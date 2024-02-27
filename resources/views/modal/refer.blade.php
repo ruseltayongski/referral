@@ -6,6 +6,7 @@ $facilities = \App\Facility::select('id','name')
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
+
 ?>
 <style>
     /* jondy changes */
@@ -16,13 +17,23 @@ $facilities = \App\Facility::select('id','name')
         margin: 0 auto; /* for centering if needed */
     }
 
-    .custom-file{
+    /* .custom-file{
+          background-color: #3498db;
         display: inline-block;
         cursor: pointer;
-        padding: 10px 20px;
+        padding: 6px 20px;
         border: 1px solid #ccc;
         border-radius: 5px;
+    } */
+    /* #file-label {
+      padding: 6px 20px;
+      cursor: pointer;
+      display: inline-block;
     }
+    #file-label:hover {
+        background-color: #2980b9; /* Adjusted hover state 
+    } */
+
     #file-input {
       display: none;
     }
@@ -39,25 +50,10 @@ $facilities = \App\Facility::select('id','name')
       display: none;
     }
 
-    #file-label {
-      background-color: #3498db;
-      color: #fff;
-      padding: 10px 15px;
-      cursor: pointer;
-      display: inline-block;
-    }
-
     #file-list {
       margin-top: 20px;
       overflow: hidden;
     }
-
-    /* .preview-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 20px;
-    }*/
 
     .preview {
       width: 150px;
@@ -84,12 +80,12 @@ $facilities = \App\Facility::select('id','name')
         margin-left: 12px;  
         
     }
-
     /* .pdf-container,
     .image-container{
         margin-bottom: 10px;
     } */
-
+    
+ 
     .image-container {
         position: relative;
         display: inline-block; /* Ensure the container only takes the necessary space */
@@ -109,18 +105,18 @@ $facilities = \App\Facility::select('id','name')
         cursor: pointer; /* Change the cursor to a pointer to indicate it's clickable */
     }
 
-    .custom-file {
+    /* .custom-file {
     cursor: pointer;
     background-color: #007bff;
     color: white;
     padding: 10px 15px;
     border-radius: 5px;
     display: inline-block;
-}
+} */
 
-.custom-file:hover {
+/* .custom-file:hover {
     background-color: #0056b3;
-}
+} */
 
 /* Style for the file list container */
 .container-preview {
@@ -144,40 +140,17 @@ $facilities = \App\Facility::select('id','name')
     align-items: center;
     gap: 10px;
 }
-
-.custom-btn {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    padding: 20px 40px; /* Larger padding */
-    font-size: 20px; /* Larger font size */
-}
-
 .custom-btn:hover {
     background-color: #0056b3;
-}
+} */
 
-.custom-btn-default {
-    background-color: #6c757d;
-    color: white;
-}
-
-.custom-btn-default:hover {
+/* .custom-btn-default:hover {
     background-color: #545b62;
-}
+} */
 
-.custom-btn-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.custom-btn-success:hover {
+/* .custom-btn-success:hover {
     background-color: #218838;
-}
+} */
 
 .preview-container {
     margin-top: 15px;
@@ -207,242 +180,237 @@ hr {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+#files-input{
+    display: none;
+}
 /* end of my changes */
 </style>
 
 <script>
 //jondy chnages for pdf and images file upload
    
-    document.addEventListener('DOMContentLoaded', function () {
-
+document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('telemedicineFollowupForm').addEventListener('submit', function(event) {
         var filesInput = document.getElementById('file-input');
         if(filesInput.files.length === 0){
             event.preventDefault();
             $("#err-msgpdf").html("Please select at least one file.");
-        $("#err-msgpdf").css('color', 'red');
+            $("#err-msgpdf").css('color', 'red');
         }
-        console.log('files inputed!', filesInput);
     });
+
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
-   
-    });
+});
 
-    function handleFileSelect(event) {
-        const fileList = event.target.files;
-        console.log('fileList', fileList);
-        const previewContainer = document.getElementById('preview-container');
-        
-        previewContainer.innerHTML = '';
-         console.log('containers', previewContainer);
-        for (const file of fileList) {
-
-            const listItem = document.createElement('div');
-            listItem.textContent = file.name;
-          
-            let allowexten = ["pdf", "png", "jpeg", "jpg"];
-            let filearr = Array.from(fileList).map(file=>file.name);
-
-            let validext = filearr.every(filename => {
-                let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
-                return allowexten.includes(ext);
-            });
-      
-            if(validext){
-                isvalidFile = true;
-                $("#telemedicineFollowupForm").off('submit'); // Remove previous submit event handler
-                    // Display image preview for image files
-                    if (file.type.startsWith('image/')) {
+function handleFileSelect(event) {
+    const fileList = event.target.files;
+    console.log('fileList', fileList);
+    const previewContainer = document.getElementById('preview-container');
+    previewContainer.innerHTML = '';
+    console.log('containers', previewContainer);
+    for (const file of fileList) {
+        const listItem = document.createElement('div');
+        listItem.textContent = file.name;
+        let allowexten = ["pdf", "png", "jpeg", "jpg","webp"];
+        let filearr = Array.from(fileList).map(file=>file.name);
+        let validext = filearr.every(filename => {
+            let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();
+            return allowexten.includes(ext);
+        });
+        if(validext){
+            isvalidFile = true;
+            $("#telemedicineFollowupForm").off('submit'); // Remove previous submit event handler
+                // Display image preview for image files
+                if (file.type.startsWith('image/')) {
                     displayImagePreview(file, previewContainer);
-                    }
-                    // Display PDF preview for .pdf files
-                    else if (file.type === 'application/pdf') {
-                        // Create a container for each PDF and its remove icon
-                        const pdfContainer = document.createElement('div');
-                        pdfContainer.classList.add('pdf-container');
-                        // Display PDF preview
-                        const pdfPreview = displayPdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
-                        const removedFiles = [];
-                        // Create the remove icon
-                        const removeIcon = document.createElement('i');
-                        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-                        removeIcon.addEventListener('click', function() {
-                            const filename = file.name;
-                            removedFiles.push(filename);
-                            
-                            const fileInput = document.getElementById('file-input');
-                            const currentfile = fileInput.files;
-                            const updatefile = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
-                            console.log('current pdf file:',currentfile);
-                            const newTransfer = new DataTransfer();
-                            updatefile.forEach(file => newTransfer.items.add(file));
-                            fileInput.files = newTransfer.files;
-                            console.log('update pdf:', updatefile);
-                            console.log('remove:', removedFiles);
-                            pdfContainer.remove();
+                }
+                // Display PDF preview for .pdf files
+                else if (file.type === 'application/pdf') {
+                    // Create a container for each PDF and its remove icon
+                    const pdfContainer = document.createElement('div');
+                    pdfContainer.classList.add('pdf-container');
+                    // Display PDF preview
+                    const allowedFolderPath = "<?php echo  asset('public/fileupload') ?>"; //jondy changes
+                    const pdffileIcon = 'PDF_file_icon.png'; //jondy changes
+                    const pdfPreview = displayPdfPreview(file.name, allowedFolderPath +'/'+  pdffileIcon); // Replace the placeholder URL jondy
+                    const removedFiles = [];
+                    // Create the remove icon
+                    const removeIcon = document.createElement('i');
+                    removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+                    removeIcon.addEventListener('click', function() {
+                        const filename = file.name;
+                        removedFiles.push(filename);
                         
-                        });
-                        pdfContainer.appendChild(pdfPreview);
-                        pdfContainer.appendChild(removeIcon);
-                        // Append the container to the main preview container
-                        previewContainer.appendChild(pdfContainer);
-                    }
-            }else{
-                isvalidFile = false;
-                previewContainer.innerHTML = '';
-                const errmsId = 'error-messages';
-                let existmsg = document.getElementById(errmsId);
-                    console.log('filname', file.name);
-                    if(!existmsg){
-                        const errmsg = document.createElement('p');
-                        console.log('error: ', errmsg);
-                        
-                        errmsg.textContent = 'Please upload a valid pdf or images file..';
-                        errmsg.style.color = 'red';
-                        errmsg.id = errmsId;
-                        $("#err-msgpdf").html(""); //to empty the error messages submission
-                        previewContainer.appendChild(errmsg);
+                        const fileInput = document.getElementById('file-input');
+                        const currentfile = fileInput.files;
+                        const updatefile = Array.from(currentfile).filter(file => !removedFiles.includes(file.name));
+                        console.log('current pdf file:',currentfile);
+                        const newTransfer = new DataTransfer();
+                        updatefile.forEach(file => newTransfer.items.add(file));
+                        fileInput.files = newTransfer.files;
+                        console.log('update pdf:', updatefile);
+                        console.log('remove:', removedFiles);
+                        pdfContainer.remove();
+                    
+                    });
+                    pdfContainer.appendChild(pdfPreview);
+                    pdfContainer.appendChild(removeIcon);
+                    // Append the container to the main preview container
+                    previewContainer.appendChild(pdfContainer);
+                }
+        }else{
+            isvalidFile = false;
+            previewContainer.innerHTML = '';
+            const errmsId = 'error-messages';
+            let existmsg = document.getElementById(errmsId);
+            console.log('filname', file.name);
+            if(!existmsg){
+                const errmsg = document.createElement('p');
+                console.log('error: ', errmsg);
+                
+                errmsg.textContent = 'Please upload a valid pdf or images file..';
+                errmsg.style.color = 'red';
+                errmsg.id = errmsId;
+                $("#err-msgpdf").html(""); //to empty the error messages submission
+                previewContainer.appendChild(errmsg);
 
-                    }
-                        break;       
             }
-            $("#telemedicineFollowupForm").submit(function(event){
-                if(!isvalidFile){
-                    event.preventDefault();
-                }else{
-                    //  $("#telemedicineFollowupForm").show();
-                        previewContainer.innerHTML = '';
-            
-                }
-            });
+            break;       
         }
+        $("#telemedicineFollowupForm").submit(function(event){
+            if(!isvalidFile){
+                event.preventDefault();
+            }else{
+                //  $("#telemedicineFollowupForm").show();
+                    previewContainer.innerHTML = '';
+        
+            }
+        });
+    }
             
-    }
+}
  
-    function displayImagePreview(file, container) {
-        const reader = new FileReader();
-        // console.log('my file', file.name);
-        console.log('my container', container);
-        reader.onload = function (e) {
-            // Create a container for each image and its remove icon
-            const imageContainer = document.createElement('div');
-            imageContainer.classList.add('image-container');
-            // Create the image preview
-            const preview = document.createElement('img');
-            preview.setAttribute('src', e.target.result);
-            preview.style.width = '150px';
-            preview.style.height = '150px';
-            preview.setAttribute('alt', file.name);
-            preview.classList.add('preview');
-
-            preview.addEventListener('click', function () { 
-                displayLargeImage(e.target.result,file.name, container);
-                
-            });
-
-            const removedFiles = []; 
-            $("#err-msgpdf").html(""); //to empty the error messages submission
-            // Create the remove icon
-            const removeIcon = document.createElement('i');
-            removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
-
-            removeIcon.addEventListener('click', function() {
-                container.removeChild(imageContainer);
-
-                const filename = file.name;
-                removedFiles.push(filename);
-
-                const fileInput = document.getElementById('file-input');
-                const currentfiles = fileInput.files;
-                console.log('my current files: ',currentfiles);
-                const updatefiles = Array.from(currentfiles).filter(file => !removedFiles.includes(file.name))
-                console.log("update files:", updatefiles);
-                const newTransfer = new DataTransfer();
-                updatefiles.forEach(file => newTransfer.items.add(file));
-                fileInput.files = newTransfer.files;
-                // $("#filecounter").val(removedFiles.join(','));
-                // var namefile = $("#filecount").val();
-                console.log('remove:', removedFiles);
-                if (container.children.length === 0) {
-                    // Reset the file input value
-                    const fileInput = document.getElementById('file-input'); 
-                    fileInput.value = '';
-                    // Optionally, trigger the change event
-                    const event = new Event('change');
-                    fileInput.dispatchEvent(event);
-                }
-            });
-
-            // Append the image and remove icon to the container
-            imageContainer.appendChild(preview);
-            imageContainer.appendChild(removeIcon);
-            // Append the container to the main container
-            container.appendChild(imageContainer);
-        };
-
-        reader.readAsDataURL(file);
-    }
-
-        // Function to display the larger image
-    function displayLargeImage(imgsrc, filename, container) {
-        // Create a modal or overlay element
-        console.log('img src:',imgsrc);    
-        console.log('img src:',filename);
- 
-        $(".modal-title").html(filename);
-       
-        $("#imageView").attr('src', imgsrc);
-        $("#imageView").attr('width', '100%');
-        $("#imageView").attr('height', 'auto');
-
-        $("#viewLargerFileModal").css('z-index', 1060);
-        $("#viewLargerFileModal").modal("show");
-    }
-
-
-
-    function displayPdfPreview(file, placeholderUrl, container) {
-        console.log('originame pdf filename:', file);
-        // displayFilePreview(file, container, placeholderUrl);
-        const pdfPreview = document.createElement('embed');
-        pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
-    
-        pdfPreview.style.width = '150px';
-        pdfPreview.style.height = '150px';
-        pdfPreview.dataset.originalFilename = file;
-        $("#err-msgpdf").html(""); //to empty the error messages submission
-        pdfPreview.addEventListener('click', function () { 
-               
-            pdfshow(file,placeholderUrl);
-                
-            });
-       
-        return pdfPreview;
-    }
-
-    function  pdfshow(file){
-        console.log('filename:', file);
-        
-        $(".modal-title").html(file);
-        $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
-        $("#viewpdf").css('z-index', 1060);
-        $("#viewpdf").modal("show");
-        
-    }
-
-    function displayFilePreview(file, container, placeholderUrl) {
-        // For unsupported file types, display a placeholder image
+function displayImagePreview(file, container) {
+    const reader = new FileReader();
+    console.log('my container', container);
+    reader.onload = function (e) {
+        const imageContainer = document.createElement('div');
+        imageContainer.classList.add('image-container');
+        // Create the image preview
         const preview = document.createElement('img');
-        preview.setAttribute('src', placeholderUrl);
+        preview.setAttribute('src', e.target.result);
+        preview.setAttribute('id', 'imagesDisplay')
+        preview.style.width = '150px';
+        preview.style.height = '150px';
         preview.setAttribute('alt', file.name);
         preview.classList.add('preview');
-        container.appendChild(preview);
-    }
+        preview.addEventListener('click', function () { 
+            displayLargeImage(e.target.result,file.name, container);    
+        });
+        const removedFiles = []; 
+        $("#err-msgpdf").html(""); //to empty the error messages submission
+        // Create the remove icon
+        const removeIcon = document.createElement('i');
+        removeIcon.classList.add('fa', 'fa-times', 'remove-icon');
+        removeIcon.addEventListener('click', function() {
+            container.removeChild(imageContainer);
+            const filename = file.name;
+            removedFiles.push(filename);
 
+            const fileInput = document.getElementById('file-input');
+            const currentfiles = fileInput.files;
+            console.log('my current files: ',currentfiles);
+            const updatefiles = Array.from(currentfiles).filter(file => !removedFiles.includes(file.name))
+            console.log("update files:", updatefiles);
+            const newTransfer = new DataTransfer();
+            updatefiles.forEach(file => newTransfer.items.add(file));
+            fileInput.files = newTransfer.files;
+            // $("#filecounter").val(removedFiles.join(','));
+            // var namefile = $("#filecount").val();
+            console.log('remove:', removedFiles);
+            if (container.children.length === 0) {
+                // Reset the file input value
+                const fileInput = document.getElementById('file-input'); 
+                fileInput.value = '';
+                // Optionally, trigger the change event
+                const event = new Event('change');
+                fileInput.dispatchEvent(event);
+            }
+        });
+        // Append the image and remove icon to the container
+        imageContainer.appendChild(preview);
+        imageContainer.appendChild(removeIcon);
+        // Append the container to the main container
+        container.appendChild(imageContainer);
+    };
+    reader.readAsDataURL(file);
+}
+        // Function to display the larger image
+function displayLargeImage(imgsrc, filename, container) {
+    // Create a modal or overlay element
+    console.log('img src:',imgsrc);    
+    console.log('img src:',filename);
+    $(".modal-title").html(filename);
+    $("#imageView").attr('src', imgsrc);
+    $("#imageView").attr('width', '100%');
+    $("#imageView").attr('height', 'auto');
+    $("#viewLargerFileModal").css('z-index', 1060);
+    $("#viewLargerFileModal").modal("show");
+}
+
+function displayPdfPreview(file, placeholderUrl, container) {
+    console.log('originame pdf filename:', file);
+    const pdfPreview = document.createElement('embed');
+    pdfPreview.setAttribute('src', placeholderUrl); // Replace with actual PDF preview logic
+    pdfPreview.style.width = '150px';
+    pdfPreview.style.height = '150px';
+    pdfPreview.dataset.originalFilename = file;
+    $("#err-msgpdf").html(""); //to empty the error messages submission
+    pdfPreview.addEventListener('click', function () { 
+        pdfshow(file,placeholderUrl);
+        });
+    return pdfPreview;
+}
+
+function pdfshow(file){
+    $(".modal-title").html(file);
+    $("#files").html('<i class="fa fa-file-pdf-o"></i> ' + file );
+    $("#viewpdf").css('z-index', 1060);
+    $("#viewpdf").modal("show");
+}
+
+function displayFilePreview(file, container, placeholderUrl) {
+    // For unsupported file types, display a placeholder image
+    const preview = document.createElement('img');
+    preview.setAttribute('src', placeholderUrl);
+    preview.setAttribute('alt', file.name);
+    preview.classList.add('preview');
+    container.appendChild(preview);
+}
+document.addEventListener("DOMContentLoaded", function() { // this will clear the display of file upload when close it the modal form jondy
+    document.getElementById("close_telemedbtn").onclick = function() {
+        $('.preview-container').empty();
+        $('.imagesDisplay').attr('src', '');
+    }
+    document.getElementById("close_telemedModal").onclick =  function() {
+        $('.preview-container').empty();
+        $('.imagesDisplay').attr('src', '');
+    }
+});
+
+$("#telemedicineFollowupForm").submit(function (event){
+    $("#telemedicineFollowupFormModal").modal('hide');
+});
+
+$(document).keydown(function(event) { //this will close modal of press the keyboard Esc jondy
+    if (event.keyCode == 27) { 
+        $("#telemedicineFollowupFormModal").modal('hide');
+        $('.preview-container').empty();
+        $('.imagesDisplay').attr('src', '');
+    }
+}); 
 //end of my changes
 </script>
-
-
 
 <div class="modal fade" role="dialog" id="referFormModal">
     <div class="modal-dialog modal-sm" role="document">
@@ -605,36 +573,38 @@ hr {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="text-green" style="font-size: 15pt;" id="followup_header"></h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close_telemedModal">
                     <span aria-hidden="true">&times;</span>
                 </button>
+                <h4 class="text-green" style="font-size: 15pt; margin-top: 0;" id="followup_header" ></h4>
+               
             </div>
             <div class="modal-body">
                 <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data">
                         <input type="hidden" name="code" id="telemed_follow_code" value="">
                         <input type="hidden" name="followup_id" id="telemedicine_follow_id" value="">
-                        <input type="hidden" name="followup_facility_id" id="followup_facility_id" value="">
                         <input type="hidden" class="telemedicine" value="">
+                        <input type="hidden" id="followup_facility_id" class="followup_facility_id" value="">
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label style="padding:0px;">SELECT FACILITY:</label>
-                            <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
-                                <option value="">Select Facility...</option>
-                                @foreach($facilities as $row)
-                                    <option value="{{ $row->id }}">{{ $row->name }}</option>
-                                @endforeach
-                            </select>
+                            <label style="padding:0px;">FACILITY:</label>
+                            <input type="text" class="form-control"  name="facility" id="followup_facility_name" value="" readonly>
                         </div>
                         <div class="form-group">
-                            <label style="padding: 0px">SELECT DEPARTMENT:</label>
-                            <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                                <option value="">Select Department...</option>
-                            </select>
+                            <label style="padding: 0px">DEPARTMENT:</label>
+                            <input type="text" class="form-control" name="department" id="department_Opd" value="OPD" readonly>
                         </div>
+
                         <div class="form-group">
-                            <label id="file-label" for="file-input" class="btn btn-primary custom-file">Select Files
-                            <input type="file" id="file-input" name="files[]" multiple class="d-none"></label>
+                            <!-- <label style="padding: 0px">Note:</label> -->
+                            <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label id="file-label" for="file-input" class="btn btn-primary custom-file form-control">Select Files</label>
+                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                            <!-- <label for="file-label" class="btn btn-primary  form-control">Select Files</label> -->
+                          
                         </div>  
                         <div class="row">
                             <div class="card">
@@ -647,7 +617,7 @@ hr {
                         </div>
                         <hr />
                         <div class="form-fotter pull-right">
-                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                            <button class="btn btn-default btn-flat" data-dismiss="modal" id="close_telemedbtn"><i class="fa fa-times"></i> Close</button>
                             <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
                         </div>
                 </form>
@@ -663,10 +633,11 @@ hr {
     <div class="modal-dialog" role="document">
         <div class="modal-content">
                 <div class="modal-header">
-                        <h4 class="text-green" style="font-size: 15pt;" id="Add_followup_headerform"></h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" >
                             <span aria-hidden="true">&times;</span>
                         </button>
+                        <h4 class="text-green" style="font-size: 15pt; margin-top: 0;" id="Add_followup_headerform"></h4>
+                        
                 </div>
             <div class="modal-body">
 
@@ -680,8 +651,12 @@ hr {
                         <div id="removedFilesContainer"></div>
                         {{ csrf_field() }}
                         <div class="form-group">
-                            <label id="file-label" for="files-input" class="btn btn-primary custom-file">Select Files
-                            <input type="file" id="files-input" name="filesInput[]" multiple class="d-none"></label>
+                            <!-- <label style="padding: 0px">Note:</label> -->
+                            <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                        </div>
+                        <div class="form-group">
+                            <label id="file-label" for="files-input" class="btn btn-primary custom-file form-control">Select Files
+                            <input type="file" id="files-input" name="filesInput[]" multiple></label>
 
                             <!-- <input type="hidden" id="filecount" name="removefile[]" multiple class="d-none"> -->
                             <!-- <div id="file-list" class="mt-3"></div> -->
@@ -706,10 +681,9 @@ hr {
         </div>
     </div>
 </div>
-
 <!------------------------------End of file------------------------------------->
-<!------------------------------for update the file----------------------------------------->
 
+<!------------------------------for update the file----------------------------------------->
 <div class="modal fade" role="dialog" id="telemedicineUpateFileFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -728,7 +702,9 @@ hr {
                     
                 <div class="form-group formtogroup">
                     <div class="upload-header">
-                        <label id="file-label" for="file-upload-update" class="btn custom-btn">Select Files
+                    <!-- <button id="file-label" for="file-input" class="btn btn-primary custom-file form-control">Select Files</button> -->
+
+                        <label id="file-label" for="file-upload-update" class="btn btn-primary custom-file form-control">Select Files
                             <input type="file" id="file-upload-update" name="files" class="d-none" onchange="readURL(this)">
                         </label>
                         <input type="hidden" id="selected-file-name-input" name="selectedFileName">
@@ -750,8 +726,8 @@ hr {
                 </div>
                 <hr />
                 <div class="form-footer text-right">
-                    <button class="btn custom-btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" id="followup_submit_edit" class="btn custom-btn-success">Submit</button>
+                    <button class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="followup_submit_edit" class="btn btn-success">Submit</button>
                 </div>
                 </form>
                 <div class="clearfix"></div>
@@ -790,7 +766,7 @@ hr {
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button class="btn btn-default btn-flat" data-dismiss="modal" id="delete_Modal_close"><i class="fa fa-times"></i> Close</button>
                         <button type="submit" id="followup_submit_delete" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Submit</button>
                     </div>
                 </form>
@@ -889,5 +865,30 @@ $.fn.hideFileEntryBackground = function () {
     this.removeClass('file-entry');
     this.hide();
 }
-//end of my chnages 
+
+ $('#telemedicineFollowupFormModal').on('shown.bs.modal', function (e) {
+    var facility_id = $("#followup_facility_id").val();
+    //console.log('my facility',facility_id)
+ //function facilityName() {
+    $.ajax({
+            url: '{{ route("api.getName", ["id" => ""]) }}/' + facility_id, 
+            method: 'GET',
+            // async: false,
+            success: function(response) {
+                // Handle the response from the controller
+                // For example, you can update the UI based on the returned value
+                $("#followup_facility_name").val(response.name);
+            },
+            error: function(xhr, status, error) {
+                // Handle errors
+                console.error('Error:', error);
+            }
+        });
+
+
+    //  }
+    //  facilityName();
+    //  setInterval(facilityName, 500);
+ });
+
 </script>

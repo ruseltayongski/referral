@@ -61,6 +61,7 @@
                     $("#followup_header").html("Follow Up Patient");
                     $("#telemedicineFollowupFormModal").modal('show');
                     $("#followup_facility_id").val(this.facilitySelectedId);
+                        //immediately close the form modal after submission
                 }
                 else {
                     const appointment = {
@@ -68,7 +69,7 @@
                         appointmentId: this.selectedAppointmentTime,
                         doctorId: this.selectedAppointmentDoctor
                     }
-                    console.log(appointment)
+                    console.log(facility_id);
                     window.location.href = `${this.base}/doctor/patient?appointmentKey=${this.generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
                 }
             },

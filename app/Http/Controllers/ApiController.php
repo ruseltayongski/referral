@@ -244,7 +244,7 @@ class ApiController extends Controller
     //         $activity_prescription = Activity::where("code",$request->code)->where("status","prescription")->where("id",">",$request->activity_id)->first();
 
     //         if($activity_prescription) {
-    //             $activity_prescription->generic_name = $request->generic_name;
+    //             $activity_prescription->lab_result = $request->lab_result;
     //             $activity_prescription->dosage = $request->dosage;
     //             $activity_prescription->formulation = $request->formulation;
     //             $activity_prescription->brandname = $request->brandname;
@@ -264,7 +264,7 @@ class ApiController extends Controller
     //                 'department_id' => $tracking->department_id,
     //                 'referring_md' => $tracking->referring_md,
     //                 'action_md' => $user->id,
-    //                 'generic_name' => $request->generic_name,
+    //                 'lab_result' => $request->lab_result,
     //                 'dosage' => $request->dosage,
     //                 'formulation' => $request->formulation,
     //                 'brandname' => $request->brandname,
@@ -387,23 +387,23 @@ class ApiController extends Controller
 
             $prescribed_activity_id = $latestActivity->id;
 
-            $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th", "12th"];
-            $position_count = 0;
+            // $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th", "12th"];
+            // $position_count = 0;
 
-            $positionPrescription = PrescribedPrescription::where('code', $code)
-            ->where('prescribed_status', $prescribed_status)
-            ->first();
+            // $positionPrescription = PrescribedPrescription::where('code', $code)
+            // ->where('prescribed_status', $prescribed_status)
+            // ->first();
 
-            while ($isFollowup && $this->isPrescriptionExists($latestActivity->code, $position[$position_count] . ' followup')) {
-                $position_count++;
-            }
+            // while ($isFollowup && $this->isPrescriptionExists($latestActivity->code, $position[$position_count] . ' followup')) {
+            //     $position_count++;
+            // }
 
-            if ($isFollowup) {
-                $position_count++;
-                $prescribed_status = $position_count < count($position) ? $position[$position_count - 1] . ' followup' : 'referred';
-            } else {
-                $prescribed_status = 'referred';
-            }
+            // if ($isFollowup) {
+            //     $position_count++;
+            //     $prescribed_status = $position_count < count($position) ? $position[$position_count - 1] . ' followup' : 'referred';
+            // } else {
+            //     $prescribed_status = 'referred';
+            // }
 
             $prescribed = new PrescribedPrescription();
             $prescribed->prescribed_activity_id = $prescribed_activity_id;
@@ -415,7 +415,7 @@ class ApiController extends Controller
             $prescribed->formulation = $singlePrescription['formulation'];
             $prescribed->frequency = $singlePrescription['frequency'];
             $prescribed->duration = $singlePrescription['duration'];
-            $prescribed->prescribed_status = $isFollowup ? $prescribed_status : 'referred';
+            // $prescribed->prescribed_status = $isFollowup ? $prescribed_status : 'referred';
             $prescribed->save();
         }
     }
@@ -460,7 +460,7 @@ class ApiController extends Controller
                 //lacking compare ID of prescribed_prescription
                 $existingSinglePrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
                     ->where('prescribed_activity_id', $activityExisting->id)
-                    ->where('prescribed_status', 'like', '% followup')
+                    // ->where('prescribed_status', 'like', '% followup')
                     ->first();
 
                 if ($existingSinglePrescription) {
@@ -489,7 +489,7 @@ class ApiController extends Controller
                 $prescribed_activity_id = $latestActivity->id;
 
                 $latestFollowupPrescription = PrescribedPrescription::where('prescribed_activity_id', $prescribed_activity_id)
-                    ->where('prescribed_status', 'like', '% followup')
+                    // ->where('prescribed_status', 'like', '% followup')
                     ->orderBy('id', 'desc')
                     ->first();
                 
@@ -502,10 +502,10 @@ class ApiController extends Controller
                     }
                     else {
 
-                        if ($latestFollowupPrescription) {
-                            $prescribed_status = $latestFollowupPrescription->prescribed_status;
-                        } 
-                        
+                        // if ($latestFollowupPrescription) {
+                        //     $prescribed_status = $latestFollowupPrescription->prescribed_status;
+                        // } 
+    
                         $prescription = new PrescribedPrescription();
                         $prescription->code = $latestActivity['code'];
                         $prescription->prescribed_activity_id = $prescribed_activity_id;
@@ -516,13 +516,14 @@ class ApiController extends Controller
                         $prescription->formulation = $prescriptionData['formulation'];
                         $prescription->frequency = $prescriptionData['frequency'];
                         $prescription->duration = $prescriptionData['duration'];
-                        $prescription->prescribed_status = $prescribed_status;
+                        // $prescription->prescribed_status = $prescribed_status;
                         $prescription->save();
                     }
                 }
             } elseif($referredActivity) {
                 $existingReferredPrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
-                ->where('prescribed_status', 'referred')
+                // ->where('prescribed_status', 'referred')
+                ->where('prescribed_activity_id',"=", $singlePrescription['prescribed_activity_id'])
                 ->first();
 
                 if ($existingReferredPrescription) {
@@ -533,7 +534,7 @@ class ApiController extends Controller
                     $existingReferredPrescription->formulation = $singlePrescription['formulation'];
                     $existingReferredPrescription->frequency = $singlePrescription['frequency'];
                     $existingReferredPrescription->duration = $singlePrescription['duration'];
-                    $existingReferredPrescription->prescribed_status = 'referred';
+                    // $existingReferredPrescription->prescribed_status = 'referred';
                     $existingReferredPrescription->save();
                 } 
                 else {
@@ -568,7 +569,7 @@ class ApiController extends Controller
                         $prescription->formulation = $prescriptionData['formulation'];
                         $prescription->frequency = $prescriptionData['frequency'];
                         $prescription->duration = $prescriptionData['duration'];
-                        $prescription->prescribed_status = 'referred';
+                        // $prescription->prescribed_status = 'referred';
                         $prescription->save();
                     }
                 }
@@ -592,10 +593,10 @@ class ApiController extends Controller
         ];
 
         broadcast(new SocketReferralDischarged($broadcast_prescribed));    
-        return response()->json(['message' => 'Prescriptions saved successfully'], 200); 
     }
     //-------------------------------------------------------------------
-    public function deletePrescriptions($id) {
+    public function deletePrescriptions($id) {       
+        return response()->json(['message' => 'Prescriptions saved successfully'], 200); 
         try {
             $prescription = PrescribedPrescription::findOrFail($id);
             $prescription->delete();
@@ -641,6 +642,20 @@ class ApiController extends Controller
             return "success";
         }
         return "failed";
+    }
+
+    public function getFacilityName($id)
+    {
+        //$facility_id = $request->facility_name_ID;
+        // $facility = Facility::select('id', 'name')->where('id',  $id)->first();
+        // $facilityId = $request->id
+        $facility = Facility::find($id)->name;
+
+        if ($facility) {
+            return response()->json(['name' => $facility]);
+        } else {
+            return response()->json(['error' => 'Facility not found'], 404);
+        }
     }
 
     public function patientFollowUp(Request $request) {
@@ -701,9 +716,8 @@ class ApiController extends Controller
                 ->orderby('id')
                 ->first();
             json_encode($filePaths);
-            $activityFile->generic_name = implode('|', $fileNames2);
+            $activityFile->lab_result = implode('|', $fileNames2);
             $activityFile->save();
-            
         }
         //  -----------------------jondy changes------------------------->
 
@@ -719,6 +733,7 @@ class ApiController extends Controller
                     ->orWhere("status","followup");
             })
             ->count();
+
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -742,7 +757,7 @@ class ApiController extends Controller
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
         //end broadcast
 
-        return Redirect::back();
+        return Redirect::route('doctor_referred');
     }
 
 
@@ -774,7 +789,7 @@ class ApiController extends Controller
             $uploadFile->move($filepath, $originalName);
                 if($request->position_count_number == 1){
                    
-                    $genericNameArray = explode('|', $activityFile->generic_name);
+                    $genericNameArray = explode('|', $activityFile->lab_result);
                     $key = array_search($retrieveFiles, $genericNameArray);
                     
                     if($originalName !== $retrieveFiles){
@@ -784,11 +799,11 @@ class ApiController extends Controller
                     if($key !== false) {
                         $genericNameArray[$key] = $originalName;
                     }
-                    $activityFile->generic_name = implode('|', $genericNameArray);
+                    $activityFile->lab_result = implode('|', $genericNameArray);
                     $activityFile->save();
                    
                 }else if($request->position_count_number >= 2){
-                    $genericNameArray = explode('|', $activity_followup->generic_name);
+                    $genericNameArray = explode('|', $activity_followup->lab_result);
                     $key = array_search($retrieveFiles, $genericNameArray);
 
                     if($originalName !== $retrieveFiles){
@@ -797,7 +812,7 @@ class ApiController extends Controller
                     if($key !== false) {
                         $genericNameArray[$key] = $originalName;
                     }
-                    $activity_followup->generic_name = implode('|', $genericNameArray);
+                    $activity_followup->lab_result = implode('|', $genericNameArray);
                     $activity_followup->save(); 
                        
                 }
@@ -845,29 +860,29 @@ class ApiController extends Controller
             if(empty($request->filename)){
                 if($request->position_count == 1){
                     json_encode($filePaths);
-                    $referredFile->generic_name = implode('|', $fileNames2);
+                    $referredFile->lab_result = implode('|', $fileNames2);
                     $referredFile->save();
     
                 }else if($request->position_count >= 2){
                     json_decode($filepath);
-                    $followupfile->generic_name = implode('|', $fileNames2);
+                    $followupfile->lab_result = implode('|', $fileNames2);
                     $followupfile->save();
                 }
 
             }else{
                 
                 if($request->position_count == 1){
-                    $genericname_array = explode('|', $referredFile->generic_name);
+                    $genericname_array = explode('|', $referredFile->lab_result);
                     $genericname_array = array_merge($genericname_array, $fileNames2);
     
-                    $referredFile->generic_name = implode('|', $genericname_array);
+                    $referredFile->lab_result = implode('|', $genericname_array);
                     $referredFile->save();
                        
                 }else if($request->position_count >= 2){
-                    $genericname_array = explode('|', $followupfile->generic_name);
+                    $genericname_array = explode('|', $followupfile->lab_result);
                     $genericname_array = array_merge($genericname_array, $fileNames2);
     
-                    $followupfile->generic_name = implode('|', $genericname_array);
+                    $followupfile->lab_result = implode('|', $genericname_array);
                     $followupfile->save();
            
                 }
@@ -891,7 +906,7 @@ class ApiController extends Controller
             ->first();
 
         if($request->position_counter == 1){
-            $referredfile_array = explode('|', $referred_activity->generic_name);
+            $referredfile_array = explode('|', $referred_activity->lab_result);
             $key = array_search($selectedfile, $referredfile_array);
             
             if($key !== false){// Check if the selected file exists in the array
@@ -900,11 +915,11 @@ class ApiController extends Controller
                 unlink($filepath . '/' . $selectedfile);
             }
 
-            $referred_activity->generic_name = implode('|', $referredfile_array);
+            $referred_activity->lab_result = implode('|', $referredfile_array);
             $referred_activity->save();
 
         }else if($request->position_counter >= 2){
-            $followfile_array = explode('|', $followup_activity->generic_name);
+            $followfile_array = explode('|', $followup_activity->lab_result);
             $key = array_search($selectedfile, $followfile_array);
 
             if($key !== false){
@@ -912,7 +927,7 @@ class ApiController extends Controller
 
                 unlink($filepath . '/' . $selectedfile);
             }
-            $followup_activity->generic_name = implode('|', $followfile_array);
+            $followup_activity->lab_result = implode('|', $followfile_array);
             $followup_activity->save();
         }
 

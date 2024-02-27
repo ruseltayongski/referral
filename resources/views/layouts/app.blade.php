@@ -51,6 +51,12 @@
 
     @yield('css')
     <style>
+        .btn-primary:focus, 
+        .btn-primary:hover {
+        background-color: #265a88;
+        background-position: 0 -15px;
+        }
+
         body {
             background: url('{{ asset('resources/img/backdrop.png') }}'), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
         }

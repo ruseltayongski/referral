@@ -179,7 +179,7 @@ Route::get('doctor/referral/data/pregnant/{id}/{referral_status}/{form_type}','d
 Route::get('doctor/referral/video/pregnant/form/{id}','doctor\ReferralCtrl@pregnantFormTelemed');
 
 
-Route::get('doctor/referred','doctor\ReferralCtrl@referred');
+Route::get('doctor/referred','doctor\ReferralCtrl@referred')->name('doctor_referred');
 Route::get('doctor/referred2','doctor\ReferralCtrl@referred2');
 Route::post('doctor/referred/cancel/{id}','doctor\ReferralCtrl@cancelReferral');
 Route::post('doctor/referred/departed/{id}','doctor\ReferralCtrl@departedReferral');
@@ -313,6 +313,8 @@ Route::post('api/video/treated','ApiController@patientTreated');
 Route::post('api/video/end','ApiController@patientEndCycle');
 Route::post('api/video/followup','ApiController@patientFollowUp');
 //for file upload ------------->
+Route::get('api/getName/{id}', 'ApiController@getFacilityName')->name('api.getName');
+
 Route::post('api/video/editfilefollowup','ApiController@editpatientFollowUpFile'); 
 Route::post('api/video/addfilefollowup','ApiController@AddpatientFollowUpFile');
 Route::post('api/video/deletefilefollowup','ApiController@deletepatientFollowUpFile');
