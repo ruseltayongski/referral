@@ -89,7 +89,7 @@
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="generic_name">1.) Generic Name:{{ index + 1 }}</label>
+                                <label for="generic_name">1.) Generic Name:</label>
                                 <input type="text" v-model="prescription.generic_name" class="form-control form-control-sm" >
                             </div>
                         </div>
@@ -140,22 +140,6 @@
 <script>
     import axios from 'axios';
     export default {
-        data() {
-            return {
-                prescriptionSubmitted: false,
-                generic_name: "",
-                brandname: "",
-                dosage: "",
-                quantity: "",
-                formulation: "",
-                frequency: "",
-                duration: "",
-                prescribed_activity_id: "",
-
-                prescriptions: [],
-            };
-
-        },
         props: {
             activity_id: {
                 type: Number
@@ -169,6 +153,21 @@
             form_type: {
                 type: String
             },
+        },
+        data() {
+            return {
+                prescriptionSubmitted: false,
+                generic_name: "",
+                brandname: "",
+                dosage: "",
+                quantity: "",
+                formulation: "",
+                frequency: "",
+                duration: "",
+                prescribed_activity_id: "",
+                prescriptions: [],
+            };
+
         },
         created() {
             const prescriptionCode = this.code;
@@ -244,7 +243,6 @@
                         activity_id: this.activity_id,
                         form_type: this.form_type,
                         prescribed_activity_id: this.prescribed_activity_id,
-
                     },
                     multiplePrescriptions: this.prescriptions,
                 };
@@ -252,8 +250,7 @@
                 Lobibox.alert("success", {
                     msg: "Prescriptions saved successfully!",
                 });
-                $("#prescriptionModal").modal("hide");
-
+                $("#prescriptionModal").modal("hide");   
                 console.log('Combined Prescription Data:', combinedPrescriptions);
                 
                 axios.post(`${this.baseUrl}/api/video/prescriptions`, combinedPrescriptions)

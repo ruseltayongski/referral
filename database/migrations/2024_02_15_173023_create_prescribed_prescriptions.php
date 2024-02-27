@@ -24,7 +24,6 @@ class CreatePrescribedPrescriptions extends Migration
             $table->string('frequency', 255)->nullable();
             $table->string('duration', 255)->nullable();
             $table->string('quantity', 255)->nullable();
-            $table->string('prescribed_status', 255)->nullable();
             $table->integer('referred_from')->nullable();
             $table->integer('referred_to')->nullable();
             $table->timestamps();
