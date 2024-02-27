@@ -509,7 +509,7 @@
             }
         },
         created() {
-            console.log("VUE.JS 3.2.3")
+            console.log("VUE.JS 3")
             Echo.join('chat')
                 .here(users => {
                     //console.log(users)

@@ -3,11 +3,13 @@
     import { Transition } from 'vue';
     import AgoraRTC from "agora-rtc-sdk-ng"
     import PrescriptionModal from './PrescriptionModal.vue';
+    import LabRequestModal from './LabRequestModal.vue';
 
     export default {
         name: 'RecoApp',
         components: {
             PrescriptionModal,
+            LabRequestModal
         },
         data() {
             return {
@@ -269,6 +271,9 @@
                     }
                 });
             },
+            labRequest() {
+                console.log("lab request")
+            }
         },
     }
 </script>
@@ -287,12 +292,12 @@
                     </div>
                     <Transition name="fade">
                     <div class="iconCall position-absolute fade-in" v-if="showDiv">
-                        <button class="btn btn-success btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
+                        <button class="btn btn-info btn-lg mic-button" :class="{ 'mic-button-slash': !audioStreaming }" @click="audioStreamingOnAnddOff" type="button"><i class="bi-mic-fill"></i></button>&nbsp;
                         <button class="btn btn-success btn-lg video-button" :class="{ 'video-button-slash': !videoStreaming }" @click="videoStreamingOnAndOff" type="button"><i class="bi-camera-video-fill"></i></button>&nbsp;
                         <button class="btn btn-danger btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>&nbsp;
                         <button class="btn btn-warning btn-lg upward-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-hospital"></i></button>
                         <button class="btn btn-success btn-lg prescription-button" data-toggle="modal" data-target="#prescriptionModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription"></i></button>
-                        <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
+                        <button class="btn btn-primary btn-lg prescription-button" data-toggle="modal" data-target="#labRequestModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription2"></i></button>
                     </div>
                     </Transition>
                     <div class="localPlayerDiv">
@@ -300,7 +305,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4" ><!-- --- -->
+            <div class="col-lg-4" >
                 <div class="telemedForm">
                     <div class="row-fluid">
                         <div>
@@ -406,6 +411,7 @@
             </div>
         </div>
         <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" :form_type="form_type" />
+        <LabRequestModal :activity_id="parseInt(activity_id)" :requested_by="parseInt(user.id)"/>
     </div>
 </template>
 

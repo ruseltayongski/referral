@@ -452,43 +452,12 @@
         $.post(url,json,function(){});
         var windowName = 'NewWindow'; // Name of the new window
         var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
+        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
         if (newWindow && newWindow.outerWidth) {
             // If the window was successfully opened, attempt to maximize it
             newWindow.moveTo(0, 0);
             newWindow.resizeTo(screen.availWidth, screen.availHeight);
         }
-
-        // if($("#accepted_progress"+code+activity_id).hasClass("completed")) {
-        //     var url = "<?php echo asset('api/video/call'); ?>";
-        //     var json = {
-        //         "_token" : "<?php echo csrf_token(); ?>",
-        //         "tracking_id" : tracking_id,
-        //         "code" : code,
-        //         "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
-        //         "referring_md" : referring_md,
-        //         "trigger_by" : "{{ $user->id }}",
-        //         "form_type" : form_tpe,
-        //         "activity_id" : activity_id
-        //     };
-        //     $.post(url,json,function(){
-
-        //     });
-        //     var windowName = 'NewWindow'; // Name of the new window
-        //     var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        //     var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes", windowName, windowFeatures);
-        //     if (newWindow && newWindow.outerWidth) {
-        //         // If the window was successfully opened, attempt to maximize it
-        //         newWindow.moveTo(0, 0);
-        //         newWindow.resizeTo(screen.availWidth, screen.availHeight);
-        //     }
-        // } 
-        // else if(!alreadyAccepted) {
-        //     Lobibox.alert("error",
-        //     {
-        //         msg: "You cannot follow up on a patient because it has not yet been examined."
-        //     });
-        // }
     }
 
     function telemedicinePrescription(track_id, activity_id, referred_code, referred_id) {
@@ -505,6 +474,25 @@
                 msg: "No prescription has been created by the referred doctor"
             });
         }
+    }
+
+    function telemedicineLabResult(activity_id) {
+        const url = "{{ asset('api/check/labresult') }}";
+        var json = {
+            "activity_id" : activity_id
+        };
+        $.post(url,json,function(result) {
+            if(result) {
+                const pdf_url = "{{ asset('doctor/print/labresult') }}";
+                window.open(`${pdf_url}/${activity_id}`);
+            }
+            else {
+                Lobibox.alert("error",
+                {
+                    msg: "No lab request has been created by the referred doctor"
+                });
+            }
+        })
     }
 
     function telemedicineEndPatient(alreadyTreated, alreadyReferred, alreadyFollowUp, alreadyEnd, code, referred_id) {
