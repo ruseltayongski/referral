@@ -263,10 +263,11 @@
                         if(type == 'yes') {
                             const endorseUpward = {
                                 code : self.referral_code,
-                                form_type: this.form_type
+                                form_type: self.form_type
                             }
                             axios.post(`${self.baseUrl}/api/video/upward`, endorseUpward).then(response => {
                                 console.log(response.status)
+                                console.log("endorseUpward:", endorseUpward);
                                 if(response.data === 'success') {
                                     Lobibox.alert("success",
                                         {

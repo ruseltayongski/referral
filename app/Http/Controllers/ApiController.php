@@ -694,6 +694,7 @@ class ApiController extends Controller
             json_encode($filePaths);
             $activityFile->lab_result = implode('|', $fileNames2);
             $activityFile->save();
+            session()->flash('first_save'); 
         }
         //  -----------------------jondy changes------------------------->
 

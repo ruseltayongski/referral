@@ -482,43 +482,60 @@
             <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
-                    <div class="step-counter">1</div>
+                    <div class="step-counter"><i class="fa fa-share" aria-hidden="true"></i></div>
                     <div class="step-name">{{ count($redirected_track) > 1 ? 'Redirected' : 'Referred' }}</div>
                 </div>
                 <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">2</div>
+                    <div class="step-counter"><i class="fa fa-eye" aria-hidden="true"></i></div>
                     <div class="step-name">Seen</div>
                 </div>
-                <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" data-actionmd="" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
+                <!----------------my changes jondy--------------->
+                <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter
-                    <?php
-                        if($follow_cancelled_track)
-                            echo "bg-yellow";
-                        elseif($follow_rejected_track)
-                            echo "bg-red";
-                        elseif($follow_queued_track && !$follow_accepted_track)
-                            echo "bg-orange";
-                    ?>"
-                     id="rejected_progress{{ $follow_track->code.$follow_track->id }}"><span id="queue_number{{ $follow_track->code }}">{!! $follow_cancelled_track || $follow_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($follow_queued_track && !$follow_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</span></div>
-                    <div class="text-center step-name" id="rejected_name{{ $follow_track->code.$follow_track->id }}">
-                    <?php
-                        if($follow_cancelled_track)
-                            echo 'Cancelled';
-                        elseif($follow_rejected_track)
-                            echo 'Declined';
-                        elseif($follow_queued_track && !$follow_accepted_track)
-                            echo 'Queued at <br> <b>'. $queue_referred.'</b>';
-                        else
-                            echo 'Accepted'
+                                                <?php
+                    if($redirected_rejected_track)
+                        echo "bg-red";
+                    elseif($redirected_cancelled_track)
+                        echo "bg-yellow";
+                    elseif($redirected_queued_track && !$redirected_accepted_track)
+                        echo "bg-orange";
                     ?>
+                            " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
+                        @if($redirected_rejected_track)
+                        <i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>
+                        @elseif($redirected_cancelled_track)
+                        <i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>       
+                        @elseif($redirected_queued_track && !$redirected_accepted_track)
+                        <i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>
+                        @endif
+                        <i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>
                     </div>
+                    <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
+                        if($redirected_rejected_track)
+                            echo 'Declined';
+                        elseif($redirected_cancelled_track)
+                            echo 'Cancelled';
+                        elseif($redirected_queued_track && !$redirected_accepted_track)
+                            echo "Queued at <br><b>".$queue_redirected."</b>";
+                        else
+                            echo "Accepted"
+                        ?></div>
                 </div>
+
+                <!----------------my changes jondy--------------->
+
                 <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">4</div>
+                    <div class="step-counter"><i class="fa fa-ambulance" aria-hidden="true"></i></div>
                     <div class="step-name">Departed</div>
                 </div>
                 <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">5</div>
+                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">
+                        @if ($redirected_notarrived_track && !$redirected_rejected_track)
+                            <i class="fa fa-ambulance" aria-hidden="true" style="font-size: 18px; color: red;"></i>
+                            <i class="fa fa-cloud" aria-hidden="true" style="font-size: 18px; color: gray;"></i>
+                        @endif
+                        <i class="fa fa-hospital-o" aria-hidden="true"></i>           
+                    </div>
                     @if($redirected_notarrived_track)
                         <div class="step-name not_arrived">Not Arrived</div>
                     @else
@@ -526,11 +543,11 @@
                     @endif
                 </div>
                 <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_cancelled_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">6</div>
+                    <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
                 </div>
                 <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">7</div>
+                    <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
                     <div class="step-name">Discharged</div>
                 </div>
             </div>
@@ -911,11 +928,14 @@
 
     $(document).ready(function() {
         var baseUrl = " <?php echo  asset('public/fileupload/' . $user->username . '/') ?>";
+        
         updateDownloadButton(); // Initial setup for the download button
         // Ensure the modal and carousel are in the DOM
         $(document).on('slid.bs.carousel', '#carousel-example-generic', function () {
+            
             updateDownloadButton(baseUrl); // Call this to update the download link based on the new active item
         });
         // Any other initialization code
     });
+
 </script>
