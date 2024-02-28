@@ -320,6 +320,7 @@ Route::post('api/video/addfilefollowup','ApiController@AddpatientFollowUpFile');
 Route::post('api/video/deletefilefollowup','ApiController@deletepatientFollowUpFile');
 Route::post('api/video/addfileIfempty','ApiController@addpatientFollowUpFileIfEmpty');
 //end of file upload ---------->
+
 Route::post('api/video/prescription/check','ApiController@checkPrescription');
 Route::get('api/get_report','ApiController@apiGetReport');
 Route::get('api/referral_list','ApiController@apiGetReferralList');
@@ -664,11 +665,6 @@ Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacility
 Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
 
-
 Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
-
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
-
-
-

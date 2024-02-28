@@ -12,7 +12,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\doctor\ReferralCtrl;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\ParamCtrl;
-
 use App\PrescribedPrescription;
 
 class PDFPrescription extends FPDF {
@@ -25,7 +24,7 @@ class PDFPrescription extends FPDF {
     public $facility_email = "";
     public $signature_path = "";
     public $license = "";
-    
+
     public function __construct($header = "",$department = "",$facility="",$facility_address="",$facility_contact="",$facility_email="",$signature_path="",$license="") {
         $this->header = $header;
         $this->department = $department;
@@ -38,95 +37,54 @@ class PDFPrescription extends FPDF {
         parent::__construct();
     }
 
-    // public function Header() {
-    //     $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo.png');
-    //     $this->Image($imagePath, 10, 10, 22);
-
-    //     $this->SetFont('Times', '', 9);
-    //     $this->Cell(0, 4, 'Republic of the Philippines', 0, 1, 'C');
-    //     $this->SetFont('Times', '', 12);
-    //     $this->Cell(0, 5, 'Department of Health', 0, 1, 'C');
-    //     $this->SetFont('Times', 'B', 14);
-    //     $this->Cell(0, 6, 'CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT', 0, 1, 'C');
-    //     $this->Ln(15);
-
-    //     $this->SetFont('Arial', 'B', 16);
-    //     $this->Cell(0, 2, $this->header, 0, 1, 'C');
-    //     $this->SetFont('Arial', '', 10);
-    //     $this->Cell(0, 10,$this->department, 0, 1, 'C');
-
-    //     $this->Ln(5);
-
-    //     $this->SetFont('Arial','B',12);
-    //     $this->Cell(0,0,$this->facility,0,"","C");
-    //     $this->Ln();
-    //     $this->SetFont('Arial','',10);
-    //     $this->Cell(0,12,$this->facility_address,0,"","C");
-    //     $this->Ln();
-    //     $this->Cell(0,0,$this->facility_email,0,"","C");
-    //     $this->Ln();
-    //     $this->Cell(0,12,$this->facility_contact,0,"","C");
-
-    //     $this->Ln(13);
-    //     $this->Line(10, $this->GetY(), 200, $this->GetY());
-    //     $this->Ln(0.5);
-    //     $this->Line(10, $this->GetY(), 200, $this->GetY());
-    //     $this->Ln(3);
-    // }
-    
-    //--------------------------------------------------------------
-    
     public function Header() {
-
-        //$this->SetLeftMargin(12); // Set left margin to 10 units
-        // $this->SetLeftMargin(10); // Set left margin
-        // $this->SetRightMargin(10); // Set right margin
-        // $this->SetAutoPageBreak(true, 25); // Enable auto page break and set margin from bottom
-        //$this->SetTextColor(0); // Black color
-        //------------------------------------------
-        
+        $this->SetTextColor(0);
         $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo.png');
         $this->Image($imagePath, 10, 10, 22);
 
+        $this->Setx(10);
         $this->SetFont('Times', '', 9);
         $this->Cell(0, 4, 'Republic of the Philippines', 0, 1, 'C');
+        $this->Setx(10);
         $this->SetFont('Times', '', 12);
         $this->Cell(0, 5, 'Department of Health', 0, 1, 'C');
+        $this->Setx(10);
         $this->SetFont('Times', 'B', 14);
         $this->Cell(0, 6, 'CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT', 0, 1, 'C');
         $this->Ln(15);
 
+        $this->Setx(10);
         $this->SetFont('Arial', 'B', 16);
         $this->Cell(0, 2, $this->header, 0, 1, 'C');
+        $this->Setx(10);
         $this->SetFont('Arial', '', 10);
         $this->Cell(0, 10,$this->department, 0, 1, 'C');
-
         $this->Ln(5);
 
+        $this->Setx(10);
         $this->SetFont('Arial','B',12);
         $this->Cell(0,0,$this->facility,0,"","C");
         $this->Ln();
 
+        $this->Setx(10);
         $this->SetFont('Arial','',10);
         $this->Cell(0,12,$this->facility_address,0,"","C");
         $this->Ln();
+        $this->Setx(10);
         $this->Cell(0,0,$this->facility_email,0,"","C");
         $this->Ln();
+        $this->Setx(10);
         $this->Cell(0,12,$this->facility_contact,0,"","C"); 
 
         $this->Ln(13);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
         $this->Ln(0.5);
         $this->Line(10, $this->GetY(), 200, $this->GetY());
-        $this->Ln(3);
-
+        $this->Ln(3); 
     }
 
-    
-    //--------------------------------------------------------------
-
     public function Footer() {
-        $this->SetY(-30);
+        $this->SetY(-40);   
         $this->Setx(120);
         $this->SetTextColor(0,0,0);
         $this->SetFont('Arial', 'B', 14);
@@ -139,8 +97,12 @@ class PDFPrescription extends FPDF {
         $this->Setx(120);
         $this->Cell(0, 0,'PTR NO.:', 0, 1, '');
         if(is_file($this->signature_path)) {
-            $this->Image($this->signature_path, 120, 250, 50, 0);
+            $this->Image($this->signature_path, 120, 245, 50, 0);
         }
+        $this->SetY(-15);
+        $this->Setx(10);
+        $this->SetFont('Arial', 'I', 8);
+        $this->Cell(0, 10, 'Page '.$this->PageNo().'/{nb}', 0, 0, 'C');
     }
 
     public function SetUnderline($value) {
@@ -211,7 +173,6 @@ class PrintCtrl extends Controller
                 "prescribed_prescriptions.frequency as frequency",
                 "prescribed_prescriptions.duration as duration",
                 "prescribed_prescriptions.quantity as quantity",
-                
 
                 \DB::raw("if(tracking.type='normal',pf.other_diagnoses,preg_f.other_diagnoses) as other_diagnosis"),
                 "patients.dob",
@@ -247,24 +208,7 @@ class PrintCtrl extends Controller
         $pdf = new PDFPrescription($header,$department,$facility,$facility_address,$facility_contact,$facility_email,$signature_path,$prescription->license);
         $pdf->setTitle($prescription->facility);
         $pdf->AddPage();
-
-        //        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo-opacity.png');
-        $imageWidth = 20;
-        $pageWidth = $pdf->GetPageWidth();
-        //        $pageHeight = $pdf->GetPageHeight();
-        for ($x = 5; $x <= $pageWidth-10; $x += $imageWidth+40) {
-            $flag = true;
-            //            for($y=0; $y<=$pageHeight; $y += 20) {
-            //                $paddingX = 0;
-            //                if($flag) {
-            //                    $paddingX = 30;
-            //                    $flag = false;
-            //                } else {
-            //                    $flag = true;
-            //                }
-            //                $pdf->Image($imagePath, $x+$paddingX, $y, $imageWidth);
-            //            }
-        }
+        $pdf->AliasNbPages();
 
         Session::put('date_referral', $prescription->date_referred);
         $patient_age_year =  ParamCtrl::getAge($prescription->dob);
@@ -288,15 +232,14 @@ class PrintCtrl extends Controller
         
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Name: ").self::orange($pdf,$prescription->patient_name,"Name: "), 0, 'L');
         $y = $pdf->getY();
-        $pdf->SetXY($x/2+40, $y-7);
+        $pdf->SetXY($x/2+165, $y-7);
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Date: ").self::orange($pdf,date("m/d/Y",strtotime($prescription->prescription_date)),"Date: "), 0);
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"Age: "), 0, 'L');
         $y = $pdf->getY();
-        $pdf->SetXY($x/2+40, $y-7);
+        $pdf->SetXY($x/2+165, $y-7);
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Sex: ").self::orange($pdf,$prescription->sex,"Sex: "), 0);
         $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$prescription->muncity,"Address:"), 0, 'L');
-
-
+        
         $prescriptionSetY = 120;
         $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
         $pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
@@ -307,28 +250,24 @@ class PrintCtrl extends Controller
         $leftMargin = 45;
         $pdf->SetLeftMargin($leftMargin);  
 
-
-        // Initialize a counter to keep track of prescriptions
         $prescriptionCounter = 0;
-
         foreach ($prescriptions as $prescription) {
-            //---------------------------------------------------------
             if ($prescriptionCounter == 8) {
-                $pdf->AddPage();
+                $pdf->AddPage();                 
+                $prescriptionSetY = 100;
+                $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
+                $pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
+                $pdf->setY($prescriptionSetY);
                 $prescriptionCounter = 0;
             }
             $prescriptionCounter++;
-            //---------------------------------------------------------
-            
+
             $rowText = "{$prescription->generic_name}    ({$prescription->brandname})    {$prescription->dosage}     #{$prescription->quantity}     {$prescription->formulation}";
             $pdf->MultiCell(0, 5, $rowText, 0, 'L');
-    
             $rowText2 = "Sig:   {$prescription->frequency}    {$prescription->duration}";
             $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
-
             $pdf->Ln(); 
         }
-        
         $pdf->Output();
         exit;
     }
@@ -457,6 +396,7 @@ class PrintCtrl extends Controller
         exit;
     }
 
+   
     public function printReferral($track_id)
     {
         $user = Session::get('auth');

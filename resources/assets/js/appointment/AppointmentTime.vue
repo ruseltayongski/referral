@@ -61,8 +61,6 @@
                     $("#followup_header").html("Follow Up Patient");
                     $("#telemedicineFollowupFormModal").modal('show');
                     $("#followup_facility_id").val(this.facilitySelectedId);
-                    //immediately close the form modal after submission
-                    console.log("it works!!");
                 }
                 else {
                     const appointment = {
