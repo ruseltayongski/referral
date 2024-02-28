@@ -196,7 +196,9 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             $("#err-msgpdf").html("Please select at least one file.");
             $("#err-msgpdf").css('color', 'red');
+            return;
         }
+        $("#telemedicineFollowupFormModal").modal('hide');
     });
 
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
@@ -398,9 +400,9 @@ document.addEventListener("DOMContentLoaded", function() { // this will clear th
     }
 });
 
-$("#telemedicineFollowupForm").submit(function (event){
-    $("#telemedicineFollowupFormModal").modal('hide');
-});
+// $("#telemedicineFollowupForm").submit(function (event){
+//     $("#telemedicineFollowupFormModal").modal('hide');
+// });
 
 $(document).keydown(function(event) { //this will close modal of press the keyboard Esc jondy
     if (event.keyCode == 27) { 
@@ -819,6 +821,13 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 
 <script>// jondy changes
 $(document).ready(function() {
+    @if(session('first_save'))
+    var number = "{{ session('first_save') }}";
+        Lobibox.notify('success', {
+            msg: 'Successfully saved file!'
+        });
+    @endif
+
     @if(session('file_save'))
     var number = "{{ session('file_save') }}";
         Lobibox.notify('success', {
