@@ -117,7 +117,7 @@
             ?>
             "
              id="rejected_progress{{ $referred_track->code.$referred_track->id }}"
-            ><span id="queue_number{{ $referred_track->code }}">{!! $referred_cancelled_track || $referred_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($referred_queued_track && !$referred_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</i></span></span></div>
+            ><span id="queue_number{{ $referred_track->code }}">{!! $referred_cancelled_track || $referred_rejected_track ? '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' : ($referred_queued_track && !$referred_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</i></span></span></div>
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                 <?php
                 if($referred_cancelled_track)
@@ -492,7 +492,7 @@
                 <!----------------my changes jondy--------------->
                 <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter
-                                                <?php
+                    <?php
                     if($redirected_rejected_track)
                         echo "bg-red";
                     elseif($redirected_cancelled_track)
@@ -500,15 +500,19 @@
                     elseif($redirected_queued_track && !$redirected_accepted_track)
                         echo "bg-orange";
                     ?>
-                            " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
-                        @if($redirected_rejected_track)
-                        <i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>
-                        @elseif($redirected_cancelled_track)
-                        <i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>       
-                        @elseif($redirected_queued_track && !$redirected_accepted_track)
-                        <i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>
-                        @endif
-                        <i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>
+                    " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
+                        <div id="icon_progress{{ $redirect_track->code.$redirect_track->id }}">
+                            <?php
+                                if($redirected_rejected_track)
+                                    echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
+                                elseif($redirected_cancelled_track)
+                                    echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
+                                elseif($redirected_queued_track && !$redirected_accepted_track)
+                                    echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
+                                else
+                                    echo'<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>';
+                            ?>
+                        </div>
                     </div>
                     <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
                         if($redirected_rejected_track)
@@ -519,7 +523,8 @@
                             echo "Queued at <br><b>".$queue_redirected."</b>";
                         else
                             echo "Accepted"
-                        ?></div>
+                        ?>
+                    </div>
                 </div>
 
                 <!----------------my changes jondy--------------->
@@ -528,20 +533,17 @@
                     <div class="step-counter"><i class="fa fa-ambulance" aria-hidden="true"></i></div>
                     <div class="step-name">Departed</div>
                 </div>
+                <!----------------my changes jondy--------------->
                 <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-                        @if ($redirected_notarrived_track && !$redirected_rejected_track)
-                            <i class="fa fa-ambulance" aria-hidden="true" style="font-size: 18px; color: red;"></i>
-                            <i class="fa fa-cloud" aria-hidden="true" style="font-size: 18px; color: gray;"></i>
-                        @endif
-                        <i class="fa fa-hospital-o" aria-hidden="true"></i>           
-                    </div>
+                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}"><i class="fa fa-hospital-o" aria-hidden="true"></i></div>
+                  
                     @if($redirected_notarrived_track)
                         <div class="step-name not_arrived">Not Arrived</div>
                     @else
                         <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
                     @endif
                 </div>
+                <!----------------my changes jondy--------------->
                 <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_cancelled_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
