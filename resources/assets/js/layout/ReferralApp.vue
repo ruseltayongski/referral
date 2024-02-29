@@ -128,6 +128,7 @@
                 $("#accepted_progress"+patient_code+activity_id).attr("data-actionmd", accepting_doctor_id);
                 $("#rejected_progress"+patient_code+activity_id).removeClass("bg-orange");
                 $("#rejected_name"+patient_code+activity_id).html("Accepted");
+                $("#icon_progress"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
                 $("#html_websocket_departed"+patient_code).html(this.buttonDeparted(tracking_id));
                 $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle toggle" style="display: table-row;">\n' +
                     '                                                            <td>'+date_accepted+'</td>\n' +
@@ -380,6 +381,7 @@
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 $("#rejected_progress"+patient_code+activity_id).addClass("bg-orange");
                 $("#rejected_name"+patient_code+activity_id).html("Queued at <br>" + "<b>" + remarks + "</b>");
+                $("#icon_progress"+patient_code+activity_id).html("<i class=\"fa fa-hourglass-half\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
                 $("#prepend_from_websocket"+patient_code).prepend('' +
                     '<tr>\n' +
                     '    <td>'+date_queued+'</td>\n' +
