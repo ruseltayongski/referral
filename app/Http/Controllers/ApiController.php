@@ -338,18 +338,15 @@ class ApiController extends Controller
     //-------------------------------------------------------------------
     
     public function getPrescriptions($code) {
-        $followupStatus = Activity::where('code', $code)
-            ->where('status', 'followup')
+        $statuses = Activity::where('code', $code)
+            ->whereIn('status', ['followup', 'prescription'])
             ->latest()
-            ->first();
+            ->get();
 
-        $prescriptionStatus = Activity::where('code', $code)
-            ->where('status', 'prescription')
-            ->latest()
-            ->first();
+        $followupStatus = $statuses->where('status', 'followup')->first();
+        $prescriptionStatus = $statuses->where('status', 'prescription')->first();
 
-        if ($prescriptionStatus && $prescriptionStatus->id > ($followupStatus ? $followupStatus->id : 0)) {
-
+        if ($prescriptionStatus && (!$followupStatus || $prescriptionStatus->id > $followupStatus->id)) {
             $prescriptions = PrescribedPrescription::where('code', $code)
                 ->where('prescribed_activity_id', $prescriptionStatus->id)
                 ->get();
@@ -357,7 +354,7 @@ class ApiController extends Controller
             return response()->json(['prescriptions' => $prescriptions], 200);
         } else {
             return response()->json(['message' => 'Prescription activity not found'], 404);
-        }
+        }   
     }
 
     private function saveSinglePrescription($singlePrescription, $request) {
@@ -467,8 +464,6 @@ class ApiController extends Controller
                     $this->saveSinglePrescription($singlePrescription, $request);
                 }
 
-                $existingPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
-
                 $latestActivity = Activity::latest()->first();
 
                 if (!$latestActivity) {
@@ -479,7 +474,11 @@ class ApiController extends Controller
                 $prescribed_activity_id = $latestActivity->id;
                 
                 foreach ($multiplePrescriptions as $prescriptionData) {
-                    $existingPrescription = $existingPrescriptions->where('id', $prescriptionData['id'])->first();
+
+                    $existingPrescription = PrescribedPrescription::where([
+                        'id' => $prescriptionData['id'],
+                        'prescribed_activity_id' => $prescribed_activity_id,
+                    ])->first();
 
                     if ($existingPrescription) {
                         $existingPrescription->update($prescriptionData);
@@ -515,10 +514,8 @@ class ApiController extends Controller
                     $existingReferredPrescription->save();
                 } 
                 else {
-                    $this->saveSinglePrescription($singlePrescription, $request, false);
+                    $this->saveSinglePrescription($singlePrescription, $request);
                 }
-        
-                $existingMultiPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
 
                 $latestActivity = Activity::latest()->first();
                 if (!$latestActivity) {
@@ -530,7 +527,10 @@ class ApiController extends Controller
 
                 foreach ($multiplePrescriptions as $prescriptionData) {
 
-                    $existingPrescription = $existingMultiPrescriptions->where('id', $prescriptionData['id'])->first();
+                    $existingPrescription = PrescribedPrescription::where([
+                        'id' => $prescriptionData['id'],
+                        'prescribed_activity_id' => $prescribed_activity_id,
+                    ])->first();
 
                     if ($existingPrescription) {
                         $existingPrescription->update($prescriptionData);
@@ -552,7 +552,7 @@ class ApiController extends Controller
                     }
                 }
             }
-
+        
         $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
             $query->where("status","referred")
                 ->orWhere("status","redirected")
@@ -567,7 +567,7 @@ class ApiController extends Controller
             "code" => $latestActivity->code,
             "referred_from" => $latest_activity->referred_from,
             "status" => "telemedicine",
-            "telemedicine_status" => "prescription"
+            "telemedicine_status" => "prescription",
         ];
 
         broadcast(new SocketReferralDischarged($broadcast_prescribed));    

@@ -172,7 +172,6 @@
         created() {
             const prescriptionCode = this.code;
             this.fetchPrescriptions(prescriptionCode);
-        
         },
         methods: {
             checkRequiredProperties(obj) {
@@ -252,10 +251,15 @@
                 });
                 $("#prescriptionModal").modal("hide");   
                 console.log('Combined Prescription Data:', combinedPrescriptions);
-                
+
                 axios.post(`${this.baseUrl}/api/video/prescriptions`, combinedPrescriptions)
                     .then(response => {
                         console.log("Prescription submitted successfully", response.data);
+
+                        //-------------------------------------------------
+                        this.prescriptions = []; // Clear prescription data
+                        this.fetchPrescriptions(this.code); // Fetch fresh data
+
                     })
                     .catch(error => {
                         console.error("Error submitting prescription", error);
@@ -298,7 +302,6 @@
                     const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
 
                     this.prescriptions = response.data.prescriptions;
-
                     const firstPrescription = this.prescriptions[0];
 
                     if (firstPrescription) {
@@ -321,6 +324,10 @@
                 }
             },
         },
+
+    
+       
+
     };
 </script>
 

@@ -19106,6 +19106,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       return true;
     },
     savePrescriptions: function savePrescriptions() {
+      var _this = this;
       if (!this.checkRequiredProperties(this)) {
         return;
       }
@@ -19146,6 +19147,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       console.log('Combined Prescription Data:', combinedPrescriptions);
       axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(this.baseUrl, "/api/video/prescriptions"), combinedPrescriptions).then(function (response) {
         console.log("Prescription submitted successfully", response.data);
+
+        //-------------------------------------------------
+        _this.prescriptions = []; // Clear prescription data
+        _this.fetchPrescriptions(_this.code); // Fetch fresh data
       })["catch"](function (error) {
         console.error("Error submitting prescription", error);
       });
@@ -19163,7 +19168,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       this.prescriptions.push(emptyPrescription);
     },
     deletePrescription: function deletePrescription(index) {
-      var _this = this;
+      var _this2 = this;
       var prescriptionToDelete = this.prescriptions[index];
       if (prescriptionToDelete.id) {
         if (confirm("Are you sure you want to delete this prescription?")) {
@@ -19172,7 +19177,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               msg: "Prescription deleted successfully!"
             });
             console.log("Prescription deleted successfully", response.data);
-            _this.prescriptions.splice(index, 1);
+            _this2.prescriptions.splice(index, 1);
           })["catch"](function (error) {
             console.error("Error deleting prescription", error);
           });
@@ -19182,7 +19187,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       }
     },
     fetchPrescriptions: function fetchPrescriptions(code) {
-      var _this2 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee() {
         var response, firstPrescription;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee$(_context) {
@@ -19191,21 +19196,21 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               case 0:
                 _context.prev = 0;
                 _context.next = 3;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("".concat(_this2.baseUrl, "/api/video/prescriptions/").concat(code));
+                return axios__WEBPACK_IMPORTED_MODULE_1___default().get("".concat(_this3.baseUrl, "/api/video/prescriptions/").concat(code));
               case 3:
                 response = _context.sent;
-                _this2.prescriptions = response.data.prescriptions;
-                firstPrescription = _this2.prescriptions[0];
+                _this3.prescriptions = response.data.prescriptions;
+                firstPrescription = _this3.prescriptions[0];
                 if (firstPrescription) {
-                  _this2.generic_name = firstPrescription.generic_name || '';
-                  _this2.brandname = firstPrescription.brandname || '';
-                  _this2.dosage = firstPrescription.dosage || '';
-                  _this2.quantity = firstPrescription.quantity || '';
-                  _this2.formulation = firstPrescription.formulation || '';
-                  _this2.frequency = firstPrescription.frequency || '';
-                  _this2.duration = firstPrescription.duration || '';
-                  _this2.prescribed_activity_id = firstPrescription.prescribed_activity_id || '';
-                  _this2.prescriptions = _this2.prescriptions.slice(1);
+                  _this3.generic_name = firstPrescription.generic_name || '';
+                  _this3.brandname = firstPrescription.brandname || '';
+                  _this3.dosage = firstPrescription.dosage || '';
+                  _this3.quantity = firstPrescription.quantity || '';
+                  _this3.formulation = firstPrescription.formulation || '';
+                  _this3.frequency = firstPrescription.frequency || '';
+                  _this3.duration = firstPrescription.duration || '';
+                  _this3.prescribed_activity_id = firstPrescription.prescribed_activity_id || '';
+                  _this3.prescriptions = _this3.prescriptions.slice(1);
                 } else {
                   console.error('No prescriptions available.');
                 }
