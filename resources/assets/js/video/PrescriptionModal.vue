@@ -44,37 +44,37 @@
                     <div style="border: solid 1px lightgray; margin-top: 10px; padding: 5px;">
                         <div class="row prescription">
                             <div class="col">
-                                <label for="generic_name">1.) Generic Name:</label>
+                                <label for="generic_name">1.) Generic Name:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="generic_name" class="form-control form-control-sm" >
                             </div>
                         </div>
                         <div class="row prescription">
-                            <div class="col">
-                                <label for="brandname">2.) Brand Name:</label>
+                            <div class="col">   
+                                <label for="brandname">2.) Brand Name: (Optional)</label>
                                 <input type="text" v-model="brandname" class="form-control form-control-sm">
                             </div>
                             <div class="col">
-                                <label for="dosage">3.) Dosage:</label>
+                                <label for="dosage">3.) Dosage:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="dosage" class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="quantity">4.) Quantity:</label>
+                                <label for="quantity">4.) Quantity:<span style="color:red;">*</span></label>
                                 <input type="number" v-model="quantity"  class="form-control form-control-sm">
                             </div>
                             <div class="col">
-                                <label for="formulation">5.) Formulation:</label>
+                                <label for="formulation">5.) Formulation:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="formulation" class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="frequency">6.) Frequency:</label>
+                                <label for="frequency">6.) Frequency:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="frequency" class="form-control form-control-sm">
                             </div>
                             <div class="col">
-                                <label for="duration">7.) Duration:</label>
+                                <label for="duration">7.) Duration:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="duration" class="form-control form-control-sm">
                             </div>
                         </div>
@@ -89,37 +89,37 @@
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="generic_name">1.) Generic Name:</label>
+                                <label for="generic_name">1.) Generic Name:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="prescription.generic_name" class="form-control form-control-sm" >
                             </div>
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="brandname">2.) Brand Name:</label>
+                                <label for="brandname">2.) Brand Name: (Optional)</label>
                                 <input type="text" v-model="prescription.brandname" class="form-control form-control-sm">
                             </div>
                             <div class="col">
-                                <label for="dosage">3.) Dosage:</label>
+                                <label for="dosage">3.) Dosage:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="prescription.dosage" class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="quantity">4.) Quantity:</label>
+                                <label for="quantity">4.) Quantity:<span style="color:red;">*</span></label>
                                 <input type="number" v-model="prescription.quantity"  class="form-control form-control-sm">
                             </div>
                             <div class="col">
-                                <label for="formulation">5.) Formulation:</label>
+                                <label for="formulation">5.) Formulation:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="prescription.formulation" class="form-control form-control-sm">
                             </div>
                         </div>
                         <div class="row prescription">
                             <div class="col">
-                                <label for="frequency">6.) Frequency:</label>
+                                <label for="frequency">6.) Frequency:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="prescription.frequency" class="form-control form-control-sm">
                             </div>
                             <div class="col">
-                                <label for="duration">7.) Duration:</label>
+                                <label for="duration">7.) Duration:<span style="color:red;">*</span></label>
                                 <input type="text" v-model="prescription.duration" class="form-control form-control-sm">
                             </div>
                         </div>
@@ -181,12 +181,12 @@
                     });
                     return false;
                 }
-                else if (!obj.brandname) {
-                    Lobibox.alert("error", {
-                        msg: "Please input brandname",
-                    });
-                    return false;
-                }
+                // else if (!obj.brandname) {
+                //     Lobibox.alert("error", {
+                //         msg: "Please input brandname",
+                //     });
+                //     return false;
+                // }
                 else if (!obj.dosage) {
                     Lobibox.alert("error", {
                         msg: "Please input dosage",
@@ -256,7 +256,6 @@
                     .then(response => {
                         console.log("Prescription submitted successfully", response.data);
 
-                        //-------------------------------------------------
                         this.prescriptions = []; // Clear prescription data
                         this.fetchPrescriptions(this.code); // Fetch fresh data
 
@@ -303,7 +302,7 @@
 
                     this.prescriptions = response.data.prescriptions;
                     const firstPrescription = this.prescriptions[0];
-
+                    
                     if (firstPrescription) {
                         this.generic_name = firstPrescription.generic_name || '';
                         this.brandname = firstPrescription.brandname || '';

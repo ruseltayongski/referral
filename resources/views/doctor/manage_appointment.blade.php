@@ -75,7 +75,7 @@
                             <th class="text-center">Department</th>
                             {{-- <th class="text-center">OPD Category</th> --}}
                             <th class="text-center">Available Doctor</th>
-                            <th class="text-center">Slot</th>
+                            <!-- <th class="text-center">Slot</th> -->
                             <th class="text-center">Action</th>
                         </tr>
                         @foreach($appointment_schedule as $row)
@@ -94,8 +94,8 @@
                                         @endforeach
                                     </ul>
                                 </td>
-                                <td> {{ count($row->telemedAssignedDoctor) }} </td>
-                                <td>
+                                <!-- <td> {{ count($row->telemedAssignedDoctor) }} </td> -->
+                                <td class="text-center">
                                     <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
                                     <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
                                 </td>
@@ -181,10 +181,10 @@
                                                             <option value="Pediatric">Pediatric</option>
                                                         </select>
                                                     </div>
-                                                    {{-- <div class="col-md-12">
+                                                    <!-- <div class="col-md-12">
                                                         <label for="slot">Slot:</label>
                                                         <input type="number" class="form-control" name="slot1" required>
-                                                    </div> --}}
+                                                    </div> -->
                                                 </div>
                                                 <div>
                                                     <label>Available Doctor</label>
@@ -194,7 +194,7 @@
                                         </div>
                                         <div id="additionalTimeContainer" style="display: none;"></div>
                                         <div style="margin-top: 15px;">
-                                            <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add More Category and Slot</button>
+                                            <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
                                         </div>
                                     </div>
                                 </div>
@@ -282,8 +282,8 @@
                                 <option value="Pediatric">Pediatric</option>
                             </select>
 
-                            <label for="update_slot">Slot:</label>
-                            <input type="number" class="form-control" name="update_slot" id="update_slot" required>
+                            <!-- <label for="update_slot">Slot:</label>
+                            <input type="number" class="form-control" name="update_slot" id="update_slot" required> -->
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
@@ -362,6 +362,7 @@
         });
         <?php Session::put('appointment_save',false); ?>
         @endif
+        
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
@@ -463,6 +464,10 @@
             });
 
             $('#deleteConfirmationModal').modal('show');
+
+            //------------------------------------
+           
+            //------------------------------------
         }
 
         //--------------------------------------------------------------
@@ -550,45 +555,41 @@
             $(".appointment_count").val(++currentCount);
             var timeInputGroup = $('<div class="time-input-group">');
             var additionalTimeInput = `<div class="label-border-time">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <label for="appointed_time">Appointed Time:</label><br>
-                                                        <div class="col-md-6">
-                                                            <span>From:</span>
-                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" required>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <span>To:</span>
-                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" required>
-                                                        </div>
-                                                        <label for="opdCategory">OPD Category:</label>
-                                                        <select class="form-control select2" name="opdCategory${currentCount}" required>
-                                                            <option selected>Select OPD Category</option>
-                                                            <option value="Family Medicine">Family Medicine</option>
-                                                            <option value="Internal Medicine">Internal Medicine</option>
-                                                            <option value="General Surgery">General Surgery</option>
-                                                            <option value="Trauma Care">Trauma Care</option>
-                                                            <option value="Burn Care">Burn Care</option>
-                                                            <option value="Ophthalmology">Ophthalmology</option>
-                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                                            <option value="ENT">ENT</option>
-                                                            <option value="Neurosurgery">Neurosurgery</option>
-                                                            <option value="Urosurgery">Urosurgery</option>
-                                                            <option value="Toxicology">Toxicology</option>
-                                                            <option value="OB-GYNE">OB-GYNE</option>
-                                                            <option value="Pediatric">Pediatric</option>
-                                                        </select>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label for="appointed_time">Appointed Time:</label><br>
+                                                    <div class="col-md-6">
+                                                        <span>From:</span>
+                                                        <input type="time" class="form-control" name="appointed_time${currentCount}" required>
                                                     </div>
-                                                    <div class="col-md-12">
-                                                        <label for="slot">Slot:</label>
-                                                        <input type="number" class="form-control" name="slot${currentCount}" required>
+                                                    <div class="col-md-6">
+                                                        <span>To:</span>
+                                                        <input type="time" class="form-control" name="appointed_time_to${currentCount}" required>
                                                     </div>
+                                                    <label for="opdCategory">OPD Category:</label>
+                                                    <select class="form-control select2" name="opdCategory${currentCount}" required>
+                                                        <option selected>Select OPD Category</option>
+                                                        <option value="Family Medicine">Family Medicine</option>
+                                                        <option value="Internal Medicine">Internal Medicine</option>
+                                                        <option value="General Surgery">General Surgery</option>
+                                                        <option value="Trauma Care">Trauma Care</option>
+                                                        <option value="Burn Care">Burn Care</option>
+                                                        <option value="Ophthalmology">Ophthalmology</option>
+                                                        <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                        <option value="ENT">ENT</option>
+                                                        <option value="Neurosurgery">Neurosurgery</option>
+                                                        <option value="Urosurgery">Urosurgery</option>
+                                                        <option value="Toxicology">Toxicology</option>
+                                                        <option value="OB-GYNE">OB-GYNE</option>
+                                                        <option value="Pediatric">Pediatric</option>
+                                                    </select>
                                                 </div>
-                                                <div>
-                                                    <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
-                                                </div>
-                                            </div>`;
+                                            </div>
+                                            <div>
+                                                <label>Available Doctor</label>
+                                                <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
+                                            </div>
+                                        </div>`;
 
             // Add the delete button
             var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';

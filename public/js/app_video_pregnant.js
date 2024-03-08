@@ -19072,12 +19072,14 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           msg: "Please input generic name"
         });
         return false;
-      } else if (!obj.brandname) {
-        Lobibox.alert("error", {
-          msg: "Please input brandname"
-        });
-        return false;
-      } else if (!obj.dosage) {
+      }
+      // else if (!obj.brandname) {
+      //     Lobibox.alert("error", {
+      //         msg: "Please input brandname",
+      //     });
+      //     return false;
+      // }
+      else if (!obj.dosage) {
         Lobibox.alert("error", {
           msg: "Please input dosage"
         });
@@ -19147,8 +19149,6 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       console.log('Combined Prescription Data:', combinedPrescriptions);
       axios__WEBPACK_IMPORTED_MODULE_1___default().post("".concat(this.baseUrl, "/api/video/prescriptions"), combinedPrescriptions).then(function (response) {
         console.log("Prescription submitted successfully", response.data);
-
-        //-------------------------------------------------
         _this.prescriptions = []; // Clear prescription data
         _this.fetchPrescriptions(_this.code); // Fetch fresh data
       })["catch"](function (error) {
@@ -19680,7 +19680,11 @@ var _hoisted_9 = {
 var _hoisted_10 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "generic_name"
-  }, "1.) Generic Name:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("1.) Generic Name:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_11 = {
   "class": "row prescription"
@@ -19691,7 +19695,7 @@ var _hoisted_12 = {
 var _hoisted_13 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "brandname"
-  }, "2.) Brand Name:", -1 /* HOISTED */);
+  }, "2.) Brand Name: (Optional)", -1 /* HOISTED */);
 });
 var _hoisted_14 = {
   "class": "col"
@@ -19699,7 +19703,11 @@ var _hoisted_14 = {
 var _hoisted_15 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "dosage"
-  }, "3.) Dosage:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("3.) Dosage:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_16 = {
   "class": "row prescription"
@@ -19710,7 +19718,11 @@ var _hoisted_17 = {
 var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "quantity"
-  }, "4.) Quantity:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("4.) Quantity:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_19 = {
   "class": "col"
@@ -19718,7 +19730,11 @@ var _hoisted_19 = {
 var _hoisted_20 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "formulation"
-  }, "5.) Formulation:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("5.) Formulation:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_21 = {
   "class": "row prescription"
@@ -19729,7 +19745,11 @@ var _hoisted_22 = {
 var _hoisted_23 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "frequency"
-  }, "6.) Frequency:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("6.) Frequency:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_24 = {
   "class": "col"
@@ -19737,7 +19757,11 @@ var _hoisted_24 = {
 var _hoisted_25 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "duration"
-  }, "7.) Duration:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("7.) Duration:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_26 = {
   "class": "row"
@@ -19761,7 +19785,11 @@ var _hoisted_32 = {
 var _hoisted_33 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "generic_name"
-  }, "1.) Generic Name:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("1.) Generic Name:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_34 = ["onUpdate:modelValue"];
 var _hoisted_35 = {
@@ -19773,7 +19801,7 @@ var _hoisted_36 = {
 var _hoisted_37 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "brandname"
-  }, "2.) Brand Name:", -1 /* HOISTED */);
+  }, "2.) Brand Name: (Optional)", -1 /* HOISTED */);
 });
 var _hoisted_38 = ["onUpdate:modelValue"];
 var _hoisted_39 = {
@@ -19782,7 +19810,11 @@ var _hoisted_39 = {
 var _hoisted_40 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "dosage"
-  }, "3.) Dosage:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("3.) Dosage:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_41 = ["onUpdate:modelValue"];
 var _hoisted_42 = {
@@ -19794,7 +19826,11 @@ var _hoisted_43 = {
 var _hoisted_44 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "quantity"
-  }, "4.) Quantity:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("4.) Quantity:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_45 = ["onUpdate:modelValue"];
 var _hoisted_46 = {
@@ -19803,7 +19839,11 @@ var _hoisted_46 = {
 var _hoisted_47 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "formulation"
-  }, "5.) Formulation:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("5.) Formulation:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_48 = ["onUpdate:modelValue"];
 var _hoisted_49 = {
@@ -19815,7 +19855,11 @@ var _hoisted_50 = {
 var _hoisted_51 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "frequency"
-  }, "6.) Frequency:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("6.) Frequency:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_52 = ["onUpdate:modelValue"];
 var _hoisted_53 = {
@@ -19824,7 +19868,11 @@ var _hoisted_53 = {
 var _hoisted_54 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "for": "duration"
-  }, "7.) Duration:", -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("7.) Duration:"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */);
 });
 var _hoisted_55 = ["onUpdate:modelValue"];
 var _hoisted_56 = {

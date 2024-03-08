@@ -240,31 +240,50 @@ class PrintCtrl extends Controller
         $pdf->MultiCell($x/2, 7, self::black($pdf,"Sex: ").self::orange($pdf,$prescription->sex,"Sex: "), 0);
         $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$prescription->muncity,"Address:"), 0, 'L');
         
-        $prescriptionSetY = 120;
+        $prescriptionSetY = 107;
         $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
-        $pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
+        $pdf->Image($rxPath, 12, $prescriptionSetY, 18, 0);
         $pdf->setY($prescriptionSetY);
 
+        $prescriptionSetY = 125;
         $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
-        $leftMargin = 45;
+        $leftMargin = 35;
         $pdf->SetLeftMargin($leftMargin);  
+        $pdf->setY($prescriptionSetY);
 
         $prescriptionCounter = 0;
+        $totalPrescriptionCount = 0;
+
         foreach ($prescriptions as $prescription) {
-            if ($prescriptionCounter == 8) {
+            $totalPrescriptionCount++;
+
+            if ($prescriptionCounter == 7) {
                 $pdf->AddPage();                 
-                $prescriptionSetY = 100;
+                $prescriptionSetY = 85;
                 $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
-                $pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
+                $pdf->Image($rxPath, 12, $prescriptionSetY, 18, 0);
                 $pdf->setY($prescriptionSetY);
                 $prescriptionCounter = 0;
+
+                $prescriptionSetY = 103;
+                $pdf->setY($prescriptionSetY);
             }
             $prescriptionCounter++;
 
-            $rowText = "{$prescription->generic_name}    ({$prescription->brandname})    {$prescription->dosage}     #{$prescription->quantity}     {$prescription->formulation}";
-            $pdf->MultiCell(0, 5, $rowText, 0, 'L');
-            $rowText2 = "Sig:   {$prescription->frequency}    {$prescription->duration}";
+            $brandname = !empty($prescription->brandname) ? $prescription->brandname : 'N/A';
+            $rowText = "{$totalPrescriptionCount}. {$prescription->generic_name}    ({$brandname})    {$prescription->dosage}     #{$prescription->quantity}";
+
+            $availableWidth = $pdf->getPageWidth() - $pdf->GetX() - 20;
+
+            if ($pdf->getStringWidth($rowText) + $pdf->getStringWidth($prescription->formulation) > $availableWidth) {
+                $pdf->MultiCell(0, 5, $rowText, 0, 'L');
+                $pdf->SetX(39);
+                $pdf->MultiCell(0, 5, $prescription->formulation, 0, 'L');
+            } else {
+                $pdf->MultiCell(0, 5, $rowText . '     ' . $prescription->formulation, 0, 'L');
+            }
+            $rowText2 = "    Sig:   {$prescription->frequency}    {$prescription->duration}";
             $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
             $pdf->Ln(); 
         }
