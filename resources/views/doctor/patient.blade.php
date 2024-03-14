@@ -178,7 +178,7 @@ $counter = 0;
                                                data-id = "{{ $row->id }}"
                                                onclick="PatientBody('<?php echo $row->id ?>')"
                                                class="update_info">
-                                                {{ $row->lname }}, {{ $row->fname }} {{ $row->mname }}
+                                                {{ $row->fname }} {{ isset($row->mname[0]) ? strtoupper($row->mname[0]) : '' }}. {{ $row->lname }} 
                                             </a>
                                         </b><br>
                                         <small class="text-success">{{ $row->contact }}</small>

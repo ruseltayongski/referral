@@ -1,7 +1,7 @@
 <div class="timeline-footer">
     <div class="form-inline">
         {{--@if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )--}}
-        @if( $row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred' || $row->status == 'followup')
+        @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred' || $row->status == 'followup')
             <div class="form-group">
                 <a class="btn btn-warning btn-xs view_form" href="#referralForm"
                    data-toggle="modal"
@@ -17,6 +17,9 @@
                     <i class="fa fa-folder"></i> View Form
                 </a>
             </div>
+        @endif
+        @if($row->status == 'accepted' && $row->telemedicine)
+            <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('67756','240220-751-1530557514975','1687','4975','normal');"><i class="fa fa-camera"></i> Join</button>
         @endif
         @if($seen > 0)
             <div class="form-group">
@@ -40,17 +43,6 @@
                 </a>
             </div>
         @endif
-        {{--@if($redirected > 0)
-            <div class="form-group">
-                <a href="#" data-toggle="modal"
-                   data-id="{{ $row->id }}"
-                   class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected
-                    @if($redirected>0)
-                        <small class="badge bg-red-active">{{ $redirected }}</small>
-                    @endif
-                </a>
-            </div>
-        @endif--}}
         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                 data-target="#feedbackModal"
                 data-code="{{ $row->code }}"
