@@ -19,7 +19,8 @@
             </div>
         @endif
         @if($row->status == 'accepted' && $row->telemedicine)
-            <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('67756','240220-751-1530557514975','1687','4975','normal');"><i class="fa fa-camera"></i> Join</button>
+            <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->where('status','referred')->orderBy('id','desc')->first() ?>
+            <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine({{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>
         @endif
         @if($seen > 0)
             <div class="form-group">
