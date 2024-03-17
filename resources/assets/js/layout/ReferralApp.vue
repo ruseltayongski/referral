@@ -128,6 +128,8 @@
                 $("#accepted_progress"+patient_code+activity_id).attr("data-actionmd", accepting_doctor_id);
                 $("#rejected_progress"+patient_code+activity_id).removeClass("bg-orange");
                 $("#rejected_name"+patient_code+activity_id).html("Accepted");
+                $("#follow_queue_number"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>") // for follow 2nd position more
+                $("#queue_number"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>")// add this for referred 1st position
                 $("#icon_progress"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
                 $("#html_websocket_departed"+patient_code).html(this.buttonDeparted(tracking_id));
                 $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle toggle" style="display: table-row;">\n' +
@@ -381,6 +383,8 @@
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 $("#rejected_progress"+patient_code+activity_id).addClass("bg-orange");
                 $("#rejected_name"+patient_code+activity_id).html("Queued at <br>" + "<b>" + remarks + "</b>");
+                $("#follow_queue_number"+patient_code+activity_id).html("<i class=\"fa fa-hourglass-half\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); // Add this Follow in 2nd more position
+                $("#queue_number"+patient_code+activity_id).html("<i class=\"fa fa-hourglass-half\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); // I add this for reffered 1st position
                 $("#icon_progress"+patient_code+activity_id).html("<i class=\"fa fa-hourglass-half\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
                 $("#prepend_from_websocket"+patient_code).prepend('' +
                     '<tr>\n' +
