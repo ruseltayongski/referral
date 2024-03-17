@@ -1,7 +1,7 @@
 <div class="timeline-footer">
     <div class="form-inline">
         {{--@if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )--}}
-        @if( $row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred' || $row->status == 'followup')
+        @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred' || $row->status == 'followup')
             <div class="form-group">
                 <a class="btn btn-warning btn-xs view_form" href="#referralForm"
                    data-toggle="modal"
@@ -17,6 +17,10 @@
                     <i class="fa fa-folder"></i> View Form
                 </a>
             </div>
+        @endif
+        @if($row->status == 'accepted' && $row->telemedicine)
+            <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->where('status','referred')->orderBy('id','desc')->first() ?>
+            <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine({{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>
         @endif
         @if($seen > 0)
             <div class="form-group">
@@ -40,17 +44,6 @@
                 </a>
             </div>
         @endif
-        {{--@if($redirected > 0)
-            <div class="form-group">
-                <a href="#" data-toggle="modal"
-                   data-id="{{ $row->id }}"
-                   class="btn btn-danger btn-xs btn-caller"><i class="fa fa-chevron-circle-right"></i> Redirected
-                    @if($redirected>0)
-                        <small class="badge bg-red-active">{{ $redirected }}</small>
-                    @endif
-                </a>
-            </div>
-        @endif--}}
         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                 data-target="#feedbackModal"
                 data-code="{{ $row->code }}"

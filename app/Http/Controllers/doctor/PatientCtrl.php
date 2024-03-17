@@ -122,52 +122,41 @@ class PatientCtrl extends Controller
             $prov = 'empty_data';
             $mun = 'empty_data';
             $brgy = 'empty_data';
-            $prov_others = 'empty_data';
-            $mun_others = 'empty_data';
-            $brgy_others = 'empty_data';
+            $prov_others = '';
+            $mun_others = '';
+            $brgy_others = '';
         }
 
-        $source='referral';
-
+        $source = 'referral';
         $data = Patients::
-            where(function($query) use ($keyword, $reg, $prov, $mun, $brgy) {
-            $query->where(function($q) use($keyword, $reg, $prov, $mun, $brgy) {
+            where(function($q) use($keyword) {
                 $q->where('lname',"like","%".$keyword."%")
                     ->orWhere('fname','like',"%".$keyword."%")
-                    ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%".$keyword."%");
+                    ->orWhereRaw("concat(fname,' ',lname) like '%$keyword%'");
             })
-                ->where('region',$reg)
-                ->where('province',$prov)
-                ->where('muncity',$mun)
-                ->where('brgy',$brgy);
-            })
-            ->orderBy('lname','asc')
-            ->paginate(15);
-
-        if(count($data) == 0) {
-            $data = Patients::
-            where(function($query) use ($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
-            $query->where(function($q) use($keyword, $reg, $prov_others, $mun_others, $brgy_others) {
-                $q->where('lname',"like","%".$keyword."%")
-                    ->orWhere('fname','like',"%".$keyword."%")
-                    ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%".$keyword."%");
-            })
-                ->where('region',$reg)
-                ->where('province_others',$prov_others)
-                ->where('muncity_others',$mun_others)
-                ->where('brgy_others',$brgy_others);
-            })
-            ->orderBy('lname','asc')
-            ->paginate(15);;
+            ->where('region',$reg)
+            ->where('province',$prov)
+            ->where('muncity',$mun)
+            ->where('brgy',$brgy)
+            ->orderBy('lname','asc');
+            
+        if($prov_others) {
+            $data = $data->where('province_others',$prov_others);
         }
+        if($mun_others) {
+            $data = $data->where('muncity_others',$mun_others);
+        }
+        if($brgy_others) {
+            $data = $data->where('brgy_others',$brgy_others);
+        }
+        
+        $data = $data->paginate(15);
 
-        //$icd10 = \DB::connection('mysql')->select("call icd10()");
         return view('doctor.patient',[
             'title' => 'Patient List',
             'data' => $data,
             'province' => Province::get(),
-            'source' => $source,
-            //'icd10' => $icd10
+            'source' => $source
         ]);
     }
 
