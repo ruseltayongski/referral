@@ -13,6 +13,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Auth;
+
 class TelemedicineCtrl extends Controller
 {
     public function index(Request $req)
@@ -22,6 +24,8 @@ class TelemedicineCtrl extends Controller
 
     public function manageAppointment(Request $req)
     {
+        $facility = Session::get('auth')->facility_id;
+       
         $appointment_schedule = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
@@ -53,11 +57,12 @@ class TelemedicineCtrl extends Controller
                 }
             ])
             ->orderBy('created_at', 'desc')
-            ->paginate(20);
-
-        $user_facility = User::
-            where('department_id',"=", '5')
-            ->where('level',"=", 'doctor')
+            ->paginate(20); 
+        
+            $user_facility = User::where('department_id',5)
+            ->where('level','doctor')
+            ->where('facility_id',$facility)
+            ->with('facility')
             ->groupBy('facility_id')
             ->get();
 
@@ -84,16 +89,22 @@ class TelemedicineCtrl extends Controller
     {
         $user = Session::get('auth');
         for($i=1; $i<=$request->appointment_count; $i++) {
+
+            if (empty($request['appointed_time'.$i]) || empty($request['appointed_time_to'.$i]) || empty($request->opdCategory.$i) || empty($request['available_doctor'.$i])) {
+                continue;
+            }
+
             $appointment_schedule = new AppointmentSchedule();
             $appointment_schedule->appointed_date = $request->appointed_date;
             $appointment_schedule->facility_id = $request->facility_id;
             $appointment_schedule->department_id = 5;
             $appointment_schedule->appointed_time = $request['appointed_time'.$i];
             $appointment_schedule->appointedTime_to = $request['appointed_time_to'.$i];
-            $appointment_schedule->opdCategory = $request->opdCategory.$i;
-            $appointment_schedule->slot = $request->slot.$i;
+            $appointment_schedule->opdCategory = $request['opdCategory'.$i];
+            //$appointment_schedule->slot = $request->slot.$i;
             $appointment_schedule->created_by = $user->id;
             $appointment_schedule->save();
+
             for($x=0; $x<count($request['available_doctor'.$i]); $x++) {
                 $tele_assign_doctor = new TelemedAssignDoctor();
                 $tele_assign_doctor->appointment_id = $appointment_schedule->id;
@@ -109,13 +120,11 @@ class TelemedicineCtrl extends Controller
 
     public function getAppointmentData(Request $request)
     {
-        //dd($id);
         $appointment = AppointmentSchedule::find($request->id);
 
         if (!$appointment) {
             return response()->json(['error' => 'Appointment not found'], 404);
         }
-
         return response()->json($appointment);
     }
 
@@ -203,9 +212,9 @@ class TelemedicineCtrl extends Controller
         return $timeSlots;
     }
 
-    public function getDoctors($facilityId)
+    public function getDoctors($facility)
     {
-        $doctors = User::where('facility_id', $facilityId)
+        $doctors = User::where('facility_id', $facility)
                 ->where('department_id','=',5)
                 ->where('level', 'doctor')
                 ->get(['id', 'fname', 'lname']);

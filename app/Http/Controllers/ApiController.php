@@ -338,18 +338,15 @@ class ApiController extends Controller
     //-------------------------------------------------------------------
     
     public function getPrescriptions($code) {
-        $followupStatus = Activity::where('code', $code)
-            ->where('status', 'followup')
+        $statuses = Activity::where('code', $code)
+            ->whereIn('status', ['followup', 'prescription'])
             ->latest()
-            ->first();
+            ->get();
 
-        $prescriptionStatus = Activity::where('code', $code)
-            ->where('status', 'prescription')
-            ->latest()
-            ->first();
+        $followupStatus = $statuses->where('status', 'followup')->first();
+        $prescriptionStatus = $statuses->where('status', 'prescription')->first();
 
-        if ($prescriptionStatus && $prescriptionStatus->id > ($followupStatus ? $followupStatus->id : 0)) {
-
+        if ($prescriptionStatus && (!$followupStatus || $prescriptionStatus->id > $followupStatus->id)) {
             $prescriptions = PrescribedPrescription::where('code', $code)
                 ->where('prescribed_activity_id', $prescriptionStatus->id)
                 ->get();
@@ -357,7 +354,7 @@ class ApiController extends Controller
             return response()->json(['prescriptions' => $prescriptions], 200);
         } else {
             return response()->json(['message' => 'Prescription activity not found'], 404);
-        }
+        }   
     }
 
     private function saveSinglePrescription($singlePrescription, $request) {
@@ -410,11 +407,48 @@ class ApiController extends Controller
             $prescribed->save();
         }
     }
+    
+    public function saveMultiPrescriptions($prescriptions, $request) {
+        $latestActivity = Activity::where('status', 'prescription')->latest()->first();
+
+        if (!$latestActivity) {
+            $latestActivity = new Activity();
+            $latestActivity->code = $prescriptions[0]['code'];
+            $latestActivity->save();
+        }
+        $prescribed_activity_id = $latestActivity->id;
+
+        foreach ($prescriptions as $prescriptionData) {
+
+            $existingPrescription = PrescribedPrescription::where([
+                'id' => $prescriptionData['id'],
+                'prescribed_activity_id' => $prescribed_activity_id,
+            ])->first();
+
+            if ($existingPrescription) {
+                $existingPrescription->update($prescriptionData);
+            } else {
+                $prescription = new PrescribedPrescription();
+                $prescription->code = $latestActivity['code'];
+                $prescription->prescribed_activity_id = $prescribed_activity_id;
+                $prescription->generic_name = $prescriptionData['generic_name'];
+                $prescription->brandname = $prescriptionData['brandname'];
+                $prescription->dosage = $prescriptionData['dosage'];
+                $prescription->quantity = $prescriptionData['quantity'];
+                $prescription->formulation = $prescriptionData['formulation'];
+                $prescription->frequency = $prescriptionData['frequency'];
+                $prescription->duration = $prescriptionData['duration'];
+                $prescription->referred_from = $latestActivity->referred_from;
+                $prescription->referred_to = $latestActivity->referred_to;
+                $prescription->save();
+            }
+        }
+    }
 
     public function savePrescriptions(Request $request) {
         $validatedData = $request->validate([
             'singlePrescription.generic_name' => 'required|string',
-            'singlePrescription.brandname' => 'required|string',
+            'singlePrescription.brandname' => '',
             'singlePrescription.dosage' => 'required|string',
             'singlePrescription.quantity' => 'required|integer',
             'singlePrescription.formulation' => 'required|string',
@@ -431,128 +465,73 @@ class ApiController extends Controller
         $singlePrescription = $validatedData['singlePrescription'];
         $multiplePrescriptions = $validatedData['multiplePrescriptions'];
 
-        $followupActivity = Activity::where('code', $singlePrescription['code'])
-            ->where('status', 'followup')
+        $referredOrFollowup = Activity::where('code', $singlePrescription['code'])
+            ->whereIn('status', ['referred', 'followup'])
             ->latest()
             ->first();
 
-        $referredActivity = Activity::where('code', $singlePrescription['code'])
-            ->where('status', 'referred')
+        $status = Activity::where('code', $singlePrescription['code'])
+            ->where('status', ['examined', 'prescription'] )
             ->latest()
             ->first();
 
-            if ($followupActivity) {
-        
+        if ($referredOrFollowup) {
+            if ($referredOrFollowup->status == 'followup') {
+
                 $activityExisting = Activity::where('code', $singlePrescription['code'])
                     ->where('status', 'prescription')
                     ->where('id', $singlePrescription['prescribed_activity_id'])
                     ->latest()
                     ->first();
-
-                $existingSinglePrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
+    
+                $existingFollowupPrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
                     ->where('prescribed_activity_id', $activityExisting->id)
                     ->first();
 
-                if ($existingSinglePrescription) {
-                    $existingSinglePrescription->generic_name = $singlePrescription['generic_name'];
-                    $existingSinglePrescription->brandname = $singlePrescription['brandname'];
-                    $existingSinglePrescription->dosage = $singlePrescription['dosage'];
-                    $existingSinglePrescription->quantity = $singlePrescription['quantity'];
-                    $existingSinglePrescription->formulation = $singlePrescription['formulation'];
-                    $existingSinglePrescription->frequency = $singlePrescription['frequency'];
-                    $existingSinglePrescription->duration = $singlePrescription['duration'];
-                    $existingSinglePrescription->save();
+                if ($status->status == 'examined' && $status->created_at > $status->status == 'prescription' && $status->created_at) {
+
+                    if ($existingFollowupPrescription) {
+                        $existingFollowupPrescription->fill($singlePrescription);
+                        $existingFollowupPrescription->save();
+                    } 
+                    $this->saveMultiPrescriptions($multiplePrescriptions, $request);
                 } 
                 else {
-                    $this->saveSinglePrescription($singlePrescription, $request);
-                }
-
-                $existingPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
-
-                $latestActivity = Activity::latest()->first();
-
-                if (!$latestActivity) {
-                    $latestActivity = new Activity();
-                    $latestActivity->code = $multiplePrescriptions[0]['code'];
-                    $latestActivity->save();
-                }
-                $prescribed_activity_id = $latestActivity->id;
-                
-                foreach ($multiplePrescriptions as $prescriptionData) {
-                    $existingPrescription = $existingPrescriptions->where('id', $prescriptionData['id'])->first();
-
-                    if ($existingPrescription) {
-                        $existingPrescription->update($prescriptionData);
-                    }
+                    if ($existingFollowupPrescription) {
+                        $existingFollowupPrescription->fill($singlePrescription);
+                        $existingFollowupPrescription->save();
+                    } 
                     else {
-                        $prescription = new PrescribedPrescription();
-                        $prescription->code = $latestActivity['code'];
-                        $prescription->prescribed_activity_id = $prescribed_activity_id;
-                        $prescription->generic_name = $prescriptionData['generic_name'];
-                        $prescription->brandname = $prescriptionData['brandname'];
-                        $prescription->dosage = $prescriptionData['dosage'];
-                        $prescription->quantity = $prescriptionData['quantity'];
-                        $prescription->formulation = $prescriptionData['formulation'];
-                        $prescription->frequency = $prescriptionData['frequency'];
-                        $prescription->duration = $prescriptionData['duration'];
-                        $prescription->referred_from = $latestActivity->referred_from;
-                        $prescription->referred_to = $latestActivity->referred_to;
-                        $prescription->save();
+                        $this->saveSinglePrescription($singlePrescription, $request);
                     }
+                    $this->saveMultiPrescriptions($multiplePrescriptions, $request);
                 }
-            } elseif($referredActivity) {
+            } 
+            elseif($referredOrFollowup->status == 'referred') {
+
                 $existingReferredPrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
                 ->first();
 
-                if ($existingReferredPrescription) {
-                    $existingReferredPrescription->generic_name = $singlePrescription['generic_name'];
-                    $existingReferredPrescription->brandname = $singlePrescription['brandname'];
-                    $existingReferredPrescription->dosage = $singlePrescription['dosage'];
-                    $existingReferredPrescription->quantity = $singlePrescription['quantity'];
-                    $existingReferredPrescription->formulation = $singlePrescription['formulation'];
-                    $existingReferredPrescription->frequency = $singlePrescription['frequency'];
-                    $existingReferredPrescription->duration = $singlePrescription['duration'];
-                    $existingReferredPrescription->save();
-                } 
+                if ($status->status == 'examined' && $status->created_at > $status->status == 'prescription' && $status->created_at) {
+    
+                    if ($existingReferredPrescription) {
+                        $existingReferredPrescription->fill($singlePrescription);
+                        $existingReferredPrescription->save(); 
+                    } 
+                    $this->saveMultiPrescriptions($multiplePrescriptions, $request);
+                }
                 else {
-                    $this->saveSinglePrescription($singlePrescription, $request, false);
-                }
-        
-                $existingMultiPrescriptions = PrescribedPrescription::whereIn('id', array_column($multiplePrescriptions, 'id'))->get();
-
-                $latestActivity = Activity::latest()->first();
-                if (!$latestActivity) {
-                    $latestActivity = new Activity();
-                    $latestActivity->code = $multiplePrescriptions[0]['code'];
-                    $latestActivity->save();
-                }
-                $prescribed_activity_id = $latestActivity->id;
-
-                foreach ($multiplePrescriptions as $prescriptionData) {
-
-                    $existingPrescription = $existingMultiPrescriptions->where('id', $prescriptionData['id'])->first();
-
-                    if ($existingPrescription) {
-                        $existingPrescription->update($prescriptionData);
+                    if ($existingReferredPrescription) {
+                        $existingReferredPrescription->fill($singlePrescription);
+                        $existingReferredPrescription->save();
                     } 
                     else {
-                        $prescription = new PrescribedPrescription();
-                        $prescription->code = $latestActivity['code'];
-                        $prescription->prescribed_activity_id = $prescribed_activity_id;
-                        $prescription->generic_name = $prescriptionData['generic_name'];
-                        $prescription->brandname = $prescriptionData['brandname'];
-                        $prescription->dosage = $prescriptionData['dosage'];
-                        $prescription->quantity = $prescriptionData['quantity'];
-                        $prescription->formulation = $prescriptionData['formulation'];
-                        $prescription->frequency = $prescriptionData['frequency'];
-                        $prescription->duration = $prescriptionData['duration'];
-                        $prescription->referred_from = $latestActivity->referred_from;
-                        $prescription->referred_to = $latestActivity->referred_to;
-                        $prescription->save();
+                        $this->saveSinglePrescription($singlePrescription, $request);
                     }
+                    $this->saveMultiPrescriptions($multiplePrescriptions, $request);
                 }
-            }
-
+            }  
+        }
         $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
             $query->where("status","referred")
                 ->orWhere("status","redirected")
@@ -567,9 +546,8 @@ class ApiController extends Controller
             "code" => $latestActivity->code,
             "referred_from" => $latest_activity->referred_from,
             "status" => "telemedicine",
-            "telemedicine_status" => "prescription"
+            "telemedicine_status" => "prescription",
         ];
-
         broadcast(new SocketReferralDischarged($broadcast_prescribed));    
     }
 
