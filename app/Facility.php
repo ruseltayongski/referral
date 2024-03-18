@@ -11,11 +11,14 @@ class Facility extends Model
 
 
 
+
+
     //------------------------------------------------
     public function opdFacilities()
     {
         return $this->belongsTo(User::class, 'id', 'facility_id');
     }
+
     //------------------------------------------------
 
 
