@@ -121,7 +121,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form action="{{ route('create-appointment') }}" method="POST">
+                    <form id="addAppointmentForm" action="{{ route('create-appointment') }}" method="POST">
                         {{ csrf_field() }}
                         <fieldset>
                             <legend><i class="fa fa-calendar-plus-o"></i> Add Appointment
@@ -137,13 +137,13 @@
                                         <label for="appointed_date">Appointment Date:</label>
                                         <input type="date" class="form-control" name="appointed_date" required>
                                         <input type="hidden" name="appointment_count" class="appointment_count" value="1">
+
                                         <label for="facility_id">Facility:</label>
-                                        <select class="form-control select2" name="facility_id" id="facility_id" onchange="onchangeDepartment($(this))" required>
-                                            <option selected>Select Facility</option>
-                                            @foreach($facility as $Facility)
-                                                <option value="{{ $Facility->facility->id}}">{{ $Facility->facility->name }}</option>
-                                            @endforeach
-                                        </select>
+                                        @foreach($facility as $Facility)
+                                        <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
+                                        <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
+                                        @endforeach
+
                                         <label for="department_id">Department:</label>
                                         <input type="text" class="form-control" name="department_id" id="department_id" value="OPD" readonly>
                                     </div>
@@ -181,10 +181,6 @@
                                                             <option value="Pediatric">Pediatric</option>
                                                         </select>
                                                     </div>
-                                                    <!-- <div class="col-md-12">
-                                                        <label for="slot">Slot:</label>
-                                                        <input type="number" class="form-control" name="slot1" required>
-                                                    </div> -->
                                                 </div>
                                                 <div>
                                                     <label>Available Doctor</label>
@@ -524,10 +520,11 @@
 
         //--------------------------------------------------------------
         var query_doctor_store = [];
-        function onchangeDepartment(data) {
             $(document).ready(function() {
-                if(data.val()) {
-                    $.get("{{ url('get-doctors').'/' }}" + data.val(), function (result) {
+                var facility_id = $(`#id`).val();
+                console.log(facility_id);
+                if(facility_id) {
+                    $.get("{{ url('get-doctors').'/' }}" + facility_id, function (result) {
                         query_doctor_store = result;
                         const current_appointment_count = $(".appointment_count").val();
                         for(var i=1; i<=current_appointment_count; i++) {
@@ -547,9 +544,7 @@
                     });
                 }
             });
-        }
-
-        //--------------------------------------------------------------
+        
         function addTimeInput(ok) {
             let currentCount = $(".appointment_count").val();
             $(".appointment_count").val(++currentCount);
@@ -591,17 +586,11 @@
                                             </div>
                                         </div>`;
 
-            // Add the delete button
             var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
             timeInputGroup.append(deleteBtn);
-
-            // Append the additional time input structure
             timeInputGroup.append(additionalTimeInput);
-
-            // Append the timeInputGroup to the additionalTimeContainer
             $('#additionalTimeContainer').append(timeInputGroup);
 
-            // Add a click event listener for the delete button
             timeInputGroup.find('.delete-time-input').on('click', function () {
                 timeInputGroup.remove();
             });
@@ -614,13 +603,11 @@
                         value: userData.id,
                         text: "Dr. "+userData.fname + ' ' + userData.lname
                     }));
-                    
-                    
                 });
             });
         }
 
-        //--------------------------------------------------------------
+
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
             title: "",
