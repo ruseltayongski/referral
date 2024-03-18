@@ -384,4 +384,3 @@ $user = Session::get('auth');
 @section('css')
 
 @endsection
-

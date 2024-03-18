@@ -286,7 +286,26 @@ $user = Session::get('auth');
 
 @section('js')
     @include('script.referral')
-
+    <script>
+        function openTelemedicine(tracking_id, referral_code, form_type, action_md, activity_id) {
+            let windowName = 'NewWindow'; // Name of the new window
+            let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+            let userid = '{{ $user->id }}';
+            const referring_md_status = userid == action_md ? 'no' : 'yes';
+            let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${tracking_id}&code=${referral_code}&form_type=${form_type}&referring_md=${referring_md_status}&activity_id=${activity_id}`;
+            let newWindow = window.open(url, windowName, windowFeatures);
+            if (newWindow && newWindow.outerWidth) {
+                newWindow.moveTo(0, 0);
+                newWindow.resizeTo(screen.availWidth, screen.availHeight);
+            }
+            const updateExamined = {
+                code : referral_code
+            }
+            $.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined, function(response) {
+                console.log(response)
+            })
+        }
+    </script>
     <script>
         $(".select2").select2({ width: '100%' });
 

@@ -19345,8 +19345,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   mounted: function mounted() {
     var telemedicineFollowUp = JSON.parse(decodeURIComponent(new URL(window.location.href).searchParams.get('appointment')));
-    this.followUpReferredId = telemedicineFollowUp[0].referred_id;
-    this.followUpCode = telemedicineFollowUp[0].code;
+    if (telemedicineFollowUp) {
+      this.followUpReferredId = telemedicineFollowUp[0].referred_id;
+      this.followUpCode = telemedicineFollowUp[0].code;
+    }
   },
   watch: {
     appointedTimes: function () {

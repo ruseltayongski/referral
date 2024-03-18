@@ -77,6 +77,7 @@ class ReferralCtrl extends Controller
             DB::raw('CONCAT(
                         if(users.level="doctor","Dr. ",""),
                     users.fname," ",users.mname," ",users.lname) as referring_md'),
+            'tracking.action_md as action_md_id',
             DB::raw('CONCAT(action.fname," ",action.mname," ",action.lname) as action_md'),
             DB::raw("(SELECT count(act1.code) from activity act1 where act1.code = tracking.code and (act1.status = 'redirected' or act1.status = 'transferred')) as position")
         )

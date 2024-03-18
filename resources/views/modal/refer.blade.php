@@ -196,7 +196,9 @@ document.addEventListener('DOMContentLoaded', function () {
             event.preventDefault();
             $("#err-msgpdf").html("Please select at least one file.");
             $("#err-msgpdf").css('color', 'red');
+            return;
         }
+        $("#telemedicineFollowupFormModal").modal('hide');
     });
 
     document.getElementById('file-input').addEventListener('change', handleFileSelect);
@@ -398,9 +400,9 @@ document.addEventListener("DOMContentLoaded", function() { // this will clear th
     }
 });
 
-$("#telemedicineFollowupForm").submit(function (event){
-    $("#telemedicineFollowupFormModal").modal('hide');
-});
+// $("#telemedicineFollowupForm").submit(function (event){
+//     $("#telemedicineFollowupFormModal").modal('hide');
+// });
 
 $(document).keydown(function(event) { //this will close modal of press the keyboard Esc jondy
     if (event.keyCode == 27) { 
@@ -629,7 +631,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 
 <!------------------------------Add files if empty or more files----------------------------->
 
-<div class="modal fade" id="FollowupAddEmptyFileFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="FollowupAddEmptyFileFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="z-index: 10000;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
                 <div class="modal-header">
@@ -640,7 +642,6 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         
                 </div>
             <div class="modal-body">
-
                 <form method="POST" action="{{ asset("api/video/addfileIfempty") }}" id="AddEmptyFileFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
                         <input type="hidden" name="code" id="telemedicine_followup_code" value="">
                         <input type="hidden" name="followup_id" id="telemedicine_followup_id" value=""><!--I add this for followup_id-->
@@ -652,7 +653,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         {{ csrf_field() }}
                         <div class="form-group">
                             <!-- <label style="padding: 0px">Note:</label> -->
-                            <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                            <p style="color:red;">Note: &nbsp;Do you Have any lab request to upload</p>
                         </div>
                         <div class="form-group">
                             <label id="file-label" for="files-input" class="btn btn-primary custom-file form-control">Select Files
@@ -684,7 +685,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 <!------------------------------End of file------------------------------------->
 
 <!------------------------------for update the file----------------------------------------->
-<div class="modal fade" role="dialog" id="telemedicineUpateFileFormModal">
+<div class="modal fade" role="dialog" id="telemedicineUpateFileFormModal" style="z-index: 10000;">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
@@ -742,7 +743,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 <!-- ----------------------------Add more file----------------------------------------->
 
 <!-------------------------- delete modal file -------------------------------------->
-<div class="modal fade" role="dialog" id="telemedicineDeleteFileFollowupFormModal">
+<div class="modal fade" role="dialog" id="telemedicineDeleteFileFollowupFormModal" style="z-index: 10000;">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
@@ -761,13 +762,13 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         <div id="file-name" class="mt-3 text-center"></div>
 
                         <div class="preview-container" id="preview-containerfor">
-                            <img id="delete-image" src="" alt="delete Image?" style="max-width: 100%; max-height: 300px;">
+                            <img id="delete-image" src="" style="max-width: 100%; max-height: 300px;">
                         </div>
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal" id="delete_Modal_close"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="followup_submit_delete" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Submit</button>
+                        <button type="submit" id="followup_submit_delete" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Delete</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -819,6 +820,13 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 
 <script>// jondy changes
 $(document).ready(function() {
+    @if(session('first_save'))
+    var number = "{{ session('first_save') }}";
+        Lobibox.notify('success', {
+            msg: 'Successfully saved file!'
+        });
+    @endif
+
     @if(session('file_save'))
     var number = "{{ session('file_save') }}";
         Lobibox.notify('success', {

@@ -48,7 +48,7 @@
   font-weight: bold;
 }
 .panel-scoped-telemedicine .stepper-item.completed .step-counter {
-  background-color: #4bb543;
+  background-color: #4F9B83;
   color: white;
 }
 .panel-scoped-telemedicine .stepper-item.completed::after {
@@ -104,7 +104,7 @@
   margin-top: -50px;
 }
 .panel-scoped-telemedicine .stepper-item-upward.completed .step-counter {
-  background-color: #4bb543;
+  background-color: #4F9B83;
   color: white;
 }
 .panel-scoped-telemedicine .stepper-item-upward.completed::after {
@@ -112,7 +112,7 @@
   content: "";
   border-bottom: 2px solid #4bb543;
   width: 100%;
-  left: 60%;
+  left: 40%;
   z-index: 3;
   margin-top: -30px;
 }
@@ -138,7 +138,7 @@
   margin-top: -44px;
 }
 .panel-scoped-telemedicine .stepper-item-follow_new.completed .step-counter-follow_new {
-  background-color: #4bb543;
+  background-color: #4F9B83;
   color: white;
 }
 .panel-scoped-telemedicine .stepper-item-follow_new {
@@ -188,7 +188,7 @@
   width: 150px;
 }
 .panel-scoped-telemedicine .stepper-item-follow.completed .step-counter-follow {
-  background-color: #4bb543;
+  background-color: #4F9B83;
   color: white;
 }
 .panel-scoped-telemedicine .stepper-item-follow.completed::before {
@@ -223,7 +223,7 @@
   margin-top: 1px;
 }
 .panel-scoped-telemedicine .stepper-item-treated_new.completed .step-counter-treated_new {
-  background-color: #4bb543;
+  background-color: #4F9B83;
 }
 .panel-scoped-telemedicine .stepper-item-treated_new::before {
   position: absolute;
@@ -365,3 +365,6 @@ a.btn.filecolorclose {
 .popover {
   width: 230px;
 }
+
+/*-----------------css from File Folder List Modal------------*/
+/*-----------------css from File Folder List Modal------------*/

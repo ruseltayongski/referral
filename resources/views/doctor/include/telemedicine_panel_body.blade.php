@@ -19,6 +19,7 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","accepted");
     $referred_accepted_track = $referred_accepted_hold->exists();
+
     $referred_rejected_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_to",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
@@ -95,7 +96,7 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
-    <small class="label bg-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
+    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
             <div class="step-counter"><i class="fa fa-calendar" aria-hidden="true"></i></div>
@@ -117,7 +118,20 @@
             ?>
             "
              id="rejected_progress{{ $referred_track->code.$referred_track->id }}"
-            ><span id="queue_number{{ $referred_track->code }}">{!! $referred_cancelled_track || $referred_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($referred_queued_track && !$referred_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</i></span></span></div>
+            ><div id="queue_number{{ $referred_track->code.$referred_track->id }}">
+                <?php
+                    if($referred_rejected_track)
+                        echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
+                    elseif($referred_cancelled_track)
+                        echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
+                    elseif($referred_queued_track && !$referred_accepted_track)
+                        echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
+                    else
+                        echo'<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>';
+                ?>
+                </div>
+            </div>
+            
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                 <?php
                 if($referred_cancelled_track)
@@ -170,7 +184,7 @@
             </div>
         </div>
         <div class="stepper-item stepper-item-referred @if($referred_redirected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_upward_track }}','{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
+            <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
             <div class="step-name">Referred</div>
             {{-- <div class="stepper-item stepper-item-follow @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
                 <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_treated_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
@@ -181,6 +195,7 @@
                 <div class="step-name step-name-end">Ended</div>
             </div> --}}
         </div>
+       
     </div>
     @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
@@ -245,7 +260,7 @@
                 ->where("status","end")
                 ->exists();
             ?>
-            <small class="label bg-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
+            <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                     <div class="step-counter"><i class="fa fa-calendar" aria-hidden="true"></i></div>
@@ -257,15 +272,32 @@
                 </div>
                 <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" data-actionmd="" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter
-                    <?php
-                        if($follow_cancelled_track)
-                            echo "bg-yellow";
-                        elseif($follow_rejected_track)
-                            echo "bg-red";
-                        elseif($follow_queued_track && !$follow_accepted_track)
-                            echo "bg-orange";
-                    ?>"
-                     id="rejected_progress{{ $follow_track->code.$follow_track->id }}"><span id="queue_number{{ $follow_track->code }}">{!! $follow_cancelled_track || $follow_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($follow_queued_track && !$follow_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</span></div>
+                    
+                        <?php
+                            if($follow_cancelled_track)
+                                echo "bg-yellow";
+                            elseif($follow_rejected_track)
+                                echo "bg-red";
+                            elseif($follow_queued_track && !$follow_accepted_track)
+                                echo "bg-orange";
+                        ?>"
+                     
+                        id="rejected_progress{{ $follow_track->code.$follow_track->id }}">
+                        <div id="follow_queue_number{{ $follow_track->code.$follow_track->id }}">
+                            <?php
+                                if($follow_cancelled_track)
+                                    echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
+                                elseif($follow_rejected_track)
+                                    echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
+                                elseif($follow_queued_track && !$follow_accepted_track)
+                                    echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
+                                else
+                                    echo '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>'
+                            ?>
+
+                        </div>
+                    </div>
+                  
                     <div class="text-center step-name" id="rejected_name{{ $follow_track->code.$follow_track->id }}">
                     <?php
                         if($follow_cancelled_track)
@@ -317,8 +349,9 @@
             </div>
         <!-- my changes in file upload -->
         <div class="stepper-wrapper">
-                <p class="mt-0">
+             
                     <?php
+                    // My changes in file Display
                     $referredActivities = $user->activities()
                         ->where('code', $follow_track->code) 
                         ->where('id', $referred_track->id)
@@ -349,12 +382,13 @@
                                         $imageFiles[] = $filename;
                                     }
                                 }
-                        
                                 ?>
                             @endforeach
-                            <?php $sortedFiles = array_merge($pdfFiles, $imageFiles) ?>
+                            <?php $sortedFiles = array_merge($pdfFiles, $imageFiles); 
+                                $jsonsortedFiles = json_encode($sortedFiles);
+                            ?> 
                             <!-- @if ($pos == $position[$position_count]) -->
-                            @foreach ($sortedFiles as $referredFile)
+                           {{-- @foreach ($sortedFiles as $referredFile)
                                 <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$referredActivities}}')">
                                 <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
                                 @if(ends_with($referredFile, '.pdf'))
@@ -363,11 +397,23 @@
                                     <i class="fa fa-file-image-o" aria-hidden="true"></i>&nbsp;{{$referredFile}}
                                 @endif
                                 </a>&nbsp;
-                            @endforeach
+                            @endforeach --}}
                             @if(empty($sortedFiles))
-                                <a href="" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">
-                                    <i class="fa fa-plus" aria-hidden="true"></i>&nbsp;add files
-                                </a>&nbsp;
+                                <a href="javascript:void(0);" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">
+                                    <div class="file-wrapper-icon">
+                                        <img src="../public/fileupload/add_folder.ico"/><br>
+                                        <label class="file-Icon-label">Add File</label>
+                                    </div>
+                                </a>
+                            @else
+                            <!-- <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$jsonsortedFiles}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{ $referredFile }}', '{{$referredActivities}}')">
+                            <i class="fa fa-folder folder-icon" style="color:#FFE68C;font-size: 30px; cursor:pointer;" data-toggle="modal" data-target="#folderModal"></i></a> -->
+                                <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$jsonsortedFiles}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{ $referredFile }}', '{{$referredActivities}}')">
+                                    <div class="file-wrapper-icon">
+                                        <img src="../public/fileupload/icon_checked_folder.ico"/><br>
+                                        <label class="file-Icon-label">File upload</label>
+                                    </div>
+                                </a>  
                             @endif
                         <!-- @endif -->
                         @elseif ($index >= 2)
@@ -379,7 +425,7 @@
                                 $followActivity = $followActivities[$index - 2];
                                 $fileNames = explode('|', $followActivity->lab_result);
                                 $followFiles = array_merge($followFiles, $fileNames);
-                                $follow_id = $followActivity->id;
+                                $follow_id   = $followActivity->id;
 
                                 foreach($fileNames as $filename){
                                     $extension = pathinfo($filename, PATHINFO_EXTENSION);
@@ -393,9 +439,10 @@
                                 ?>
                             @endif
                                 <?php $sortedFiles_follow = array_merge($pdfFiles_follow, $imageFiles_follow) ?>
-                                <?php  $allfiles = implode('|', array_map('/',$imageFiles_follow)); ?>
+                                <?php $sortedFilesFollow = json_encode($sortedFiles_follow); ?>
+                                <?php  $allfiles = implode('|', array_map('/',$imageFiles_follow));?>
                             @if ($pos == $position[$position_count])
-                                    @foreach ($sortedFiles_follow as $followFile)   
+                                    {{--@foreach ($sortedFiles_follow as $followFile)   
                                   
                                     <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $followFile }}', '{{$followActivity}}')">
                                         <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
@@ -406,20 +453,28 @@
                                         @endif
                                       
                                     </a>&nbsp;
-                                    @endforeach
+                                    @endforeach --}}
                                     @if(empty($sortedFiles_follow))
-                                        <a href="#" class="btn btn-success btn-xs" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$followFile}}')">
-                                        <i class="fa fa-plus" aria-hidden="true"></i>add files
+                                        <a href="#"  onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$followFile}}')">
+                                            <div class="file-wrapper-icon">
+                                                <img src="../public/fileupload/add_folder.ico"/><br>
+                                                <label class="file-Icon-label">Add File</label>
+                                            </div>
                                         </a>&nbsp;
-                                    @endif
-                                 
+                                   @else 
+                                        <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$sortedFilesFollow}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{ $followFile }}', '{{$followActivity}}')">
+                                            <div class="file-wrapper-icon">
+                                                <img src="../public/fileupload/icon_checked_folder.ico"/><br>
+                                                <label class="file-Icon-label">File upload</label>
+                                            </div>
+                                        </a>
+                                    @endif  
                             @endif
                         @endif
                     @endforeach
-                  
-                </p>
+                <!--   // End of  My changes in file Display -->
             </div>
-
+            <div id="modalContainer"></div>              
         <!-- end of my changes in display file upload -->
         @endforeach
     @endif
@@ -452,7 +507,7 @@
                 ->where("referred_to",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","cancelled")
-                ->exists();
+                ->exists();    
             $redirected_travel_track = \App\Activity::where("code",$redirect_track->code)
                 ->where("referred_to",$redirect_track->referred_from)
                 ->where("created_at",">=",$redirect_track->created_at)
@@ -479,61 +534,80 @@
                 ->where("status","discharged")
                 ->exists();
             ?>
-            <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
+            <!-- Start changes -->
+            <small class="label position-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
-                    <div class="step-counter">1</div>
+                    <div class="step-counter"><i class="fa fa-share" aria-hidden="true"></i></div>
                     <div class="step-name">{{ count($redirected_track) > 1 ? 'Redirected' : 'Referred' }}</div>
                 </div>
                 <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">2</div>
+                    <div class="step-counter"><i class="fa fa-eye" aria-hidden="true"></i></div>
                     <div class="step-name">Seen</div>
                 </div>
-                <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" data-actionmd="" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
+                <!----------------my changes jondy--------------->
+                <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter
                     <?php
-                        if($follow_cancelled_track)
-                            echo "bg-yellow";
-                        elseif($follow_rejected_track)
-                            echo "bg-red";
-                        elseif($follow_queued_track && !$follow_accepted_track)
-                            echo "bg-orange";
-                    ?>"
-                     id="rejected_progress{{ $follow_track->code.$follow_track->id }}"><span id="queue_number{{ $follow_track->code }}">{!! $follow_cancelled_track || $follow_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : ($follow_queued_track && !$follow_accepted_track ?  '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>' ) !!}</span></div>
-                    <div class="text-center step-name" id="rejected_name{{ $follow_track->code.$follow_track->id }}">
-                    <?php
-                        if($follow_cancelled_track)
-                            echo 'Cancelled';
-                        elseif($follow_rejected_track)
-                            echo 'Declined';
-                        elseif($follow_queued_track && !$follow_accepted_track)
-                            echo 'Queued at <br> <b>'. $queue_referred.'</b>';
-                        else
-                            echo 'Accepted'
+                            if($redirected_rejected_track)
+                                echo "bg-red";
+                            elseif($redirected_cancelled_track)
+                                echo "bg-yellow";
+                            elseif($redirected_queued_track && !$redirected_accepted_track)
+                                echo "bg-orange";
                     ?>
+                    " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
+                        <div id="icon_progress{{ $redirect_track->code.$redirect_track->id }}">
+                            <?php
+                                if($redirected_rejected_track)
+                                    echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
+                                elseif($redirected_cancelled_track)
+                                    echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
+                                elseif($redirected_queued_track && !$redirected_accepted_track)
+                                    echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
+                                else
+                                    echo'<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>';
+                            ?>
+                        </div>
+                    </div>
+                    <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
+                        if($redirected_rejected_track)
+                            echo 'Declined';
+                        elseif($redirected_cancelled_track)
+                            echo 'Cancelled';
+                        elseif($redirected_queued_track && !$redirected_accepted_track)
+                            echo "Queued at <br><b>".$queue_redirected."</b>";
+                        else
+                            echo "Accepted"
+                        ?>
                     </div>
                 </div>
+                <!----------------my changes jondy--------------->
                 <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">4</div>
+                    <div class="step-counter"><i class="fa fa-ambulance" aria-hidden="true"></i></div>
                     <div class="step-name">Departed</div>
                 </div>
+                <!----------------my changes jondy--------------->
                 <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">5</div>
+                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}"><i class="fa fa-hospital-o" aria-hidden="true"></i></div>
+                  
                     @if($redirected_notarrived_track)
                         <div class="step-name not_arrived">Not Arrived</div>
                     @else
                         <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
                     @endif
                 </div>
+                <!----------------my changes jondy--------------->
                 <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_cancelled_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">6</div>
+                    <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
                 </div>
                 <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter">7</div>
+                    <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
                     <div class="step-name">Discharged</div>
                 </div>
             </div>
+            <!-- End of changes -->
         @endforeach
     @endif
     @if(count($activities) > 0)
@@ -728,6 +802,83 @@
 </div>
 
 <script>
+//--------------> adding folder list
+function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUrl) {
+    //var sortedFiles = JSON.parse(sortedFiles);
+    var asortedFiles = Array.isArray(sortedFiles) ? sortedFiles : JSON.parse(sortedFiles);
+    console.log("my assorted files:", asortedFiles);
+    // Show the modal
+    // showFolderModal();
+    if(!$('#folderModal').hasClass('show')){
+        var filesListHtml = asortedFiles.map(file => {
+            var fileExtension = file.split('.').pop().toLowerCase();
+            if(fileExtension == 'pdf'){
+                iconHtml = `
+                    <div class="d-flex flex-column  align-items-center justify-content-center">
+                        <img src="../public/fileupload/PDF_file_icon.png" width="100%" height="100px" pdf-file" alt="PDF File"/>
+                    </div>`;
+            }else { // const fileUrl = `${baseUrl}/${file}`; 
+                iconHtml = `<img src="${baseUrl}/${file}" width="100%" height="100px" alt="PDF File" />`;
+            }
+            return `<div class="cardsfile">
+                        <div class="card mb-4 shadow-sm card-body-file">
+                            <a href="javascript:void(0);" id="fileContentList" onclick="openFileViewer('${index}','${activity_code}','${activity_id}','${follow_id}','${baseUrl}', '${file}','${asortedFiles}')" class="file-link">
+                                <div class="card-body card-body-card">
+                                   ${iconHtml}
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    `;
+        }).join('');
+        var modalsContent = `
+            <div class="modal fade" id="folderModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-vertical-list">
+                            <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title" id="folderModalLabel">File Folder List</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        ${filesListHtml}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div
+        `;
+
+        document.getElementById('modalContainer').innerHTML = modalsContent;
+    };
+    $('.cardsfile').each(function() {
+        if(asortedFiles.length === 1){
+            $(this).addClass('col-md-12');
+        }else if(asortedFiles.length === 2){
+            $(this).addClass('col-md-6');
+        }else if(asortedFiles.length === 3){
+            $(this).addClass('col-md-4');
+        }
+        else{
+            $(this).addClass('col-md-3');
+        }
+    });
+    // $('.modal-content .card-body-folder').html(index == 1 ? filesListHtml : '');
+    $('#folderModal').modal('show');
+    event.stopPropagation();
+}
+    
+    $('#folderModal').on('hidden.bs.modal', function (e) {
+        $('#folderModal').modal('hide');
+        $('#modalContainer').empty();
+        $('#folderModal').remove();
+        $('.modal-backdrop').remove();
+    });
+
+//-------------->End adding folder list
+
     // Initialize popover
     $(function () {
         $('.popoverTelemedicine').popover({
@@ -744,14 +895,20 @@
         if(document.getElementById('carouselmodaId')){
             return;
         }
-        let parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
-        parsedfiles = Array.isArray(parsedfiles) ? parsedfiles : [parsedfiles];
-        console.log('parse files', parsedfiles);
-            //const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
-        const allfilename =  parsedfiles.map(file => file.lab_result ? file.lab_result.split('|') : []).flat().filter(name => name !== "");
-        console.log('all filenames', allfilename);
+        let fileslist = allfiles.split(',');
+        // Split_filesname.filter(filename => filename.trim() !== '').map(function(filename);
+        let allfilename = fileslist.filter(filename => filename.trim() !== '').map(filename => { return filename});
+        let allfilenames = fileslist.map(filename => `"${filename.trim()}"`);
+        console.log("my filesssss", allfilename);
+        // let parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
+        // parsedfiles = Array.isArray(parsedfiles) ? parsedfiles : [parsedfiles];
+        // console.log('parse files', parsedfiles);
+        //     //const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
+        // const allfilename =  parsedfiles.map(file => file.lab_result ? file.lab_result.split('|') : []).flat().filter(name => name !== "");
+        // console.log('all filenames', allfilename);
+
         const clickedFile = allfilename.findIndex(file => file === fileNames);
-        console.log('selected file', clickedFile);
+        // console.log('selected file', clickedFile);
         let carouselItems = '';
         allfilename.forEach((file, index) => {
             let isActive = index === clickedFile ? 'active' : '';
@@ -796,15 +953,15 @@
                                             <a href="" id="download" class="btn btn-success filecolor" download="">
                                                 <i class="fa fa-download"></i> Download
                                             </a>
-                                            <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()"  class="btn btn-success filecolor">
+                                            <a href="#" id="updateButton" onclick="editFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}');"  class="btn btn-success filecolor">
                                                 <i class="fa fa-pencil-square-o"></i> Update
                                             </a>
                                     
-                                            <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}'); closeModal()">
+                                            <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}','${baseUrl}');">
                                                 <i class="fa fa-plus"></i> Add More
                                             </a>
 
-                                            <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}'); closeModal()" class="btn btn-danger filecolorDelete">
+                                            <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
                                                 <i class="fa fa-trash"></i> Delete
                                             </a>
                                             <a href="#" class="btn btn-default filecolorclose" onclick="closeModalButton()" id="closeModalId">
@@ -826,7 +983,7 @@
         modal.style.left = '0';
         modal.style.width = '100%';
         modal.style.height = '100%';
-        modal.style.backgroundColor = 'rgba(0,0,0,0.95)';
+        modal.style.backgroundColor = 'rgba(0,0,0,0.99)';
         modal.style.zIndex = '9999';
 
         document.body.appendChild(modal);
@@ -837,7 +994,7 @@
                 modal.parentNode.removeChild(modal);
             }
         };
-            getfilename(baseUrl,code,activity_id,follow_id,position);  
+        getfilename(baseUrl,code,activity_id,follow_id,position);  
     }
 
     function closeModal() {
@@ -845,11 +1002,14 @@
     }
 
     function closeModalButton() {
-        $("#carouselmodaId").hide('hide');  
-        // location.reload();
         $("#carouselmodaId").remove();
+        // $("#folderModal").remove();
+        // $(".modal-backdrop").remove();
     }
 
+    $('#carouselmodaId').on('hidden.bs.modal', function () {
+        $("#folderModal").remove();
+    });
     $(document).ready(function() {
         $('.carousel').carousel({
             interval: false,
@@ -911,11 +1071,69 @@
 
     $(document).ready(function() {
         var baseUrl = " <?php echo  asset('public/fileupload/' . $user->username . '/') ?>";
+        
         updateDownloadButton(); // Initial setup for the download button
         // Ensure the modal and carousel are in the DOM
         $(document).on('slid.bs.carousel', '#carousel-example-generic', function () {
+            
             updateDownloadButton(baseUrl); // Call this to update the download link based on the new active item
         });
         // Any other initialization code
     });
+
 </script>
+<style>
+/** ---------------My changes File Folder Modal -------------- */
+.card-body-folder{
+        margin-bottom: 5px; /* Adjust as needed */
+        margin-right: 30px;
+    }
+.position-blue{
+    color: #337AB7 !important;
+}
+.iconUl{
+    list-style-type:none;
+}
+  .modal-dialog-centered {
+    position: fixed;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+
+  .modal-vertical-list {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
+    max-height: 90%;
+  }
+  #folderModal{
+    background-color: rgba(0,0,0,0.90)
+  }
+  .file-wrapper-icon{
+    margin-top: -200px;
+    margin-left: 10px;
+    text-align: center;
+    display: inline-block;
+  }
+  .file-Icon-label{
+    display: block;
+    margin: 0 auto;
+    color: black;
+    font-weight: normal;
+    
+  }
+  .file-link {
+    display: block;
+    text-decoration: none;
+}
+.modal-body {
+    max-height: calc(100vh - 212px);
+    overflow-y: auto;
+}
+/** ---------------My changes File Folder Modal -------------- */
+</style>

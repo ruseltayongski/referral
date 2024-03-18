@@ -19101,6 +19101,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       $("#accepted_progress" + patient_code + activity_id).attr("data-actionmd", accepting_doctor_id);
       $("#rejected_progress" + patient_code + activity_id).removeClass("bg-orange");
       $("#rejected_name" + patient_code + activity_id).html("Accepted");
+      $("#follow_queue_number" + patient_code + activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); // for follow 2nd position more
+      $("#queue_number" + patient_code + activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); // add this for referred 1st position
+      $("#icon_progress" + patient_code + activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
       $("#html_websocket_departed" + patient_code).html(this.buttonDeparted(tracking_id));
       $("#prepend_from_websocket" + patient_code).prepend('<tr class="toggle toggle" style="display: table-row;">\n' + '                                                            <td>' + date_accepted + '</td>\n' + '                                                            <td>\n' + '                                                                <span class="txtPatient">' + patient_name + '</span>  was accepted by <span class="txtDoctor">Dr. ' + accepting_doctor + '</span> of <span class="txtHospital">' + accepting_facility_name + '</span>.\n' + '                                                                <span class="remarks">Remarks: ' + remarks + '</span>\n' + '                                                            </td>\n' + '                                                        </tr>');
       var msg = patient_name + ' was accepted by Dr. ' + accepting_doctor + ' of ' + accepting_facility_name + '<br><br>\n' + '       <a href="' + redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
@@ -19258,6 +19261,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       $("#accepted_progress" + patient_code + activity_id).addClass("completed");
       $("#rejected_progress" + patient_code + activity_id).addClass("bg-orange");
       $("#rejected_name" + patient_code + activity_id).html("Queued at <br>" + "<b>" + remarks + "</b>");
+      $("#follow_queue_number" + patient_code + activity_id).html("<i class=\"fa fa-hourglass-half\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); // Add this Follow in 2nd more position
+      $("#queue_number" + patient_code + activity_id).html("<i class=\"fa fa-hourglass-half\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); // I add this for reffered 1st position
+      $("#icon_progress" + patient_code + activity_id).html("<i class=\"fa fa-hourglass-half\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
       $("#prepend_from_websocket" + patient_code).prepend('' + '<tr>\n' + '    <td>' + date_queued + '</td>\n' + '    <td>\n' + '       <span class="txtPatient">' + patient_name + '</span>`s queueing number was updated by Dr. <span class="txtDoctor">' + queued_by + '</span> of <span class="txtHospital">' + queued_by_facility + '</span>.\n' + '       <span class="remarks">Status: First queued at ' + first_queue + '. Latest queue update is at <b><u>' + remarks + '</u></b></span>\n' + '       <br>\n' + '   </td>\n' + '</tr>');
       var msg = patient_name + " was queued at " + remarks + " by Dr. " + queued_by + ' of ' + queued_by_facility + '<br>' + date_queued + '<br><br>\n' + '       <a href="' + redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
       Lobibox.notify('warning', {

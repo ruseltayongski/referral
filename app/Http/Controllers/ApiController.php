@@ -672,6 +672,7 @@ class ApiController extends Controller
             json_encode($filePaths);
             $activityFile->lab_result = implode('|', $fileNames2);
             $activityFile->save();
+            session()->flash('first_save'); 
         }
         //  -----------------------jondy changes------------------------->
 
@@ -755,7 +756,7 @@ class ApiController extends Controller
                     }
                     $activityFile->lab_result = implode('|', $genericNameArray);
                     $activityFile->save();
-                   
+                    return response()->json(['filename' =>$activityFile->lab_result ]); // add this to access lab_request file
                 }else if($request->position_count_number >= 2){
                     $genericNameArray = explode('|', $activity_followup->lab_result);
                     $key = array_search($retrieveFiles, $genericNameArray);
@@ -768,7 +769,7 @@ class ApiController extends Controller
                     }
                     $activity_followup->lab_result = implode('|', $genericNameArray);
                     $activity_followup->save(); 
-                       
+                    return response()->json(['filename' =>$activity_followup->lab_result ]);// add this to access lab_request file
                 }
         }
          session()->flash('update_file', $request->position_count_number);
@@ -816,11 +817,12 @@ class ApiController extends Controller
                     json_encode($filePaths);
                     $referredFile->lab_result = implode('|', $fileNames2);
                     $referredFile->save();
-    
+                    return response()->json(['filename' => $referredFile->lab_result]);
                 }else if($request->position_count >= 2){
                     json_decode($filepath);
                     $followupfile->lab_result = implode('|', $fileNames2);
                     $followupfile->save();
+                    return response()->json(['filename' => $followupfile->lab_result ]);// add this to access lab_request file
                 }
 
             }else{
@@ -831,14 +833,14 @@ class ApiController extends Controller
     
                     $referredFile->lab_result = implode('|', $genericname_array);
                     $referredFile->save();
-                       
+                    return response()->json(['filename' => $referredFile->lab_result ]);
                 }else if($request->position_count >= 2){
                     $genericname_array = explode('|', $followupfile->lab_result);
                     $genericname_array = array_merge($genericname_array, $fileNames2);
     
                     $followupfile->lab_result = implode('|', $genericname_array);
                     $followupfile->save();
-           
+                    return response()->json(['filename' => $followupfile->lab_result]);// add this to access lab_request file
                 }
             }
         }          
@@ -871,7 +873,7 @@ class ApiController extends Controller
 
             $referred_activity->lab_result = implode('|', $referredfile_array);
             $referred_activity->save();
-
+            return response()->json(['filename' => $referred_activity->lab_result]);
         }else if($request->position_counter >= 2){
             $followfile_array = explode('|', $followup_activity->lab_result);
             $key = array_search($selectedfile, $followfile_array);
@@ -883,6 +885,7 @@ class ApiController extends Controller
             }
             $followup_activity->lab_result = implode('|', $followfile_array);
             $followup_activity->save();
+            return response()->json(['filename' => $followup_activity->lab_result ]);// add this to access lab_request file
         }
 
         session()->flash('delete_file', $request->position_counter);
