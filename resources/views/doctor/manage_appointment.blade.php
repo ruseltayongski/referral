@@ -632,5 +632,6 @@
                 $('.appt_body').html(response);
             });
         }
+        //------------------------
     </script>
 @endsection
