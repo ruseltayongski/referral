@@ -140,8 +140,8 @@
 
                                         <label for="facility_id">Facility:</label>
                                         @foreach($facility as $Facility)
-                                        <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
-                                        <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
+                                            <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
+                                            <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
                                         @endforeach
 
                                         <label for="department_id">Department:</label>
@@ -198,7 +198,8 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-                            <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
+                            <!-- <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button> -->
+                            <button type="button" class="btn btn-success btn-sm" onclick="validateAndSubmitForm()"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </form>
                 </div>
@@ -359,7 +360,6 @@
         <?php Session::put('appointment_save',false); ?>
         @endif
         
-        //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
 
@@ -388,7 +388,6 @@
             $('#updateConfirmationModal').modal('show');
         }
 
-        //--------------------------------------------------------------
         function updateAppointment() {
             var appointmentId = $('#updateAppointmentId').val();
             var appointedDate = $('#update_appointed_date').val();
@@ -434,7 +433,6 @@
             });
         }
 
-        //--------------------------------------------------------------
         function DeleteModal(appointmentId) {
             $('#deleteAppointmentId').val(appointmentId);
 
@@ -466,7 +464,6 @@
             //------------------------------------
         }
 
-        //--------------------------------------------------------------
         function deleteAppointment() {
             var appointmentId = $('#deleteAppointmentId').val();
 
@@ -492,7 +489,6 @@
             });
         }
 
-        //--------------------------------------------------------------
         function onchangeUpdateDepartment(data){
             if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
@@ -523,6 +519,7 @@
             $(document).ready(function() {
                 var facility_id = $(`#id`).val();
                 console.log(facility_id);
+
                 if(facility_id) {
                     $.get("{{ url('get-doctors').'/' }}" + facility_id, function (result) {
                         query_doctor_store = result;
@@ -606,6 +603,65 @@
                 });
             });
         }
+
+
+        //------------------------------------------------------------------
+        function validateAndSubmitForm() {
+
+            var from1 = document.querySelector('input[name="appointed_time1"]').value;
+            var to1 = document.querySelector('input[name="appointed_time_to1"]').value;
+
+            var fromDate1 = new Date('1970-01-01T' + from1);
+            var toDate1 = new Date('1970-01-01T' + to1);
+
+            if (fromDate1 >= toDate1) {
+                Lobibox.notify('error', {
+                    msg: 'Appointment time "from" should be before "to" for the first appointment.',
+                    delay: 5000,
+                    sound: false
+                });
+                return;
+            }
+
+            var additionalAppointments = document.querySelectorAll('.time-input-group');
+            var prevTo = toDate1;
+            var valid = true;
+
+            additionalAppointments.forEach(function(appointment, index) {
+                var from = appointment.querySelector('input[name="appointed_time' + (index + 2) + '"]').value;
+                var to = appointment.querySelector('input[name="appointed_time_to' + (index + 2) + '"]').value;
+
+                var fromDate = new Date('1970-01-01T' + from);
+                var toDate = new Date('1970-01-01T' + to);
+
+                if (fromDate >= toDate) {
+                    Lobibox.notify('error', {
+                        msg: 'Appointment time "from" should be before "to" for the additional appointment number ' + (index + 2) + '.',
+                        delay: 5000,
+                        sound: false
+                    });
+                    valid = false;
+                }
+                // Check if the current appointment starts before the previous one ends
+                if (fromDate < prevTo) {
+                    Lobibox.notify('error', {
+                        msg: 'Appointment times should not overlap for the additional appointment number ' + (index + 2) + '.',
+                        delay: 5000,
+                        sound: false
+                    });
+                    valid = false;
+                }
+                prevTo = toDate;
+            });
+
+            if (valid) {
+                document.getElementById('addAppointmentForm').submit();
+            }
+        }
+        //------------------------------------------------------------------
+       
+
+
 
 
         @if(Session::get('appt_notif'))
