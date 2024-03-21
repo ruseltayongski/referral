@@ -113,72 +113,11 @@ class TelemedicineCtrl extends Controller
                 $tele_assign_doctor->save();
             }
         }
-
         Session::put('appointment_save',true);
         return redirect()->back();
     }
 
-    //--------------------------------------------------
-//     public function createAppointment(Request $request)
-// {
-//     $user = Session::get('auth');
-
-//     // Track the ending time of the previous appointment
-//     $prevTo = null;
-
-//     // Iterate through each appointment
-//     for ($i = 1; $i <= $request->appointment_count; $i++) {
-//         // Check if any required field is empty, if so, skip this iteration
-//         if (empty($request['appointed_time' . $i]) || empty($request['appointed_time_to' . $i]) || empty($request->opdCategory . $i) || empty($request['available_doctor' . $i])) {
-//             continue;
-//         }
-
-//         // Validate appointment time 'from' and 'to'
-//         $from = $request['appointed_time' . $i];
-//         $to = $request['appointed_time_to' . $i];
-
-//         if (strtotime($from) >= strtotime($to)) {
-//             // Handle validation error - 'from' should be before 'to'
-//             return redirect()->back()->withInput()->withErrors(['error' => 'Appointment time "from" should be before "to".']);
-//         }
-
-//         // Create a new AppointmentSchedule instance
-//         $appointment_schedule = new AppointmentSchedule();
-//         $appointment_schedule->appointed_date = $request->appointed_date;
-//         $appointment_schedule->facility_id = $request->facility_id;
-//         $appointment_schedule->department_id = 5;
-//         $appointment_schedule->appointed_time = $from;
-//         $appointment_schedule->appointedTime_to = $to;
-//         $appointment_schedule->opdCategory = $request['opdCategory' . $i];
-//         $appointment_schedule->created_by = $user->id;
-//         $appointment_schedule->save();
-
-//         // Save assigned doctors for this appointment
-//         foreach ($request['available_doctor' . $i] as $doctorId) {
-//             $tele_assign_doctor = new TelemedAssignDoctor();
-//             $tele_assign_doctor->appointment_id = $appointment_schedule->id;
-//             $tele_assign_doctor->doctor_id = $doctorId;
-//             $tele_assign_doctor->created_by = $user->id;
-//             $tele_assign_doctor->save();
-//         }
-        
-
-//         // Update the ending time of the previous appointment
-//         $prevTo = $to;
-//     }
-
-//     // Set session flag for successful appointment save
-//     Session::put('appointment_save', true);
-
-//     // Redirect back to previous page
-//     return redirect()->back();
-// }
-
-    //--------------------------------------------------
-
-
-
-
+   
     public function getAppointmentData(Request $request)
     {
         $appointment = AppointmentSchedule::find($request->id);

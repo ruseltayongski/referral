@@ -135,7 +135,8 @@
                                 <div class="col-md-4">
                                     <div class="label-border">
                                         <label for="appointed_date">Appointment Date:</label>
-                                        <input type="date" class="form-control" name="appointed_date" required>
+                                        <label id="date_error" style="color: red; font-size: 12px;"></label>
+                                        <input type="date" class="form-control" name="appointed_date" id="appointed_date" required>
                                         <input type="hidden" name="appointment_count" class="appointment_count" value="1">
 
                                         <label for="facility_id">Facility:</label>
@@ -198,7 +199,6 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
-                            <!-- <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button> -->
                             <button type="button" class="btn btn-success btn-sm" onclick="validateAndSubmitForm()"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </form>
@@ -514,7 +514,6 @@
             }
         }
 
-        //--------------------------------------------------------------
         var query_doctor_store = [];
             $(document).ready(function() {
                 var facility_id = $(`#id`).val();
@@ -549,7 +548,7 @@
             var additionalTimeInput = `<div class="label-border-time">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <label for="appointed_time">Appointed Time:</label><br>
+                                                    <label for="appointed_time">Appointment Time:</label><br>
                                                     <div class="col-md-6">
                                                         <span>From:</span>
                                                         <input type="time" class="form-control" name="appointed_time${currentCount}" required>
@@ -604,24 +603,58 @@
             });
         }
 
-
-        //------------------------------------------------------------------
         function validateAndSubmitForm() {
+            var appointedDate = document.querySelector('input[name="appointed_date"]').value;
+            var currentDate = new Date().toISOString().split('T')[0];
+
+            if (appointedDate < currentDate) {
+                Lobibox.notify('warning', {
+                    msg: 'Please select appointment date.',
+                    delay: 5000,
+                    sound: false
+                });
+                return;
+            }
 
             var from1 = document.querySelector('input[name="appointed_time1"]').value;
             var to1 = document.querySelector('input[name="appointed_time_to1"]').value;
-
+            var opdCategory1 = document.querySelector('select[name="opdCategory1"]').value;
+            var availableDoctor1 = document.querySelector('select[name="available_doctor1[]"]').value;
             var fromDate1 = new Date('1970-01-01T' + from1);
             var toDate1 = new Date('1970-01-01T' + to1);
 
-            if (fromDate1 >= toDate1) {
-                Lobibox.notify('error', {
+            if (from1.trim() === '' || to1.trim() === '') {
+                Lobibox.notify('warning', {
+                    msg: 'Please enter both "from" and "to" appointment times.',
+                    delay: 5000,
+                    sound: false
+                });
+                return;
+            }
+            else if (fromDate1 >= toDate1) {
+                Lobibox.notify('warning', {
                     msg: 'Appointment time "from" should be before "to" for the first appointment.',
                     delay: 5000,
                     sound: false
                 });
                 return;
             }
+            else if (opdCategory1.trim() === '') {
+                Lobibox.notify('warning', {
+                    msg: 'Please select an OPD Category.',
+                    delay: 5000,
+                    sound: false
+                });
+                return;
+            }
+            else if (availableDoctor1.trim() === '') {
+                Lobibox.notify('warning', {
+                    msg: 'Please select available Doctor.',
+                    delay: 5000,
+                    sound: false
+                });
+                return;
+            } 
 
             var additionalAppointments = document.querySelectorAll('.time-input-group');
             var prevTo = toDate1;
@@ -630,22 +663,46 @@
             additionalAppointments.forEach(function(appointment, index) {
                 var from = appointment.querySelector('input[name="appointed_time' + (index + 2) + '"]').value;
                 var to = appointment.querySelector('input[name="appointed_time_to' + (index + 2) + '"]').value;
-
                 var fromDate = new Date('1970-01-01T' + from);
                 var toDate = new Date('1970-01-01T' + to);
+                var opdCategory = appointment.querySelector('select[name="opdCategory' + (index + 2) + '"]').value;
+                var selectedDoctors = appointment.querySelectorAll('select[name="available_doctor' + (index + 2) + '[]"] option:checked');
 
-                if (fromDate >= toDate) {
-                    Lobibox.notify('error', {
-                        msg: 'Appointment time "from" should be before "to" for the additional appointment number ' + (index + 2) + '.',
+                if (!from.trim() || !to.trim()) {
+                    Lobibox.notify('warning', {
+                        msg: 'Please enter both "from" and "to" appointment times for additional appointment.',
                         delay: 5000,
                         sound: false
                     });
                     valid = false;
                 }
-                // Check if the current appointment starts before the previous one ends
-                if (fromDate < prevTo) {
-                    Lobibox.notify('error', {
-                        msg: 'Appointment times should not overlap for the additional appointment number ' + (index + 2) + '.',
+                else if (fromDate >= toDate) {
+                    Lobibox.notify('warning', {
+                        msg: 'Appointment time "from" should be before "to" for the additional appointment.',
+                        delay: 5000,
+                        sound: false
+                    });
+                    valid = false;
+                }
+                else if (fromDate < prevTo) {
+                    Lobibox.notify('warning', {
+                        msg: 'Additional appointment times should not overlap with previous appointment times.',
+                        delay: 5000,
+                        sound: false
+                    });
+                    valid = false;
+                }
+                else if (opdCategory === "Select OPD Category") {
+                    Lobibox.notify('warning', {
+                        msg: 'Please select an OPD category for additional appointment.',
+                        delay: 5000,
+                        sound: false
+                    });
+                    valid = false;
+                }
+                else if (selectedDoctors.length === 0) {
+                    Lobibox.notify('warning', {
+                        msg: 'Please select available doctor for additional appointment.',
                         delay: 5000,
                         sound: false
                     });
@@ -653,16 +710,23 @@
                 }
                 prevTo = toDate;
             });
-
             if (valid) {
-                document.getElementById('addAppointmentForm').submit();
+                document.getElementById('addAppointmentForm').submit(); 
             }
         }
-        //------------------------------------------------------------------
-       
 
-
-
+        function validateDate() {
+            var inputDate = document.getElementById("appointed_date").value;
+            var currentDate = new Date().toISOString().split('T')[0];
+            if (inputDate < currentDate) {
+                document.getElementById("date_error").textContent = "Appointment date must be today or later.";
+                return false;
+            } else {
+                document.getElementById("date_error").textContent = "";
+                return true;
+            }
+        }
+        document.getElementById("appointed_date").addEventListener("change", validateDate);
 
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
@@ -688,6 +752,5 @@
                 $('.appt_body').html(response);
             });
         }
-        //------------------------
     </script>
 @endsection
