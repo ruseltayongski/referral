@@ -19,7 +19,7 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","accepted")
         ->exists();
-    Session::put('referred_accepted_track',$referred_accepted_track);
+    Session::put('referred_accepted_track',$referred_accepted_track); // I add this on 24/3/24
     $referred_rejected_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_to",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
@@ -41,6 +41,7 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","arrived")
         ->exists();
+    Session::put('referred_arrived_track',$referred_arrived_track);// I add this on 24/3/24
     $referred_notarrived_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_from",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
@@ -154,7 +155,7 @@
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","accepted")
                 ->exists();
-            Session::put('redirected_accepted_track',$redirected_accepted_track);
+            Session::put('redirected_accepted_track',$redirected_accepted_track);// I add this on 24/3/24
             $redirected_rejected_track = \App\Activity::where("code",$redirect_track->code)
                 ->where("referred_to",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
@@ -170,11 +171,13 @@
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","travel")
                 ->exists();
+            Session::put('redirected_travel_track',$redirected_travel_track); // I add this on 24/3/24
             $redirected_arrived_track = \App\Activity::where("code",$redirect_track->code)
                 ->where("referred_from",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","arrived")
                 ->exists();
+            Session::put('redirected_arrived_track', $redirected_arrived_track);// I add this on 24/3/24
             $redirected_notarrived_track = \App\Activity::where("code",$redirect_track->code)
                 ->where("referred_from",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
