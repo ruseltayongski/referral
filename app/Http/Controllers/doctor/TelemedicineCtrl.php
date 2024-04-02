@@ -222,5 +222,30 @@ class TelemedicineCtrl extends Controller
         return $doctors;
     }
 
+    //-------------------------------------------------------
+    public function validateAppointment(Request $request)
+    {
+        $appointedDate = $request->appointed_date;
+        $appointedTimeFrom = $request->appointed_time1;
+        $appointedTimeTo = $request->appointed_time_to1;
+
+        $appointmentExists = AppointmentSchedule::where('appointed_date', $appointedDate)
+                            ->where(function($query) use ($appointedTimeFrom, $appointedTimeTo) {
+                                $query->whereBetween('appointed_time', [$appointedTimeFrom, $appointedTimeTo]);
+                                    // ->orWhereBetween('appointedTime_to', [$appointedTimeFrom, $appointedTimeTo]);
+                            })  
+                            ->exists();
+
+        if ($appointmentExists) {
+            return response()->json(['isValid' => false, 'message' => 'The appointment slot for this time range on the chosen date are already booked. Please select another time.']);
+        }
+
+        return response()->json(['isValid' => true]);
+    }
+    //-------------------------------------------------------
+
+   
+
+
 }
 

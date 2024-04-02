@@ -668,3 +668,7 @@ Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAva
 Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
+
+//-------------------------------------------------------------------------------------
+Route::post('/validate-appointment', 'doctor\TelemedicineCtrl@validateAppointment')->name('validate-appointment');
+
