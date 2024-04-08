@@ -257,6 +257,7 @@
 
   .stepper-item-treated_new.completed .step-counter-treated_new {
     background-color: #4F9B83;
+    color: white // i am adding this color to highlight the threated icon completed
   }
 
   .stepper-item-treated_new::before {
@@ -273,10 +274,10 @@
     position: absolute;
     content: "";
     border-bottom: 2px solid #4bb543;
-    width: 145px;
+    width: 175px; //changes from 145
     z-index: 3;
-    transform: rotate(30deg);
-    margin-top: -5px;
+    transform: rotate(44deg); //changes from 30
+    margin-top: -10px; // changes from -5
     color:white; 
   }
 

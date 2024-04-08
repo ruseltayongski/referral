@@ -318,6 +318,7 @@ Route::get('api/getName/{id}', 'ApiController@getFacilityName')->name('api.getNa
 Route::post('api/video/editfilefollowup','ApiController@editpatientFollowUpFile'); 
 Route::post('api/video/addfilefollowup','ApiController@AddpatientFollowUpFile');
 Route::post('api/video/deletefilefollowup','ApiController@deletepatientFollowUpFile');
+Route::post('api/video/deletMorefiles','ApiController@deletemultipleFiles');// added new route in multiple delete files
 Route::post('api/video/addfileIfempty','ApiController@addpatientFollowUpFileIfEmpty');
 //end of file upload ---------->
 

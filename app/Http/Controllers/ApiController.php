@@ -406,6 +406,26 @@ class ApiController extends Controller
             $prescribed->referred_to = $latestActivity->referred_to;
             $prescribed->save();
         }
+
+        //----------------------------------------------------- jondy added
+        $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred")
+                ->orWhere('status',"followup");
+        })
+            ->orderBy("id","desc")
+            ->first();
+
+        $broadcast_prescribed = [
+            "activity_id" => $latest_activity->id,
+            "code" => $latestActivity->code,
+            "referred_from" => $latest_activity->referred_from,
+            "status" => "telemedicine",
+            "telemedicine_status" => "prescription",
+        ];
+        broadcast(new SocketReferralDischarged($broadcast_prescribed)); 
+        //-------------------------------------------------------jondy added
     }
     
     public function saveMultiPrescriptions($prescriptions, $request) {
@@ -443,6 +463,26 @@ class ApiController extends Controller
                 $prescription->save();
             }
         }
+
+        //----------------------------------------------------- jondy added
+        $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred")
+                ->orWhere('status',"followup");
+        })
+            ->orderBy("id","desc")
+            ->first();
+
+        $broadcast_prescribed = [
+            "activity_id" => $latest_activity->id,
+            "code" => $latestActivity->code,
+            "referred_from" => $latest_activity->referred_from,
+            "status" => "telemedicine",
+            "telemedicine_status" => "prescription",
+        ];
+        broadcast(new SocketReferralDischarged($broadcast_prescribed)); 
+        //-------------------------------------------------------jondy added
     }
 
     public function savePrescriptions(Request $request) {
@@ -532,23 +572,24 @@ class ApiController extends Controller
                 }
             }  
         }
-        $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
-            $query->where("status","referred")
-                ->orWhere("status","redirected")
-                ->orWhere("status","transferred")
-                ->orWhere('status',"followup");
-        })
-            ->orderBy("id","desc")
-            ->first();
+        //I comment this 
+        // $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
+        //     $query->where("status","referred")
+        //         ->orWhere("status","redirected")
+        //         ->orWhere("status","transferred")
+        //         ->orWhere('status',"followup");
+        // })
+        //     ->orderBy("id","desc")
+        //     ->first();
 
-        $broadcast_prescribed = [
-            "activity_id" => $latest_activity->id,
-            "code" => $latestActivity->code,
-            "referred_from" => $latest_activity->referred_from,
-            "status" => "telemedicine",
-            "telemedicine_status" => "prescription",
-        ];
-        broadcast(new SocketReferralDischarged($broadcast_prescribed));    
+        // $broadcast_prescribed = [
+        //     "activity_id" => $latest_activity->id,
+        //     "code" => $latestActivity->code,
+        //     "referred_from" => $latest_activity->referred_from,
+        //     "status" => "telemedicine",
+        //     "telemedicine_status" => "prescription",
+        // ];
+        // broadcast(new SocketReferralDischarged($broadcast_prescribed));    
     }
 
     public function deletePrescriptions($id) {
@@ -849,7 +890,6 @@ class ApiController extends Controller
     }
 
     public function deletepatientFollowUpFile(Request $request){
-       
         $user = Session::get('auth');
         $selectedfile = $request->selectedFileName;
         $filepath = public_path() . '/fileupload/' . $user->username;
@@ -891,6 +931,57 @@ class ApiController extends Controller
         session()->flash('delete_file', $request->position_counter);
         return Redirect::back();
     }
+
+     //Multiple files can be deleted
+    function deletemultipleFiles(Request $request){
+        $files = $request->input('files');
+        $code = $request->input('code');
+        $baseUrl = $request->input('baseUrl');
+        $actvity_id = $request->input('activity_id');
+        $follow_id = $request->input('follow_id');
+        $position = $request->input('position');
+        
+        $referred_Activity = Activity::where('id', $actvity_id)
+            ->where('code', $code)
+            ->first();
+        
+        $follow_Activity = Activity::where('id', $follow_id)
+            ->where('code', $code)
+            ->first();
+
+        if($position == 1){
+            $referredfile_array = explode('|', $referred_Activity->lab_result);
+            
+            foreach($files as $file){
+                $key = array_search($file, $referredfile_array);
+
+                if($key !== false){
+                    unset($referredfile_array[$key]);
+
+                    unlink($baseUrl . '/' . $file);
+                }
+            }
+            $referred_Activity->lab_result = implode('|',$referredfile_array);
+            $referred_Activity->save();
+            return response()->json(['message' => $referred_Activity->lab_result]);
+        }else if($position >= 2){
+            $follow_array = explode('|', $follow_Activity->lab_result);
+            foreach($files as $file){
+                $key = array_search($file, $follow_array);
+
+                if($key !== false){
+                    unset($follow_array[$key]);
+                    
+                    unlink($baseUrl . '/' . $file);
+                }
+            }
+            $follow_Activity->lab_result = implode('|', $follow_array);
+            $follow_Activity->save();
+            return response()->json(['message' => $follow_Activity->lab_result]);
+        }
+    }
+    // ----------------------end of my changes jondy file upload------------------------->
+
 
     // ----------------------end of my changes jondy file upload------------------------->
 

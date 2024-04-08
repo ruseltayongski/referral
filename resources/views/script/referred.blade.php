@@ -2,9 +2,10 @@
     <?php $user=Session::get('auth');?>
     var myfacility_name = "{{ \App\Facility::find($user->facility_id)->name }}";
 
-    function telemedicineReferPatient(alreadyRedirected,alreadyFollowup,code,referred_id) {
+    function telemedicineReferPatient(alreadyRedirected,alreadyFollowup,code,referred_id) { 
         // console.log('upward level', endorseUpward);
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
+        console.log('alreadyRedirected', alreadyRedirected, 'alreadyFollowup', alreadyFollowup);
         $(".telemedicine").val(0);
         $("#telemedicine_redirected_code").val(code);
         if(upwardIsCompleted && !alreadyRedirected && !alreadyFollowup) {
@@ -30,48 +31,66 @@
         }
     }
 
-    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id) {
+    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack) { // I add this FollowTrack
         const prescriptionIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
-        if((examinedPatient || prescriptionIsCompleted) && !alreadyTreated && (!alreadyUpward || !upwardIsCompleted)) {
-            Lobibox.confirm({
-                msg: "Do you want to treat this patient?",
-                callback: function ($this, type, ev) {
-                    if(type === 'yes') {
-                        var json = {
-                            "_token" : "<?php echo csrf_token(); ?>",
-                            "code" : code
-                        };
-                        var url = "<?php echo asset('api/video/treated') ?>";
-                        $.post(url,json,function(result){
-                            if(result === 'success') {
-                                Lobibox.alert("success",
-                                {
-                                    msg: "The patient was successfully treated."
-                                });
-                                $("#treated_progress"+code+referred_id).addClass('completed');
-                            }
-                        })
-                    }
-                }
-            });
-        } else if(alreadyTreated) {
-            Lobibox.alert("error",
-                {
-                    msg: "This tracking area has already been treated!"
-                });
-        } else if(alreadyUpward || upwardIsCompleted) {
+        console.log("followtrack:", alreadyUpward && !alreadyTreated && !followTrack);
+
+        if(alreadyUpward && !alreadyTreated){ // I add this condition para sa error nga treated kung ma upward na siya
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been upward!"
                 });
-        }
-        else {
+        }else if (followTrack){ //I add this condition kung naka fllow na siya error ang treated niya
             Lobibox.alert("error",
                 {
-                    msg: "You can't treat a patient because the patient has not been examined."
+                    msg: "This tracking area has already been followed!"
                 });
+        }else{
+
+            if((examinedPatient || prescriptionIsCompleted) && !alreadyTreated && (!alreadyUpward || !upwardIsCompleted)) {
+                Lobibox.confirm({
+                    msg: "Do you want to treat this patient?",
+                    callback: function ($this, type, ev) {
+                        if(type === 'yes') {
+                            var json = {
+                                "_token" : "<?php echo csrf_token(); ?>",
+                                "code" : code
+                            };
+                            var url = "<?php echo asset('api/video/treated') ?>";
+                            $.post(url,json,function(result){
+                                console.log('result:ddfdff', result==='success', result);
+                                if (result === 'success') {
+                                    Lobibox.alert("success", {
+                                        msg: "The patient was successfully treated."
+                                    });
+                                    $("#treated_progress" + code + referred_id).addClass('completed');
+                                }
+                            });
+                        }
+                    }
+                });
+            } else if(alreadyTreated) {
+                Lobibox.alert("error",
+                    {
+                        msg: "This tracking area has already been treated!"
+                    });
+            } else if(alreadyUpward || upwardIsCompleted) {
+                Lobibox.alert("error",
+                    {
+                        msg: "This tracking area has already been upward!"
+                    });
+            }
+            else {
+                Lobibox.alert("error",
+                    {
+                        msg: "You can't treat a patient because the patient has not been examined."
+                    });
+            }
+
+
         }
+        
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -250,6 +269,35 @@
         });
         return pdfPreview;
     }
+    function SuccessNotify(message) { //adding a notification in each function of files
+        Lobibox.notify("success", {
+            size: 'mini', 
+            rounded: true,
+            delay: 5000, 
+            position: 'bottom right',
+            msg: message,
+            showClass: 'fadeIn',
+            hideClass: 'fadeOut',
+            width: 400, 
+            icon: true, 
+            sound: true 
+        });
+    }
+    function errorNotify(message){//adding error a notification in each function of files
+        Lobibox.notify("error",
+        {
+            size: 'mini',
+            rounded: true,
+            delay: 5000,
+            position: 'bottom right',
+            msg: message,
+            showClass: 'fadeIn',
+            hideClass: 'fadeOut',
+            width: 400,
+            icon: true,
+            sound: true
+        });
+    }
     //------------------------my adding for update file uploader Follow up-----------------------------//
     function editFileforFollowup(baseUrl,fileNames,code,activity_id,follow_id,position){
         console.log("updated filename: ", fileNames);
@@ -262,8 +310,9 @@
         $("#selected-file-name-input").val(fileNames);
         $("#position_count_number").val(position);
         var currentPosition = $("#position_count_number").val();
-        var fileExtension = fileNames.split('.').pop().toLowerCase();
-        if(fileExtension === 'pdf'){
+        var Ext = fileNames.split('.').pop().toLowerCase();
+        console.log("My EXT ", Ext);
+        if(Ext === 'pdf'){
             $("#file-preview-black").html(fileNames);
              $("#img-preview").attr('src','../public/fileupload/PDF_file_icon.png');
              $("#img-preview").css('width', '30%');
@@ -290,11 +339,13 @@
                 success: function(response){
                     console.log("my file response:", response.filename);
                     updateFilesInFollowup(response.filename, baseUrl,position,code,activity_id,follow_id);
-                    $("#telemedicineUpateFileFormModal").modal("hide");
+                    SuccessNotify("File successfully updated.");
                     $("#carouselmodaId").remove();
                 }
 
             });
+            
+            $("#telemedicineUpateFileFormModal").modal("hide");
         });
     }
 
@@ -303,9 +354,9 @@
        // $("#carouselmodaId").remove();
     });
     //------------------------Add files if empty add more-----------------------------//
-    function addfilesInFollowupIfempty(position,code,referred_id,follow_id,fileNames,baseUrl){
+    function addfilesInFollowupIfempty(position,code,referred_id,follow_id,baseUrl,fileNames){
         event.preventDefault();
-        console.log('my response data', fileNames);
+        console.log('my Base Url data', baseUrl);
         $(".telemedicine").val(1);
         $("#filenames").val(filenames);
         $("#position_counter").val(position);
@@ -321,6 +372,30 @@
         // });
         $("#followup_submit_empty").off().on("click", function(event) {//adding this to addfilesInFollowupIfempty as an Ajax 
             event.preventDefault();
+            var filesInput = document.getElementById('files-input');
+            var fileslength = filesInput.files.length;
+            var invalidfile = false;
+            for(var i = 0; i < fileslength; i++){
+                var file = filesInput.files[i];
+                var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
+                //mo check kung valid ba ang file
+                if(!['png','jpeg','jpg', 'webp', 'pdf'].includes(ext)){
+                    invalidfile = true;
+                    break;// mo Break sa loop kung invalid file is found
+                }
+            }
+            console.log("invalidfile", invalidfile);
+            if(fileslength === 0 ){
+                $("#err-message").html("Please select at least one file.");
+                $("#err-message").css('color', 'red');
+                return;
+            } 
+            else if(invalidfile){
+                return false;
+            }
+            var openViewerCall = function (){
+                $('#FollowupAddEmptyFileFormModal').modal('show');
+            };
             var formData = new FormData($("#AddEmptyFileFollowupForm")[0]);
             console.log("form data update:", formData);
             formData.append('_token', '{{ csrf_token() }}');
@@ -331,9 +406,13 @@
                 processData: false,
                 contentType: false,
                 success: function(response){
-                    console.log("my filename in addfile if empty", response.filename);
-                    updateFilesInFollowup(response.filename, baseUrl,position,code,referred_id,follow_id);
-                    $("#FollowupAddEmptyFileFormModal").modal('hide');
+
+                    selectedFiles = [];//mao ni mo clear sa selectedFiles nga gi select previously sa folderModal
+
+                    updateFilesInFollowup(response.filename, baseUrl,position,code,referred_id,follow_id,openViewerCall);
+
+                    SuccessNotify("File already saved in Position " + position);
+
                     $("#carouselmodaId").remove();
                 },
                 error: function(xhr, status, error){
@@ -341,6 +420,7 @@
                      console.error(xhr.responseText);	
                 }
             });
+            $("#FollowupAddEmptyFileFormModal").modal('hide');
         });
     }
 
@@ -364,16 +444,8 @@
     //------------------------ delete file-----------------------------//
     function DeleteFileforFollowup(baseUrl,fileNames,code,referred_id,follow_id,position){
         event.preventDefault();
+
         var ext = fileNames.split('.').pop().toLowerCase();
-        if(ext === "pdf"){
-            $("#file-name").text(fileNames);
-            $("#preview-containerfor").html(''); 
-            // $("#preview-containerfor").html('<img id="delete-image" src="' + `../public/fileupload/PDF_file_icon.png` + '" width="50%" height="150px" />'); //jondy changes
-        }else{
-            //$("#pdfViewer").remove();
-            $("#file-name").text('');
-            $("#preview-containerfor").html('<img id="delete-image" src="' + `${baseUrl}/${fileNames}` + '" width="50%" height="150px" />'); //jondy changes
-        }
         $("#telemedicine_code").val(code);
         $("#delete_telemedicine_followup_id").val(follow_id);
         $("#delete_telemedicine_referred_id").val(referred_id);
@@ -383,65 +455,110 @@
         position_counter.val(position);
         $("#Delete_followup_header").html("Are you sure You want to delete this file?");
         $("#telemedicineDeleteFileFollowupFormModal").modal('show');
-        $("#followup_submit_delete").on("click", function(event) {//adding this to DeleteFileforFollowup as an Ajax 
-            event.preventDefault(); 
+
+        $(document).on("click", "#followup_submit_delete", async function(event) {//adding this to DeleteFileforFollowup as an Ajax 
+            event.preventDefault();
+            isDeletingFile = true;
             var formData = $("#telemedicineDeleteFileForm").serialize(); 
             // console.log('formDatasdsd', formData);
-            $.ajax({
-                type: "POST",
-                url: $("#telemedicineDeleteFileForm").attr("action"),
-                data: formData,
-                success: function(response) { 
-                   // updateFilesInFollowup(response.filename, baseUrl,position,code,referred_id,follow_id);
-                    $(".card-body-file").each(function() {
-                        var filenameAttr = $(this).find(".file-link").attr("onclick").split("'")[11];
-                        if (filenameAttr.includes(fileNames)) {
-                            $(this).closest(".cardsfile").remove();
+
+            try {
+                const response = await $.ajax({
+                    type: "POST",
+                    url: $("#telemedicineDeleteFileForm").attr("action"),
+                    data: formData
+                 });
+                  console.log("delete files Count", response.filename);
+                  console.log('filename split?', fileNames);
+                
+                var removingFile = false;
+
+                var activeItem = $(".item.active[data-filename='" + fileNames + "']");
+                    if (activeItem.length > 0) {
+                        removingFile = true;
+                        setTimeout(function() {
+                            $(document).keydown(function(e) { // I add this for disabled slide carousel
+                                if (e.keyCode === 37) {
+                                    // Previous
+                                    $(".carousel-control.left").click();
+                                    return false;
+                                }
+                                if (e.keyCode === 39) {
+                                    // Next
+                                    $(".carousel-control.right").click();
+                                    return false;
+                                }
+                            });
+                            activeItem.remove(); 
+                            errorNotify("Selected file already Deleted in position " + position);
+                            removingFile = false; 
+
+                            var nextItem = activeItem.next(".item");
+                            if (nextItem.length === 0) {
+                                nextItem = $(".item").first(); 
+                            }
+                            nextItem.addClass("active").show();
+                        }, 10); 
+                        //activeItem.remove();
+                    }
+                    var filenames = response.filename.split('|');
+                    if (filenames.length == 1) {
+                        $("#carouselmodaId").remove();
+                        $("#carouselmodaId").modal('hide');
+                        if (!$(".lobibox-title").length) {
+                            Lobibox.alert("success", {
+                                msg: "All files already deleted!",
+                                callback: function() {
+                                   
+                                }
+                            });
                         }
-                    }); 
-                    $(".item.active[data-filename='" + fileNames + "']").remove();
-                    var nextItem = $(".item[data-filename]").first();
-                    console.log("Item next", nextItem);
-                    if (nextItem.length > 0) {
-                        nextItem.addClass("active");
-                        $("#selected-file-name").val(nextItem.data("filename"));
-                    } // else{
-                        //     location.reload();
-                        //     $("#carouselmodaId").modal('hide');
-                        //     $('#folderModal').modal('hide');
-                        // }
-                    // }
+                    }
+
+                    updateFilesInFollowup(response.filename, baseUrl, position, code, referred_id, follow_id);
                     $("#telemedicineDeleteFileFollowupFormModal").modal('hide');
-                },
-                error: function(xhr, status, error) {
-                    // Handle error here
-                    console.error(xhr.responseText);
-                }
-            });
+             } catch (error) {
+                console.error("Error:", error);
+            } finally {
+                // Clear the flag to indicate file deletion operation is finished
+                isDeletingFile = false;
+            }
         });
 
-     }//end of the function 
+    }//end of the function 
 
     function updateFilesInFollowup(filenames,baseUrl,position,code,referred_id,follow_id) { // I add this for appendinng File folder list
+
+        $(document).on('keydown', function(event) {
+            if (event.keyCode === 27) { // Check if Escape key is pressed
+                location.reload(); // Reload the page to refresh modal content
+            }
+        });
+        // console.log('upate file', baseUrl, 'position:', position);
+        console.log("filenamesdfdffd", filenames);
         filenames = filenames || '';
-        
         var Split_filesname = filenames.split('|').filter(filename => filename.trim() !== '');
         console.log("my sple folder", Split_filesname);
         var column_card = "";
 
         var allfilesImgPdf = Split_filesname.map(function(filename){
             var ext = filename.split('.').pop().toLowerCase();
+            var checkboxHtml = `
+                <div class="checkbox-container">
+                    <input type="checkbox" class="file-checkbox" value="${filename}" onchange="toggleFileSelection('${filename}', event, '${baseUrl}','${code}','${referred_id}','${follow_id}','${position}')" />
+                </div>`;
             var iconHtml;
 
             if (ext === 'pdf') {
                 iconHtml = `<div class="d-flex flex-column align-items-center justify-content-center">
-                                <img src="../public/fileupload/PDF_file_icon.png" width="100%" height="100px" class="pdf-file" alt="PDF File">
+                                <img src="../public/fileupload/pdffile.png" width="100%" height="100px" class="pdf-file" alt="PDF File">
                             </div>`;
             } else {
                 iconHtml = `<img src="${baseUrl}/${filename}" width="100%" height="100px" alt="PDF File">`;
             }
             return `<div class="${column_card} cardsfile">
                         <div class="card mb-4 shadow-sm card-body-file">
+                            ${checkboxHtml}
                             <a href="javascript:void(0);" onclick="openFileViewer('${position}','${code}','${referred_id}','${follow_id}','${baseUrl}', '${filename}','${Split_filesname}')" class="file-link">
                                 <div class="card-body card-body-card">
                                     ${iconHtml}
@@ -450,25 +567,37 @@
                         </div>
                     </div>`;
         }).join(""); // Join the HTML strings into a single string
-        var modalsContent = `
-            <div class="modal fade" id="folderModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content modal-vertical-list">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title" id="folderModalLabel">File Folder List</h4>
-                        </div>
-                        <div class="modal-body">
-                            <div class="container-fluid">
-                                <div class="row">
-                                    ${allfilesImgPdf}
+        var modal = $('#folderModal');
+        if(modal.length === 0) {
+            var modalsContent = `
+                <div class="modal fade" id="folderModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content modal-vertical-list">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title" id="folderModalLabel">File Folder List</h4>
+                                <label><input type="checkbox" id="checkVisible" value="" onclick="checkVisibleFiles(this.checked, '${Split_filesname}','${baseUrl}','${code}','${referred_id}','${follow_id}','${position}')" />&nbsp; Select all files</label>
+                                
+                                <button type="button" id="removeFiles" class="btn btn-success btn-xs">remove files</button>
+                                <a href="javascript:void(0);" class="btn btn-primary btn-xs" onclick="addfilesInFollowupIfempty('${position}','${code}','${referred_id}','${follow_id}','${baseUrl}','${Split_filesname}')">
+                                    Add More Files
+                                </a>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        ${allfilesImgPdf}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>`;
-        $('#modalContainer').html(modalsContent); // Update the modal content
+                </div>`;
+            $('#modalContainer').html(modalsContent); // Update the modal content
+            modal = $('#folderModal');
+        } else {
+            modal.find('.modal-body .row').html(allfilesImgPdf);
+        }
         $('.cardsfile').each(function() {
             if(Split_filesname.length === 1){
                 $(this).addClass('col-md-12');
@@ -481,8 +610,11 @@
                 $(this).addClass('col-md-3');
             }
         });
+        modal.modal('show'); // Show the modal
 
-        $('#folderModal').modal('show'); // Show the modal
+        modal.find('.close').off('click').on('click', function () {
+           location.reload(true);
+        });
     } // end of appending file folder list
 
     $('#telemedicineDeleteFileFollowupFormModal').on('hidden.bs.modal', function () {
@@ -510,7 +642,7 @@
     function readURL(input) {
         var url = input.value;
         var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
-        console.log('input', input);
+        // console.log('input', input);
         if (input.files && input.files[0]) {
             var fileName = input.files[0].name;
             $('#img-preview').attr('src', '').css('display', 'none');
@@ -519,15 +651,18 @@
             $("#file-empty").html("");
             if (ext === "pdf") {
                 isvalidFile = true;
+                $("#followup_submit_edit").prop('disabled', false);
                 $('#img-preview').attr('src', '../public/fileupload/PDF_file_icon.png').css('display', 'block');
                 $("#img-preview").css('width', '50%');
                 $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
             } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG" || ext === "webp") {
                 isvalidFile = true;
+                $("#followup_submit_edit").prop('disabled', false);
                 $('#file-preview-black').html('<i class="fa fa-file-image-o"></i> ' + fileName);
                 $('#img-preview').attr('src', URL.createObjectURL(input.files[0])).css('display', 'block');
             } else {
                 isvalidFile = false;
+                $("#followup_submit_edit").prop('disabled', true);
                 $("#file-preview-red").html("Please upload a valid pdf or image file.").css('color', 'red');
             }
             $("#telemedicineUpateFileForm").submit(function(event){
@@ -540,12 +675,15 @@
         }
     }
 
-    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
+    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward) { // I am adding  alreadyTreated and  alreadyUpward
         $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
         $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
         const prescribedIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
+        //--------
+        console.log("alreadyFollowup", alreadyFollowUp);
+        //---------
         if(alreadyFollowUp) {
             Lobibox.alert("error",
                 {
@@ -562,6 +700,16 @@
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been ended!"
+                });
+        }else if(alreadyTreated){ //Gi add ni nako nga condition para dili nani siya mo follow up kung ang patiente ge treated na
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been treated!"
+                });
+        }else if(alreadyUpward){//Gi add ni nako nga condition para dili nani siya mo follow up kung ang patiente na upward na
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been Upward level!"
                 });
         }
         else if(treatedIsCompleted) {
@@ -587,6 +735,55 @@
          //immediately close the form modal after submission
       
     }
+
+
+    // function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id) {
+    //     $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
+    //     $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
+    //     $(".telemedicine").val(1);
+    //     const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
+    //     const prescribedIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
+    //     if(alreadyFollowUp) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "This tracking area has already been follow up!"
+    //             });
+    //     }
+    //     else if(alreadyReferred) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "This tracking area has already been referred!"
+    //             });
+    //     }
+    //     else if(alreadyEnded) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "This tracking area has already been ended!"
+    //             });
+    //     }
+    //     else if(treatedIsCompleted) {
+    //         telemedicine = 1;
+    //         $("#telemedicineFollowupFormModal").modal('show');
+    //     }
+    //     else if(!examinedPatient && !prescribedIsCompleted) {
+    //         Lobibox.alert("error",
+    //             {
+    //                 msg: "You cannot follow up on a patient because it has not yet been examined."
+    //             });
+    //     }
+    //     else {
+    //         // $("#followup_header").html("Follow Up Patient");
+    //         // telemedicine = 1;
+    //         // $("#telemedicineFollowupFormModal").modal('show');
+    //         const appointment = {
+    //             code: code,
+    //             referred_id: referred_id
+    //         }
+    //         window.location.href = `{{ asset('doctor/appointment/calendar') }}?appointmentKey=${generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
+    //     }
+    //      //immediately close the form modal after submission
+      
+    // }
        
 
     function consultToOtherFacilities(code) {

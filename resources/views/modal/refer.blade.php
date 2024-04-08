@@ -275,7 +275,6 @@ function handleFileSelect(event) {
                 errmsg.id = errmsId;
                 $("#err-msgpdf").html(""); //to empty the error messages submission
                 previewContainer.appendChild(errmsg);
-
             }
             break;       
         }
@@ -285,11 +284,10 @@ function handleFileSelect(event) {
             }else{
                 //  $("#telemedicineFollowupForm").show();
                     previewContainer.innerHTML = '';
-        
             }
         });
     }
-            
+    $("#followup_submit_telemedicine").prop('disabled', !isvalidFile);   
 }
  
 function displayImagePreview(file, container) {
@@ -510,12 +508,12 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 <!-- for viewing pdf file preview jondy changes -->
-<div class="modal fade" id="viewpdf" tabindex="-1" role="dialog" aria-labelledby="viewpdfFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
+<!-- <div class="modal fade" id="viewpdf" tabindex="-1" role="dialog" aria-labelledby="viewpdfFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header"> -->
                 <!-- Modal header content goes here -->
-                <h5 class="modal-title" id="viewLargerFileModalLabel">Modal Title</h5>
+                <!-- <h5 class="modal-title" id="viewLargerFileModalLabel">Modal Title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -523,27 +521,27 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
             <div class="modal-body">
                         <div class="row">
                             <div class="card">
-                                <div class="card-body preview-item">
+                                <div class="card-body preview-item"> -->
                                     <!-- <embed src="" id="pdfPreviewContainer" type="application/pdf"/> -->
-                                    <h4 id="files"></h>
+                                    <!-- <h4 id="files"></h>
                                     <img src="" id="pdfView">
                                 </div>
                             </div>
                         </div>
-            </div>
-            <div class="modal-footer">
+            </div> -->
+            <!-- <div class="modal-footer"> -->
                 <!-- Modal footer content goes here -->
-            </div>
+            <!-- </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- for viewing images file preview jondy changes -->
-<div class="modal fade" id="viewLargerFileModal" tabindex="-1" role="dialog" aria-labelledby="viewLargerFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
+<!-- <div class="modal fade" id="viewLargerFileModal" tabindex="-1" role="dialog" aria-labelledby="viewLargerFileModalLabel" aria-hidden="true"  style="z-index: 1060;" >
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header"> -->
                 <!-- Modal header content goes here -->
-                <h5 class="modal-title" id="viewLargerFileModalLabel">Modal Title</h5>
+                <!-- <h5 class="modal-title" id="viewLargerFileModalLabel">Modal Title</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -551,9 +549,9 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
             <div class="modal-body">
                         <div class="row">
                             <div class="card">
-                                <div class="card-body preview-item">
+                                <div class="card-body preview-item"> -->
                                     <!-- <embed src="" id="pdfPreviewContainer" type="application/pdf"/> -->
-                                    <h4 id="files"></h>
+                                    <!-- <h4 id="files"></h>
                                     <img src="" id="imageView">
                                 </div>
                             </div>
@@ -563,12 +561,12 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                     <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                 </div>
             </div>
-                <div class="modal-footer">
+                <div class="modal-footer"> -->
                     <!-- Modal footer content goes here -->
-                </div>
+                <!-- </div>
         </div>
     </div>
-</div> <!------end of my changes------>
+</div> ----end of my changes---- -->
 
 <!------------------------------Starting Adding file in first follow up------------------------------------>
 <div class="modal fade" id="telemedicineFollowupFormModal" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -639,7 +637,6 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                             <span aria-hidden="true">&times;</span>
                         </button>
                         <h4 class="text-green" style="font-size: 15pt; margin-top: 0;" id="Add_followup_headerform"></h4>
-                        
                 </div>
             <div class="modal-body">
                 <form method="POST" action="{{ asset("api/video/addfileIfempty") }}" id="AddEmptyFileFollowupForm" enctype="multipart/form-data"><!--I add this enctype="multipart/form-data-->
@@ -653,7 +650,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         {{ csrf_field() }}
                         <div class="form-group">
                             <!-- <label style="padding: 0px">Note:</label> -->
-                            <p style="color:red;">Note: &nbsp;Do you Have any lab request to upload</p>
+                            <p style="color:red;">Note: &nbsp;Do you Have any lab request to upload ?</p>
                         </div>
                         <div class="form-group">
                             <label id="file-label" for="files-input" class="btn btn-primary custom-file form-control">Select Files
@@ -756,16 +753,16 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                     <input type="hidden" name="referred_id" id="delete_telemedicine_referred_id" value=""><!--I add this for followup_id-->
                     <input type="hidden"  id="position_counterer" name="position_counter" value="">
                     <input type="hidden" class="telemedicine" value="">
+                    <input type="hidden" id="selected-file-name" name="selectedFileName" value="">
                     {{ csrf_field() }}
-                    <div class="form-group">
-                        <input type="hidden" id="selected-file-name" name="selectedFileName" value="">
+                    <!-- <div class="form-group">
                         <div id="file-name" class="mt-3 text-center"></div>
 
                         <div class="preview-container" id="preview-containerfor">
                             <img id="delete-image" src="" style="max-width: 100%; max-height: 300px;">
                         </div>
                     </div>
-                    <hr />
+                    <hr /> -->
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal" id="delete_Modal_close"><i class="fa fa-times"></i> Close</button>
                         <button type="submit" id="followup_submit_delete" class="btn btn-danger btn-flat"><i class="fa fa-trash"></i> Delete</button>

@@ -169,20 +169,43 @@
             <div class="step-name" style="margin-right:10px;">Disposition</div>
         </div>       
  
-        <div class="stepper-item-upward @if($referred_upward_track && !$referred_treated_track) completed @endif" id="upward_progress{{ $referred_track->code.$referred_track->id }}">
+ <!--  original code-->   {{--<div class="stepper-item-upward @if($referred_upward_track && !$referred_treated_track) completed @endif" id="upward_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-caret-up" aria-hidden="true" style="font-size:25px"></i></div>
-            <div class="step-name">Upward</div>
+            <div class="step-name">Upward</div> --}}<!--  end of original code-->
+<!-- jondy changes code -->
+        <div class="stepper-item-upward @if($referred_upward_track && !$referred_treated_track && !$referred_followup_track) completed @endif" id="upward_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="step-counter"><i class="fa fa-caret-up" aria-hidden="true" style="font-size:25px"></i></div>
+            <div class="step-name">Upward</div> <!--end of upward changes-->
 
-            <div class="stepper-item stepper-item-follow_new @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+ <!--original code follow up--> {{-- <div class="stepper-item stepper-item-follow_new @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
                 <div class="step-counter-follow_new" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
                 <div class="step-name step-name-treated_new">Follow Up</div>
-            </div>
+            </div> --}} <!--end of original code-->
 
-            <div class="stepper-item stepper-item-treated_new @if($referred_end_track && !$referred_followup_track) completed @endif" id="treated_progress{{ $referred_track->code.$referred_track->id }}">
+
+            <!-- my changes to follow up -->
+            <div class="stepper-item stepper-item-follow_new @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+                <div class="step-counter-follow_new" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}','{{$referred_treated_track}}','{{$referred_upward_track}}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
+                <div class="step-name step-name-treated_new">Follow Up</div>
+            </div><!--  end -->
+
+            <!--Original code treated-->
+            {{--<div class="stepper-item stepper-item-treated_new @if($referred_end_track && !$referred_followup_track) completed @endif" id="treated_progress{{ $referred_track->code.$referred_track->id }}">
                 <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $referred_upward_track }}','{{ $referred_examined_track }}','{{ $referred_treated_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
                 <div class="step-name step-name-treated_new">Treated</div>
-            </div>
+            </div> --}}<!-- end -->
+
+
+            <!-- my changes to treated -->
+                <div class="stepper-item stepper-item-treated_new @if($referred_treated_track && !$referred_followup_track) completed @endif" id="treated_progress{{ $referred_track->code.$referred_track->id }}">
+                    <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $referred_upward_track }}','{{ $referred_examined_track }}','{{ $referred_treated_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}','{{$referred_followup_track}}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                    <div class="step-name step-name-treated_new">Treated</div>
+                </div>
+            <!--  end -->
         </div>
+       
+          
+        
         <div class="stepper-item stepper-item-referred @if($referred_redirected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
             <div class="step-name">Referred</div>
@@ -259,6 +282,7 @@
                 ->where("created_at",">",$follow_track->created_at)
                 ->where("status","end")
                 ->exists();
+
             ?>
             <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
             <div class="stepper-wrapper">
@@ -319,24 +343,48 @@
                     <div class="step-counter step-counter-prescription" onclick="telemedicinePrescription('{{ $row->id }}','{{ $follow_prescription_hold->first()->id }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-home" aria-hidden="true"></i></div>
                     <div class="step-name" style="margin-right:10px;">Disposition</div>
                 </div>
-                <div class="stepper-item-upward @if($follow_upward_track) completed @endif" id="upward_progress{{ $follow_track->code.$follow_track->id }}">
+<!--Original code -->{{-- <div class="stepper-item-upward @if($follow_upward_track) completed @endif" id="upward_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter"><i class="fa fa-caret-up" aria-hidden="true" style="font-size:25px"></i></div>
+                    <div class="step-name">Upward</div>--}} <!-- end of original code-->
+
+                <!-- jondy cahanges in upward -->
+                <div class="stepper-item-upward @if($follow_upward_track && !$follow_followup_track) completed @endif" id="upward_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter"><i class="fa fa-caret-up" aria-hidden="true" style="font-size:25px"></i></div>
                     <div class="step-name">Upward</div>
-
-
-                    <div class="stepper-item stepper-item-follow_new @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                <!-- end of changes -->
+                   
+<!--Original code--> {{--<div class="stepper-item stepper-item-follow_new @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
                         <div class="step-counter-follow_new" onclick="telemedicineFollowUpPatient('{{ $follow_redirected_track }}','{{ $follow_end_track }}','{{ $follow_examined_track }}','{{ $follow_followup_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
                         <div class="step-name">Follow Up</div>
-                    </div>
+                    </div>--}} <!--end original code -->
 
-                    <div class="stepper-item stepper-item-treated_new @if($follow_treated_track) completed @endif" id="treated_progress{{ $follow_track->code.$follow_track->id }}">
+                    <!-- jondy changes code -->
+                   <div class="stepper-item stepper-item-follow_new @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                        <div class="step-counter-follow_new" onclick="telemedicineFollowUpPatient('{{ $follow_redirected_track }}','{{ $follow_end_track }}','{{ $follow_examined_track }}','{{ $follow_followup_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}','{{$follow_treated_track}}','{{$follow_upward_track}}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
+                        <div class="step-name">Follow Up</div>
+                    </div>
+                    <!-- end changes -->
+        
+<!--original code -->{{--<div class="stepper-item stepper-item-treated_new @if($follow_treated_track) completed @endif" id="treated_progress{{ $follow_track->code.$follow_track->id }}">
                         <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $follow_upward_track }}','{{ $follow_examined_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
                         <div class="step-name step-name-treated_new">Treated</div>
+                    </div>--}}<!--end original code -->
+
+
+                    <!-- jondy changes in treated -->
+                    <div class="stepper-item stepper-item-treated_new @if($follow_treated_track && !$follow_followup_track && !$follow_upward_track) completed @endif" id="treated_progress{{ $follow_track->code.$follow_track->id }}">
+                        <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $follow_upward_track }}','{{ $follow_examined_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}','{{$follow_followup_track}}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                        <div class="step-name step-name-treated_new">Treated</div>
                     </div>
+                    <!-- end of changes treated-->
                 </div>
-                <div class="stepper-item stepper-item-referred @if($follow_redirected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+<!-- original code -->{{--<div class="stepper-item stepper-item-referred @if($follow_redirected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_upward_track }}','{{ $follow_redirected_track }}','{{ $follow_followup_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
-                    <div class="step-name">Referred</div>
+                    <div class="step-name">Referred</div>--}} <!-- endoriginal code -->
+            <!-- jondy changes -->
+                <div class="stepper-item stepper-item-referred @if($follow_redirected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                    <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_redirected_track }}','{{ $follow_followup_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
+                    <div class="step-name">Referred</div>  <!--end jondy changes -->
                     {{-- <div class="stepper-item stepper-item-follow @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
                         <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $follow_redirected_track }}','{{ $follow_end_track }}','{{ $follow_examined_track }}','{{ $follow_followup_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
                         <div class="step-name">Follow Up</div>
@@ -399,7 +447,7 @@
                                 </a>&nbsp;
                             @endforeach --}}
                             @if(empty($sortedFiles))
-                                <a href="javascript:void(0);" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$referredFile}}')">
+                                <a href="javascript:void(0);" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{$referredFile}}','{{$referredActivities}}')">
                                     <div class="file-wrapper-icon">
                                         <img src="../public/fileupload/add_folder.ico"/><br>
                                         <label class="file-Icon-label">Add File</label>
@@ -455,7 +503,7 @@
                                     </a>&nbsp;
                                     @endforeach --}}
                                     @if(empty($sortedFiles_follow))
-                                        <a href="#"  onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{$followFile}}')">
+                                        <a href="#"  onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{$followFile}}')">
                                             <div class="file-wrapper-icon">
                                                 <img src="../public/fileupload/add_folder.ico"/><br>
                                                 <label class="file-Icon-label">Add File</label>
@@ -805,6 +853,12 @@
 //--------------> adding folder list
 function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUrl) {
     //var sortedFiles = JSON.parse(sortedFiles);
+    $(document).on('keydown', function(event) {
+            if (event.keyCode === 27) { // Check if Escape key is pressed
+                location.reload(); // Reload the page to refresh modal content
+            }
+    });
+
     var asortedFiles = Array.isArray(sortedFiles) ? sortedFiles : JSON.parse(sortedFiles);
     console.log("my assorted files:", asortedFiles);
     // Show the modal
@@ -812,16 +866,21 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
     if(!$('#folderModal').hasClass('show')){
         var filesListHtml = asortedFiles.map(file => {
             var fileExtension = file.split('.').pop().toLowerCase();
+            var checkboxHtml = `
+                <div class="checkbox-container">
+                    <input type="checkbox" class="file-checkbox" value="${file}" onchange="toggleFileSelection('${file}', event, '${baseUrl}','${activity_code}','${activity_id}','${follow_id}','${index}')" />
+                </div>`;
             if(fileExtension == 'pdf'){
                 iconHtml = `
                     <div class="d-flex flex-column  align-items-center justify-content-center">
-                        <img src="../public/fileupload/PDF_file_icon.png" width="100%" height="100px" pdf-file" alt="PDF File"/>
+                        <img src="../public/fileupload/pdffile.png" width="100%" height="100px" class="pdf-file" alt="PDF File"/>
                     </div>`;
             }else { // const fileUrl = `${baseUrl}/${file}`; 
-                iconHtml = `<img src="${baseUrl}/${file}" width="100%" height="100px" alt="PDF File" />`;
+                iconHtml = `<img src="${baseUrl}/${file}" width="100%" height="100px" alt="image File" />`;
             }
             return `<div class="cardsfile">
                         <div class="card mb-4 shadow-sm card-body-file">
+                            ${checkboxHtml}
                             <a href="javascript:void(0);" id="fileContentList" onclick="openFileViewer('${index}','${activity_code}','${activity_id}','${follow_id}','${baseUrl}', '${file}','${asortedFiles}')" class="file-link">
                                 <div class="card-body card-body-card">
                                    ${iconHtml}
@@ -838,6 +897,15 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
                             <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                                 <h4 class="modal-title" id="folderModalLabel">File Folder List</h4>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <label><input type="checkbox" id="checkVisible" value='${asortedFiles}' onclick="checkVisibleFiles(this.checked, '${asortedFiles}','${baseUrl}','${activity_code}','${activity_id}','${follow_id}','${index}')" />&nbsp; Select all files</label>
+                                        <button type="button" id="removeFiles" class="btn btn-success btn-xs">remove files</button>
+                                        <a href="javascript:void(0);" class="btn btn-primary btn-xs" onclick="addfilesInFollowupIfempty('${index}','${activity_code}','${activity_id}','${follow_id}','${baseUrl}','${asortedFiles}')">
+                                            Add More Files
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-body">
                                 <div class="container-fluid">
@@ -865,17 +933,158 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
             $(this).addClass('col-md-3');
         }
     });
+    modal = $('#folderModal');
     // $('.modal-content .card-body-folder').html(index == 1 ? filesListHtml : '');
     $('#folderModal').modal('show');
     event.stopPropagation();
+   
 }
+
     
-    $('#folderModal').on('hidden.bs.modal', function (e) {
-        $('#folderModal').modal('hide');
-        $('#modalContainer').empty();
-        $('#folderModal').remove();
-        $('.modal-backdrop').remove();
+$('#folderModal').on('hidden.bs.modal', function (e) {
+    $('#folderModal').modal('hide');
+    $('#modalContainer').empty();
+    $('#folderModal').remove();
+    $('.modal-backdrop').remove();
+});
+//----------------for checkbox remove multiple files--------------------------//
+var selectedFiles = [];
+function checkVisibleFiles(checked, files,baseUrl,code,activity_id,follow_id,position) {
+    var checkboxes = document.querySelectorAll('.cardsfile input[type="checkbox"]');
+    
+    var filesArray = files.split(',');
+    var checkbox = $('.file-checkbox:checked');
+    if(checkbox.length > 0){
+        selectedFiles = [];
+    }
+    if(!checked){
+        checkboxes.forEach(function(checkbox) {
+        selectedFiles = [];
+        checkbox.checked = checked;
+        const index = selectedFiles.indexOf(checkbox.value);
+            if (index > -1) {
+                selectedFiles.splice(index, 1);
+            }
+        });
+        console.log("select all files", selectedFiles);
+    }else{
+        selectedFiles.push(...filesArray);
+        checkboxes.forEach(function(checkbox) {
+            checkbox.checked = checked;
+            if (selectedFiles.indexOf(checkbox.value) === -1) {
+                selectedFiles.push(checkbox.value);
+            }
+        });
+
+        $('#removeFiles').click(function() {
+
+            $.ajax({
+                url: "<?php echo asset("api/video/deletMorefiles") ?>",
+                type: "POST",
+                headers:{
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    baseUrl: baseUrl,
+                    files: selectedFiles,
+                    code:code,
+                    activity_id:activity_id,
+                    follow_id:follow_id,
+                    position:position
+                },
+                success: function(response){
+                    console.log('My response', response.message);
+                    selectedFiles.forEach(function(filename) {
+                        $('.file-checkbox').each(function() {
+                            var fileCheckbox = $(this);
+                            var fileValue = fileCheckbox.val();
+                            
+                            if (fileValue === filename && fileCheckbox.prop('checked')) {
+                                setTimeout(function() {
+                                    fileCheckbox.closest('.cardsfile').remove();
+                                    errorNotify("Selected file already Deleted in position " + position);
+                                }, 50); 
+                            }
+                        });
+                    });
+                    updateFilesInFollowup(response.message, baseUrl, position, code, activity_id, follow_id);
+                },
+                error: function(xhr, status, error){
+                    console.error("Error removing files:", error);
+                }
+            });
+        });
+
+        console.log("select all files", selectedFiles);
+     
+       
+    }
+}
+
+function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,position){
+ 
+    if(event.target.checked){
+        selectedFiles.push(file);
+    }else{
+        const index = selectedFiles.indexOf(file);
+        if(index > -1){
+            selectedFiles.splice(index, 1);
+        }
+    } 
+    console.log("selected files", selectedFiles);
+    $(document).ready(function() {
+        $('#removeFiles').click(function() {
+
+            $.ajax({
+                url: "<?php echo asset("api/video/deletMorefiles") ?>",
+                type: "POST",
+                headers:{
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    baseUrl: baseUrl,
+                    files: selectedFiles,
+                    code:code,
+                    activity_id:activity_id,
+                    follow_id:follow_id,
+                    position:position
+                },
+                success: function(response){
+                    console.log('My response', response.message);
+                    selectedFiles.forEach(function(filename) {
+                        $('.file-checkbox').each(function() {
+                            var fileCheckbox = $(this);
+                            var fileValue = fileCheckbox.val();
+                            
+                            if (fileValue === filename && fileCheckbox.prop('checked')) {
+                                setTimeout(function() {
+                                    fileCheckbox.closest('.cardsfile').remove();
+                                    errorNotify("Selected file already Deleted in position " + position);
+                                }, 50); 
+                            }
+                        });
+                    });
+                    updateFilesInFollowup(response.message, baseUrl, position, code, activity_id, follow_id);
+                },
+                error: function(xhr, status, error){
+                    console.error("Error removing files:", error);
+                }
+            });
+        });
+
     });
+}
+
+//removeSelectedFiles(selectedFiles,baseUrl,activity_code,activity_id,follow_id,position);
+// function removeSelectedFiles(selectedFiles,baseUrl,activity_code,activity_id,follow_id,position) {
+//     console.log("removing files", selectedFiles,activity_code);
+//     if(selectedFiles.length === 0){
+//         console.log("No files selected for removal.");
+//         return;
+//     }
+
+// }
+//----------------End for checkbox remove multiple files--------------------------//
 
 //-------------->End adding folder list
 
@@ -891,25 +1100,26 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
     }
 
     //---------------------------------------------------------------------------------------------------
+    let modalOpen = false; //Flag to track if modal is para ma reload ang page use ESC key
     function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames, allfiles) {
+        modalOpen = true; //  Set flag to true when modal is opened
         if(document.getElementById('carouselmodaId')){
             return;
         }
+        var carouselmodaId_exists = document.getElementById('carouselmodaId');
+        if(carouselmodaId_exists){
+            carouselmodaId_exists.parentNode.removeChild(carouselmodaId_exists);
+        }
+        
         let fileslist = allfiles.split(',');
         // Split_filesname.filter(filename => filename.trim() !== '').map(function(filename);
         let allfilename = fileslist.filter(filename => filename.trim() !== '').map(filename => { return filename});
         let allfilenames = fileslist.map(filename => `"${filename.trim()}"`);
         console.log("my filesssss", allfilename);
-        // let parsedfiles = Array.isArray(allfiles)? allfiles : JSON.parse(allfiles);
-        // parsedfiles = Array.isArray(parsedfiles) ? parsedfiles : [parsedfiles];
-        // console.log('parse files', parsedfiles);
-        //     //const allfilename = parsedfiles.map(file => file.generic_name.split('|')).flat();
-        // const allfilename =  parsedfiles.map(file => file.lab_result ? file.lab_result.split('|') : []).flat().filter(name => name !== "");
-        // console.log('all filenames', allfilename);
-
         const clickedFile = allfilename.findIndex(file => file === fileNames);
         // console.log('selected file', clickedFile);
         let carouselItems = '';
+
         allfilename.forEach((file, index) => {
             let isActive = index === clickedFile ? 'active' : '';
             var fileExtension = file.split('.').pop().toLowerCase();
@@ -928,6 +1138,7 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
                 `;
             }
         });
+
         var modalContent = `
             <div class="container">
                 <div class="row">
@@ -949,6 +1160,7 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
                                                     <span class="sr-only">Next</span>
                                                 </a>
                                         </div>
+                                       
                                         <div class="carousel-buttons" style="position: absolute; bottom: 10px; left: 0; right: 0;">
                                             <a href="" id="download" class="btn btn-success filecolor" download="">
                                                 <i class="fa fa-download"></i> Download
@@ -957,10 +1169,9 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
                                                 <i class="fa fa-pencil-square-o"></i> Update
                                             </a>
                                     
-                                            <a href="#" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${fileNames}','${baseUrl}');">
+                                            <a href="#" id="addmore" class="btn btn-success filecolor" onclick="addfilesInFollowupIfempty('${position}','${code}','${activity_id}','${follow_id}','${baseUrl}','${fileNames}');">
                                                 <i class="fa fa-plus"></i> Add More
                                             </a>
-
                                             <a href="#" id="deleteButton" onclick="DeleteFileforFollowup('${baseUrl}','${code}','${activity_id}','${follow_id}','${position}')" class="btn btn-danger filecolorDelete">
                                                 <i class="fa fa-trash"></i> Delete
                                             </a>
@@ -975,6 +1186,7 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
                 </div>
             </div>              
         `;
+
         var modal = document.createElement('div');
         modal.id = 'carouselmodaId'
         modal.innerHTML = modalContent;
@@ -994,9 +1206,10 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
                 modal.parentNode.removeChild(modal);
             }
         };
-        getfilename(baseUrl,code,activity_id,follow_id,position);  
+       
+        getfilename(baseUrl,code,activity_id,follow_id,position);   
     }
-
+ 
     function closeModal() {
         $("#carouselmodaId").hide();
     }
@@ -1010,29 +1223,107 @@ function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUr
     $('#carouselmodaId').on('hidden.bs.modal', function () {
         $("#folderModal").remove();
     });
+
+   
+    // Flag to indicate whether a file deletion operation is in progress
+    var isDeletingFile = false;
+    // Function to disable next and previous slide arrows
+    function disableSlideArrows() {
+        $(".carousel-control.left").addClass("disabled");
+        $(".carousel-control.right").addClass("disabled");
+    }
+
+    // Function to enable next and previous slide arrows
+    function enableSlideArrows() {
+        $(".carousel-control.left").removeClass("disabled");
+        $(".carousel-control.right").removeClass("disabled");
+    }
+
     $(document).ready(function() {
         $('.carousel').carousel({
             interval: false,
         });
+        
+        var buttonFileClicked = false
+        var buttonDisabled = false;
+        
+        function disableDeleteBtn(){ // this will disable button if slide file
+            var deletebtn = document.getElementById("deleteButton");
+            var addmorebtn = document.getElementById("addmore");
+            var updateBtn = document.getElementById("updateButton");
+            var download = document.getElementById("download");
+
+            if(buttonDisabled){
+                return;
+            }
+                deletebtn.style.pointerEvents = "none";
+                addmorebtn.style.pointerEvents = "none";
+                updateBtn.style.pointerEvents = "none";
+                download.style.pointerEvents = "none";
+
+                deletebtn.style.opacity = "0.5";
+                addmorebtn.style.opacity = "0.5";
+                updateBtn.style.opacity = "0.5";
+                download.style.opacity = "0.5";
+
+                buttonDisabled = true;
+            setTimeout(function() {
+                 if(!buttonFileClicked){
+                    deletebtn.style.pointerEvents = "";
+                    deletebtn.style.opacity = "";
+                    addmorebtn.style.pointerEvents = "";
+                    addmorebtn.style.opacity = "";
+                    updateBtn.style.pointerEvents = "";
+                    updateBtn.style.opacity = "";
+                    download.style.pointerEvents = "";
+                    download.style.opacity = "";
+
+                    buttonDisabled = false;
+                 }
+                
+            }, 1000); // 0.5 seconds
+        } 
         //this will control the arrow keyboard left & right
         $(document).keydown(function(e) {
+            var isDeleteModalOpen = $("#telemedicineDeleteFileFollowupFormModal").hasClass("show") || $("#telemedicineDeleteFileFollowupFormModal").css("display") === "block";// when modal open the carousel won't slide
+            var isUpdateModalOpen = $("#telemedicineUpateFileFormModal").hasClass("show") || $("#telemedicineUpateFileFormModal").css("display") === "block";
+            var isAddModalOpen    = $("#FollowupAddEmptyFileFormModal").hasClass("show") || $("#FollowupAddEmptyFileFormModal").css("display") === "block";
+            if (isDeletingFile) {
+                return;
+             }
+            if(isDeleteModalOpen || isUpdateModalOpen || isAddModalOpen){
+                return;
+            }
+            if(buttonFileClicked){
+                return false;
+            }
             if (e.keyCode === 37) {
             // Previous
             $(".carousel-control.left").click();
-            return false;
+                disableDeleteBtn();
+                return false;
             }
+
             if (e.keyCode === 39) {
             // Next
             $(".carousel-control.right").click();
-            return false;
+                disableDeleteBtn();
+                return false;
             }
         });
     });
-
+    
     $(document).keydown(function(event) { //this will close modal of press the keyboard Esc
-        if (event.keyCode == 27) { 
+        selectedFiles = [];//mao ni mo clear sa selectedFiles nga gi select previously sa folderModal
+        if (event.keyCode == 27) {
+            selectedFiles = [];
+            location.reload(true); // Refresh the page immediately
             $('#carouselmodaId').hide();
-            $("#carouselmodaId").remove();
+            // $("#carouselmodaId").remove();
+
+            $('#folderModal').hide();
+            // $('#folderModal').remove();
+            $('.modal-backdrop').remove();
         }
     });
 
