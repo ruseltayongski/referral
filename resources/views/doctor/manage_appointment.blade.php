@@ -135,7 +135,7 @@
                                 <div class="col-md-4">
                                     <div class="label-border">
                                         <label for="appointed_date">Appointment Date:</label>
-                                        <input type="date" class="form-control" name="appointed_date" required>
+                                        <input type="date" class="form-control appointment_date" name="appointed_date" required>
                                         <input type="hidden" name="appointment_count" class="appointment_count" value="1">
 
                                         <label for="facility_id">Facility:</label>
@@ -349,6 +349,9 @@
 
 @section('js')
     <script>
+        const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
+        document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
+
         @if(Session::get('appointment_save'))
         Lobibox.notify('success', {
             title: "",

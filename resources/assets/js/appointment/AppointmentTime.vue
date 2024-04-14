@@ -37,7 +37,17 @@
             }
         },
         methods: {
-            areAllDoctorsNotAvailable(doctors) {
+            areAllDoctorsNotAvailable(doctors,date) {
+                let currentDate = new Date().toISOString().split('T')[0];
+                var doctor_available = doctors.every(doctor => doctor.appointment_by);
+                console.log('doctor_available', doctor_available);
+                if(date){
+                    //return date < currentDate || doctors.every(doctor => doctor.appointment_by);
+                    return date < currentDate;
+                }
+                // // document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
+                // // document.querySelector('.hours_radio').setAttribute('min', currentDat);
+                // // $('.hours_radio').setAttribute('min', currentDate);
                 return doctors.every(doctor => doctor.appointment_by);
             },
             proceedAppointment() {
@@ -123,7 +133,7 @@
                                                 v-model="selectedAppointmentTime" 
                                                 :value="appointment.id" 
                                                 @change="handleAppointmentTimeChange"
-                                                :disabled="areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor)"
+                                                :disabled="areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor,appointment.appointed_date)"
                                             >&nbsp;&nbsp;
                                             <span :class="{ 'text-green' : !areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor),'text-red' : areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor) }">{{ appointment.appointed_time }} to {{ appointment.appointedTime_to }}</span>
                                             <ul v-if="appointment.id == selectedAppointmentTime" class="doctor-list" v-for="assignedDoctor in appointment.telemed_assigned_doctor" :key="assignedDoctor.id">

@@ -499,9 +499,12 @@
             prescribedCompleted(patient_code, activity_id) {
                 $("#prescribed_progress"+patient_code+activity_id).addClass("completed");
             },
-            upwardCompleted(patient_code, activity_id) {
+            upwardCompleted(patient_code,activity_id) {
                 $("#upward_progress"+patient_code+activity_id).addClass("completed");
             },
+            // labreq(request_id,activity_id){//I add this changes
+            //     $("#lab_progress"+request_id).addClass("completed");
+            // },
             async telemedicineExamined() {
                 const updateExamined = {
                     code : this.referral_code,
@@ -667,6 +670,7 @@
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
                     console.log(event);
+                    // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             console.log("callAdoctor");
@@ -693,6 +697,11 @@
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
                     }
+
+                    // if(event.payload.laboratory_code){I add this changes
+                    //     console.log('succefully upload labrequest');
+                    //     this.labreq(event.payload.request_by,event.payload.activity_id);                         
+                    // }
                 });
 
             Echo.join('referral_update')

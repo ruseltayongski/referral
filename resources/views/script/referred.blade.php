@@ -34,9 +34,12 @@
     function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack) { // I add this FollowTrack
         const prescriptionIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
-        console.log("followtrack:", alreadyUpward && !alreadyTreated && !followTrack);
+        const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed'); // nag add ko ani kay para sa error messages kung ikaduha siya click para sa already treated
+        const examPatientCompleted = document.getElementById(`examined_progress${code}${referred_id}`).classList.contains('completed');
 
-        if(alreadyUpward && !alreadyTreated){ // I add this condition para sa error nga treated kung ma upward na siya
+        console.log('upward', alreadyUpward, !treatedIsCompleted, !alreadyTreated);
+
+        if((alreadyUpward || upwardIsCompleted) && !alreadyTreated && !treatedIsCompleted){ // I add this condition para sa error nga treated kung ma upward na siya
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been upward!"
@@ -46,9 +49,20 @@
                 {
                     msg: "This tracking area has already been followed!"
                 });
-        }else{
+        }else if(treatedIsCompleted && alreadyTreated){//error messages para sa pag click ikaduha sa treated icon
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been treated!"
+                });
+        }else if(!examPatientCompleted && !examinedPatient){
+            Lobibox.alert("error",
+                {
+                    msg: "You cannot treated on a patient because it has not yet been examined.!"
+                });
+        }
+        else{
 
-            if((examinedPatient || prescriptionIsCompleted) && !alreadyTreated && (!alreadyUpward || !upwardIsCompleted)) {
+            //if((examinedPatient || prescriptionIsCompleted) && !alreadyTreated && (!alreadyUpward || !upwardIsCompleted)) {
                 Lobibox.confirm({
                     msg: "Do you want to treat this patient?",
                     callback: function ($this, type, ev) {
@@ -59,7 +73,8 @@
                             };
                             var url = "<?php echo asset('api/video/treated') ?>";
                             $.post(url,json,function(result){
-                                console.log('result:ddfdff', result==='success', result);
+                                result = result.trim(); // trim or removing whitespace characters
+                                console.log('result:ddfdff', result);
                                 if (result === 'success') {
                                     Lobibox.alert("success", {
                                         msg: "The patient was successfully treated."
@@ -70,27 +85,33 @@
                         }
                     }
                 });
-            } else if(alreadyTreated) {
-                Lobibox.alert("error",
-                    {
-                        msg: "This tracking area has already been treated!"
-                    });
-            } else if(alreadyUpward || upwardIsCompleted) {
-                Lobibox.alert("error",
-                    {
-                        msg: "This tracking area has already been upward!"
-                    });
-            }
-            else {
-                Lobibox.alert("error",
-                    {
-                        msg: "You can't treat a patient because the patient has not been examined."
-                    });
-            }
+                if(treatedIsCompleted){//error messages para sa pag click ikaduha sa treated icon
+                    Lobibox.alert("error",
+                        {
+                            msg: "This tracking area has already been treated!"
+                        });
+                }
+            // } else if(alreadyTreated || treatedIsCompleted) {
+            //     console.log("treatedIsCompleted",treatedIsCompleted);
+            //     Lobibox.alert("error",
+            //         {
+            //             msg: "This tracking area has already been treated!"
+            //         });
+            // } else if(alreadyUpward || upwardIsCompleted) {
+            //     Lobibox.alert("error",
+            //         {
+            //             msg: "This tracking area has already been upward!"
+            //         });
+            // }
+            // else {
+            //     Lobibox.alert("error",
+            //         {
+            //             msg: "You can't treat a patient because the patient has not been examined."
+            //         });
+            // }
 
 
         }
-        
     }
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -679,6 +700,7 @@
         $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
         $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
+        const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
         const prescribedIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
         //--------
@@ -706,7 +728,7 @@
                 {
                     msg: "This tracking area has already been treated!"
                 });
-        }else if(alreadyUpward){//Gi add ni nako nga condition para dili nani siya mo follow up kung ang patiente na upward na
+        }else if(alreadyUpward || upwardIsCompleted){//Gi add ni nako nga condition para dili nani siya mo follow up kung ang patiente na upward na
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been Upward level!"
@@ -714,7 +736,11 @@
         }
         else if(treatedIsCompleted) {
             telemedicine = 1;
-            $("#telemedicineFollowupFormModal").modal('show');
+            //$("#telemedicineFollowupFormModal").modal('show');
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been treated!"
+                });
         }
         else if(!examinedPatient && !prescribedIsCompleted) {
             Lobibox.alert("error",
@@ -794,28 +820,52 @@
         $("#telemedicineFollowupFormModal").modal('show');
     }
 
-    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to) {
-        var url = "<?php echo asset('api/video/call'); ?>";
-        var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "tracking_id" : tracking_id,
-            "code" : code,
-            "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
-            "referring_md" : referring_md,
-            "trigger_by" : "{{ $user->id }}",
-            "form_type" : form_tpe,
-            "activity_id" : activity_id,
-            "referred_to" : referred_to
-        };
-        $.post(url,json,function(){});
-        var windowName = 'NewWindow'; // Name of the new window
-        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
-        if (newWindow && newWindow.outerWidth) {
-            // If the window was successfully opened, attempt to maximize it
-            newWindow.moveTo(0, 0);
-            newWindow.resizeTo(screen.availWidth, screen.availHeight);
+    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow) {
+        const upwardIsCompleted = $('#upward_progress'+code+activity_id).hasClass('completed');
+        const treatedIsCompleted = $('#treated_progress'+code+activity_id).hasClass('completed');
+        const acceptedComplete = $("#accepted_progress"+code+activity_id).hasClass('completed');
+        console.log('accepted',acceptedComplete)
+        if(alreadyTreated || alreadyfollow || treatedIsCompleted    ){// I am adding this condition for consultation tracking icon condition
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been followed or treated!"
+                });
+        }else if(!acceptedComplete){
+            Lobibox.alert("error",
+                {
+                    msg: "You cannot Consult unless the user accept your Appointment!"
+                });
         }
+        else if(alreadyReferred || alreadyupward || upwardIsCompleted ){// I am adding this condition for consultation tracking icon condition
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been Upward or Refferred!"
+                });
+        }else{
+            var url = "<?php echo asset('api/video/call'); ?>";
+            var json = {
+                "_token" : "<?php echo csrf_token(); ?>",
+                "tracking_id" : tracking_id,
+                "code" : code,
+                "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
+                "referring_md" : referring_md,
+                "trigger_by" : "{{ $user->id }}",
+                "form_type" : form_tpe,
+                "activity_id" : activity_id,
+                "referred_to" : referred_to
+            };
+            $.post(url,json,function(){});
+            var windowName = 'NewWindow'; // Name of the new window
+            var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
+            if (newWindow && newWindow.outerWidth) {
+                // If the window was successfully opened, attempt to maximize it
+                newWindow.moveTo(0, 0);
+                newWindow.resizeTo(screen.availWidth, screen.availHeight);
+            }
+
+        }
+
     }
 
     function telemedicinePrescription(track_id, activity_id, referred_code, referred_id) {
@@ -834,23 +884,32 @@
         }
     }
 
-    function telemedicineLabResult(activity_id) {
+    function telemedicineLabResult(activity_id,lab_request,request_id) {
+        const labIscompleted = $("#lab_progress"+request_id).addClass("completed");
         const url = "{{ asset('api/check/labresult') }}";
-        var json = {
-            "activity_id" : activity_id
-        };
-        $.post(url,json,function(result) {
+            var json = {
+                "activity_id" : activity_id
+            };
+
+        // if(lab_request && labIscompleted){
+        //     Lobibox.alert("error",
+        //         {
+        //             msg: "No lab request has been created by the referred doctor"
+        //         });
+        // }else{
+            $.post(url,json,function(result) {
             if(result) {
                 const pdf_url = "{{ asset('doctor/print/labresult') }}";
                 window.open(`${pdf_url}/${activity_id}`);
-            }
-            else {
+            }else {
                 Lobibox.alert("error",
                 {
                     msg: "No lab request has been created by the referred doctor"
                 });
             }
-        })
+        });
+        //}
+   
     }
 
     function telemedicineEndPatient(alreadyTreated, alreadyReferred, alreadyFollowUp, alreadyEnd, code, referred_id) {

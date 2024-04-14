@@ -2602,6 +2602,12 @@ class ApiController extends Controller
                 'laboratory_code' => $row
             ]);
         }
+        // $broadcast_labrequest = [ // I add this changes
+        //     "laboratory_code" =>$request->laboratory_code,
+        //     "request_by" =>$request->requested_by,
+        //     "activity_id" =>$request->activity_id
+        // ];
+        // broadcast(new SocketReferralDischarged($broadcast_labrequest)); 
         return response()->json(['lab_request' => $request->all()], Response::HTTP_CREATED);
     }
 

@@ -19,7 +19,6 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","accepted");
     $referred_accepted_track = $referred_accepted_hold->exists();
-
     $referred_rejected_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_to",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
@@ -73,6 +72,8 @@
     $followup_track = \App\Activity::where("code",$row->code)
         ->where("status","followup")
         ->get();
+    $lab_request = \App\LabRequest::where("activity_id",$referred_track->id)
+        ->first(); // I am adding this condition for error messages of lab result icon
 
     //reset the variable in followup if followup not exist
     $followup_queued_track = 0;
@@ -146,7 +147,7 @@
             </div>
         </div>
         <div class="stepper-item @if($referred_examined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}','{{$referred_treated_track}}','{{$referred_redirected_track}}','{{$referred_upward_track}}','{{$referred_followup_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
             <div class="step-name">Consultation</div>
         </div>
 
@@ -161,7 +162,7 @@
                     `{{ $referred_track->id }}`)" >
                     <i class="fa fa-file-text-o"></i> Prescription
                     </a>&nbsp;&nbsp;
-                    <a class="btn btn-app" onclick="telemedicineLabResult(`{{ $referred_track->id }}`)">
+                    <a class="btn btn-app" onclick="telemedicineLabResult(`{{ $referred_track->id }}`, `{{$lab_request->laboratory_code}}`)">
                         <i class="fa fa-building-o"></i> Lab Result
                         </a>'>
                 <i class="fa fa-home" aria-hidden="true"></i>
@@ -283,6 +284,9 @@
                 ->where("status","end")
                 ->exists();
 
+            $lab_request = \App\LabRequest::where("activity_id",$follow_track->id)
+                ->first(); // I am adding this condition for error messages of lab result icon
+                
             ?>
             <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
             <div class="stepper-wrapper">
@@ -336,13 +340,30 @@
                     </div>
                 </div>
                 <div class="stepper-item @if($follow_examined_track) completed @endif" id="examined_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}','{{$follow_treated_track}}','{{$follow_redirected_track}}','{{$follow_upward_track}}','{{$follow_followup_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
                     <div class="step-name">Consultation</div>
                 </div>
-                <div class="stepper-item stepper-item-prescription @if($follow_examined_track) completed @endif" id="prescribed_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-prescription" onclick="telemedicinePrescription('{{ $row->id }}','{{ $follow_prescription_hold->first()->id }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-home" aria-hidden="true"></i></div>
-                    <div class="step-name" style="margin-right:10px;">Disposition</div>
+                
+                <div class="stepper-item stepper-item-prescription @if($follow_examined_track || $follow_prescription_track) completed @endif" id="prescribed_progress{{ $follow_track->code.$follow_track->id }}" id="lab_progress{{$lab_request->requested_by}}">
+                    <div class="step-counter step-counter-prescription popoverTelemedicine"
+                    data-toggle="popover"
+                    data-placement="top"
+                    title='Generate PDF<button type="button" class="close" onclick="closePopover();">×</button>'
+                    data-content='<a class="btn btn-app" onclick="telemedicinePrescription(`{{$row->id}}`,
+                    `{{ $follow_prescription_hold->first()->id }}`,
+                    `{{ $follow_track->code }}`,     
+                    `{{ $follow_track->id }}`)" >
+                    <i class="fa fa-file-text-o"></i> Prescription
+                    </a>&nbsp;&nbsp;
+                    <a class="btn btn-app" onclick="telemedicineLabResult(`{{ $follow_track->id }}`,`{{ $lab_request->laboratory_code}}`,`{{$lab_request->requested_by}}`)">
+                    <input type="hidden" id="user_request" name="user" value="">    
+                    <i class="fa fa-building-o"></i> Lab Result
+                    </a>'>
+                    <i class="fa fa-home" aria-hidden="true"></i>
                 </div>
+                    <div class="step-name" style="margin-right:10px;">Disposition</div>
+            </div>
+
 <!--Original code -->{{-- <div class="stepper-item-upward @if($follow_upward_track) completed @endif" id="upward_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter"><i class="fa fa-caret-up" aria-hidden="true" style="font-size:25px"></i></div>
                     <div class="step-name">Upward</div>--}} <!-- end of original code-->
