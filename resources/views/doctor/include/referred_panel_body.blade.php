@@ -119,9 +119,9 @@
         </div>
         <div class="stepper-item @if( ($referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter {{ $referred_notarrived_track && !$referred_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $referred_track->code.$referred_track->id }}">
-                {!! $referred_notarrived_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 18px; color: red;"></i><i class="fa fa-cloud" aria-hidden="true" style="font-size: 18px; color: gray;"></i>' : 
-                '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 18px;"></i>' !!}</div>
-                @if($referred_notarrived_track)
+                {!! $referred_notarrived_track && !$referred_rejected_track && !$referred_cancelled_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' : 
+                '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>' !!}</div>
+                @if($referred_notarrived_track && !$referred_rejected_track && !$referred_cancelled_track)
                     <div class="step-name not_arrived">Not Arrived</div>
                 @else
                     <div class="step-name" id="arrived_name{{ $referred_track->code.$referred_track->id }}">Arrived</div>
@@ -234,9 +234,9 @@
                     <div class="step-name">Departed</div>
                 </div>
                 <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 18px; color: red;"></i><i class="fa fa-cloud" aria-hidden="true" style="font-size: 18px; color: gray;"></i>' : 
-                    '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 18px"></i>' !!}</div>
-                    @if($redirected_notarrived_track)
+                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' : 
+                    '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px"></i>' !!}</div>
+                    @if($redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track)
                         <div class="step-name not_arrived">Not Arrived</div>
                     @else
                         <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
