@@ -176,11 +176,10 @@ $user = Session::get('auth');
                                 <a href="#transferModal" data-toggle="modal"
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
                             @endif  -->
-                            @if((Session::get('referred_accepted_track') || Session::get('redirected_accepted_track') ) && !Session::get('referred_travel_track') && !Session::get('redirected_travel_track') && !Session::get('referred_arrived_track') && !Session::get('redirected_arrived_track') && $row->referred_from == $user->facility_id)
+                            @if((Session::get('referred_accepted_track') || Session::get('redirected_accepted_track') ) || !Session::get('referred_travel_track') && !Session::get('redirected_travel_track') && !Session::get('referred_arrived_track') && !Session::get('redirected_arrived_track') && $row->referred_from == $user->facility_id)
                                 <a href="#transferModal" data-toggle="modal"
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
                             @endif
-                          
                             <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                                     data-target="#feedbackModal"
                                     data-code="{{ $row->code }}"

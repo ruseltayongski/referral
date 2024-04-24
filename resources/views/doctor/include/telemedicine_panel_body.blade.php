@@ -653,14 +653,15 @@
                 </div>
                 <!----------------my changes jondy--------------->
                 <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter"><i class="fa fa-ambulance" aria-hidden="true"></i></div>
+                    <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
                     <div class="step-name">Departed</div>
                 </div>
                 <!----------------my changes jondy--------------->
                 <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}"><i class="fa fa-hospital-o" aria-hidden="true"></i></div>
+                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
+                         '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px"></i>' !!}</div>
                   
-                    @if($redirected_notarrived_track)
+                    @if($redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track)
                         <div class="step-name not_arrived">Not Arrived</div>
                     @else
                         <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
@@ -1121,9 +1122,9 @@ function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,posi
     }
 
     //---------------------------------------------------------------------------------------------------
-    let modalOpen = false; //Flag to track if modal is para ma reload ang page use ESC key
+    var modalOpenEsc = false; //Flag to track if modal is para ma reload ang page use ESC key
     function openFileViewer(position,code, activity_id, follow_id, baseUrl, fileNames, allfiles) {
-        modalOpen = true; //  Set flag to true when modal is opened
+        modalOpenEsc = true; //  Set flag to true when modal is opened
         if(document.getElementById('carouselmodaId')){
             return;
         }

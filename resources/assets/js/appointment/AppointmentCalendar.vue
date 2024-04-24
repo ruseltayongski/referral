@@ -92,9 +92,16 @@
             },
             eventRenderFunction(event, element) {
                 //console.log(event,event.start.format('YYYY-MM-DD'))
+                let currentDate = new Date().toISOString().split('T')[0];
                 this.$nextTick(() => {
                     const targetTd = $(".fc-day[data-date='" + event.start.format('YYYY-MM-DD') + "']")
-                    targetTd.css('background-color', '#00a65a') //color the td of day in calendar
+                    const date = targetTd.attr('data-date')
+                    if(date < currentDate){
+                        targetTd.css('background-color', 'red') //color the td of day in calendar'
+                    }else{
+                        targetTd.css('background-color', '#00a65a') //color the td of day in calendar'
+                    }
+
                     targetTd.addClass("add-cursor-pointer");
                     $(".fc-content").remove()
                 });
