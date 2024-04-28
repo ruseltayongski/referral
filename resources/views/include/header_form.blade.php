@@ -15,10 +15,9 @@
                 </div>
             </div>
             <div class="col-md-2">
-                {{--<img src="{{ asset('resources/img/f1.jpg') }}" width="100">--}}
                 @if($form->code)
-                    <script src="{{ asset('public/js/app_qr.js?version=').date('YmdHis') }}" defer></script>
-                    <div id="app_qr">
+                    <script src="{{ asset('public/js/app_qr_'.$optionHeader.'.js?version='.date('YmdHis')) }}" defer></script>
+                    <div id="app_qr_{{ $optionHeader }}">
                         <qr-app :patient_code="'{{ $form->code }}'" :telemedicine="{{ $form->telemedicine }}"></qr-app>
                     </div>
                 @endif

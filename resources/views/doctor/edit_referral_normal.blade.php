@@ -121,7 +121,7 @@ $facilities = \App\Facility::select('id','name')
 
 <form action="{{ url('doctor/referral/edit') }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">
     <div class="jim-content">
-        @include('include.header_form')<br>
+        @include('include.header_form', ['optionHeader' => 'edit'])<br>
         <div class="form-group-sm form-inline">
             {{ csrf_field() }}
             <input type="hidden" name="id" value="{{ $id }}">

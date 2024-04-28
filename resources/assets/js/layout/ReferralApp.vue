@@ -736,9 +736,10 @@
                     else if(event.payload.notif_type === "undo cancel") {
                         if(event.payload.referred_to === this.user.facility_id) {
                             console.log('undo cancel');
+                            console.log('undo status', event.payload.status);
                             console.log(event.payload);
                             let status = event.payload.status;
-                            if(status === 'referred' || status === 'redirected' || status === 'accepted') {
+                            if(status === 'referred' || status === 'redirected' || status === 'accepted' || status === 'followup') { // I add this code status === 'followup' to realtime the undo of cancellation in followup status
                                 let type = event.payload.form_type;
                                 type = type==='normal' ? 'normal-section':'pregnant-section';
                                 let referral_type = (type==='normal-section') ? 'normal':'pregnant';
@@ -944,6 +945,7 @@
                         }
                     }
                     else if(event.payload.notif_type === "queue patient") {
+                        console.log("que at::", event.payload);
                         if(event.payload.referred_from === this.user.facility_id) {
                             this.notifyReferralQueueUpdated(event.payload.patient_code, event.payload.activity_id, event.payload.remarks, event.payload.date_queued, event.payload.patient_name, event.payload.queued_by, event.payload.queued_by_facility, event.payload.redirect_track, event.payload.first_queue);
                         }

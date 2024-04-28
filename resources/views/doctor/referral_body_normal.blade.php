@@ -34,7 +34,7 @@
     }
 </style>
 
-@include('include.header_form')
+@include('include.header_form', ['optionHeader' => 'referred'])<br>
 
 <table class="table table-striped form-label referral-table">
     <tr>

@@ -713,6 +713,7 @@ $counter = 0;
                 url: "{{ url('doctor/patient/refer/pregnant') }}",
                 type: 'POST',
                 success: function(data){
+                    console.log("patient", data);
                     //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
                     if(data.referred_to == 790 || data.referred_to == 23) {
                         var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();

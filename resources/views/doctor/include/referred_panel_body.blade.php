@@ -35,11 +35,6 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","travel")
         ->exists();
-    $referred_referred_track = \App\Activity::where("code",$referred_track->code)
-        // ->where("referred_to",$referred_track->referred_from)
-        ->where("created_at",">=",$referred_track->created_at)
-        ->where("status","referred")
-        ->exists(); //I will remove this 
     Session::put('referred_travel_track',$referred_travel_track);   // I add this on 20/3/24
     $referred_arrived_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_from",$referred_track->referred_to)
@@ -52,6 +47,7 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","archived")
         ->exists();
+    Session::put('referred_notarrived_track',$referred_notarrived_track); // I add this on 
     $referred_admitted_track = \App\Activity::where("code",$referred_track->code)
         ->where("referred_from",$referred_track->referred_to)
         ->where("created_at",">=",$referred_track->created_at)
@@ -90,7 +86,7 @@
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
         </div>
-        <div class="text-center stepper-item @if($referred_accepted_track || $referred_rejected_track) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="text-center stepper-item @if($referred_accepted_track  && (!$referred_rejected_track || !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter
                                         <?php
             if($referred_cancelled_track)
@@ -101,9 +97,16 @@
                 echo "bg-orange";
             ?>
             " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">
-                    {!! $referred_cancelled_track || $referred_rejected_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : 
-                    ($referred_queued_track && !$referred_accepted_track? '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : 
-                    '<i class="fa fa-thumbs-up completed" aria-hidden="true" style="font-size:15px;"></i>')  !!} 
+            <?php
+                    if($referred_rejected_track)
+                        echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
+                    elseif($referred_cancelled_track)
+                        echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
+                    elseif($referred_queued_track && !$referred_accepted_track)
+                        echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
+                    else
+                        echo'<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>';
+                ?>
                     </span></div>
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                 <?php
@@ -118,6 +121,7 @@
                 ?>
             </div>
         </div>
+
         <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
             <div class="step-name">Departed</div>
@@ -172,7 +176,7 @@
                 ->where("status","cancelled")
                 ->exists();
             $redirected_travel_track = \App\Activity::where("code",$redirect_track->code)
-                // ->where("referred_to",$redirect_track->referred_from)
+                // ->where("referred_to",$redirect_track->referred_from) // I uncomment this 
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","travel")
                 ->exists();
@@ -189,6 +193,7 @@
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","archived")
                 ->exists();
+            Session::put('redirected_notarrived_track',$redirected_notarrived_track); // I add this on 
             $redirected_admitted_track = \App\Activity::where("code",$redirect_track->code)
                 ->where("referred_from",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
@@ -248,11 +253,11 @@
                         <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
                     @endif
                 </div>
-                <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_cancelled_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_rejected_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
                 </div>
-                <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
                     <div class="step-name">Discharged</div>
                 </div>

@@ -34,6 +34,7 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","examined")
         ->exists();
+    Session::put('referred_examined_track', $referred_examined_track);// I add this on 
     $referred_prescription_hold = \App\Activity::where("code",$referred_track->code)
         ->where("referred_from",$referred_track->referred_from)
         ->where("created_at",">=",$referred_track->created_at)
@@ -62,7 +63,6 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","end")
         ->exists();
-
     $redirected_track = \App\Activity::where("code",$row->code)
         ->where(function($query) {
             $query->where("status","redirected")
@@ -110,7 +110,7 @@
         <div class="text-center stepper-item @if($referred_accepted_track) completed @endif" data-actionmd="" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter
             <?php
-                if($referred_cancelled_track)
+                if($referred_cancelled_track && !$referred_accepted_track)
                     echo "bg-yellow";
                 elseif($referred_rejected_track)
                     echo "bg-red";
@@ -123,7 +123,7 @@
                 <?php
                     if($referred_rejected_track)
                         echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
-                    elseif($referred_cancelled_track)
+                    elseif($referred_cancelled_track && !$referred_accepted_track)
                         echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
                     elseif($referred_queued_track && !$referred_accepted_track)
                         echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
@@ -135,7 +135,7 @@
             
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                 <?php
-                if($referred_cancelled_track)
+                if($referred_cancelled_track && !$referred_accepted_track)
                     echo 'Cancelled';
                 elseif($referred_rejected_track)
                     echo 'Declined';
@@ -283,7 +283,6 @@
                 ->where("created_at",">",$follow_track->created_at)
                 ->where("status","end")
                 ->exists();
-
             $lab_request = \App\LabRequest::where("activity_id",$follow_track->id)
                 ->first(); // I am adding this condition for error messages of lab result icon
                 
@@ -302,7 +301,7 @@
                     <div class="step-counter
                     
                         <?php
-                            if($follow_cancelled_track)
+                            if($follow_cancelled_track && !$follow_accepted_track)
                                 echo "bg-yellow";
                             elseif($follow_rejected_track)
                                 echo "bg-red";
@@ -313,7 +312,7 @@
                         id="rejected_progress{{ $follow_track->code.$follow_track->id }}">
                         <div id="follow_queue_number{{ $follow_track->code.$follow_track->id }}">
                             <?php
-                                if($follow_cancelled_track)
+                                if($follow_cancelled_track && !$follow_accepted_track)
                                     echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
                                 elseif($follow_rejected_track)
                                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
@@ -328,7 +327,7 @@
                   
                     <div class="text-center step-name" id="rejected_name{{ $follow_track->code.$follow_track->id }}">
                     <?php
-                        if($follow_cancelled_track)
+                        if($follow_cancelled_track && !$follow_accepted_track)
                             echo 'Cancelled';
                         elseif($follow_rejected_track)
                             echo 'Declined';
@@ -578,7 +577,7 @@
                 ->where("status","cancelled")
                 ->exists();    
             $redirected_travel_track = \App\Activity::where("code",$redirect_track->code)
-                ->where("referred_to",$redirect_track->referred_from)
+                // ->where("referred_to",$redirect_track->referred_from) // I remove this para mo highlight ang depart
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","travel")
                 ->exists();
@@ -656,12 +655,13 @@
                     <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
                     <div class="step-name">Departed</div>
                 </div>
+         
                 <!----------------my changes jondy--------------->
-                <div class="stepper-item @if( ($redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
+                <div class="stepper-item @if($redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
+                    <div class="step-counter {{ $redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
                          '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px"></i>' !!}</div>
                   
-                    @if($redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track)
+                    @if($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track)
                         <div class="step-name not_arrived">Not Arrived</div>
                     @else
                         <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
