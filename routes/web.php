@@ -655,6 +655,7 @@ Route::post('doctor/referral/queuePatient','doctor\ReferralCtrl@queuePatient');
 Route::match(['GET','POST'],'doctor/duplicate','doctor\ReferralCtrl@duplicates');
 Route::match(['GET','POST'],'doctor/telemedicine','doctor\TelemedicineCtrl@index');
 
+Route::get('/get-booked-dates', 'doctor\TelemedicineCtrl@getBookedDates')->name('get-booked-dates'); // I add this to get all dates that booked by the user
 Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCalendar');
 Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment');
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');

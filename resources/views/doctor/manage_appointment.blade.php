@@ -30,6 +30,10 @@
             display: block;
             width: 100%;
         }
+
+        .already-appointed {
+        background-color: #FFA07A; /* trapping background color of the Date appointment */
+    }
     </style>
 @endsection
 
@@ -135,7 +139,7 @@
                                 <div class="col-md-4">
                                     <div class="label-border">
                                         <label for="appointed_date">Appointment Date:</label>
-                                        <input type="date" class="form-control appointment_date" name="appointed_date" required>
+                                        <input type="date" class="form-control appointment_date" name="appointed_date" id="appointment_date" required>
                                         <input type="hidden" name="appointment_count" class="appointment_count" value="1">
 
                                         <label for="facility_id">Facility:</label>
@@ -149,48 +153,50 @@
                                     </div>
                                 </div>
                                 <div class="col-md-8">
-                                    <div class="label-border">
-                                        <div id="opdCategoryContainer">
-                                            <div>
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <label for="appointed_time">Appointment Time:</label><br>
-                                                        <div class="col-md-6">
-                                                            <span>From:</span>
-                                                            <input type="time" class="form-control" name="appointed_time1" required>
+                                    <div class ="time-input-group">
+                                        <div class="label-border">
+                                            <div id="opdCategoryContainer">
+                                                <div>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label for="appointed_time">Appointment Time:</label><br>
+                                                            <div class="col-md-6">
+                                                                <span>From:</span>
+                                                                <input type="time" class="form-control" name="appointed_time1" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <span>To:</span>
+                                                                <input type="time" class="form-control" name="appointed_time_to1" required>
+                                                            </div>
+                                                            <label for="opdCategory">OPD Category:</label>
+                                                            <select class="form-control select2" name="opdCategory1" id="opdCategory" required>
+                                                                <option selected value="">Select OPD Category</option>
+                                                                <option value="Family Medicine">Family Medicine</option>
+                                                                <option value="Internal Medicine">Internal Medicine</option>
+                                                                <option value="General Surgery">General Surgery</option>
+                                                                <option value="Trauma Care">Trauma Care</option>
+                                                                <option value="Burn Care">Burn Care</option>
+                                                                <option value="Ophthalmology">Ophthalmology</option>
+                                                                <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                                <option value="ENT">ENT</option>
+                                                                <option value="Neurosurgery">Neurosurgery</option>
+                                                                <option value="Urosurgery">Urosurgery</option>
+                                                                <option value="Toxicology">Toxicology</option>
+                                                                <option value="OB-GYNE">OB-GYNE</option>
+                                                                <option value="Pediatric">Pediatric</option>
+                                                            </select>
                                                         </div>
-                                                        <div class="col-md-6">
-                                                            <span>To:</span>
-                                                            <input type="time" class="form-control" name="appointed_time_to1" required>
-                                                        </div>
-                                                        <label for="opdCategory">OPD Category:</label>
-                                                        <select class="form-control select2" name="opdCategory1" id="opdCategory" required>
-                                                            <option selected value="">Select OPD Category</option>
-                                                            <option value="Family Medicine">Family Medicine</option>
-                                                            <option value="Internal Medicine">Internal Medicine</option>
-                                                            <option value="General Surgery">General Surgery</option>
-                                                            <option value="Trauma Care">Trauma Care</option>
-                                                            <option value="Burn Care">Burn Care</option>
-                                                            <option value="Ophthalmology">Ophthalmology</option>
-                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
-                                                            <option value="ENT">ENT</option>
-                                                            <option value="Neurosurgery">Neurosurgery</option>
-                                                            <option value="Urosurgery">Urosurgery</option>
-                                                            <option value="Toxicology">Toxicology</option>
-                                                            <option value="OB-GYNE">OB-GYNE</option>
-                                                            <option value="Pediatric">Pediatric</option>
-                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label>Available Doctor</label>
+                                                        <select class="form-control select2 available_doctor1" name="available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor1" name="available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;" required></select>
-                                                </div>
                                             </div>
-                                        </div>
-                                        <div id="additionalTimeContainer" style="display: none;"></div>
-                                        <div style="margin-top: 15px;">
-                                            <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
+                                            <div id="additionalTimeContainer" style="display: none;"></div>
+                                            <div style="margin-top: 15px;">
+                                                <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -349,9 +355,6 @@
 
 @section('js')
     <script>
-        const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
-        document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
-
         @if(Session::get('appointment_save'))
         Lobibox.notify('success', {
             title: "",
@@ -361,6 +364,7 @@
         });
         <?php Session::put('appointment_save',false); ?>
         @endif
+        
         
         //----------------------------------------------------------------
         function UpdateModal(appointmentId) {
@@ -609,8 +613,98 @@
                 });
             });
         }
+        //----------------------Trapping Appointment Time From and Time To and Date----------------------------//    
+        const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
+        document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
 
+        $(document).ready(function() {
+        $.ajax({
+            url: "{{ route('get-booked-dates') }}",
+            type: 'GET',
+            success: function(response){
+                 console.log("response", response);
+                
+                // var currentDate = new Date(); // Get current date
 
+                // var filteredDates = response.filter(function(dateString) {
+                //     var date = new Date(dateString);
+                //     return date >= currentDate; // Filter out past dates
+                // });
+                // console.log('filteredDates', filteredDates);
+
+                $(function() {
+                    $('#appointment_date').on('input', function() {
+                        var selectedDate = $(this).val();
+                        if (response.includes(selectedDate)) {
+                            $(this).val('');
+                            $(this).addClass('already-appointed');
+                            alert('This date is Already Appointed. Please select another date.');
+                        }else{
+                            $(this).removeClass('already-appointed');
+                        }
+                    });
+                });
+    
+            },
+            error: function(xhr, status, error){
+                console.error(xhr, responseText);
+            }
+        });
+    });
+
+        var allAppointmentTimes = [];
+        var currentCounts = 1;
+       
+        $(document).on('change', 'input[type="time"]', function() {
+          
+            var timeInputGroup = $(this).closest('.time-input-group');
+            var index = $('.time-input-group').index(timeInputGroup) + 1;
+            currentCounts = index;
+           
+            var fromInput = timeInputGroup.find('input[name^="appointed_time' + currentCounts + '"]');
+            var toInput = timeInputGroup.find('input[name^="appointed_time_to' + currentCounts + '"]');
+             
+            var fromTime = fromInput.val();
+            var toTime = toInput.val();
+
+            var fromTimeObj = new Date("2000-01-01T" + fromTime);
+            var toTimeObj = new Date("2000-01-01T" + toTime);
+
+            if (toTimeObj <= fromTimeObj) {
+                alert('End time must be after start time');
+                toInput.val('');
+                return;
+            }
+            
+            var isUnique = true;
+            var timeObject = {
+                from: fromTimeObj,
+                to: toTimeObj
+            };
+
+            for (var i =0; i < allAppointmentTimes.length; i++){
+                var existingTime = allAppointmentTimes[i];
+                //console.log('existingTime:: ',existingTime.from, 'existing :', existingTime.to);
+                //console.log('existingTime:: ',timeObject.from, 'new time:', timeObject.to);
+                if ((timeObject.from >= existingTime.from && timeObject.from < existingTime.to) ||(timeObject.to > existingTime.from && timeObject.to <= existingTime.to) ||
+                    (timeObject.from <= existingTime.from && timeObject.to >= existingTime.to)) 
+                {
+                    isUnique = false;
+                    break;
+                }
+            }
+            if(!isUnique) {
+                alert('Appointment time must be unique');
+                fromInput.val('');
+                toInput.val('');
+                return;
+            }
+            allAppointmentTimes.push(timeObject);
+            allAppointmentTimes = allAppointmentTimes.filter(appointment => appointment.to instanceof Date && !isNaN(appointment.to));
+            console.log("allAppointmentTimes", allAppointmentTimes);
+        });            
+ //----------------------End Trapping Appointment Time From and Time To----------------------------// 
+    
         @if(Session::get('appt_notif'))
         Lobibox.notify('success', {
             title: "",

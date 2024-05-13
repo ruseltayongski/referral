@@ -94,12 +94,19 @@
                 //console.log(event,event.start.format('YYYY-MM-DD'))
                 let currentDate = new Date().toISOString().split('T')[0];
                 this.$nextTick(() => {
-                    const targetTd = $(".fc-day[data-date='" + event.start.format('YYYY-MM-DD') + "']")
-                    const date = targetTd.attr('data-date')
+                    const targetTd = $(".fc-day[data-date='" + event.start.format('YYYY-MM-DD') + "']");
+                    const targetdrag = $(".fc-draggable[data-date='" + event.start.format('YYYY-MM-DD') + "']");
+                    const targetGrid = $('.fc-day-grid-event');
+                    const date = targetTd.attr('data-date');
+                    
                     if(date < currentDate){
-                        targetTd.css('background-color', 'red') //color the td of day in calendar'
+                        targetTd.css('background-color', '#6C757D'); //color the td of day in calendar'
+                        targetGrid.css('border-color', "#6C757D");
+                        targetdrag.remove();
                     }else{
                         targetTd.css('background-color', '#00a65a') //color the td of day in calendar'
+                        targetdrag.css('border-color', "#00a65a");
+                        targetGrid.remove();
                     }
 
                     targetTd.addClass("add-cursor-pointer");

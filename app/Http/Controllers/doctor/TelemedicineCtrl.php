@@ -117,7 +117,14 @@ class TelemedicineCtrl extends Controller
         Session::put('appointment_save',true);
         return redirect()->back();
     }
+    //-------------Get all booked Dates--------------------------------------
+    public function getBookedDates(){
+        $user = Session::get('auth');
 
+        $bookDates = AppointmentSchedule::where('facility_id', $user->facility_id)->pluck('appointed_date')->toArray();
+        return response()->json($bookDates);
+    }
+    //-------------End of get all booked dates-------------------------------
     public function getAppointmentData(Request $request)
     {
         $appointment = AppointmentSchedule::find($request->id);

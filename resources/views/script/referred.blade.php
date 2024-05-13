@@ -884,21 +884,14 @@
         }
     }
 
-    function telemedicineLabResult(activity_id,lab_request,request_id) {
-        const labIscompleted = $("#lab_progress"+request_id).addClass("completed");
+    function telemedicineLabResult(activity_id,lab_code) {
         const url = "{{ asset('api/check/labresult') }}";
-            var json = {
-                "activity_id" : activity_id
-            };
-
-        // if(lab_request && labIscompleted){
-        //     Lobibox.alert("error",
-        //         {
-        //             msg: "No lab request has been created by the referred doctor"
-        //         });
-        // }else{
-            $.post(url,json,function(result) {
-            if(result) {
+        var json = {
+            "activity_id" : activity_id
+        };
+  
+        $.post(url,json,function(result) {
+            if(result.id) {
                 const pdf_url = "{{ asset('doctor/print/labresult') }}";
                 window.open(`${pdf_url}/${activity_id}`);
             }else {
@@ -908,8 +901,6 @@
                 });
             }
         });
-        //}
-   
     }
 
     function telemedicineEndPatient(alreadyTreated, alreadyReferred, alreadyFollowUp, alreadyEnd, code, referred_id) {

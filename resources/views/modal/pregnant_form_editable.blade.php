@@ -7,6 +7,10 @@
         ->where('referral_used','yes')
         ->orderBy('name','asc')->get();
     $reason_for_referral = \App\ReasonForReferral::get();
+    $appointmentParam = $_GET['appointment']; // I add this
+    $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
+    $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
+
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">
     <div class="modal-dialog modal-lg" role="document">
@@ -22,7 +26,8 @@
                     <input type="hidden" name="code" value="" />
                     <input type="hidden" name="source" value="{{ $source }}" />
                     <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" /><br>
-
+                    <input type="hidden" name="appointmentId" value="{{ $telemedicine_appointment_id }}" /><!-- I add this changes for passing to the controller -->
+                    <input type="hidden" name="doctorId" value="{{ $telemedicine_doctor_id }}" /><!-- I add this changes for passing to the controller -->
                     <div class="row">
                         <div class="col-md-12">
                             <b>REFERRAL RECORD</b>

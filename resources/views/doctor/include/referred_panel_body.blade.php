@@ -58,6 +58,11 @@
         ->where("created_at",">=",$referred_track->created_at)
         ->where("status","discharged")
         ->exists();
+    $referred_transferred_track = \App\Activity::where("code",$referred_track->code) // I add this changes for discharged highlight complete
+        ->where("referred_from",$referred_track->referred_to)
+        ->where("created_at",">=",$referred_track->created_at)
+        ->where("status","transferred")
+        ->exists();
     $redirected_track = \App\Activity::where("code",$row->code)
         ->where(function($query) {
             $query->where("status","redirected")
@@ -112,7 +117,7 @@
                 <?php
                 if($referred_cancelled_track)
                     echo 'Cancelled';
-                elseif($referred_rejected_track)
+                elseif($referred_rejected_track && !$referred_accepted_track)
                     echo 'Declined';
                 elseif($referred_queued_track && !$referred_accepted_track)
                     echo 'Queued at <br> <b>'. $queue_referred.'</b>';
@@ -140,7 +145,7 @@
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-        <div class="stepper-item @if($referred_discharged_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item @if($referred_discharged_track && !$referred_transferred_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
             <div class="step-name">Discharged</div>
         </div>
@@ -199,6 +204,12 @@
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","admitted")
                 ->exists();
+            $redirected_transferred_track = \App\Activity::where("code",$redirect_track->code) // i add this for discharge condition
+                // ->where("referred_from",$redirect_track->referred_to)
+                ->where("created_at",">=",$redirect_track->created_at)
+                ->where("status","transferred")
+                ->exists();
+            Session::put('redirected_transferred_track',$redirected_transferred_track);
             $redirected_discharged_track = \App\Activity::where("code",$redirect_track->code)
                 ->where("referred_from",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
@@ -226,8 +237,21 @@
                         echo "bg-orange";
                     ?>
                             " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
-                            {!! $redirected_rejected_track || $redirected_cancelled_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : 
-                       ($redirected_queued_track && !$redirected_accepted_track? '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>')  !!} 
+
+                    <?php
+                    if($redirected_rejected_track)
+                        echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
+                    elseif($redirected_cancelled_track)
+                        echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
+                    elseif($redirected_queued_track && !$redirected_accepted_track)
+                        echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
+                    else
+                        echo'<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>';
+                    ?>
+
+
+                       {{-- {!! $redirected_rejected_track || $redirected_cancelled_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : 
+                       ($redirected_queued_track && !$redirected_accepted_track? '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>')  !!} --}}
                         </div>
                     <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
                         if($redirected_rejected_track)
@@ -257,7 +281,7 @@
                     <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
                 </div>
-                <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="stepper-item @if($redirected_discharged_track && !$redirected_transferred_track && !$redirected_cancelled_track && !$redirected_rejected_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
                     <div class="step-name">Discharged</div>
                 </div>
