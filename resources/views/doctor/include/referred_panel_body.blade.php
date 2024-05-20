@@ -91,19 +91,21 @@
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
         </div>
-        <div class="text-center stepper-item @if($referred_accepted_track  && (!$referred_rejected_track || !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="text-center stepper-item @if($referred_accepted_track && (!$referred_rejected_track || !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter
                                         <?php
             if($referred_cancelled_track)
                 echo "bg-yellow";
-            elseif($referred_rejected_track)
+            elseif($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
+                echo "bg-red";
+            elseif($referred_rejected_track && $referred_travel_track)
                 echo "bg-red";
             elseif($referred_queued_track && !$referred_accepted_track)
                 echo "bg-orange";
             ?>
             " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">
             <?php
-                    if($referred_rejected_track)
+                    if($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
                         echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                     elseif($referred_cancelled_track)
                         echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
@@ -117,7 +119,7 @@
                 <?php
                 if($referred_cancelled_track)
                     echo 'Cancelled';
-                elseif($referred_rejected_track && !$referred_accepted_track)
+                elseif($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
                     echo 'Declined';
                 elseif($referred_queued_track && !$referred_accepted_track)
                     echo 'Queued at <br> <b>'. $queue_referred.'</b>';
@@ -226,10 +228,10 @@
                     <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
                     <div class="step-name">Seen</div>
                 </div>
-                <div class="stepper-item @if($redirected_accepted_track || $redirected_rejected_track || $redirected_cancelled_track) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="stepper-item @if($redirected_accepted_track && (!$redirected_rejected_track || !$redirected_cancelled_track)) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter
-                                                <?php
-                    if($redirected_rejected_track)
+                    <?php
+                    if($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
                         echo "bg-red";
                     elseif($redirected_cancelled_track)
                         echo "bg-yellow";
@@ -239,7 +241,7 @@
                             " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
 
                     <?php
-                    if($redirected_rejected_track)
+                    if($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
                         echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                     elseif($redirected_cancelled_track)
                         echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
@@ -254,7 +256,7 @@
                        ($redirected_queued_track && !$redirected_accepted_track? '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>')  !!} --}}
                         </div>
                     <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
-                        if($redirected_rejected_track)
+                        if($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
                             echo 'Declined';
                         elseif($redirected_cancelled_track)
                             echo 'Cancelled';
@@ -262,7 +264,8 @@
                             echo "Queued at <br><b>".$queue_redirected."</b>";
                         else
                             echo "Accepted"
-                        ?></div>
+                        ?>
+                    </div>
                 </div>
                 <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div><!--!-Sample Only--! -->

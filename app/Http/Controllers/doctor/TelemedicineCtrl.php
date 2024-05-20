@@ -135,34 +135,206 @@ class TelemedicineCtrl extends Controller
         return response()->json($appointment);
     }
 
+    //-------My version of getAppointmentData------------->
+
+    public function displayAppointment(Request $request)
+    {
+        //dd($id);
+        // $doctor_id =TelemedAssignDoctor::where('appointment_id', $request->id)
+        // ->pluck('doctor_id')->first();
+        // $appointment = AppointmentSchedule::find($request->id);
+        $appointed_date = AppointmentSchedule::where('id', $request->id)
+        ->pluck('appointed_date')
+        ->first();
+        $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)->
+            with([
+                'createdBy' => function ($query) {
+                    $query->select(
+                        'id',
+                        'username'
+                    );
+                },
+                'facility' => function ($query) {
+                    $query->select(
+                        'id',
+                        'name'
+                    );
+                },
+                'department' => function ($query) {
+                    $query->select(
+                        'id',
+                        'description'
+                    );
+                },
+                'telemedAssignedDoctor' => function ($query) {
+                    $query->with(['doctor' => function ($query) {
+                        $query->select(
+                            'id',
+                            'fname',
+                            'lname'
+                        );
+                    }]);
+                }
+            ])->get();
+        return response()->json($appointment);
+
+    }
+
+    public function deleteAppointmentSched(Request $request){
+
+        $appointed_date = AppointmentSchedule::where('id', $request->id)
+        ->pluck('appointed_date')
+        ->first();
+        $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)->
+            with([
+                'createdBy' => function ($query) {
+                    $query->select(
+                        'id',
+                        'username'
+                    );
+                },
+                'facility' => function ($query) {
+                    $query->select(
+                        'id',
+                        'name'
+                    );
+                },
+                'department' => function ($query) {
+                    $query->select(
+                        'id',
+                        'description'
+                    );
+                },
+                'telemedAssignedDoctor' => function ($query) {
+                    $query->with(['doctor' => function ($query) {
+                        $query->select(
+                            'id',
+                            'fname',
+                            'lname'
+                        );
+                    }]);
+                }
+            ])->get();
+    
+        return response()->json($appointment);
+    }
+
+    //------------end-------------------------------------->
+    // public function updateAppointment(Request $request)
+    // {
+    //     $validatedData = $request->validate([
+    //         'id' => 'required|integer',
+    //         'appointed_date' => 'required|date',
+    //         'appointed_time' => 'required',
+    //         'appointedTime_to' => 'required',
+    //         'facility_id' => 'required',
+    //         'department_id' => 'required',
+    //         'opdCategory' => 'required',
+    //         'slot' => 'required|integer',
+    //     ]);
+
+    //     $appointmentId = $validatedData['id'];
+    //     $appointment = AppointmentSchedule::find($appointmentId);
+
+    //     if (!$appointment) {
+    //         return response()->json(['error' => 'Appointment not found'], 404);
+    //     }
+
+    //     $appointment->fill($validatedData); // Update appointment attributes
+
+    //     if ($appointment->save()) {
+    //         return response()->json(['message' => 'Appointment updated successfully'], 200);
+    //     } else {
+    //         return response()->json(['error' => 'Failed to update appointment'], 500);
+    //     }
+    // }
+
+    //-------------------------Version of updateAppointment -----------------------------//
+
     public function updateAppointment(Request $request)
     {
-        $validatedData = $request->validate([
-            'id' => 'required|integer',
-            'appointed_date' => 'required|date',
-            'appointed_time' => 'required',
-            'appointedTime_to' => 'required',
-            'facility_id' => 'required',
-            'department_id' => 'required',
-            'opdCategory' => 'required',
-            'slot' => 'required|integer',
-        ]);
+        
+        $user = Session::get('auth');
 
-        $appointmentId = $validatedData['id'];
-        $appointment = AppointmentSchedule::find($appointmentId);
+        $appointmentDate = $request->input('update_appointment_date');
+        
+        $appointed_id = $request->input("appointment_id");
+        $appointed_date = AppointmentSchedule::where('id', $appointed_id)
+        ->pluck('appointed_date')
+        ->first();
+      
+        $requestCount = $request->appointment_count;
+      
+            for($i=2; $i<=$requestCount; $i++) { 
+                $appointment_id = $request->input('appointment_id' . $i);
+           
+                $appointment = AppointmentSchedule::with(['telemedAssignedDoctor' => function ($query) {
+                    $query->with(['doctor' => function ($query) {
+                        $query->select('id', 'fname', 'lname');
+                    }]);
+                }])->find($appointment_id);
 
-        if (!$appointment) {
-            return response()->json(['error' => 'Appointment not found'], 404);
+                if($appointment){
+
+                    $appointment->appointed_date = $request->input('appointed_date'); 
+                    $appointment->appointed_time =  $request->input('update_appointed_time' . $i);  
+                    $appointment->appointedTime_to = $request->input('update_appointed_to' . $i);
+                    $appointment->opdCategory = $request->input('opdCategory' . $i);
+                    $appointment->save();
+                    
+                    foreach($appointment->telemedAssignedDoctor as $assignedoctor){
+                        // dd($request->all());
+                        $assignedoctor->doctor_id = $request->input('available_doctor' . $i);
+                        $assignedoctor->save();
+                    }  
+                }
+            }
+       
+           
+        for($i=1; $i<=$request->appointment_count; $i++) { 
+
+                if(empty($request['appointed_time'.$i]) || empty($request['appointed_time_to'.$i]) || empty($request['opdCategory'.$i])) {
+                    continue;
+                }
+                
+                $Update_appointment_data = new AppointmentSchedule();
+                $Update_appointment_data->appointed_date = $appointmentDate;
+                $Update_appointment_data->facility_id = $request->facility_id;
+                $Update_appointment_data->department_id = 5;
+                $Update_appointment_data->appointed_time = $request['appointed_time'.$i];
+                $Update_appointment_data->appointedTime_to = $request['appointed_time_to'.$i];
+                $Update_appointment_data->opdCategory = $request['opdCategory'.$i];
+                $Update_appointment_data->created_by = $user->id;
+                $Update_appointment_data->save();
+                
+                $availableDoctors = is_array($request['available_doctor'.$i])
+                ? $request['available_doctor'.$i]
+                : [$request['available_doctor'.$i]];
+    
+                foreach($availableDoctors as $doctorId){
+                    $tele_assign_doctor = new TelemedAssignDoctor();
+                    $tele_assign_doctor->appointment_id = $Update_appointment_data->id;
+                    $tele_assign_doctor->doctor_id = $doctorId;
+                    $tele_assign_doctor->created_by = $user->id;
+                    $tele_assign_doctor->save();
+                }
         }
 
-        $appointment->fill($validatedData); // Update appointment attributes
+           
 
-        if ($appointment->save()) {
-            return response()->json(['message' => 'Appointment updated successfully'], 200);
-        } else {
-            return response()->json(['error' => 'Failed to update appointment'], 500);
-        }
+            Session::put('appointment_save',true);       
+        
+        return redirect()->back();
     }
+
+    public function deleteTimeSlot($id){
+        $appointedSlot = AppointmentSchedule::findOrFail($id);
+        $appointedSlot->delete();
+
+        return response()->json(['message' => 'Appointment successfully deleted']);
+    }
+
+    //-------------------------End version of updateAppointment ------------------------//
 
     public function deleteAppointment(Request $request)
     {

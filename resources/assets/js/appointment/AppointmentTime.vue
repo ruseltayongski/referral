@@ -37,14 +37,34 @@
             }
         },
         methods: {
-            areAllDoctorsNotAvailable(doctors,date) {
-                let currentDate = new Date().toISOString().split('T')[0];
+            areAllDoctorsNotAvailable(doctors,date,time) {
+                let currentDateTime = new Date();
+                let currentDate = currentDateTime.toISOString().split('T')[0];
+                let currentTime = currentDateTime.toTimeString().split(' ')[0].substring(0, 5);
+                console.log('time', time);
                 var doctor_available = doctors.every(doctor => doctor.appointment_by);
                 console.log('doctor_available', doctor_available);
-                if(date){
-                    //return date < currentDate || doctors.every(doctor => doctor.appointment_by);
-                    return date < currentDate;
+
+                 if (date) {
+                    // Check if the date is in the past
+                    if (date < currentDate) {
+                        return true;
+                    }
+                    // If the date is today, check if the time is in the past
+                    if (date === currentDate) {
+                        if (time < currentTime) {
+                            return true;
+                        }
+                    }
+                    return doctor_available; // Disable if all doctors are not available
                 }
+                return doctor_available; // Default to doctor availability if date is not provided
+
+                // if(date){
+                //     //return date < currentDate || doctors.every(doctor => doctor.appointment_by);
+                //     return date < currentDate;
+                // }
+                  
                 // // document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
                 // // document.querySelector('.hours_radio').setAttribute('min', currentDat);
                 // // $('.hours_radio').setAttribute('min', currentDate);
@@ -134,7 +154,7 @@
                                                 v-model="selectedAppointmentTime" 
                                                 :value="appointment.id" 
                                                 @change="handleAppointmentTimeChange"
-                                                :disabled="areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor,appointment.appointed_date)"
+                                                :disabled="areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor,appointment.appointed_date,appointment.appointed_time)"
                                             >&nbsp;&nbsp;
                                             <span :class="{ 'text-green' : !areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor),'text-red' : areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor) }">{{ appointment.appointed_time }} to {{ appointment.appointedTime_to }}</span>
                                             <ul v-if="appointment.id == selectedAppointmentTime" class="doctor-list" v-for="assignedDoctor in appointment.telemed_assigned_doctor" :key="assignedDoctor.id">

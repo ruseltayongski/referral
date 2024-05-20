@@ -34,6 +34,15 @@
         .already-appointed {
         background-color: #FFA07A; /* trapping background color of the Date appointment */
     }
+
+    .btn-xs {
+    padding: .90rem .15rem;
+    font-size: .880rem;
+    line-height: .5;
+    border-radius: .2rem;
+    }
+   
+
     </style>
 @endsection
 
@@ -195,7 +204,7 @@
                                             </div>
                                             <div id="additionalTimeContainer" style="display: none;"></div>
                                             <div style="margin-top: 15px;">
-                                                <button type="button" class="btn btn-info btn-sm" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
+                                                <button type="button" class="btn btn-info btn-xs" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
                                             </div>
                                         </div>
                                     </div>
@@ -230,7 +239,7 @@
     </div>
 
     <!-- Update Appointment Modal -->
-    <div class="modal fade" role="dialog" id="updateConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="updateConfirmationModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" role="dialog" id="updateConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="updateConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -254,9 +263,9 @@
                             <input type="time" class="form-control" name="update_appointedTime_to" id="update_appointedTime_to">
 
                             <label for="update_facility_id">Facility:</label>
-                            <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeUpdateDepartment($(this))" required>
+                            <select class="form-control" name="update_facility_id" id="update_facility_id" onchange="onchangeUpdateDepartment($(this))" required> -->
                                 <!-- <select class="form-control" name="update_facility_id" id="update_facility_id"> -->
-                                @foreach($facilityList as $facility)
+                                <!-- @foreach($facilityList as $facility)
                                     <option value="{{ $facility->id }}" selected>{{ $facility->name }}</option>
                                 @endforeach
                             </select>
@@ -282,10 +291,66 @@
                                 <option value="Toxicology">Toxicology</option>
                                 <option value="OB-GYNE">OB-GYNE</option>
                                 <option value="Pediatric">Pediatric</option>
-                            </select>
+                            </select> -->
 
                             <!-- <label for="update_slot">Slot:</label>
                             <input type="number" class="form-control" name="update_slot" id="update_slot" required> -->
+                        <!-- </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-success btn-sm" onclick="updateAppointment()"><i class="fa fa-check"></i> Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- My Update Appointment Version -->
+
+    <div class="modal fade" role="dialog" id="updateConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="addAppointmentForm" action="{{ route('update-appointment') }}" method="POST">
+                        {{ csrf_field() }}
+                        <fieldset>
+                            <legend><i class="fa fa-calendar-plus-o"></i> Update Appointment
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </legend>
+                        </fieldset>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-border">
+                                        <label for="appointed_date">Appointment Date:</label>
+                                        <input type="date" class="form-control appointment_date" id="update_appointed_date" name="appointed_date" required>
+                                        <input type="hidden" name="appointment_count" class="appointment_count" value="1">
+
+                                        <label for="facility_id">Facility:</label>
+                                        @foreach($facility as $Facility)
+                                        <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
+                                        <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
+                                        @endforeach
+                                        <label for="department_id">Department:</label>
+                                        <input type="text" class="form-control" name="department_id" id="department_id" value="OPD" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="label-border">
+                                        <div id="opdCategoryContainer">
+                                          <div id="update_additionalTimeContainer" style="display: none;"></div>
+                                                <div style="margin-top: 15px;">
+                                                    <button type="button" class="btn btn-info btn-sm" id="update_add_slots" onclick="updateAddTimeInput()">Add Slot</button>
+                                                </div>    
+                                           </div>    
+                                        </div>
+                                        <!-- <div id="update_additionalTimeContainer" style="display: none;"></div> -->
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
@@ -297,14 +362,16 @@
         </div>
     </div>
 
+
+<!-- End of Update Appointment Version -->
     <!-- Delete Appointment Modal -->
-    <div class="modal fade" role="dialog" id="deleteConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" role="dialog" id="deleteConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-body">
                     <form id="deleteAppointmentForm" method="post" action="{{ route('delete-appointment') }}">
                         {{ csrf_field() }}
-                        <fieldset>
+                        <fieldset>  
                             <h5><strong><p>Are you sure you want to delete this appointment?</p></strong></h5>
                         </fieldset>
                         <div class="form-group">
@@ -349,7 +416,62 @@
                 </div>
             </div>
         </div>
+    </div> -->
+    
+    <div class="modal fade" role="dialog" id="deleteConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="addAppointmentForm" action="" method="POST">
+                        {{ csrf_field() }}
+                        <fieldset>
+                            <legend style="color:red"><i class="fa fa-calendar-plus-o"></i> Delete Appointment ?
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </legend>
+                        </fieldset>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-border">
+                                        <label for="appointed_date">Appointment Date:</label>
+                                        <input type="date" class="form-control appointment_date" id="delete_appointed_date" name="appointed_date" readonly>
+                                        <input type="hidden" name="appointment_count" class="appointment_count" value="1">
+
+                                        <label for="facility_id">Facility:</label>
+                                        @foreach($facility as $Facility)
+                                        <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
+                                        <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
+                                        @endforeach
+                                        <label for="department_id">Department:</label>
+                                        <input type="text" class="form-control" name="department_id" id="department_id" value="OPD" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="label-border">
+                                        <div id="opdCategoryContainer">
+                                          <div id="delete_additionalTimeContainer" style="display: none;"></div>
+                                                <div style="margin-top: 15px;">
+                                                    <!-- <button type="button" class="btn btn-info btn-sm" id="update_add_slots" onclick="deleteTimeInput()">Add Slot</button> -->
+                                                </div>    
+                                           </div>    
+                                        </div>
+                                        <!-- <div id="update_additionalTimeContainer" style="display: none;"></div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
+
 
 @endsection
 
@@ -367,112 +489,162 @@
         
         
         //----------------------------------------------------------------
+        // function UpdateModal(appointmentId) {
+        //     $('#updateAppointmentId').val(appointmentId);
+
+        //     var url = "{{ route('get-appointment-data', ':id') }}";
+        //     url = url.replace(':id', appointmentId);
+
+        //     $.get(url, function(data) {
+        //         console.log(data);
+
+        //         $('#update_appointed_date').val(data.appointed_date);
+        //         $('#update_appointed_time').val(data.appointed_time);
+        //         $('#update_appointedTime_to').val(data.appointedTime_to);
+        //         $('#update_created_by').val(data.created_by);
+        //         $('#update_facility_id').val(data.facility_id);
+        //         $('#update_department_id').val(data.department_id);
+        //         $('#update_opdCategory').val(data.opdCategory);
+        //         $('#update_appointed_by').val(data.appointed_by);
+        //         $('#update_code').val(data.code);
+        //         $('#update_status').val(data.status);
+        //         $('#update_slot').val(data.slot);
+        //     }).fail(function(jqXHR, textStatus, errorThrown) {
+        //         console.log("AJAX Error: " + errorThrown);
+        //     });
+
+        //     $('#updateConfirmationModal').modal('show');
+        // }
+
+        //--------------------my version of my UpdateModal
+
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
-
-            var url = "{{ route('get-appointment-data', ':id') }}";
-            url = url.replace(':id', appointmentId);
+            console.log('sfdfssd',appointmentId);
+            var url = "{{ url('display/appointment').'/'}}"+appointmentId;
+           // url = url.replace(':id', appointmentId);
 
             $.get(url, function(data) {
-                console.log(data);
+                console.log('my appointed Id:asdasd',data);
 
-                $('#update_appointed_date').val(data.appointed_date);
-                $('#update_appointed_time').val(data.appointed_time);
-                $('#update_appointedTime_to').val(data.appointedTime_to);
-                $('#update_created_by').val(data.created_by);
-                $('#update_facility_id').val(data.facility_id);
-                $('#update_department_id').val(data.department_id);
-                $('#update_opdCategory').val(data.opdCategory);
-                $('#update_appointed_by').val(data.appointed_by);
-                $('#update_code').val(data.code);
-                $('#update_status').val(data.status);
-                $('#update_slot').val(data.slot);
+                $('#update_additionalTimeContainer').empty();//to empty the previous  generate form
+                if(data && data.length > 0){
+                    data.forEach(function(appointment){   
+                        // $('#update_department_id').val(appointment.department.description);
+                        // $('#update_facility_id').val(appointment.facility_id).trigger('change');
+                        $('#update_appointed_date').val(appointment.appointed_date);
+                        updateAddTimeInput(appointment);
+                    });
+                }else{
+                    console.log('No appointments found.');
+                }
+                
 
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("AJAX Error: " + errorThrown);
             });
-
             $('#updateConfirmationModal').modal('show');
         }
 
-        //--------------------------------------------------------------
-        function updateAppointment() {
-            var appointmentId = $('#updateAppointmentId').val();
-            var appointedDate = $('#update_appointed_date').val();
-            var appointedTime = $('#update_appointed_time').val();
-            var appointedTo = $('#update_appointedTime_to').val();
-            var appointmentCreatedBy = $('#update_created_by').val();
-            var appointmentFacilityId = $('#update_facility_id').val();
-            var appointmentDepartmentId = $('#update_department_id').val();
-            var appointmentOpdCategory = $('#update_opdCategory').val();
-            var appointmentAppointedBy = $('#update_appointed_by').val();
-            var appointmentCode = $('#update_code').val();
-            var appointmentStatus = $('#update_status').val();
-            var appointmentSlot = $('#update_slot').val();
-
-            var url = "{{ route('update-appointment') }}";
-            var data = {
-                _token: "{{ csrf_token() }}",
-                id: appointmentId,
-                appointed_date: appointedDate,
-                appointed_time: appointedTime,
-                appointedTime_to: appointedTo,
-                created_by: appointmentCreatedBy,
-                facility_id: appointmentFacilityId,
-                department_id: appointmentDepartmentId,
-                opdCategory: appointmentOpdCategory,
-                appointed_by: appointmentAppointedBy,
-                code: appointmentCode,
-                status: appointmentStatus,
-                slot: appointmentSlot
-            };
-
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: data,
-                success: function(response) {
-                    $('#editAppointmentModal').modal('hide');
-                    alert(response.message);
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    console.error("AJAX Request Failed: " + errorThrown);
-                }
-            });
-        }
+        //-------------------End of my version UpdateModal
 
         //--------------------------------------------------------------
-        function DeleteModal(appointmentId) {
-            $('#deleteAppointmentId').val(appointmentId);
+        // function updateAppointment() {
+        //     var appointmentId = $('#updateAppointmentId').val();
+        //     var appointedDate = $('#update_appointed_date').val();
+        //     var appointedTime = $('#update_appointed_time').val();
+        //     var appointedTo = $('#update_appointedTime_to').val();
+        //     var appointmentCreatedBy = $('#update_created_by').val();
+        //     var appointmentFacilityId = $('#update_facility_id').val();
+        //     var appointmentDepartmentId = $('#update_department_id').val();
+        //     var appointmentOpdCategory = $('#update_opdCategory').val();
+        //     var appointmentAppointedBy = $('#update_appointed_by').val();
+        //     var appointmentCode = $('#update_code').val();
+        //     var appointmentStatus = $('#update_status').val();
+        //     var appointmentSlot = $('#update_slot').val();
 
-            var url = "{{ route('get-appointment-data', ':id') }}";
-            url = url.replace(':id', appointmentId);
+        //     var url = "{{ route('update-appointment') }}";
+        //     var data = {
+        //         _token: "{{ csrf_token() }}",
+        //         id: appointmentId,
+        //         appointed_date: appointedDate,
+        //         appointed_time: appointedTime,
+        //         appointedTime_to: appointedTo,
+        //         created_by: appointmentCreatedBy,
+        //         facility_id: appointmentFacilityId,
+        //         department_id: appointmentDepartmentId,
+        //         opdCategory: appointmentOpdCategory,
+        //         appointed_by: appointmentAppointedBy,
+        //         code: appointmentCode,
+        //         status: appointmentStatus,
+        //         slot: appointmentSlot
+        //     };
 
-            $.get(url, function(data) {
-                //console.log(data);
-                $('#del_appointed_date').val(data.appointed_date);
-                $('#del_appointed_time').val(data.appointed_time);
-                $('#del_appointedTime_to').val(data.appointedTime_to);
-                $('#del_created_by').val(data.created_by);
-                $('#del_facility_id').val(data.facility_id);
-                $('#del_department_id').val(data.department_id);
-                $('#del_appointed_by').val(data.appointed_by);
-                var createdByUserId = data.created_by;
-                $.get("{{ route('get-user-data', ':id') }}".replace(':id', createdByUserId), function(user) {
-                    $('#del_created_by').val(user.username);
+        //     $.ajax({
+        //         type: "POST",
+        //         url: url,
+        //         data: data,
+        //         success: function(response) {
+        //             $('#editAppointmentModal').modal('hide');
+        //             alert(response.message);
+        //         },
+        //         error: function(xhr, textStatus, errorThrown) {
+        //             console.error("AJAX Request Failed: " + errorThrown);
+        //         }
+        //     });
+        // }
+
+        //--------------------------------------------------------------
+        // function DeleteModal(appointmentId) {
+        //     $('#deleteAppointmentId').val(appointmentId);
+
+        //     var url = "{{ route('get-appointment-data', ':id') }}";
+        //     url = url.replace(':id', appointmentId);
+
+        //     $.get(url, function(data) {
+        //         deleteTimeInput(data);
+        //         //console.log(data);
+        //         $('#del_appointed_date').val(data.appointed_date);
+        //         $('#del_appointed_time').val(data.appointed_time);
+        //         $('#del_appointedTime_to').val(data.appointedTime_to);
+        //         $('#del_created_by').val(data.created_by);
+        //         $('#del_facility_id').val(data.facility_id);
+        //         $('#del_department_id').val(data.department_id);
+        //         $('#del_appointed_by').val(data.appointed_by);
+        //         var createdByUserId = data.created_by;
+        //         $.get("{{ route('get-user-data', ':id') }}".replace(':id', createdByUserId), function(user) {
+        //             $('#del_created_by').val(user.username);
+        //         });
+
+        //     }).fail(function(jqXHR, textStatus, errorThrown) {
+        //         console.log("AJAX Error: " + errorThrown);
+        //     });
+
+        //     $('#deleteConfirmationModal').modal('show');
+
+        //     //------------------------------------
+           
+        //     //------------------------------------
+        // }
+        function DeleteModal(appointmentId){
+
+            var url = "{{ url('deleteSched/appointment').'/'}}"+appointmentId;
+            $.get(url, function(data){
+                
+                console.log("data", data);
+              if(data && data.length > 0){
+                data.forEach(function(appointment){
+                    console.log("äppointment",appointment.appointed_date);
+                    $('#delete_appointed_date').val(appointment.appointed_date);
+                    deleteTimeInput(appointment);
                 });
-
+              }
+               
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("AJAX Error: " + errorThrown);
             });
-
             $('#deleteConfirmationModal').modal('show');
-
-            //------------------------------------
-           
-            //------------------------------------
         }
-
         //--------------------------------------------------------------
         function deleteAppointment() {
             var appointmentId = $('#deleteAppointmentId').val();
@@ -613,6 +785,233 @@
                 });
             });
         }
+
+//-----------------My Append Update Edit appointment Time---------------------------//
+
+function updateAddTimeInput(appointment) {
+            console.log('welcome appointment', appointment)
+            let currentCount = $(".appointment_count").val();
+            $(".appointment_count").val(++currentCount);
+            var timeInputGroup = $('<div class="time-input-group">');
+            var appointments = appointment ? appointment : '';
+            // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
+            var appointmentDate = appointment && appointment.appointed_date ? appointment.appointed_date : '';
+               if(appointment){
+                var doctor = appointment.telemed_assigned_doctor[0].doctor;
+                var selectId = "Update_available_doctor" + currentCount;
+                var additionalTimeInput = `<div class="label-border-time">
+                                                <div class="row">
+                                                <input type="hidden" id="updateAppointmentId" name="update_appointment_date" value="${appointmentDate}" class="form-control">
+                                                    <div class="col-md-12">
+                                                    {{csrf_field()}}
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <input type="hidden" name="appointment_id${currentCount}" class="appointment_id" value="${appointment.id}">
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" id="update_appointed_time" name="update_appointed_time${currentCount}" value="${appointments.appointed_time}">
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" id="update_appointedTime_to" name="update_appointed_to${currentCount}" value="${appointments.appointedTime_to}">
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory">
+                                                            <option selected>${appointments.opdCategory}</option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option>
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                   
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+                                                      ${generateDoctorsOptions(doctor,appointments)}
+                                                    </select>
+                                                </div>
+                                            </div>`;
+
+                                        }else{
+                                             //this will add a new form 
+                                            var additionalTimeInput = `<div class="label-border-time">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <label for="appointed_time">Appointed Time:</label><br>
+                                                        <div class="col-md-6">
+                                                            <span>From:</span>
+                                                            <input type="time" class="form-control" name="appointed_time${currentCount}" id="update_appointed_time" >
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <span>To:</span>
+                                                            <input type="time" class="form-control" name="appointed_time_to${currentCount}" id="update_appointedTime_to">
+                                                        </div>
+                                                        <label for="opdCategory">OPD Category:</label>
+                                                        <select class="form-control select" name="opdCategory${currentCount}" id="update_opdCategory">
+                                                            <option selected></option>
+                                                            <option value="Family Medicine">Family Medicine</option>
+                                                            <option value="Internal Medicine">Internal Medicine</option>
+                                                            <option value="General Surgery">General Surgery</option>
+                                                            <option value="Trauma Care">Trauma Care</option>
+                                                            <option value="Burn Care">Burn Care</option>
+                                                            <option value="Ophthalmology">Ophthalmology</option>
+                                                            <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
+                                                            <option value="ENT">ENT</option>
+                                                            <option value="Neurosurgery">Neurosurgery</option>
+                                                            <option value="Urosurgery">Urosurgery</option>
+                                                            <option value="Toxicology">Toxicology</option> 
+                                                            <option value="OB-GYNE">OB-GYNE</option>
+                                                            <option value="Pediatric">Pediatric</option>
+                                                        </select>
+                                                    </div>
+                                                 
+                                                </div>
+                                                <div>
+                                                    <label>Available Doctor</label>
+                                                    <select class="form-control select2 available_doctors${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" id="update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;">
+
+                                                    </select>
+                                                </div>
+                                            </div>`;
+                                        }
+                          
+                                 
+            // Add the delete button
+            var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
+            timeInputGroup.append(deleteBtn);
+
+            // Append the additional time input structure
+            timeInputGroup.append(additionalTimeInput);
+
+            // Append the timeInputGroup to the additionalTimeContainer
+            $('#update_additionalTimeContainer').append(timeInputGroup);
+            // Add a click event listener for the delete button
+            if(appointment){
+
+                timeInputGroup.find('.delete-time-input').on('click', function () {
+                    console.log('my appointment delete', appointment);
+                    var appoint_id = appointment.id;
+                    var url = "{{ route('delete-timeSlot', ':id') }}";
+                    url = url.replace(':id', appoint_id);
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            _token: $('meta[name="csrf-token"]').attr('content'), 
+                            id: appoint_id
+                        },
+                        success: function(message){
+                            // alert("Time Slot Successfuly deleted!");
+                            Lobibox.alert("error",
+                            {
+                                msg: "Time Slot Successfuly deleted!"
+                            });
+                            timeInputGroup.remove();
+                        },
+                        error: function(error) {
+                            alert('Error deleting appointment', error);
+                        }
+                    })
+            });
+            }else{
+                timeInputGroup.find('.delete-time-input').on('click', function () {
+
+                    timeInputGroup.remove();
+                });
+            }
+
+            $('#update_additionalTimeContainer').show();
+            $(document).ready(function() {
+                $('.select2').select2();
+                $.each(query_doctor_store, function (index, userData) {
+                    $(`.available_doctors${currentCount}`).append($('<option>', {
+                        value: userData.id,
+                        text: userData.lname + '' + userData.lname
+                    }));
+                });
+            });
+
+        }
+        
+        
+
+//---------------- Ending My Append Update Edit appointment Time---------------------//
+
+
+function deleteTimeInput(appointment){
+    let currentCount = $(".appointment_count").val();
+    $(".appointment_count").val(++currentCount);
+    console.log("welcome Appointment:", appointment);
+    var appointments = appointment ? appointment : '';
+    var doctor = appointment.telemed_assigned_doctor[0].doctor;
+    var timeInputGroup = $('<div class="time-input-group">');
+    var additionalTimeInput = 
+        `<div class="label-border-time">
+            <div class="row">
+                <div class="col-md-12">
+                {{csrf_field()}}
+                    <label for="appointed_time">Appointed Time:</label><br>
+                    <input type="hidden" name="appointment_id${currentCount}" class="appointment_id" value="${appointments.id}">
+                    <div class="col-md-6">
+                        <span>From:</span>
+                        <input type="time" class="form-control" id="update_appointed_time" name="update_appointed_time${currentCount}" value="${appointments.appointed_time}" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <span>To:</span>
+                        <input type="time" class="form-control" id="update_appointedTime_to" name="update_appointed_to${currentCount}" value="${appointments.appointedTime_to}" readonly>
+                    </div>
+                    <label for="opdCategory">OPD Category:</label>
+                    <select class="form-control select2" name="opdCategory${currentCount}" id="update_opdCategory" disabled>
+                        <option selected>${appointments.opdCategory}</option>
+                    </select>
+                </div>
+                
+            </div>
+            <div>
+                <label>Available Doctor</label>
+                <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor" data-placeholder="Select Doctor" style="width: 100%;" disabled>
+                        ${generateDoctorsOptions(doctor,appointments)}
+                </select>
+            </div>
+        </div>`;
+        
+        timeInputGroup.append(additionalTimeInput);
+        $('#delete_additionalTimeContainer').append(timeInputGroup);
+        $('#delete_additionalTimeContainer').show();
+
+
+        $(document).ready(function() {
+                $('.select2').select2();
+                // $.each(query_doctor_store, function (index, userData) {
+                //     $(`.available_doctors${currentCount}`).append($('<option>', {
+                //         value: userData.id,
+                //         text: userData.lname + '' + userData.lname
+                //     }));
+                // });
+            });
+    }
+    function generateDoctorsOptions(doctorData){
+           var options = '';
+
+           if(Array.isArray(doctorData)){
+             doctorData.forEach(function (doctor){
+                options += `<option value="${doctor.id}" selected>${doctor.fname} ${doctor.lname}</option>`;
+             });
+           }else if(typeof doctorData === 'object' && doctorData !== null){
+            options += `<option value="${doctorData.id}" selected>${doctorData.fname} ${doctorData.lname}</option>`;
+           }
+           return options;
+        }
         //----------------------Trapping Appointment Time From and Time To and Date----------------------------//    
         const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
         document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
@@ -622,15 +1021,7 @@
             url: "{{ route('get-booked-dates') }}",
             type: 'GET',
             success: function(response){
-                 console.log("response", response);
-                
-                // var currentDate = new Date(); // Get current date
-
-                // var filteredDates = response.filter(function(dateString) {
-                //     var date = new Date(dateString);
-                //     return date >= currentDate; // Filter out past dates
-                // });
-                // console.log('filteredDates', filteredDates);
+                //  console.log("response", response);
 
                 $(function() {
                     $('#appointment_date').on('input', function() {
@@ -669,12 +1060,7 @@
 
             var fromTimeObj = new Date("2000-01-01T" + fromTime);
             var toTimeObj = new Date("2000-01-01T" + toTime);
-
-            if (toTimeObj <= fromTimeObj) {
-                alert('End time must be after start time');
-                toInput.val('');
-                return;
-            }
+            // console.log("toTimeObj", fromTime);
             
             var isUnique = true;
             var timeObject = {
@@ -693,15 +1079,33 @@
                     break;
                 }
             }
+
+            allAppointmentTimes.push(timeObject);
+            allAppointmentTimes = allAppointmentTimes.filter(appointment => appointment.to instanceof Date && !isNaN(appointment.to));
+            console.log("allAppointmentTime", allAppointmentTimes);
+            //console.log("timeObjectsasasd", allAppointmentTimes.filter(appointment=> appointment.from.getTime() && appointment.to.getTime()));
+            if (toTimeObj <= fromTimeObj) {
+
+            allAppointmentTimes = allAppointmentTimes.filter(appointment => !(appointment.from.getTime() === fromTimeObj.getTime() && appointment.to.getTime() === toTimeObj.getTime()));
+            allAppointmentTimes = allAppointmentTimes.filter(appoint => !(appoint.from.getTime() === fromTimeObj.getTime() && appoint.to.getTime() === toTimeObj.getTime()));
+
+            console.log("allAppointmentTimes Remove if end time start Totime:",  allAppointmentTimes);
+            
+                alert('End time must be after start time');
+                toInput.val('');
+                fromInput.val('');
+                return;
+            }
+
             if(!isUnique) {
                 alert('Appointment time must be unique');
+                allAppointmentTimes = allAppointmentTimes.filter(appoint => !(appoint.from.getTime() === fromTimeObj.getTime() && appoint.to.getTime() === toTimeObj.getTime()));
+                console.log("allAppointmentTimes remove if not unique:", allAppointmentTimes);
                 fromInput.val('');
                 toInput.val('');
                 return;
             }
-            allAppointmentTimes.push(timeObject);
-            allAppointmentTimes = allAppointmentTimes.filter(appointment => appointment.to instanceof Date && !isNaN(appointment.to));
-            console.log("allAppointmentTimes", allAppointmentTimes);
+
         });            
  //----------------------End Trapping Appointment Time From and Time To----------------------------// 
     

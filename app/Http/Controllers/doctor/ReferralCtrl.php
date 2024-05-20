@@ -315,7 +315,6 @@ class ReferralCtrl extends Controller
             "referring_fac_id" => $track->referring_fac_id,
             "form_type" => $form_type
         ];
-
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
@@ -459,7 +458,7 @@ class ReferralCtrl extends Controller
             "referring_fac_id" => $track->referring_fac_id,
             "form_type" => "pregnant"
         ];
-
+      
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
@@ -472,6 +471,7 @@ class ReferralCtrl extends Controller
         $form = PregnantForm::select(
             DB::raw("'$id' as tracking_id"),
             'tracking.action_md',
+            'tracking.telemedicine', // I add this a piece of code for accessing telemedicine
             'tracking.referring_md',
             'pregnant_form.patient_baby_id',
             'pregnant_form.code',

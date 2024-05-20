@@ -660,7 +660,10 @@ Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCa
 Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment');
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
 Route::get('/appointment/data/{id}', 'doctor\TelemedicineCtrl@getAppointmentData')->name('get-appointment-data');
+Route::get('/display/appointment/{id}', 'doctor\TelemedicineCtrl@displayAppointment')->name('display-appointment'); // I add this route to retrieve a multiple time slot manage appointment
+Route::get('/deleteSched/appointment/{id}', 'doctor\TelemedicineCtrl@deleteAppointmentSched')->name('delete-appointmentSched');// I add this route to retrieve a multiple time slot manage appointment
 Route::post('/appointment/update', 'doctor\TelemedicineCtrl@updateAppointment')->name('update-appointment');
+Route::delete('/delete-timeSlot/{id}','doctor\TelemedicineCtrl@deleteTimeSlot')->name('delete-timeSlot'); // I add this route to delete a multiple time slot manage appointment
 Route::post('/appointment/delete', 'doctor\TelemedicineCtrl@deleteAppointment')->name('delete-appointment');
 Route::get('/user/get/{id}', 'doctor\TelemedicineCtrl@getUserData')->name('get-user-data');
 Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacilityDetails')->name('get-Facility-Details');

@@ -3,11 +3,12 @@
     import { Transition } from 'vue';
     import AgoraRTC from "agora-rtc-sdk-ng"
     import PrescriptionModal from './PrescriptionModal.vue';
-
+    import LabRequestModal from './LabRequestModal.vue'; // I add this
     export default {
         name: 'RecoApp',
         components: {
             PrescriptionModal,
+            LabRequestModal
         },
         data() {
             return {
@@ -276,9 +277,9 @@
                     activity_id: this.activity_id
                 }
                 axios.post(`${this.baseUrl}/api/video/prescription/check`, getPrescription).then((response) => {
-                    console.log(response)
-                    if(response.data === 'success') {
-                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${this.activity_id}`, '_blank');
+                    console.log(response,);
+                    if(response.data.status === 'success') {
+                        window.open(`${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${response.data.prescriptions[0].prescribed_activity_id}`, '_blank');
                     } else {
                         Lobibox.alert("error",
                             {
@@ -298,11 +299,12 @@
                         if(type == 'yes') {
                             const endorseUpward = {
                                 code : self.referral_code,
-                                form_type: "normal"
+                                form_type: self.form_type
                             }
                             axios.post(`${self.baseUrl}/api/video/upward`, endorseUpward).then(response => {
-                                console.log(response.status)
-                                if(response.data === 'success') {
+                                console.log(response.data);
+                                var successData = response.data.trim();
+                                if(successData ==='success') {
                                     Lobibox.alert("success",
                                         {
                                             msg: "Successfully endorse the patient for upward referral!"
@@ -340,7 +342,9 @@
                             <button class="btn btn-danger  btn-lg decline-button" @click="leaveChannel" type="button"><i class="bi-telephone-x-fill"></i></button>
                             <button class="btn btn-warning btn-lg upward-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'" style="margin-left:10px;"><i class="bi-hospital"></i></button>
                             <button class="btn btn-success btn-lg prescription-button" data-toggle="modal" data-target="#prescriptionModal" type="button" v-if="referring_md == 'no'"><i class="bi bi-prescription"></i></button>
-                            <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
+                            <!-- <button class="btn btn-success btn-lg lab-button" @click="endorseUpward" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button> -->
+                            <button class="btn btn-primary btn-lg prescription-button" data-toggle="modal" data-target="#labRequestModal" type="button" v-if="referring_md == 'no'"><i class="bi-card-checklist"></i></button>
+
                         </div>
                     </Transition>
                     <div class="localPlayerDiv">
@@ -572,6 +576,8 @@
             </div>
         </div>
         <PrescriptionModal :activity_id="parseInt(activity_id)" :baseUrl="baseUrl" :code="referral_code" :form_type="form_type" />
+        <LabRequestModal :activity_id="parseInt(activity_id)" :requested_by="parseInt(user.id)"/>
+
     </div>
 </template>
 
