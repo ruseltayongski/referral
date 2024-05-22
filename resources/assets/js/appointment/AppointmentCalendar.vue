@@ -100,15 +100,13 @@
                     const date = targetTd.attr('data-date');
                     
                     if(date < currentDate){
-                        targetTd.css('background-color', '#6C757D'); //color the td of day in calendar'
-                        targetGrid.css('border-color', "#6C757D");
-                        targetdrag.remove();
+                        targetTd.css('background-color', 'rgb(255 214 214)'); //color the td of day in calendar'
+                        targetTd.css('border-color', "rgb(230 193 193)");
                     }else{
                         targetTd.css('background-color', '#00a65a') //color the td of day in calendar'
                         targetdrag.css('border-color', "#00a65a");
-                        targetGrid.remove();
                     }
-
+                    targetGrid.remove();
                     targetTd.addClass("add-cursor-pointer");
                     $(".fc-content").remove()
                 });

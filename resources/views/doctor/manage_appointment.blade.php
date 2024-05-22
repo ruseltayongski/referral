@@ -417,15 +417,15 @@
             </div>
         </div>
     </div> -->
-    
+    <!-- Delete Appointment Modal -->
     <div class="modal fade" role="dialog" id="deleteConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-body">
-                    <form id="addAppointmentForm" action="" method="POST">
+                    <form id="addAppointmentForm" action="{{ route('delete-appointment') }}" method="POST">
                         {{ csrf_field() }}
                         <fieldset>
-                            <legend style="color:red"><i class="fa fa-calendar-plus-o"></i> Delete Appointment ?
+                            <legend style="color:red"><i class="fa fa-calendar-plus-o"></i> Delete Appointment
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -463,7 +463,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"  id="cancelbtn-clear"><i class="fa fa-times"></i> Cancel</button>
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>delete</button>
                         </div>
                     </form>
@@ -487,7 +487,15 @@
         <?php Session::put('appointment_save',false); ?>
         @endif
         
-        
+        @if(Session::get('appointment_delete'))
+        Lobibox.notify('success', {
+            title: "",
+            msg: "Appointment Susccessfully Deleted!",
+            size: 'mini',
+            rounded: true
+        });
+        <?php Session::put('appointment_delete',false); ?>
+        @endif
         //----------------------------------------------------------------
         // function UpdateModal(appointmentId) {
         //     $('#updateAppointmentId').val(appointmentId);
@@ -631,19 +639,56 @@
             var url = "{{ url('deleteSched/appointment').'/'}}"+appointmentId;
             $.get(url, function(data){
                 
-                console.log("data", data);
+            let alertshown = false;
+            let showdeletModal = true;
+
               if(data && data.length > 0){
+
                 data.forEach(function(appointment){
-                    console.log("äppointment",appointment.appointed_date);
+
+                    let currentDate = new Date().toISOString().split('T')[0];
+
+                    let available_doctor = appointment.telemed_assigned_doctor[0].appointment_by;
+
+                    let appointedDate = appointment.appointed_date;
+                    let date = new Date(appointedDate);
+                    const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+                    let month = monthNames[date.getMonth()];
+                    let day = date.getDate();
+                    let year = date.getFullYear();
+                    let formattedDate = `${month} ${day}, ${year}`;
+                    console.log("date format",formattedDate);
+                    // if(currentDate <= appointment.appointed_date && !alertshown && available_doctor){
+                        if(available_doctor && !alertshown){
+                        // alert("Are you sure you want to delete this Present or Future Appointment?");
+                        alertshown = true;
+                        showdeletModal = false;
+                        console.log('showdeletModal',showdeletModal);
+                        Lobibox.alert("error",
+                            {
+                                msg: `You cannot delete this Appointment This is already appointed by the assigned Doctor on ${formattedDate}`
+                            });
+                    }
+
                     $('#delete_appointed_date').val(appointment.appointed_date);
                     deleteTimeInput(appointment);
+                    
                 });
               }
-               
+
+            if (showdeletModal) {
+            
+                $('#deleteConfirmationModal').modal('show');
+
+            } else {
+
+                $('#deleteConfirmationModal').modal('hide');
+            }
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("AJAX Error: " + errorThrown);
             });
-            $('#deleteConfirmationModal').modal('show');
+            
         }
         //--------------------------------------------------------------
         function deleteAppointment() {
@@ -949,6 +994,7 @@ function updateAddTimeInput(appointment) {
 
 
 function deleteTimeInput(appointment){
+    
     let currentCount = $(".appointment_count").val();
     $(".appointment_count").val(++currentCount);
     console.log("welcome Appointment:", appointment);
@@ -998,8 +1044,15 @@ function deleteTimeInput(appointment){
                 //         text: userData.lname + '' + userData.lname
                 //     }));
                 // });
-            });
+            });  
     }
+
+    $(document).ready(function() {
+        $('#cancelbtn-clear').on('click', function() {
+             $('#delete_additionalTimeContainer').empty();
+            console.log("it works");
+        });
+    });
     function generateDoctorsOptions(doctorData){
            var options = '';
 

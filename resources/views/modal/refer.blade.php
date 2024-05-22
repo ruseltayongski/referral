@@ -233,7 +233,7 @@ function handleFileSelect(event) {
                     pdfContainer.classList.add('pdf-container');
                     // Display PDF preview
                     const allowedFolderPath = "<?php echo  asset('public/fileupload') ?>"; //jondy changes
-                    const pdffileIcon = 'PDF_file_icon.png'; //jondy changes
+                    const pdffileIcon = 'pdffile.png'; //jondy changes
                     const pdfPreview = displayPdfPreview(file.name, allowedFolderPath +'/'+  pdffileIcon); // Replace the placeholder URL jondy
                     const removedFiles = [];
                     // Create the remove icon

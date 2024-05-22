@@ -162,7 +162,7 @@
                     // Create a container for each PDF and its remove icon
                     const Containerpdf = document.createElement('div');
                     Containerpdf.classList.add('pdf-container');
-                    const pdfPreview = PdfPreview(file.name, '../public/fileupload/PDF_file_icon.png'); // Replace the placeholder URL
+                    const pdfPreview = PdfPreview(file.name, '../public/fileupload/pdffile.png'); // Replace the placeholder URL
                     const removedFiles = [];
                     // Create the remove icon
                     const removeIcon = document.createElement('i');
@@ -335,8 +335,8 @@
         console.log("My EXT ", Ext);
         if(Ext === 'pdf'){
             $("#file-preview-black").html(fileNames);
-             $("#img-preview").attr('src','../public/fileupload/PDF_file_icon.png');
-             $("#img-preview").css('width', '30%');
+             $("#img-preview").attr('src','../public/fileupload/pdffile.png');
+             $("#img-preview").css('width', '50%');
              $("#img-preview").css('height', '110px');
         }else{
             $("#img-preview").attr('src', `${baseUrl}/${fileNames}`);
@@ -673,7 +673,7 @@
             if (ext === "pdf") {
                 isvalidFile = true;
                 $("#followup_submit_edit").prop('disabled', false);
-                $('#img-preview').attr('src', '../public/fileupload/PDF_file_icon.png').css('display', 'block');
+                $('#img-preview').attr('src', '../public/fileupload/pdffile.png').css('display', 'block');
                 $("#img-preview").css('width', '50%');
                 $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
             } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG" || ext === "webp") {

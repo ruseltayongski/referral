@@ -139,7 +139,7 @@
                                 </div>
                                 <div>
                                     <div class="external-event bg-green">Available Present & future Date</div>
-                                    <div class="external-event" style="background-color: #6C757D; color: #ffff">Disabled Previous Date</div>
+                                    <div class="external-event" style="background-color: rgb(255 214 214); color: #ffff">Disabled Previous Date</div>
                                 </div>
                                 <div class="box box-solid">
                                     <div class="box-header with-border">

@@ -338,14 +338,30 @@ class TelemedicineCtrl extends Controller
 
     public function deleteAppointment(Request $request)
     {
-        $id = $request->input('id');
-        $appointment = AppointmentSchedule::find($id);
+        $appointedIds = [];
+        for($i=2; $i<=$request->appointment_count; $i++) { 
+            $appointedId = $request->input('appointment_id' . $i);
+            $key = 'appointment_id' . $i;
+            $appointed_date = AppointmentSchedule::where('id', $appointedId)
+            ->pluck('appointed_date')
+            ->first();
+           
+           $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)->delete();
+           //TelemedAssignDoctor
 
-        if($appointment->delete()){
-            return response()->json(['success' => 'Appointment deleted successfully']);
-        } else {
-            return response()->json(['error' => 'Appointment not found'], 404);
+           if(array_key_exists($key, $request->all())){
+                $appointedIds[] = $request->input($key);
+           }
         }
+    
+        if(!empty($appointedIds)){
+
+            $teleme_assign = TelemedAssignDoctor::whereIn('appointment_id', $appointedIds)->delete();
+        }
+
+        Session::put('appointment_delete',true);       
+        return redirect()->back();
+    
     }
 
     public function getUserData($id)
