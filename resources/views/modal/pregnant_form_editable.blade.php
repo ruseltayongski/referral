@@ -1,16 +1,21 @@
 <?php
+
+    $appointmentParam = $_GET['appointment']; // I add this
+    $facility_id_telemed = json_decode(json_decode($appointmentParam, true), true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
+    $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
+    $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
+
     $user = Session::get('auth');
     $myfacility = \App\Facility::find($user->facility_id);
     $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
+        ->where('id', $facility_id_telemed) // I am adding this to get the specific facility name
         ->where('status',1)
         ->where('referral_used','yes')
         ->orderBy('name','asc')->get();
+        
     $reason_for_referral = \App\ReasonForReferral::get();
-    $appointmentParam = $_GET['appointment']; // I add this
-    $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
-    $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
-
+   
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">
     <div class="modal-dialog modal-lg" role="document">

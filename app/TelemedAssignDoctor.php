@@ -12,4 +12,9 @@ class TelemedAssignDoctor extends Model
     public function doctor() {
         return $this->belongsTo(User::class, 'doctor_id', 'id');
     }
+
+    public function appointmentSchedule() //I add this
+    {
+        return $this->belongsTo(AppointmentSchedule::class, 'id');
+    }
 }

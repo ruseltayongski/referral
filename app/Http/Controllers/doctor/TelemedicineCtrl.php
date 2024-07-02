@@ -25,7 +25,7 @@ class TelemedicineCtrl extends Controller
     public function manageAppointment(Request $req)
     {
         $facility = Session::get('auth')->facility_id;
-       
+        
         $appointment_schedule = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
@@ -56,16 +56,17 @@ class TelemedicineCtrl extends Controller
                     }]);
                 }
             ])
+            ->where('facility_id',$facility)
             ->orderBy('created_at', 'desc')
             ->paginate(20); 
-        
+
             $user_facility = User::where('department_id',5)
             ->where('level','doctor')
             ->where('facility_id',$facility)
             ->with('facility')
             ->groupBy('facility_id')
             ->get();
-
+           
         $data = [
             'appointment_schedule' => $appointment_schedule,
             'facility' => $user_facility,
@@ -79,8 +80,16 @@ class TelemedicineCtrl extends Controller
     public function appointmentCalendar() {
         $user = Session::get('auth');
         $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
+        
+         $facility_id = AppointmentSchedule::pluck('facility_id');
+
+        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor'])->find($facility_id);
+        
+        //  return $appointment_slot;
+        
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
+            'appointment_slot' => $appointment_slot,
             'user' => $user
         ]);
     }
@@ -143,6 +152,8 @@ class TelemedicineCtrl extends Controller
         // $doctor_id =TelemedAssignDoctor::where('appointment_id', $request->id)
         // ->pluck('doctor_id')->first();
         // $appointment = AppointmentSchedule::find($request->id);
+        $facility = Session::get('auth')->facility_id;
+
         $appointed_date = AppointmentSchedule::where('id', $request->id)
         ->pluck('appointed_date')
         ->first();
@@ -175,12 +186,16 @@ class TelemedicineCtrl extends Controller
                         );
                     }]);
                 }
-            ])->get();
+            ])->where('facility_id', $facility)
+            ->get();
+
+           
         return response()->json($appointment);
 
     }
 
     public function deleteAppointmentSched(Request $request){
+        $facility_id = Session::get('auth')->facility_id;
 
         $appointed_date = AppointmentSchedule::where('id', $request->id)
         ->pluck('appointed_date')
@@ -214,7 +229,8 @@ class TelemedicineCtrl extends Controller
                         );
                     }]);
                 }
-            ])->get();
+            ])->where('facility_id', $facility_id)
+            ->get();
     
         return response()->json($appointment);
     }
@@ -278,7 +294,7 @@ class TelemedicineCtrl extends Controller
 
                     $appointment->appointed_date = $request->input('appointed_date'); 
                     $appointment->appointed_time =  $request->input('update_appointed_time' . $i);  
-                    $appointment->appointedTime_to = $request->input('update_appointed_to' . $i);
+                    $appointment->appointedTime_to = $request->input('update_appointed_time_to' . $i);
                     $appointment->opdCategory = $request->input('opdCategory' . $i);
                     $appointment->save();
                     
@@ -292,7 +308,7 @@ class TelemedicineCtrl extends Controller
        
            
         for($i=1; $i<=$request->appointment_count; $i++) { 
-
+            
                 if(empty($request['appointed_time'.$i]) || empty($request['appointed_time_to'.$i]) || empty($request['opdCategory'.$i])) {
                     continue;
                 }
@@ -321,14 +337,16 @@ class TelemedicineCtrl extends Controller
         }
 
            
-
+            // dd($request->all());
             Session::put('appointment_save',true);       
         
         return redirect()->back();
     }
 
     public function deleteTimeSlot($id){
+      
         $appointedSlot = AppointmentSchedule::findOrFail($id);
+        $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $id)->delete();
         $appointedSlot->delete();
 
         return response()->json(['message' => 'Appointment successfully deleted']);

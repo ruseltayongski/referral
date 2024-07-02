@@ -207,7 +207,7 @@
        
           
         
-        <div class="stepper-item stepper-item-referred @if($referred_redirected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item stepper-item-referred @if($referred_redirected_track && !$referred_upward_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
             <div class="step-name">Referred</div>
             {{-- <div class="stepper-item stepper-item-follow @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
@@ -402,7 +402,7 @@
                     <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_upward_track }}','{{ $follow_redirected_track }}','{{ $follow_followup_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
                     <div class="step-name">Referred</div>--}} <!-- endoriginal code -->
             <!-- jondy changes -->
-                <div class="stepper-item stepper-item-referred @if($follow_redirected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
+                <div class="stepper-item stepper-item-referred @if($follow_redirected_track && $follow_upward_track && !$follow_treated_track && !$follow_followup_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $follow_redirected_track }}','{{ $follow_followup_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
                     <div class="step-name">Referred</div>  <!--end jondy changes -->
                     {{-- <div class="stepper-item stepper-item-follow @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">
@@ -446,7 +446,7 @@
                                     $extension = pathinfo($filename, PATHINFO_EXTENSION);
                                     if (in_array($extension, ['pdf'])){
                                         $pdfFiles[] = $filename;                                            
-                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png','webp'])){
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png','webp','jfif'])){
                                         $imageFiles[] = $filename;
                                     }
                                 }
@@ -499,7 +499,7 @@
                                     $extension = pathinfo($filename, PATHINFO_EXTENSION);
                                     if (in_array($extension, ['pdf'])){
                                         $pdfFiles_follow[] = $filename;                                            
-                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png','webp'])){
+                                    }elseif (in_array($extension, ['JPG','JPEG','PNG','jpg', 'jpeg', 'png','webp','jfif'])){
                                         $imageFiles_follow[] = $filename;
                                     }
                                 }
@@ -601,6 +601,12 @@
                 ->where("created_at",">=",$redirect_track->created_at)
                 ->where("status","discharged")
                 ->exists();
+            
+            $redirected_transferred_track = \App\Activity::where("code",$redirect_track->code)
+                ->where("referred_from",$redirect_track->referred_to)
+                ->where("created_at",">=",$redirect_track->created_at)
+                ->where("status","transferred")
+                ->exists();
             ?>
             <!-- Start changes -->
             <small class="label position-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
@@ -672,7 +678,7 @@
                     <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
                 </div>
-                <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="stepper-item @if($redirected_discharged_track && !$redirected_transferred_track) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
                     <div class="step-name">Discharged</div>
                 </div>

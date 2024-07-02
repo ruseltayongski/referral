@@ -11,7 +11,8 @@
 @section('content')
     @include('modal.refer')
     <div id="app_appointment">
-        <appointment-app :user="{{ $user }}" :appointment_sched="{{ $appointment_sched }}"></appointment-app>
+        <appointment-app :user="{{ $user }}" :appointment_slot="{{ json_encode($appointment_slot) }}"></appointment-app>
+        <!-- <appointment-app :user="{{ $user }}" :appointment_sched="{{ json_encode($appointment_slot) }}"></appointment-app> -->
     </div>
 @endsection
 
@@ -19,3 +20,4 @@
     <!-- fullCalendar 2.2.5 -->
     <script src="{{ asset('resources/plugin/fullcalendar/fullcalendar.min.js') }}"></script>
 @endsection
+

@@ -39,7 +39,7 @@
 
         console.log('upward', alreadyUpward, !treatedIsCompleted, !alreadyTreated);
 
-        if((alreadyUpward || upwardIsCompleted) && !alreadyTreated && !treatedIsCompleted){ // I add this condition para sa error nga treated kung ma upward na siya
+        if(alreadyUpward && upwardIsCompleted && (!alreadyTreated || !treatedIsCompleted)){ // I add this condition para sa error nga treated kung ma upward na siya
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been upward!"
@@ -50,6 +50,11 @@
                     msg: "This tracking area has already been followed!"
                 });
         }else if(treatedIsCompleted && alreadyTreated){//error messages para sa pag click ikaduha sa treated icon
+            Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been treated!"
+                });
+        }else if(treatedIsCompleted){
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been treated!"
@@ -126,7 +131,7 @@
                 return;
             }
             var ext = filesInput[0].name.split('.').toLowerCase();
-            if (!['png', 'jpeg', 'jpg', 'webp'].includes(ext)) {
+            if (!['png', 'jpeg', 'jpg', 'webp', 'jfif'].includes(ext)) {
                 event.preventDefault(); // Prevent form submission if the file is not valid
                 return;
             }
@@ -145,7 +150,7 @@
         for(const file of listfile){
             const listItems = document.createElement('div');
             listItems.textContent = file.name;
-            let allowedextension =  ["pdf", "png", "jpeg", "jpg","webp"];
+            let allowedextension =  ["pdf", "png", "jpeg", "jpg","webp","jfif"];
             let arrayfile = Array.from(listfile).map(file=>file.name);
             let allextension =  arrayfile.every(fileName => {
                 let ext = fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
@@ -400,7 +405,7 @@
                 var file = filesInput.files[i];
                 var ext = file.name.substring(file.name.lastIndexOf('.') + 1).toLowerCase();
                 //mo check kung valid ba ang file
-                if(!['png','jpeg','jpg', 'webp', 'pdf'].includes(ext)){
+                if(!['png','jpeg','jpg', 'webp', 'pdf','jfif'].includes(ext)){
                     invalidfile = true;
                     break;// mo Break sa loop kung invalid file is found
                 }
@@ -676,7 +681,7 @@
                 $('#img-preview').attr('src', '../public/fileupload/pdffile.png').css('display', 'block');
                 $("#img-preview").css('width', '50%');
                 $('#file-preview-black').html('<i class="fa fa-file-pdf-o"></i> ' + fileName);
-            } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG" || ext === "webp") {
+            } else if (ext === "png" || ext === "jpeg" || ext === "jpg" || ext === "PNG" || ext === "JPEG" || ext === "JPG" || ext === "webp" || ext === "jfif") {
                 isvalidFile = true;
                 $("#followup_submit_edit").prop('disabled', false);
                 $('#file-preview-black').html('<i class="fa fa-file-image-o"></i> ' + fileName);

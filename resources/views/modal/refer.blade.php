@@ -213,7 +213,7 @@ function handleFileSelect(event) {
     for (const file of fileList) {
         const listItem = document.createElement('div');
         listItem.textContent = file.name;
-        let allowexten = ["pdf", "png", "jpeg", "jpg","webp"];
+        let allowexten = ["pdf", "png", "jpeg", "jpg","webp","jfif"];
         let filearr = Array.from(fileList).map(file=>file.name);
         let validext = filearr.every(filename => {
             let ext = filename.substring(filename.lastIndexOf('.') + 1).toLowerCase();

@@ -91,6 +91,7 @@
                 }
             },
             eventRenderFunction(event, element) {
+                console.log("element", element);
                 //console.log(event,event.start.format('YYYY-MM-DD'))
                 let currentDate = new Date().toISOString().split('T')[0];
                 this.$nextTick(() => {

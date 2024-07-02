@@ -5,7 +5,7 @@
                 <h3 class="page-header">Select Facility</h3>
                 <div class="row">
                     <div class="scroll-container">
-                        <appointment-facility v-if="appointment_sched" v-for="appointment in appointment_sched" :key="appointment.id" 
+                        <appointment-facility v-if="appointment_slot" v-for="appointment in appointment_slot" :key="appointment.id" 
                         :facilitySelectedId="facilitySelectedId" :appointment="appointment" @facilitySelected="facilitySelected"></appointment-facility>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
         },
         props: [
             "user",
-            "appointment_sched"
+            "appointment_slot"
         ],
         data() {
             return {

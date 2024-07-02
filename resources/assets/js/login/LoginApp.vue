@@ -422,11 +422,11 @@
 
                         <div class="col-lg-6 mt-4 mt-lg-0">
                             <div class="member d-flex align-items-start">
-                                <div class="pic"><img :src="ccatubig" class="img-fluid" alt=""></div>
+                                <div class="pic"><img :src="JGonzales" class="img-fluid" alt=""></div>
                                 <div class="member-info">
-                                    <h4>Christine Anne I. Catubig</h4>
+                                    <h4>Jondy D. Gonzales</h4>
                                     <span>Computer Programmer I</span>
-                                    <p>09226204186</p>
+                                    <p>09917382477</p>
                                     <div class="social">
                                         <a href=""><i class="ri-twitter-fill"></i></a>
                                         <a href=""><i class="ri-facebook-fill"></i></a>
@@ -1118,6 +1118,7 @@
                 call_center: path + "/resources/medilab/assets/img/contact/call_center.jpg",
                 rtayong: path + "/resources/medilab/assets/img/contact/tayong_rusel.JPG",
                 ccatubig: path + "/resources/medilab/assets/img/contact/catubig.png",
+                JGonzales: path + "/resources/medilab/assets/img/contact/JGonzales.png",
                 fmaningo: path + "/resources/medilab/assets/img/contact/maningo_fmj.png",
                 ggorosin: path + "/resources/medilab/assets/img/contact/gorosin.g.jpg",
                 rsugabo: path + "/resources/medilab/assets/img/contact/reyan.jpg",
