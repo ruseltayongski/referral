@@ -1911,4 +1911,148 @@ class ReportCtrl extends Controller
             "type" => $type
         ]);
     }
+
+    public function get_date(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+
+        $cebuprovince = Facility::where('province', 2)
+        ->where('muncity', '!=', 63)
+        ->where('muncity', '!=', 80)
+        ->where('muncity', '!=', 76)
+        ->with('activities')
+        ->get();
+
+        // Call viewDeclined method with parameters
+    }
+
+    public function getReferOrDecline($category, $pluck, $date_start, $date_end) {
+        $data = new Activity();
+        if($category == 'referred') {
+            $data = $data->whereIn("referred_from", $pluck)
+                ->where(function($query) {
+                $query->where("status",'referred')
+                    ->orWhere("status", 'redirected');
+            });
+        }
+        else if ($category == 'rejected') {
+            $data = $data->whereIn("referred_to", $pluck)
+                        ->where(function($query) {
+                            $query->where("status",'rejected');
+                        });
+        }
+        else {
+            return "invalid category";
+        }
+        $data = $data
+                ->whereBetween("created_at",[$date_start.' 00:00:00',$date_end.' 23:59:59'])
+                ->count();
+        
+        return $data;
+    }
+
+    public function referOrDeclineHolder($date_start, $date_end) {
+        $cebu_province_referred = $this->getReferOrDecline("referred", $this->populatePluck('cebu_province'), $date_start, $date_end);
+        $cebu_province_rejected = $this->getReferOrDecline("rejected", $this->populatePluck('cebu_province'), $date_start, $date_end);
+
+        $cebu_city_referred = $this->getReferOrDecline("referred", $this->populatePluck('cebu_city'), $date_start, $date_end);
+        $cebu_city_rejected = $this->getReferOrDecline("rejected", $this->populatePluck('cebu_city'), $date_start, $date_end);
+        return [
+            "cebu_province_referred" => $cebu_province_referred,
+            "cebu_province_rejected" => $cebu_province_rejected,
+            "cebu_province_percent" => 0, //code dire jondy
+
+            "cebu_city_referred" => $cebu_city_referred,
+            "cebu_city_rejected" => $cebu_city_rejected,
+            "cebu_city_percent" => 0, //code dire jondy
+        ];
+    }
+
+    public function populatePluck($city) {
+        $pluck = Facility::select("id")->where('province', 2);
+        if($city == 'cebu_province') {
+            $pluck = $pluck
+            ->where('muncity', '!=', 63)
+            ->where('muncity', '!=', 80)
+            ->where('muncity', '!=', 76);
+        }
+        else if($city == 'cebu_city') {
+            $pluck = $pluck->where('muncity', '=', 63);
+        }
+        else if($city == 'mandaue_city') {
+            $pluck = $pluck->where('muncity', '=', 80);
+        }
+        else if($city == 'lapulapu_city') {
+            $pluck = $pluck->where('muncity', '=', 76);
+        }
+        else {
+            return "invalid city";
+        }
+
+        $pluck = $pluck->get();
+
+        return $pluck;
+    }
+
+    public function viewDeclined(Request $request)
+    {
+        // if($request->start_date) {
+
+        // }
+        // $startDate = $req->input('start_date');
+        // $endDate = $req->input('end_date');
+  
+        // // Initialize variables to avoid undefined variable errors
+        // $cebuprovince = [];
+        // $cebucity = [];
+        // $mandauecity = [];
+        // $lapulapucity = [];
+
+        if($request->date_range){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $date_end = Carbon::now()->endOfDay()->format('Y-m-d');
+        }
+
+        $date_range = date('m/d/Y', strtotime($date_start)).' - '.date('m/d/Y', strtotime($date_end));
+
+        $cebuprovince = Facility::select("id")->where('province', 2)
+            ->where('muncity', '!=', 63)
+            ->where('muncity', '!=', 80)
+            ->where('muncity', '!=', 76)
+            //->with('activities')
+            ->get();
+
+        $data = $this->referOrDeclineHolder($date_start, $date_end);
+
+        $cebucity = Facility::where('province', 2)
+            ->where('muncity', '=', 63)
+            ->with('activities')
+            ->get();
+
+        $mandauecity = Facility::where('province', 2)
+            ->where('muncity', '=', 80)
+            ->with('activities')
+            ->get();
+
+        $lapulapucity = Facility::where('province', 2)
+            ->where('muncity', '=', 76)
+            ->with('activities')
+            ->get();
+
+        // Pass data to the view
+        return view('admin.report.declined_referral', [
+            'cebuprovince' => $cebuprovince,
+            'cebucity' => $cebucity,
+            'mandauecity' => $mandauecity,
+            'lapulapucity' => $lapulapucity,
+            'startDate' => $startDate,
+            'endDate' => $endDate, // Make sure to include endDate in the view data
+            'data' => $data,
+            'date_range' => $date_range
+        ]);
+    }
 }

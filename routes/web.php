@@ -112,6 +112,9 @@ Route::get('admin/statistics','admin\ReportCtrl@statisticsReport');
 Route::match(['GET','POST'],'admin/er_ob','admin\ReportCtrl@erobReport');
 Route::match(['GET','POST'],'admin/average/user_online','admin\ReportCtrl@averageUsersOnline');
 
+Route::match(['GET', 'POST'],'admin/declined', 'admin\ReportCtrl@viewDeclined'); // I add this for declined
+Route::get('admin/get_date', 'admin\ReportCtrl@get_date'); // date
+
 //SUPPORT Page
 Route::get('support','doctor\HomeCtrl@index1');
 Route::get('support/dashboard/count','support\HomeCtrl@count');

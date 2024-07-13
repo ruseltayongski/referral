@@ -24,6 +24,11 @@ class Facility extends Model
         return $this->hasMany(AppointmentSchedule::class, 'facility_id');
     }
 
+    public function activities()
+    {
+        return $this->hasMany(Activity::class, 'referred_to');
+    }
+
 }
 
 

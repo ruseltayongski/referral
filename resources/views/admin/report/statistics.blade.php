@@ -291,6 +291,7 @@
                                             {{ $right_sum }}
                                         </label>
                                     </td>
+                                    
                                     <td width="10%">
                                         <?php
                                             $accept_percent = $row['data']['accepted'] / ($row['data']['referred'] + $row['data']['redirected'] +$row['data']['transferred'] ) * 100;
@@ -300,6 +301,9 @@
                                         </span><br>
                                         <b style="font-size: 15pt" class="<?php if($accept_percent >= 50) echo 'text-green'; else echo 'text-red'; ?>">({{ round($accept_percent)."%" }})</b>
                                     </td>
+
+
+                                    
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','denied','{{ $date_range }}')">{{ $row['data']['denied'] }}</span>
                                         <br><br>
