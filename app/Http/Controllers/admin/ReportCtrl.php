@@ -1454,6 +1454,129 @@ class ReportCtrl extends Controller
         ]);
     }
 
+    public function coordinatedData($date_start, $date_end, $pluck_from, $pluck_to) {
+        $data = Activity::whereBetween("created_at",[$date_start,$date_end])
+                                ->where(function ($query) {
+                                    $query->where('status', 'referred')
+                                        ->orWhere('status', 'redirected')
+                                        ->orWhere('status', 'transferred');
+                                })
+                                ->whereIn("referred_from", $pluck_from)
+                                ->whereIn("referred_to", $pluck_to)
+                                ->count();
+
+        return $data;
+    }
+    
+    public function coordinatedPluck($category, $level) {
+        $pluck = Facility::
+                    select('id')
+                    ->where('referral_used','yes')
+                    ->where('province',2);
+
+        if($category == 'cebu_province') {
+            $pluck = $pluck->where('muncity', '!=', 63) //cebu city
+            ->where('muncity', '!=', 80) //mandaue city
+            ->where('muncity', '!=', 76); //lapulapu city
+        } 
+        else if ($category == 'cebu_city') {
+            $pluck = $pluck->where('muncity', 63);
+        }
+        else if ($category == 'mandaue_city') {
+            $pluck = $pluck->where('muncity', 80);
+        }
+        else if ($category == 'lapulapu_city') {
+            $pluck = $pluck->where('muncity', 76);
+        }
+        else {
+            return 'error in category';
+        }
+                    
+        if($level == 'rhu') {
+            $pluck = $pluck->where(function ($query) {
+                $query->where('level', 'infirmary')
+                    ->orWhere('level', 'primary_care_facility')
+                    ->orWhere('level', 'RHU');
+            });
+        }
+        else if ($level == 1 || $level == 2 || $level == 3) {
+            $pluck = $pluck->where('level', $level);
+        }
+        else {
+            return 'error in level';
+        }        
+        
+        $pluck = $pluck->get();
+
+        return $pluck;
+    }
+
+    public function coordinatedMappers($category, $date_start, $date_end) {
+        $categoryOptions = ["rhu", 1, 2, 3];
+        $categoryColumn = ["rhu" => "RHU", 1 => "LEVEL 1", 2 => "LEVEL 2", 3 => "LEVEL 3"];
+        $mappers = [];
+    
+        foreach($categoryOptions as $cat1) {
+            $total = 0;
+            $categoryData = [];
+    
+            foreach($categoryOptions as $cat2) {
+                $refer = $this->coordinatedData(
+                    $date_start,
+                    $date_end,
+                    $this->coordinatedPluck($category, $cat1),
+                    $this->coordinatedPluck($category, $cat2)
+                );
+                $total += $refer;
+                $categoryData[] = [
+                    "pointed" => $categoryColumn[$cat1],
+                    "category" => $category,
+                    "coordinate" => $categoryColumn[$cat1].' TO '.$categoryColumn[$cat2],
+                    "refer" => $refer
+                ];
+            }
+    
+            foreach ($categoryData as &$data) {
+                if ($total > 0) {
+                    $data["percentage"] = round(($data["refer"] / $total) * 100).'%';
+                } else {
+                    $data["percentage"] = 0;
+                }
+                $mappers[] = $data;
+            }
+    
+            $mappers[] = [
+                "pointed" => $categoryColumn[$cat1+1],
+                "total" => $total
+            ];
+        }
+    
+        return $mappers;
+    }
+
+    public function coordinatedReferral(Request $request) {
+        $category = $request->category ? $request->category : 'cebu_province';
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfDay()->format('Y-m-d').' 23:59:59';
+            $request->date_range = $date_start." - ".$date_end;
+        }
+
+        $start = \Carbon\Carbon::parse($date_start)->format('m/d/Y');
+        $end = \Carbon\Carbon::parse($date_end)->format('m/d/Y');
+        $data = $this->coordinatedMappers($category, $date_start, $date_end); 
+
+        return view("admin.report.coordinated_referral", [
+            "start" => $start,
+            "end" => $end,
+            "category" => $category,
+            "data" => $data
+        ]);
+    }
+
     function countCases($data) {
         $facilities = array();
         $asymp = 0;
