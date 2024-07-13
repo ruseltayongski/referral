@@ -85,6 +85,6 @@
                 @endforeach
             </ul>
         </li>
-
+        <li><a href="{{ url('admin/coordinated/referral') }}"><i class="fa fa-hand-rock-o"></i>Coordinated Referral</a></li>
     </ul>
 </li>
