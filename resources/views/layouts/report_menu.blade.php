@@ -63,6 +63,7 @@
         @endif
             <li><a href="{{ url('admin/report/top/icd') }}"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
             <li><a href="{{ url('admin/report/top/reason_for_referral') }}"><i class="fa fa-code-fork"></i>Top Reason for Referral</a></li>
+            <li><a href="{{ url('admin/report/top/reason_for_declined') }}"><i class="fa fa-code-fork"></i>Top Reason for declined</a></li><!----I add this for declined--->
             <li><a href="{{ url('admin/report/tat') }}"><i class="fa fa-clock-o"></i>Turn Around Time</a></li>
             {{--<li class="dropdown-submenu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-clock-o"></i>Turn Around Time</a>

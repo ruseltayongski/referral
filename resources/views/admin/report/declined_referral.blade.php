@@ -18,125 +18,23 @@
             <div class="box-header with-border" style="margin-top: -200px;">
                
                     <div class="form-group">
-
-                    @php
-                        $totalRejected = 0;
-                        $totalreferred = 0;
-                        $cctotalRejected = 0;
-                        $cctotalreferred = 0;
-                        $manTotalReferred = 0;
-                        $manTotalRejected = 0;
-                        $lapuTotalRejected = 0;
-                        $lapuTotalReferred = 0;
-                    @endphp
-                     @foreach($cebuprovince as $prov)
-                        
-                        @php
-                            $rejected = $prov->activities->filter(function($activity){
-                                return $activity->status === 'rejected';
-                            });
-                            $referred = $prov->activities->filter(function($activity){
-                                return $activity->status === 'referred';
-                            });
-                            $countreferred = $referred->count();
-                            $countRejected = $rejected->count();
-                        @endphp
-                           
-                             @if($countRejected > 0 || countreferred > 0)
-                               
-                             @endif
-
-                             @php
-                                $totalRejected += $countRejected;
-                                $totalreferred += $countreferred
-                             @endphp
-
-                    @endforeach
-                  
-                        @foreach($cebucity as $cc)
-                            @php
-                                $ccrejected = $cc->activities->filter(function($activity){
-                                    return $activity->status === 'rejected';
-                                });
-                                $ccreferred = $cc->activities->filter(function($activity){
-                                    return $activity->status === 'referred';
-                                });
-                                $cccountRejected = $ccrejected->count();
-                                $cccountReferred =  $ccreferred->count();
-                            @endphp
-                                @if($cccountRejected > 0 || $cccountReferred > 0)
-                                @endif
-
-                                @php
-                                $cctotalRejected += $cccountRejected;
-                                $cctotalreferred += $cccountReferred
-                                @endphp
-                        @endforeach
-                        
-                        @foreach($mandauecity as $mandaue)
-                                @php
-                              
-                                    $manrejected = $mandaue->activities->filter(function($activity){
-                                        return $activity->status === 'rejected';
-                                    });
-
-                                    $manreferred = $mandaue->activities->filter(function($activity){
-                                        return $activity->status === 'referred';
-                                    });
-                                    
-                                    $manCountRejected = $manrejected.count();
-                                    $manCountReferred = $manreferred.count();
-                                @endphp
-                                    @if($manCountRejected > 0 || manCountReferred > 0)
-                                    @endif
-
-                                    @php
-                                    $manTotalRejected += $manCountReferred;
-                                    $manTotalReferred += $manCountReferred
-                                    @endphp
-                        @endforeach
-
-                        @foreach($lapulapucity as $lapulapu)
-                                    @php
-                                        $lapuRejected = $lapulapu->activities->filter(function($activity){
-                                            return $activity->status === 'rejected';
-                                        });
-                                        $lapuReferred = $lapulapu->activities->filter(function($activity){
-                                            return $activity->status === 'referred';
-                                        });
-
-                                        $lapuCountRejected =  $lapuRejected.count();
-                                        $lapuCountReferred = $lapuReferred.count();
-                                    @endphp
-
-                                    @if($lapuCountRejected > 0 || $lapuCountReferred > 0)
-                                    @endif
-                                    
-                                    @php
-                                        $lapuTotalRejected +=  $lapuCountRejected;
-                                        $lapuTotalReferred +=  $lapuCountReferred
-                                    @endphp
-
-                        @endforeach
-                        
-                    <form id="filterForm" method="POST" action="{{ asset('admin/declined') }}">
-                        {{ csrf_field() }}
-                        <?php 
-                        //$date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); 
-                        ?>
-                        <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
-                        <!-- <input type="text" class="form-control" name="datee" value="" placeholder="" id="datee"> -->
-                        <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
-                        <!-- <button type="button" class="btn btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics') }}'"><i class="fa fa-search"></i> View All</button> -->
-                    </form>
-                </div>
+                        <form id="filterForm" method="POST" action="{{ asset('admin/declined') }}">
+                            {{ csrf_field() }}
+                            <?php 
+                            //$date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); 
+                            ?>
+                            <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
+                            <!-- <input type="text" class="form-control" name="datee" value="" placeholder="" id="datee"> -->
+                            <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                            <!-- <button type="button" class="btn btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics') }}'"><i class="fa fa-search"></i> View All</button> -->
+                        </form>
+                    </div>
                
             </div>
             <div class="box-body">
                
                     <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-fixed-header">
-                            
+                        <table class="table table-hover table-bordered table-fixed-header"> 
                         <thead>
                             <tr>
                             <th scope="col">City</th>
@@ -151,9 +49,12 @@
                                 <td>{{$data['cebu_province_referred']}}</td>
                                 <td>{{$data['cebu_province_rejected']}}</td>
                                 <td>
+                                    @if($data['cebu_province_percent'] > 0)
+                                        {{$data['cebu_province_percent']}}%
                                     
-                                {{ number_format(($totalRejected / $totalreferred) * 100, 2) }}%
-                               
+                                    @else
+                                        0.00%
+                                    @endif
                                 </td>
                             </tr>
 
@@ -162,31 +63,37 @@
                                 <td>{{$data['cebu_city_referred']}}</td>
                                 <td>{{$data['cebu_city_rejected']}}</td>
                                 <td>
-                                    {{ number_format(($cctotalRejected / $cctotalreferred) * 100, 2) }}%
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Mandaue City</td>
-                                <td>{{$manTotalReferred}}</td>
-                                <td>{{$manTotalRejected}}</td>
-                                <td>
-                                    @if($manTotalReferred > 0 && $manTotalRejected > 0)
-                                    {{ number_format(($manTotalRejected / $manTotalReferred) * 100, 2) }}%
+                                     @if($data['cebu_city_percent'] > 0)
+                                      {{$data['cebu_city_percent']}}%
                                     @else
                                         0.00%
                                     @endif
                                 </td>
                             </tr>
                             <tr>
-                                <td>Lapu-Lapu City City</td>
-                                <td>{{$lapuTotalReferred}}</td>
-                                <td>{{$lapuTotalRejected}}</td>
+                                <td>Mandaue City</td>
+                                <td>{{$data['mandaue_city_referred']}}</td>
+                                <td>{{$data['mandaue_city_rejected']}}</td>
                                 <td>
-                                    @if($lapuTotalReferred > 0 && $lapuTotalRejected > 0)
-                                        {{ number_format(($lapuTotalRejected / $lapuTotalReferred) * 100, 2) }}%
+                                    @if($data['mandaue_city_percent'] > 0)
+                                    {{ $data['mandaue_city_percent'] }}%
+                                    @else
+                                        0.00%
+                                    @endif
+                                
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Lapu-Lapu City City</td>
+                                <td>{{$data['lapulapu_city_referred']}}</td>
+                                <td>{{$data['lapulapu_city_rejected']}}</td>
+                                <td>
+                                    @if($data['lapulapu_city_percent'] > 0)
+                                        {{$data['lapulapu_city_percent']}}%
                                     @else
                                      0.00%
                                     @endif
+                                    
                                 </td>
                             </tr>
                         </tbody>

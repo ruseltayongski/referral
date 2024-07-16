@@ -87,6 +87,7 @@ Route::get('admin/daily/referral/incoming/{province_id}','admin\PatientCtrl@getA
 Route::get('admin/report/top/icd','admin\ReportCtrl@topIcd');
 Route::get('admin/report/top/icd_filter','admin\ReportCtrl@icdFilter');
 Route::get('admin/report/top/reason_for_referral','admin\ReportCtrl@topReasonForReferral');
+Route::match(['GET','POST'],'admin/report/top/reason_for_declined','admin\ReportCtrl@topReasonFordeclined'); // I add this for declined
 Route::get('admin/report/top/filter_top_reason_referral','admin\ReportCtrl@filterTopReasonReferral');
 Route::get('admin/report/agebracket','admin\ReportCtrl@ageBracket');
 Route::post('admin/report/agebracket/filter','admin\ReportCtrl@ageBracketFilter2');
