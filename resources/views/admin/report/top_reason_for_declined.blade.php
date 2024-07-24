@@ -24,6 +24,7 @@
                 </form>
             </div>
         </div>
+        
         <div class="col-md-10">
                 <div class="jim-content">
                     <div class="box-body table-responsive no-padding">
@@ -36,12 +37,12 @@
                             @if(isset($selected_category))
                                 @foreach($data[$selected_category] as $reason)
                                     <tr>
-
                                         <td>{{$reason['remarks']}}</td>
                                         <td>
                                             <label for="">{{$reason['count']}}</label>
                                         </td>
                                     </tr>
+                                
                                 @endforeach
                               @else
                                 <tr>

@@ -7,7 +7,31 @@
     </style>
     <div class="row col-md-12">
         <div class="box box-success">
-            <section class="content-header">
+
+        <div class="row">
+                <div class="col-md-8">
+                    <div class="box-header with-border">
+                        <h3> Declined Report </h3>
+                        <form action="{{ asset('admin/declined') }}" style="margin-top:20px;display:flex;" id="myForm" method="POST" class="form-inline">
+                            {{ csrf_field() }}
+                            <select name="inoutgoing" class="form-control" style="width:40%;" required>
+                                <option value="">Select For</option>
+                                <option value="referred_to">Incoming</option>
+                                <option value="referred_from">Outgoing</option> 
+                            </select>
+                            <div class="form-group-sm" style="margin-bottom: 10px;display:flex;width:100%;">
+                                <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range"  style="width: 40%;height:35px;">
+                                <button type="submit" class="btn btn-success btn-sm btn-flat">
+                                    <i class="fa fa-search"></i> Filter
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- <section class="content-header">
                 <h1>
                     Declined Report
                     <small>Control panel</small>
@@ -15,22 +39,35 @@
             </section>
             <section class="content">
             </section>
-            <div class="box-header with-border" style="margin-top: -200px;">
-               
+            <div class="col-md-8">
+                <div class="box-header with-border" style="margin-top: -240px;">
                     <div class="form-group">
                         <form id="filterForm" method="POST" action="{{ asset('admin/declined') }}">
-                            {{ csrf_field() }}
+                            {{ csrf_field() }} -->
                             <?php 
                             //$date_range = date("m/d/Y",strtotime($date_range_start)).' - '.date("m/d/Y",strtotime($date_range_end)); 
                             ?>
-                            <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
-                            <!-- <input type="text" class="form-control" name="datee" value="" placeholder="" id="datee"> -->
-                            <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
-                            <!-- <button type="button" class="btn btn-warning btn-flat" onClick="window.location.href = '{{ asset('admin/statistics') }}'"><i class="fa fa-search"></i> View All</button> -->
-                        </form>
+                            <!-- <div class="form-group" style="width:40%;">
+                                <select name="inoutgoing" class="form-control" id="inoutgoing" required>
+                                    <option value="">Select For</option>
+                                    <option value="referred_to">Incoming</option>
+                                    <option value="referred_from">Outgoing</option>
+                                </select>
+                            </div>
+                            <div class="form-group-sm" style="margin-bottom: 10px;display:flex;width:100%;">
+                                <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
+                                <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                            </div> -->
+                            <!-- <div class="form-group col-md-4">
+                                <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" placeholder="Filter your daterange here..." id="consolidate_date_range">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center">
+                                    <button type="submit" class="btn btn-info btn-flat"><i class="fa fa-search"></i> Filter</button>
+                            </div> -->
+                        <!-- </form>
                     </div>
-               
-            </div>
+                </div>
+            </div> -->
             <div class="box-body">
                
                     <div class="table-responsive">

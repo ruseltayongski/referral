@@ -1158,81 +1158,153 @@ class ReportCtrl extends Controller
     }
     //--------------------------------added code for declined
    public function getDeclinedRemarks($status, $level, $date_start, $date_end){
-        $data = Activity::query();
-    
-        if($status == 'rejected'){
-            $data = $data->whereIn("referred_to", $level)
-                ->where("status", 'rejected')
-                ->whereBetween('created_at', [$date_start,$date_end])
-                ->select('remarks','created_at', DB::raw('COUNT(remarks) as count'))
-                ->groupBy('remarks')
-                ->havingRaw('COUNT(*) > 1')
-                ->orderBy('count', 'desc')
-                ->limit(10)
-                ->get();
 
-        } else {
-            return "Invalid status";
+//---------------------------------------------------------------------------------->
+        // $data = Activity::query();
+    
+        // if($status == 'rejected'){
+        //     $data = $data->whereIn("referred_to", $level)
+        //         ->where("status", 'rejected')
+        //         ->whereBetween('created_at', [$date_start,$date_end])
+        //         ->select('remarks','created_at', DB::raw('COUNT(remarks) as count'))
+        //         ->groupBy('remarks')
+        //         ->havingRaw('COUNT(*) > 1')
+        //         ->orderBy('count', 'desc')
+        //         ->limit(10)
+        //         ->get();
+
+        // } else {
+        //     return "Invalid status";
+        // }
+
+        // return $data;
+//------------------------------------------------------------------------------------>
+
+        if($status !== 'rejected'){
+            return 'Invalid Status';
         }
 
-        return $data;
-}
+        $remarksData = Activity::query()
+            ->whereIn("referred_to", $level)
+            ->where("status", 'rejected')
+            ->whereBetween('created_at', [$date_start, $date_end])
+            ->select('remarks', 'created_at')
+            ->get();
 
-public function populateLevel($level){
-    $facility = Facility::select("id","level");
+        $groupRemarks = [];
+        $threshold = 2;
 
-    if ($level == 2) {
-        $facility = $facility->where('level', '2')->where('id', '!=', 24);
-    } elseif ($level == 3) {
-        $facility = $facility->where('level', '3')->where('id', '!=', 24);
-    } elseif ($level == 5) {
-        $facility = $facility->where('level', '3')->where('id', '=', 24);
-    } else {
-        return "Invalid level";
+        foreach($remarksData as $remarksData){
+            $remark = $remarksData->remarks;
+            $grouped = false;
+            
+            foreach($groupRemarks as &$group){
+                if(levenshtein($remark, $group['remark']) <= $threshold){
+                    $group['count']++;
+                    $group['remarks'][] = $remarksData;
+                    // Track the most frequent remark within each group
+                    if(isset($group['remark_frequency'][$remark])){
+                        $group['remark_frequency'][$remark]++;
+                    }else{
+                        $group['remark_frequency'][$remark] = 1;
+                    }
+
+                      // Update the main remark if the current remark is more frequent
+                    if ($group['remark_frequency'][$remark] > $group['remark_frequency'][$group['remark']]) {
+                        $group['remark'] = $remark;
+                    }
+
+                    $grouped = true;
+                    break;
+                }
+            } 
+
+            if(!$grouped){
+                $groupRemarks[] = [
+                    'remark' => $remark,
+                    'count' => 1,
+                    'remarks' => [$remarksData],
+                    'remark_frequency' => [$remark => 1]
+                ];
+            }
+
+        }
+        // Filter groups where count > 1
+        $groupRemarks = array_filter($groupRemarks, function ($group) {
+            return $group['count'] > 1;
+        });
+        //descending order  take the highest count 
+        usort($groupRemarks, function($as, $bs){
+            return $bs['count'] <=> $as['count'];
+        });
+
+        $result = array_map(function($group){
+            return[
+                'remarks' => $group['remark'],
+                'count' => $group['count'],
+            ];
+        }, array_slice($groupRemarks, 0, 10));
+       
+        // $result1 = array_slice($groupRemarks, 0, 10);
+ 
+        return $result;
     }
 
-    return $facility->pluck('id')->toArray();
-}
+    public function populateLevel($level){
+        $facility = Facility::select("id","level");
 
-public function getDeclinedHolder($date_start, $date_end){
-    
-    $facilityLevel2 = $this->getDeclinedRemarks("rejected", $this->populateLevel(2), $date_start, $date_end);
-    $facilityLevel3 = $this->getDeclinedRemarks("rejected", $this->populateLevel(3), $date_start, $date_end);
-    $vecenteSottoFacility = $this->getDeclinedRemarks("rejected", $this->populateLevel(5), $date_start, $date_end);
+        if ($level == 2) {
+            $facility = $facility->where('level', '2')->where('id', '!=', 24);
+        } elseif ($level == 3) {
+            $facility = $facility->where('level', '3')->where('id', '!=', 24);
+        } elseif ($level == 5) {
+            $facility = $facility->where('id', '=', 24);
+        } else {
+            return "Invalid level";
+        }
 
-    return [
-        "Level2" =>  $facilityLevel2,
-        "Level3" =>  $facilityLevel3,
-        "Vecente Sotto" => $vecenteSottoFacility,
-    ];
-}
+        return $facility->pluck('id')->toArray();
+    }   
 
-public function topReasonForDeclined(Request $request) {
-    // Log::info('Request Dataadsasdasd22: ', $request->all());
+    public function getDeclinedHolder($date_start, $date_end){
+        
+        $facilityLevel2 = $this->getDeclinedRemarks("rejected", $this->populateLevel(2), $date_start, $date_end);
+        $facilityLevel3 = $this->getDeclinedRemarks("rejected", $this->populateLevel(3), $date_start, $date_end);
+        $vecenteSottoFacility = $this->getDeclinedRemarks("rejected", $this->populateLevel(5), $date_start, $date_end);
 
-    if($request->date_range){
-        $dates = explode(' - ', $request->date_range);
-        $date_start = Carbon::createFromFormat('m/d/Y', $dates[0])->startOfDay()->format('Y-m-d H:i:s');
-        $date_end = Carbon::createFromFormat('m/d/Y', $dates[1])->endOfDay()->format('Y-m-d H:i:s');
-    } else {
-        $date_start = Carbon::now()->startOfMonth()->format('Y-m-d H:i:s');
-        $date_end = Carbon::now()->endOfMonth()->format('Y-m-d H:i:s');
+        return [
+            "Level2" =>  $facilityLevel2,
+            "Level3" =>  $facilityLevel3,
+            "Vecente Sotto" => $vecenteSottoFacility,
+        ];
     }
 
-    $date_range = date('m/d/Y', strtotime($date_start)).' - '.date('m/d/Y', strtotime($date_end));
-    
-    $data = $this->getDeclinedHolder($date_start, $date_end);
-    $selectedFacility = $request->facility_category;
-    // Debugging statement
+    public function topReasonForDeclined(Request $request) {
+        // Log::info('Request Dataadsasdasd22: ', $request->all());
 
-    return view('admin.report.top_reason_for_declined', [
-        'data' => $data,
-        'date_range' => $date_range,
-        'date_start' => $date_start,
-        'date_end' => $date_end,
-        'selected_category' => $selectedFacility,
-    ]);
-}
+        if($request->date_range){
+            $dates = explode(' - ', $request->date_range);
+            $date_start = Carbon::createFromFormat('m/d/Y', $dates[0])->startOfDay()->format('Y-m-d H:i:s');
+            $date_end = Carbon::createFromFormat('m/d/Y', $dates[1])->endOfDay()->format('Y-m-d H:i:s');
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d H:i:s');
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d H:i:s');
+        }
+
+        $date_range = date('m/d/Y', strtotime($date_start)).' - '.date('m/d/Y', strtotime($date_end));
+        
+        $data = $this->getDeclinedHolder($date_start, $date_end);
+        $selectedFacility = $request->facility_category;
+        // Debugging statement
+
+        return view('admin.report.top_reason_for_declined', [
+            'data' => $data,
+            'date_range' => $date_range,
+            'date_start' => $date_start,
+            'date_end' => $date_end,
+            'selected_category' => $selectedFacility,
+        ]);
+    }
 
     //-------------------------------------------------------
     public function topReasonForReferral(Request $request) {
@@ -2129,7 +2201,8 @@ public function topReasonForDeclined(Request $request) {
         // Call viewDeclined method with parameters
     }
 
-    public function getReferOrDecline($category, $pluck, $date_start, $date_end) {
+    public function getReferOrDecline($InOutgoing,$category, $pluck, $date_start, $date_end) {
+  
         // $data = new Activity();
         // if($category == 'referred') {
         //     $data = $data->whereIn("referred_to", $pluck)
@@ -2152,21 +2225,20 @@ public function topReasonForDeclined(Request $request) {
         //         ->count();
         
         // return $data;
-
-
-
-        //----------------------------------------------------------
-        
+        //----------------------------------------------------------//
+        if(empty($InOutgoing)){
+            return 0;
+        }
         $data = new Activity();
         if($category == 'referred') {
-            $data = $data->whereIn("referred_to", $pluck)
+            $data = $data->whereIn($InOutgoing, $pluck)
                 ->where(function($query) {
                 $query->where("status",'referred')
                     ->orWhere("status", 'redirected');
             });
         }
         else if ($category == 'rejected') {
-            $data = $data->whereIn("referred_to", $pluck)
+            $data = $data->whereIn($InOutgoing, $pluck)
                         ->where(function($query) {
                             $query->where("status",'rejected');
                         });
@@ -2179,23 +2251,21 @@ public function topReasonForDeclined(Request $request) {
                 ->count();
         
         return $data;
-
-
         //-----------------------------------------------------------
     }
 
-    public function referOrDeclineHolder($date_start, $date_end) {
-        $cebu_province_referred = $this->getReferOrDecline("referred", $this->populatePluck('cebu_province'), $date_start, $date_end);
-        $cebu_province_rejected = $this->getReferOrDecline("rejected", $this->populatePluck('cebu_province'), $date_start, $date_end);
+    public function referOrDeclineHolder($InOutgoing,$date_start, $date_end) {
+        $cebu_province_referred = $this->getReferOrDecline($InOutgoing,"referred", $this->populatePluck('cebu_province'), $date_start, $date_end);
+        $cebu_province_rejected = $this->getReferOrDecline($InOutgoing,"rejected", $this->populatePluck('cebu_province'), $date_start, $date_end);
 
-        $cebu_mandaue_referred = $this->getReferOrDecline("referred", $this->populatePluck('mandaue_city'), $date_start, $date_end);
-        $cebu_mandaue_rejected = $this->getReferOrDecline("rejected", $this->populatePluck('mandaue_city'), $date_start, $date_end);
+        $cebu_mandaue_referred = $this->getReferOrDecline($InOutgoing,"referred", $this->populatePluck('mandaue_city'), $date_start, $date_end);
+        $cebu_mandaue_rejected = $this->getReferOrDecline($InOutgoing,"rejected", $this->populatePluck('mandaue_city'), $date_start, $date_end);
 
-        $cebu_city_referred = $this->getReferOrDecline("referred", $this->populatePluck('cebu_city'), $date_start, $date_end);
-        $cebu_city_rejected = $this->getReferOrDecline("rejected", $this->populatePluck('cebu_city'), $date_start, $date_end);
+        $cebu_city_referred = $this->getReferOrDecline($InOutgoing,"referred", $this->populatePluck('cebu_city'), $date_start, $date_end);
+        $cebu_city_rejected = $this->getReferOrDecline($InOutgoing,"rejected", $this->populatePluck('cebu_city'), $date_start, $date_end);
 
-        $cebu_lapu_referred = $this->getReferOrDecline("referred", $this->populatePluck('lapulapu_city'), $date_start, $date_end);
-        $cebu_lapu_rejected = $this->getReferOrDecline("rejected", $this->populatePluck('lapulapu_city'), $date_start, $date_end);
+        $cebu_lapu_referred = $this->getReferOrDecline($InOutgoing,"referred", $this->populatePluck('lapulapu_city'), $date_start, $date_end);
+        $cebu_lapu_rejected = $this->getReferOrDecline($InOutgoing,"rejected", $this->populatePluck('lapulapu_city'), $date_start, $date_end);
 
         return [
             "cebu_province_referred" => $cebu_province_referred,
@@ -2255,7 +2325,7 @@ public function topReasonForDeclined(Request $request) {
         // $cebucity = [];
         // $mandauecity = [];
         // $lapulapucity = [];
-
+        $InOutgoing = $request->inoutgoing;
         if($request->date_range){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0]));
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1]));
@@ -2273,7 +2343,7 @@ public function topReasonForDeclined(Request $request) {
             //->with('activities')
             ->get();
 
-        $data = $this->referOrDeclineHolder($date_start, $date_end);
+        $data = $this->referOrDeclineHolder($InOutgoing,$date_start, $date_end);
 
         $cebucity = Facility::where('province', 2)
             ->where('muncity', '=', 63)
@@ -2289,7 +2359,7 @@ public function topReasonForDeclined(Request $request) {
             ->where('muncity', '=', 76)
             ->with('activities')
             ->get();
-        //return $data['mandaue_city_referred'];
+  
         // Pass data to the view
         return view('admin.report.declined_referral', [
             'cebuprovince' => $cebuprovince,
