@@ -7,15 +7,23 @@
 
     $user = Session::get('auth');
     $myfacility = \App\Facility::find($user->facility_id);
-    $facilities = \App\Facility::select('id','name')
+
+    if($facility_id_telemed){
+        $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
         ->where('id', $facility_id_telemed) // I am adding this to get the specific facility name
         ->where('status',1)
         ->where('referral_used','yes')
         ->orderBy('name','asc')->get();
+    }else{
+        $facilities = \App\Facility::select('id','name')
+        ->where('id','!=',$user->facility_id)
+        ->where('status',1)
+        ->where('referral_used','yes')
+        ->orderBy('name','asc')->get();
+    }
         
     $reason_for_referral = \App\ReasonForReferral::get();
-   
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">
     <div class="modal-dialog modal-lg" role="document">
