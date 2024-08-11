@@ -1048,8 +1048,7 @@ function deleteTimeInput(appointment){
 
             for (var i =0; i < allAppointmentTimes.length; i++){
                 var existingTime = allAppointmentTimes[i];
-                //console.log('existingTime:: ',existingTime.from, 'existing :', existingTime.to);
-                //console.log('existingTime:: ',timeObject.from, 'new time:', timeObject.to);
+           
                 if ((timeObject.from >= existingTime.from && timeObject.from < existingTime.to) ||(timeObject.to > existingTime.from && timeObject.to <= existingTime.to) ||
                     (timeObject.from <= existingTime.from && timeObject.to >= existingTime.to)) 
                 {
@@ -1071,7 +1070,7 @@ function deleteTimeInput(appointment){
             
                 alert('End time must be after start time');
                 toInput.val('');
-                fromInput.val('');
+                //fromInput.val('');
                 return;
             }
 
@@ -1093,14 +1092,14 @@ function deleteTimeInput(appointment){
             }
            
 
-            if(!isUnique) {
-                alert('Appointment time must be unique');
-                allAppointmentTimes = allAppointmentTimes.filter(appoint => !(appoint.from.getTime() === fromTimeObj.getTime() && appoint.to.getTime() === toTimeObj.getTime()));
-                console.log("allAppointmentTimes remove if not unique:", allAppointmentTimes);
-                fromInput.val('');
-                toInput.val('');
-                return;
-            }
+            // if(!isUnique) {
+            //     alert('Appointment time must be unique');
+            //     allAppointmentTimes = allAppointmentTimes.filter(appoint => !(appoint.from.getTime() === fromTimeObj.getTime() && appoint.to.getTime() === toTimeObj.getTime()));
+            //     console.log("allAppointmentTimes remove if not unique:", allAppointmentTimes);
+            //     fromInput.val('');
+            //     toInput.val('');
+            //     return;
+            // }
 
             $('input[name="appointed_date"]').data('fromTimeObj', fromTimeObj);
             $('input[name="appointed_date"]').data('Totime', toTimeObj);
