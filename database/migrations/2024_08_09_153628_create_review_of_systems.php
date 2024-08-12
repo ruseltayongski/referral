@@ -15,24 +15,24 @@ class CreateReviewOfSystems extends Migration
     {
         Schema::create('review_of_systems', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
-            $table->string('skin');
-            $table->string('head');
-            $table->string('eyes');
-            $table->string('ears');
-            $table->string('nose_or_sinuses');
-            $table->string('mouth_or_throat');
-            $table->string('neck');
-            $table->string('breast');
-            $table->string('respiratory_or_cardiac');
-            $table->string('gastrointestinal');
-            $table->string('urinary');
-            $table->string('peripheral_vascular');
-            $table->string('musculoskeletal');
-            $table->string('neurologic');
-            $table->string('hematologic');
-            $table->string('endocrine');
-            $table->string('psychiatric');
+            $table->integer('patient_id')->nullable();
+            $table->string('skin')->nullable();
+            $table->string('head')->nullable();
+            $table->string('eyes')->nullable();
+            $table->string('ears')->nullable();
+            $table->string('nose_or_sinuses')->nullable();
+            $table->string('mouth_or_throat')->nullable();
+            $table->string('neck')->nullable();
+            $table->string('breast')->nullable();
+            $table->string('respiratory_or_cardiac')->nullable();
+            $table->string('gastrointestinal')->nullable();
+            $table->string('urinary')->nullable();
+            $table->string('peripheral_vascular')->nullable();
+            $table->string('musculoskeletal')->nullable();
+            $table->string('neurologic')->nullable();
+            $table->string('hematologic')->nullable();
+            $table->string('endocrine')->nullable();
+            $table->string('psychiatric')->nullable();
             $table->timestamps();
         });
     }

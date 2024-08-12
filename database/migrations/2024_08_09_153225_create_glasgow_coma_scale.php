@@ -15,12 +15,12 @@ class CreateGlasgowComaScale extends Migration
     {
         Schema::create('glasgow_coma_scale', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
-            $table->string('pupil_size_chart');
-            $table->string('motor_response');
-            $table->string('verbal_response');
-            $table->string('eye_response');
-            $table->string('gsc_score');
+            $table->integer('patient_id')->nullable();
+            $table->string('pupil_size_chart')->nullable();
+            $table->string('motor_response')->nullable();
+            $table->string('verbal_response')->nullable();
+            $table->string('eye_response')->nullable();
+            $table->string('gsc_score')->nullable();
             $table->timestamps();
         });
     }

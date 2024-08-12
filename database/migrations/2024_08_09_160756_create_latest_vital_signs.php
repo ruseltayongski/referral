@@ -15,12 +15,12 @@ class CreateLatestVitalSigns extends Migration
     {
         Schema::create('latest_vital_signs', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
-            $table->string('temperature');
-            $table->string('pulse_rate');
-            $table->string('respiratory_rate');
-            $table->string('blood_pressure');
-            $table->string('oxygen_saturation');
+            $table->integer('patient_id')->nullable();
+            $table->string('temperature')->nullable();
+            $table->string('pulse_rate')->nullable();
+            $table->string('respiratory_rate')->nullable();
+            $table->string('blood_pressure')->nullable();
+            $table->string('oxygen_saturation')->nullable();
             $table->timestamps();
         });
     }

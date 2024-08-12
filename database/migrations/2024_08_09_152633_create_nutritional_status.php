@@ -15,9 +15,9 @@ class CreateNutritionalStatus extends Migration
     {
         Schema::create('nutritional_status', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
-            $table->string('diet');
-            $table->string('specify_diets');
+            $table->integer('patient_id')->nullable();
+            $table->string('diet')->nullable();
+            $table->string('specify_diets')->nullable();
             $table->timestamps();
         });
     }

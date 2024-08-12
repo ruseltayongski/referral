@@ -15,21 +15,30 @@ class CreatePediatricHistory extends Migration
     {
         Schema::create('pediatric_history', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
-            $table->string('prenatal_a');
-            $table->string('prenatal_g');
-            $table->string('prenatal_p');
-            $table->string('natal_born_at');
-            $table->string('natal_by');
-            $table->string('natal_via');
-            $table->string('natal_term');
-            $table->string('natal_weight');
-            $table->string('natal_br');
-            $table->string('natal_with_good_cry');
-            $table->string('natal_other_complications');
-            $table->string('post_natal_feeding_history');
-            $table->string('post_natal_immunization_history');
-            $table->string('post_natal_development_milestones');
+            $table->integer('patient_id')->nullable();
+            $table->string('prenatal_a')->nullable();
+            $table->string('prenatal_g')->nullable();
+            $table->string('prenatal_p')->nullable();
+            $table->string('prenatal_with_maternas_illness')->nullable();
+            $table->string('natal_born_at')->nullable();
+            $table->string('natal_born_address')->nullable();
+            $table->string('natal_by')->nullable();
+            $table->string('natal_via')->nullable();
+            $table->string('natal_indication')->nullable();
+            $table->string('natal_term')->nullable();
+            $table->string('natal_weight')->nullable();
+            $table->string('natal_br')->nullable();
+            $table->string('natal_with_good_cry')->nullable();
+            $table->string('natal_other_complications')->nullable();
+            $table->string('post_natal_feeding_history')->nullable();
+            $table->string('post_natal_x_month')->nullable();
+            $table->string('post_natal_formula_feed')->nullable();
+            $table->string('post_natal_started_semifoods')->nullable();
+            $table->string('post_natal_immunization_history')->nullable();
+            $table->string('post_natal_dpt_opv_x')->nullable();
+            $table->string('post_natal_hepB_x_doses')->nullable();
+            $table->string('post_natal_others')->nullable();
+            $table->string('post_natal_development_milestones')->nullable();
             $table->timestamps();
         });
     }

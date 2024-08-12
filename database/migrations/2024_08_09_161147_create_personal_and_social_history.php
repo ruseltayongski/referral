@@ -15,13 +15,18 @@ class CreatePersonalAndSocialHistory extends Migration
     {
         Schema::create('personal_and_social_history', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
-            $table->string('smoking');
-            $table->string('smoking_remarks');
-            $table->string('alcohol_drinking');
-            $table->string('illicit_drugs');
-            $table->string('current_medications');
-            $table->string('pertinent_laboratory_and_procedures');
+            $table->integer('patient_id')->nullable();
+            $table->boolean('smoking')->nullable();
+            $table->integer('smoking_sticks_per_day')->nullable();
+            $table->string('smoking_quit_year')->nullable();
+            $table->string('smoking_remarks')->nullable();
+            $table->boolean('alcohol_drinking')->nullable();
+            $table->string('alcohol_liquor_type')->nullable();
+            $table->string('alcohol_drinking_quit_year')->nullable();
+            $table->boolean('illicit_drugs')->nullable();
+            $table->string('illicit_drugs_taken')->nullable();
+            $table->string('illicit_drugs_quit_year')->nullable();
+            $table->string('current_medications')->nullable();
             $table->timestamps();
         });
     }
