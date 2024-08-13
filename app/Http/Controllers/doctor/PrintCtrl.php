@@ -42,7 +42,9 @@ class PDFPrescription extends FPDF
     public function Header()
     {
         $this->SetTextColor(0);
-        $imagePath = realpath(__DIR__ . '/../../../../resources/img/video/doh-logo.png');
+        $headerPath = realpath(__DIR__.'/../../../../resources/img/video/wave_header.png');
+        $this->Image($headerPath, 0, 0, 210, 35);
+        $imagePath = realpath(__DIR__.'/../../../../resources/img/video/doh-logo.png');
         $this->Image($imagePath, 10, 10, 22);
 
         $this->Setx(10);
@@ -57,24 +59,24 @@ class PDFPrescription extends FPDF
         $this->Ln(15);
 
         $this->Setx(10);
-        $this->SetFont('Arial', 'B', 16);
-        $this->Cell(0, 2, $this->header, 0, 1, 'C');
+        $this->SetFont('Arial', 'B', 13);
+        $this->Cell(0, 2, iconv('UTF-8', 'windows-1252', $this->header), 0, 1, 'C');
         $this->Setx(10);
-        $this->SetFont('Arial', '', 10);
-        $this->Cell(0, 10, $this->department, 0, 1, 'C');
+        $this->SetFont('Arial', '', 9);
+        $this->Cell(0, 10, iconv('UTF-8', 'windows-1252',  $this->department), 0, 1, 'C');
         $this->Ln(5);
 
         $this->Setx(10);
-        $this->SetFont('Arial', 'B', 12);
-        $this->Cell(0, 0, $this->facility, 0, "", "C");
+        $this->SetFont('Arial', 'B', 10);
+        $this->Cell(0, 0,  iconv('UTF-8', 'windows-1252', $this->facility),  0, "", "C");
         $this->Ln();
 
         $this->Setx(10);
-        $this->SetFont('Arial', '', 10);
-        $this->Cell(0, 12, $this->facility_address, 0, "", "C");
+        $this->SetFont('Arial', '', 9);
+        $this->Cell(0, 12, iconv('UTF-8', 'windows-1252',  $this->facility_address),  0, "", "C");
         $this->Ln();
         $this->Setx(10);
-        $this->Cell(0, 0, $this->facility_email, 0, "", "C");
+        $this->Cell(0, 0,  iconv('UTF-8', 'windows-1252', $this->facility_email),  0, "", "C");
         $this->Ln();
         $this->Setx(10);
         $this->Cell(0, 12, $this->facility_contact, 0, "", "C");
@@ -88,20 +90,33 @@ class PDFPrescription extends FPDF
 
     public function Footer()
     {
+
+        $headerPath = realpath(__DIR__.'/../../../../resources/img/video/wave_footer.png');
+        $this->Image($headerPath, 0, 262, 210, 35);
+
         $this->SetY(-40);
-        $this->Setx(120);
+        $this->Setx(105);
         $this->SetTextColor(0, 0, 0);
-        $this->SetFont('Arial', 'B', 14);
+
+        $this->SetFont('Arial', 'B', 11);
+        $headerLength = strlen($this->header);
+        if ($headerLength > 41) {
+            $this->SetFont('Arial', 'B', 9);    
+        }
+        if ($headerLength > 49) {
+            $this->SetFont('Arial', 'B', 8);    
+        }
         $this->SetUnderline(true);
-        $this->Cell(0, 10, $this->header . "   ", 0, 1, '');
+        $this->Cell(0, 10, iconv('UTF-8', 'windows-1252', $this->header), 0, 1, '');
+
         $this->SetFont('Arial', '', 10);
-        $this->Setx(120);
-        $this->Cell(0, 0, "LICENSE NO.: " . $this->license, 0, 1, '');
+        $this->Setx(105);
+        $this->Cell(0, 0,"LICENSE NO.: ".$this->license, 0, 1, '');
         $this->Ln(4);
-        $this->Setx(120);
-        $this->Cell(0, 0, 'PTR NO.:', 0, 1, '');
-        if (is_file($this->signature_path)) {
-            $this->Image($this->signature_path, 120, 245, 50, 0);
+        $this->Setx(105);
+        $this->Cell(0, 0,'PTR NO.:', 0, 1, '');
+        if(is_file($this->signature_path)) {
+            $this->Image($this->signature_path, 115, 245, 50, 0);
         }
         $this->SetY(-15);
         $this->Setx(10);
@@ -238,26 +253,61 @@ class PrintCtrl extends Controller
         if ($patient_age_month['days'] == 1)
             $patient_age .= $patient_age_month['days'] . " day old";
         else
-            $patient_age .= $patient_age_month['days'] . " days old";
+            $patient_age .= $patient_age_month['days']." days old"; 
 
-        $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name: ") . self::orange($pdf, $prescription->patient_name, "Name: "), 0, 'L');
-        $y = $pdf->getY();
-        $pdf->SetXY($x / 2 + 165, $y - 7);
-        $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date: ") . self::orange($pdf, date("m/d/Y", strtotime($prescription->prescription_date)), "Date: "), 0);
-        $pdf->MultiCell($x / 2, 7, self::black($pdf, "Age: ") . self::orange($pdf, $patient_age, "Age: "), 0, 'L');
-        $y = $pdf->getY();
-        $pdf->SetXY($x / 2 + 165, $y - 7);
-        $pdf->MultiCell($x / 2, 7, self::black($pdf, "Sex: ") . self::orange($pdf, $prescription->sex, "Sex: "), 0);
-        $pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $prescription->muncity, "Address:"), 0, 'L');
+        //----------------------------------------------------------------------------------------------
+        $formattedDate = date("m/d/Y", strtotime($prescription->prescription_date));
+        $pdf->SetFillColor(222, 250, 238);  
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Name: ", 0, 0, '', true); 
 
-        $prescriptionSetY = 107;
-        $rxPath = realpath(__DIR__ . '/../../../../resources/img/video/rx.png');
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(130, 8, "{$prescription->patient_name}", 0, 0, 'L', true);
+        $pdf->Cell(2, 8, '', 0, 0);
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Date: ", 0, 0, '', true);
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(0, 8, $formattedDate, 0, 1, '', true);
+        $pdf->Ln(2); 
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Age: ", 0, 0, '', true); 
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(130, 8, "{$patient_age}", 0, 0, 'L', true); 
+        $pdf->Cell(2, 8, '', 0, 0);
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Sex: ", 0, 0, '', true);   
+        $pdf->SetFont('Arial', 'I', 10);
+        $pdf->Cell(0, 8, "{$prescription->sex}", 0, 1, '', true); 
+        $pdf->Ln(2);
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(19, 8, "Address: ", 0, 0, '', true); 
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(0, 8, iconv('UTF-8', 'windows-1252', "{$prescription->muncity}"), 0, 1, '', true);
+        $pdf->Ln(23);
+        //-------------------------------------------------------------------------------------------------
+
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Name: ").self::orange($pdf,$prescription->patient_name,"Name: "), 0, 'L');
+        // $y = $pdf->getY();
+        // $pdf->SetXY($x/2+165, $y-7);
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Date: ").self::orange($pdf,date("m/d/Y",strtotime($prescription->prescription_date)),"Date: "), 0);
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"Age: "), 0, 'L');
+        // $y = $pdf->getY();
+        // $pdf->SetXY($x/2+165, $y-7); 
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Sex: ").self::orange($pdf,$prescription->sex,"Sex: "), 0);
+        // $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,$prescription->muncity,"Address:"), 0, 'L');
+        
+        $prescriptionSetY = 117;
+        $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx_3.png');
         $pdf->Image($rxPath, 12, $prescriptionSetY, 18, 0);
         $pdf->setY($prescriptionSetY);
 
-        $prescriptionSetY = 125;
-        $pdf->SetTextColor(102, 56, 0);
-        $pdf->SetFont('Arial', 'I', 10);
+        $prescriptionSetY = 138;
+        //$pdf->SetTextColor(102,56,0);
+        $pdf->SetFont('Arial','I',10);
         $leftMargin = 35;
         $pdf->SetLeftMargin($leftMargin);
         $pdf->setY($prescriptionSetY);
@@ -271,7 +321,7 @@ class PrintCtrl extends Controller
             if ($prescriptionCounter == 7) {
                 $pdf->AddPage();
                 $prescriptionSetY = 85;
-                $rxPath = realpath(__DIR__ . '/../../../../resources/img/video/rx.png');
+                $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx_3.png');
                 $pdf->Image($rxPath, 12, $prescriptionSetY, 18, 0);
                 $pdf->setY($prescriptionSetY);
                 $prescriptionCounter = 0;
@@ -405,14 +455,12 @@ class PrintCtrl extends Controller
         // Initialize a counter to keep track of prescriptions
         $prescriptionCounter = 0;
         foreach ($activity->labRequest as $row) {
-            //---------------------------------------------------------
             if ($prescriptionCounter == 8) {
                 $pdf->AddPage();
                 $prescriptionCounter = 0;
             }
             $prescriptionCounter++;
-            //---------------------------------------------------------
-
+            
             $rowText = "{$row->laboratory_description}";
             $pdf->MultiCell(0, 5, $rowText, 0, 'L');
 
