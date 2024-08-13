@@ -6,7 +6,7 @@
                 <div class="row">
                     <div class="scroll-container">
                         <appointment-facility v-if="appointment_slot" v-for="appointment in appointment_slot" :key="appointment.id" 
-                        :facilitySelectedId="facilitySelectedId" :appointment="appointment" @facilitySelected="facilitySelected"></appointment-facility>
+                        :facilitySelectedId="facilitySelectedId" :appointment="appointment" :user="user" @facilitySelected="facilitySelected"></appointment-facility>
                     </div>
                 </div>
             </div>

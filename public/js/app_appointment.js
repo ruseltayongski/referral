@@ -19294,6 +19294,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   props: {
+    user: {
+      type: Object
+    },
     appointment: {
       type: Object
     },
@@ -19305,6 +19308,7 @@ __webpack_require__.r(__webpack_exports__);
     emptyAppointmentByCount: function emptyAppointmentByCount() {
       var count = 0;
       var now = new Date();
+      console.log('user', this.appointment);
       if (this.appointment && this.appointment.appointment_schedules) {
         this.appointment.appointment_schedules.forEach(function (sched) {
           // Combine appointed_date and appointed_time into a single Date object
@@ -19591,8 +19595,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: appointment.id,
       facilitySelectedId: $data.facilitySelectedId,
       appointment: appointment,
+      user: $props.user,
       onFacilitySelected: $options.facilitySelected
-    }, null, 8 /* PROPS */, ["facilitySelectedId", "appointment", "onFacilitySelected"]);
+    }, null, 8 /* PROPS */, ["facilitySelectedId", "appointment", "user", "onFacilitySelected"]);
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_calendar, {
     facilitySelectedId: $data.facilitySelectedId,
     onAppointedTime: $options.appointedTime
@@ -19674,7 +19679,7 @@ var _hoisted_11 = {
 };
 var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
   "class": "description-text"
-}, "Total Slot", -1 /* HOISTED */);
+}, "Total Appointment", -1 /* HOISTED */);
 var _hoisted_13 = {
   "class": "col-sm-4 border-right"
 };
@@ -19694,7 +19699,8 @@ var _hoisted_18 = {
   "class": "description-block"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [$props.appointment.id !== $props.user.facility_id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    key: 0,
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
       'highlighted': $props.appointment.id == $props.facilitySelectedId
     }, "box box-widget widget-user with-badge"])
@@ -19709,7 +19715,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $options.facilitySelected($props.appointment.id);
     })
-  }, " Select")])])])])], 2 /* CLASS */)]);
+  }, " Select")])])])])], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
 }
 
 /***/ }),
@@ -19766,13 +19772,13 @@ var _hoisted_9 = /*#__PURE__*/_withScopeId(function () {
 var _hoisted_10 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event bg-green"
-  }, "Available Present & future Date"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, "Available Slot"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event",
     style: {
       "background-color": "rgb(255 214 214)",
       "color": "#ffff"
     }
-  }, "Disabled Previous Date")], -1 /* HOISTED */);
+  }, "Full Slot")], -1 /* HOISTED */);
 });
 var _hoisted_11 = {
   "class": "box box-solid"
@@ -19781,8 +19787,8 @@ var _hoisted_12 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "box-header with-border"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
-    "class": "box-title"
-  }, "Select Time and Doctor"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "box-title timeDoctor"
+  }, "Please choose Time and Doctor"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "date-selected"
   })], -1 /* HOISTED */);
 });
@@ -19968,7 +19974,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.appointment-time-list[data-v-3c340b3a] {\r\n        /* display: flex;  */\r\n        padding: 10px;\n}\n.appointment-time-list > .doctor-list[data-v-3c340b3a] {\r\n        display: block !important;\r\n        list-style-type: none;\r\n        margin-top: 7px;\n}\n.hours_radio[data-v-3c340b3a] {\r\n        margin-bottom: 5px;\r\n        transform: scale(1.5);\r\n        cursor: pointer;\r\n        accent-color: #00a65a;\n}\n#consultation[data-v-3c340b3a] {\r\n        margin-top: 20px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.appointment-time-list[data-v-3c340b3a] {\r\n        /* display: flex;  */\r\n        padding: 10px;\n}\n.appointment-time-list > .doctor-list[data-v-3c340b3a] {\r\n        display: block !important;\r\n        list-style-type: none;\r\n        margin-top: 7px;\n}\n.hours_radio[data-v-3c340b3a] {\r\n        margin-bottom: 5px;\r\n        transform: scale(1.5);\r\n        cursor: pointer;\r\n        accent-color: #00a65a;\n}\n#consultation[data-v-3c340b3a] {\r\n        margin-top: 20px;\n}\n.timeDoctor[data-v-3c340b3a]{\r\n        font-size: 16px;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -21406,12 +21412,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _App_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./App.vue?vue&type=script&lang=js */ "./resources/assets/js/appointment/App.vue?vue&type=script&lang=js");
-/* harmony import */ var C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(_App_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"], [['__file',"resources/assets/js/appointment/App.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"])(_App_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"], [['__file',"resources/assets/js/appointment/App.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -21434,7 +21440,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppointmentApp_vue_vue_type_template_id_215abd78__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentApp.vue?vue&type=template&id=215abd78 */ "./resources/assets/js/appointment/AppointmentApp.vue?vue&type=template&id=215abd78");
 /* harmony import */ var _AppointmentApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentApp.vue?vue&type=script&lang=js */ "./resources/assets/js/appointment/AppointmentApp.vue?vue&type=script&lang=js");
 /* harmony import */ var _AppointmentApp_vue_vue_type_style_index_0_id_215abd78_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppointmentApp.vue?vue&type=style&index=0&id=215abd78&lang=css */ "./resources/assets/js/appointment/AppointmentApp.vue?vue&type=style&index=0&id=215abd78&lang=css");
-/* harmony import */ var C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -21442,7 +21448,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_AppointmentApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentApp_vue_vue_type_template_id_215abd78__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/appointment/AppointmentApp.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_AppointmentApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentApp_vue_vue_type_template_id_215abd78__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/appointment/AppointmentApp.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -21464,13 +21470,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _AppointmentCalendar_vue_vue_type_template_id_be163eaa__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentCalendar.vue?vue&type=template&id=be163eaa */ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa");
 /* harmony import */ var _AppointmentCalendar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentCalendar.vue?vue&type=script&lang=js */ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=script&lang=js");
-/* harmony import */ var C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_AppointmentCalendar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentCalendar_vue_vue_type_template_id_be163eaa__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/appointment/AppointmentCalendar.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_AppointmentCalendar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentCalendar_vue_vue_type_template_id_be163eaa__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/appointment/AppointmentCalendar.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -21492,13 +21498,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _AppointmentFacility_vue_vue_type_template_id_67dbcce0__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentFacility.vue?vue&type=template&id=67dbcce0 */ "./resources/assets/js/appointment/AppointmentFacility.vue?vue&type=template&id=67dbcce0");
 /* harmony import */ var _AppointmentFacility_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentFacility.vue?vue&type=script&lang=js */ "./resources/assets/js/appointment/AppointmentFacility.vue?vue&type=script&lang=js");
-/* harmony import */ var C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_AppointmentFacility_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentFacility_vue_vue_type_template_id_67dbcce0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/appointment/AppointmentFacility.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_AppointmentFacility_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentFacility_vue_vue_type_template_id_67dbcce0__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/appointment/AppointmentFacility.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -21521,7 +21527,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppointmentTime_vue_vue_type_template_id_3c340b3a_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentTime.vue?vue&type=template&id=3c340b3a&scoped=true */ "./resources/assets/js/appointment/AppointmentTime.vue?vue&type=template&id=3c340b3a&scoped=true");
 /* harmony import */ var _AppointmentTime_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentTime.vue?vue&type=script&lang=js */ "./resources/assets/js/appointment/AppointmentTime.vue?vue&type=script&lang=js");
 /* harmony import */ var _AppointmentTime_vue_vue_type_style_index_0_id_3c340b3a_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css */ "./resources/assets/js/appointment/AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css");
-/* harmony import */ var C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -21529,7 +21535,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_xampp7_4_29_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_AppointmentTime_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentTime_vue_vue_type_template_id_3c340b3a_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3c340b3a"],['__file',"resources/assets/js/appointment/AppointmentTime.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_AppointmentTime_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentTime_vue_vue_type_template_id_3c340b3a_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3c340b3a"],['__file',"resources/assets/js/appointment/AppointmentTime.vue"]])
 /* hot reload */
 if (false) {}
 

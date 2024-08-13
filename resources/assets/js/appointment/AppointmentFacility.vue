@@ -1,6 +1,6 @@
 <template>
     <div class="col-md-4 scroll-item">
-        <div :class="{ 'highlighted': appointment.id == facilitySelectedId }" class="box box-widget widget-user with-badge">
+        <div v-if="appointment.id !== user.facility_id" :class="{ 'highlighted': appointment.id == facilitySelectedId }" class="box box-widget widget-user with-badge">
             <div class="widget-user-header">
                 <h3 class="widget-user-username">
                     {{ appointment.name }}
@@ -19,7 +19,7 @@
                             <h5 class="description-header">
                                {{ balanceSlotThisMonth }}
                             </h5>
-                            <span class="description-text">Total Slot</span>
+                            <span class="description-text">Total Appointment</span>
                         </div>
                     </div>
                     <div class="col-sm-4 border-right">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+     </div>
     </div>
 </template>
 <script>
@@ -49,6 +49,9 @@
             };
         },
         props: {
+            user: {
+                type: Object,
+            },
             appointment: {
                 type: Object, 
             },
@@ -60,7 +63,7 @@
             emptyAppointmentByCount() {
                 let count = 0;
                 const now = new Date();
-
+                console.log('user', this.appointment);
                 if(this.appointment && this.appointment.appointment_schedules){
                     this.appointment.appointment_schedules.forEach(sched => {
                         // Combine appointed_date and appointed_time into a single Date object

@@ -138,12 +138,12 @@
                                     <h4 class="box-title">Legends</h4>
                                 </div>
                                 <div>
-                                    <div class="external-event bg-green">Available Present & future Date</div>
-                                    <div class="external-event" style="background-color: rgb(255 214 214); color: #ffff">Disabled Previous Date</div>
+                                    <div class="external-event bg-green">Available Slot</div>
+                                    <div class="external-event" style="background-color: rgb(255 214 214); color: #ffff">Full Slot</div>
                                 </div>
                                 <div class="box box-solid">
                                     <div class="box-header with-border">
-                                        <h3 class="box-title">Select Time and Doctor</h3>
+                                        <h3 class="box-title timeDoctor">Please choose Time and Doctor</h3>
                                         <div id="date-selected"></div>
                                     </div>
                                     <div class="box-body" v-if="appointedTimes.length > 0 && showAppointmentTime">
@@ -202,5 +202,8 @@
     }
     #consultation {
         margin-top: 20px;
+    }
+    .timeDoctor{
+        font-size: 16px;
     }
 </style>
