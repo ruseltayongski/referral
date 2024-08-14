@@ -597,9 +597,9 @@ Route::post('admin/icd/add', 'admin\IcdCtrl@add');
 Route::post('admin/icd/delete', 'admin\IcdCtrl@delete');
 Route::post('admin/icd/checkIfExistICD', 'admin\IcdCtrl@checkIfExistICD');
 
-Route::get('revised/referral', function (){
-    return view('modal/revised_normal_form');
-});
+// Route::get('revised/referral', function (){
+//     return view('modal/revised_normal_form');
+// });
 
 Route::get('doctor/referral/edit_info/{id}/{form_type}/{referral_status}','doctor\ReferralCtrl@editInfo');
 Route::post('doctor/referral/edit','doctor\ReferralCtrl@editForm');
@@ -680,3 +680,7 @@ Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAva
 Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
+
+//new forms
+Route::get('/revised/referral', 'doctor\NewFormCtrl@index');
+Route::post('submit-referral', 'doctor\NewFormCtrl@saveReferral')->name('submit-referral');
