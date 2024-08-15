@@ -355,7 +355,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="hypertension"> Hypertension
+                                            <input type="hidden" name="comor_hyper_cbox" value="No">
+                                                <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Hypertension
                                                 <span id="comor_hyper"> since
                                                     <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
                                                         <?php
@@ -367,7 +368,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Diabetes Mellitus"> Diabetes Mellitus
+                                            <input type="hidden" name="comor_diab_cbox" value="No">
+                                                <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Diabetes Mellitus
                                                 <span id="comor_diab"> since
                                                     <select class="form-control select" name="diab_year" style="font-size: 10pt;">
                                                         <?php
@@ -379,7 +381,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Bronchial Asthma"> Bronchial Asthma
+                                            <input type="hidden" name="comor_asthma_cbox" value="No">
+                                                <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Bronchial Asthma
                                                 <span id="comor_asthma"> since
                                                     <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
                                                         <?php
@@ -393,26 +396,31 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="COPD">
+                                            <input type="hidden" name="comor_copd_cbox" value="No">
+                                                <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> COPD</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Dyslipidema">
+                                            <input type="hidden" name="comor_dyslip_cbox" value="No">
+                                                <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Dyslipidemia</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Thyroid Disease">
+                                            <input type="hidden" name="comor_thyroid_cbox" value="No">
+                                                <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                            <input type="hidden" name="comor_cancer_cbox" value="No">
+                                                <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer <i>(specify)</i>:</span>
                                                 <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                            <input type="hidden" name="comor_others_cbox" value="No">
+                                                <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Other(s): </span>
                                                 <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
@@ -433,19 +441,19 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Food(s): <i>(ex. crustaceans, eggs)</i> </span>
-                                                <textarea class="form-control" id="allergy_food" name="allergy_food" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
-                                                <textarea class="form-control" id="allergy_drug" name="allergy_drug" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Other(s): </span>
-                                                <textarea class="form-control" id="allergy_other" name="allergy_other" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -464,41 +472,41 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Hypertension: </span>
                                                 <input type="text" id="heredo_hyper" name="heredo_hypertension_side">
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Diabetes Mellitus: </span>
                                                 <input type="text" id="heredo_diab" name="heredo_diabetes_side">
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Bronchial Asthma: </span>
                                                 <input type="text" id="heredo_asthma" name="heredo_asthma_side">
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer: </span>
                                                 <input type="text" id="heredo_cancer" name="heredo_cancer_side">
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Kidney: </span>
                                                 <input type="text" id="heredo_kidney" name="heredo_kidney_side">
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease: </span>
                                                 <input type="text" id="heredo_thyroid" name="heredo_thyroid_side">
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_others_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox">
+                                                <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Other(s): </span>
-                                                <input type="text" id="heredo_others" name="heredo_others">
+                                                <input type="text" id="heredo_others" name="heredo_others_side">
                                             </div>
                                         </div>
                                     </div><br>
@@ -525,7 +533,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <span>A <input type="number" name="prenatal_age" style="width: 8%" min="0">
-                                                     year old G <input type="number" name="prenatal_g" style="width: 8%" min="0"> P <input type="number" style="width: 8%" min="0"> mother
+                                                     year old G <input type="number" name="prenatal_g" style="width: 8%" min="0"> P <input type="number" style="width: 8%" min="0" name="prenatal_p"> mother
                                                     <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowith" name="prenatal_radio" value="with"> with
                                                     <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowout" name="prenatal_radio" value="without"> without
                                                     MATERNAL ILLNESS, if Yes (specify)
@@ -545,7 +553,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                         <option value="clinic">Clinic</option>
                                                         <option value="hospital">Hospital</option>
                                                     </select>
-                                                    <input type="text" id="hospital_name" name="natal_hospital" style="width: 30%;" placeholder="Specify where">
+                                                    <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where">
                                                     by
                                                     <select class="form-control-select" name="natal_by">
                                                         <option value="md">MD</option>
@@ -589,11 +597,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="col-md-12">
                                                 <i>Feeding History</i><br>&emsp;
                                                 <span>
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Breastfed"> Breastfed
+                                                <input type="hidden" name="postnatal_bfeed" value="No">
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes"> Breastfed
                                                     <span id="breastfed">
                                                         x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0"> mos.
                                                     </span>
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="formula fed"> Formula Fed,
+                                                    <input type="hidden" name="postnatal_ffeed" value="No">
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes"> Formula Fed,
                                                     <span id="formula_fed">
                                                         (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify">
                                                     </span>
@@ -605,18 +615,24 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <i>Immunization History</i><br>&emsp;
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="BCG"> BCG
+                                                <input type="hidden" name="immu_bcg_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes"> BCG
+                                                <input type="hidden" name="immu_dpt_cbox" value="No">
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="DPT/OPV"> DPT/OPV
                                                 <span id="immu_dpt">
                                                     x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0"> doses
                                                 </span>
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Hep B"> Hep B
+                                                <input type="hidden" name="immu_hepb_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes"> Hep B
                                                 <span id="immu_hepb">
                                                     x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0"> doses
                                                 </span>
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Measles"> Measles
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="MMR"> MMR
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Others"> Other(s)
+                                                <input type="hidden" name="immu_measles_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes"> Measles
+                                                <input type="hidden" name="immu_mmr_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes"> MMR
+                                                <input type="hidden" name="immu_others_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes"> Other(s)
                                                 <span id="immu_others">
                                                     <input type="text" name="immu_others" style="width: 20%;">
                                                 </span>

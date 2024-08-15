@@ -18,6 +18,7 @@ class CreatePastMedicalHistory extends Migration
             $table->integer('patient_id')->nullable();
             $table->string('commordities')->nullable();
             $table->string('heredofamilial_diseases')->nullable();
+            $table->string('allergies')->nullable();
             $table->string('previous_hospitalization')->nullable();
             $table->timestamps();
         });
