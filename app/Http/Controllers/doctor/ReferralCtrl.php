@@ -27,6 +27,7 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
 use App\Icd;
+use App\Icd10;
 use App\Issue;
 use App\ModeTransportation;
 use App\Monitoring;
@@ -1357,7 +1358,7 @@ class ReferralCtrl extends Controller
         return Redirect::back();
     }
 
-    public function redirect(Request $req)
+    public function redirect(Request $req) // MyRedirect
     {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
@@ -1400,6 +1401,9 @@ class ReferralCtrl extends Controller
         $count_seen = Seen::where('tracking_id',$tracking->id)->count();
         $count_reco = Feedback::where("code",$req->code)->count();
         $redirect_track = asset("doctor/referred?referredCode=").$req->code;
+        $icds = Icd::where('code', $req->code)->pluck('icd_id')->toArray();
+        $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();//I am added this
+        $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
         $position = Activity::where("code",$req->code)
             ->where(function($query) {
                 $query->where("status","redirected")
@@ -1424,7 +1428,9 @@ class ReferralCtrl extends Controller
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
-            "position" => $position
+            "position" => $position,
+            "push_diagnosis" => Icd10::whereIn('id', $icds)->pluck('description'),
+            "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
 
@@ -1444,6 +1450,10 @@ class ReferralCtrl extends Controller
                 return Redirect::back();
             }
         }//push notification for cebu south medical center*/
+
+        // return Redirect::back()->with('new_referral', $new_referral);
+
+        session()->put('new_referral', $new_referral);
 
         return Redirect::back();
     }
