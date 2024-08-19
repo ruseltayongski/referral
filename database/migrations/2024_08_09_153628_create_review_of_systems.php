@@ -13,7 +13,7 @@ class CreateReviewOfSystems extends Migration
      */
     public function up()
     {
-        Schema::create('review_of_systems', function (Blueprint $table) {
+        Schema::create('review_of_system', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('patient_id')->nullable();
             $table->string('skin')->nullable();
