@@ -15,7 +15,7 @@ class CreatePregnancyTable extends Migration
     {
         Schema::create('pregnancy', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('patient_id');
+            $table->integer('patient_id')->nullable();
             $table->string('prenatal_history')->nullable();
             $table->integer('pregnancy_order')->nullable();
             $table->string('pregnancy_year')->nullable();
