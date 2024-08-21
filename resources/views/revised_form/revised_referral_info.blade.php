@@ -179,6 +179,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 </style>
 
+
 <div class="modal fade" role="dialog" id="normalFormModal" >
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -340,6 +341,37 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
+                                <?php
+                                    // Your commordities string
+                                    $commorditiesString = $data->commordities;
+
+                                    // Split by commas to separate different conditions
+                                    $conditions = explode(',', $commorditiesString);
+
+                                    // Initialize an array to map conditions to their values
+                                    $conditionsArray = [];
+
+                                    // Iterate over each condition
+                                    foreach ($conditions as $condition) {
+                                        // Split by 'Year =>' to identify conditions with years
+                                        $parts = explode(' Year => ', $condition);
+                                        if (count($parts) == 2) {
+                                            // Condition with a year
+                                            $conditionsArray[trim($parts[0])] = trim($parts[1]);
+                                        } else {
+                                            // Handle conditions without years or notes
+                                            $conditionsArray[trim($parts[0])] = 'NoYear';
+                                        }
+                                    }
+                                    
+                                     
+                                    // Additional handling for Cancer and Others
+                                    $conditionsArray['Cancer'] = $conditionsArray['Cancer'] ?? '';
+                                    $conditionsArray['Others'] = $conditionsArray['Others'] ?? '';
+                                    ?>
+
+
+                                
                                 <div class="collapse" id="collapse_medical_history" style="width: 100%;">
                                     <b>COMORBIDITIES</b>
                                     <div class="container-referral">
@@ -356,75 +388,102 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-4">
                                             <input type="hidden" name="comor_hyper_cbox" value="No">
-                                                <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Hypertension
+                                                <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                @if (array_key_exists('Hypertension', $conditionsArray))
+                                                    checked
+                                                @endif
+                                                > Hypertension
                                                 <span id="comor_hyper"> since
-                                                    <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
-                                                        <?php
-                                                        foreach(range(date('Y'), 1950) as $year) {
-                                                            echo "<option>$year</option>\n";
-                                                        }
-                                                        ?>
-                                                    </select>
+                                                <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
+                                                @foreach (range(date('Y'), 1950) as $year)
+                                                    <option value="{{ $year }}" @if ($conditionsArray['Hypertension'] == $year) selected @endif>{{ $year }}</option>
+                                                @endforeach
+                                                 </select>
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
                                             <input type="hidden" name="comor_diab_cbox" value="No">
-                                                <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Diabetes Mellitus
-                                                <span id="comor_diab"> since
-                                                    <select class="form-control select" name="diab_year" style="font-size: 10pt;">
-                                                        <?php
-                                                        foreach(range(date('Y'), 1950) as $year) {
-                                                            echo "<option>$year</option>\n";
-                                                        }
-                                                        ?>
-                                                    </select>
-                                                </span>
+                                            <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                @if (array_key_exists('Diabetes', $conditionsArray) && $conditionsArray['Diabetes'] !== 'NoYear')
+                                                    checked
+                                                @endif
+                                            >
+                                            Diabetes Mellitus
+                                            <span id="comor_diab"> since
+                                                <select class="form-control select" name="diab_year" style="font-size: 10pt;">
+                                                    @foreach (range(date('Y'), 1950) as $year)
+                                                        <option value="{{ $year }}" @if (isset($conditionsArray['Diabetes']) && $conditionsArray['Diabetes'] == $year) selected @endif>{{ $year }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </span>
                                             </div>
                                             <div class="col-md-4">
                                             <input type="hidden" name="comor_asthma_cbox" value="No">
-                                                <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Bronchial Asthma
+                                                <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                @if (array_key_exists('Asthma', $conditionsArray) && $conditionsArray['Asthma'] !== 'NoYear')
+                                                    checked
+                                                @endif
+                                                > Bronchial Asthma
                                                 <span id="comor_asthma"> since
-                                                    <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
-                                                        <?php
-                                                        foreach(range(date('Y'), 1950) as $year) {
-                                                            echo "<option>$year</option>\n";
-                                                        }
-                                                        ?>
-                                                    </select>
+                                                <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
+                                                    @foreach (range(date('Y'), 1950) as $year)
+                                                        <option value="{{ $year }}" @if (isset($conditionsArray['Asthma']) && $conditionsArray['Asthma'] == $year) selected @endif>{{ $year }}</option>
+                                                    @endforeach
+                                                </select>
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                             <input type="hidden" name="comor_copd_cbox" value="No">
-                                                <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                                <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                @if (array_key_exists('COPD', $conditionsArray))
+                                                    checked
+                                                @endif
+                                                >
                                                 <span> COPD</span>
                                             </div>
                                             <div class="col-md-4">
                                             <input type="hidden" name="comor_dyslip_cbox" value="No">
-                                                <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                                <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                @if (array_key_exists('Thyroid Disease', $conditionsArray))
+                                                    checked
+                                                @endif
+                                                >
                                                 <span> Dyslipidemia</span>
                                             </div>
                                             <div class="col-md-4">
                                             <input type="hidden" name="comor_thyroid_cbox" value="No">
-                                                <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                                <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                @if (array_key_exists('Thyroid Disease', $conditionsArray))
+                                                    checked
+                                                @endif
+                                                >
                                                 <span> Thyroid Disease</span>
                                             </div>
                                         </div>
                                         <div class="row">
+                                            <!-- Cancer Checkbox and Textarea -->
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_cancer_cbox" value="No">
-                                                <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Cancer <i>(specify)</i>:</span>
-                                                <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                <input type="hidden" name="comor_cancer_cbox" value="No">
+                                                <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                    <?php if (array_key_exists('Cancer', $conditionsArray) && $conditionsArray['Cancer'] !== 'NoYear') echo 'checked'; ?>
+                                                >
+                                                <span>Cancer <i>(specify)</i>:</span>
+                                                <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($conditionsArray['Cancer']); ?></textarea>
                                             </div>
+                                            <!-- Other(s) Checkbox and Textarea -->
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_others_cbox" value="No">
-                                                <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Other(s): </span>
-                                                <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                <input type="hidden" name="comor_others_cbox" value="No">
+                                                <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
+                                                    <?php if (array_key_exists('Others', $conditionsArray) && $conditionsArray['Others'] !== 'NoYear') echo 'checked'; ?>
+                                                >
+                                                <span>Other(s):</span>
+                                                <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($conditionsArray['Others']); ?></textarea>
                                             </div>
                                         </div>
+
+
                                     </div><br>
 
                                     <b>ALLERGIES</b><i> (Specify)</i><br>
@@ -2202,7 +2261,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <hr />
                         <div class="form-fotter pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                            <button type="submit" id="sbmitBtn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                            <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>{{--/.form-group--}}
@@ -2268,6 +2327,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }).on('hide.bs.collapse', function(){
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-minus").addClass("fa-plus");
     });
+
+    /*****Populate data**********/
+    var retrieved_data = @json($data);
+
+    console.log(JSON.stringify(retrieved_data));
+    // function check_checkbox(){
+        
+    // }
+
 
     /* *****PRENATAL ADD ROW***** */
     <?php

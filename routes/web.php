@@ -683,4 +683,6 @@ Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescription
 
 //new forms
 Route::get('/revised/referral', 'doctor\NewFormCtrl@index');
+Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@view_info');
+Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@redirect_referral_info')->name('redirect-referral-info');
 Route::post('submit-referral', 'doctor\NewFormCtrl@saveReferral')->name('submit-referral');
