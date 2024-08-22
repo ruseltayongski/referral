@@ -35,7 +35,8 @@ class CreateObstetricAndGynecologicHistory extends Migration
             $table->string('parity_lnmp')->nullable();
             $table->string('parity_edc')->nullable();
             $table->string('aog_lnmp')->nullable();
-            $table->string('aog_eutz')->nullable();       
+            $table->string('aog_eutz')->nullable();
+            $table->string('prenatal_history')->nullable();     
             $table->timestamps();
         });
     }

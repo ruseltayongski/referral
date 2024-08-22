@@ -51,7 +51,8 @@ class NewFormCtrl extends Controller
                 )
                 ->where('past_medical_history.patient_id', $patient_id)
                 ->first();
-        
+            // Debugging
+            // dd($data);
             return view('revised_form.revised_referral_info', ['data' => $data]);
         }
         
@@ -80,7 +81,7 @@ class NewFormCtrl extends Controller
             $rs_hematologic_methods=[];
             $rs_endocrine_methods=[];
             $rs_psychiatric_methods=[];
-            $patient_id=1;
+            $patient_id=2;
 
             // Define the fields for comorbidities with associated additional data (year or string)
             $comorbidity_fields = [

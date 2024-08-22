@@ -618,7 +618,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <input type="hidden" name="immu_bcg_cbox" value="No">
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes"> BCG
                                                 <input type="hidden" name="immu_dpt_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="DPT/OPV"> DPT/OPV
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes"> DPT/OPV
                                                 <span id="immu_dpt">
                                                     x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0"> doses
                                                 </span>
