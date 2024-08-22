@@ -110,7 +110,7 @@
             type: 'POST',
             success: function(tracking_id) {
                 window.location.reload(false);
-                console.log(tracking_id);
+                console.log('hellllloooo',tracking_id);
                 /*if(tracking_id=='denied')
                 {
                     window.location.reload(false);

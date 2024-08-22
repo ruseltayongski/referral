@@ -609,7 +609,7 @@ $counter = 0;
             form.append("firebase_key", firebase_key);
 
             var settings = {
-                "url": "https://dohcsmc.site/notifier/api/insert_referral_5pm",
+                "url": "https://dohcsmc.com/notifier/api/insert_referral_5pm",
                 "method": "POST",
                 "timeout": 0,
                 "processData": false,
@@ -648,6 +648,7 @@ $counter = 0;
                     //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
                     if(data.referred_to == 790 || data.referred_to == 23) {
                         var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                        data.age = parseInt(data.age);
                         sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
                         $('.loading').hide();
                         $('#pregnantModal').modal('hide');
@@ -716,6 +717,7 @@ $counter = 0;
                     console.log("patient", data);
                     //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
                     if(data.referred_to == 790 || data.referred_to == 23) {
+                        data.age = parseInt(data.age);
                         var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
                         sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
                         $('.loading').hide();

@@ -437,7 +437,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+  
 <div class="modal fade" role="dialog" id="redirectedFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -871,7 +871,7 @@ function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, s
         form.append("firebase_key", firebase_key);
 
         var settings = {
-            "url": "https://dohcsmc.site/notifier/api/insert_referral_5pm",
+            "url": "https://dohcsmc.com/notifier/api/insert_referral_5pm",
             "method": "POST",
             "timeout": 0,
             "processData": false,
@@ -886,16 +886,22 @@ function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, s
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-
-        @if(Session::has('new_referral'))
-                var data = @json(Session::get('new_referral'));
-                console.log('hahahah',data);
-                // console.log(data.age, data.chiefComplaint, data.referred_department, data.push_diagnosis, data.patient_name, data.patient_sex, data.referring_name,data.referred_date, data.patient_code);
-                if(data.referred_to == 790 || data.referred_to == 23) {
-                    sendNotifierData(data.age, data.chiefComplaint, data.referred_department, data.push_diagnosis, data.patient_name, data.patient_sex, data.referring_name,data.referred_date, data.patient_code);
-                }
-                //23 'MAJOR FINDINGS woman' 'OPD' 'Pneumonia in whooping cough due to Bordatella pertusis,Pneumonia in whooping cough due to Bordatella\nparapertusis' 'Eleanor Bush T. Channing Vincent' 'Female' 'Dumdum Medical Clinic' '2024-08-12T07:24:10.000000Z' '240812-669-1524106694959'
-        @endif
+        let datastore = @json(Session::get('for_firebase_data'));
+        if(datastore) {
+            sendNotifierData(
+                datastore.age,
+                datastore.chiefComplaint, 
+                datastore.referred_department, 
+                datastore.push_diagnosis, 
+                datastore.patient_name,
+                datastore.patient_sex, 
+                datastore.referring_name,
+                datastore.referred_date,
+                datastore.patient_code
+            );
+            <?php session()->put('for_firebase_data', null); ?>
+        }
+      
     });
 
 $(document).ready(function() {

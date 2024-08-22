@@ -764,6 +764,8 @@ class ReferralCtrl extends Controller
             $data = $data->paginate(10);
         }
 
+        //  $new_referral = $request->query();
+
         return view('doctor.referred2',[
             'title' => 'Referred Patients',
             'data' => $data,
@@ -776,7 +778,8 @@ class ReferralCtrl extends Controller
             'department_filter' => $department_filter,
             'user' => $user,
             'more_position' => $request->more_position,
-            'duplicate' => $request->duplicate
+            'duplicate' => $request->duplicate,
+            // 'new_referral' => $new_referral,
         ]);
     }
 
@@ -1402,6 +1405,7 @@ class ReferralCtrl extends Controller
         $count_reco = Feedback::where("code",$req->code)->count();
         $redirect_track = asset("doctor/referred?referredCode=").$req->code;
         $icds = Icd::where('code', $req->code)->pluck('icd_id')->toArray();
+        $diagnosis = Icd10::whereIn('id', $icds)->pluck('description');
         $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();//I am added this
         $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
         $position = Activity::where("code",$req->code)
@@ -1429,7 +1433,7 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
-            "push_diagnosis" => Icd10::whereIn('id', $icds)->pluck('description'),
+            "push_diagnosis" => $diagnosis,
             "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
@@ -1452,9 +1456,9 @@ class ReferralCtrl extends Controller
         }//push notification for cebu south medical center*/
 
         // return Redirect::back()->with('new_referral', $new_referral);
-
-        session()->put('new_referral', $new_referral);
-
+        if($req->facility == 790 || $req->facility == 23) {
+            session()->put('for_firebase_data', $new_referral);
+        }
         return Redirect::back();
     }
 
