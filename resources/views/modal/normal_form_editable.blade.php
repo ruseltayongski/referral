@@ -9,7 +9,6 @@
         ->where('id','!=',$user->facility_id)
         ->where('status',1)
         ->where('referral_used','yes');
-    
     if($facility_id_telemedicine) {
         $facilities = $facilities->where('id', $facility_id_telemedicine);
     }

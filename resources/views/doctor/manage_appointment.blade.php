@@ -643,9 +643,8 @@
             var appointments = appointment ? appointment : '';
             // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
             var appointmentDate = appointment && appointment.appointed_date ? appointment.appointed_date : '';
-            console.log("asssi", assignedDoc);
                if(appointment){
-                var doctor = appointment.telemed_assigned_doctor[0].doctor;
+                var doctor = appointment.telemed_assigned_doctor;
                 var selectId = "Update_available_doctor" + currentCount;
                 var additionalTimeInput = `<div class="label-border-time">
                                                 <div class="row">
@@ -763,9 +762,8 @@
                     var appoint_id = appointment.id;
                     var url = "{{ route('delete-timeSlot', ':id') }}";
                     url = url.replace(':id', appoint_id);
-                    
                     let doctorAssigned = appointment.telemed_assigned_doctor[0].appointment_by;
-                       
+            
                     if(doctorAssigned){
                         Lobibox.alert("error",
                         {
@@ -818,7 +816,7 @@
                 $.each(query_doctor_store, function (index, userData) {
                     $(`.available_doctors${currentCount}`).append($('<option>', {
                         value: userData.id,
-                        text: userData.lname + '' + userData.lname
+                        text: userData.fname + ' ' + userData.lname
                     }));
                 });
             });
@@ -921,7 +919,7 @@ function deleteTimeInput(appointment){
     $(".appointment_count").val(++currentCount);
     console.log("welcome Appointment:", appointment);
     var appointments = appointment ? appointment : '';
-    var doctor = appointment.telemed_assigned_doctor[0].doctor;
+    var doctor = appointment.telemed_assigned_doctor;
     var timeInputGroup = $('<div class="time-input-group">');
     var additionalTimeInput = 
         `<div class="label-border-time">
@@ -977,10 +975,10 @@ function deleteTimeInput(appointment){
     });
     function generateDoctorsOptions(doctorData){
            var options = '';
-
            if(Array.isArray(doctorData)){
              doctorData.forEach(function (doctor){
-                options += `<option value="${doctor.id}" selected>${doctor.fname} ${doctor.lname}</option>`;
+                console.log("doctorData::", doctor);
+                options += `<option value="${doctor.doctor.id}" selected>${doctor.doctor.fname} ${doctor.doctor.lname}</option>`;
              });
            }else if(typeof doctorData === 'object' && doctorData !== null){
             options += `<option value="${doctorData.id}" selected>${doctorData.fname} ${doctorData.lname}</option>`;
@@ -1019,7 +1017,6 @@ function deleteTimeInput(appointment){
         });
     });
     $(document).ready(function() {
-
         var allAppointmentTimes = [];
         var currentCounts = 1;
 
@@ -1027,8 +1024,8 @@ function deleteTimeInput(appointment){
             var appointmentDate = $("#appointment_date").val();
         
             var timeInputGroup = $(this).closest('.time-input-group');
-            var index = $('.time-input-group').index(timeInputGroup) + 1;
-            currentCounts = index;
+            var index = $('.time-input-group').index(timeInputGroup);
+            currentCounts = index + 1;
            
             var fromInput = timeInputGroup.find('input[name^="appointed_time' + currentCounts + '"]');
             var toInput = timeInputGroup.find('input[name^="appointed_time_to' + currentCounts + '"]');
@@ -1046,6 +1043,12 @@ function deleteTimeInput(appointment){
                 to: toTimeObj
             };
 
+            if(!appointmentDate){
+                 alert('Please select Date first!');
+                 toInput.val('');
+                 fromInput.val('');
+            }
+
             for (var i =0; i < allAppointmentTimes.length; i++){
                 var existingTime = allAppointmentTimes[i];
            
@@ -1057,9 +1060,18 @@ function deleteTimeInput(appointment){
                 }
             }
 
+            console.log('slot', index);
+            if(isUnique){
+                
+                    allAppointmentTimes[index] = timeObject;
+                
+            }else{
+                console.log("Timeslot overlaps with an existing one.");
+            }
+            
             allAppointmentTimes.push(timeObject);
             allAppointmentTimes = allAppointmentTimes.filter(appointment => appointment.to instanceof Date && !isNaN(appointment.to));
-            console.log("allAppointmentTime", allAppointmentTimes);
+
             //console.log("timeObjectsasasd", allAppointmentTimes.filter(appointment=> appointment.from.getTime() && appointment.to.getTime()));
             if (toTimeObj <= fromTimeObj) {
 
