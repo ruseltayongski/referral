@@ -36,6 +36,15 @@
                 this.showAppointmentTime = false;
             }
         },
+      computed: {
+            areAllAppointmentFull(){
+                return this.appointedTimes.every(appointment =>
+                    this.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor, appointment.appointed_date, appointment.appointed_time)
+
+                );
+
+            }
+        },
         methods: {
             areAllDoctorsNotAvailable(doctors,date,time) {
                 let currentDateTime = new Date();
@@ -173,7 +182,8 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                        <button type="button" id="consultation" class="btn btn-success bt-md btn-block" @click="proceedAppointment"><i class="fa fa-calendar"></i>&nbsp;Appointment</button>
+                                        <button v-if="!areAllAppointmentFull" type="button" id="consultation" class="btn btn-success bt-md btn-block" @click="proceedAppointment"><i class="fa fa-calendar"></i>&nbsp;Appointment</button>
+                                         <button v-else type="button" id="consultation" class="btn btn-danger bt-md btn-block" disabled><i class="fa fa-calendar"></i>&nbsp;All appointments are full</button>
                                     </div>
                                 </div>
                             </div>
