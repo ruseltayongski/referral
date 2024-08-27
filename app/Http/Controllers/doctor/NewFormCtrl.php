@@ -37,7 +37,6 @@ class NewFormCtrl extends Controller
                 ->join('obstetric_and_gynecologic_history', 'past_medical_history.patient_id', '=', 'obstetric_and_gynecologic_history.patient_id')
                 ->join('latest_vital_signs', 'past_medical_history.patient_id', '=', 'latest_vital_signs.patient_id')
                 ->join('personal_and_social_history', 'past_medical_history.patient_id', '=', 'personal_and_social_history.patient_id')
-                ->join('pregnancy', 'past_medical_history.patient_id', '=', 'pregnancy.patient_id')
                 ->select(
                     'past_medical_history.*',           
                     'pediatric_history.*',
@@ -47,13 +46,17 @@ class NewFormCtrl extends Controller
                     'obstetric_and_gynecologic_history.*',
                     'latest_vital_signs.*',
                     'personal_and_social_history.*',
-                    'pregnancy.*'
                 )
                 ->where('past_medical_history.patient_id', $patient_id)
                 ->first();
+
+            $pregnancy_data = DB::table('pregnancy')
+                ->where('patient_id', $patient_id)
+                ->get(); // Retrieves all rows for the patient
+
             // Debugging
             // dd($data);
-            return view('revised_form.revised_referral_info', ['data' => $data]);
+            return view('revised_form.revised_referral_info', ['data' => $data, 'pregnancy_data' => $pregnancy_data]);
         }
         
 
@@ -81,6 +84,7 @@ class NewFormCtrl extends Controller
             $rs_hematologic_methods=[];
             $rs_endocrine_methods=[];
             $rs_psychiatric_methods=[];
+
             $patient_id=2;
 
             // Define the fields for comorbidities with associated additional data (year or string)
@@ -909,48 +913,44 @@ class NewFormCtrl extends Controller
                 'aog_eutz'=>$request->aog_byEUTZ,     
             ];
 
-            $smoke_quit_year;
-            $smoke_sticks_per_day;
-            $drinking_quit_year;
-            $liquor_type;
-            $drugs_quit_year;
-            $drugs_taken;
+        
 
-            if ($request->smoking_radio=="No" && $request->smoking_sticks_per_day == null){
-                $smoke_quit_year = "N/A";
-                $smoke_sticks_per_day= "N/A";
-            }else {
-                $smoke_quit_year = $request->smoking_year_quit;
-                $smoke_sticks_per_day = $request->smoking_sticks_per_day;
-            }
-            if ($request->alcohol_radio=="No" && $request->alcohol_liquor_type==null){
-                $drinking_quit_year = "N/A";
-                $liquor_type = "N/A";
-            }else {
-                $drinking_quit_year=$request->alcohol_year_quit;
-                $liquor_type = $request->alcohol_liquor_type;
-            }
-            if ($request->illicit_drugs == "No" && $request->illicit_drugs_taken==null){
-                $drugs_quit_year = "N/A";
-                $drugs_taken="N/A";
-            }else {
-                $drugs_quit_year = $request->drugs_year_quit;
-                $drugs_taken = $request->illicit_drugs_taken;
-            }
+            // if ($request->smoking_radio=="No" && $request->smoking_sticks_per_day == null){
+            //     $smoke_quit_year = "N/A";
+            //     $smoke_sticks_per_day= "N/A";
+            // }else {
+            //     $smoke_quit_year = $request->smoking_year_quit;
+            //     $smoke_sticks_per_day = $request->smoking_sticks_per_day;
+            // }
+            // if ($request->alcohol_radio=="No" && $request->alcohol_liquor_type==null){
+            //     $drinking_quit_year = "N/A";
+            //     $liquor_type = "N/A";
+            // }else {
+            //     $drinking_quit_year=$request->alcohol_year_quit;
+            //     $liquor_type = $request->alcohol_liquor_type;
+            // }
+            // if ($request->illicit_drugs == "No" && $request->illicit_drugs_taken==null){
+            //     $drugs_quit_year = "N/A";
+            //     $drugs_taken="N/A";
+            // }else {
+            //     $drugs_quit_year = $request->drugs_year_quit;
+            //     $drugs_taken = $request->illicit_drugs_taken;
+            // }
 
             $personal_history = [
-                'patient_id'=>$patient_id,
-                'smoking'=>$request->smoking_radio,
-                'smoking_sticks_per_day'=>$smoke_sticks_per_day,
-                'smoking_quit_year'=>$smoke_quit_year,
-                'smoking_remarks'=>$request->smoking_other_remarks,
-                'alcohol_drinking'=>$request->alcohol_radio,
-                'alcohol_liquor_type'=>$liquor_type,
-                'alcohol_drinking_quit_year'=>$drinking_quit_year,
-                'illicit_drugs'=>$request->illicit_drugs,
-                'illicit_drugs_taken'=>$drugs_taken,
-                'illicit_drugs_quit_year'=>$drugs_quit_year,
-                'current_medications'=>$request->current_meds,
+                'patient_id' => $patient_id,
+                'smoking' => $request->smoking_radio, 
+                'smoking_sticks_per_day' => $request->smoking_sticks_per_day, 
+                'smoking_quit_year' => $request->smoking_year_quit, 
+                'smoking_remarks' => $request->smoking_other_remarks, 
+                'alcohol_drinking' => $request->alcohol_radio, 
+                'alcohol_liquor_type' => $request->alcohol_type, 
+                'alcohol_bottles_per_day' => $request->alcohol_bottles, 
+                'alcohol_drinking_quit_year' => $request->alcohol_year_quit, 
+                'illicit_drugs' => $request->illicit_drugs, 
+                'illicit_drugs_taken' => $request->illicit_drugs_token, 
+                'illicit_drugs_quit_year' => $request->drugs_year_quit, 
+                'current_medications' => $request->current_meds, 
             ];
             $review_of_system = [
                 'patient_id'=>$patient_id,
@@ -1036,7 +1036,7 @@ class NewFormCtrl extends Controller
             // Pregnancy::create($pregnancy_data);
 
             // Debugging
-            // dd($request->all(),
+            // dd($request->all());
             // $glasgocoma_scale);
 
             return redirect("/revised/referral/info/{$patient_id}");

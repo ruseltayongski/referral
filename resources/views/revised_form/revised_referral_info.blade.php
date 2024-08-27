@@ -183,8 +183,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     width: auto; /* Allows the modal to shrink or grow depending on content */
     }
 </style>
-
-
+{{dd($data)}}
 <div class="modal fade" role="dialog" id="normalFormModal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -347,29 +346,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </button><br><br>
                                 </div>
                                 <?php
-                                // Your commordities string
+                                
                                 $commorditiesString = $data->commordities;
-
-                                // Split by commas to separate different conditions
                                 $conditions = explode(',', $commorditiesString);
 
-                                // Initialize an array to map conditions to their values
                                 $conditionsArray = [];
 
-                                // Iterate over each condition
                                 foreach ($conditions as $condition) {
-                                    // Split by 'Year =>' to identify conditions with years
+                                    
                                     $parts = explode(' Year => ', $condition);
                                     if (count($parts) == 2) {
-                                        // Condition with a year
+                                        
                                         $conditionsArray[trim($parts[0])] = trim($parts[1]);
                                     } else {
-                                        // Handle conditions without years or notes
+                                        
                                         $conditionsArray[trim($parts[0])] = trim($condition);
                                     }
                                 }
 
-                                // Additional handling for Cancer and Others
+                                
                                 $conditionsArray['Cancer'] = $conditionsArray['Cancer'] ?? '';
                                 $conditionsArray['Others'] = $conditionsArray['Others'] ?? '';
                                 ?>
@@ -489,27 +484,27 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </div><br>
                                     
                                     <?php
-                                        // Assuming $data->allergies is available in your PHP script
+                                        
                                         $allergiesString = $data->allergies;
 
-                                        // Initialize an array to map allergies to their causes or descriptions
+                                        
                                         $allergiesArray = [
                                             'Food Allergy' => '',
                                             'Drug Allergy' => '',
                                             'Other Allergy' => ''
                                         ];
 
-                                        // Split the allergies string by commas
+                                        
                                         $allergies = explode(',', $allergiesString);
 
-                                        // Iterate over each allergy
+                                        
                                         foreach ($allergies as $key => $allergy) {
                                             $allergy = trim($allergy);
 
-                                            // Look for the "Cause =>" pattern and get the cause
+                                            
                                             if (strpos($allergy, 'Cause =>') !== false) {
                                                 $parts = explode('Cause =>', $allergy);
-                                                $type = trim($allergies[$key - 1]); // Get the type from the previous element
+                                                $type = trim($allergies[$key - 1]); 
                                                 $cause = trim($parts[1]);
 
                                                 if (isset($allergiesArray[$type])) {
@@ -558,10 +553,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </div><br>
                                     
                                     <?php
-                                        // Assuming $data->heredofamilial_diseases is available in your PHP script
+                                        
                                         $heredoString = $data->heredofamilial_diseases;
 
-                                        // Initialize an array to map heredofamilial diseases to their respective sides
+                                        
                                         $heredoArray = [
                                             'Hypertension' => '',
                                             'Diabetes' => '',
@@ -572,10 +567,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             'Others' => ''
                                         ];
 
-                                        // Split the heredofamilial diseases string by commas
+                                        
                                         $diseases = explode(',', $heredoString);
 
-                                        // Iterate over each disease
+                                        
                                         foreach ($diseases as $disease) {
                                             // Look for the "side =>" pattern and get the side
                                             if (strpos($disease, 'side =>') !== false) {
@@ -863,7 +858,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div>
                         <?php
-                            // Sample data from database
+                            
                             $menarche = $data->menarche;
                             $gynecological_data = [
                                 'menarche' => (int)$menarche,
@@ -888,7 +883,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 'aog_eutz' => $data->aog_eutz,
                             ];
                             
-                            // Process form data
+                            
                             
                             $menarche_value = htmlspecialchars($gynecological_data['menarche']);
                             $menopause_checked_yes = ($gynecological_data['menopause'] === 'Yes') ? 'checked' : '';
@@ -1050,31 +1045,30 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             </tr>
                                         </thead>
                                         <tbody>
+                                        @foreach($pregnancy_data as $pregnancy)
                                             <tr style="font-size: 10pt">
-                                                <td><input class="form-control" type="text" name="pregnancy_history_order[]"></td>
+                                                <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
                                                 <td>
                                                     <select class="form-control select" name="pregnancy_history_year[]">
-                                                        <?php
-                                                        foreach (range(date('Y'), 1950) as $year) {
-                                                            echo "<option>".$year."</option>";
-                                                        }
-                                                        ?>
+                                                    @foreach(range(date('Y'), 1950) as $year)
+                                                    <option value="{{ $year }}" {{ $year == $pregnancy->pregnancy_year ? 'selected' : '' }}>{{ $year }}</option>
+                                                    @endforeach
                                                     </select>
                                                 </td>
-                                                <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>
+                                                <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{$pregnancy->pregnancy_gestation_completed}}"></td>
+                                                <td><input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{$pregnancy->pregnancy_outcome}}"></td>
+                                                <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
                                                 <td>
-                                                    <select class="select form-control" name="prenatal_history_sex[]">
-                                                        <option value="">Choose...</option>
-                                                        <option value="M">Male</option>
-                                                        <option value="F">Female</option>
-                                                    </select>
+                                                <select class="select form-control" name="prenatal_history_sex[]">
+                                                    <option value="M" {{ $pregnancy->pregnancy_sex == 'M' ? 'selected' : '' }}>Male</option>
+                                                    <option value="F" {{ $pregnancy->pregnancy_sex == 'F' ? 'selected' : '' }}>Female</option>
+                                                </select>
                                                 </td>
-                                                <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_complications[]"></td>
+                                                <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
+                                                <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
+                                                <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
                                             </tr>
+                                        @endforeach
                                         </tbody>
                                     </table>
                                         <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
@@ -1085,36 +1079,64 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div>
 
+                        <?php 
+                        $personal_history_data = [
+                            'smoking' => $data->smoking,
+                            'smoking_sticks_per_day' => $data->smoking_sticks_per_day,
+                            'smoking_quit_year' => $data->smoking_quit_year,
+                            'smoking_remarks' => $data->smoking_remarks,
+                            'alcohol_drinking' => $data->alcohol_drinking,
+                            'alcohol_liquor_type' => $data->alcohol_liquor_type,
+                            'alcohol_drinking_quit_year' => $data->alcohol_drinking_quit_year,
+                            'illicit_drugs' => $data->illicit_drugs,
+                            'illicit_drugs_taken' => $data->illicit_drugs_taken,
+                            'illicit_drugs_quit_year' => $data->illicit_drugs_quit_year,
+                            'current_medications' => $data->current_medications,
+                        ];
+
+                        $smoking_yes = ($personal_history_data['smoking'] === 'Yes') ? 'checked' : '';
+                        $smoking_no = ($personal_history_data['smoking'] === 'No') ? 'checked' : '';
+                        $smoking_quit = ($personal_history_data['smoking'] === 'Quit') ? 'checked' : '';
+
+                        $alcohol_yes = ($personal_history_data['alcohol_drinking'] === 'Yes') ? 'checked' : '';
+                        $alcohol_no = ($personal_history_data['alcohol_drinking'] === 'No') ? 'checked' : '';
+                        $alcohol_quit = ($personal_history_data['alcohol_drinking'] === 'Quit') ? 'checked' : '';
+
+                        $drugs_yes = ($personal_history_data['illicit_drugs'] === 'Yes') ? 'checked' : '';
+                        $drugs_no = ($personal_history_data['illicit_drugs'] === 'No') ? 'checked' : '';
+                        $drugs_quit = ($personal_history_data['illicit_drugs'] === 'Quit') ? 'checked' : '';
+                        ?>
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history" aria-expanded="false" aria-controls="collapse_persocial_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_personal_history" aria-expanded="false" aria-controls="collapse_personal_history">
                                         <div class="web-view"><b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>PERSONAL and SOCIAL HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_persocial_history" style="width: 100%;">
+                                <div class="collapse" id="collapse_personal_history" style="width: 100%;">
                                     <b>SMOKING</b>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_yes" value="Yes">
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_yes" value="Yes" <?php echo $smoking_yes; ?>>
                                                 <label for="smoke_yes">Yes</label><br>
-                                                <span id="smoking_sticks">Sticks per day: <input type="number" min="0" style="width:30%;" name="smoking_sticks_per_day"></span>
+                                                <span id="smoking_sticks">Sticks per day: <input type="number" min="0" style="width:30%;" name="smoking_sticks_per_day" value="<?php echo htmlspecialchars($personal_history_data['smoking_sticks_per_day']); ?>"></span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_no" value="No">
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_no" value="No" <?php echo $smoking_no; ?>>
                                                 <label for="smoke_no">No</label>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_quit" value="Quit">
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_quit" value="Quit" <?php echo $smoking_quit; ?>>
                                                 <label for="smoke_quit">Quit</label>
                                                 <span id="smoking_quit_year"> since
                                                     <select class="form-control select" name="smoking_year_quit">
                                                         <?php
-                                                            foreach(range(date('Y'), 1950) as $year)
-                                                                echo "<option>".$year."</option>";
+                                                        foreach(range(date('Y'), 1950) as $year)
+                                                            echo "<option " . ($year == htmlspecialchars($personal_history_data['smoking_quit_year']) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -1122,7 +1144,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-8">
-                                                <span>Other Remarks: <textarea class="form-control" style="resize: none;width:50%;" rows="2" name="smoking_other_remarks"></textarea></span>
+                                                <span>Other Remarks: <textarea class="form-control" style="resize: none;width:50%;" rows="2" name="smoking_other_remarks"><?php echo htmlspecialchars($personal_history_data['smoking_remarks']); ?></textarea></span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1131,21 +1153,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_yes_radio" value="Yes">
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_yes_radio" value="Yes" <?php echo $alcohol_yes; ?>>
                                                 <label for="alcohol_yes_radio">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio" value="No">
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio" value="No" <?php echo $alcohol_no; ?>>
                                                 <label for="alcohol_no_radio">No</label>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_quit_radio" value="Quit">
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_quit_radio" value="Quit" <?php echo $alcohol_quit; ?>>
                                                 <label for="alcohol_quit_radio">Quit</label>
                                                 <span id="alcohol_quit_year"> since
                                                     <select class="form-control select" name="alcohol_year_quit">
                                                         <?php
                                                         foreach(range(date('Y'), 1950) as $year)
-                                                            echo "<option>".$year."</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($personal_history_data['alcohol_drinking_quit_year']) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -1153,10 +1175,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <span id="alcohol_type">Liquor Type: <textarea class="form-control" style="resize: none;" rows="2" name="alcohol_type"></textarea></span>
+                                                <span id="alcohol_type">Liquor Type: <textarea class="form-control" style="resize: none;" rows="2" name="alcohol_type"><?php echo htmlspecialchars($personal_history_data['alcohol_liquor_type']); ?></textarea></span>
                                             </div>
                                             <div class="col-md-4">
-                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0" style="width:25%;" name="alcohol_bottles"></span>
+                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0" style="width:25%;" name="alcohol_bottles" value="<?php echo htmlspecialchars($personal_history_data['alcohol_bottles']); ?>"></span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1165,21 +1187,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input type="radio" name="illicit_drugs" id="drugs_yes_radio" class="referral-radio-btn" value="Yes">
+                                                <input type="radio" name="illicit_drugs" id="drugs_yes_radio" class="referral-radio-btn" value="Yes" <?php echo $drugs_yes; ?>>
                                                 <label for="drugs_yes_radio">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" name="illicit_drugs" id="drugs_no_radio" class="referral-radio-btn" value="No">
+                                                <input type="radio" name="illicit_drugs" id="drugs_no_radio" class="referral-radio-btn" value="No" <?php echo $drugs_no; ?>>
                                                 <label for="drugs_no_radio">No</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="radio" name="illicit_drugs" id="drugs_quit_radio" class="referral-radio-btn" value="Quit">
+                                                <input type="radio" name="illicit_drugs" id="drugs_quit_radio" class="referral-radio-btn" value="Quit" <?php echo $drugs_quit; ?>>
                                                 <label for="drugs_quit_radio">Quit</label>
                                                 <span id="drugs_quit_year"> since
                                                     <select class="form-control select" name="drugs_year_quit">
                                                         <?php
                                                         foreach(range(date('Y'), 1950) as $year)
-                                                            echo "<option>".$year."</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($personal_history_data['illicit_drugs_quit_year']) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -1188,7 +1210,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-8" id="drugs_text">
                                                 Specify drugs taken:
-                                                <textarea class="form-control" rows="2" style="resize: none;width:50%;" name="illicit_drugs_token"></textarea>
+                                                <textarea class="form-control" rows="2" style="resize: none;width:50%;" name="illicit_drugs_token"><?php echo htmlspecialchars($personal_history_data['illicit_drugs_taken']); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1274,6 +1296,37 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
+
+                        <?php
+                            // Sample data from the database
+                            $data = [
+                                "skin" => $data->skin,
+                                "head" => $data->head,
+                                "eyes" => $data->eyes,
+                                "ears" => $data->ears,
+                                "nose_or_sinuses" => $data->nose_or_sinuses,
+                                "mouth_or_throat" => $data->mouth_or_throat,
+                                "neck" => $data->neck,
+                                "breast" => $data->breast,
+                                "respiratory_or_cardiac" => $data->respiratory_or_cardiac,
+                                "gastrointestinal" => $data->gastrointestinal,
+                                "urinary" => $data->urinary,
+                                "peripheral_vascular" => $data->peripheral_vascular,
+                                "musculoskeletal" => $data->musculoskeletal,
+                                "neurologic" => $data->neurologic,
+                                "hematologic" => "Anemia,Easy bruising/bleeding,Past Transfusions",
+                                "endocrine" => "Abnormal growth,Increased appetite,Increased thirst,Increased urine production,Thyroid troubles,Heat/cold intolerance,Excessive sweating,Diabetes",
+                                "psychiatric" => "Tension/Anxiety,Depression/suicide ideation,Memory problems,Unusual problems,Sleep problems,Past treatment with psychiatrist,Change in mood/change in attitude",
+                            ];
+                            // Function to check if the symptom is in the user's data
+                            function isChecked($category, $symptom) {
+                                global $data;
+                                return isset($data[$category]) && strpos($data[$category], $symptom) !== false ? 'checked' : '';
+                            }
+
+                            ?>
+                        ?>
+                        
 
                         <div class="row">
                             <div class="col-lg-12">
