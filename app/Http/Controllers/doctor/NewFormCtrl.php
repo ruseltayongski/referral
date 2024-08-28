@@ -170,6 +170,10 @@ class NewFormCtrl extends Controller
             ];
             //  Define the fields for review system with associated causes
             $rs_skin_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_skin_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_skin_none_cbox',
                 'other' => null
@@ -188,6 +192,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_head_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_head_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_head_none_cbox',
                 'other' => null
@@ -202,6 +210,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_eyes_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_eyes_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_eyes_none_cbox',
                 'other' => null
@@ -236,6 +248,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_ears_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_ears_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_ears_none_cbox',
                 'other' => null
@@ -262,6 +278,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_nose_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_nose_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_nose_none_cbox',
                 'other' => null
@@ -280,6 +300,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_mouth_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_mouth_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_mouth_none_cbox',
                 'other' => null
@@ -302,6 +326,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_neck_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_neck_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_neck_none_cbox',
                 'other' => null
@@ -325,6 +353,10 @@ class NewFormCtrl extends Controller
             ];
 
             $rs_breast_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_breast_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_breast_none_cbox',
                 'other' => null
@@ -347,6 +379,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_respiratory_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_respi_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_respi_none_cbox',
                 'other' => null
@@ -359,7 +395,7 @@ class NewFormCtrl extends Controller
                 'cbox' => 'rs_respi_cough_cbox',
                 'other' => null
             ],
-            'Production of phlegm, color' => [
+            'Production of phlegm color' => [
                 'cbox' => 'rs_respi_phlegm_cbox',
                 'other' => null
             ],
@@ -418,6 +454,10 @@ class NewFormCtrl extends Controller
             
             ];
             $rs_gastrointestinal_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_gastro_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_gastro_none_cbox',
                 'other' => null
@@ -484,6 +524,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_urinary_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_urin_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_urin_none_cbox',
                 'other' => null
@@ -526,6 +570,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_peripheral_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_peri_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_peri_none_cbox',
                 'other' => null
@@ -545,12 +593,16 @@ class NewFormCtrl extends Controller
             ];
 
             $rs_musculoskeletal_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_muscle_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_muscle_none_cbox',
                 'other' => null
             ],
             'Pain' => [
-                'cbox' => 'rs_musclgit e_pain_cbox',
+                'cbox' => 'rs_musclgit_cbox',
                 'other' => null
             ],
             'Swelling' => [
@@ -583,6 +635,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_neurologic_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_neuro_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_neuro_none_cbox',
                 'other' => null
@@ -631,12 +687,16 @@ class NewFormCtrl extends Controller
                 'cbox' => 'rs_neuro_numbness_cbox',
                 'other' => null
             ],
-            'Feeling of "pins and needles/tingles' => [
+            'Feeling of pins and needles/tingles' => [
                 'cbox' => 'rs_neuro_tingles_cbox',
                 'other' => null
             ],
             ];
             $rs_hematologic_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_hema_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_hema_none_cbox',
                 'other' => null
@@ -655,6 +715,10 @@ class NewFormCtrl extends Controller
             ],
             ];
             $rs_endocrine_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_endo_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_endo_none_cbox',
                 'other' => null
@@ -692,6 +756,10 @@ class NewFormCtrl extends Controller
                 'other' => null
             ],];
             $rs_psychiatric_fields = [
+            'Select All' => [
+                    'cbox' => 'rs_psych_all_cbox',
+                    'other' => null
+            ],
             'None' => [
                 'cbox' => 'rs_psych_none_cbox',
                 'other' => null
@@ -1036,7 +1104,7 @@ class NewFormCtrl extends Controller
             // Pregnancy::create($pregnancy_data);
 
             // Debugging
-            // dd($request->all());
+            // dd($request->all(), $rs_skin_methods);
             // $glasgocoma_scale);
 
             return redirect("/revised/referral/info/{$patient_id}");
@@ -1046,7 +1114,7 @@ class NewFormCtrl extends Controller
     public function dataArray($dataFields, &$dataMethods, $request)   {
         foreach ($dataFields as $default_method => $fields) {
             $cbox = $fields['cbox'];
-            $other_data = $fields['other'];
+            $other_data = $fields['other'] ?? null;;
 
             if ($request->$cbox == "Yes") {
                 $dataMethod = $default_method;

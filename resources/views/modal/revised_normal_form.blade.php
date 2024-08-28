@@ -474,34 +474,64 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Hypertension: </span>
-                                                <input type="text" id="heredo_hyper" name="heredo_hypertension_side">
+                                                <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
+                                                        <option value="Maternal">Maternal</option>
+                                                        <option value="Paternal">Paternal</option>
+                                                        <option value="Both">Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_hyper" name="heredo_hypertension_side"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Diabetes Mellitus: </span>
-                                                <input type="text" id="heredo_diab" name="heredo_diabetes_side">
+                                                <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
+                                                        <option value="Maternal">Maternal</option>
+                                                        <option value="Paternal">Paternal</option>
+                                                        <option value="Both">Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_diab" name="heredo_diabetes_side"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Bronchial Asthma: </span>
-                                                <input type="text" id="heredo_asthma" name="heredo_asthma_side">
+                                                <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
+                                                        <option value="Maternal">Maternal</option>
+                                                        <option value="Paternal">Paternal</option>
+                                                        <option value="Both">Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_asthma" name="heredo_asthma_side"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer: </span>
-                                                <input type="text" id="heredo_cancer" name="heredo_cancer_side">
+                                                <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
+                                                        <option value="Maternal">Maternal</option>
+                                                        <option value="Paternal">Paternal</option>
+                                                        <option value="Both">Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_cancer" name="heredo_cancer_side"> -->
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Kidney: </span>
-                                                <input type="text" id="heredo_kidney" name="heredo_kidney_side">
+                                                <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
+                                                        <option value="Maternal">Maternal</option>
+                                                        <option value="Paternal">Paternal</option>
+                                                        <option value="Both">Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_kidney" name="heredo_kidney_side"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease: </span>
-                                                <input type="text" id="heredo_thyroid" name="heredo_thyroid_side">
+                                                <select class="form-control-select" id="heredo_thyroid" name="heredo_thyroid_side">
+                                                        <option value="Maternal">Maternal</option>
+                                                        <option value="Paternal">Paternal</option>
+                                                        <option value="Both">Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_thyroid" name="heredo_thyroid_side"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
@@ -1020,7 +1050,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_skin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_skin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1051,7 +1081,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_head_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_head_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1064,8 +1094,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <span> Headaches</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_head_injury_cbox" value="No">
-                                                <input class="form-check-input" id="rs_head_injury_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_injury_cbox" value="No">
+                                                <input class="form-check-input" id="rs_head_injury_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_injury_cbox" value="Yes">
                                                 <span> Head injury</span>
                                             </div>
                                         </div>
@@ -1075,7 +1104,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_eyes_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_eyes_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1128,7 +1157,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_ears_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_ears_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1166,7 +1195,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_nose_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_nose_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_all_cbox" value="Yes">
                                                 <span> Select All </span>
                                             </div>
                                             <div class="col-md-3">
@@ -1194,7 +1223,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_mouth_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_mouth_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1226,7 +1255,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neck_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_neck_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1258,7 +1287,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_breast_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_breast_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1290,7 +1319,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_respi_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1376,7 +1405,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_gastro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1458,7 +1487,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_urin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1514,7 +1543,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_peri_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_peri_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1542,7 +1571,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_muscle_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1552,7 +1581,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_musclgit e_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musclgit e_pain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_musclgit_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musclgit_cbox" value="Yes">
                                                 <span> Pain</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1592,7 +1621,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_neuro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1660,7 +1689,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_hema_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_hema_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1688,7 +1717,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_endo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1738,7 +1767,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_psych_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_all_cbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
@@ -2928,27 +2957,24 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', true);
-            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', true);
-            $('#rs_muscle_none_cbox').prop('checked', false);
-        } else {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', false);
-            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', false);
-        }
+    if($(this).is(':checked')) {
+        $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
+        $('#rs_muscle_none_cbox').prop('checked', false);
+    } else {
+        $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+    }
     });
+
     $('#rs_muscle_none_cbox').on('click', function() {
         if($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', false);
-            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', false);
+            $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
-    $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').on('click', function() {
+
+    $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
-    $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').on('click', function() {
-        $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
-    });
+
 
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox').on('click', function() {

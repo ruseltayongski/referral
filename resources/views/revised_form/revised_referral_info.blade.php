@@ -183,7 +183,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     width: auto; /* Allows the modal to shrink or grow depending on content */
     }
 </style>
-{{dd($data)}}
+
 <div class="modal fade" role="dialog" id="normalFormModal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -1298,34 +1298,42 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         </div>
 
                         <?php
-                            // Sample data from the database
-                            $data = [
-                                "skin" => $data->skin,
-                                "head" => $data->head,
-                                "eyes" => $data->eyes,
-                                "ears" => $data->ears,
-                                "nose_or_sinuses" => $data->nose_or_sinuses,
-                                "mouth_or_throat" => $data->mouth_or_throat,
-                                "neck" => $data->neck,
-                                "breast" => $data->breast,
-                                "respiratory_or_cardiac" => $data->respiratory_or_cardiac,
-                                "gastrointestinal" => $data->gastrointestinal,
-                                "urinary" => $data->urinary,
-                                "peripheral_vascular" => $data->peripheral_vascular,
-                                "musculoskeletal" => $data->musculoskeletal,
-                                "neurologic" => $data->neurologic,
-                                "hematologic" => "Anemia,Easy bruising/bleeding,Past Transfusions",
-                                "endocrine" => "Abnormal growth,Increased appetite,Increased thirst,Increased urine production,Thyroid troubles,Heat/cold intolerance,Excessive sweating,Diabetes",
-                                "psychiatric" => "Tension/Anxiety,Depression/suicide ideation,Memory problems,Unusual problems,Sleep problems,Past treatment with psychiatrist,Change in mood/change in attitude",
-                            ];
-                            // Function to check if the symptom is in the user's data
-                            function isChecked($category, $symptom) {
-                                global $data;
-                                return isset($data[$category]) && strpos($data[$category], $symptom) !== false ? 'checked' : '';
-                            }
+                        // Sample data from the database
+                        $data = [
+                            "skin" => $data->skin ?? null,
+                            "head" => $data->head ?? null,
+                            "eyes" => $data->eyes ?? null,
+                            "ears" => $data->ears ?? null,
+                            "nose_or_sinuses" => $data->nose_or_sinuses ?? null,
+                            "mouth_or_throat" => $data->mouth_or_throat ?? null,
+                            "neck" => $data->neck ?? null,
+                            "breast" => $data->breast ?? null,
+                            "respiratory_or_cardiac" => $data->respiratory_or_cardiac ?? null,
+                            "gastrointestinal" => $data->gastrointestinal ?? null,
+                            "urinary" => $data->urinary ?? null,
+                            "peripheral_vascular" => $data->peripheral_vascular ?? null,
+                            "musculoskeletal" => $data->musculoskeletal ?? null,
+                            "neurologic" => $data->neurologic ?? null,
+                            "hematologic" => $data->hematologic ?? null,
+                            "endocrine" => $data->endocrine ?? null,
+                            "psychiatric" => $data->psychiatric ?? null,
+                        ];
 
-                            ?>
+                        // Function to check if the symptom is in the user's data
+                        function isChecked($data, $category, $symptom) {
+                            // Ensure the category exists and is not empty
+                            if (!empty($data[$category])) {
+                                // Escape the data to prevent XSS
+                                $safeCategory = htmlspecialchars($data[$category], ENT_QUOTES, 'UTF-8');
+                                // Check if the symptom is in the category's data
+                                if (stripos($safeCategory, $symptom) !== false) {
+                                    return 'checked';
+                                }
+                            }
+                            return '';
+                        }
                         ?>
+                        
                         
 
                         <div class="row">
@@ -1341,28 +1349,28 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_skin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_skin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_all_cbox" <?= isChecked($data, 'skin', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_skin_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_skin_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_none_cbox" <?= isChecked($data, 'skin', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_skin_rashes_cbox" value="No">
-                                                <input class="form-check-input" id="rs_skin_rashes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_rashes_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_skin_rashes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_rashes_cbox" <?= isChecked($data, 'skin', 'Rashes'); ?>>
                                                 <span> Rashes</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_skin_itching_cbox" value="No">
-                                                <input class="form-check-input" id="rs_skin_itching_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_itching_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_skin_itching_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_itching_cbox" <?= isChecked($data, 'skin', 'Itching'); ?>>
                                                 <span> Itching</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_skin_hairchange_cbox" value="No">
-                                                <input class="form-check-input" id="rs_skin_hairchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_hairchange_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_skin_hairchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_hairchange_cbox" <?= isChecked($data, 'skin', 'Rashes'); ?>>
                                                 <span> Change in hair or nails</span>
                                             </div>
                                         </div>
@@ -1372,21 +1380,20 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_head_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_head_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_all_cbox" <?= isChecked($data, 'head', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_head_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_head_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_none_cbox" <?= isChecked($data, 'head', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_head_headache_cbox" value="No">
-                                                <input class="form-check-input" id="rs_head_headache_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_headache_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_head_headache_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_headache_cbox" <?= isChecked($data, 'head', 'Headaches'); ?>>
                                                 <span> Headaches</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_head_injury_cbox" value="No">
-                                                <input class="form-check-input" id="rs_head_injury_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_injury_cbox" value="No">
+                                                <input class="form-check-input" id="rs_head_injury_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_injury_cbox" <?= isChecked($data, 'head', 'Head injury'); ?>>
                                                 <span> Head injury</span>
                                             </div>
                                         </div>
@@ -1396,50 +1403,50 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_eyes_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_eyes_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_all_cbox" <?= isChecked($data, 'eyes', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_eyes_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eyes_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_none_cbox" <?= isChecked($data, 'eyes', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_eyes_glasses_cbox" value="No">
-                                                <input class="form-check-input" id="rs_eyes_glasses_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glasses_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eyes_glasses_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glasses_cbox" <?= isChecked($data, 'eyes', 'Glasses or Contacts'); ?>>
                                                 <span> Glasses or Contacts</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_eyes_vision_cbox" value="No">
-                                                <input class="form-check-input" id="rs_eyes_vision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_vision_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eyes_vision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_vision_cbox" <?= isChecked($data, 'eyes', 'Change in vision'); ?>>
                                                 <span> Change in vision</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_eyes_pain_cbox" value="No">
-                                                <input class="form-check-input" id="rs_eyes_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_pain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eyes_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_pain_cbox" <?= isChecked($data, 'eyes', 'Eye pain'); ?>>
                                                 <span> Eye pain</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_eyes_doublevision_cbox" value="No">
-                                                <input class="form-check-input" id="rs_eyes_doublevision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_doublevision_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eyes_doublevision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_doublevision_cbox" <?= isChecked($data, 'eyes', 'Double Vision'); ?>>
                                                 <span> Double Vision</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                             <input type="hidden" name="rs_eyes_flashing_cbox" value="No">
-                                                <input class="form-check-input" id="rs_eyes_flashing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_flashing_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eyes_flashing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_flashing_cbox" <?= isChecked($data, 'eyes', 'Flashing lights'); ?>>
                                                 <span> Flashing lights</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="rs_eyes_glaucoma_cbox" value="No">
-                                                <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" <?= isChecked($data, 'eyes', 'Glaucoma/Cataracts'); ?>>
                                                 <span> Glaucoma/Cataracts</span>
                                             </div>
                                             <div class="col-md-3">
                                                 
-                                                <input class="form-check-input" id="rs_eye_exam_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eye_exam_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_eye_exam_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eye_exam_cbox" <?= isChecked($data, 'eyes', 'Last eye exam'); ?>>
                                                 <span> Last eye exam</span>
                                             </div>
                                         </div>
@@ -1449,35 +1456,35 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_ears_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_ears_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_all_cbox" <?= isChecked($data, 'ears', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_ears_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_ears_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_none_cbox" <?= isChecked($data, 'ears', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 
-                                                <input class="form-check-input" id="rs_ears_changehearing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_changehearing_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_ears_changehearing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_changehearing_cbox" <?= isChecked($data, 'ears', 'Change in hearing'); ?>>
                                                 <span> Change in hearing</span>
                                             </div>
                                             <div class="col-md-2">
                                                 
-                                                <input class="form-check-input" id="rs_ears_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_pain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_ears_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_pain_cbox" <?= isChecked($data, 'ears', 'Ear pain'); ?>>
                                                 <span> Ear pain</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="rs_ears_discharge_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_discharge_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_ears_discharge_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_discharge_cbox" <?= isChecked($data, 'ears', 'Ear discharge'); ?>>
                                                 <span> Ear discharge</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="rs_ears_ringing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_ringing_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_ears_ringing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_ringing_cbox" <?= isChecked($data, 'ears', 'Ringing'); ?>>
                                                 <span> Ringing</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="rs_ears_dizziness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_dizziness_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_ears_dizziness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_dizziness_cbox" <?= isChecked($data, 'ears', 'Dizziness'); ?>>
                                                 <span> Dizziness</span>
                                             </div>
                                         </div>
@@ -1487,25 +1494,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_nose_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_nose_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_all_cbox" <?= isChecked($data, 'nose_or_sinuses', 'Select All'); ?>>
                                                 <span> Select All </span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_nose_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_nose_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_none_cbox" <?= isChecked($data, 'nose_or_sinuses', 'None'); ?>>
                                                 <span> None </span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_nose_bleeds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_bleeds_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_nose_bleeds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_bleeds_cbox" <?= isChecked($data, 'nose_or_sinuses', 'Nose bleeds'); ?>>
                                                 <span> Nose bleeds</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_nose_stuff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_stuff_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_nose_stuff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_stuff_cbox" <?= isChecked($data, 'nose_or_sinuses', 'Nasal stuffiness'); ?>>
                                                 <span> Nasal stuffiness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_nose_colds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_colds_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_nose_colds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_colds_cbox" <?= isChecked($data, 'nose_or_sinuses', 'Frequent Colds'); ?>>
                                                 <span> Frequent Colds</span>
                                             </div>
                                         </div>
@@ -1515,29 +1522,29 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_mouth_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_mouth_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_all_cbox" <?= isChecked($data, 'mouth_or_throat', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_mouth_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_mouth_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_none_cbox" <?= isChecked($data, 'mouth_or_throat', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_mouth_bleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_bleed_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_mouth_bleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_bleed_cbox" <?= isChecked($data, 'mouth_or_throat', 'Bleeding gums'); ?>>
                                                 <span> Bleeding gums</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_mouth_soretongue_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_soretongue_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_mouth_soretongue_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_soretongue_cbox" <?= isChecked($data, 'mouth_or_throat', 'Sore tongue'); ?>>
                                                 <span> Sore tongue</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_mouth_sorethroat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_sorethroat_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_mouth_sorethroat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_sorethroat_cbox" <?= isChecked($data, 'mouth_or_throat', 'Sore throat'); ?>>
                                                 <span> Sore throat</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_mouth_hoarse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_hoarse_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_mouth_hoarse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_hoarse_cbox" <?= isChecked($data, 'mouth_or_throat', 'Hoarseness'); ?>>
                                                 <span> Hoarseness</span>
                                             </div>
                                         </div>
@@ -1547,29 +1554,29 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neck_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_neck_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_all_cbox" <?= isChecked($data, 'neck', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neck_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neck_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_none_cbox" <?= isChecked($data, 'neck', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neck_lumps_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_lumps_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neck_lumps_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_lumps_cbox" <?= isChecked($data, 'neck', 'Lumps'); ?>>
                                                 <span> Lumps</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neck_swollen_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_swollen_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neck_swollen_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_swollen_cbox" <?= isChecked($data, 'neck', 'Swollen glands'); ?>>
                                                 <span> Swollen glands</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neck_goiter_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_goiter_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neck_goiter_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_goiter_cbox" <?= isChecked($data, 'neck', 'Goiter'); ?>>
                                                 <span> Goiter</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neck_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_stiff_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neck_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_stiff_cbox" <?= isChecked($data, 'neck', 'Stiffness'); ?>>
                                                 <span> Stiffness</span>
                                             </div>
                                         </div>
@@ -1579,29 +1586,29 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_breast_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_breast_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_all_cbox" <?= isChecked($data, 'breast', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_breast_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_breast_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_none_cbox" <?= isChecked($data, 'breast', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_breast_lumps_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_lumps_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_breast_lumps_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_lumps_cbox" <?= isChecked($data, 'breast', 'Lumps'); ?>>
                                                 <span> Lumps</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_breast_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_pain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_breast_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_pain_cbox" <?= isChecked($data, 'breast', 'Pain'); ?>>
                                                 <span> Pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_breast_discharge_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_discharge_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_breast_discharge_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_discharge_cbox" <?= isChecked($data, 'breast', 'Nipple discharge'); ?>>
                                                 <span> Nipple discharge</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_breast_bse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_bse_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_breast_bse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_bse_cbox" <?= isChecked($data, 'breast', 'BSE'); ?>>
                                                 <span> BSE</span>
                                             </div>
                                         </div>
@@ -1611,83 +1618,83 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_respi_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_all_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_none_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_shortness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_shortness_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_shortness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_shortness_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Shortness of breath'); ?>>
                                                 <span> Shortness of breath</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_cough_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_cough_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_cough_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_cough_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Cough'); ?>>
                                                 <span> Cough</span>
                                             </div>
                                             <div class="col-sm-3">
-                                                <input class="form-check-input" id="rs_respi_phlegm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_phlegm_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_phlegm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_phlegm_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Production of phlegm, color'); ?>>
                                                 <span> Production of phlegm, color</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_wheezing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_wheezing_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_wheezing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_wheezing_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Wheezing'); ?>>
                                                 <span> Wheezing</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_coughblood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_coughblood_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_coughblood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_coughblood_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Coughing up blood'); ?>>
                                                 <span> Coughing up blood</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_chestpain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_chestpain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_chestpain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_chestpain_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Chest pain'); ?>>
                                                 <span> Chest pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_fever_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_fever_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_fever_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_fever_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Fever'); ?>>
                                                 <span> Fever</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_sweats_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_sweats_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_sweats_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_sweats_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Night sweats'); ?>>
                                                 <span> Night sweats</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_swelling_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_swelling_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_swelling_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_swelling_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Swelling in hands/feet'); ?>>
                                                 <span> Swelling in hands/feet</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_bluefingers_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_bluefingers_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_bluefingers_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_bluefingers_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Blue fingers/toes'); ?>>
                                                 <span> Blue fingers/toes</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_highbp_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_highbp_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_highbp_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_highbp_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'High blood pressure'); ?>>
                                                 <span> High blood pressure</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_skipheartbeats_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_skipheartbeats_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_skipheartbeats_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_skipheartbeats_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Skipping heart beats'); ?>>
                                                 <span> Skipping heart beats</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_heartmurmur_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_heartmurmur_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_heartmurmur_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_heartmurmur_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Heart murmur'); ?>>
                                                 <span> Heart murmur</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_hxheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_hxheart_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_hxheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_hxheart_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'HX of heart medication'); ?>>
                                                 <span> HX of heart medication</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_brochitis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_brochitis_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_brochitis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_brochitis_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Bronchitis/emphysema'); ?>>
                                                 <span> Bronchitis/emphysema</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_respi_rheumaticheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_rheumaticheart_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_respi_rheumaticheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_rheumaticheart_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Rheumatic heart disease'); ?>>
                                                 <span> Rheumatic heart disease</span>
                                             </div>
                                         </div>
@@ -1697,79 +1704,79 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_gastro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_all_cbox" <?= isChecked($data, 'gastrointestinal', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_none_cbox" <?= isChecked($data, 'gastrointestinal', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-sm-3">
-                                                <input class="form-check-input" id="rs_gastro_appetite_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_appetite_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_appetite_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_appetite_cbox" <?= isChecked($data, 'gastrointestinal', 'Change of appetite or weight'); ?>>
                                                 <span> Change of appetite or weight</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_swallow_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_swallow_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_swallow_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_swallow_cbox" <?= isChecked($data, 'gastrointestinal', 'Problems swallowing'); ?>>
                                                 <span> Problems swallowing</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_nausea_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_nausea_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_nausea_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_nausea_cbox" <?= isChecked($data, 'gastrointestinal', 'Nausea'); ?>>
                                                 <span> Nausea</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_heartburn_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_heartburn_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_heartburn_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_heartburn_cbox" <?= isChecked($data, 'gastrointestinal', 'Heartburn'); ?>>
                                                 <span> Heartburn</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_vomit_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_vomit_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_vomit_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_vomit_cbox" <?= isChecked($data, 'gastrointestinal', 'Vomiting'); ?>>
                                                 <span> Vomiting</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_vomitblood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_vomitblood_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_vomitblood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_vomitblood_cbox" <?= isChecked($data, 'gastrointestinal', 'Vomiting Blood'); ?>>
                                                 <span> Vomiting Blood</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_constipation_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_constipation_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_constipation_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_constipation_cbox" <?= isChecked($data, 'gastrointestinal', 'Constipation'); ?>>
                                                 <span> Constipation</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_diarrhea_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_diarrhea_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_diarrhea_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_diarrhea_cbox" <?= isChecked($data, 'gastrointestinal', 'Diarrhea'); ?>>
                                                 <span> Diarrhea</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_bowel_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_bowel_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_bowel_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_bowel_cbox" <?= isChecked($data, 'gastrointestinal', 'Change in bowel habits'); ?>>
                                                 <span> Change in bowel habits</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_abdominal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_abdominal_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_abdominal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_abdominal_cbox" <?= isChecked($data, 'gastrointestinal', 'Abdominal pain'); ?>>
                                                 <span> Abdominal pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_belching_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_belching_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_belching_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_belching_cbox" <?= isChecked($data, 'gastrointestinal', 'Excessive belching'); ?>>
                                                 <span> Excessive belching</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_flatus_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_flatus_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_flatus_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_flatus_cbox" <?= isChecked($data, 'gastrointestinal', 'Excessive flatus'); ?>>
                                                 <span> Excessive flatus</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_jaundice_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_jaundice_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_jaundice_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_jaundice_cbox" <?= isChecked($data, 'gastrointestinal', 'Yellow color of skin (Jaundice/Hepatitis)'); ?>>
                                                 <span> Yellow color of skin (Jaundice/Hepatitis)</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_intolerance_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_intolerance_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_intolerance_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_intolerance_cbox" <?= isChecked($data, 'gastrointestinal', 'Food intolerance'); ?>>
                                                 <span> Food intolerance</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_gastro_rectalbleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_rectalbleed_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_gastro_rectalbleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_rectalbleed_cbox" <?= isChecked($data, 'gastrointestinal', 'Rectal bleeding/Hemorrhoids'); ?>>
                                                 <span> Rectal bleeding/Hemorrhoids</span>
                                             </div>
                                         </div>
@@ -1779,53 +1786,53 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_urin_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_all_cbox" <?= isChecked($data, 'urinary', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_none_cbox" <?= isChecked($data, 'urinary', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_difficult_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_difficult_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_difficult_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_difficult_cbox" <?= isChecked($data, 'urinary', 'Difficulty in urination'); ?>>
                                                 <span> Difficulty in urination</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_pain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_pain_cbox" <?= isChecked($data, 'urinary', 'Pain or burning on urination'); ?>>
                                                 <span> Pain or burning on urination</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_frequent_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_frequent_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_frequent_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_frequent_cbox" <?= isChecked($data, 'urinary', 'Frequent urination at night'); ?>>
                                                 <span> Frequent urination at night</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_urgent_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_urgent_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_urgent_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_urgent_cbox" <?= isChecked($data, 'urinary', 'Urgent need to urinate'); ?>>
                                                 <span> Urgent need to urinate</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_incontinence_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_incontinence_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_incontinence_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_incontinence_cbox" <?= isChecked($data, 'urinary', 'Incontinence of urine'); ?>>
                                                 <span> Incontinence of urine</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_dribbling_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_dribbling_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_dribbling_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_dribbling_cbox" <?= isChecked($data, 'urinary', 'Dribbling'); ?>>
                                                 <span> Dribbling</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_decreased_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_decreased_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_decreased_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_decreased_cbox" <?= isChecked($data, 'urinary', 'Decreased urine stream'); ?>>
                                                 <span> Decreased urine stream</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_blood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_blood_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_blood_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_blood_cbox" <?= isChecked($data, 'urinary', 'Blood in urine'); ?>>
                                                 <span> Blood in urine</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_urin_uti_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_uti_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_urin_uti_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_uti_cbox" <?= isChecked($data, 'urinary', 'UTI/stones/prostate infection'); ?>>
                                                 <span> UTI/stones/prostate infection</span>
                                             </div>
                                         </div>
@@ -1835,25 +1842,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_peri_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_peri_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_all_cbox" <?= isChecked($data, 'peripheral_vascular', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_peri_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_peri_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_none_cbox" <?= isChecked($data, 'peripheral_vascular', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_peri_legcramp_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_legcramp_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_peri_legcramp_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_legcramp_cbox" <?= isChecked($data, 'peripheral_vascular', 'Leg cramps'); ?>>
                                                 <span> Leg cramps</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_peri_varicose_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_varicose_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_peri_varicose_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_varicose_cbox" <?= isChecked($data, 'peripheral_vascular', 'Varicose veins'); ?>>
                                                 <span> Varicose veins</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_peri_veinclot_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_veinclot_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_peri_veinclot_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_veinclot_cbox" <?= isChecked($data, 'peripheral_vascular', 'Clots in veins'); ?>>
                                                 <span> Clots in veins</span>
                                             </div>
                                         </div>
@@ -1863,47 +1870,47 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_muscle_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_all_cbox" <?= isChecked($data, 'musculoskeletal', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_none_cbox" <?= isChecked($data, 'musculoskeletal', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_musclgit e_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musclgit e_pain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_musclgit_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musclgit_cbox" <?= isChecked($data, 'musculoskeletal', 'Pain'); ?>>
                                                 <span> Pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_swell_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_swell_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_swell_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_swell_cbox" <?= isChecked($data, 'musculoskeletal', 'Swelling'); ?>>
                                                 <span> Swelling</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_stiff_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_stiff_cbox" <?= isChecked($data, 'musculoskeletal', 'Stiffness'); ?>>
                                                 <span> Stiffness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_decmotion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_decmotion_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_decmotion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_decmotion_cbox" <?= isChecked($data, 'musculoskeletal', 'Decreased joint motion'); ?>>
                                                 <span> Decreased joint motion</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_brokenbone_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_brokenbone_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_brokenbone_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_brokenbone_cbox" <?= isChecked($data, 'musculoskeletal', 'Broken bone'); ?>>
                                                 <span> Broken bone</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_sprain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_sprain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" <?= isChecked($data, 'musculoskeletal', 'Serious sprains'); ?>>
                                                 <span> Serious sprains</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_arthritis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_arthritis_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_arthritis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_arthritis_cbox" <?= isChecked($data, 'musculoskeletal', 'Arthritis'); ?>>
                                                 <span> Arthritis</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_gout_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_gout_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_muscle_gout_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_gout_cbox" <?= isChecked($data, 'musculoskeletal', 'Gout'); ?>>
                                                 <span> Gout</span>
                                             </div>
                                         </div>
@@ -1913,66 +1920,66 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_neuro_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_all_cbox" <?= isChecked($data, 'neurologic', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_none_cbox" <?= isChecked($data, 'neurologic', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_headache_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_headache_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_headache_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_headache_cbox" <?= isChecked($data, 'neurologic', 'Headaches'); ?>>
                                                 <span> Headaches</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_seizure_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_seizure_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_seizure_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_seizure_cbox" <?= isChecked($data, 'neurologic', 'Seizures'); ?>>
                                                 <span> Seizures</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_faint_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_faint_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_faint_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_faint_cbox" <?= isChecked($data, 'neurologic', 'Loss of Consciousness/Fainting'); ?>>
                                                 <span> Loss of Consciousness/Fainting</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_paralysis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_paralysis_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_paralysis_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_paralysis_cbox" <?= isChecked($data, 'neurologic', 'Paralysis'); ?>>
                                                 <span> Paralysis</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_weakness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_weakness_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_weakness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_weakness_cbox" <?= isChecked($data, 'neurologic', 'Weakness'); ?>>
                                                 <span> Weakness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_sizeloss_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_sizeloss_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_sizeloss_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_sizeloss_cbox" <?= isChecked($data, 'neurologic', 'Loss of muscle size'); ?>>
                                                 <span> Loss of muscle size</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_spasm_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_spasm_cbox" <?= isChecked($data, 'neurologic', 'Muscle Spasm'); ?>>
                                                 <span> Muscle Spasm</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_tremor_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tremor_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_tremor_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tremor_cbox" <?= isChecked($data, 'neurologic', 'Tremor'); ?>>
                                                 <span> Tremor</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_involuntary_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_involuntary_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_involuntary_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_involuntary_cbox" <?= isChecked($data, 'neurologic', 'Involuntary movement'); ?>>
                                                 <span> Involuntary movement</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_incoordination_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_incoordination_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_incoordination_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_incoordination_cbox" <?= isChecked($data, 'neurologic', 'Incoordination'); ?>>
                                                 <span> Incoordination</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_numbness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_numbness_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_numbness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_numbness_cbox" <?= isChecked($data, 'neurologic', 'Numbness'); ?>>
                                                 <span> Numbness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_tingles_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tingles_cbox" value="Yes">
-                                                <span> Feeling of "pins and needles/tingles"</span>
+                                                <input class="form-check-input" id="rs_neuro_tingles_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tingles_cbox" <?= isChecked($data, 'neurologic', 'Feeling of pins and needles/tingles'); ?>>
+                                                <span> Feeling of pins and needles/tingles</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1981,25 +1988,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_hema_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_hema_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_all_cbox" <?= isChecked($data, 'hematologic', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_hema_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_hema_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_none_cbox" <?= isChecked($data, 'hematologic', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_hema_anemia_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_anemia_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_hema_anemia_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_anemia_cbox" <?= isChecked($data, 'hematologic', 'Anemia'); ?>>
                                                 <span> Anemia</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_hema_bruising_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_bruising_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_hema_bruising_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hema_bruising_cbox" <?= isChecked($data, 'hematologic', 'Easy bruising/bleeding'); ?>>
                                                 <span> Easy bruising/bleeding</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rss_hema_transfusion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rss_hema_transfusion_cbox" value="Yes">
+                                                <input class="form-check-input" id="rss_hema_transfusion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rss_hema_transfusion_cbox" <?= isChecked($data, 'hematologic', 'Past Transfusions'); ?>>
                                                 <span> Past Transfusions</span>
                                             </div>
                                         </div>
@@ -2009,47 +2016,47 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_endo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_all_cbox" <?= isChecked($data, 'endocrine', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_none_cbox" <?= isChecked($data, 'endocrine', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_abnormal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_abnormal_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_abnormal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_abnormal_cbox" <?= isChecked($data, 'endocrine', 'Abnormal growth'); ?>>
                                                 <span> Abnormal growth</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_appetite_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_appetite_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_appetite_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_appetite_cbox" <?= isChecked($data, 'endocrine', 'Increased appetite'); ?>>
                                                 <span> Increased appetite</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_thirst_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_thirst_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_thirst_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_thirst_cbox" <?= isChecked($data, 'endocrine', 'Increased thirst'); ?>>
                                                 <span> Increased thirst</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_urine_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_urine_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_urine_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_urine_cbox" <?= isChecked($data, 'endocrine', 'Increased urine production'); ?>>
                                                 <span> Increased urine production</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_thyroid_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_thyroid_cbox" <?= isChecked($data, 'endocrine', 'Thyroid trouble'); ?>>
                                                 <span> Thyroid trouble</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_heatcold_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_heatcold_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_heatcold_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_heatcold_cbox" <?= isChecked($data, 'endocrine', 'Heat/cold intolerance'); ?>>
                                                 <span> Heat/cold intolerance</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_sweat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_sweat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" <?= isChecked($data, 'endocrine', 'Excessive sweating'); ?>>
                                                 <span> Excessive sweating</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_diabetes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_diabetes_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_endo_diabetes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_diabetes_cbox" <?= isChecked($data, 'endocrine', 'Diabetes'); ?>>
                                                 <span> Diabetes</span>
                                             </div>
                                         </div>
@@ -2059,43 +2066,43 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="rs_psych_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_all_cbox" <?= isChecked($data, 'psychiatric', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_none_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_none_cbox" <?= isChecked($data, 'psychiatric', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_tension_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_tension_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_tension_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_tension_cbox" <?= isChecked($data, 'psychiatric', 'Tension/Anxiety'); ?>>
                                                 <span> Tension/Anxiety</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_depression_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_depression_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_depression_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_depression_cbox" <?= isChecked($data, 'psychiatric', 'Depression/suicide ideation'); ?>>
                                                 <span> Depression/suicide ideation</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_memory_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_memory_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_memory_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_memory_cbox" <?= isChecked($data, 'psychiatric', 'Memory problems'); ?>>
                                                 <span> Memory problems</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_unusual_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_unusual_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_unusual_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_unusual_cbox" <?= isChecked($data, 'psychiatric', 'Unusual problems'); ?>>
                                                 <span> Unusual problems</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_sleep_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_sleep_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_sleep_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_sleep_cbox" <?= isChecked($data, 'psychiatric', 'Sleep problems'); ?>>
                                                 <span> Sleep problems</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_treatment_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_treatment_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_treatment_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_treatment_cbox" <?= isChecked($data, 'psychiatric', 'Past treatment with psychiatrist'); ?>>
                                                 <span> Past treatment with psychiatrist</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_psych_moodchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_moodchange_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_psych_moodchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_moodchange_cbox" <?= isChecked($data, 'psychiatric', 'Change in mood/change in attitude towards family/friends'); ?>>
                                                 <span> Change in mood/change in attitude towards family/friends</span>
                                             </div>
                                         </div>
@@ -2103,6 +2110,23 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
+                        <?php
+                        // Sanitize and validate input
+                        $valid_diets = ['None', 'Oral', 'Tube', 'TPN', 'NPO'];
+                        $selected_diet = in_array($data->diet, $valid_diets) ? $data->diet : 'None';
+
+                        $nutritional_status_data = [
+                            'diet' => $selected_diet,
+                            'specify_diets' => htmlspecialchars($data->specify_diets, ENT_QUOTES, 'UTF-8'),
+                        ];
+
+                        // Determine checked status for radio buttons
+                        $diet_none = ($nutritional_status_data['diet'] === 'None') ? 'checked' : '';
+                        $diet_oral = ($nutritional_status_data['diet'] === 'Oral') ? 'checked' : '';
+                        $diet_tube = ($nutritional_status_data['diet'] === 'Tube') ? 'checked' : '';
+                        $diet_tpn = ($nutritional_status_data['diet'] === 'TPN') ? 'checked' : '';
+                        $diet_npo = ($nutritional_status_data['diet'] === 'NPO') ? 'checked' : '';
+                        ?>
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -2117,35 +2141,37 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_none" value="None">
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_none" value="None" <?php echo $diet_none; ?>>
                                                 <label for="diet_none"> None </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_oral" value="Oral">
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_oral" value="Oral" <?php echo $diet_oral; ?>>
                                                 <label for="diet_oral"> Oral </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tube" value="Tube">
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tube" value="Tube" <?php echo $diet_tube; ?>>
                                                 <label for="diet_tube"> Tube </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tpn" value="TPN">
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tpn" value="TPN" <?php echo $diet_tpn; ?>>
                                                 <label for="diet_tpn"> TPN </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio", id="diet_npo" value="NPO">
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_npo" value="NPO" <?php echo $diet_npo; ?>>
                                                 <label for="diet_npo"> NPO </label>
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                Specify Diets: <textarea class="form-control" name="diet" style="resize: none;width: 100%;" rows="3"></textarea><br><br>
+                                                Specify Diets: <textarea class="form-control" name="specify_diets" style="resize: none;width: 100%;" rows="3"><?php echo htmlspecialchars($nutritional_status_data['specify_diets']); ?></textarea><br><br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -3258,25 +3284,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', true);
-            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', true);
-            $('#rs_muscle_none_cbox').prop('checked', false);
-        } else {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', false);
-            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', false);
-        }
+    if($(this).is(':checked')) {
+        $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
+        $('#rs_muscle_none_cbox').prop('checked', false);
+    } else {
+        $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+    }
     });
+
     $('#rs_muscle_none_cbox').on('click', function() {
         if($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').prop('checked', false);
-            $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').prop('checked', false);
+            $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
-    $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox').on('click', function() {
-        $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
-    });
-    $('#rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox').on('click', function() {
+
+    $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
 

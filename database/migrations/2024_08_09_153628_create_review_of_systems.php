@@ -24,12 +24,12 @@ class CreateReviewOfSystems extends Migration
             $table->string('mouth_or_throat')->nullable();
             $table->string('neck')->nullable();
             $table->string('breast')->nullable();
-            $table->string('respiratory_or_cardiac')->nullable();
-            $table->string('gastrointestinal')->nullable();
+            $table->text('respiratory_or_cardiac')->nullable();
+            $table->text('gastrointestinal')->nullable();
             $table->string('urinary')->nullable();
             $table->string('peripheral_vascular')->nullable();
             $table->string('musculoskeletal')->nullable();
-            $table->string('neurologic')->nullable();
+            $table->text('neurologic')->nullable();
             $table->string('hematologic')->nullable();
             $table->string('endocrine')->nullable();
             $table->string('psychiatric')->nullable();
