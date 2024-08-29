@@ -276,8 +276,8 @@ class TelemedicineCtrl extends Controller
         
         $appointed_id = $request->input("appointment_id");
         $appointed_date = AppointmentSchedule::where('id', $appointed_id)
-        ->pluck('appointed_date')
-        ->first();
+            ->pluck('appointed_date')
+            ->first();
       
         $requestCount = $request->appointment_count;
       
@@ -289,7 +289,7 @@ class TelemedicineCtrl extends Controller
                         $query->select('id', 'fname', 'lname');
                     }]);
                 }])->find($appointment_id);
-
+                
                 if($appointment){
 
                     $appointment->appointed_date = $request->input('appointed_date'); 
@@ -298,11 +298,33 @@ class TelemedicineCtrl extends Controller
                     $appointment->opdCategory = $request->input('opdCategory' . $i);
                     $appointment->save();
                     
-                    foreach($appointment->telemedAssignedDoctor as $assignedoctor){
-                        // dd($request->all());
-                        $assignedoctor->doctor_id = $request->input('available_doctor' . $i);
-                        $assignedoctor->save();
-                    }  
+                   // $appointment->telemedAssignedDoctor()->delete();
+
+                    $doctor_ids = $request->input('available_doctor' . $i);
+                    
+                    if(!is_array($doctor_ids)){
+                        $doctor_ids = [$doctor_ids];
+                    }
+
+                    $existingDoctorIds = $appointment->telemedAssignedDoctor->pluck('doctor_id')->toArray();
+                    $doctorsToDelete = array_diff($existingDoctorIds, $doctor_ids);
+
+                    $doctorsToAdd = array_diff($doctor_ids, $existingDoctorIds);
+
+                    if(!empty($doctorsToDelete)){ // Delete doctors that are no longer in the request
+                        $appointment->telemedAssignedDoctor()->whereIn('doctor_id', $doctorsToDelete)->delete();
+                    }
+
+                    foreach($doctorsToAdd as $doctor_id){
+                        $appointment->telemedAssignedDoctor()->create([
+                            'doctor_id' => $doctor_id
+                        ]);
+                    }
+                    // foreach($appointment->telemedAssignedDoctor as $assignedoctor){
+                      
+                    //     $assignedoctor->doctor_id = $request->input('available_doctor' . $i);
+                    //     $assignedoctor->save();
+                    // }  
                 }
             }
        

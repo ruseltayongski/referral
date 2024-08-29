@@ -276,6 +276,7 @@
                                     <div class="label-border">
                                         <div id="opdCategoryContainer">
                                           <div id="update_additionalTimeContainer" style="display: none;"></div>
+                                                <input type="hidden" class="form-control appointment_date" id="update_appointed_date" value="{{$row->appointed_date}}" required>
                                                 <div style="margin-top: 15px;">
                                                     <button type="button" class="btn btn-info btn-sm" id="update_add_slots" data-appointed-date="{{$row->appointed_date}}" onclick="updateAddTimeInput()">Add Slot</button>
                                                 </div>    
@@ -687,7 +688,7 @@
                                                 </div>
                                                 <div>
                                                     <label>Available Doctor</label>
-                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor${currentCount}" data-placeholder="Select Doctor" style="width: 100%;">
+                                                    <select class="form-control select2 available_doctor${currentCount}" name="available_doctor${currentCount}[]" multiple="multiple" name="Update_available_doctor" id="Update_available_doctor${currentCount}" data-placeholder="Select Doctor" style="width: 100%;">
                                                       ${generateDoctorsOptions(doctor,appointments)}
                                                     </select>
                                                 </div>
@@ -883,9 +884,8 @@
                 currentDate.setHours(0, 0, 0, 0);
                 appointmentDate.setHours(0, 0, 0, 0);
 
-                console.log("currentDate",currentDate);
                 console.log("appointmentDate",  appointedDate);
-                console.log("is past? ", appointmentDate < currentDate);
+                
 
                 if(appointmentDate < currentDate){ //disabled all slot if it is already in the past date
                     update_slots.style.display = 'none';
@@ -965,7 +965,7 @@ function deleteTimeInput(appointment){
                 //     }));
                 // });
             });  
-    }
+}
 
     $(document).ready(function() {
         $('#cancelbtn-clear').on('click', function() {
@@ -974,23 +974,23 @@ function deleteTimeInput(appointment){
         });
     });
     function generateDoctorsOptions(doctorData){
-           var options = '';
-           if(Array.isArray(doctorData)){
-             doctorData.forEach(function (doctor){
-                console.log("doctorData::", doctor);
-                options += `<option value="${doctor.doctor.id}" selected>${doctor.doctor.fname} ${doctor.doctor.lname}</option>`;
-             });
-           }else if(typeof doctorData === 'object' && doctorData !== null){
-            options += `<option value="${doctorData.id}" selected>${doctorData.fname} ${doctorData.lname}</option>`;
-           }
-           return options;
+        var options = '';
+        if(Array.isArray(doctorData)){
+            doctorData.forEach(function (doctor){
+            console.log("doctorData::", doctor.doctor.id);
+            options += `<option value="${doctor.doctor.id}" selected>${doctor.doctor.fname} ${doctor.doctor.lname}</option>`;
+            });
+        }else if(typeof doctorData === 'object' && doctorData !== null){
+        options += `<option value="${doctorData.id}" selected>${doctorData.fname} ${doctorData.lname}</option>`;
         }
-        //----------------------Trapping Appointment Time From and Time To and Date----------------------------//    
-        const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
-        document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
-        console.log('today', today);
+        return options;
+    }
+    //----------------------Trapping Appointment Time From and Time To and Date----------------------------//    
+    const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
+    document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
+    console.log('today', today);
 
-        $(document).ready(function() {
+    $(document).ready(function() {
         $.ajax({
             url: "{{ route('get-booked-dates') }}",
             type: 'GET',
@@ -1017,18 +1017,23 @@ function deleteTimeInput(appointment){
         });
     });
     $(document).ready(function() {
+
         var allAppointmentTimes = [];
         var currentCounts = 1;
-
-        $(document).on('change', 'input[type="time"]', function() {
-            var appointmentDate = $("#appointment_date").val();
         
+        $(document).on('change', 'input[type="time"]', function() {
+
+            var UpdateDate = $("#update_appointed_date").val().trim();
+            
+            var appointmentDate = $("#appointment_date").val().trim();
+            
             var timeInputGroup = $(this).closest('.time-input-group');
             var index = $('.time-input-group').index(timeInputGroup);
             currentCounts = index + 1;
            
             var fromInput = timeInputGroup.find('input[name^="appointed_time' + currentCounts + '"]');
             var toInput = timeInputGroup.find('input[name^="appointed_time_to' + currentCounts + '"]');
+            var selectedDoctors = $(`.available_doctor${currentCounts}`).val();
 
             var fromTime = fromInput.val();
             var toTime = toInput.val();
@@ -1040,21 +1045,27 @@ function deleteTimeInput(appointment){
             var isUnique = true;
             var timeObject = {
                 from: fromTimeObj,
-                to: toTimeObj
+                to: toTimeObj,
+                doctors: selectedDoctors
             };
 
-            if(!appointmentDate){
-                 alert('Please select Date first!');
-                 toInput.val('');
-                 fromInput.val('');
-            }
+            console.log("selectedDoctors", timeObject);
+
+            // if(!appointmentDate || !UpdateDate){
+            //     alert('Please select Date first!');
+            //      toInput.val('');
+            //      fromInput.val('');
+            // }
 
             for (var i =0; i < allAppointmentTimes.length; i++){
                 var existingTime = allAppointmentTimes[i];
            
-                if ((timeObject.from >= existingTime.from && timeObject.from < existingTime.to) ||(timeObject.to > existingTime.from && timeObject.to <= existingTime.to) ||
-                    (timeObject.from <= existingTime.from && timeObject.to >= existingTime.to)) 
-                {
+                var timeOverlap = (timeObject.from >= existingTime.from && timeObject.from < existingTime.to) ||(timeObject.to > existingTime.from && timeObject.to <= existingTime.to) ||
+                    (timeObject.from <= existingTime.from && timeObject.to >= existingTime.to)
+                
+                var doctorsOverlap = JSON.stringify(timeObject.doctors) === JSON.stringify(existingTime.doctors);
+
+                if (timeOverlap && doctorsOverlap) {
                     isUnique = false;
                     break;
                 }
@@ -1104,14 +1115,14 @@ function deleteTimeInput(appointment){
             }
            
 
-            // if(!isUnique) {
-            //     alert('Appointment time must be unique');
-            //     allAppointmentTimes = allAppointmentTimes.filter(appoint => !(appoint.from.getTime() === fromTimeObj.getTime() && appoint.to.getTime() === toTimeObj.getTime()));
-            //     console.log("allAppointmentTimes remove if not unique:", allAppointmentTimes);
-            //     fromInput.val('');
-            //     toInput.val('');
-            //     return;
-            // }
+            if(!isUnique) {
+                alert('Appointment time must be unique');
+                // allAppointmentTimes = allAppointmentTimes.filter(appoint => !(appoint.from.getTime() === fromTimeObj.getTime() && appoint.to.getTime() === toTimeObj.getTime()));
+                // console.log("allAppointmentTimes remove if not unique:", allAppointmentTimes);
+                fromInput.val('');
+                toInput.val('');
+                return;
+            }
 
             $('input[name="appointed_date"]').data('fromTimeObj', fromTimeObj);
             $('input[name="appointed_date"]').data('Totime', toTimeObj);
