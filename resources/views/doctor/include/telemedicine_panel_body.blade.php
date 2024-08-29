@@ -207,7 +207,7 @@
        
           
         
-        <div class="stepper-item stepper-item-referred @if($referred_redirected_track && !$referred_upward_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item stepper-item-referred @if($referred_redirected_track && $referred_upward_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
             <div class="step-name">Referred</div>
             {{-- <div class="stepper-item stepper-item-follow @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">

@@ -19010,7 +19010,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AppointmentApp',
+  name: "AppointmentApp",
   components: {
     AppointmentFacility: _AppointmentFacility_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     AppointmentCalendar: _AppointmentCalendar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -19055,20 +19055,20 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AppointmentCalendar',
+  name: "AppointmentCalendar",
   data: function data() {
     return {
       calendar: null,
       header: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'month,agendaWeek,agendaDay'
+        left: "prev,next today",
+        center: "title",
+        right: "month,agendaWeek,agendaDay"
       },
       buttonText: {
-        today: 'today',
-        month: 'month',
-        week: 'week',
-        day: 'day'
+        today: "today",
+        month: "month",
+        week: "week",
+        day: "day"
       },
       events: []
     };
@@ -19076,6 +19076,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   props: {
     facilitySelectedId: {
       type: Number
+    },
+    appointmentSlot: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      } // Ensure it's an empty array by default
     }
   },
   watch: {
@@ -19104,7 +19110,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }()
   },
   mounted: function mounted() {
-    this.ini_events($('#external-events div.external-event'));
+    this.ini_events($("#external-events div.external-event"));
     this.generateCalendar();
   },
   methods: {
@@ -19113,7 +19119,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         var eventObject = {
           title: $.trim($(this).text()) // use the element's text as the event title
         };
-        $(this).data('eventObject', eventObject);
+        $(this).data("eventObject", eventObject);
         $(this).draggable({
           zIndex: 1070,
           revert: true,
@@ -19130,7 +19136,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 self = _this;
-                _this.calendar = $('#calendar').fullCalendar({
+                _this.calendar = $("#calendar").fullCalendar({
                   dayRender: _this.dayRenderFunction.bind(_this),
                   eventRender: _this.eventRenderFunction.bind(_this),
                   dayClick: _this.dayClickFunction.bind(_this),
@@ -19151,7 +19157,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     dayRenderFunction: function dayRenderFunction(date, cell) {
       var eventsOnDate = this.events.filter(function (event) {
-        return moment(event.start).isSame(date, 'day');
+        return moment(event.start).isSame(date, "day");
       });
       if (eventsOnDate.length > 0) {
         cell.css("background-color", "green");
@@ -19159,20 +19165,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     eventRenderFunction: function eventRenderFunction(event, element) {
-      console.log("element", element);
+      var _this2 = this;
       //console.log(event,event.start.format('YYYY-MM-DD'))
-      var currentDate = new Date().toISOString().split('T')[0];
+      var currentDate = new Date().toISOString().split("T")[0];
       this.$nextTick(function () {
-        var targetTd = $(".fc-day[data-date='" + event.start.format('YYYY-MM-DD') + "']");
-        var targetdrag = $(".fc-draggable[data-date='" + event.start.format('YYYY-MM-DD') + "']");
-        var targetGrid = $('.fc-day-grid-event');
-        var date = targetTd.attr('data-date');
-        if (date < currentDate) {
-          targetTd.css('background-color', 'rgb(255 214 214)'); //color the td of day in calendar'
-          targetTd.css('border-color', "rgb(230 193 193)");
+        var targetTd = $(".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']");
+        var targetdrag = $(".fc-draggable[data-date='" + event.start.format("YYYY-MM-DD") + "']");
+        var targetGrid = $(".fc-day-grid-event");
+        var date = targetTd.attr("data-date");
+        var isfullyBooked = _this2.appointmentSlot.some(function (appointment) {
+          if (appointment.appointment_schedules.length > 0) {
+            var slotOndate = appointment.appointment_schedules.filter(function (slot) {
+              return slot.appointed_date === date;
+            });
+            // if (slotOndate.length > 0) {
+            //   slotOndate.map((slot) => {
+            //     console.log(slot.telemed_assigned_doctor[0].appointment_by);
+            //   });
+            // }
+            return slotOndate.length > 0 && slotOndate.every(function (slot) {
+              return slot.telemed_assigned_doctor[0].appointment_by;
+            });
+          }
+          return false;
+        });
+        if (date < currentDate || isfullyBooked) {
+          targetTd.css("background-color", "rgb(255 214 214)"); //color the td of day in calendar'
+          targetTd.css("border-color", "rgb(230 193 193)");
         } else {
-          targetTd.css('background-color', '#00a65a'); //color the td of day in calendar'
-          targetdrag.css('border-color', "#00a65a");
+          targetTd.css("background-color", "#00a65a"); //color the td of day in calendar'
+          targetdrag.css("border-color", "#00a65a");
         }
         targetGrid.remove();
         targetTd.addClass("add-cursor-pointer");
@@ -19180,15 +19202,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     dayClickFunction: function dayClickFunction(date, allDay, jsEvent, view) {
-      var _this2 = this;
+      var _this3 = this;
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
         var eventsOnDate, params, responseBody, response;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                eventsOnDate = _this2.events.filter(function (event) {
-                  return moment(event.start).isSame(date, 'day');
+                eventsOnDate = _this3.events.filter(function (event) {
+                  return moment(event.start).isSame(date, "day");
                 });
                 if (!(eventsOnDate.length > 0)) {
                   _context3.next = 8;
@@ -19196,14 +19218,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 }
                 params = JSON.parse(JSON.stringify(eventsOnDate))[0];
                 responseBody = {
-                  'selected_date': params.start,
-                  'facility_id': params.facility_id
+                  selected_date: params.start,
+                  facility_id: params.facility_id
                 };
                 _context3.next = 6;
-                return _this2.__appointmentScheduleHours(responseBody);
+                return _this3.__appointmentScheduleHours(responseBody);
               case 6:
                 response = _context3.sent;
-                _this2.$emit('appointedTime', response.data);
+                _this3.$emit("appointedTime", response.data);
               case 8:
               case "end":
                 return _context3.stop();
@@ -19213,10 +19235,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     updateCalendarEvents: function updateCalendarEvents() {
-      var _this3 = this;
-      this.calendar.fullCalendar('removeEvents');
+      var _this4 = this;
+      this.calendar.fullCalendar("removeEvents");
       this.events.forEach(function (event) {
-        _this3.calendar.fullCalendar('renderEvent', event, true);
+        _this4.calendar.fullCalendar("renderEvent", event, true);
       });
     },
     getRandomInt: function getRandomInt(min, max) {
@@ -19237,7 +19259,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 response = _context4.sent;
                 return _context4.abrupt("return", response.data.facility_data.map(function (item) {
                   return {
-                    title: 'Appointment',
+                    title: "Appointment",
                     start: new Date(item.appointed_date),
                     backgroundColor: "#00a65a",
                     borderColor: "#00a65a",
@@ -19287,7 +19309,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AppointmentFacility',
+  name: "AppointmentFacility",
   data: function data() {
     return {
       doh_logo: $("#broadcasting_url").val() + "/resources/img/video/doh-logo.png"
@@ -19308,7 +19330,7 @@ __webpack_require__.r(__webpack_exports__);
     emptyAppointmentByCount: function emptyAppointmentByCount() {
       var count = 0;
       var now = new Date();
-      console.log('user', this.appointment);
+      console.log("user", this.appointment);
       if (this.appointment && this.appointment.appointment_schedules) {
         this.appointment.appointment_schedules.forEach(function (sched) {
           // Combine appointed_date and appointed_time into a single Date object
@@ -19327,7 +19349,6 @@ __webpack_require__.r(__webpack_exports__);
     },
     shouldDisplayFacility: function shouldDisplayFacility() {
       var now = new Date();
-      console.log('sched', this.appointment.appointment_schedules);
       var isAppointedExpire = this.appointment.appointment_schedules.every(function (sched) {
         var AppointedDate = new Date("".concat(sched.appointed_date));
         return AppointedDate <= now;
@@ -19375,7 +19396,7 @@ __webpack_require__.r(__webpack_exports__);
         $(".fc-day").removeClass("add-cursor-pointer");
         //
       }
-      this.$emit('facilitySelected', id);
+      this.$emit("facilitySelected", id);
     }
   }
 });
@@ -19399,7 +19420,7 @@ __webpack_require__.r(__webpack_exports__);
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: 'AppointmentTime',
+  name: "AppointmentTime",
   props: {
     appointedTimes: {
       type: Object
@@ -19419,7 +19440,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     };
   },
   mounted: function mounted() {
-    var telemedicineFollowUp = JSON.parse(decodeURIComponent(new URL(window.location.href).searchParams.get('appointment')));
+    var telemedicineFollowUp = JSON.parse(decodeURIComponent(new URL(window.location.href).searchParams.get("appointment")));
     if (telemedicineFollowUp) {
       this.followUpReferredId = telemedicineFollowUp[0].referred_id;
       this.followUpCode = telemedicineFollowUp[0].code;
@@ -19478,13 +19499,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   methods: {
     areAllDoctorsNotAvailable: function areAllDoctorsNotAvailable(doctors, date, time) {
       var currentDateTime = new Date();
-      var currentDate = currentDateTime.toISOString().split('T')[0];
-      var currentTime = currentDateTime.toTimeString().split(' ')[0].substring(0, 5);
-      console.log('time', time);
+      var currentDate = currentDateTime.toISOString().split("T")[0];
+      var currentTime = currentDateTime.toTimeString().split(" ")[0].substring(0, 5);
+      console.log("time", time);
       var doctor_available = doctors.every(function (doctor) {
         return doctor.appointment_by;
       });
-      console.log('doctor_available', doctor_available);
+      console.log("doctor_available", doctor_available);
       if (date) {
         // Check if the date is in the past
         if (date < currentDate) {
@@ -19529,7 +19550,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
         $("#followup_header").html("Follow Up Patient");
-        $("#telemedicineFollowupFormModal").modal('show');
+        $("#telemedicineFollowupFormModal").modal("show");
         $("#followup_facility_id").val(this.facilitySelectedId);
       } else {
         var appointment = {
@@ -19542,8 +19563,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
     },
     generateAppointmentKey: function generateAppointmentKey(length) {
-      var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-      var key = '';
+      var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var key = "";
       for (var i = 0; i < length; i++) {
         var randomIndex = Math.floor(Math.random() * characters.length);
         key += characters.charAt(randomIndex);
@@ -19618,8 +19639,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }, null, 8 /* PROPS */, ["facilitySelectedId", "appointment", "user", "onFacilitySelected"]);
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_calendar, {
     facilitySelectedId: $data.facilitySelectedId,
+    appointmentSlot: $props.appointment_slot,
     onAppointedTime: $options.appointedTime
-  }, null, 8 /* PROPS */, ["facilitySelectedId", "onAppointedTime"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_time, {
+  }, null, 8 /* PROPS */, ["facilitySelectedId", "appointmentSlot", "onAppointedTime"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_time, {
     facilitySelectedId: $data.facilitySelectedId,
     appointedTimes: $data.appointedTimes
   }, null, 8 /* PROPS */, ["facilitySelectedId", "appointedTimes"])])])])], 64 /* STABLE_FRAGMENT */);
@@ -19627,10 +19649,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa":
-/*!*************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa ***!
-  \*************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -19640,10 +19662,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
+var _withScopeId = function _withScopeId(n) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-be163eaa"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
+};
 var _hoisted_1 = {
   "class": "col-md-9"
 };
-var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"jim-content\"><h3 class=\"page-header\">Appointment Calendar</h3><div class=\"calendar-container\"><section class=\"content\"><div class=\"row\"><div class=\"box box-primary\"><div class=\"box-body no-padding\"><div id=\"calendar\"></div></div></div></div></section></div></div>", 1);
+var _hoisted_2 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"jim-content\" data-v-be163eaa><h3 class=\"page-header\" data-v-be163eaa>Appointment Calendar</h3><div class=\"calendar-container\" data-v-be163eaa><section class=\"content\" data-v-be163eaa><div class=\"row\" data-v-be163eaa><div class=\"box box-primary\" data-v-be163eaa><div class=\"box-body no-padding\" data-v-be163eaa><div id=\"calendar\" data-v-be163eaa></div></div></div></div></section></div></div>", 1);
 var _hoisted_3 = [_hoisted_2];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _hoisted_3);
@@ -19720,7 +19745,7 @@ var _hoisted_18 = {
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return $props.appointment.id !== $props.user.facility_id && $options.shouldDisplayFacility ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([{
-      'highlighted': $props.appointment.id == $props.facilitySelectedId
+      highlighted: $props.appointment.id == $props.facilitySelectedId
     }, "box box-widget widget-user with-badge"])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.appointment.name), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.appointment.address), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doh_logo,
@@ -19733,7 +19758,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $options.facilitySelected($props.appointment.id);
     })
-  }, " Select")])])])])], 2 /* CLASS */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true);
+  }, " Select ")])])])])], 2 /* CLASS */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true);
 }
 
 /***/ }),
@@ -19781,13 +19806,6 @@ var _hoisted_8 = {
   "class": "box-body no-padding"
 };
 var _hoisted_9 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "box-header with-border"
-  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
-    "class": "box-title"
-  }, "Legends")], -1 /* HOISTED */);
-});
-var _hoisted_10 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event bg-green"
   }, "Available Slot"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -19796,45 +19814,45 @@ var _hoisted_10 = /*#__PURE__*/_withScopeId(function () {
       "background-color": "rgb(255 214 214)",
       "color": "#ffff"
     }
-  }, "Full Slot")], -1 /* HOISTED */);
+  }, " Full Slot ")], -1 /* HOISTED */);
 });
-var _hoisted_11 = {
+var _hoisted_10 = {
   "class": "box box-solid"
 };
-var _hoisted_12 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_11 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "box-header with-border"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "box-title timeDoctor"
-  }, "Please choose Time and Doctor"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, " Please choose Time and Doctor "), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "date-selected"
   })], -1 /* HOISTED */);
 });
-var _hoisted_13 = {
+var _hoisted_12 = {
   key: 0,
   "class": "box-body"
 };
-var _hoisted_14 = ["value", "disabled"];
-var _hoisted_15 = ["value", "onChange", "disabled"];
-var _hoisted_16 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_13 = ["value", "disabled"];
+var _hoisted_14 = ["value", "onChange", "disabled"];
+var _hoisted_15 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
   }, null, -1 /* HOISTED */);
 });
-var _hoisted_17 = {
+var _hoisted_16 = {
   key: 1,
   type: "button",
   id: "consultation",
   "class": "btn btn-danger bt-md btn-block",
   disabled: ""
 };
-var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_17 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
   }, null, -1 /* HOISTED */);
 });
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [_hoisted_9, _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [_hoisted_12, $props.appointedTimes.length > 0 && $data.showAppointmentTime ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointedTimes, function (appointment) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"box-header with-border\">\r\n                  <h4 class=\"box-title\">Legends</h4>\r\n                </div> "), _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [_hoisted_11, $props.appointedTimes.length > 0 && $data.showAppointmentTime ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointedTimes, function (appointment) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "appointment-time-list",
       key: appointment.id
@@ -19849,7 +19867,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         return $options.handleAppointmentTimeChange && $options.handleAppointmentTimeChange.apply($options, arguments);
       }),
       disabled: $options.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor, appointment.appointed_date, appointment.appointed_time)
-    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_14), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_13), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
         'text-green': !$options.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor),
         'text-red': $options.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor)
@@ -19871,7 +19889,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.handleDoctorChange(assignedDoctor.doctor.id);
         },
         disabled: assignedDoctor.appointment_by
-      }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_15), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentDoctor]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
+      }, null, 40 /* PROPS, HYDRATE_EVENTS */, _hoisted_14), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentDoctor]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
           'text-green': !assignedDoctor.appointment_by,
           'text-red': assignedDoctor.appointment_by
@@ -19886,7 +19904,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[3] || (_cache[3] = function () {
       return $options.proceedAppointment && $options.proceedAppointment.apply($options, arguments);
     })
-  }, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Appointment")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" All appointments are full")]))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])])])]);
+  }, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Appointment ")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_16, [_hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" All appointments are full ")]))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])])])]);
 }
 
 /***/ }),
@@ -19988,6 +20006,30 @@ ___CSS_LOADER_EXPORT___.push([module.id, "\r\n", ""]);
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css":
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.page-header[data-v-be163eaa] {\r\n  margin: 10px 0 0 0;\r\n  font-size: 22px;\n}\r\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css":
 /*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css ***!
@@ -20005,7 +20047,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.appointment-time-list[data-v-3c340b3a] {\r\n        /* display: flex;  */\r\n        padding: 10px;\n}\n.appointment-time-list > .doctor-list[data-v-3c340b3a] {\r\n        display: block !important;\r\n        list-style-type: none;\r\n        margin-top: 7px;\n}\n.hours_radio[data-v-3c340b3a] {\r\n        margin-bottom: 5px;\r\n        transform: scale(1.5);\r\n        cursor: pointer;\r\n        accent-color: #00a65a;\n}\n#consultation[data-v-3c340b3a] {\r\n        margin-top: 20px;\n}\n.timeDoctor[data-v-3c340b3a]{\r\n        font-size: 16px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.appointment-time-list[data-v-3c340b3a] {\r\n  /* display: flex;  */\r\n  padding: 10px;\n}\n.appointment-time-list > .doctor-list[data-v-3c340b3a] {\r\n  display: block !important;\r\n  list-style-type: none;\r\n  margin-top: 7px;\n}\n.hours_radio[data-v-3c340b3a] {\r\n  margin-bottom: 5px;\r\n  transform: scale(1.5);\r\n  cursor: pointer;\r\n  accent-color: #00a65a;\n}\n#consultation[data-v-3c340b3a] {\r\n  margin-top: 20px;\n}\n.timeDoctor[data-v-3c340b3a] {\r\n  font-size: 16px;\n}\n.page-header[data-v-3c340b3a] {\r\n  margin: 10px 0 0 0;\r\n  font-size: 22px;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -21100,6 +21142,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_style_index_0_id_be163eaa_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_style_index_0_id_be163eaa_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_style_index_0_id_be163eaa_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css":
 /*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css ***!
@@ -21499,15 +21571,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _AppointmentCalendar_vue_vue_type_template_id_be163eaa__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentCalendar.vue?vue&type=template&id=be163eaa */ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa");
+/* harmony import */ var _AppointmentCalendar_vue_vue_type_template_id_be163eaa_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true */ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true");
 /* harmony import */ var _AppointmentCalendar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentCalendar.vue?vue&type=script&lang=js */ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=script&lang=js");
-/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var _AppointmentCalendar_vue_vue_type_style_index_0_id_be163eaa_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css */ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css");
+/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
 
 ;
-const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"])(_AppointmentCalendar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentCalendar_vue_vue_type_template_id_be163eaa__WEBPACK_IMPORTED_MODULE_0__.render],['__file',"resources/assets/js/appointment/AppointmentCalendar.vue"]])
+
+
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_AppointmentCalendar_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_AppointmentCalendar_vue_vue_type_template_id_be163eaa_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-be163eaa"],['__file',"resources/assets/js/appointment/AppointmentCalendar.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -21671,18 +21746,18 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa":
-/*!***********************************************************************************************!*\
-  !*** ./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa ***!
-  \***********************************************************************************************/
+/***/ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true":
+/*!***********************************************************************************************************!*\
+  !*** ./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true ***!
+  \***********************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_template_id_be163eaa__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_template_id_be163eaa_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render)
 /* harmony export */ });
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_template_id_be163eaa__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AppointmentCalendar.vue?vue&type=template&id=be163eaa */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa");
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_template_id_be163eaa_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=template&id=be163eaa&scoped=true");
 
 
 /***/ }),
@@ -21728,6 +21803,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentApp_vue_vue_type_style_index_0_id_215abd78_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AppointmentApp.vue?vue&type=style&index=0&id=215abd78&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentApp.vue?vue&type=style&index=0&id=215abd78&lang=css");
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css":
+/*!*************************************************************************************************************************!*\
+  !*** ./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css ***!
+  \*************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentCalendar_vue_vue_type_style_index_0_id_be163eaa_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentCalendar.vue?vue&type=style&index=0&id=be163eaa&scoped=true&lang=css");
 
 
 /***/ }),
