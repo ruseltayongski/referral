@@ -2,14 +2,14 @@
 
 <?php
 $user = Session::get('auth');
-$facilities = \App\Facility::select('id','name')
-    ->where('id','!=',$user->facility_id)
-    ->where('status',1)
-    ->where('referral_used','yes')
-    ->orderBy('name','asc')->get();
+$facilities = \App\Facility::select('id', 'name')
+    ->where('id', '!=', $user->facility_id)
+    ->where('status', 1)
+    ->where('referral_used', 'yes')
+    ->orderBy('name', 'asc')->get();
 $myfacility = \App\Facility::find($user->facility_id);
 $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
-$inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
+$inventory = \App\Inventory::where("facility_id", $myfacility->id)->get();
 $reason_for_referral = \App\ReasonForReferral::get();
 ?>
 
@@ -147,8 +147,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 
     .referral-radio-btn {
-        height:18px;
-        width:18px;
+        height: 18px;
+        width: 18px;
         vertical-align: middle;
     }
 
@@ -164,14 +164,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
         white-space: nowrap;
     }
 
-    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}
+    #glasgow_table_1,
+    tr td:nth-child(1) {
+        width: 35%;
+    }
+
+    #glasgow_table_2 tr td:nth-child(2) {
+        width: 35%;
+    }
 
     @media only screen and (max-width: 720px) {
         .web-view {
             display: none;
             visibility: hidden;
         }
+
         .mobile-view {
             display: block;
             visibility: visible;
@@ -179,8 +186,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 
     #normalFormModal .modal-dialog {
-    max-width: 60%; /* Adjusts modal to 90% of the screen width */
-    width: auto; /* Allows the modal to shrink or grow depending on content */
+        max-width: 60%;
+        /* Adjusts modal to 90% of the screen width */
+        width: auto;
+        /* Allows the modal to shrink or grow depending on content */
     }
 </style>
 
@@ -193,7 +202,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                     <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
-                        <input type="hidden" class="pt_age"/>
+                        <input type="hidden" class="pt_age" />
                         <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
                         <input type="hidden" name="code" value="" />
                         <input type="hidden" name="source" value="{{ $source }}" />
@@ -206,18 +215,18 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                &nbsp;<span >{{ $facility_address['address'] }}</span>
+                                &nbsp;<span>{{ $facility_address['address'] }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Name of referring MD/HCW</small><br>
-                                &nbsp;<span >Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
+                                &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Date/Time Referred (ReCo)</small><br>
-                                <span >{{ date('l F d, Y h:i A') }}</span>
+                                <span>{{ date('l F d, Y h:i A') }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Name of Patient</small><br>
@@ -235,7 +244,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <select name="referred_facility" class="select2 select_facility" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -337,6 +346,23 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div>
 
+                        <?php
+                        $all_data = $all_data ?? (object) [];
+
+                        function isChecked($all_data, $category, $symptom)
+                        {
+                            if (!isset($all_data->$category) || !is_string($all_data->$category)) {
+                                return '';
+                            }
+                            $safeCategory = htmlspecialchars($all_data->$category, ENT_QUOTES, 'UTF-8');
+                            if (stripos($safeCategory, $symptom) !== false) {
+                                return 'checked';
+                            }
+                            return '';
+                        }
+
+                        ?>
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -346,323 +372,302 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </button><br><br>
                                 </div>
                                 <?php
-                                
-                                $commorditiesString = $data->commordities;
-                                $conditions = explode(',', $commorditiesString);
 
-                                $conditionsArray = [];
-
-                                foreach ($conditions as $condition) {
-                                    
-                                    $parts = explode(' Year => ', $condition);
-                                    if (count($parts) == 2) {
-                                        
-                                        $conditionsArray[trim($parts[0])] = trim($parts[1]);
-                                    } else {
-                                        
-                                        $conditionsArray[trim($parts[0])] = trim($condition);
-                                    }
-                                }
-
-                                
-                                $conditionsArray['Cancer'] = $conditionsArray['Cancer'] ?? '';
-                                $conditionsArray['Others'] = $conditionsArray['Others'] ?? '';
+                                $commordities_data_fetch = [
+                                    'commordities_hyper_year' => $data->commordities_hyper_year,
+                                    'commordities_diabetes_year' => $data->commordities_diabetes_year,
+                                    'commordities_asthma_year' => $data->commordities_asthma_year,
+                                    'commordities_cancer' => $data->commordities_cancer,
+                                    'commordities_others' => $data->commordities_others
+                                ];
                                 ?>
-                                
+
                                 <div class="collapse" id="collapse_medical_history" style="width: 100%;">
                                     <b>COMORBIDITIES</b>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_all_cbox" name="comor_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Select All">
+                                                <input class="form-check-input" id="comor_all_cbox" name="comor_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Select All'); ?>>
                                                 <span>Select All</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_none_cbox" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="None">
+                                                <input class="form-check-input" id="comor_none_cbox" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="None" <?= isChecked($data, 'commordities', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_hyper_cbox" value="No">
-                                                <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                @if (array_key_exists('Hypertension', $conditionsArray))
-                                                    checked
-                                                @endif
-                                                > Hypertension
+                                                <input type="hidden" name="comor_hyper_cbox" value="No">
+                                                <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Hypertension'); ?>>
+                                                Hypertension
                                                 <span id="comor_hyper"> since
-                                                <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
-                                                @foreach (range(date('Y'), 1950) as $year)
-                                                    <option value="{{ $year }}" @if ($conditionsArray['Hypertension'] == $year) selected @endif>{{ $year }}</option>
-                                                @endforeach
-                                                 </select>
+                                                    <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
+                                                        <?php
+                                                        foreach (range(date('Y'), 1950) as $year)
+                                                            echo "<option " . ($year == htmlspecialchars($commordities_data_fetch['commordities_hyper_year']) ? 'selected' : '') . ">$year</option>";
+                                                        ?>
+                                                    </select>
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_diab_cbox" value="No">
-                                            <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                @if (array_key_exists('Diabetes', $conditionsArray) && $conditionsArray['Diabetes'] !== 'NoYear')
-                                                    checked
-                                                @endif
-                                            >
-                                            Diabetes Mellitus
-                                            <span id="comor_diab"> since
-                                                <select class="form-control select" name="diab_year" style="font-size: 10pt;">
-                                                    @foreach (range(date('Y'), 1950) as $year)
-                                                        <option value="{{ $year }}" @if (isset($conditionsArray['Diabetes']) && $conditionsArray['Diabetes'] == $year) selected @endif>{{ $year }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </span>
+                                                <input type="hidden" name="comor_diab_cbox" value="No">
+                                                <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Diabetes'); ?>>
+                                                Diabetes Mellitus
+                                                <span id="comor_diab"> since
+                                                    <select class="form-control select" name="diab_year" style="font-size: 10pt;">
+                                                        <?php
+                                                        foreach (range(date('Y'), 1950) as $year)
+                                                            echo "<option " . ($year == htmlspecialchars($commordities_data_fetch['commordities_diabetes_year']) ? 'selected' : '') . ">$year</option>";
+                                                        ?>
+                                                    </select>
+                                                </span>
                                             </div>
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_asthma_cbox" value="No">
-                                                <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                @if (array_key_exists('Asthma', $conditionsArray) && $conditionsArray['Asthma'] !== 'NoYear')
-                                                    checked
-                                                @endif
-                                                > Bronchial Asthma
+                                                <input type="hidden" name="comor_asthma_cbox" value="No">
+                                                <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Asthma'); ?>>
+                                                Bronchial Asthma
                                                 <span id="comor_asthma"> since
-                                                <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
-                                                    @foreach (range(date('Y'), 1950) as $year)
-                                                        <option value="{{ $year }}" @if (isset($conditionsArray['Asthma']) && $conditionsArray['Asthma'] == $year) selected @endif>{{ $year }}</option>
-                                                    @endforeach
-                                                </select>
+                                                    <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
+                                                        <?php
+                                                        foreach (range(date('Y'), 1950) as $year)
+                                                            echo "<option " . ($year == htmlspecialchars($commordities_data_fetch['commordities_asthma_year']) ? 'selected' : '') . ">$year</option>";
+                                                        ?>
+                                                    </select>
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_copd_cbox" value="No">
-                                                <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                @if (array_key_exists('COPD', $conditionsArray))
-                                                    checked
-                                                @endif
-                                                >
+                                                <input type="hidden" name="comor_copd_cbox" value="No">
+                                                <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'COPD'); ?>>
                                                 <span> COPD</span>
                                             </div>
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_dyslip_cbox" value="No">
-                                                <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                @if (array_key_exists('Thyroid Disease', $conditionsArray))
-                                                    checked
-                                                @endif
-                                                >
+                                                <input type="hidden" name="comor_dyslip_cbox" value="No">
+                                                <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Dyslipidemia'); ?>>
                                                 <span> Dyslipidemia</span>
                                             </div>
                                             <div class="col-md-4">
-                                            <input type="hidden" name="comor_thyroid_cbox" value="No">
-                                                <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                @if (array_key_exists('Thyroid Disease', $conditionsArray))
-                                                    checked
-                                                @endif
-                                                >
+                                                <input type="hidden" name="comor_thyroid_cbox" value="No">
+                                                <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Thyroid Disease'); ?>>
                                                 <span> Thyroid Disease</span>
                                             </div>
                                         </div>
                                         <div class="row">
-                                        
+
                                             <div class="col-md-4">
                                                 <input type="hidden" name="comor_cancer_cbox" value="No">
-                                                <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                    <?php if (array_key_exists('Cancer', $conditionsArray) && !empty($conditionsArray['Cancer'])) echo 'checked'; ?>
-                                                >
+                                                <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Cancer'); ?>>
                                                 <span>Cancer <i>(specify)</i>:</span>
-                                                <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($conditionsArray['Cancer']); ?></textarea>
+                                                <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($commordities_data_fetch['commordities_cancer']); ?></textarea>
                                             </div>
-                                        
+
                                             <div class="col-md-4">
                                                 <input type="hidden" name="comor_others_cbox" value="No">
-                                                <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                    <?php if (array_key_exists('Others', $conditionsArray) && !empty($conditionsArray['Others'])) echo 'checked'; ?>
-                                                >
+                                                <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Others'); ?>>
                                                 <span>Other(s):</span>
-                                                <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($conditionsArray['Others']); ?></textarea>
+                                                <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($commordities_data_fetch['commordities_others']); ?></textarea>
                                             </div>
                                         </div>
 
 
                                     </div><br>
-                                    
+
                                     <?php
-                                        
-                                        $allergiesString = $data->allergies;
 
-                                        
-                                        $allergiesArray = [
-                                            'Food Allergy' => '',
-                                            'Drug Allergy' => '',
-                                            'Other Allergy' => ''
-                                        ];
+                                    $allergiesString = $data->allergies;
 
-                                        
-                                        $allergies = explode(',', $allergiesString);
 
-                                        
-                                        foreach ($allergies as $key => $allergy) {
-                                            $allergy = trim($allergy);
+                                    $allergiesArray = [
+                                        'Food Allergy' => '',
+                                        'Drug Allergy' => '',
+                                        'Other Allergy' => ''
+                                    ];
 
-                                            
-                                            if (strpos($allergy, 'Cause =>') !== false) {
-                                                $parts = explode('Cause =>', $allergy);
-                                                $type = trim($allergies[$key - 1]); 
-                                                $cause = trim($parts[1]);
 
-                                                if (isset($allergiesArray[$type])) {
-                                                    $allergiesArray[$type] = $cause;
-                                                }
+                                    $allergies = explode(',', $allergiesString);
+
+
+                                    foreach ($allergies as $key => $allergy) {
+                                        $allergy = trim($allergy);
+
+
+                                        if (strpos($allergy, 'Cause =>') !== false) {
+                                            $parts = explode('Cause =>', $allergy);
+                                            $type = trim($allergies[$key - 1]);
+                                            $cause = trim($parts[1]);
+
+                                            if (isset($allergiesArray[$type])) {
+                                                $allergiesArray[$type] = $cause;
                                             }
                                         }
-                                        ?>
+                                    }
+                                    ?>
 
 
                                     <b>ALLERGIES</b><i> (Specify)</i><br>
                                     <div class="container-referral">
                                         <div class="row">
-                                        <div class="col-md-4">
-                                            <input class="form-check-input" id="allergy_all_cbox" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="select all">
-                                            <span> Select All</span>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input class="form-check-input" id="allergy_none_cbox" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="none">
-                                            <span> None</span>
-                                        </div>
+                                            <div class="col-md-4">
+                                                <input class="form-check-input" id="allergy_all_cbox" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="select all">
+                                                <span> Select All</span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input class="form-check-input" id="allergy_none_cbox" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="none">
+                                                <span> None</span>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                        <div class="col-md-4">
-                                            <input type="hidden" name="allergy_food_cbox" value="No">
-                                            <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($allergiesArray['Food Allergy'])) echo 'checked'; ?>>
-                                            <span> Food(s): <i>(ex. crustaceans, eggs)</i></span>
-                                            <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Food Allergy']); ?></textarea>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="hidden" name="allergy_drug_cbox" value="No">
-                                            <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($allergiesArray['Drug Allergy'])) echo 'checked'; ?>>
-                                            <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
-                                            <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Drug Allergy']); ?></textarea>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <input type="hidden" name="allergy_other_cbox" value="No">
-                                            <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($allergiesArray['Other Allergy'])) echo 'checked'; ?>>
-                                            <span> Other(s):</span>
-                                            <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Other Allergy']); ?></textarea>
-                                        </div>
+                                            <div class="col-md-4">
+                                                <input type="hidden" name="allergy_food_cbox" value="No">
+                                                <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($allergiesArray['Food Allergy'])) echo 'checked'; ?>>
+                                                <span> Food(s): <i>(ex. crustaceans, eggs)</i></span>
+                                                <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Food Allergy']); ?></textarea>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="hidden" name="allergy_drug_cbox" value="No">
+                                                <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($allergiesArray['Drug Allergy'])) echo 'checked'; ?>>
+                                                <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
+                                                <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Drug Allergy']); ?></textarea>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <input type="hidden" name="allergy_other_cbox" value="No">
+                                                <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($allergiesArray['Other Allergy'])) echo 'checked'; ?>>
+                                                <span> Other(s):</span>
+                                                <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Other Allergy']); ?></textarea>
+                                            </div>
                                         </div>
                                     </div><br>
-                                    
+
                                     <?php
-                                        
-                                        $heredoString = $data->heredofamilial_diseases;
 
-                                        
-                                        $heredoArray = [
-                                            'Hypertension' => '',
-                                            'Diabetes' => '',
-                                            'Asthma' => '',
-                                            'Cancer' => '',
-                                            'Kidney Disease' => '',
-                                            'Thyroid Disease' => '',
-                                            'Others' => ''
-                                        ];
+                                    $heredoString = $data->heredofamilial_diseases;
 
-                                        
-                                        $diseases = explode(',', $heredoString);
+                                    $heredoArray = [
+                                        'Hypertension' => '',
+                                        'Diabetes' => '',
+                                        'Asthma' => '',
+                                        'Cancer' => '',
+                                        'Kidney Disease' => '',
+                                        'Thyroid Disease' => '',
+                                        'Others' => ''
+                                    ];
 
-                                        
-                                        foreach ($diseases as $disease) {
-                                            // Look for the "side =>" pattern and get the side
-                                            if (strpos($disease, 'side =>') !== false) {
-                                                $parts = explode('side =>', $disease);
-                                                $type = trim($parts[0]); // Disease type
-                                                $side = trim($parts[1]); // Side of the family
 
-                                                if (isset($heredoArray[$type])) {
-                                                    $heredoArray[$type] = $side;
-                                                }
+                                    $diseases = explode(',', $heredoString);
+
+
+                                    foreach ($diseases as $disease) {
+                                        // Look for the "side =>" pattern and get the side
+                                        if (strpos($disease, 'side =>') !== false) {
+                                            $parts = explode('side =>', $disease);
+                                            $type = trim($parts[0]); // Disease type
+                                            $side = trim($parts[1]); // Side of the family
+
+                                            if (isset($heredoArray[$type])) {
+                                                $heredoArray[$type] = $side;
                                             }
                                         }
-                                        ?>
+                                    }
+                                    ?>
+
 
                                     <script>
-                                  function toggleInputVisibility(inputId) {
-                                        var checkbox = document.getElementById(inputId + '_cbox');
-                                        var inputField = document.getElementById(inputId);
+                                        function toggleInputVisibility(inputId) {
+                                            var checkbox = document.getElementById(inputId + '_cbox');
+                                            var inputField = document.getElementById(inputId);
 
-                                        if (checkbox.checked) {
-                                            inputField.style.display = 'inline-block';
-                                        } else {
-                                            inputField.style.display = 'none';
-                                            inputField.value = '';  // Optionally clear the input if unchecked
+                                            if (checkbox.checked) {
+                                                inputField.style.display = 'inline-block';
+                                            } else {
+                                                inputField.style.display = 'none';
+                                                inputField.value = ''; // Optionally clear the input if unchecked
+                                            }
                                         }
-                                    }
                                     </script>
 
                                     <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
                                     <div class="container-referral">
                                         <div class="row">
-                                        <div class="col-md-3">
-                                            <input class="form-check-input" id="heredo_all_cbox" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="select all">
-                                            <span>Select All</span>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input class="form-check-input" id="heredo_none_cbox" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="none">
-                                            <span>None</span>
-                                        </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="heredo_all_cbox" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="select all">
+                                                <span>Select All</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="heredo_none_cbox" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="none">
+                                                <span>None</span>
+                                            </div>
                                         </div>
                                         <div class="row">
-                                        <div class="col-md-3">
-                                            <input type="hidden" name="heredo_hyper_cbox" value="No">
-                                            <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($heredoArray['Hypertension'])) echo 'checked'; ?>>
-                                            <span>Hypertension:</span>
-                                            <input type="text" id="heredo_hyper" name="heredo_hypertension_side" value="<?php echo htmlspecialchars($heredoArray['Hypertension']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="hidden" name="heredo_diab_cbox" value="No">
-                                            <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($heredoArray['Diabetes'])) echo 'checked'; ?>>
-                                            <span>Diabetes Mellitus:</span>
-                                            <input type="text" id="heredo_diab" name="heredo_diabetes_side" value="<?php echo htmlspecialchars($heredoArray['Diabetes']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="hidden" name="heredo_asthma_cbox" value="No">
-                                            <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($heredoArray['Asthma'])) echo 'checked'; ?>>
-                                            <span>Bronchial Asthma:</span>
-                                            <input type="text" id="heredo_asthma" name="heredo_asthma_side" value="<?php echo htmlspecialchars($heredoArray['Asthma']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="hidden" name="heredo_cancer_cbox" value="No">
-                                            <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($heredoArray['Cancer'])) echo 'checked'; ?>>
-                                            <span>Cancer:</span>
-                                            <input type="text" id="heredo_cancer" name="heredo_cancer_side" value="<?php echo htmlspecialchars($heredoArray['Cancer']); ?>">
-                                        </div>
+                                            <div class="col-md-3">
+                                                <input type="hidden" name="heredo_hyper_cbox" value="No">
+                                                <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Hypertension'])) echo 'checked'; ?>>
+                                                <span>Hypertension:</span>
+                                                <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
+                                                    <option value="Maternal" <?php echo ($heredoArray['Hypertension'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($heredoArray['Hypertension'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($heredoArray['Hypertension'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_hyper" name="heredo_hypertension_side" value="<?php echo htmlspecialchars($heredoArray['Hypertension']); ?>"> -->
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="hidden" name="heredo_diab_cbox" value="No">
+                                                <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Diabetes'])) echo 'checked'; ?>>
+                                                <span>Diabetes Mellitus:</span>
+                                                <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
+                                                    <option value="Maternal" <?php echo ($heredoArray['Diabetes'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($heredoArray['Diabetes'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($heredoArray['Diabetes'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_diab" name="heredo_diabetes_side" value="<?php echo htmlspecialchars($heredoArray['Diabetes']); ?>"> -->
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="hidden" name="heredo_asthma_cbox" value="No">
+                                                <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Asthma'])) echo 'checked'; ?>>
+                                                <span>Bronchial Asthma:</span>
+                                                <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
+                                                    <option value="Maternal" <?php echo ($heredoArray['Asthma'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($heredoArray['Asthma'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($heredoArray['Asthma'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_asthma" name="heredo_asthma_side" value="<?php echo htmlspecialchars($heredoArray['Asthma']); ?>"> -->
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="hidden" name="heredo_cancer_cbox" value="No">
+                                                <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Cancer'])) echo 'checked'; ?>>
+                                                <span>Cancer:</span>
+                                                <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
+                                                    <option value="Maternal" <?php echo ($heredoArray['Cancer'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($heredoArray['Cancer'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($heredoArray['Cancer'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_cancer" name="heredo_cancer_side" value="<?php echo htmlspecialchars($heredoArray['Cancer']); ?>"> -->
+                                            </div>
                                         </div><br>
                                         <div class="row">
-                                        <div class="col-md-3">
-                                            <input type="hidden" name="heredo_kidney_cbox" value="No">
-                                            <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($heredoArray['Kidney Disease'])) echo 'checked'; ?>>
-                                            <span>Kidney:</span>
-                                            <input type="text" id="heredo_kidney" name="heredo_kidney_side" value="<?php echo htmlspecialchars($heredoArray['Kidney Disease']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="hidden" name="heredo_thyroid_cbox" value="No">
-                                            <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($heredoArray['Thyroid Disease'])) echo 'checked'; ?>>
-                                            <span>Thyroid Disease:</span>
-                                            <input type="text" id="heredo_thyroid" name="heredo_thyroid_side" value="<?php echo htmlspecialchars($heredoArray['Thyroid Disease']); ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <input type="hidden" name="heredo_others_cbox" value="No">
-                                            <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"
-                                                <?php if(!empty($heredoArray['Others'])) echo 'checked'; ?>>
-                                            <span>Other(s):</span>
-                                            <input type="text" id="heredo_others" name="heredo_others_side" value="<?php echo htmlspecialchars($heredoArray['Others']); ?>">
-                                        </div>
+                                            <div class="col-md-3">
+                                                <input type="hidden" name="heredo_kidney_cbox" value="No">
+                                                <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Kidney Disease'])) echo 'checked'; ?>>
+                                                <span>Kidney:</span>
+                                                <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
+                                                    <option value="Maternal" <?php echo ($heredoArray['Kidney Disease'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($heredoArray['Kidney Disease'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($heredoArray['Kidney Disease'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                </select>
+                                                <!-- <input type="text" id="heredo_kidney" name="heredo_kidney_side" value="<?php echo htmlspecialchars($heredoArray['Kidney Disease']); ?>"> -->
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="hidden" name="heredo_thyroid_cbox" value="No">
+                                                <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Thyroid Disease'])) echo 'checked'; ?>>
+                                                <span>Thyroid Disease:</span>
+                                                <input type="text" id="heredo_thyroid" name="heredo_thyroid_side" value="<?php echo htmlspecialchars($heredoArray['Thyroid Disease']); ?>">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="hidden" name="heredo_others_cbox" value="No">
+                                                <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Others'])) echo 'checked'; ?>>
+                                                <span>Other(s):</span>
+                                                <input type="text" id="heredo_others" name="heredo_others_side" value="<?php echo htmlspecialchars($heredoArray['Others']); ?>">
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -688,17 +693,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <span>A <input type="number" name="prenatal_age" style="width: 8%" min="0" value="{{$data->prenatal_a}}">
-                                                     year old G <input type="number" name="prenatal_g" style="width: 8%" min="0" value="{{$data->prenatal_g}}"> P <input type="number" style="width: 8%" min="0" name="prenatal_p" value="{{$data->prenatal_p}}"> mother
-                                                     <?php
-                                                       
-                                                        $prenatalData = $data->prenatal_radiowith_or_without;
-
-                                                        // Determine which radio button should be checked
-                                                        $withChecked = ($prenatalData === 'with') ? 'checked' : '';
-                                                        $withoutChecked = ($prenatalData === 'without') ? 'checked' : '';
-                                                        ?>
-                                                     <input class="referral-radio-btn" name="prenatal_radio" type="radio" id="prenatal_radiowith" value="with" <?php echo $withChecked; ?>> with
-                                                     <input class="referral-radio-btn" name="prenatal_radio" type="radio" id="prenatal_radiowout" value="without" <?php echo $withoutChecked; ?>> without
+                                                    year old G <input type="number" name="prenatal_g" style="width: 8%" min="0" value="{{$data->prenatal_g}}"> P <input type="number" style="width: 8%" min="0" name="prenatal_p" value="{{$data->prenatal_p}}"> mother
+                                                    <input class="referral-radio-btn" name="prenatal_radio" type="radio" id="prenatal_radiowith" value="with" <?= isChecked($data, 'prenatal_radiowith_or_without', 'with'); ?>> with
+                                                    <input class="referral-radio-btn" name="prenatal_radio" type="radio" id="prenatal_radiowout" value="without" <?= isChecked($data, 'prenatal_radiowith_or_without', 'without'); ?>> without
                                                     MATERNAL ILLNESS, if Yes (specify)
                                                     <textarea class="form-control" id="prenatal_mat_illness" name="prenatal_maternal_illness" style="resize: none;width: 50%;" rows="2">{{$data->prenatal_with_maternal_illness}}</textarea>
                                                 </span>
@@ -711,12 +708,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <span>Born at
-                                                <select class="form-control-select" name="natal_bornat">
-                                                    <option value="home" <?php echo ($data->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
-                                                    <option value="clinic" <?php echo ($data->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
-                                                    <option value="hospital" <?php echo ($data->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
-                                                </select>
-                                                <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where" value="{{ $data->natal_born_address }}">
+                                                    <select class="form-control-select" name="natal_bornat">
+                                                        <option value="home" <?php echo ($data->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
+                                                        <option value="clinic" <?php echo ($data->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
+                                                        <option value="hospital" <?php echo ($data->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
+                                                    </select>
+                                                    <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where" value="{{ $data->natal_born_address }}">
                                                     by
                                                     <select class="form-control-select" name="natal_by">
                                                         <option value="md" <?php echo ($data->natal_by == 'md') ? 'selected' : ''; ?>>MD</option>
@@ -736,11 +733,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <span>
-                                                <select class="form-control-select" name="natal_term">
-                                                    <option value="preterm" <?php echo ($data->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
-                                                    <option value="fullterm" <?php echo ($data->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
-                                                    <option value="postterm" <?php echo ($data->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
-                                                </select>
+                                                    <select class="form-control-select" name="natal_term">
+                                                        <option value="preterm" <?php echo ($data->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
+                                                        <option value="fullterm" <?php echo ($data->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
+                                                        <option value="postterm" <?php echo ($data->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
+                                                    </select>
                                                     , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01" value="{{$data->natal_weight}}"> kg,
                                                     BR <input type="text" name="natal_br" style="width: 20%" value="{{$data->natal_br}}">, with Good Cry
                                                     <select class="form-control-select" name="natal_withGoodCry">
@@ -754,48 +751,23 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                     </div><br>
                                     <?php
-                                        // Sample data from database
-                                        $postnatal_data = [
-                                            'postnatal_bfeed' => $data->post_natal_bfeed,
-                                            'postnatal_bfeed_xmos' => $data->post_natal_bfeedx_month,
-                                            'postnatal_ffeed' => $data->post_natal_formula_feed,
-                                            'postnatal_ffeed_specify' => $data->post_natal_ffeed_specify,
-                                            'postnatal_started_semisolidfood_at' => $data->post_natal_started_semifoods,
-                                            'immu_bcg_cbox' => $data->post_natal_bcg,
-                                            'immu_dpt_cbox' => $data->post_natal_dpt_opv_x,
-                                            'immu_dpt_doses' => $data->post_dpt_doses,
-                                            'immu_hepb_cbox' => $data->post_natal_hepB_cbox,
-                                            'immu_hepb_doses' => $data->post_natal_hepB_x_doses,
-                                            'immu_measles_cbox' => $data->post_natal_immu_measles_cbox,
-                                            'immu_mmr_cbox' => $data->post_natal_mmr_cbox,
-                                            'immu_others_cbox' => $data->post_natal_others_cbox,
-                                            'immu_others' => $data->post_natal_others,
-                                            'prenatal_milestone' => $data->post_natal_development_milestones,
-                                        ];
+                                    $postnatal_data = [
+                                        'postnatal_bfeed_xmos' => $data->post_natal_bfeedx_month,
+                                        'postnatal_ffeed_specify' => $data->post_natal_ffeed_specify,
+                                        'postnatal_started_semisolidfood_at' => $data->post_natal_started_semifoods,
+                                        'immu_dpt_doses' => $data->post_dpt_doses,
+                                        'immu_hepb_doses' => $data->post_natal_hepB_x_doses,
+                                        'immu_others' => $data->post_natal_others,
 
-                                        // Feeding History
-                                        $postnatal_bfeed_checked = ($postnatal_data['postnatal_bfeed'] === 'Yes') ? 'checked' : '';
-                                        $postnatal_bfeed_xmos_value = htmlspecialchars($postnatal_data['postnatal_bfeed_xmos']);
-                                        $postnatal_ffeed_checked = ($postnatal_data['postnatal_ffeed'] === 'Yes') ? 'checked' : '';
-                                        $postnatal_ffeed_specify_value = htmlspecialchars($postnatal_data['postnatal_ffeed_specify']);
-                                        $postnatal_started_semisolidfood_at_value = htmlspecialchars($postnatal_data['postnatal_started_semisolidfood_at']);
+                                    ];
 
-                                        // Immunization History
-                                        $immu_bcg_checked = ($postnatal_data['immu_bcg_cbox'] === 'Yes') ? 'checked' : '';
-                                        $immu_dpt_checked = ($postnatal_data['immu_dpt_cbox'] === 'Yes') ? 'checked' : '';
-                                        $immu_dpt_doses_value = htmlspecialchars($postnatal_data['immu_dpt_doses']);
-                                        $immu_hepb_checked = ($postnatal_data['immu_hepb_cbox'] === 'Yes') ? 'checked' : '';
-                                        $immu_hepb_doses_value = htmlspecialchars($postnatal_data['immu_hepb_doses']);
-                                        $immu_measles_checked = ($postnatal_data['immu_measles_cbox'] === 'Yes') ? 'checked' : '';
-                                        $immu_mmr_checked = ($postnatal_data['immu_mmr_cbox'] === 'Yes') ? 'checked' : '';
-                                        $immu_others_checked = ($postnatal_data['immu_others_cbox'] === 'Yes') ? 'checked' : '';
-                                        $immu_others_value = htmlspecialchars($postnatal_data['immu_others']);
-
-                                        // Developmental Milestones
-                                        $dev_miles_under_checked = ($postnatal_data['prenatal_milestone'] === 'Under developed') ? 'checked' : '';
-                                        $dev_miles_par_checked = ($postnatal_data['prenatal_milestone'] === 'At par with age') ? 'checked' : '';
+                                    $postnatal_bfeed_xmos_value = htmlspecialchars($postnatal_data['postnatal_bfeed_xmos']);
+                                    $postnatal_ffeed_specify_value = htmlspecialchars($postnatal_data['postnatal_ffeed_specify']);
+                                    $postnatal_started_semisolidfood_at_value = htmlspecialchars($postnatal_data['postnatal_started_semisolidfood_at']);
+                                    $immu_dpt_doses_value = htmlspecialchars($postnatal_data['immu_dpt_doses']);
+                                    $immu_hepb_doses_value = htmlspecialchars($postnatal_data['immu_hepb_doses']);
+                                    $immu_others_value = htmlspecialchars($postnatal_data['immu_others']);
                                     ?>
-
 
                                     <b>POST NATAL</b>
                                     <div class="container-referral">
@@ -803,42 +775,42 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="col-md-12">
                                                 <i>Feeding History</i><br>&emsp;
                                                 <span>
-                                                <input type="hidden" name="postnatal_bfeed" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?php echo $postnatal_bfeed_checked; ?>> Breastfed
+                                                    <input type="hidden" name="postnatal_bfeed" value="No">
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?= isChecked($data, 'post_natal_bfeed', 'Yes'); ?>> Breastfed
                                                     <span id="breastfed">
-                                                    x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
+                                                        x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
                                                     </span>
                                                     <input type="hidden" name="postnatal_ffeed" value="No">
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?php echo $postnatal_ffeed_checked; ?>> Formula Fed,
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?= isChecked($data, 'post_natal_formula_feed', 'Yes'); ?>> Formula Fed,
                                                     <span id="formula_fed">
                                                         (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify" value="<?php echo $postnatal_ffeed_specify_value; ?>">
                                                     </span>
                                                 </span>
                                                 started semi solid foods at
-                                                  <input type="number" name="postnatal_started_semisolidfood_at" style="width: 10%" min="0" value="<?php echo $postnatal_started_semisolidfood_at_value; ?>"> mos
+                                                <input type="number" name="postnatal_started_semisolidfood_at" style="width: 10%" min="0" value="<?php echo $postnatal_started_semisolidfood_at_value; ?>"> mos
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <i>Immunization History</i><br>&emsp;
                                                 <input type="hidden" name="immu_bcg_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?php echo $immu_bcg_checked; ?>> BCG
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?= isChecked($data, 'post_natal_bcg', 'Yes'); ?>> BCG
                                                 <input type="hidden" name="immu_dpt_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?php echo $immu_dpt_checked; ?>> DPT/OPV
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?= isChecked($data, 'post_natal_dpt_opv_x', 'Yes'); ?>> DPT/OPV
                                                 <span id="immu_dpt">
-                                                     x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0" value="<?php echo $immu_dpt_doses_value; ?>"> doses
+                                                    x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0" value="<?php echo $immu_dpt_doses_value; ?>"> doses
                                                 </span>
                                                 <input type="hidden" name="immu_hepb_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?php echo $immu_hepb_checked; ?>> Hep B
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?= isChecked($data, 'post_natal_hepB_cbox', 'Yes'); ?>> Hep B
                                                 <span id="immu_hepb">
-                                                     x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0" value="<?php echo $immu_hepb_doses_value; ?>"> doses
+                                                    x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0" value="<?php echo $immu_hepb_doses_value; ?>"> doses
                                                 </span>
                                                 <input type="hidden" name="immu_measles_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?php echo $immu_measles_checked; ?>> Measles
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?= isChecked($data, 'post_natal_immu_measles_cbox', 'Yes'); ?>> Measles
                                                 <input type="hidden" name="immu_mmr_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?php echo $immu_mmr_checked; ?>> MMR
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?= isChecked($data, 'post_natal_mmr_cbox', 'Yes'); ?>> MMR
                                                 <input type="hidden" name="immu_others_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?php echo $immu_others_checked; ?>> Other(s)
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?= isChecked($data, 'post_natal_others_cbox', 'Yes'); ?>> Other(s)
                                                 <span id="immu_others">
                                                     <input type="text" name="immu_others" style="width: 20%;" value="<?php echo $immu_others_value; ?>">
                                                 </span>
@@ -847,9 +819,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <i>Developmental Milestones</i><br>&emsp;
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under" value="Under developed" <?php echo $dev_miles_under_checked; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under" value="Under developed" <?= isChecked($data, 'post_natal_development_milestones', 'Under developed'); ?>>
                                                 <label for="dev_miles_under">Under developed</label>
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par" value="At par with age" <?php echo $dev_miles_par_checked; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par" value="At par with age" <?= isChecked($data, 'post_natal_development_milestones', 'At par with age'); ?>>
                                                 <label for="dev_miles_par">At par with age</label>
                                             </div>
                                         </div>
@@ -858,219 +830,198 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div>
                         <?php
-                            
-                            $menarche = $data->menarche;
-                            $gynecological_data = [
-                                'menarche' => (int)$menarche,
-                                'menopause' => $data->menopause,
-                                'menopausal_age' => $data->menopausal_age,
-                                'menstrual_cycle' => $data->menstrual_cycle,
-                                'mens_irreg_xmos' => $data->mens_irreg_xmos,
-                                'menstrual_cycle_dysmenorrhea' => $data->menstrual_cycle_dysmenorrhea,
-                                'menstrual_cycle_duration' => $data->menstrual_cycle_duration,
-                                'menstrual_cycle_padsperday' => $data->menstrual_cycle_padsperday,
-                                'menstrual_cycle_medication' => $data->menstrual_cycle_medication,
-                                'contraceptive_history' => $data->contraceptive_history,
-                                'parity_g' => $data->parity_g,
-                                'parity_p' => $data->parity_p,
-                                'parity_ft' => $data->parity_ft,
-                                'parity_pt' => $data->parity_pt,
-                                'parity_a' => $data->parity_a,
-                                'parity_l' => $data->parity_l,
-                                'parity_lnmp' => $data->parity_lnmp,
-                                'parity_edc' => $data->parity_edc,
-                                'aog_lnmp' => $data->aog_lnmp,
-                                'aog_eutz' => $data->aog_eutz,
-                            ];
-                            
-                            
-                            
-                            $menarche_value = htmlspecialchars($gynecological_data['menarche']);
-                            $menopause_checked_yes = ($gynecological_data['menopause'] === 'Yes') ? 'checked' : '';
-                            $menopause_checked_no = ($gynecological_data['menopause'] === 'No') ? 'checked' : '';
-                            $menopausal_age_value = htmlspecialchars($gynecological_data['menopausal_age']);
-                            $menstrual_cycle_reg_checked = ($gynecological_data['menstrual_cycle'] === 'regular') ? 'checked' : '';
-                            $menstrual_cycle_irreg_checked = ($gynecological_data['menstrual_cycle'] === 'irregular') ? 'checked' : '';
-                            $mens_irreg_xmos_value = htmlspecialchars($gynecological_data['mens_irreg_xmos']);
-                            $dysmenorrhea_checked_yes = ($gynecological_data['menstrual_cycle_dysmenorrhea'] === 'Yes') ? 'checked' : '';
-                            $dysmenorrhea_checked_no = ($gynecological_data['menstrual_cycle_dysmenorrhea'] === 'No') ? 'checked' : '';
-                            $menstrual_cycle_duration_value = htmlspecialchars($gynecological_data['menstrual_cycle_duration']);
-                            $menstrual_cycle_padsperday_value = htmlspecialchars($gynecological_data['menstrual_cycle_padsperday']);
-                            $menstrual_cycle_medication_value = htmlspecialchars($gynecological_data['menstrual_cycle_medication']);
-                            $contraceptive_data = explode(',', $gynecological_data['contraceptive_history']);
-                            $contraceptive_none_checked = in_array('none', $contraceptive_data) ? 'checked' : '';
-                            $contraceptive_pills_checked = in_array('Pills', $contraceptive_data) ? 'checked' : '';
-                            $contraceptive_iud_checked = in_array('IUD', $contraceptive_data) ? 'checked' : '';
-                            $contraceptive_rhythm_checked = in_array('Rhythm', $contraceptive_data) ? 'checked' : '';
-                            $contraceptive_condom_checked = in_array('Condom', $contraceptive_data) ? 'checked' : '';
-                            $contraceptive_others_checked = in_array('Other(s)', $contraceptive_data) ? 'checked' : '';
-                            $contraceptive_others_value = ''; // Assuming no 'Other(s)' data provided in the example
-                            $parity_g_value = htmlspecialchars($gynecological_data['parity_g']);
-                            $parity_p_value = htmlspecialchars($gynecological_data['parity_p']);
-                            $parity_pt_value = htmlspecialchars($gynecological_data['parity_pt']);
-                            $parity_a_value = htmlspecialchars($gynecological_data['parity_a']);
-                            $parity_l_value = htmlspecialchars($gynecological_data['parity_l']);
-                            $parity_lnmp_value = htmlspecialchars($gynecological_data['parity_lnmp']);
-                            $parity_edc_value = htmlspecialchars($gynecological_data['parity_edc']);
-                            $aog_lnmp_value = htmlspecialchars($gynecological_data['aog_lnmp']);
-                            $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
+
+                        $menarche = $data->menarche;
+                        $gynecological_data = [
+                            'menarche' => (int) $menarche,
+                            'menopausal_age' => $data->menopausal_age,
+                            'mens_irreg_xmos' => $data->mens_irreg_xmos,
+                            'menstrual_cycle_duration' => $data->menstrual_cycle_duration,
+                            'menstrual_cycle_padsperday' => $data->menstrual_cycle_padsperday,
+                            'menstrual_cycle_medication' => $data->menstrual_cycle_medication,
+                            'contraceptive_others' => $data->contraceptive_others,
+                            'parity_g' => $data->parity_g,
+                            'parity_p' => $data->parity_p,
+                            'parity_ft' => $data->parity_ft,
+                            'parity_pt' => $data->parity_pt,
+                            'parity_a' => $data->parity_a,
+                            'parity_l' => $data->parity_l,
+                            'parity_lnmp' => $data->parity_lnmp,
+                            'parity_edc' => $data->parity_edc,
+                            'aog_lnmp' => $data->aog_lnmp,
+                            'aog_eutz' => $data->aog_eutz,
+                        ];
+
+                        $menarche_value = htmlspecialchars($gynecological_data['menarche']);
+                        $menopausal_age_value = htmlspecialchars($gynecological_data['menopausal_age']);
+                        $mens_irreg_xmos_value = htmlspecialchars($gynecological_data['mens_irreg_xmos']);
+                        $menstrual_cycle_duration_value = htmlspecialchars($gynecological_data['menstrual_cycle_duration']);
+                        $menstrual_cycle_padsperday_value = htmlspecialchars($gynecological_data['menstrual_cycle_padsperday']);
+                        $menstrual_cycle_medication_value = htmlspecialchars($gynecological_data['menstrual_cycle_medication']);
+                        $contraceptive_others_value = htmlspecialchars($gynecological_data['contraceptive_others']);
+                        $parity_g_value = htmlspecialchars($gynecological_data['parity_g']);
+                        $parity_p_value = htmlspecialchars($gynecological_data['parity_p']);
+                        $parity_pt_value = htmlspecialchars($gynecological_data['parity_pt']);
+                        $parity_a_value = htmlspecialchars($gynecological_data['parity_a']);
+                        $parity_l_value = htmlspecialchars($gynecological_data['parity_l']);
+                        $parity_lnmp_value = htmlspecialchars($gynecological_data['parity_lnmp']);
+                        $parity_edc_value = htmlspecialchars($gynecological_data['parity_edc']);
+                        $aog_lnmp_value = htmlspecialchars($gynecological_data['aog_lnmp']);
+                        $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
                         ?>
-
-
-
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                         <div class="row" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
-                                    <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
-                                    <div class="mobile-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b><br> <i> (as applicable)</i></div>
-                                    <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                </button><br><br>
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
+                                        <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b><br> <i> (as applicable)</i></div>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
-                                <b>MENARCHE</b> @ <input type="number" min="9" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
-                                <b>MENOPAUSE:</b> &emsp;
-                                <input type="radio" class="referral-radio-btn" name="menopause" id="menopause_yes" value="Yes" <?php echo $menopause_checked_yes; ?>>
-                                <label for="menopause_yes">Yes</label>
-                                <input type="radio" class="referral-radio-btn" name="menopause" id="menopause_no" value="No" <?php echo $menopause_checked_no; ?>>
-                                <label for="menopause_no">No</label>
-                                <span id="menopausal_age">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9" value="<?php echo $menopausal_age_value; ?>"></span><br><br>
+                                    <b>MENARCHE</b> @ <input type="number" min="9" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <b>MENOPAUSE:</b> &emsp;
+                                    <input type="radio" class="referral-radio-btn" name="menopause" id="menopause_yes" value="Yes" <?= isChecked($data, 'menopause', 'Yes'); ?>>
+                                    <label for="menopause_yes">Yes</label>
+                                    <input type="radio" class="referral-radio-btn" name="menopause" id="menopause_no" value="No" <?= isChecked($data, 'menopause', 'No'); ?>>
+                                    <label for="menopause_no">No</label>
+                                    <span id="menopausal_age">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9" value="<?php echo $menopausal_age_value; ?>"></span><br><br>
 
-                                <b>MENSTRUAL CYCLE</b>
-                                <div class="container-referral">
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <input type="radio" class="referral-radio-btn" name="menstrual_cycle" id="mens_cycle_reg" value="regular" <?php echo $menstrual_cycle_reg_checked; ?>>
-                                            <label for="mens_cycle_reg">Regular</label>
-                                            <input type="radio" class="referral-radio-btn" name="menstrual_cycle" id="mens_cycle_irreg" value="irregular" <?php echo $menstrual_cycle_irreg_checked; ?>>
-                                            <label for="mens_cycle_irreg">Irregular</label>
-                                            <span id="mens_irreg">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0" value="<?php echo $mens_irreg_xmos_value; ?>"> mos</span>
+                                    <b>MENSTRUAL CYCLE</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="radio" class="referral-radio-btn" name="menstrual_cycle" id="mens_cycle_reg" value="regular" <?= isChecked($data, 'menstrual_cycle', 'regular'); ?>>
+                                                <label for="mens_cycle_reg">Regular</label>
+                                                <input type="radio" class="referral-radio-btn" name="menstrual_cycle" id="mens_cycle_irreg" value="irregular" <?= isChecked($data, 'menstrual_cycle', 'irregular'); ?>>
+                                                <label for="mens_cycle_irreg">Irregular</label>
+                                                <span id="mens_irreg">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0" value="<?php echo $mens_irreg_xmos_value; ?>"> mos</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <b>Dysmenorrhea:</b> &emsp;
+                                                <input type="radio" class="referral-radio-btn" name="menstrual_cycle_dysmenorrhea" id="dysmenorrhea_yes" value="Yes" <?= isChecked($data, 'menstrual_cycle_dysmenorrhea', 'Yes'); ?>>
+                                                <label for="dysmenorrhea_yes">Yes</label>
+                                                <input type="radio" class="referral-radio-btn" name="menstrual_cycle_dysmenorrhea" id="dysmenorrhea_no" value="No" <?= isChecked($data, 'menstrual_cycle_dysmenorrhea', 'No'); ?>>
+                                                <label for="dysmenorrhea_no">No</label><br>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6">
-                                            <b>Dysmenorrhea:</b> &emsp;
-                                            <input type="radio" class="referral-radio-btn" name="menstrual_cycle_dysmenorrhea" id="dysmenorrhea_yes" value="Yes" <?php echo $dysmenorrhea_checked_yes; ?>>
-                                            <label for="dysmenorrhea_yes">Yes</label>
-                                            <input type="radio" class="referral-radio-btn" name="menstrual_cycle_dysmenorrhea" id="dysmenorrhea_no" value="No" <?php echo $dysmenorrhea_checked_no; ?>>
-                                            <label for="dysmenorrhea_no">No</label><br>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <b>Duration:</b> <input type="number" style="width:15%;" min="0" name="menstrual_cycle_duration" value="<?php echo $menstrual_cycle_duration_value; ?>"> days &emsp;
+                                                <b>Pads/day:</b> <input type="number" style="width:15%;" min="0" name="menstrual_cycle_padsperday" value="<?php echo $menstrual_cycle_padsperday_value; ?>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <b>Medication:</b> <input type="text" style="width:70%;" name="menstrual_cycle_medication" value="<?php echo $menstrual_cycle_medication_value; ?>">
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <b>Duration:</b> <input type="number" style="width:15%;" min="0" name="menstrual_cycle_duration" value="<?php echo $menstrual_cycle_duration_value; ?>"> days &emsp;
-                                            <b>Pads/day:</b> <input type="number" style="width:15%;" min="0" name="menstrual_cycle_padsperday" value="<?php echo $menstrual_cycle_padsperday_value; ?>">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <b>Medication:</b> <input type="text" style="width:70%;" name="menstrual_cycle_medication" value="<?php echo $menstrual_cycle_medication_value; ?>">
-                                        </div>
-                                    </div>
-                                </div><br>
+                                    </div><br>
 
-                                <b>CONTRACEPTIVE HISTORY</b>
-                                <div class="container-referral">
-                                    <div class="row">
-                                        <div class="col-md-2">
-                                            <input class="form-check-input" id="contraceptive_none" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="none" <?php echo $contraceptive_none_checked; ?>> None
+                                    <b>CONTRACEPTIVE HISTORY</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_none" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history" value="none" <?= isChecked($data, 'contraceptive_history', 'none'); ?>> None
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_pills" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history" value="Pills" <?= isChecked($data, 'contraceptive_history', 'Pills'); ?>> Pills
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history" value="IUD" <?= isChecked($data, 'contraceptive_history', 'IUD'); ?>> IUD
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history" value="Rhythm" <?= isChecked($data, 'contraceptive_history', 'Rhythm'); ?>> Rhythm
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history" value="Condom" <?= isChecked($data, 'contraceptive_history', 'Condom'); ?>> Condom
+                                            </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <input class="form-check-input" id="contraceptive_pills" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="Pills" <?php echo $contraceptive_pills_checked; ?>> Pills
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="Other(s)" <?= isChecked($data, 'contraceptive_history', 'Other(s)'); ?>> Other(s)
+                                                <textarea class="form-control" id="contraceptive_others_text" name="contraceptive_others" style="resize: none;width: 50%;" rows="2"><?php echo htmlspecialchars($contraceptive_others_value); ?></textarea><br>
+                                            </div>
                                         </div>
-                                        <div class="col-md-2">
-                                            <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="IUD" <?php echo $contraceptive_iud_checked; ?>> IUD
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="Rhythm" <?php echo $contraceptive_rhythm_checked; ?>> Rhythm
-                                        </div>
-                                        <div class="col-md-2">
-                                            <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="Condom" <?php echo $contraceptive_condom_checked; ?>> Condom
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="Other(s)" <?php echo $contraceptive_others_checked; ?>> Other(s)
-                                            <textarea class="form-control" id="contraceptive_others_text" name="contraceptive_others" style="resize: none;width: 50%;" rows="2"><?php echo htmlspecialchars($contraceptive_others_value); ?></textarea><br>
-                                        </div>
-                                    </div>
-                                </div><br>
-                                
-                                <b>PARITY</b>
-                                <div class="container-referral">
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <b>G</b> <input type="number" min="0" style="width:8%;" name="parity_g" value="<?php echo $parity_g_value; ?>">
-                                            <b>P</b> <input type="number" min="0" style="width:8%;" name="parity_p" value="<?php echo $parity_p_value; ?>">&emsp;
-                                            <b>(FT</b> <input type="text" style="width:8%;" name="parity_ft" value="{{$data->parity_ft}}">
-                                            <b>PT</b> <input type="text" style="width:8%;" name="parity_pt" value="<?php echo $parity_pt_value; ?>">
-                                            <b>A</b> <input type="text" style="width:8%;" name="parity_a" value="<?php echo $parity_a_value; ?>">
-                                            <b>L</b> <input type="text" style="width:8%;" name="parity_l" value="<?php echo $parity_l_value; ?>"><b>)</b>
-                                        </div>
-                                    </div>
-                                </div><br>
+                                    </div><br>
 
-                                <div class="container-referral">
-                                    <b>LNMP</b>
-                                    <input type="text" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
-                                    <b>EDC</b><i>(if pregnant)</i>
-                                    <input type="text" style="width:15%;" name="parity_edc" value="<?php echo $parity_edc_value; ?>">
-                                </div><br>
+                                    <b>PARITY</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <b>G</b> <input type="number" min="0" style="width:8%;" name="parity_g" value="<?php echo $parity_g_value; ?>">
+                                                <b>P</b> <input type="number" min="0" style="width:8%;" name="parity_p" value="<?php echo $parity_p_value; ?>">&emsp;
+                                                <b>(FT</b> <input type="text" style="width:8%;" name="parity_ft" value="{{$data->parity_ft}}">
+                                                <b>PT</b> <input type="text" style="width:8%;" name="parity_pt" value="<?php echo $parity_pt_value; ?>">
+                                                <b>A</b> <input type="text" style="width:8%;" name="parity_a" value="<?php echo $parity_a_value; ?>">
+                                                <b>L</b> <input type="text" style="width:8%;" name="parity_l" value="<?php echo $parity_l_value; ?>"><b>)</b>
+                                            </div>
+                                        </div>
+                                    </div><br>
 
-                                <b>AOG</b>
-                                <div class="container-referral">
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <b>by LNMP</b> <input type="number" min="0" style="width:25%;" name="aog_lnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
+                                    <div class="container-referral">
+                                        <b>LNMP</b>
+                                        <input type="text" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
+                                        <b>EDC</b><i>(if pregnant)</i>
+                                        <input type="text" style="width:15%;" name="parity_edc" value="<?php echo $parity_edc_value; ?>">
+                                    </div><br>
+
+                                    <b>AOG</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <b>by LNMP</b> <input type="number" min="0" style="width:25%;" name="aog_lnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <b>by EUTZ</b> <input type="number" min="0" style="width:25%;" name="aog_eutz" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
+                                            </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <b>by EUTZ</b> <input type="number" min="0" style="width:25%;" name="aog_eutz" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
-                                        </div>
-                                    </div>
-                                </div><br>
+                                    </div><br>
 
                                     <b>PRENATAL HISTORY</b><br>
-                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"></textarea><br><br>
+                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $data->prenatal_history; ?>></textarea><br><br>
                                     <div class="table-responsive" style="overflow-x: auto">
-                                    <table class="table table-bordered" id="prenatal_table">
-                                        <thead>
-                                            <tr style="font-size: 10pt;">
-                                                <th class="text-center" style="width:50%;">Pregnancy Order</th>
-                                                <th class="text-center" style="width:20%;">Year</th>
-                                                <th class="text-center">Gestation Completed</th>
-                                                <th class="text-center">Pregnancy Outcome</th>
-                                                <th class="text-center">Place of Birth</th>
-                                                <th class="text-center">Sex</th>
-                                                <th class="text-center" style="width:50%;">Birth Weight</th>
-                                                <th class="text-center">Present Status</th>
-                                                <th class="text-center">Complication(s)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        @foreach($pregnancy_data as $pregnancy)
-                                            <tr style="font-size: 10pt">
-                                                <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
-                                                <td>
-                                                    <select class="form-control select" name="pregnancy_history_year[]">
-                                                    @foreach(range(date('Y'), 1950) as $year)
-                                                    <option value="{{ $year }}" {{ $year == $pregnancy->pregnancy_year ? 'selected' : '' }}>{{ $year }}</option>
-                                                    @endforeach
-                                                    </select>
-                                                </td>
-                                                <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{$pregnancy->pregnancy_gestation_completed}}"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{$pregnancy->pregnancy_outcome}}"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
-                                                <td>
-                                                <select class="select form-control" name="prenatal_history_sex[]">
-                                                    <option value="M" {{ $pregnancy->pregnancy_sex == 'M' ? 'selected' : '' }}>Male</option>
-                                                    <option value="F" {{ $pregnancy->pregnancy_sex == 'F' ? 'selected' : '' }}>Female</option>
-                                                </select>
-                                                </td>
-                                                <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
-                                                <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
-                                            </tr>
-                                        @endforeach
-                                        </tbody>
-                                    </table>
+                                        <table class="table table-bordered" id="prenatal_table">
+                                            <thead>
+                                                <tr style="font-size: 10pt;">
+                                                    <th class="text-center" style="width:50%;">Pregnancy Order</th>
+                                                    <th class="text-center" style="width:20%;">Year</th>
+                                                    <th class="text-center">Gestation Completed</th>
+                                                    <th class="text-center">Pregnancy Outcome</th>
+                                                    <th class="text-center">Place of Birth</th>
+                                                    <th class="text-center">Sex</th>
+                                                    <th class="text-center" style="width:50%;">Birth Weight</th>
+                                                    <th class="text-center">Present Status</th>
+                                                    <th class="text-center">Complication(s)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($pregnancy_data as $pregnancy)
+                                                <tr style="font-size: 10pt">
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
+                                                    <td>
+                                                        <select class="form-control select" name="pregnancy_history_year[]">
+                                                            @foreach(range(date('Y'), 1950) as $year)
+                                                            <option value="{{ $year }}" {{ $year == $pregnancy->pregnancy_year ? 'selected' : '' }}>{{ $year }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{$pregnancy->pregnancy_gestation_completed}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{$pregnancy->pregnancy_outcome}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
+                                                    <td>
+                                                        <select class="select form-control" name="prenatal_history_sex[]">
+                                                            <option value="M" {{ $pregnancy->pregnancy_sex == 'M' ? 'selected' : '' }}>Male</option>
+                                                            <option value="F" {{ $pregnancy->pregnancy_sex == 'F' ? 'selected' : '' }}>Female</option>
+                                                        </select>
+                                                    </td>
+                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
                                         <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
                                             <i class="fa fa-plus"> Add Row</i>
                                         </button><br><br>
@@ -1079,33 +1030,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div>
 
-                        <?php 
+                        <?php
                         $personal_history_data = [
-                            'smoking' => $data->smoking,
                             'smoking_sticks_per_day' => $data->smoking_sticks_per_day,
                             'smoking_quit_year' => $data->smoking_quit_year,
                             'smoking_remarks' => $data->smoking_remarks,
-                            'alcohol_drinking' => $data->alcohol_drinking,
                             'alcohol_liquor_type' => $data->alcohol_liquor_type,
+                            'alcohol_bottles_per_day' => $data->alcohol_bottles_per_day,
                             'alcohol_drinking_quit_year' => $data->alcohol_drinking_quit_year,
-                            'illicit_drugs' => $data->illicit_drugs,
                             'illicit_drugs_taken' => $data->illicit_drugs_taken,
                             'illicit_drugs_quit_year' => $data->illicit_drugs_quit_year,
                             'current_medications' => $data->current_medications,
                         ];
-
-                        $smoking_yes = ($personal_history_data['smoking'] === 'Yes') ? 'checked' : '';
-                        $smoking_no = ($personal_history_data['smoking'] === 'No') ? 'checked' : '';
-                        $smoking_quit = ($personal_history_data['smoking'] === 'Quit') ? 'checked' : '';
-
-                        $alcohol_yes = ($personal_history_data['alcohol_drinking'] === 'Yes') ? 'checked' : '';
-                        $alcohol_no = ($personal_history_data['alcohol_drinking'] === 'No') ? 'checked' : '';
-                        $alcohol_quit = ($personal_history_data['alcohol_drinking'] === 'Quit') ? 'checked' : '';
-
-                        $drugs_yes = ($personal_history_data['illicit_drugs'] === 'Yes') ? 'checked' : '';
-                        $drugs_no = ($personal_history_data['illicit_drugs'] === 'No') ? 'checked' : '';
-                        $drugs_quit = ($personal_history_data['illicit_drugs'] === 'Quit') ? 'checked' : '';
                         ?>
+
+
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -1121,21 +1060,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_yes" value="Yes" <?php echo $smoking_yes; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_yes" value="Yes" <?= isChecked($data, 'smoking', 'Yes'); ?>>
                                                 <label for="smoke_yes">Yes</label><br>
                                                 <span id="smoking_sticks">Sticks per day: <input type="number" min="0" style="width:30%;" name="smoking_sticks_per_day" value="<?php echo htmlspecialchars($personal_history_data['smoking_sticks_per_day']); ?>"></span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_no" value="No" <?php echo $smoking_no; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_no" value="No" <?= isChecked($data, 'smoking', 'No'); ?>>
                                                 <label for="smoke_no">No</label>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_quit" value="Quit" <?php echo $smoking_quit; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_quit" value="Quit" <?= isChecked($data, 'smoking', 'Quit'); ?>>
                                                 <label for="smoke_quit">Quit</label>
                                                 <span id="smoking_quit_year"> since
                                                     <select class="form-control select" name="smoking_year_quit">
                                                         <?php
-                                                        foreach(range(date('Y'), 1950) as $year)
+                                                        foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($personal_history_data['smoking_quit_year']) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
@@ -1153,20 +1092,20 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_yes_radio" value="Yes" <?php echo $alcohol_yes; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_yes_radio" value="Yes" <?= isChecked($data, 'alcohol_drinking', 'Yes'); ?>>
                                                 <label for="alcohol_yes_radio">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio" value="No" <?php echo $alcohol_no; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio" value="No" <?= isChecked($data, 'alcohol_drinking', 'No'); ?>>
                                                 <label for="alcohol_no_radio">No</label>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_quit_radio" value="Quit" <?php echo $alcohol_quit; ?>>
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_quit_radio" value="Quit" <?= isChecked($data, 'alcohol_drinking', 'Quit'); ?>>
                                                 <label for="alcohol_quit_radio">Quit</label>
                                                 <span id="alcohol_quit_year"> since
                                                     <select class="form-control select" name="alcohol_year_quit">
                                                         <?php
-                                                        foreach(range(date('Y'), 1950) as $year)
+                                                        foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($personal_history_data['alcohol_drinking_quit_year']) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
@@ -1178,7 +1117,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <span id="alcohol_type">Liquor Type: <textarea class="form-control" style="resize: none;" rows="2" name="alcohol_type"><?php echo htmlspecialchars($personal_history_data['alcohol_liquor_type']); ?></textarea></span>
                                             </div>
                                             <div class="col-md-4">
-                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0" style="width:25%;" name="alcohol_bottles" value="<?php echo htmlspecialchars($personal_history_data['alcohol_bottles']); ?>"></span>
+                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0" style="width:25%;" name="alcohol_bottles" value="<?php echo htmlspecialchars($personal_history_data['alcohol_bottles_per_day']); ?>"></span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1187,20 +1126,20 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input type="radio" name="illicit_drugs" id="drugs_yes_radio" class="referral-radio-btn" value="Yes" <?php echo $drugs_yes; ?>>
+                                                <input type="radio" name="illicit_drugs" id="drugs_yes_radio" class="referral-radio-btn" value="Yes" <?= isChecked($data, 'illicit_drugs', 'Yes'); ?>>
                                                 <label for="drugs_yes_radio">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" name="illicit_drugs" id="drugs_no_radio" class="referral-radio-btn" value="No" <?php echo $drugs_no; ?>>
+                                                <input type="radio" name="illicit_drugs" id="drugs_no_radio" class="referral-radio-btn" value="No" <?= isChecked($data, 'illicit_drugs', 'No'); ?>>
                                                 <label for="drugs_no_radio">No</label>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="radio" name="illicit_drugs" id="drugs_quit_radio" class="referral-radio-btn" value="Quit" <?php echo $drugs_quit; ?>>
+                                                <input type="radio" name="illicit_drugs" id="drugs_quit_radio" class="referral-radio-btn" value="Quit" <?= isChecked($data, 'illicit_drugs', 'Quit'); ?>>
                                                 <label for="drugs_quit_radio">Quit</label>
                                                 <span id="drugs_quit_year"> since
                                                     <select class="form-control select" name="drugs_year_quit">
                                                         <?php
-                                                        foreach(range(date('Y'), 1950) as $year)
+                                                        foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($personal_history_data['illicit_drugs_quit_year']) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
@@ -1252,33 +1191,33 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="lab_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_all_cbox" value="Select All">
+                                                <input class="form-check-input" id="lab_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_all_cbox" value="Yes" <?= isChecked($data, 'pertinent_laboratory_and_procedures', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="lab_ua_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ua_cbox" value="UA">
+                                                <input class="form-check-input" id="lab_ua_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ua_cbox" value="Yes" <?= isChecked($data, 'pertinent_laboratory_and_procedures', 'UA'); ?>>
                                                 <span> UA</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="lab_cbc_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_cbc_cbox" value="CBC">
+                                                <input class="form-check-input" id="lab_cbc_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_cbc_cbox" value="Yes" <?= isChecked($data, 'pertinent_laboratory_and_procedures', 'CBC'); ?>>
                                                 <span> CBC</span>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="lab_xray_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_xray_cbox" value="X-RAY">
+                                                <input class="form-check-input" id="lab_xray_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_xray_cbox" value="Yes" <?= isChecked($data, 'pertinent_laboratory_and_procedures', 'X-RAY'); ?>>
                                                 <span> X-RAY</span>
                                             </div>
                                             <div class="col-md-6">
-                                                <input class="form-check-input" id="lab_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox"> Others:
-                                                <textarea id="lab_others" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2"></textarea>
+                                                <input class="form-check-input" id="lab_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_others_cbox" <?= isChecked($data, 'pertinent_laboratory_and_procedures', 'Others'); ?>> Others:
+                                                <textarea id="lab_others" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"><?php echo htmlspecialchars($data->lab_procedure_other); ?></textarea>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="file-upload">
                                                     <div class="image-upload-wrap">
-                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
                                                         <div class="drag-text">
                                                             <h3>Drag and drop a file or select add Image</h3>
                                                         </div>
@@ -1297,44 +1236,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div>
 
-                        <?php
-                        // Sample data from the database
-                        $data = [
-                            "skin" => $data->skin ?? null,
-                            "head" => $data->head ?? null,
-                            "eyes" => $data->eyes ?? null,
-                            "ears" => $data->ears ?? null,
-                            "nose_or_sinuses" => $data->nose_or_sinuses ?? null,
-                            "mouth_or_throat" => $data->mouth_or_throat ?? null,
-                            "neck" => $data->neck ?? null,
-                            "breast" => $data->breast ?? null,
-                            "respiratory_or_cardiac" => $data->respiratory_or_cardiac ?? null,
-                            "gastrointestinal" => $data->gastrointestinal ?? null,
-                            "urinary" => $data->urinary ?? null,
-                            "peripheral_vascular" => $data->peripheral_vascular ?? null,
-                            "musculoskeletal" => $data->musculoskeletal ?? null,
-                            "neurologic" => $data->neurologic ?? null,
-                            "hematologic" => $data->hematologic ?? null,
-                            "endocrine" => $data->endocrine ?? null,
-                            "psychiatric" => $data->psychiatric ?? null,
-                        ];
-
-                        // Function to check if the symptom is in the user's data
-                        function isChecked($data, $category, $symptom) {
-                            // Ensure the category exists and is not empty
-                            if (!empty($data[$category])) {
-                                // Escape the data to prevent XSS
-                                $safeCategory = htmlspecialchars($data[$category], ENT_QUOTES, 'UTF-8');
-                                // Check if the symptom is in the category's data
-                                if (stripos($safeCategory, $symptom) !== false) {
-                                    return 'checked';
-                                }
-                            }
-                            return '';
-                        }
-                        ?>
-                        
-                        
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -1435,7 +1336,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                            <input type="hidden" name="rs_eyes_flashing_cbox" value="No">
+                                                <input type="hidden" name="rs_eyes_flashing_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_flashing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_flashing_cbox" <?= isChecked($data, 'eyes', 'Flashing lights'); ?>>
                                                 <span> Flashing lights</span>
                                             </div>
@@ -1445,7 +1346,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <span> Glaucoma/Cataracts</span>
                                             </div>
                                             <div class="col-md-3">
-                                                
+
                                                 <input class="form-check-input" id="rs_eye_exam_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eye_exam_cbox" <?= isChecked($data, 'eyes', 'Last eye exam'); ?>>
                                                 <span> Last eye exam</span>
                                             </div>
@@ -1466,12 +1367,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                
+
                                                 <input class="form-check-input" id="rs_ears_changehearing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_changehearing_cbox" <?= isChecked($data, 'ears', 'Change in hearing'); ?>>
                                                 <span> Change in hearing</span>
                                             </div>
                                             <div class="col-md-2">
-                                                
+
                                                 <input class="form-check-input" id="rs_ears_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_pain_cbox" <?= isChecked($data, 'ears', 'Ear pain'); ?>>
                                                 <span> Ear pain</span>
                                             </div>
@@ -2110,22 +2011,30 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
-                        <?php
-                        // Sanitize and validate input
-                        $valid_diets = ['None', 'Oral', 'Tube', 'TPN', 'NPO'];
-                        $selected_diet = in_array($data->diet, $valid_diets) ? $data->diet : 'None';
 
+                        <?php
                         $nutritional_status_data = [
-                            'diet' => $selected_diet,
-                            'specify_diets' => htmlspecialchars($data->specify_diets, ENT_QUOTES, 'UTF-8'),
+                            'specify_diets' => $data->specify_diets,
+                        ];
+                        $latest_vital_sign_data = [
+                            'temperature' => $data->temperature,
+                            'pulse_rate' => $data->pulse_rate,
+                            'respiratory_rate' => $data->respiratory_rate,
+                            'blood_pressure' => $data->blood_pressure,
+                            'oxygen_saturation' => $data->oxygen_saturation,
+                        ];
+                        $glasgow_coma_scale_data = [
+                            'gsc_score' => $data->gsc_score,
                         ];
 
-                        // Determine checked status for radio buttons
-                        $diet_none = ($nutritional_status_data['diet'] === 'None') ? 'checked' : '';
-                        $diet_oral = ($nutritional_status_data['diet'] === 'Oral') ? 'checked' : '';
-                        $diet_tube = ($nutritional_status_data['diet'] === 'Tube') ? 'checked' : '';
-                        $diet_tpn = ($nutritional_status_data['diet'] === 'TPN') ? 'checked' : '';
-                        $diet_npo = ($nutritional_status_data['diet'] === 'NPO') ? 'checked' : '';
+
+                        $specify_diets_data = htmlspecialchars($nutritional_status_data['specify_diets']);
+                        $temperature_data = htmlspecialchars($latest_vital_sign_data['temperature']);
+                        $pulse_rate_data = htmlspecialchars($latest_vital_sign_data['pulse_rate']);
+                        $respiratory_rate_data = htmlspecialchars($latest_vital_sign_data['respiratory_rate']);
+                        $blood_pressure_data = htmlspecialchars($latest_vital_sign_data['blood_pressure']);
+                        $oxygen_saturation_data = htmlspecialchars($latest_vital_sign_data['oxygen_saturation']);
+                        $gsc_score_data = htmlspecialchars($glasgow_coma_scale_data['gsc_score']);
                         ?>
 
                         <div class="row">
@@ -2141,35 +2050,36 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_none" value="None" <?php echo $diet_none; ?>>
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_none" value="None" <?= isChecked($data, 'diet', 'None'); ?>>
                                                 <label for="diet_none"> None </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_oral" value="Oral" <?php echo $diet_oral; ?>>
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_oral" value="Oral" <?= isChecked($data, 'diet', 'Oral'); ?>>
                                                 <label for="diet_oral"> Oral </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tube" value="Tube" <?php echo $diet_tube; ?>>
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tube" value="Tube" <?= isChecked($data, 'diet', 'Tube'); ?>>
                                                 <label for="diet_tube"> Tube </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tpn" value="TPN" <?php echo $diet_tpn; ?>>
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tpn" value="TPN" <?= isChecked($data, 'diet', 'TPN'); ?>>
                                                 <label for="diet_tpn"> TPN </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_npo" value="NPO" <?php echo $diet_npo; ?>>
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_npo" value="NPO" <?= isChecked($data, 'diet', 'NPO'); ?>>
                                                 <label for="diet_npo"> NPO </label>
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                Specify Diets: <textarea class="form-control" name="specify_diets" style="resize: none;width: 100%;" rows="3"><?php echo htmlspecialchars($nutritional_status_data['specify_diets']); ?></textarea><br><br>
+                                                Specify Diets: <textarea class="form-control" name="specify_diets" style="resize: none;width: 100%;" rows="3"><?php echo $specify_diets_data; ?></textarea><br><br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
 
 
 
@@ -2185,21 +2095,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                Temperature: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp"> &#176;C
+                                                Temperature: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp" value="<?php echo $temperature_data; ?>"> &#176;C
                                             </div>
                                             <div class="col-md-4">
-                                                Pulse Rate/Heart Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse"> bpm
+                                                Pulse Rate/Heart Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse" value="<?php echo $pulse_rate_data; ?>"> bpm
                                             </div>
                                             <div class="col-md-4">
-                                                Respiratory Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate"> cpm
+                                                Respiratory Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate" value="<?php echo $respiratory_rate_data; ?>"> cpm
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                Blood Pressure: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_bp"> mmHg
+                                                Blood Pressure: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_bp" value="<?php echo $blood_pressure_data; ?>"> mmHg
                                             </div>
                                             <div class="col-md-4">
-                                                O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
+                                                O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo $oxygen_saturation_data; ?>"> %
                                             </div>
                                         </div><br>
                                     </div>
@@ -2226,70 +2136,70 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <b>1</b><br>
                                                     <span class="glasgow-dot" style="height: 6px; width: 6px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1" <?= isChecked($data, 'pupil_size_chart', '1'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_2">
                                                     <b>2</b><br>
                                                     <span class="glasgow-dot" style="height: 10px; width: 10px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_2" value="2">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_2" value="2" <?= isChecked($data, 'pupil_size_chart', '2'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_3">
                                                     <b>3</b><br>
                                                     <span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_3" value="3">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_3" value="3" <?= isChecked($data, 'pupil_size_chart', '3'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_4">
                                                     <b>4</b><br>
                                                     <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_4" value="4">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_4" value="4" <?= isChecked($data, 'pupil_size_chart', '4'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_5">
                                                     <b>5</b><br>
                                                     <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_5" value="5">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_5" value="5" <?= isChecked($data, 'pupil_size_chart', '5'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_6">
                                                     <b>6</b><br>
                                                     <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6" <?= isChecked($data, 'pupil_size_chart', '6'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow-7">
                                                     <b>7</b><br>
                                                     <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7" <?= isChecked($data, 'pupil_size_chart', '7'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_8">
                                                     <b>8</b><br>
                                                     <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8" <?= isChecked($data, 'pupil_size_chart', '8'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_9">
                                                     <b>9</b><br>
                                                     <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9" <?= isChecked($data, 'pupil_size_chart', '9'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <b>10</b><br>
                                                 <label for="glasgow_10">
                                                     <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_10" value="10">
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_10" value="10" <?= isChecked($data, 'pupil_size_chart', '10'); ?>>
                                             </div>
                                         </div>
                                         <div class="mobile-view">
@@ -2297,7 +2207,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <div class="col-md-1">
                                                     <b>1</b>
                                                     <label for="glasgow_1">
-                                                    <span class="glasgow-dot" style="height: 6px; width: 6px;"></span>
+                                                        <span class="glasgow-dot" style="height: 6px; width: 6px;"></span>
                                                     </label>
                                                     <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1">&emsp;&emsp;
 
@@ -2375,50 +2285,50 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
-                                                    <tr style="font-size: 11px;">
-                                                        <th id="glasgow_table_1" style="text-align: center">ADULT AND CHILD</th>
-                                                        <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
-                                                        <th style="text-align: center">POINTS</th>
-                                                        <th style="text-align: center">OPTIONS</th>
-                                                    </tr>
+                                                        <tr style="font-size: 11px;">
+                                                            <th id="glasgow_table_1" style="text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th style="text-align: center">POINTS</th>
+                                                            <th style="text-align: center">OPTIONS</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td>Obeys Command</td>
-                                                        <td>Spontaneous Movement</td>
-                                                        <td style="text-align: center">6</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio"  value=6></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Localizes Pain</td>
-                                                        <td>Withdraws (Touch)</td>
-                                                        <td style="text-align: center">5</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=5></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Withdraws</td>
-                                                        <td>Withdraws (Pain)</td>
-                                                        <td style="text-align: center">4</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=4></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Flexion to Pain</td>
-                                                        <td>Flexion to Pain</td>
-                                                        <td style="text-align: center">3</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=3></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Extension to Pain</td>
-                                                        <td>Extension to Pain</td>
-                                                        <td style="text-align: center">2</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=2></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>None</td>
-                                                        <td>None</td>
-                                                        <td style="text-align: center">1</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=1></td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>Obeys Command</td>
+                                                            <td>Spontaneous Movement</td>
+                                                            <td style="text-align: center">6</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=6 <?= isChecked($data, 'motor_response', '6'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Localizes Pain</td>
+                                                            <td>Withdraws (Touch)</td>
+                                                            <td style="text-align: center">5</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=5 <?= isChecked($data, 'motor_response', '5'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Withdraws</td>
+                                                            <td>Withdraws (Pain)</td>
+                                                            <td style="text-align: center">4</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=4 <?= isChecked($data, 'motor_response', '4'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Flexion to Pain</td>
+                                                            <td>Flexion to Pain</td>
+                                                            <td style="text-align: center">3</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=3 <?= isChecked($data, 'motor_response', '3'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Extension to Pain</td>
+                                                            <td>Extension to Pain</td>
+                                                            <td style="text-align: center">2</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=2 <?= isChecked($data, 'motor_response', '2'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>None</td>
+                                                            <td>None</td>
+                                                            <td style="text-align: center">1</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="motor_radio" value=1 <?= isChecked($data, 'motor_response', '1'); ?>></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -2428,44 +2338,44 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
-                                                    <tr style="font-size: 11px;">
-                                                        <th id="glasgow_table_1" style="width:35%; text-align: center">ADULT AND CHILD</th>
-                                                        <th id="glasgow_table_2" style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
-                                                        <th style="text-align: center">POINTS</th>
-                                                        <th style="text-align: center">OPTIONS</th>
-                                                    </tr>
+                                                        <tr style="font-size: 11px;">
+                                                            <th id="glasgow_table_1" style="width:35%; text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_table_2" style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th style="text-align: center">POINTS</th>
+                                                            <th style="text-align: center">OPTIONS</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td>Oriented</td>
-                                                        <td>Coos and Babbles</td>
-                                                        <td style="text-align: center">5</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=5></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Confused</td>
-                                                        <td>Irritable Cry</td>
-                                                        <td style="text-align: center">4</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=4></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Inappropriate</td>
-                                                        <td>Cries to Pain</td>
-                                                        <td style="text-align: center">3</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=3></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Incomprehensible</td>
-                                                        <td>Moans to Pain</td>
-                                                        <td style="text-align: center">2</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=2></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>None</td>
-                                                        <td>None</td>
-                                                        <td style="text-align: center">1</td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=1></td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>Oriented</td>
+                                                            <td>Coos and Babbles</td>
+                                                            <td style="text-align: center">5</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=5 <?= isChecked($data, 'verbal_response', '5'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Confused</td>
+                                                            <td>Irritable Cry</td>
+                                                            <td style="text-align: center">4</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=4 <?= isChecked($data, 'verbal_response', '4'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Inappropriate</td>
+                                                            <td>Cries to Pain</td>
+                                                            <td style="text-align: center">3</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=3 <?= isChecked($data, 'verbal_response', '3'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Incomprehensible</td>
+                                                            <td>Moans to Pain</td>
+                                                            <td style="text-align: center">2</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=2 <?= isChecked($data, 'verbal_response', '2'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>None</td>
+                                                            <td>None</td>
+                                                            <td style="text-align: center">1</td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" name="verbal_radio" value=1 <?= isChecked($data, 'verbal_response', '1'); ?>></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -2477,45 +2387,45 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
-                                                    <tr style="font-size: 11px;">
-                                                        <th id="glasgow_table_1" style="width:40%; text-align: center">ADULT AND CHILD</th>
-                                                        <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
-                                                        <th style="text-align: center">POINTS</th>
-                                                        <th style="text-align: center">OPTIONS</th>
-                                                    </tr>
+                                                        <tr style="font-size: 11px;">
+                                                            <th id="glasgow_table_1" style="width:40%; text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th style="text-align: center">POINTS</th>
+                                                            <th style="text-align: center">OPTIONS</th>
+                                                        </tr>
                                                     </thead>
                                                     <tbody>
-                                                    <tr>
-                                                        <td>Spontaneous</td>
-                                                        <td>Spontaneous</td>
-                                                        <td style="text-align: center">4 </td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=4></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>To Command</td>
-                                                        <td>To Voice</td>
-                                                        <td style="text-align: center">3 </td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=3></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>To Pain</td>
-                                                        <td>To Pain</td>
-                                                        <td style="text-align: center">2 </td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=2></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>None</td>
-                                                        <td>None</td>
-                                                        <td style="text-align: center">1 </td>
-                                                        <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=1></td>
-                                                    </tr>
+                                                        <tr>
+                                                            <td>Spontaneous</td>
+                                                            <td>Spontaneous</td>
+                                                            <td style="text-align: center">4 </td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=4 <?= isChecked($data, 'eye_response', '4'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>To Command</td>
+                                                            <td>To Voice</td>
+                                                            <td style="text-align: center">3 </td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=3 <?= isChecked($data, 'eye_response', '3'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>To Pain</td>
+                                                            <td>To Pain</td>
+                                                            <td style="text-align: center">2 </td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=2 <?= isChecked($data, 'eye_response', '2'); ?>></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>None</td>
+                                                            <td>None</td>
+                                                            <td style="text-align: center">1 </td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=1 <?= isChecked($data, 'eye_response', '1'); ?>></td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <br><br><b>GCS Score: </b>
-                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="0" readonly>
+                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="<?php echo $gsc_score_data; ?>" readonly>
                                         </div>
                                     </div><br>
                                 </div>
@@ -2537,7 +2447,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
-                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                             @endforeach
                                         </select><br><br>
                                         <div id="other_reason_referral"></div>
@@ -2601,35 +2511,34 @@ $reason_for_referral = \App\ReasonForReferral::get();
 <script>
     $("#normalFormModal").modal("show");
 
-//    $('#pedia_show').hide();
-//    $('#menarche_show').hide();
-//
-//    var pt_age = parseInt($('.pt_age').val(), 10);
-//    if(pt_age > 18)
-//        $('#pedia_show').show();
-//    if($('.patient_sex').val() === "Female")
-//        $('#menarche_show').show();
+    //    $('#pedia_show').hide();
+    //    $('#menarche_show').hide();
+    //
+    //    var pt_age = parseInt($('.pt_age').val(), 10);
+    //    if(pt_age > 18)
+    //        $('#pedia_show').show();
+    //    if($('.patient_sex').val() === "Female")
+    //        $('#menarche_show').show();
 
-    $(".collapse").on('show.bs.collapse', function(){
+    $(".collapse").on('show.bs.collapse', function() {
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");
-    }).on('hide.bs.collapse', function(){
+    }).on('hide.bs.collapse', function() {
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-minus").addClass("fa-plus");
     });
 
     /*****Populate data**********/
-    var retrieved_data = @json($data);
-
-    console.log(JSON.stringify(retrieved_data));
+    // var retrieved_data = @json($data);
+    // console.log(JSON.stringify(retrieved_data));
     // function check_checkbox(){
-        
+
     // }
 
 
     /* *****PRENATAL ADD ROW***** */
     <?php
-        $select_year = "";
-        foreach(range(date('Y'), 1950) as $year)
-            $select_year .= "<option>".$year."</option>";
+    $select_year = "";
+    foreach (range(date('Y'), 1950) as $year)
+        $select_year .= "<option>" . $year . "</option>";
     ?>
     var select_year = "<?php echo $select_year; ?>";
 
@@ -2659,49 +2568,49 @@ $reason_for_referral = \App\ReasonForReferral::get();
     /* *****COMORBIDITY***** */
     // $('#comor_diab, #comor_asthma, #comor_hyper, #comor_cancer, #comor_others').hide();
     $('#comor_all_cbox').on('click', function() {
-       if($(this).is(':checked')) {
-           $('#comor_none_cbox').prop('checked', false);
-           $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', true);
-           $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox').prop('checked', true);
-           $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer').show();
-       } else {
-           $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', false);
-           $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox, #comor_others_cbox').prop('checked', false);
-           $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer, #comor_others').hide();
-       }
+        if ($(this).is(':checked')) {
+            $('#comor_none_cbox').prop('checked', false);
+            $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', true);
+            $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox').prop('checked', true);
+            $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer').show();
+        } else {
+            $('#comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', false);
+            $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox, #comor_others_cbox').prop('checked', false);
+            $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer, #comor_others').hide();
+        }
     });
     $('#comor_hyper_cbox').on('click', function() {
         $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
         $('#comor_all_cbox').prop('checked', false);
-        if($(this).is(':checked'))
-           $('#comor_hyper').show();
+        if ($(this).is(':checked'))
+            $('#comor_hyper').show();
         else
-           $('#comor_hyper').hide();
+            $('#comor_hyper').hide();
     });
     $('#comor_diab_cbox').on('click', function() {
         $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#comor_diab').show();
         else
             $('#comor_diab').hide();
     });
     $('#comor_asthma_cbox').on('click', function() {
         $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
-        if($(this).is(':checked'))
-           $('#comor_asthma').show();
+        if ($(this).is(':checked'))
+            $('#comor_asthma').show();
         else
-           $('#comor_asthma').hide();
+            $('#comor_asthma').hide();
     });
     $('#comor_cancer_cbox').on('click', function() {
         $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#comor_cancer').show();
         else
             $('#comor_cancer').hide();
     });
     $('#comor_others_cbox').on('click', function() {
         $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#comor_others').show();
         else
             $('#comor_others').hide();
@@ -2710,7 +2619,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('#comor_none_cbox, #comor_all_cbox').prop('checked', false);
     });
     $('#comor_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#comor_all_cbox, #comor_hyper_cbox, #comor_diab_cbox, #comor_asthma_cbox, #comor_copd_cbox').prop('checked', false);
             $('#comor_dyslip_cbox, #comor_thyroid_cbox, #comor_cancer_cbox, #comor_others_cbox').prop('checked', false);
             $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer, #comor_others').hide();
@@ -2719,8 +2628,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* *****ALLERGY***** */
     // $('#allergy_food, #allergy_drug, #allergy_other').hide();
-    $('#allergy_all_cbox').on('click', function () {
-        if($(this).is(':checked')) {
+    $('#allergy_all_cbox').on('click', function() {
+        if ($(this).is(':checked')) {
             $('#allergy_none_cbox').prop('checked', false);
             $('#allergy_food_cbox, #allergy_drug_cbox').prop('checked', true);
             $('#allergy_food, #allergy_drug').show();
@@ -2731,36 +2640,36 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
     $('#allergy_food_cbox').on('click', function() {
         $('#allergy_all_cbox, #allergy_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#allergy_food').show();
         else
             $('#allergy_food').hide();
     });
     $('#allergy_drug_cbox').on('click', function() {
         $('#allergy_all_cbox, #allergy_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
-           $('#allergy_drug').show();
+        if ($(this).is(':checked'))
+            $('#allergy_drug').show();
         else
-           $('#allergy_drug').hide();
+            $('#allergy_drug').hide();
     });
     $('#allergy_other_cbox').on('click', function() {
         $('#allergy_all_cbox, #allergy_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#allergy_other').show();
         else
             $('#allergy_other').hide();
     });
     $('#allergy_none_cbox').on('click', function() {
-       if($(this).is(':checked')) {
-           $('#allergy_food_cbox, #allergy_drug_cbox, #allergy_other_cbox, #allergy_all_cbox').prop('checked', false);
-           $('#allergy_food, #allergy_drug, #allergy_other').hide();
-       }
+        if ($(this).is(':checked')) {
+            $('#allergy_food_cbox, #allergy_drug_cbox, #allergy_other_cbox, #allergy_all_cbox').prop('checked', false);
+            $('#allergy_food, #allergy_drug, #allergy_other').hide();
+        }
     });
 
     /* *****HEREDOFAMILIAL***** */
     // $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid, #heredo_others').hide();
     $('#heredo_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#heredo_none_cbox').prop('checked', false);
             $('#heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', true);
             $('#heredo_kidney_cbox, #heredo_thyroid_cbox').prop('checked', true);
@@ -2773,101 +2682,101 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
     $('#heredo_hyper_cbox').on('click', function() {
         $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#heredo_hyper').show();
         else
             $('#heredo_hyper').hide();
     });
     $('#heredo_diab_cbox').on('click', function() {
         $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#heredo_diab').show();
         else
             $('#heredo_diab').hide();
     });
     $('#heredo_asthma_cbox').on('click', function() {
         $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#heredo_asthma').show();
         else
             $('#heredo_asthma').hide();
     });
     $('#heredo_cancer_cbox').on('click', function() {
         $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#heredo_cancer').show();
         else
             $('#heredo_cancer').hide();
     });
     $('#heredo_kidney_cbox').on('click', function() {
         $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#heredo_kidney').show();
         else
             $('#heredo_kidney').hide();
     });
     $('#heredo_thyroid_cbox').on('click', function() {
         $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#heredo_thyroid').show();
         else
             $('#heredo_thyroid').hide();
     });
     $('#heredo_others_cbox').on('click', function() {
         $('#heredo_all_cbox, #heredo_none_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#heredo_others').show();
         else
             $('#heredo_others').hide();
     });
     $('#heredo_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
-           $('#heredo_all_cbox, #heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', false);
-           $('#heredo_kidney_cbox, #heredo_thyroid_cbox, #heredo_others_cbox').prop('checked', false);
-           $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid, #heredo_others').hide();
-       }
+        if ($(this).is(':checked')) {
+            $('#heredo_all_cbox, #heredo_hyper_cbox, #heredo_diab_cbox, #heredo_asthma_cbox, #heredo_cancer_cbox').prop('checked', false);
+            $('#heredo_kidney_cbox, #heredo_thyroid_cbox, #heredo_others_cbox').prop('checked', false);
+            $('#heredo_hyper, #heredo_diab, #heredo_asthma, #heredo_cancer, #heredo_kidney, #heredo_thyroid, #heredo_others').hide();
+        }
     });
- 
+
     /* *****LAB PROCEDURES***** */
     // $('#lab_others').hide();
-    $('#lab_all_cbox').on('click', function () {
-       if($(this).is(':checked'))
-           $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').prop('checked', true);
-       else
-           $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').prop('checked', false);
+    $('#lab_all_cbox').on('click', function() {
+        if ($(this).is(':checked'))
+            $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').prop('checked', true);
+        else
+            $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').prop('checked', false);
     });
-    $('#lab_others_cbox').on('click', function () {
+    $('#lab_others_cbox').on('click', function() {
         $('#lab_all_cbox').prop('checked', false);
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#lab_others').show();
         else
             $('#lab_others').hide();
     });
-    $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').on('click', function () {
+    $('#lab_ua_cbox, #lab_cbc_cbox, #lab_xray_cbox').on('click', function() {
         $('#lab_all_cbox').prop('checked', false);
     });
 
     /* *****PRENATAL***** */
     // $('#prenatal_mat_illness').hide();
     $('#prenatal_radiowith').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#prenatal_mat_illness').show();
     });
     $('#prenatal_radiowout').on('click', function() {
-       if($(this).is(':checked'))
-           $('#prenatal_mat_illness').hide();
+        if ($(this).is(':checked'))
+            $('#prenatal_mat_illness').hide();
     });
 
     /* *****POST NATAL (FEEDING HISTORY)****** */
     // $('#breastfed, #formula_fed').hide();
     $('#postnatal_bfeed').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#breastfed').show();
         else
             $('#breastfed').hide();
     });
     $('#postnatal_ffeed').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#formula_fed').show();
         else
             $('#formula_fed').hide();
@@ -2876,55 +2785,54 @@ $reason_for_referral = \App\ReasonForReferral::get();
     /* *****POST NATAL (IMMUNIZATION HISTORY)****** */
     // $('#immu_dpt, #immu_hepb, #immu_others').hide();
     $('#immu_dpt_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#immu_dpt').show();
         else
             $('#immu_dpt').hide();
     });
     $('#immu_hepb_cbox').on('click', function() {
-       if($(this).is(':checked'))
-           $('#immu_hepb').show();
-       else
-           $('#immu_hepb').hide();
+        if ($(this).is(':checked'))
+            $('#immu_hepb').show();
+        else
+            $('#immu_hepb').hide();
     });
     $('#immu_others_cbox').on('click', function() {
-       if($(this).is(':checked'))
-           $('#immu_others').show();
-       else
-           $('#immu_others').hide();
+        if ($(this).is(':checked'))
+            $('#immu_others').show();
+        else
+            $('#immu_others').hide();
     });
 
     /* *****MENSTRUAL/MENOPAUSAL***** */
     // $('#mens_irreg, #menopausal_age').hide();
     $('#mens_irreg_radio').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#mens_irreg').show();
     });
     $('#mens_reg_radio').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#mens_irreg').hide();
     });
     $('#menopausal').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#menopausal_age').show();
     });
     $('#non_menopausal').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#menopausal_age').hide();
     });
 
     /* *****CONTRACEPTIVES***** */
     // $('#contraceptive_others').hide();
     $('#contraceptive_others_cbox').on('click', function() {
-       if($(this).is(':checked')) {
-           $('#contraceptive_others').show();
-           $('#contraceptive_none_cbox').prop('checked', false);
-       }
-       else
-           $('#contraceptive_others').hide();
+        if ($(this).is(':checked')) {
+            $('#contraceptive_others').show();
+            $('#contraceptive_none_cbox').prop('checked', false);
+        } else
+            $('#contraceptive_others').hide();
     });
     $('#contraceptive_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#contraceptive_others').hide();
             $('#contraceptive_pills_cbox, #contraceptive_iud_cbox, #contraceptive_rhythm_cbox, #contraceptive_condom_cbox, #contraceptive_others_cbox').prop('checked', false);
         }
@@ -2937,19 +2845,19 @@ $reason_for_referral = \App\ReasonForReferral::get();
     // $('#smoking_sticks').hide();
     // $('#smoking_quit_year').hide();
     $('#smoke_yes').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#smoking_sticks').show();
             $('#smoking_quit_year').hide();
         }
     });
     $('#smoke_quit').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#smoking_quit_year').show();
             $('#smoking_sticks').hide();
         }
     });
     $('#smoke_no').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#smoking_sticks').hide();
             $('#smoking_quit_year').hide();
         }
@@ -2960,21 +2868,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
     // $('#alcohol_type').hide();
     // $('#alcohol_quit_year').hide();
     $('#alcohol_yes_radio').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#alcohol_bottles').show();
             $('#alcohol_type').show();
             $('#alcohol_quit_year').hide();
         }
     })
     $('#alcohol_no_radio').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#alcohol_bottles').hide();
             $('#alcohol_type').hide();
             $('#alcohol_quit_year').hide();
         }
     });
     $('#alcohol_quit_radio').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#alcohol_quit_year').show();
             $('#alcohol_bottles').hide();
             $('#alcohol_type').hide();
@@ -2985,19 +2893,19 @@ $reason_for_referral = \App\ReasonForReferral::get();
     // $('#drugs_text').hide();
     // $('#drugs_quit_year').hide();
     $('#drugs_yes_radio').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#drugs_text').show();
             $('#drugs_quit_year').hide();
         }
     });
     $('#drugs_no_radio').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#drugs_text').hide();
             $('#drugs_quit_year').hide();
         }
     });
     $('#drugs_quit_radio').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#drugs_quit_year').show();
             $('#drugs_text').hide();
         }
@@ -3006,7 +2914,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
     function resetPupilSize() {
         $('input[name="glasgow_btn"]:checked').each(function() {
-            if($(this).is(':checked'))
+            if ($(this).is(':checked'))
                 $(this).prop('checked', false);
         })
     }
@@ -3015,7 +2923,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
         var gcs = parseInt($('#gcs_score').val(), 10);
         var total = 0;
-        if(last_motor == 0)
+        if (last_motor == 0)
             total = gcs + motor;
         else
             total = (gcs - last_motor) + motor;
@@ -3027,7 +2935,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
         var gcs = parseInt($('#gcs_score').val(), 10);
         var total = 0;
-        if(last_verbal == 0)
+        if (last_verbal == 0)
             total = gcs + verbal;
         else
             total = (gcs - last_verbal) + verbal;
@@ -3039,7 +2947,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
         var gcs = parseInt($('#gcs_score').val(), 10);
         var total = 0;
-        if(last_eye == 0)
+        if (last_eye == 0)
             total = gcs + eye;
         else
             total = (gcs - last_eye) + eye;
@@ -3050,16 +2958,16 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* *****REVIEW OF SYSTEMS***** */
     /* SKIN */
-    $('#rs_skin_all_cbox').on('click', function () {
-       if($(this).is(':checked')) {
-           $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', true);
-           $('#rs_skin_none_cbox').prop('checked', false);
-       } else
-           $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
+    $('#rs_skin_all_cbox').on('click', function() {
+        if ($(this).is(':checked')) {
+            $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', true);
+            $('#rs_skin_none_cbox').prop('checked', false);
+        } else
+            $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
     });
-    $('#rs_skin_none_cbox').on('click', function () {
-       if($(this).is(':checked'))
-           $('#rs_skin_all_cbox, #rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
+    $('#rs_skin_none_cbox').on('click', function() {
+        if ($(this).is(':checked'))
+            $('#rs_skin_all_cbox, #rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
     });
     $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').on('click', function() {
         $('#rs_skin_all_cbox, #rs_skin_none_cbox').prop('checked', false);
@@ -3067,15 +2975,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* HEAD */
     $('#rs_head_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_head_headache_cbox, #rs_head_injury_cbox').prop('checked', true);
             $('#rs_head_none_cbox').prop('checked', false);
         } else
             $('#rs_head_headache_cbox, #rs_head_injury_cbox').prop('checked', false);
     });
     $('#rs_head_none_cbox').on('click', function() {
-       if($(this).is(':checked'))
-           $('#rs_head_all_cbox, #rs_head_headache_cbox, #rs_head_injury_cbox').prop('checked', false);
+        if ($(this).is(':checked'))
+            $('#rs_head_all_cbox, #rs_head_headache_cbox, #rs_head_injury_cbox').prop('checked', false);
     });
     $('#rs_head_headache_cbox, #rs_head_injury_cbox').on('click', function() {
         $('#rs_head_all_cbox, #rs_head_none_cbox').prop('checked', false);
@@ -3083,7 +2991,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* EYES */
     $('#rs_eyes_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', true);
             $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', true);
             $('#rs_eyes_none_cbox').prop('checked', false);
@@ -3093,7 +3001,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     });
     $('#rs_eyes_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', false);
             $('#rs_eyes_all_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', false);
         }
@@ -3104,62 +3012,62 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* EARS */
     $('#rs_ears_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').prop('checked', true);
             $('#rs_ears_none_cbox').prop('checked', false);
         } else
             $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').prop('checked', false);
     });
     $('#rs_ears_none_cbox').on('click', function() {
-       if($(this).is(':checked'))
-           $('#rs_ears_all_cbox, #rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').prop('checked', false);
+        if ($(this).is(':checked'))
+            $('#rs_ears_all_cbox, #rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').prop('checked', false);
     });
     $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').on('click', function() {
-       $('#rs_ears_all_cbox, #rs_ears_none_cbox').prop('checked', false);
+        $('#rs_ears_all_cbox, #rs_ears_none_cbox').prop('checked', false);
     });
 
     /* NOSE/SINUSES */
     $('#rs_nose_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').prop('checked', true);
             $('#rs_nose_none_cbox').prop('checked', false);
-        }else
+        } else
             $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').prop('checked', false);
     });
     $('#rs_nose_none_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#rs_nose_all_cbox, #rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').prop('checked', false);
     });
     $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').on('click', function() {
-       $('#rs_nose_all_cbox, #rs_nose_none_cbox').prop('checked', false);
+        $('#rs_nose_all_cbox, #rs_nose_none_cbox').prop('checked', false);
     });
 
     /* MOUTH/THROAT */
     $('#rs_mouth_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').prop('checked', true);
             $('#rs_mouth_none_cbox').prop('checked', false);
         } else
             $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').prop('checked', false);
     });
     $('#rs_mouth_none_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#rs_mouth_all_cbox, #rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').prop('checked', false);
     });
     $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').on('click', function() {
-       $('#rs_mouth_all_cbox, #rs_mouth_none_cbox').prop('checked', false);
+        $('#rs_mouth_all_cbox, #rs_mouth_none_cbox').prop('checked', false);
     });
 
     /* NECK */
     $('#rs_neck_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').prop('checked', true);
             $('#rs_neck_none_cbox').prop('checked', false);
         } else
             $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').prop('checked', false);
     });
     $('#rs_neck_none_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#rs_neck_all_cbox, #rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').prop('checked', false);
     });
     $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').on('click', function() {
@@ -3168,14 +3076,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* BREAST */
     $('#rs_breast_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').prop('checked', true);
             $('#rs_breast_none_cbox').prop('checked', false);
         } else
             $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').prop('checked', false);
     });
     $('#rs_breast_none_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#rs_breast_all_cbox, #rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').prop('checked', false);
     });
     $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').on('click', function() {
@@ -3184,7 +3092,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* RESPIRATORY/CARDIAC */
     $('#rs_respi_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_respi_shortness_cbox, #rs_respi_cough_cbox, #rs_respi_phlegm_cbox, #rs_respi_wheezing_cbox, #rs_respi_coughblood_cbox').prop('checked', true);
             $('#rs_respi_chestpain_cbox, #rs_respi_fever_cbox, #rs_respi_sweats_cbox, #rs_respi_swelling_cbox, #rs_respi_bluefingers_cbox').prop('checked', true);
             $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').prop('checked', true);
@@ -3196,14 +3104,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     });
     $('#rs_respi_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_respi_all_cbox, #rs_respi_shortness_cbox, #rs_respi_cough_cbox, #rs_respi_phlegm_cbox, #rs_respi_wheezing_cbox, #rs_respi_coughblood_cbox').prop('checked', false);
             $('#rs_respi_chestpain_cbox, #rs_respi_fever_cbox, #rs_respi_sweats_cbox, #rs_respi_swelling_cbox, #rs_respi_bluefingers_cbox').prop('checked', false);
             $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').prop('checked', false);
         }
     });
     $('#rs_respi_shortness_cbox, #rs_respi_cough_cbox, #rs_respi_phlegm_cbox, #rs_respi_wheezing_cbox, #rs_respi_coughblood_cbox').on('click', function() {
-       $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
+        $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
     });
     $('#rs_respi_chestpain_cbox, #rs_respi_fever_cbox, #rs_respi_sweats_cbox, #rs_respi_swelling_cbox, #rs_respi_bluefingers_cbox').on('click', function() {
         $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
@@ -3214,7 +3122,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* GASTROINTESTINAL */
     $('#rs_gastro_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_gastro_appetite_cbox, #rs_gastro_swallow_cbox, #rs_gastro_nausea_cbox, #rs_gastro_heartburn_cbox, #rs_gastro_vomit_cbox, #rs_gastro_vomitblood_cbox').prop('checked', true);
             $('#rs_gastro_constipation_cbox, #rs_gastro_diarrhea_cbox, #rs_gastro_bowel_cbox, #rs_gastro_abdominal_cbox, #rs_gastro_belching_cbox, #rs_gastro_flatus_cbox').prop('checked', true);
             $('#rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').prop('checked', true);
@@ -3226,7 +3134,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     });
     $('#rs_gastro_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_gastro_appetite_cbox, #rs_gastro_swallow_cbox, #rs_gastro_nausea_cbox, #rs_gastro_heartburn_cbox, #rs_gastro_vomit_cbox, #rs_gastro_vomitblood_cbox').prop('checked', false);
             $('#rs_gastro_constipation_cbox, #rs_gastro_diarrhea_cbox, #rs_gastro_bowel_cbox, #rs_gastro_abdominal_cbox, #rs_gastro_belching_cbox, #rs_gastro_flatus_cbox').prop('checked', false);
             $('#rs_gastro_all_cbox, #rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').prop('checked', false);
@@ -3244,7 +3152,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* URINARY */
     $('#rs_urin_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').prop('checked', true);
             $('#rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').prop('checked', true);
             $('#rs_urin_none_cbox').prop('checked', false);
@@ -3254,10 +3162,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     });
     $('#rs_urin_none_cbox').on('click', function() {
-       if($(this).is(':checked')) {
-           $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').prop('checked', false);
-           $('#rs_urin_all_cbox, #rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').prop('checked', false);
-       }
+        if ($(this).is(':checked')) {
+            $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').prop('checked', false);
+            $('#rs_urin_all_cbox, #rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').prop('checked', false);
+        }
     });
     $('#rs_urin_difficult_cbox, #rs_urin_pain_cbox, #rs_urin_frequent_cbox, #rs_urin_urgent_cbox, #rs_urin_incontinence_cbox').on('click', function() {
         $('#rs_urin_all_cbox, #rs_urin_none_cbox').prop('checked', false);
@@ -3268,14 +3176,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* PERIPHERAL VASCULAR */
     $('#rs_peri_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', true);
             $('#rs_peri_none_cbox').prop('checked', false);
         } else
             $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
     });
     $('#rs_peri_none_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#rs_peri_all_cbox, #rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
     });
     $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').on('click', function() {
@@ -3284,16 +3192,16 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
-    if($(this).is(':checked')) {
-        $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
-        $('#rs_muscle_none_cbox').prop('checked', false);
-    } else {
-        $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
-    }
+        if ($(this).is(':checked')) {
+            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
+            $('#rs_muscle_none_cbox').prop('checked', false);
+        } else {
+            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+        }
     });
 
     $('#rs_muscle_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
@@ -3304,7 +3212,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', true);
             $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', true);
             $('#rs_neuro_none_cbox').prop('checked', false);
@@ -3314,10 +3222,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     });
     $('#rs_neuro_none_cbox').on('click', function() {
-       if($(this).is(':checked')) {
-           $('#rs_neuro_all_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
-           $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
-       }
+        if ($(this).is(':checked')) {
+            $('#rs_neuro_all_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
+            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
+        }
     });
     $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').on('click', function() {
         $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
@@ -3328,14 +3236,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* HEMATOLOGIC */
     $('#rs_hema_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').prop('checked', true);
             $('#rs_hema_none_cbox').prop('checked', false);
         } else
             $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').prop('checked', false);
     });
     $('#rs_hema_none_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#rs_hema_all_cbox, #rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').prop('checked', false);
     });
     $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').on('click', function() {
@@ -3344,7 +3252,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* ENDOCRINE */
     $('#rs_endo_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', true);
             $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', true);
             $('#rs_endo_none_cbox').prop('checked', false);
@@ -3354,7 +3262,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     });
     $('#rs_endo_none_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', false);
             $('#rs_endo_all_cbox, #rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', false);
         }
@@ -3368,14 +3276,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* PSYCHIATRIC */
     $('#rs_psych_all_cbox').on('click', function() {
-        if($(this).is(':checked')) {
+        if ($(this).is(':checked')) {
             $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', true);
             $('#rs_psych_none_cbox').prop('checked', false);
         } else
             $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
     });
     $('#rs_psych_none_cbox').on('click', function() {
-        if($(this).is(':checked'))
+        if ($(this).is(':checked'))
             $('#rs_psych_all_cbox, #rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
     });
     $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
@@ -3395,15 +3303,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     $('.reason_referral').on('change', function() {
         var value = $(this).val();
-        if(value == '-1') {
+        if (value == '-1') {
             $("#other_reason_referral").html(loading);
-            setTimeout(function(){
+            setTimeout(function() {
                 $("#other_reason_referral").html('<span>Other Reason for Referral:</span>\n' +
                     '                                <br />\n' +
                     '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            },500);
+            }, 500);
             $("#other_reason_referral").show();
-        }else{
+        } else {
             clearOtherReasonReferral();
         }
     });
@@ -3435,10 +3343,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('.image-upload-wrap').show();
     }
 
-    $('.image-upload-wrap').bind('dragover', function () {
+    $('.image-upload-wrap').bind('dragover', function() {
         $('.image-upload-wrap').addClass('image-dropping');
     });
-    $('.image-upload-wrap').bind('dragleave', function () {
+    $('.image-upload-wrap').bind('dragleave', function() {
         $('.image-upload-wrap').removeClass('image-dropping');
     });
 </script>

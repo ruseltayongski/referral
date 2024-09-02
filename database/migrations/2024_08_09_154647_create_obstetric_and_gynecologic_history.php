@@ -26,6 +26,7 @@ class CreateObstetricAndGynecologicHistory extends Migration
             $table->string('menstrual_cycle_padsperday')->nullable();
             $table->string('menstrual_cycle_medication')->nullable();
             $table->string('contraceptive_history')->nullable();
+            $table->string('contraceptive_others')->nullable();
             $table->string('parity_g')->nullable();
             $table->string('parity_p')->nullable();
             $table->string('parity_ft')->nullable();
@@ -36,7 +37,7 @@ class CreateObstetricAndGynecologicHistory extends Migration
             $table->string('parity_edc')->nullable();
             $table->string('aog_lnmp')->nullable();
             $table->string('aog_eutz')->nullable();
-            $table->string('prenatal_history')->nullable();     
+            $table->text('prenatal_history')->nullable();
             $table->timestamps();
         });
     }
