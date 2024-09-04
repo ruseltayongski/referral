@@ -17,6 +17,7 @@ use App\LatestVitalSigns;
 use App\PertinentLaboratory;
 use App\Pregnancy;
 use DB;
+use Anouar\Fpdf\Fpdf;;
 
 class NewFormCtrl extends Controller
 {
@@ -92,803 +93,608 @@ class NewFormCtrl extends Controller
         $rs_endocrine_methods = [];
         $rs_psychiatric_methods = [];
 
-        $patient_id = 1;
+        $patient_id = 7;
 
         // Define the fields for comorbidities with associated additional data (year or string)
         $comorbidity_fields = [
             'Select All' => [
                 'cbox' => 'comor_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'comor_none_cbox',
-                'other' => null
             ],
             'Hypertension' => [
                 'cbox' => 'comor_hyper_cbox',
-                'other' => null
             ],
             'Diabetes' => [
                 'cbox' => 'comor_diab_cbox',
-                'other' => null
             ],
             'Asthma' => [
                 'cbox' => 'comor_asthma_cbox',
-                'other' => null
             ],
             'COPD' => [
                 'cbox' => 'comor_copd_cbox',
-                'other' => null
             ],
             'Dyslipidemia' => [
                 'cbox' => 'comor_dyslip_cbox',
-                'other' => null
             ],
             'Thyroid Disease' => [
                 'cbox' => 'comor_thyroid_cbox',
-                'other' => null
             ],
             'Cancer' => [
                 'cbox' => 'comor_cancer_cbox',
-                'other' => null
             ],
             'Others' => [
                 'cbox' => 'comor_others_cbox',
-                'other' => null
             ]
         ];
         // Define the fields for heredofamilial diseases with associated additional data (side of the family)
         $heredofamilial_diseases_fields = [
+            'Select All' => [
+                'cbox' => 'heredo_all_cbox',
+            ],
+            'None' => [
+                'cbox' => 'heredo_none_cbox',
+            ],
             'Hypertension' => [
                 'cbox' => 'heredo_hyper_cbox',
-                'side' => 'heredo_hypertension_side'
             ],
             'Diabetes' => [
                 'cbox' => 'heredo_diab_cbox',
-                'side' => 'heredo_diabetes_side'
             ],
             'Asthma' => [
                 'cbox' => 'heredo_asthma_cbox',
-                'side' => 'heredo_asthma_side'
             ],
             'Cancer' => [
                 'cbox' => 'heredo_cancer_cbox',
-                'side' => 'heredo_cancer_side'
             ],
             'Kidney Disease' => [
                 'cbox' => 'heredo_kidney_cbox',
-                'side' => 'heredo_kidney_side'
             ],
             'Thyroid Disease' => [
                 'cbox' => 'heredo_thyroid_cbox',
-                'side' => 'heredo_thyroid_side'
             ],
             'Others' => [
                 'cbox' => 'heredo_others_cbox',
-                'side' => 'heredo_others_side'
             ],
         ];
         // Define the fields for allergies with associated causes
         $allergies_fields = [
-            'Food Allergy' => [
+            'Select All' => [
+                'cbox' => 'allergy_all_cbox',
+            ],
+            'None' => [
+                'cbox' => 'allergy_none_cbox',
+            ],
+            'Food' => [
                 'cbox' => 'allergy_food_cbox',
-                'cause' => 'allergy_food_cause'
             ],
-            'Drug Allergy' => [
+            'Drugs' => [
                 'cbox' => 'allergy_drug_cbox',
-                'cause' => 'allergy_drug_cause'
             ],
-            'Other Allergy' => [
+            'Others' => [
                 'cbox' => 'allergy_other_cbox',
-                'cause' => 'allergy_other_cause'
             ]
         ];
         //  Define the fields for review system with associated causes
         $rs_skin_fields = [
             'Select All' => [
                 'cbox' => 'rs_skin_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_skin_none_cbox',
-                'other' => null
             ],
             'Rashes' => [
                 'cbox' => 'rs_skin_rashes_cbox',
-                'other' => null
             ],
             'Itching' => [
                 'cbox' => 'rs_skin_itching_cbox',
-                'other' => null
             ],
             'Change in hair or nails' => [
                 'cbox' => 'rs_skin_hairchange_cbox',
-                'other' => null
             ],
         ];
         $rs_head_fields = [
             'Select All' => [
                 'cbox' => 'rs_head_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_head_none_cbox',
-                'other' => null
             ],
             'Headaches' => [
                 'cbox' => 'rs_head_headache_cbox',
-                'other' => null
             ],
             'Head injury' => [
                 'cbox' => 'rs_head_injury_cbox',
-                'other' => null
             ],
         ];
         $rs_eyes_fields = [
             'Select All' => [
                 'cbox' => 'rs_eyes_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_eyes_none_cbox',
-                'other' => null
             ],
             'Glasses or Contacts' => [
                 'cbox' => 'rs_eyes_glasses_cbox',
-                'other' => null
             ],
             'Change in vision' => [
                 'cbox' => 'rs_eyes_vision_cbox',
-                'other' => null
             ],
             'Eye pain' => [
                 'cbox' => 'rs_eyes_pain_cbox',
-                'other' => null
             ],
             'Double Vision' => [
                 'cbox' => 'rs_eyes_doublevision_cbox',
-                'other' => null
             ],
             'Flashing lights' => [
                 'cbox' => 'rs_eyes_flashing_cbox',
-                'other' => null
             ],
             'Glaucoma/Cataracts' => [
                 'cbox' => 'rs_eyes_glaucoma_cbox',
-                'other' => null
             ],
             'Last eye exam' => [
                 'cbox' => 'rs_eye_exam_cbox',
-                'other' => null
             ],
         ];
         $rs_ears_fields = [
             'Select All' => [
                 'cbox' => 'rs_ears_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_ears_none_cbox',
-                'other' => null
             ],
             'Change in hearing' => [
                 'cbox' => 'rs_ears_changehearing_cbox',
-                'other' => null
             ],
             'Ear pain' => [
                 'cbox' => 'rs_ears_pain_cbox',
-                'other' => null
             ],
             'Ear discharge' => [
                 'cbox' => 'rs_ears_discharge_cbox',
-                'other' => null
             ],
             'Ringing' => [
                 'cbox' => 'rs_ears_ringing_cbox',
-                'other' => null
             ],
             'Dizziness' => [
                 'cbox' => 'rs_ears_dizziness_cbox',
-                'other' => null
             ],
         ];
         $rs_nose_fields = [
             'Select All' => [
                 'cbox' => 'rs_nose_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_nose_none_cbox',
-                'other' => null
             ],
             'Nose bleeds' => [
                 'cbox' => 'rs_nose_bleeds_cbox',
-                'other' => null
             ],
             'Nasal stuffiness' => [
                 'cbox' => 'rs_nose_stuff_cbox',
-                'other' => null
             ],
             'Frequent Colds' => [
                 'cbox' => 'rs_nose_colds_cbox',
-                'other' => null
             ],
         ];
         $rs_mouth_fields = [
             'Select All' => [
                 'cbox' => 'rs_mouth_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_mouth_none_cbox',
-                'other' => null
             ],
             'Bleeding gums' => [
                 'cbox' => 'rs_mouth_bleed_cbox',
-                'other' => null
             ],
             'Sore tongue' => [
                 'cbox' => 'rs_mouth_soretongue_cbox',
-                'other' => null
             ],
             'Sore throat' => [
                 'cbox' => 'rs_mouth_sorethroat_cbox',
-                'other' => null
             ],
             'Hoarseness' => [
                 'cbox' => 'rs_mouth_hoarse_cbox',
-                'other' => null
             ],
         ];
         $rs_neck_fields = [
             'Select All' => [
                 'cbox' => 'rs_neck_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_neck_none_cbox',
-                'other' => null
             ],
             'Lumps' => [
                 'cbox' => 'rs_neck_lumps_cbox',
-                'other' => null
             ],
             'Swollen glands' => [
                 'cbox' => 'rs_neck_swollen_cbox',
-                'other' => null
             ],
             'Goiter' => [
                 'cbox' => 'rs_neck_goiter_cbox',
-                'other' => null
             ],
             'Stiffness' => [
                 'cbox' => 'rs_neck_stiff_cbox',
-                'other' => null
             ],
         ];
 
         $rs_breast_fields = [
             'Select All' => [
                 'cbox' => 'rs_breast_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_breast_none_cbox',
-                'other' => null
             ],
             'Lumps' => [
                 'cbox' => 'rs_breast_lumps_cbox',
-                'other' => null
             ],
             'Pain' => [
                 'cbox' => 'rs_breast_pain_cbox',
-                'other' => null
             ],
             'Nipple discharge' => [
                 'cbox' => 'rs_breast_discharge_cbox',
-                'other' => null
             ],
             'BSE' => [
                 'cbox' => 'rs_breast_bse_cbox',
-                'other' => null
             ],
         ];
         $rs_respiratory_fields = [
             'Select All' => [
                 'cbox' => 'rs_respi_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_respi_none_cbox',
-                'other' => null
             ],
             'Shortness of breath' => [
                 'cbox' => 'rs_respi_shortness_cbox',
-                'other' => null
             ],
             'Cough' => [
                 'cbox' => 'rs_respi_cough_cbox',
-                'other' => null
             ],
             'Production of phlegm color' => [
                 'cbox' => 'rs_respi_phlegm_cbox',
-                'other' => null
             ],
             'Wheezing' => [
                 'cbox' => 'rs_respi_wheezing_cbox',
-                'other' => null
             ],
             'Coughing up blood' => [
                 'cbox' => 'rs_respi_coughblood_cbox',
-                'other' => null
             ],
             'Chest pain' => [
                 'cbox' => 'rs_respi_chestpain_cbox',
-                'other' => null
             ],
             'Fever' => [
                 'cbox' => 'rs_respi_fever_cbox',
-                'other' => null
             ],
             'Night sweats' => [
                 'cbox' => 'rs_respi_sweats_cbox',
-                'other' => null
             ],
             'Swelling in hands/feet' => [
                 'cbox' => 'rs_respi_swelling_cbox',
-                'other' => null
             ],
             'Blue fingers/toes' => [
                 'cbox' => 'rs_respi_bluefingers_cbox',
-                'other' => null
             ],
             'High blood pressure' => [
                 'cbox' => 'rs_respi_highbp_cbox',
-                'other' => null
             ],
             'Skipping heart beats' => [
                 'cbox' => 'rs_respi_skipheartbeats_cbox',
-                'other' => null
             ],
             'Heart murmur' => [
                 'cbox' => 'rs_respi_heartmurmur_cbox',
-                'other' => null
             ],
             'HX of heart medication' => [
                 'cbox' => 'rs_respi_hxheart_cbox',
-                'other' => null
             ],
             'Bronchitis/emphysema' => [
                 'cbox' => 'rs_respi_brochitis_cbox',
-                'other' => null
             ],
             'Rheumatic heart disease' => [
                 'cbox' => 'rs_respi_rheumaticheart_cbox',
-                'other' => null
             ],
 
         ];
         $rs_gastrointestinal_fields = [
             'Select All' => [
                 'cbox' => 'rs_gastro_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_gastro_none_cbox',
-                'other' => null
             ],
             'Change of appetite or weight' => [
                 'cbox' => 'rs_gastro_appetite_cbox',
-                'other' => null
             ],
             'Problems swallowing' => [
                 'cbox' => 'rs_gastro_swallow_cbox',
-                'other' => null
             ],
             'Nausea' => [
                 'cbox' => 'rs_gastro_nausea_cbox',
-                'other' => null
             ],
             'Heartburn' => [
                 'cbox' => 'rs_gastro_heartburn_cbox',
-                'other' => null
             ],
             'Vomiting' => [
                 'cbox' => 'rs_gastro_vomit_cbox',
-                'other' => null
             ],
             'Vomiting Blood' => [
                 'cbox' => 'rs_gastro_vomitblood_cbox',
-                'other' => null
             ],
             'Constipation' => [
                 'cbox' => 'rs_gastro_constipation_cbox',
-                'other' => null
             ],
             'Diarrhea' => [
                 'cbox' => 'rs_gastro_diarrhea_cbox',
-                'other' => null
             ],
             'Change in bowel habits' => [
                 'cbox' => 'rs_gastro_bowel_cbox',
-                'other' => null
             ],
             'Abdominal pain' => [
                 'cbox' => 'rs_gastro_abdominal_cbox',
-                'other' => null
             ],
             'Excessive belching' => [
                 'cbox' => 'rs_gastro_belching_cbox',
-                'other' => null
             ],
             'Excessive flatus' => [
                 'cbox' => 'rs_gastro_flatus_cbox',
-                'other' => null
             ],
             'Yellow color of skin (Jaundice/Hepatitis)' => [
                 'cbox' => 'rs_gastro_jaundice_cbox',
-                'other' => null
             ],
             'Food intolerance' => [
                 'cbox' => 'rs_gastro_intolerance_cbox',
-                'other' => null
             ],
             'Rectal bleeding/Hemorrhoids' => [
                 'cbox' => 'rs_gastro_rectalbleed_cbox',
-                'other' => null
             ],
         ];
         $rs_urinary_fields = [
             'Select All' => [
                 'cbox' => 'rs_urin_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_urin_none_cbox',
-                'other' => null
             ],
             'Difficulty in urination' => [
                 'cbox' => 'rs_urin_difficult_cbox',
-                'other' => null
             ],
             'Pain or burning on urination' => [
                 'cbox' => 'rs_urin_pain_cbox',
-                'other' => null
             ],
             'Frequent urination at night' => [
                 'cbox' => 'rs_urin_frequent_cbox',
-                'other' => null
             ],
             'Urgent need to urinate' => [
                 'cbox' => 'rs_urin_urgent_cbox',
-                'other' => null
             ],
             'Incontinence of urine' => [
                 'cbox' => 'rs_urin_incontinence_cbox',
-                'other' => null
             ],
             'Dribbling' => [
                 'cbox' => 'rs_urin_dribbling_cbox',
-                'other' => null
             ],
             'Decreased urine stream' => [
                 'cbox' => 'rs_urin_decreased_cbox',
-                'other' => null
             ],
             'Blood in urine' => [
                 'cbox' => 'rs_urin_blood_cbox',
-                'other' => null
             ],
             'UTI/stones/prostate infection' => [
                 'cbox' => 'rs_urin_uti_cbox',
-                'other' => null
             ],
         ];
         $rs_peripheral_fields = [
             'Select All' => [
                 'cbox' => 'rs_peri_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_peri_none_cbox',
-                'other' => null
             ],
             'Leg cramps' => [
                 'cbox' => 'rs_peri_legcramp_cbox',
-                'other' => null
             ],
             'Varicose veins' => [
                 'cbox' => 'rs_peri_varicose_cbox',
-                'other' => null
             ],
             'Clots in veins' => [
                 'cbox' => 'rs_peri_veinclot_cbox',
-                'other' => null
             ],
         ];
 
         $rs_musculoskeletal_fields = [
             'Select All' => [
                 'cbox' => 'rs_muscle_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_muscle_none_cbox',
-                'other' => null
             ],
             'Pain' => [
                 'cbox' => 'rs_musclgit_cbox',
-                'other' => null
             ],
             'Swelling' => [
                 'cbox' => 'rs_muscle_swell_cbox',
-                'other' => null
             ],
             'Stiffness' => [
                 'cbox' => 'rs_muscle_stiff_cbox',
-                'other' => null
             ],
             'Decreased joint motion' => [
                 'cbox' => 'rs_muscle_decmotion_cbox',
-                'other' => null
             ],
             'Broken bone' => [
                 'cbox' => 'rs_muscle_brokenbone_cbox',
-                'other' => null
             ],
             'Serious sprains' => [
                 'cbox' => 'rs_muscle_sprain_cbox',
-                'other' => null
             ],
             'Arthritis' => [
                 'cbox' => 'rs_muscle_arthritis_cbox',
-                'other' => null
             ],
             'Gout' => [
                 'cbox' => 'rs_muscle_gout_cbox',
-                'other' => null
             ],
         ];
         $rs_neurologic_fields = [
             'Select All' => [
                 'cbox' => 'rs_neuro_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_neuro_none_cbox',
-                'other' => null
             ],
             'Headaches' => [
                 'cbox' => 'rs_neuro_headache_cbox',
-                'other' => null
             ],
             'Seizures' => [
                 'cbox' => 'rs_neuro_seizure_cbox',
-                'other' => null
             ],
             'Loss of Consciousness/Fainting' => [
                 'cbox' => 'rs_neuro_faint_cbox',
-                'other' => null
             ],
             'Paralysis' => [
                 'cbox' => 'rs_neuro_paralysis_cbox',
-                'other' => null
             ],
             'Weakness' => [
                 'cbox' => 'rs_neuro_weakness_cbox',
-                'other' => null
             ],
             'Loss of muscle size' => [
                 'cbox' => 'rs_neuro_sizeloss_cbox',
-                'other' => null
             ],
             'Muscle Spasm' => [
                 'cbox' => 'rs_neuro_spasm_cbox',
-                'other' => null
             ],
             'Tremor' => [
                 'cbox' => 'rs_neuro_tremor_cbox',
-                'other' => null
             ],
             'Involuntary movement' => [
                 'cbox' => 'rs_neuro_involuntary_cbox',
-                'other' => null
             ],
             'Incoordination' => [
                 'cbox' => 'rs_neuro_incoordination_cbox',
-                'other' => null
             ],
             'Numbness' => [
                 'cbox' => 'rs_neuro_numbness_cbox',
-                'other' => null
             ],
             'Feeling of pins and needles/tingles' => [
                 'cbox' => 'rs_neuro_tingles_cbox',
-                'other' => null
             ],
         ];
         $rs_hematologic_fields = [
             'Select All' => [
                 'cbox' => 'rs_hema_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_hema_none_cbox',
-                'other' => null
             ],
             'Anemia' => [
                 'cbox' => 'rs_hema_anemia_cbox',
-                'other' => null
             ],
             'Easy bruising/bleeding' => [
                 'cbox' => 'rs_hema_bruising_cbox',
-                'other' => null
             ],
             'Past Transfusions' => [
                 'cbox' => 'rss_hema_transfusion_cbox',
-                'other' => null
             ],
         ];
         $rs_endocrine_fields = [
             'Select All' => [
                 'cbox' => 'rs_endo_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_endo_none_cbox',
-                'other' => null
             ],
             'Abnormal growth' => [
                 'cbox' => 'rs_endo_abnormal_cbox',
-                'other' => null
             ],
             'Increased appetite' => [
                 'cbox' => 'rs_endo_appetite_cbox',
-                'other' => null
             ],
             'Increased thirst' => [
                 'cbox' => 'rs_endo_thirst_cbox',
-                'other' => null
             ],
             'Increased urine production' => [
                 'cbox' => 'rs_endo_urine_cbox',
-                'other' => null
             ],
             'Thyroid troubles' => [
                 'cbox' => 'rs_endo_thyroid_cbox',
-                'other' => null
             ],
             'Heat/cold intolerancee' => [
                 'cbox' => 'rs_endo_heatcold_cbox',
-                'other' => null
             ],
             'Excessive sweating' => [
                 'cbox' => 'rs_endo_sweat_cbox',
-                'other' => null
             ],
             'Diabetes' => [
                 'cbox' => 'rs_endo_diabetes_cbox',
-                'other' => null
             ],
         ];
         $rs_psychiatric_fields = [
             'Select All' => [
                 'cbox' => 'rs_psych_all_cbox',
-                'other' => null
             ],
             'None' => [
                 'cbox' => 'rs_psych_none_cbox',
-                'other' => null
             ],
             'Tension/Anxiety' => [
                 'cbox' => 'rs_psych_tension_cbox',
-                'other' => null
             ],
             'Depression/suicide ideation' => [
                 'cbox' => 'rs_psych_depression_cbox',
-                'other' => null
             ],
             'Memory problems' => [
                 'cbox' => 'rs_psych_memory_cbox',
-                'other' => null
             ],
             'Unusual problems' => [
                 'cbox' => 'rs_psych_unusual_cbox',
-                'other' => null
             ],
             'Sleep problems' => [
                 'cbox' => 'rs_psych_sleep_cbox',
-                'other' => null
             ],
             'Past treatment with psychiatrist' => [
                 'cbox' => 'rs_psych_treatment_cbox',
-                'other' => null
             ],
             'Change in mood/change in attitude towards family/friends' => [
                 'cbox' => 'rs_psych_moodchange_cbox',
-                'other' => null
             ],
         ];
         // Define the fields for contraceptive with associated causes
         $contraceptive_fields = [
             'Pills' => [
                 'cbox' => 'contraceptive_pills_cbox',
-                'other' => null
             ],
             'IUD' => [
                 'cbox' => 'contraceptive_iud_cbox',
-                'other' => null
             ],
             'Rhythm' => [
                 'cbox' => 'contraceptive_rhythm_cbox',
-                'other' => null
             ],
             'Condom' => [
                 'cbox' => 'contraceptive_condom_cbox',
-                'other' => null
             ],
             'Other' => [
                 'cbox' => 'contraceptive_other_cbox',
-                'other' => null
             ],
         ];
 
         $pertinent_fields = [
             'Select All' => [
                 'cbox' => 'lab_all_cbox',
-                'other' => null
             ],
             'UA' => [
                 'cbox' => 'lab_ua_cbox',
-                'other' => null
             ],
             'CBC' => [
                 'cbox' => 'lab_cbc_cbox',
-                'other' => null
             ],
             'X-RAY' => [
                 'cbox' => 'lab_xray_cbox',
-                'other' => null
             ],
             'Others' => [
                 'cbox' => 'lab_others_cbox',
-                'other' => null
             ],
         ];
 
-        // Process heredofamilial diseases
-        foreach ($heredofamilial_diseases_fields as $default_field => $fields) {
-            $cbox = $fields['cbox'];
-            $side = $fields['side'];
-
-            if ($request->$cbox == "Yes") {
-                $heredofamilial = $default_field;
-
-                if ($side && $request->$side) {
-                    $heredofamilial .= ' side => ' . $request->$side;
-                }
-
-                $heredofamilial_diseases[] = $heredofamilial;
-            }
-        }
-
-        // Process allergies
-        foreach ($allergies_fields as $default_field => $fields) {
-            $cbox = $fields['cbox'];
-            $cause = $fields['cause'];
-
-            if ($request->$cbox == "Yes") {
-                $allergy = $default_field;
-
-                if ($cause && $request->$cause) {
-                    $allergy .= ', Cause => ' . $request->$cause;
-                }
-
-                $allergies[] = $allergy;
-            }
-        }
-
         $this->dataArray($contraceptive_fields, $contraceptive_methods, $request);
+        $this->dataArray($allergies_fields, $allergies, $request);
+        $this->dataArray($heredofamilial_diseases_fields, $heredofamilial_diseases, $request);
         $this->dataArray($pertinent_fields, $pertinent_methods, $request);
         $this->dataArray($comorbidity_fields, $comorbidities, $request);
 
@@ -945,7 +751,17 @@ class NewFormCtrl extends Controller
             'commordities_others' => $request->comor_others,
             'commordities_cancer' => $request->comor_cancer,
             'heredofamilial_diseases' => $heredofamilial_diseases,
+            'heredo_hyper_side' => $request->heredo_hypertension_side,
+            'heredo_diab_side' => $request->heredo_diabetes_side,
+            'heredo_asthma_side' => $request->heredo_asthma_side,
+            'heredo_cancer_side' => $request->heredo_cancer_side,
+            'heredo_kidney_side' => $request->heredo_kidney_side,
+            'heredo_thyroid_side' => $request->heredo_thyroid_side,
+            'heredo_others' => $request->heredo_others_side,
             'allergies' => $allergies,
+            'allergy_food_cause' => $request->allergy_food_cause,
+            'allergy_drugs_cause' => $request->allergy_drug_cause,
+            'allergy_others_cause' => $request->allergy_other_cause,
             'previous_hospitalization' => $request->previous_hospitalization,
         ];
 
@@ -1101,7 +917,7 @@ class NewFormCtrl extends Controller
         }
 
 
-        // dd($request->all(), $personal_history, $obstetric_history, $pertinent_lab, $past_medical_history_data, $comorbidities);
+        // dd($request->all(), $request->comor_others, $request->allergy_other_cause);
         // Save to database
         PastMedicalHistory::create($past_medical_history_data);
         PertinentLaboratory::create($pertinent_lab);
@@ -1112,30 +928,213 @@ class NewFormCtrl extends Controller
         NutritionalStatus::create($nutritional_status);
         GlasgoComaScale::create($glasgocoma_scale);
         LatestVitalSigns::create($vital_signs);
-        // Pregnancy::create($pregnancy_data);
-
-        // Debugging
-
-        // $glasgocoma_scale);
 
         return redirect("/revised/referral/info/{$patient_id}");
     }
 
-    public function dataArray($dataFields, &$dataMethods, $request)
+    public function dataArray($fields, &$output, $request)
     {
-        foreach ($dataFields as $default_method => $fields) {
-            $cbox = $fields['cbox'];
-            $other_data = $fields['other'] ?? null;;
-
-            if ($request->$cbox == "Yes") {
-                $dataMethod = $default_method;
-
-                if ($other_data && $request->$other_data) {
-                    $dataMethod .= ' => ' . $request->$other_data;
-                }
-
-                $dataMethods[] = $dataMethod;
+        foreach ($fields as $key => $field) {
+            if ($request->has($field['cbox'])) {
+                $output[] = $key;
             }
         }
+    }
+
+    public function generatePdf($patient_id)
+    {
+        // Fetch the data needed for the PDF
+        $data = DB::table('past_medical_history')
+            ->join('pediatric_history', 'past_medical_history.patient_id', '=', 'pediatric_history.patient_id')
+            ->join('nutritional_status', 'past_medical_history.patient_id', '=', 'nutritional_status.patient_id')
+            ->join('glasgow_coma_scale', 'past_medical_history.patient_id', '=', 'glasgow_coma_scale.patient_id')
+            ->join('review_of_system', 'past_medical_history.patient_id', '=', 'review_of_system.patient_id')
+            ->join('obstetric_and_gynecologic_history', 'past_medical_history.patient_id', '=', 'obstetric_and_gynecologic_history.patient_id')
+            ->join('latest_vital_signs', 'past_medical_history.patient_id', '=', 'latest_vital_signs.patient_id')
+            ->join('personal_and_social_history', 'past_medical_history.patient_id', '=', 'personal_and_social_history.patient_id')
+            ->join('pertinent_laboratory', 'past_medical_history.patient_id', '=', 'pertinent_laboratory.patient_id')
+            ->join('pregnancy', 'past_medical_history.patient_id', '=', 'pregnancy.patient_id')
+            ->select(
+                'past_medical_history.*',
+                'pediatric_history.*',
+                'nutritional_status.*',
+                'glasgow_coma_scale.*',
+                'review_of_system.*',
+                'obstetric_and_gynecologic_history.*',
+                'latest_vital_signs.*',
+                'personal_and_social_history.*',
+                'pertinent_laboratory.*',
+                'pregnancy.*'
+            )
+            ->where('past_medical_history.patient_id', $patient_id)
+            ->first();
+
+        $pdf = new Fpdf();
+        $x = ($pdf->w) - 20;
+
+        $pdf->setTopMargin(17);
+        $pdf->setTitle($data->patient_id);
+        $pdf->addPage();
+
+        $pdf->SetFont('Arial', 'B', 12);
+
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->SetTextColor(30);
+        $pdf->SetDrawColor(200);
+        $pdf->SetLineWidth(.3);
+
+        // PAST MEDICAL HISTORY
+        $pdf->MultiCell(0, 7, "PAST MEDICAL HISTORY", 1, 'L', true);
+        $pdf->SetFillColor(255, 250, 205);
+        $pdf->SetTextColor(40);
+        $pdf->SetDrawColor(230);
+        $pdf->SetLineWidth(.3);
+
+        $pdf->MultiCell(0, 7, "Comorbidities:" . self::green($pdf, $data->commordities, 'Comorbidities'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Allergies:" . self::green($pdf, $data->allergies, 'Allergies'), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "HEREDOFAMILIAL DISEASES: ") . "\n" . self::staticGreen($pdf, $data->heredofamilial_diseases), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, $data->previous_hospitalization), 1, 'L');
+
+        $pdf->ln(10);
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->SetTextColor(30);
+        $pdf->SetDrawColor(200);
+        $pdf->SetLineWidth(.3);
+
+        //PEDIATRIC HISTORY
+        $pdf->MultiCell(0, 7, "PEDIATRIC HISTORY", 1, 'L', true);
+        $pdf->SetFillColor(255, 250, 205);
+        $pdf->SetTextColor(40);
+        $pdf->SetDrawColor(230);
+        $pdf->SetLineWidth(.3);
+        $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_with_maternal_illness, 'Maternal Illness'), 1, 'L');
+        $pdf->ln(3);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->MultiCell(0, 7, "NATAL", 1, 'L', true);
+        $pdf->MultiCell(0, 7, "Born At:" . self::green($pdf, $data->natal_born_at, 'Born At'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Born Address:" . self::green($pdf, $data->natal_born_address, 'Born Address'), 1, 'L');
+        $pdf->MultiCell(0, 7, "By:" . self::green($pdf, $data->natal_by, 'By'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Via:" . self::green($pdf, $data->natal_via, 'Via'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Indication:" . self::green($pdf, $data->natal_indication, 'Indication'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Term:" . self::green($pdf, $data->natal_term, 'Term'), 1, 'L');
+        $pdf->MultiCell(0, 7, "With Good Cry:" . self::green($pdf, $data->natal_with_good_cry, 'With Good Cry'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Other Complications:" . self::green($pdf, $data->natal_other_complications, 'Other Complications'), 1, 'L');
+        $pdf->ln(3);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->MultiCell(0, 7, "POST NATAL", 1, 'L', true);
+        $pdf->ln(3);
+        $pdf->MultiCell(0, 7, "Feeding History", 1, 'L', true);
+        $pdf->MultiCell(0, 7, "Breast Feed in mos:" . self::green($pdf, $data->post_natal_bfeedx_month, 'Breast Feed in mos'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Specific Formula Feed:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Specific Formula Feed'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Started Semi Food in mos:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Started Semi Food in mos'), 1, 'L');
+        $pdf->ln(3);
+        $pdf->MultiCell(0, 7, "Immunization History", 1, 'L', true);
+        if ($data->post_natal_bcg == "Yes") {
+            $pdf->MultiCell(0, 7, "BCG:" . self::green($pdf, "Immunized", 'BCG'), 1, 'L');
+        }
+        if ($data->post_natal_dpt_opv_x == "Yes") {
+            $pdf->MultiCell(0, 7, "DPT/OPV:" . self::green($pdf, "Immunized", 'DPT/OPV'), 1, 'L');
+            $pdf->MultiCell(0, 7, "DPT/OPV doses:" . self::green($pdf, $data->post_dpt_doses, 'DPT/OPV doses'), 1, 'L');
+        }
+        if ($data->post_natal_hepB_cbox == "Yes") {
+            $pdf->MultiCell(0, 7, "Hep B:" . self::green($pdf, "Immunized", 'Hep B'), 1, 'L');
+            $pdf->MultiCell(0, 7, "Hep B doses:" . self::green($pdf, $data->post_natal_hepB_x_doses, 'Hep B doses'), 1, 'L');
+        }
+        if ($data->post_natal_immu_measles_cbox == "Yes") {
+            $pdf->MultiCell(0, 7, "Measles:" . self::green($pdf, "Immunized", 'Measles'), 1, 'L');
+        }
+        if ($data->post_natal_mmr_cbox == "Yes") {
+            $pdf->MultiCell(0, 7, "MMR:" . self::green($pdf, "Immunized", 'MMR'), 1, 'L');
+        }
+        if ($data->post_natal_others_cbox == "Yes") {
+            $pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $data->post_natal_others, 'Others'), 1, 'L');
+        }
+
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->SetTextColor(30);
+        $pdf->SetDrawColor(200);
+        $pdf->SetLineWidth(.3);
+        $pdf->ln(10);
+
+        //OBSTETRIC AND GYNECOLOGIC HISTORY 
+        $pdf->MultiCell(0, 7, "OBSTETRIC AND GYNECOLOGIC HISTORY", 1, 'L', true);
+        $pdf->SetFillColor(255, 250, 205);
+        $pdf->SetTextColor(40);
+        $pdf->SetDrawColor(230);
+        $pdf->SetLineWidth(.3);
+
+        $pdf->Output();
+        exit();
+
+
+
+        // dd($data);
+    }
+
+    public function orange($pdf, $val, $str)
+    {
+        $y = $pdf->getY() + 4.5;
+        $x = $pdf->getX() + 2;
+        $ln = $pdf->GetStringWidth($str) + 1;
+        $pdf->SetTextColor(102, 56, 0);
+        $pdf->SetFont('Arial', 'I', 10);
+        $r = $pdf->Text($x + $ln, $y, $val);
+        $pdf->SetFont('Arial', '', 10);
+        return $r;
+    }
+
+    public function staticGreen($pdf, $val)
+    {
+        $pdf->SetTextColor(0, 50, 0);
+        $pdf->SetFont('Arial', '', 10);
+        return $val;
+    }
+
+    public function staticBlack($pdf, $val)
+    {
+        $y = $pdf->getY() + 4.5;
+        $x = $pdf->getX() + 2;
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('Arial', '', 10);
+        return $pdf->Text($x, $y, $val);
+    }
+
+    public function green($pdf, $val, $str)
+    {
+        $y = $pdf->getY() + 4.5;
+        $x = $pdf->getX() + 2;
+        $ln = $pdf->GetStringWidth($str) + 1;
+        $pdf->SetTextColor(0, 50, 0);
+        $pdf->SetFont('Arial', 'I', 10);
+        $r = $pdf->Text($x + $ln, $y, $val);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->SetTextColor(0, 0, 0);
+        return $r;
+    }
+
+    public function gray($pdf, $val, $str)
+    {
+        $y = $pdf->getY() + 4.5;
+        $x = $pdf->getX() + 2;
+        $ln = $pdf->GetStringWidth($str) + 1;
+        $pdf->SetTextColor(51, 51, 51);
+        $pdf->SetFont('Arial', 'I', 10);
+        $r = $pdf->Text($x + $ln, $y, $val);
+        $pdf->SetFont('Arial', '', 10);
+        return $r;
+    }
+
+    public function black($pdf, $val)
+    {
+        $y = $pdf->getY() + 4.5;
+        $x = $pdf->getX() + 2;
+        $pdf->SetTextColor(0, 0, 0);
+        $pdf->SetFont('Arial', 'B', 10);
+        return $pdf->Text($x, $y, $val);
     }
 }

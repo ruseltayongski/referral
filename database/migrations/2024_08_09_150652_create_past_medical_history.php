@@ -23,7 +23,17 @@ class CreatePastMedicalHistory extends Migration
             $table->string('commordities_others')->nullable();
             $table->string('commordities_cancer')->nullable();
             $table->string('heredofamilial_diseases')->nullable();
+            $table->string('heredo_hyper_side')->nullable();
+            $table->string('heredo_diab_side')->nullable();
+            $table->string('heredo_asthma_side')->nullable();
+            $table->string('heredo_cancer_side')->nullable();
+            $table->string('heredo_kidney_side')->nullable();
+            $table->string('heredo_thyroid_side')->nullable();
+            $table->string('heredo_others')->nullable();
             $table->string('allergies')->nullable();
+            $table->string('allergy_food_cause')->nullable();
+            $table->string('allergy_drugs_cause')->nullable();
+            $table->string('allergy_others_cause')->nullable();
             $table->string('previous_hospitalization')->nullable();
             $table->timestamps();
         });

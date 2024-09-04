@@ -16,9 +16,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
 <style>
     .file-upload {
         background-color: #ffffff;
-        width: 600px;
+        width: 100%;
+        max-width: 800px;
         margin: 0 auto;
         padding: 20px;
+        box-sizing: border-box;
     }
 
     .file-upload-btn {
@@ -34,6 +36,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         outline: none;
         text-transform: uppercase;
         font-weight: 700;
+        font-size: 14px;
     }
 
     .file-upload-btn:hover {
@@ -68,6 +71,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
         margin-top: 20px;
         border: 4px dashed #1FB264;
         position: relative;
+        padding: 20px;
+        box-sizing: border-box;
     }
 
     .image-dropping,
@@ -77,8 +82,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 
     .image-title-wrap {
-        padding: 0 15px 15px 15px;
+        padding: 15px;
         color: #222;
+        box-sizing: border-box;
     }
 
     .drag-text {
@@ -89,7 +95,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
         font-weight: 100;
         text-transform: uppercase;
         color: #15824B;
-        padding: 60px 0;
+        padding: 40px 0;
+        font-size: 18px;
     }
 
     .file-upload-image {
@@ -97,11 +104,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
         max-width: 200px;
         margin: auto;
         padding: 20px;
+        box-sizing: border-box;
     }
 
     .remove-image {
-        width: 200px;
-        margin: 0;
+        width: 100%;
         color: #fff;
         background: #cd4535;
         border: none;
@@ -112,6 +119,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         outline: none;
         text-transform: uppercase;
         font-weight: 700;
+        font-size: 14px;
     }
 
     .remove-image:hover {
@@ -129,16 +137,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
     .container-referral {
         border: 1px solid lightgrey;
         width: 100%;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left: 5px;
-        padding-right: 5px;
+        padding: 5px;
+        box-sizing: border-box;
     }
-
-    /*.glasgow-table {
-        border: 1px solid lightgrey;
-        width: 100%;
-    }*/
 
     .glasgow-dot {
         background-color: #494646;
@@ -157,11 +158,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
         visibility: hidden;
     }
 
-
     table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
+        width: 100%;
+        box-sizing: border-box;
     }
 
     #glasgow_table_1,
@@ -173,6 +175,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
         width: 35%;
     }
 
+    /* Web view modal size adjustment */
+    .web-view .modal-dialog {
+        max-width: 90%;
+        /* Adjust this value as needed */
+        width: auto;
+    }
+
+    /* Mobile-specific styles */
     @media only screen and (max-width: 720px) {
         .web-view {
             display: none;
@@ -183,13 +193,34 @@ $reason_for_referral = \App\ReasonForReferral::get();
             display: block;
             visibility: visible;
         }
-    }
 
-    #normalFormModal .modal-dialog {
-        max-width: 60%;
-        /* Adjusts modal to 90% of the screen width */
-        width: auto;
-        /* Allows the modal to shrink or grow depending on content */
+        .file-upload {
+            padding: 15px;
+        }
+
+        .file-upload-btn,
+        .remove-image {
+            font-size: 12px;
+            padding: 8px;
+        }
+
+        .image-upload-wrap {
+            padding: 15px;
+        }
+
+        .drag-text h3 {
+            font-size: 16px;
+            padding: 40px 0;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        #normalFormModal .modal-dialog {
+            max-width: 100%;
+            width: auto;
+        }
     }
 </style>
 
@@ -317,7 +348,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
                                         <b>HISTORY OF PRESENT ILLNESS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -334,7 +365,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
                                         <b>DIAGNOSIS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -366,21 +397,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
                                         <b>PAST MEDICAL HISTORY</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <?php
-
-                                $commordities_data_fetch = [
-                                    'commordities_hyper_year' => $data->commordities_hyper_year,
-                                    'commordities_diabetes_year' => $data->commordities_diabetes_year,
-                                    'commordities_asthma_year' => $data->commordities_asthma_year,
-                                    'commordities_cancer' => $data->commordities_cancer,
-                                    'commordities_others' => $data->commordities_others
-                                ];
-                                ?>
 
                                 <div class="collapse" id="collapse_medical_history" style="width: 100%;">
                                     <b>COMORBIDITIES</b>
@@ -404,7 +425,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
-                                                            echo "<option " . ($year == htmlspecialchars($commordities_data_fetch['commordities_hyper_year']) ? 'selected' : '') . ">$year</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($data->commordities_hyper_year) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -417,7 +438,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <select class="form-control select" name="diab_year" style="font-size: 10pt;">
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
-                                                            echo "<option " . ($year == htmlspecialchars($commordities_data_fetch['commordities_diabetes_year']) ? 'selected' : '') . ">$year</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($data->commordities_diabetes_year) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -430,7 +451,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
-                                                            echo "<option " . ($year == htmlspecialchars($commordities_data_fetch['commordities_asthma_year']) ? 'selected' : '') . ">$year</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($data->commordities_asthma_year) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -459,214 +480,131 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <input type="hidden" name="comor_cancer_cbox" value="No">
                                                 <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Cancer'); ?>>
                                                 <span>Cancer <i>(specify)</i>:</span>
-                                                <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($commordities_data_fetch['commordities_cancer']); ?></textarea>
+                                                <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($data->commordities_cancer); ?></textarea>
                                             </div>
 
                                             <div class="col-md-4">
                                                 <input type="hidden" name="comor_others_cbox" value="No">
                                                 <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'commordities', 'Others'); ?>>
                                                 <span>Other(s):</span>
-                                                <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($commordities_data_fetch['commordities_others']); ?></textarea>
+                                                <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($data->commordities_others); ?></textarea>
                                             </div>
                                         </div>
 
 
                                     </div><br>
 
-                                    <?php
-
-                                    $allergiesString = $data->allergies;
-
-
-                                    $allergiesArray = [
-                                        'Food Allergy' => '',
-                                        'Drug Allergy' => '',
-                                        'Other Allergy' => ''
-                                    ];
-
-
-                                    $allergies = explode(',', $allergiesString);
-
-
-                                    foreach ($allergies as $key => $allergy) {
-                                        $allergy = trim($allergy);
-
-
-                                        if (strpos($allergy, 'Cause =>') !== false) {
-                                            $parts = explode('Cause =>', $allergy);
-                                            $type = trim($allergies[$key - 1]);
-                                            $cause = trim($parts[1]);
-
-                                            if (isset($allergiesArray[$type])) {
-                                                $allergiesArray[$type] = $cause;
-                                            }
-                                        }
-                                    }
-                                    ?>
-
-
                                     <b>ALLERGIES</b><i> (Specify)</i><br>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="allergy_all_cbox" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="select all">
+                                                <input class="form-check-input" id="allergy_all_cbox" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'allergies', 'Select All'); ?>>
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="allergy_none_cbox" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="none">
+                                                <input class="form-check-input" id="allergy_none_cbox" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'allergies', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <input type="hidden" name="allergy_food_cbox" value="No">
-                                                <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($allergiesArray['Food Allergy'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'allergies', 'Food'); ?>>
                                                 <span> Food(s): <i>(ex. crustaceans, eggs)</i></span>
-                                                <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Food Allergy']); ?></textarea>
+                                                <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($data->allergy_food_cause); ?></textarea>
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="hidden" name="allergy_drug_cbox" value="No">
-                                                <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($allergiesArray['Drug Allergy'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'allergies', 'Drugs'); ?>>
                                                 <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
-                                                <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Drug Allergy']); ?></textarea>
+                                                <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($data->allergy_drugs_cause); ?></textarea>
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="hidden" name="allergy_other_cbox" value="No">
-                                                <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($allergiesArray['Other Allergy'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'allergies', 'Others'); ?>>
                                                 <span> Other(s):</span>
-                                                <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($allergiesArray['Other Allergy']); ?></textarea>
+                                                <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($data->allergy_others_cause); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <?php
-
-                                    $heredoString = $data->heredofamilial_diseases;
-
-                                    $heredoArray = [
-                                        'Hypertension' => '',
-                                        'Diabetes' => '',
-                                        'Asthma' => '',
-                                        'Cancer' => '',
-                                        'Kidney Disease' => '',
-                                        'Thyroid Disease' => '',
-                                        'Others' => ''
-                                    ];
-
-
-                                    $diseases = explode(',', $heredoString);
-
-
-                                    foreach ($diseases as $disease) {
-                                        // Look for the "side =>" pattern and get the side
-                                        if (strpos($disease, 'side =>') !== false) {
-                                            $parts = explode('side =>', $disease);
-                                            $type = trim($parts[0]); // Disease type
-                                            $side = trim($parts[1]); // Side of the family
-
-                                            if (isset($heredoArray[$type])) {
-                                                $heredoArray[$type] = $side;
-                                            }
-                                        }
-                                    }
-                                    ?>
-
-
-                                    <script>
-                                        function toggleInputVisibility(inputId) {
-                                            var checkbox = document.getElementById(inputId + '_cbox');
-                                            var inputField = document.getElementById(inputId);
-
-                                            if (checkbox.checked) {
-                                                inputField.style.display = 'inline-block';
-                                            } else {
-                                                inputField.style.display = 'none';
-                                                inputField.value = ''; // Optionally clear the input if unchecked
-                                            }
-                                        }
-                                    </script>
 
                                     <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_all_cbox" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="select all">
+                                                <input class="form-check-input" id="heredo_all_cbox" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Select All'); ?>>
                                                 <span>Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_none_cbox" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="none">
+                                                <input class="form-check-input" id="heredo_none_cbox" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'None'); ?>>
                                                 <span>None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input type="hidden" name="heredo_hyper_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Hypertension'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Hypertension'); ?>>
                                                 <span>Hypertension:</span>
                                                 <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
-                                                    <option value="Maternal" <?php echo ($heredoArray['Hypertension'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($heredoArray['Hypertension'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($heredoArray['Hypertension'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    <option value="Maternal" <?php echo ($data->heredo_hyper_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($data->heredo_hyper_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($data->heredo_hyper_side === 'Both') ? 'selected' : ''; ?>>Both</option>
                                                 </select>
-                                                <!-- <input type="text" id="heredo_hyper" name="heredo_hypertension_side" value="<?php echo htmlspecialchars($heredoArray['Hypertension']); ?>"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="heredo_diab_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Diabetes'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Diabetes'); ?>>
                                                 <span>Diabetes Mellitus:</span>
                                                 <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
-                                                    <option value="Maternal" <?php echo ($heredoArray['Diabetes'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($heredoArray['Diabetes'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($heredoArray['Diabetes'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    <option value="Maternal" <?php echo ($data->heredo_diab_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($data->heredo_diab_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($data->heredo_diab_side === 'Both') ? 'selected' : ''; ?>>Both</option>
                                                 </select>
-                                                <!-- <input type="text" id="heredo_diab" name="heredo_diabetes_side" value="<?php echo htmlspecialchars($heredoArray['Diabetes']); ?>"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="heredo_asthma_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Asthma'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Asthma'); ?>>
                                                 <span>Bronchial Asthma:</span>
                                                 <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
-                                                    <option value="Maternal" <?php echo ($heredoArray['Asthma'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($heredoArray['Asthma'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($heredoArray['Asthma'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    <option value="Maternal" <?php echo ($data->heredo_asthma_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($data->heredo_asthma_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($data->heredo_asthma_side === 'Both') ? 'selected' : ''; ?>>Both</option>
                                                 </select>
-                                                <!-- <input type="text" id="heredo_asthma" name="heredo_asthma_side" value="<?php echo htmlspecialchars($heredoArray['Asthma']); ?>"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="heredo_cancer_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Cancer'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Cancer'); ?>>
                                                 <span>Cancer:</span>
                                                 <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
-                                                    <option value="Maternal" <?php echo ($heredoArray['Cancer'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($heredoArray['Cancer'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($heredoArray['Cancer'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    <option value="Maternal" <?php echo ($data->heredo_cancer_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($data->heredo_cancer_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($data->heredo_cancer_side === 'Both') ? 'selected' : ''; ?>>Both</option>
                                                 </select>
-                                                <!-- <input type="text" id="heredo_cancer" name="heredo_cancer_side" value="<?php echo htmlspecialchars($heredoArray['Cancer']); ?>"> -->
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input type="hidden" name="heredo_kidney_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Kidney Disease'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Kidney Disease'); ?>>
                                                 <span>Kidney:</span>
                                                 <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
-                                                    <option value="Maternal" <?php echo ($heredoArray['Kidney Disease'] === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($heredoArray['Kidney Disease'] === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($heredoArray['Kidney Disease'] === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    <option value="Maternal" <?php echo ($data->heredo_kidney_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                    <option value="Paternal" <?php echo ($data->heredo_kidney_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                    <option value="Both" <?php echo ($data->heredo_kidney_side === 'Both') ? 'selected' : ''; ?>>Both</option>
                                                 </select>
-                                                <!-- <input type="text" id="heredo_kidney" name="heredo_kidney_side" value="<?php echo htmlspecialchars($heredoArray['Kidney Disease']); ?>"> -->
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="heredo_thyroid_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Thyroid Disease'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Thyroid Disease'); ?>>
                                                 <span>Thyroid Disease:</span>
-                                                <input type="text" id="heredo_thyroid" name="heredo_thyroid_side" value="<?php echo htmlspecialchars($heredoArray['Thyroid Disease']); ?>">
+                                                <input type="text" id="heredo_thyroid" name="heredo_thyroid_side" value="<?php echo htmlspecialchars($data->heredo_thyroid_side); ?>">
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="hidden" name="heredo_others_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?php if (!empty($heredoArray['Others'])) echo 'checked'; ?>>
+                                                <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($data, 'heredofamilial_diseases', 'Others'); ?>>
                                                 <span>Other(s):</span>
-                                                <input type="text" id="heredo_others" name="heredo_others_side" value="<?php echo htmlspecialchars($heredoArray['Others']); ?>">
+                                                <input type="text" id="heredo_others" name="heredo_others_side" value="<?php echo htmlspecialchars($data->heredo_others); ?>">
                                             </div>
                                         </div>
                                     </div><br>
@@ -681,7 +619,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row" id="pedia_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
                                         <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
@@ -874,9 +812,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
                                         <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
-                                        <div class="mobile-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b><br> <i> (as applicable)</i></div>
+                                        <div class="mobile-view">
+                                            <b>OBSTETRIC AND GYNECOLOGIC<br> HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -939,7 +878,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="Other(s)" <?= isChecked($data, 'contraceptive_history', 'Other(s)'); ?>> Other(s)
+                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_history[]" value="Other(s)" <?= isChecked($data, 'contraceptive_history', 'Other'); ?>> Other(s)
                                                 <textarea class="form-control" id="contraceptive_others_text" name="contraceptive_others" style="resize: none;width: 50%;" rows="2"><?php echo htmlspecialchars($contraceptive_others_value); ?></textarea><br>
                                             </div>
                                         </div>
@@ -1033,15 +972,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <?php
                         $personal_history_data = [
                             'smoking_sticks_per_day' => $data->smoking_sticks_per_day,
-                            'smoking_quit_year' => $data->smoking_quit_year,
                             'smoking_remarks' => $data->smoking_remarks,
-                            'alcohol_liquor_type' => $data->alcohol_liquor_type,
-                            'alcohol_bottles_per_day' => $data->alcohol_bottles_per_day,
-                            'alcohol_drinking_quit_year' => $data->alcohol_drinking_quit_year,
                             'illicit_drugs_taken' => $data->illicit_drugs_taken,
-                            'illicit_drugs_quit_year' => $data->illicit_drugs_quit_year,
                             'current_medications' => $data->current_medications,
                         ];
+
                         ?>
 
 
@@ -1049,7 +984,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_personal_history" aria-expanded="false" aria-controls="collapse_personal_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_personal_history" aria-expanded="false" aria-controls="collapse_personal_history">
                                         <div class="web-view"><b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>PERSONAL and SOCIAL HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
@@ -1075,7 +1010,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <select class="form-control select" name="smoking_year_quit">
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
-                                                            echo "<option " . ($year == htmlspecialchars($personal_history_data['smoking_quit_year']) ? 'selected' : '') . ">$year</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($data->smoking_quit_year) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -1106,7 +1041,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <select class="form-control select" name="alcohol_year_quit">
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
-                                                            echo "<option " . ($year == htmlspecialchars($personal_history_data['alcohol_drinking_quit_year']) ? 'selected' : '') . ">$year</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($data->alcohol_drinking_quit_year) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -1114,10 +1049,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <span id="alcohol_type">Liquor Type: <textarea class="form-control" style="resize: none;" rows="2" name="alcohol_type"><?php echo htmlspecialchars($personal_history_data['alcohol_liquor_type']); ?></textarea></span>
+                                                <span id="alcohol_type">Liquor Type: <textarea class="form-control" style="resize: none;" rows="2" name="alcohol_type"><?php echo htmlspecialchars($data->alcohol_liquor_type); ?></textarea></span>
                                             </div>
                                             <div class="col-md-4">
-                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0" style="width:25%;" name="alcohol_bottles" value="<?php echo htmlspecialchars($personal_history_data['alcohol_bottles_per_day']); ?>"></span>
+                                                <span id="alcohol_bottles">Bottles per day: <input type="number" min="0" style="width:25%;" name="alcohol_bottles" value="<?php echo htmlspecialchars($data->alcohol_bottles_per_day); ?>"></span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1140,7 +1075,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <select class="form-control select" name="drugs_year_quit">
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
-                                                            echo "<option " . ($year == htmlspecialchars($personal_history_data['illicit_drugs_quit_year']) ? 'selected' : '') . ">$year</option>";
+                                                            echo "<option " . ($year == htmlspecialchars($data->illicit_drugs_quit_year) ? 'selected' : '') . ">$year</option>";
                                                         ?>
                                                     </select>
                                                 </span>
@@ -1160,7 +1095,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
                                         <b>CURRENT MEDICATION(S)</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -1175,9 +1110,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
                                         <div class="web-view">
-                                            <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b> <i>(include Dates)</i>
+                                            <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b><br> <i>(include Dates)</i>
                                             <span class="pull-right"><i class="fa fa-plus"></i></span>
                                         </div>
                                         <div class="mobile-view">
@@ -1240,7 +1175,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
                                         <b>REVIEW OF SYSTEMS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -1537,7 +1472,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <span> Cough</span>
                                             </div>
                                             <div class="col-sm-3">
-                                                <input class="form-check-input" id="rs_respi_phlegm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_phlegm_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Production of phlegm, color'); ?>>
+                                                <input class="form-check-input" id="rs_respi_phlegm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_phlegm_cbox" <?= isChecked($data, 'respiratory_or_cardiac', 'Production of phlegm color'); ?>>
                                                 <span> Production of phlegm, color</span>
                                             </div>
                                             <div class="col-md-3">
@@ -2011,36 +1946,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
-
-                        <?php
-                        $nutritional_status_data = [
-                            'specify_diets' => $data->specify_diets,
-                        ];
-                        $latest_vital_sign_data = [
-                            'temperature' => $data->temperature,
-                            'pulse_rate' => $data->pulse_rate,
-                            'respiratory_rate' => $data->respiratory_rate,
-                            'blood_pressure' => $data->blood_pressure,
-                            'oxygen_saturation' => $data->oxygen_saturation,
-                        ];
-                        $glasgow_coma_scale_data = [
-                            'gsc_score' => $data->gsc_score,
-                        ];
-
-
-                        $specify_diets_data = htmlspecialchars($nutritional_status_data['specify_diets']);
-                        $temperature_data = htmlspecialchars($latest_vital_sign_data['temperature']);
-                        $pulse_rate_data = htmlspecialchars($latest_vital_sign_data['pulse_rate']);
-                        $respiratory_rate_data = htmlspecialchars($latest_vital_sign_data['respiratory_rate']);
-                        $blood_pressure_data = htmlspecialchars($latest_vital_sign_data['blood_pressure']);
-                        $oxygen_saturation_data = htmlspecialchars($latest_vital_sign_data['oxygen_saturation']);
-                        $gsc_score_data = htmlspecialchars($glasgow_coma_scale_data['gsc_score']);
-                        ?>
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
                                         <b>NUTRITIONAL STATUS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2072,7 +1981,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                Specify Diets: <textarea class="form-control" name="specify_diets" style="resize: none;width: 100%;" rows="3"><?php echo $specify_diets_data; ?></textarea><br><br>
+                                                Specify Diets: <textarea class="form-control" name="specify_diets" style="resize: none;width: 100%;" rows="3"><?php echo htmlspecialchars($data->specify_diets); ?></textarea><br><br>
                                             </div>
                                         </div>
                                     </div>
@@ -2080,13 +1989,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                         </div>
 
-
-
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
                                         <b>LATEST VITAL SIGNS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2095,21 +2001,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                Temperature: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp" value="<?php echo $temperature_data; ?>"> &#176;C
+                                                Temperature: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp" value="<?php echo htmlspecialchars($data->temperature); ?>"> &#176;C
                                             </div>
                                             <div class="col-md-4">
-                                                Pulse Rate/Heart Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse" value="<?php echo $pulse_rate_data; ?>"> bpm
+                                                Pulse Rate/Heart Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse" value="<?php echo htmlspecialchars($data->pulse_rate); ?>"> bpm
                                             </div>
                                             <div class="col-md-4">
-                                                Respiratory Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate" value="<?php echo $respiratory_rate_data; ?>"> cpm
+                                                Respiratory Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate" value="<?php echo htmlspecialchars($data->respiratory_rate); ?>"> cpm
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                Blood Pressure: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_bp" value="<?php echo $blood_pressure_data; ?>"> mmHg
+                                                Blood Pressure: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_bp" value="<?php echo htmlspecialchars($data->blood_pressure); ?>"> mmHg
                                             </div>
                                             <div class="col-md-4">
-                                                O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo $oxygen_saturation_data; ?>"> %
+                                                O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo htmlspecialchars($data->oxygen_saturation); ?>"> %
                                             </div>
                                         </div><br>
                                     </div>
@@ -2120,7 +2026,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
                                         <b>GLASGOW COMA SCALE</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2425,7 +2331,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="col-md-6">
                                             <br><br><b>GCS Score: </b>
-                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="<?php echo $gsc_score_data; ?>" readonly>
+                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="<?php echo htmlspecialchars($data->gsc_score); ?>" readonly>
                                         </div>
                                     </div><br>
                                 </div>
@@ -2435,7 +2341,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
                                         <b>REASON FOR REFERRAL</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2458,6 +2364,18 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <hr />
                         <div class="form-fotter pull-right">
+                            <button type="button" id="pdfBtn" class="btn btn-warning">Generate PDF</button>
+                            <script>
+                                document.getElementById('pdfBtn').addEventListener('click', function() {
+                                    // Assuming patient_id is dynamically available
+                                    var patientId = '{{ $data->patient_id }}'; // Replace with actual logic to get patient_id if needed
+
+                                    // Open the PDF in a new tab
+                                    var url = "{{ route('generate-pdf', ':id') }}";
+                                    url = url.replace(':id', patientId);
+                                    window.open(url, '_blank');
+                                });
+                            </script>
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
                             <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
