@@ -1,3 +1,4 @@
+
 <?php
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
@@ -188,8 +189,9 @@ hr {
 
 <script>
 //jondy chnages for pdf and images file upload
-   
+
 document.addEventListener('DOMContentLoaded', function () {
+
     document.getElementById('telemedicineFollowupForm').addEventListener('submit', function(event) {
         var filesInput = document.getElementById('file-input');
         if(filesInput.files.length === 0){
@@ -435,7 +437,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-
+  
 <div class="modal fade" role="dialog" id="redirectedFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -813,10 +815,97 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
+</div><!-- /.modal -->  
+<script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
 <script>// jondy changes
+
+function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {
+        // Check if Firebase app with name '[DEFAULT]' already exists
+        if (!firebase.apps.length) {
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+                apiKey: "AIzaSyB_vRWWDwfiJVCA7RWOyP4lxyWn5QLYKmA",
+                authDomain: "notifier-5e4e8.firebaseapp.com",
+                databaseURL: "https://notifier-5e4e8-default-rtdb.firebaseio.com",
+                projectId: "notifier-5e4e8",
+                storageBucket: "notifier-5e4e8.appspot.com",
+                messagingSenderId: "359294836752",
+                appId: "1:359294836752:web:87c854779366d0f11d2a95",
+                measurementId: "G-HEYDWWHLKV"
+            };
+            // Initialize Firebase
+            firebase.initializeApp(firebaseConfig);
+        }
+
+        //initialize firebase
+        var dbRef = firebase.database();
+        //create table
+        var requestRef = dbRef.ref('23');
+
+        const newRef = requestRef.push({
+            age: age,
+            chiefComplaint: chiefComplaint,
+            department: department,
+            diagnosis: diagnosis,
+            patient: patient,
+            sex: sex,
+            referring_hospital : referring_hospital,
+            date_referred : moment(date_referred).format("YYYY-MM-DD HH:mm:ss"),
+            patient_code : patient_code
+        });
+
+        const firebase_key = newRef.key;
+        console.log(firebase_key)
+
+
+        var form = new FormData();
+        form.append("age", age);
+        form.append("chiefComplaint", chiefComplaint);
+        form.append("department", department);
+        form.append("diagnosis", diagnosis);
+        form.append("patient", patient);
+        form.append("sex", sex);
+        form.append("referring_hospital", referring_hospital);
+        form.append("date_referred", moment(date_referred).format("YYYY-MM-DD HH:mm:ss"));
+        form.append("patient_code", patient_code);
+        form.append("firebase_key", firebase_key);
+
+        var settings = {
+            "url": "https://dohcsmc.com/notifier/api/insert_referral_5pm",
+            "method": "POST",
+            "timeout": 0,
+            "processData": false,
+            "mimeType": "multipart/form-data",
+            "contentType": false,
+            "data": form
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let datastore = @json(Session::get('for_firebase_data'));
+        if(datastore) {
+            sendNotifierData(
+                datastore.age,
+                datastore.chiefComplaint, 
+                datastore.referred_department, 
+                datastore.push_diagnosis, 
+                datastore.patient_name,
+                datastore.patient_sex, 
+                datastore.referring_name,
+                datastore.referred_date,
+                datastore.patient_code
+            );
+            <?php session()->put('for_firebase_data', null); ?>
+        }
+      
+    });
+
 $(document).ready(function() {
+
     @if(session('first_save'))
     var number = "{{ session('first_save') }}";
         Lobibox.notify('success', {
