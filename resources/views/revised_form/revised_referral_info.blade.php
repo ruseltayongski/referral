@@ -16,11 +16,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
 <style>
     .file-upload {
         background-color: #ffffff;
-        width: 100%;
-        max-width: 800px;
+        width: 600px;
         margin: 0 auto;
         padding: 20px;
-        box-sizing: border-box;
     }
 
     .file-upload-btn {
@@ -36,7 +34,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
         outline: none;
         text-transform: uppercase;
         font-weight: 700;
-        font-size: 14px;
     }
 
     .file-upload-btn:hover {
@@ -71,8 +68,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
         margin-top: 20px;
         border: 4px dashed #1FB264;
         position: relative;
-        padding: 20px;
-        box-sizing: border-box;
     }
 
     .image-dropping,
@@ -82,9 +77,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 
     .image-title-wrap {
-        padding: 15px;
+        padding: 0 15px 15px 15px;
         color: #222;
-        box-sizing: border-box;
     }
 
     .drag-text {
@@ -95,8 +89,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         font-weight: 100;
         text-transform: uppercase;
         color: #15824B;
-        padding: 40px 0;
-        font-size: 18px;
+        padding: 60px 0;
     }
 
     .file-upload-image {
@@ -104,11 +97,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
         max-width: 200px;
         margin: auto;
         padding: 20px;
-        box-sizing: border-box;
     }
 
     .remove-image {
-        width: 100%;
+        width: 200px;
+        margin: 0;
         color: #fff;
         background: #cd4535;
         border: none;
@@ -119,7 +112,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
         outline: none;
         text-transform: uppercase;
         font-weight: 700;
-        font-size: 14px;
     }
 
     .remove-image:hover {
@@ -137,9 +129,16 @@ $reason_for_referral = \App\ReasonForReferral::get();
     .container-referral {
         border: 1px solid lightgrey;
         width: 100%;
-        padding: 5px;
-        box-sizing: border-box;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
     }
+
+    /*.glasgow-table {
+        border: 1px solid lightgrey;
+        width: 100%;
+    }*/
 
     .glasgow-dot {
         background-color: #494646;
@@ -158,12 +157,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
         visibility: hidden;
     }
 
+
     table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
-        width: 100%;
-        box-sizing: border-box;
     }
 
     #glasgow_table_1,
@@ -175,14 +173,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
         width: 35%;
     }
 
-    /* Web view modal size adjustment */
-    .web-view .modal-dialog {
-        max-width: 90%;
-        /* Adjust this value as needed */
-        width: auto;
-    }
-
-    /* Mobile-specific styles */
     @media only screen and (max-width: 720px) {
         .web-view {
             display: none;
@@ -193,37 +183,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
             display: block;
             visibility: visible;
         }
-
-        .file-upload {
-            padding: 15px;
-        }
-
-        .file-upload-btn,
-        .remove-image {
-            font-size: 12px;
-            padding: 8px;
-        }
-
-        .image-upload-wrap {
-            padding: 15px;
-        }
-
-        .drag-text h3 {
-            font-size: 16px;
-            padding: 40px 0;
-        }
-
-        table {
-            width: 100%;
-        }
-
-        #normalFormModal .modal-dialog {
-            max-width: 100%;
-            width: auto;
-        }
     }
 </style>
-
 <div class="modal fade" role="dialog" id="normalFormModal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">

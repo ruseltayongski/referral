@@ -352,19 +352,18 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_all_cbox" value="No">
                                                 <input class="form-check-input" id="comor_all_cbox" name="comor_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="comor_all_cbox" value="Yes">
                                                 <span>Select All</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_none_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_none_cbox" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="comor_none_cbox" value="Yes">
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_hyper_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Hypertension
                                                 <span id="comor_hyper"> since
                                                     <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
@@ -377,7 +376,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_diab_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Diabetes Mellitus
                                                 <span id="comor_diab"> since
                                                     <select class="form-control select" name="diab_year" style="font-size: 10pt;">
@@ -390,7 +389,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_asthma_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Bronchial Asthma
                                                 <span id="comor_asthma"> since
                                                     <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
@@ -405,30 +404,30 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_copd_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> COPD</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_dyslip_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Dyslipidemia</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_thyroid_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_cancer_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer <i>(specify)</i>:</span>
                                                 <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_others_cbox" value="No">
+
                                                 <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Other(s): </span>
                                                 <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"></textarea>
@@ -440,31 +439,31 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="allergy_all_cbox" value="No">
+
                                                 <input class="form-check-input" id="allergy_all_cbox" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="allergy_none_cbox" value="No">
+
                                                 <input class="form-check-input" id="allergy_none_cbox" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="allergy_food_cbox" value="No">
+
                                                 <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Food(s): <i>(ex. crustaceans, eggs)</i> </span>
                                                 <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="allergy_drug_cbox" value="No">
+
                                                 <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
                                                 <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="allergy_other_cbox" value="No">
+
                                                 <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Other(s): </span>
                                                 <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"></textarea>
@@ -476,19 +475,19 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_all_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_all_cbox" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Select All</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_none_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_none_cbox" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_hyper_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Hypertension: </span>
                                                 <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
@@ -499,7 +498,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <!-- <input type="text" id="heredo_hyper" name="heredo_hypertension_side"> -->
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_diab_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Diabetes Mellitus: </span>
                                                 <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
@@ -510,7 +509,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <!-- <input type="text" id="heredo_diab" name="heredo_diabetes_side"> -->
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_asthma_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Bronchial Asthma: </span>
                                                 <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
@@ -521,7 +520,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <!-- <input type="text" id="heredo_asthma" name="heredo_asthma_side"> -->
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_cancer_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer: </span>
                                                 <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
@@ -534,7 +533,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_kidney_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Kidney: </span>
                                                 <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
@@ -545,7 +544,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <!-- <input type="text" id="heredo_kidney" name="heredo_kidney_side"> -->
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="heredo_thyroid_cbox" value="No">
+
                                                 <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease: </span>
                                                 <select class="form-control-select" id="heredo_thyroid" name="heredo_thyroid_side">
