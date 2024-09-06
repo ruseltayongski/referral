@@ -112,7 +112,7 @@ class NewFormCtrl extends Controller
         $rs_endocrine_methods = [];
         $rs_psychiatric_methods = [];
 
-        $patient_id = 12;
+        $patient_id = 14;
 
         // Define the fields for comorbidities with associated additional data (year or string)
         $comorbidity_fields = [
@@ -935,8 +935,6 @@ class NewFormCtrl extends Controller
             ]);
         }
 
-
-        // dd($request->all(), $past_medical_history_data);
         // Save to database
         PastMedicalHistory::create($past_medical_history_data);
         PertinentLaboratory::create($pertinent_lab);
@@ -967,9 +965,9 @@ class NewFormCtrl extends Controller
     {
         $dataArray = [];
 
-        foreach ($stringData as $index => $key) {
-            if (isset($explodedData[$index])) {
-                $dataArray[$key] = trim($explodedData[$index]);
+        foreach ($stringData as $key) {
+            if (in_array($key, $explodedData)) {
+                $dataArray[$key] = "Yes";
             } else {
                 $dataArray[$key] = '';
             }
@@ -980,45 +978,44 @@ class NewFormCtrl extends Controller
 
     function explodeString($string)
     {
-        $exploded_string = explode('Select All,None,', $string);
+
+        if (strpos($string, 'Select All,None,') !== false) {
+            $exploded_string = explode('Select All,None,', $string);
+        } else if (strpos($string, 'Select All,') !== false) {
+            $exploded_string = explode('Select All,', $string);
+        } else {
+            return $string;
+        }
+
+
         $implodeString = implode(',', $exploded_string);
         $implodeString = ltrim($implodeString, ', ');
         return $implodeString;
     }
-    function explodeString_selectAll($string)
-    {
-        $exploded_string = explode('Select All,', $string);
-        $implodeString = implode(',', $exploded_string);
-        $implodeString = ltrim($implodeString, ', ');
-        return $implodeString;
-    }
+
 
     // generate pdf functions.
 
     public function generatePdf($patient_id)
     {
 
+
         $data = $this->fetchDataFromDB($patient_id);
+        $comor_string = $data->commordities;
+        $comor_explodedData = explode(',', $comor_string);
+        $comorbidities = ['Hypertension', 'Diabetes', 'Asthma', 'Cancer', 'Others'];
 
-        $comor_explodedData = explode(',', $data->commordities);
+        $allergies_string = $data->allergies;
+        $allergies_explodedData = explode(',', $allergies_string);
+        $allergies = ['Food', 'Drugs', 'Others'];
 
-        $comorbidities = [
-            'select_all',
-            'none_value',
-            'Hypertension',
-            'Diabetes',
-            'Asthma',
-            'COPD',
-            'Dyslipidemia',
-            'Thyroid_Disease',
-            'Cancer',
-            'Others'
-            // Add more keys as needed...
-        ];
+        $heredo_string = $data->heredofamilial_diseases;
+        $heredo_exploadedData = explode(',', $heredo_string);
+        $heredofamilial = ['Hypertension', 'Diabetes', 'Asthma', 'Cancer', 'Kidney Disease', 'Thyroid Disease', 'Others'];
 
         $comor_dataArray = $this->mapExplodedDataToArray($comor_explodedData, $comorbidities);
-
-        // dd($comor_dataArray);
+        $allergies_dataArray = $this->mapExplodedDataToArray($allergies_explodedData, $allergies);
+        $heredo_dataArray = $this->mapExplodedDataToArray($heredo_exploadedData, $heredofamilial);
 
         $pdf = new Fpdf();
         $x = ($pdf->w) - 20;
@@ -1030,15 +1027,51 @@ class NewFormCtrl extends Controller
         $this->titleHeader($pdf, "PAST MEDICAL HISTORY");
 
         $pdf->MultiCell(0, 7, "Comorbidities:" . self::green($pdf, $this->explodeString($data->commordities), 'Comorbidities'), 1, 'L');
-        if ($comor_dataArray['Hypertension'] === "Hypertension") {
-            $pdf->MultiCell(0, 7, "Hypertension Year:" . self::green($pdf, $this->explodeString($data->commordities_hyper_year), 'Hypertension Year'), 1, 'L');;
+
+        if (!empty($comor_dataArray['Hypertension'])) {
+            $pdf->MultiCell(0, 7, "Hypertension Year:" . self::green($pdf, $this->explodeString($data->commordities_hyper_year), 'Hypertension Year'), 1, 'L');
         }
-        dd($comor_dataArray['Diabetes']);
-        if ($comor_dataArray['Diabetes'] === "Diabetes") {
-            $pdf->MultiCell(0, 7, "Diabetes Year:" . self::green($pdf, $this->explodeString($data->commordities_diabetes_year), 'Diabetes Year'), 1, 'L');;
+        if (!empty($comor_dataArray['Diabetes'])) {
+            $pdf->MultiCell(0, 7, "Diabetes Year:" . self::green($pdf, $this->explodeString($data->commordities_diabetes_year), 'Diabetes Year'), 1, 'L');
+        }
+        if (!empty($comor_dataArray['Asthma'])) {
+            $pdf->MultiCell(0, 7, "Asthma Year:" . self::green($pdf, $this->explodeString($data->commordities_asthma_year), 'Asthma Year'), 1, 'L');
+        }
+        if (!empty($comor_dataArray['Cancer'])) {
+            $pdf->MultiCell(0, 7, "Cancer:" . self::green($pdf, $this->explodeString($data->commordities_cancer), 'Cancer'), 1, 'L');
+        }
+        if (!empty($comor_dataArray['Others'])) {
+            $pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $this->explodeString($data->commordities_others), 'Others'), 1, 'L');
         }
         $pdf->MultiCell(0, 7, "Allergies:" . self::green($pdf, $this->explodeString($data->allergies), 'Allergies'), 1, 'L');
+        if (!empty($allergies_dataArray['Food'])) {
+            $pdf->MultiCell(0, 7, "Food(s): (ex. crustaceans, eggs):" . self::green($pdf, $this->explodeString($data->allergy_food_cause), 'Food(s): (ex. crustaceans, eggs)'), 1, 'L');
+        }
+        if (!empty($allergies_dataArray['Drugs'])) {
+            $pdf->MultiCell(0, 7, "Drugs allergy:" . self::green($pdf, $this->explodeString($data->allergy_drugs_cause), 'Drugs allergy'), 1, 'L');
+        }
         $pdf->MultiCell(0, 7, self::staticBlack($pdf, "HEREDOFAMILIAL DISEASES: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->heredofamilial_diseases)), 1, 'L');
+        if (!empty($heredo_dataArray['Hypertension'])) {
+            $pdf->MultiCell(0, 7, "Hypertension side:" . self::green($pdf, $this->explodeString($data->heredo_hyper_side), 'Hypertension side'), 1, 'L');
+        }
+        if (!empty($heredo_dataArray['Diabetes'])) {
+            $pdf->MultiCell(0, 7, "Diabetes side:" . self::green($pdf, $this->explodeString($data->heredo_diab_side), 'Diabetes side'), 1, 'L');
+        }
+        if (!empty($heredo_dataArray['Asthma'])) {
+            $pdf->MultiCell(0, 7, "Asthma side:" . self::green($pdf, $this->explodeString($data->heredo_asthma_side), 'Asthma side'), 1, 'L');
+        }
+        if (!empty($heredo_dataArray['Cancer'])) {
+            $pdf->MultiCell(0, 7, "Cancer side:" . self::green($pdf, $this->explodeString($data->heredo_cancer_side), 'Cancer side'), 1, 'L');
+        }
+        if (!empty($heredo_dataArray['Kidney Disease'])) {
+            $pdf->MultiCell(0, 7, "Kidney Disease side:" . self::green($pdf, $this->explodeString($data->heredo_kidney_side), 'Kidney Disease side'), 1, 'L');
+        }
+        if (!empty($heredo_dataArray['Thyroid Disease'])) {
+            $pdf->MultiCell(0, 7, "Thyroid Disease:" . self::green($pdf, $this->explodeString($data->heredo_thyroid_side), 'Thyroid Disease'), 1, 'L');
+        }
+        if (!empty($heredo_dataArray['Others'])) {
+            $pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $this->explodeString($data->heredo_others), 'Others'), 1, 'L');
+        }
         $pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, $data->previous_hospitalization), 1, 'L');
 
 
@@ -1047,10 +1080,13 @@ class NewFormCtrl extends Controller
         $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
         $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
         $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_with_maternal_illness, 'Maternal Illness'), 1, 'L');
+        if ($data->prenatal_radiowith_or_without == "with") {
+            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Maternal Illness: ") . "\n" . self::staticGreen($pdf, $data->prenatal_with_maternal_illness), 1, 'L');
+        } else if ($data->prenatal_radiowith_or_without == "without") {
+            $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_radiowith_or_without . " illness", 'Maternal Illness'), 1, 'L');
+        }
         $pdf->ln(1);
         $pdf->SetFillColor(235, 235, 235);
-        $pdf->MultiCell(0, 7, "NATAL", 1, 'L', true);
         $pdf->MultiCell(0, 7, "Born At:" . self::green($pdf, $data->natal_born_at, 'Born At'), 1, 'L');
         $pdf->MultiCell(0, 7, "Born Address:" . self::green($pdf, $data->natal_born_address, 'Born Address'), 1, 'L');
         $pdf->MultiCell(0, 7, "By:" . self::green($pdf, $data->natal_by, 'By'), 1, 'L');
@@ -1058,14 +1094,25 @@ class NewFormCtrl extends Controller
         $pdf->MultiCell(0, 7, "Indication:" . self::green($pdf, $data->natal_indication, 'Indication'), 1, 'L');
         $pdf->MultiCell(0, 7, "Term:" . self::green($pdf, $data->natal_term, 'Term'), 1, 'L');
         $pdf->MultiCell(0, 7, "With Good Cry:" . self::green($pdf, $data->natal_with_good_cry, 'With Good Cry'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Other Complications:" . self::green($pdf, $data->natal_other_complications, 'Other Complications'), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Other Complications: ") . "\n" . self::staticGreen($pdf, $data->natal_other_complications), 1, 'L');
         $pdf->ln(1);
         $pdf->SetFillColor(235, 235, 235);
-        $pdf->MultiCell(0, 7, "POST NATAL", 1, 'L', true);
+        $pdf->SetTextColor(40);
         $pdf->ln(1);
         $pdf->MultiCell(0, 7, "Feeding History", 1, 'L', true);
-        $pdf->MultiCell(0, 7, "Breast Feed in mos:" . self::green($pdf, $data->post_natal_bfeedx_month, 'Breast Feed in mos'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Specific Formula Feed:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Specific Formula Feed'), 1, 'L');
+        if ($data->post_natal_bfeed == "Yes") {
+            $pdf->MultiCell(0, 7, "Breast Feed:" . self::green($pdf, $data->post_natal_bfeed, 'Breast Feed'), 1, 'L');
+            $pdf->MultiCell(0, 7, "Breast Feed in mos:" . self::green($pdf, $data->post_natal_bfeedx_month, 'Breast Feed in mos'), 1, 'L');
+        } else if ($data->post_natal_bfeed == "No") {
+            $pdf->MultiCell(0, 7, "Breast Feed:" . self::green($pdf, $data->post_natal_bfeed, 'Breast Feed'), 1, 'L');
+        }
+        if ($data->post_natal_formula_feed == "Yes") {
+            $pdf->MultiCell(0, 7, "Formula Feed:" . self::green($pdf, $data->post_natal_formula_feed, 'Formula Feed'), 1, 'L');
+            $pdf->MultiCell(0, 7, "Specific Formula Feed:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Specific Formula Feed'), 1, 'L');
+        } else if ($data->post_formula_feed == "No") {
+            $pdf->MultiCell(0, 7, "Formula Feed:" . self::green($pdf, $data->post_natal_formula_feed, 'Formula Feed'), 1, 'L');
+        }
+
         $pdf->MultiCell(0, 7, "Started Semi Food in mos:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Started Semi Food in mos'), 1, 'L');
         $pdf->ln(1);
         $pdf->MultiCell(0, 7, "Immunization History", 1, 'L', true);
@@ -1089,16 +1136,16 @@ class NewFormCtrl extends Controller
         if ($data->post_natal_others_cbox == "Yes") {
             $pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $data->post_natal_others, 'Others'), 1, 'L');
         }
-
+        $pdf->MultiCell(0, 7, "Developmental Milestones:" . self::green($pdf, $data->post_natal_development_milestones, 'Developmental Milestones'), 1, 'L');
 
         $pdf->ln(3);
         // this is for the prenancy table
         $pdf->SetFont('Arial', '', 12);
         // Define the table header based on your migration fields
         $header = array(
-            'Pregnancy Order', 'Year', 'Gestation Completed',
-            'Pregnancy Outcome', 'Place of Birth', 'Sex',
-            'Birth Weight', 'Present Status', 'Complications'
+            'Preg. Order', 'Year', 'Gestation Completed',
+            'Preg. Outcome', 'Birthplace', 'Sex',
+            'BW', 'Present Status', 'Complications'
         );
 
         $data_pregnancy = $this->fetchPregnant($patient_id);
@@ -1106,11 +1153,15 @@ class NewFormCtrl extends Controller
         // Convert data to an array for FPDF
         $dataArray = [];
         foreach ($data_pregnancy as $row) {
-            $dataArray[] = (array) $row;  // Convert each row to an array
+            $dataArray[] = (array) $row;
         }
 
         // Create the styled table in the PDF
         $this->obstetricPage($pdf, $header, $dataArray, $data);
+
+
+
+
         $pdf->addPage();
         $this->titleHeader($pdf, "PERSONAL AND SOCIAL HISTORY");
         if ($data->smoking == "Yes") {
@@ -1144,16 +1195,14 @@ class NewFormCtrl extends Controller
             $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
             $pdf->MultiCell(0, 7, "Drugs quit year:" . self::green($pdf, $data->illicit_drugs_quit_year, 'Drugs quit year'), 1, 'L');
         }
-        $pdf->MultiCell(0, 7, "Current Medications:" . self::green($pdf, $data->current_medications, 'Current Medications'), 1, 'L');
-
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Current Medications: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->current_medications)), 1, 'L');
         $this->titleHeader($pdf, "PERTINENT LABORATORY AND OTHER ANCILLARY PROCEDURES");
         $pdf->MultiCell(0, 7, "Pertinent Laboratory:" . self::green($pdf, $data->pertinent_laboratory_and_procedures, 'Pertinent Laboratory'), 1, 'L');
         $pdf->MultiCell(0, 7, "Other Procedures:" . self::green($pdf, $data->lab_procedure_other, 'Other Procedures'), 1, 'L');
 
         $this->titleHeader($pdf, "NUTRITIONAL STATUS");
         $pdf->MultiCell(0, 7, "Diet:" . self::green($pdf, $data->diet, 'Diet'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Specific Diet:" . self::green($pdf, $data->specify_diets, 'Specific Diet'), 1, 'L');
-
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Specific Diet: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->specify_diets)), 1, 'L');
         $this->titleHeader($pdf, "LATEST VITAL SIGNS");
         $pdf->MultiCell(0, 7, "Temperature:" . self::green($pdf, $data->temperature, 'Temperature'), 1, 'L');
         $pdf->MultiCell(0, 7, "Pulse Rate:" . self::green($pdf, $data->pulse_rate, 'Pulse Rate'), 1, 'L');
@@ -1170,23 +1219,23 @@ class NewFormCtrl extends Controller
 
         $pdf->addPage();
         $this->titleHeader($pdf, "REVIEW OF SYSTEMS");
-        $pdf->MultiCell(0, 7, "Skin:" . self::green($pdf, $this->explodeString_selectAll($data->skin), 'Skin'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Head:" . self::green($pdf, $this->explodeString_selectAll($data->head), 'Head'), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Eyes: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->eyes)), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Ears: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->ears)), 1, 'L');
-        $pdf->MultiCell(0, 7, "Nose/Sinuses:" . self::green($pdf, $this->explodeString_selectAll($data->nose_or_sinuses), 'Nose/Sinuses'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Mouth/Throat:" . self::green($pdf, $this->explodeString_selectAll($data->mouth_or_throat), 'Mouth/Throat'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Neck:" . self::green($pdf, $this->explodeString_selectAll($data->neck), 'Neck'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Skin:" . self::green($pdf, $this->explodeString($data->skin), 'Skin'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Head:" . self::green($pdf, $this->explodeString($data->head), 'Head'), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Eyes: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->eyes)), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Ears: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->ears)), 1, 'L');
+        $pdf->MultiCell(0, 7, "Nose/Sinuses:" . self::green($pdf, $this->explodeString($data->nose_or_sinuses), 'Nose/Sinuses'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Mouth/Throat:" . self::green($pdf, $this->explodeString($data->mouth_or_throat), 'Mouth/Throat'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Neck:" . self::green($pdf, $this->explodeString($data->neck), 'Neck'), 1, 'L');
         $pdf->MultiCell(0, 7, "Breast:" . self::green($pdf, $data->breast, 'Breast'), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Respiratory/Cardiac: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->respiratory_or_cardiac)), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Gastrointestinal: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->gastrointestinal)), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Urinary: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->urinary)), 1, 'L');
-        $pdf->MultiCell(0, 7, "Peripheral Vascular:" . self::green($pdf, $this->explodeString_selectAll($data->peripheral_vascular), 'Peripheral Vascular'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Musculoskeletal:" . self::green($pdf, $this->explodeString_selectAll($data->musculoskeletal), 'Musculoskeletal'), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Neurologic: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->neurologic)), 1, 'L');
-        $pdf->MultiCell(0, 7, "Hematologic:" . self::green($pdf, $this->explodeString_selectAll($data->hematologic), 'Hematologic'), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Endocrine: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->endocrine)), 1, 'L');
-        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Psychiatric: ") . "\n" . self::staticGreen($pdf, $this->explodeString_selectAll($data->psychiatric)), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Respiratory/Cardiac: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->respiratory_or_cardiac)), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Gastrointestinal: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->gastrointestinal)), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Urinary: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->urinary)), 1, 'L');
+        $pdf->MultiCell(0, 7, "Peripheral Vascular:" . self::green($pdf, $this->explodeString($data->peripheral_vascular), 'Peripheral Vascular'), 1, 'L');
+        $pdf->MultiCell(0, 7, "Musculoskeletal:" . self::green($pdf, $this->explodeString($data->musculoskeletal), 'Musculoskeletal'), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Neurologic: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->neurologic)), 1, 'L');
+        $pdf->MultiCell(0, 7, "Hematologic:" . self::green($pdf, $this->explodeString($data->hematologic), 'Hematologic'), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Endocrine: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->endocrine)), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Psychiatric: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->psychiatric)), 1, 'L');
         $pdf->addPage();
 
 
@@ -1206,7 +1255,6 @@ class NewFormCtrl extends Controller
         $pdf->SetLineWidth(.3);
         $pdf->ln(5);
 
-        //PERSONAL AND SOCIAL HISTORY 
         $pdf->MultiCell(0, 7, $title, 1, 'L', true);
         $pdf->SetFillColor(255, 250, 205);
         $pdf->SetTextColor(40);
@@ -1282,9 +1330,15 @@ class NewFormCtrl extends Controller
     private function obstetricPage($pdf, $header, $data, $data_)
     {
 
-        // Set PDF to landscape orientation
-        $pdf->SetMargins(6.35, 6.35, 6.35);  // 0.25-inch margin (~6.35mm)
+
+        $pdf->SetMargins(6.35, 6.35, 6.35);
         $pdf->AddPage('L');
+
+        $contraceptive_other = $data->contraceptive_history;
+        $other_explodedData = explode(',', $contraceptive_other);
+        $others = ['Other'];
+
+        $other_dataArray = $this->mapExplodedDataToArray($other_explodedData, $others);
 
         $this->titleHeader($pdf, "OBSTETRIC AND GYNECOLOGIC HISTORY");
         $pdf->MultiCell(0, 7, "Menarche:" . self::green($pdf, $data_->menarche, 'Menarche'), 1, 'L');
@@ -1302,7 +1356,9 @@ class NewFormCtrl extends Controller
         $pdf->MultiCell(0, 7, "Pads per day:" . self::green($pdf, $data_->menstrual_cycle_padsperday, 'Pads per day'), 1, 'L');
         $pdf->MultiCell(0, 7, "Medication:" . self::green($pdf, $data_->menstrual_cycle_medication, 'Medication'), 1, 'L');
         $pdf->MultiCell(0, 7, "Contraceptive History:" . self::green($pdf, $data_->contraceptive_history, 'contraceptive History'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Contraceptive Others:" . self::green($pdf, $data_->contraceptive_others, 'contraceptive Others'), 1, 'L');
+        if (!empty($other_dataArray['Other'])) {
+            $pdf->MultiCell(0, 7, "Contraceptive Others:" . self::green($pdf, $data_->contraceptive_others, 'contraceptive Others'), 1, 'L');
+        }
         $pdf->MultiCell(0, 7, "Parity G:" . self::green($pdf, $data_->parity_g, 'Parity G'), 1, 'L');
         $pdf->MultiCell(0, 7, "Parity P:" . self::green($pdf, $data_->parity_p, 'Parity P'), 1, 'L');
         $pdf->MultiCell(0, 7, "Parity FT:" . self::green($pdf, $data_->parity_ft, 'Parity FT'), 1, 'L');
@@ -1312,36 +1368,34 @@ class NewFormCtrl extends Controller
         $pdf->MultiCell(0, 7, "Parity LNMP:" . self::green($pdf, $data_->parity_lnmp, 'Parity LNMP'), 1, 'L');
         $pdf->MultiCell(0, 7, "Parity EDC:" . self::green($pdf, $data_->parity_edc, 'Parity EDC'), 1, 'L');
         $pdf->MultiCell(0, 7, "EUTZ:" . self::green($pdf, $data_->aog_eutz, 'EUTZ'), 1, 'L');
-        $pdf->MultiCell(0, 7, "Prenatal History:" . self::green($pdf, $data_->prenatal_history, 'Prenatal History'), 1, 'L');
+        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Prenatal History: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data_->prenatal_history)), 1, 'L');
 
-
+        $pdf->SetMargins(6.35, 6.35, 6.35);
+        $pdf->AddPage('L');
 
         $pdf->ln(5);
-        // Colors, line width, and bold font for the table header
+
         $pdf->SetFillColor(200, 200, 200);
         $pdf->SetTextColor(0);
         $pdf->SetDrawColor(200, 200, 200);
         $pdf->SetLineWidth(.3);
-        $pdf->SetFont('Arial', 'B', 10);  // Set bold font for header
+        $pdf->SetFont('Arial', 'B', 10);
 
-        // Set column widths for landscape mode (ensure the sum does not exceed page width)
-        $colWidth = array(30, 16, 38, 38, 38, 15, 28, 38, 43);  // Adjust as needed
 
-        // Header: draw in a row with individual cells
+        $colWidth = array(20, 16, 38, 34, 36, 10, 16, 34, 80);
+
+
         foreach ($header as $i => $colHeader) {
-            $pdf->Cell($colWidth[$i], 7, $colHeader, 1, 0, 'C', true);  // Use Cell() to align text in one row
+            $pdf->Cell($colWidth[$i], 7, $colHeader, 1, 0, 'C', true);
         }
-        $pdf->Ln();  // Move to the next line
+        $pdf->Ln();
 
-        // Color and font restoration for table rows
         $pdf->SetFillColor(224, 235, 255);
         $pdf->SetTextColor(0);
-        $pdf->SetFont('Arial', '', 10);  // Reset font to normal
+        $pdf->SetFont('Arial', '', 10);
 
-        // Data rows
         $fill = false;
         foreach ($data as $row) {
-            // Loop through each column in the row and print the corresponding data, wrapped
             $pdf->Cell($colWidth[0], 6, $this->wrapText($pdf, $row['pregnancy_order'], $colWidth[0]), 'LR', 0, 'L', $fill);
             $pdf->Cell($colWidth[1], 6, $this->wrapText($pdf, $row['pregnancy_year'], $colWidth[1]), 'LR', 0, 'L', $fill);
             $pdf->Cell($colWidth[2], 6, $this->wrapText($pdf, $row['pregnancy_gestation_completed'], $colWidth[2]), 'LR', 0, 'L', $fill);
@@ -1350,38 +1404,35 @@ class NewFormCtrl extends Controller
             $pdf->Cell($colWidth[5], 6, $this->wrapText($pdf, $row['pregnancy_sex'], $colWidth[5]), 'LR', 0, 'L', $fill);
             $pdf->Cell($colWidth[6], 6, $this->wrapText($pdf, $row['pregnancy_birth_weight'], $colWidth[6]), 'LR', 0, 'R', $fill);
             $pdf->Cell($colWidth[7], 6, $this->wrapText($pdf, $row['pregnancy_present_status'], $colWidth[7]), 'LR', 0, 'L', $fill);
-            $pdf->Cell($colWidth[8], 6, $this->wrapText($pdf, $row['pregnancy_complication'], $colWidth[8]), 'LR', 0, 'L', $fill);
-            $pdf->Ln();  // Move to the next line for the next row
-            $fill = !$fill;  // Alternate the background color for the next row
+            $pdf->Cell($colWidth[8], 6, $this->wrapText($pdf, $row['pregnancy_complication'], $colWidth[7]), 'LR', 0, 'L', $fill);
+            $pdf->Ln();
+            $fill = !$fill;
         }
 
-        // Closing line for the table
+
         $pdf->Cell(array_sum($colWidth), 0, '', 'T');
     }
 
-    // Helper function to wrap text manually
     private function wrapText($pdf, $text, $colWidth)
     {
-        // Define maximum number of characters per line based on column width
-        $maxLineWidth = $colWidth / 2.5;  // Adjust this value based on font size and width
 
-        // Split text into words
+        $maxLineWidth = $colWidth / 2.5;
+
         $words = explode(' ', $text);
         $wrappedText = '';
         $line = '';
 
         foreach ($words as $word) {
-            // Check if adding the next word would exceed the max width
+
             if ($pdf->GetStringWidth($line . ' ' . $word) <= $maxLineWidth) {
                 $line .= ($line == '') ? $word : ' ' . $word;
             } else {
-                // If the line is full, append it to the wrapped text and start a new line
                 $wrappedText .= $line . "\n";
                 $line = $word;
             }
         }
 
-        // Add the last line to the wrapped text
+
         $wrappedText .= $line;
 
         return $wrappedText;
