@@ -856,7 +856,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     </td>
                                                     <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_complications[]"></td>
+                                                    <td><input class="form-control" type="text" maxlength="38" name="pregnancy_history_complications[]"></td>
                                                 </tr>
                                             </tbody>
                                         </table>
