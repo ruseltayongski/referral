@@ -47871,7 +47871,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatApp_vue_vue_type_template_id_f12ca17c_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatApp.vue?vue&type=template&id=f12ca17c&scoped=true */ "./resources/assets/js/components/ChatApp.vue?vue&type=template&id=f12ca17c&scoped=true");
 /* harmony import */ var _ChatApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatApp.vue?vue&type=script&lang=js */ "./resources/assets/js/components/ChatApp.vue?vue&type=script&lang=js");
 /* harmony import */ var _ChatApp_vue_vue_type_style_index_0_id_f12ca17c_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatApp.vue?vue&type=style&index=0&id=f12ca17c&lang=scss&scoped=true */ "./resources/assets/js/components/ChatApp.vue?vue&type=style&index=0&id=f12ca17c&lang=scss&scoped=true");
-/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -47879,7 +47879,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ChatApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ChatApp_vue_vue_type_template_id_f12ca17c_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-f12ca17c"],['__file',"resources/assets/js/components/ChatApp.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ChatApp_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ChatApp_vue_vue_type_template_id_f12ca17c_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-f12ca17c"],['__file',"resources/assets/js/components/ChatApp.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -47902,7 +47902,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatForm_vue_vue_type_template_id_3f0ca373_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatForm.vue?vue&type=template&id=3f0ca373&scoped=true */ "./resources/assets/js/components/ChatForm.vue?vue&type=template&id=3f0ca373&scoped=true");
 /* harmony import */ var _ChatForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatForm.vue?vue&type=script&lang=js */ "./resources/assets/js/components/ChatForm.vue?vue&type=script&lang=js");
 /* harmony import */ var _ChatForm_vue_vue_type_style_index_0_id_3f0ca373_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatForm.vue?vue&type=style&index=0&id=3f0ca373&lang=scss&scoped=true */ "./resources/assets/js/components/ChatForm.vue?vue&type=style&index=0&id=3f0ca373&lang=scss&scoped=true");
-/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -47910,7 +47910,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ChatForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ChatForm_vue_vue_type_template_id_3f0ca373_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3f0ca373"],['__file',"resources/assets/js/components/ChatForm.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ChatForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ChatForm_vue_vue_type_template_id_3f0ca373_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-3f0ca373"],['__file',"resources/assets/js/components/ChatForm.vue"]])
 /* hot reload */
 if (false) {}
 
@@ -47933,7 +47933,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatMessages_vue_vue_type_template_id_2915307b_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatMessages.vue?vue&type=template&id=2915307b&scoped=true */ "./resources/assets/js/components/ChatMessages.vue?vue&type=template&id=2915307b&scoped=true");
 /* harmony import */ var _ChatMessages_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatMessages.vue?vue&type=script&lang=js */ "./resources/assets/js/components/ChatMessages.vue?vue&type=script&lang=js");
 /* harmony import */ var _ChatMessages_vue_vue_type_style_index_0_id_2915307b_lang_scss_scoped_true__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatMessages.vue?vue&type=style&index=0&id=2915307b&lang=scss&scoped=true */ "./resources/assets/js/components/ChatMessages.vue?vue&type=style&index=0&id=2915307b&lang=scss&scoped=true");
-/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+/* harmony import */ var C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
 
 
 
@@ -47941,7 +47941,7 @@ __webpack_require__.r(__webpack_exports__);
 ;
 
 
-const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ChatMessages_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ChatMessages_vue_vue_type_template_id_2915307b_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-2915307b"],['__file',"resources/assets/js/components/ChatMessages.vue"]])
+const __exports__ = /*#__PURE__*/(0,C_xampp7_4_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_ChatMessages_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_ChatMessages_vue_vue_type_template_id_2915307b_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-2915307b"],['__file',"resources/assets/js/components/ChatMessages.vue"]])
 /* hot reload */
 if (false) {}
 
