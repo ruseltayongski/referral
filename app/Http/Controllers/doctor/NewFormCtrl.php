@@ -85,8 +85,7 @@ class NewFormCtrl extends Controller
         return view('revised_form.revised_referral_info', ['data' => $data, 'pregnancy_data' => $pregnancy_data]);
     }
 
-
-    public function saveReferral(Request $request)
+    private function prepareData($request, $patient_id)
     {
         // Initialize arrays for storing medical history information
         $comorbidities = [];
@@ -112,7 +111,7 @@ class NewFormCtrl extends Controller
         $rs_endocrine_methods = [];
         $rs_psychiatric_methods = [];
 
-        $patient_id = 14;
+        // $patient_id = 15;
 
         // Define the fields for comorbidities with associated additional data (year or string)
         $comorbidity_fields = [
@@ -831,7 +830,7 @@ class NewFormCtrl extends Controller
             'menstrual_cycle_padsperday' => $request->mens_padsperday,
             'menstrual_cycle_medication' => $request->mens_medication,
             'contraceptive_history' => $contraceptive_methods,
-            'contraceptive_others' => $request->contraceptive_other,
+            'contraceptive_others' => $request->contraceptive_others,
             'prenatal_history' => $request->prenatal_history,
             'parity_g' => $request->parity_g,
             'parity_p' => $request->parity_p,
@@ -908,6 +907,36 @@ class NewFormCtrl extends Controller
             'oxygen_saturation' => $request->vital_oxy_saturation,
         ];
 
+        return [
+            'past_medical_history_data' => $past_medical_history_data,
+            'pertinent_lab' => $pertinent_lab,
+            'pediatric_history' => $pediatric_history,
+            'obstetric_history' => $obstetric_history,
+            'personal_history' => $personal_history,
+            'review_of_system' => $review_of_system,
+            'nutritional_status' => $nutritional_status,
+            'glasgocoma_scale' => $glasgocoma_scale,
+            'vital_signs' => $vital_signs,
+        ];
+    }
+
+
+    public function saveReferral(Request $request)
+    {
+
+        $patient_id = 2;
+
+        $data = $this->prepareData($request, $patient_id);
+
+        PastMedicalHistory::create($data['past_medical_history_data']);
+        PertinentLaboratory::create($data['pertinent_lab']);
+        PediatricHistory::create($data['pediatric_history']);
+        ObstetricAndGynecologicHistory::create($data['obstetric_history']);
+        PersonalAndSocialHistory::create($data['personal_history']);
+        ReviewOfSystems::create($data['review_of_system']);
+        NutritionalStatus::create($data['nutritional_status']);
+        GlasgoComaScale::create($data['glasgocoma_scale']);
+        LatestVitalSigns::create($data['vital_signs']);
 
 
         $orders = $request->input('pregnancy_history_order');
@@ -935,16 +964,24 @@ class NewFormCtrl extends Controller
             ]);
         }
 
-        // Save to database
-        PastMedicalHistory::create($past_medical_history_data);
-        PertinentLaboratory::create($pertinent_lab);
-        PediatricHistory::create($pediatric_history);
-        ObstetricAndGynecologicHistory::create($obstetric_history);
-        PersonalAndSocialHistory::create($personal_history);
-        ReviewOfSystems::create($review_of_system);
-        NutritionalStatus::create($nutritional_status);
-        GlasgoComaScale::create($glasgocoma_scale);
-        LatestVitalSigns::create($vital_signs);
+
+        return redirect("/revised/referral/info/{$patient_id}");
+    }
+
+    public function updateReferral(Request $request, $patient_id)
+    {
+
+        $data = $this->prepareData($request, $patient_id);
+
+        PastMedicalHistory::where('patient_id', $patient_id)->update($data['past_medical_history_data']);
+        PertinentLaboratory::where('patient_id', $patient_id)->update($data['pertinent_lab']);
+        PediatricHistory::where('patient_id', $patient_id)->update($data['pediatric_history']);
+        ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->update($data['obstetric_history']);
+        PersonalAndSocialHistory::where('patient_id', $patient_id)->update($data['personal_history']);
+        ReviewOfSystems::where('patient_id', $patient_id)->update($data['review_of_system']);
+        NutritionalStatus::where('patient_id', $patient_id)->update($data['nutritional_status']);
+        GlasgoComaScale::where('patient_id', $patient_id)->update($data['glasgocoma_scale']);
+        LatestVitalSigns::where('patient_id', $patient_id)->update($data['vital_signs']);
 
         return redirect("/revised/referral/info/{$patient_id}");
     }
@@ -1409,13 +1446,11 @@ class NewFormCtrl extends Controller
             $fill = !$fill;
         }
 
-
         $pdf->Cell(array_sum($colWidth), 0, '', 'T');
     }
 
     private function wrapText($pdf, $text, $colWidth)
     {
-
         $maxLineWidth = $colWidth / 2.5;
 
         $words = explode(' ', $text);
@@ -1431,10 +1466,7 @@ class NewFormCtrl extends Controller
                 $line = $word;
             }
         }
-
-
         $wrappedText .= $line;
-
         return $wrappedText;
     }
 }
