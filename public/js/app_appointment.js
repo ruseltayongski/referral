@@ -19167,7 +19167,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     eventRenderFunction: function eventRenderFunction(event, element) {
       var _this2 = this;
       //console.log(event,event.start.format('YYYY-MM-DD'))
-      var currentDate = new Date().toISOString().split("T")[0];
+      // let currentDate = new Date().toISOString().split("T")[0];
+      var currentDateTime = new Date().toISOString().split("T")[0]; // get the current date and time
       this.$nextTick(function () {
         var targetTd = $(".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']");
         var targetdrag = $(".fc-draggable[data-date='" + event.start.format("YYYY-MM-DD") + "']");
@@ -19178,22 +19179,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             var slotOndate = appointment.appointment_schedules.filter(function (slot) {
               return slot.appointed_date === date;
             });
-            // if (slotOndate.length > 0) {
-            //   slotOndate.map((slot) => {
-            //     console.log(slot.telemed_assigned_doctor[0].appointment_by);
-            //   });
-            // }
-            return slotOndate.length > 0 && slotOndate.every(function (slot) {
-              return slot.telemed_assigned_doctor[0].appointment_by;
+
+            // Group by appointment_id
+            var groupedByAppointmentId = slotOndate.reduce(function (acc, slot) {
+              var id = slot.appointment_id;
+              if (!acc[id]) acc[id] = [];
+              acc[id].push(slot.telemed_assigned_doctor.map(function (doctor) {
+                return doctor.appointment_by;
+              }));
+              return acc;
+            }, {});
+            // Check if all appointment_by for each appointment_id are assigned
+            return Object.values(groupedByAppointmentId).some(function (appointments) {
+              return appointments.every(function (appointment_by_list) {
+                return appointment_by_list.every(function (appointment_by) {
+                  return appointment_by;
+                });
+              });
             });
           }
           return false;
         });
-        if (date < currentDate || isfullyBooked) {
-          targetTd.css("background-color", "rgb(255 214 214)"); //color the td of day in calendar'
+        if (date < currentDateTime || isfullyBooked) {
+          targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
           targetTd.css("border-color", "rgb(230 193 193)");
         } else {
-          targetTd.css("background-color", "#00a65a"); //color the td of day in calendar'
+          targetTd.css("background-color", "#00a65a"); //available color green'
           targetdrag.css("border-color", "#00a65a");
         }
         targetGrid.remove();
@@ -19308,6 +19319,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AppointmentFacility",
   data: function data() {
@@ -19332,29 +19349,61 @@ __webpack_require__.r(__webpack_exports__);
       var now = new Date();
       console.log("user", this.appointment);
       if (this.appointment && this.appointment.appointment_schedules) {
+        var appointmentIdMap = new Map();
         this.appointment.appointment_schedules.forEach(function (sched) {
           // Combine appointed_date and appointed_time into a single Date object
           var appointedDatetime = new Date("".concat(sched.appointed_date, "T").concat(sched.appointed_time));
+
           // Check if the schedule is in the future
           if (appointedDatetime > now) {
             sched.telemed_assigned_doctor.forEach(function (doctor) {
-              if (!doctor.appointment_by) {
-                count++;
+              var appointmentId = doctor.appointment_id;
+              // Initialize the map for this appointment_id if not done already
+              if (!appointmentIdMap.has(appointmentId)) {
+                appointmentIdMap.set(appointmentId, {
+                  allNull: true,
+                  // Assume all appointment_by are null initially
+                  hasNull: false // Track if there's at least one null
+                });
+              }
+              // Initialize the map for this appointment_id if not done already
+              var status = appointmentIdMap.get(appointmentId);
+              if (doctor.appointment_by) {
+                status.allNull = false;
+              } else {
+                status.hasNull = true;
               }
             });
+          }
+        });
+        // Count the number of appointment_ids where all appointment_by are null
+        appointmentIdMap.forEach(function (status, appointmentId) {
+          if (status.hasNull) {
+            count++;
           }
         });
       }
       return count;
     },
+    // shouldDisplayFacility() {
+    //   const now = new Date();
+    //   const isAppointedExpire = this.appointment.appointment_schedules.every(
+    //     (sched) => {
+    //       const AppointedDate = new Date(`${sched.appointed_date}`);
+    //       console.log(AppointedDate);
+    //       return AppointedDate <= now;
+    //     }
+    //   );
+    //   return !isAppointedExpire;
+    //   //&& !this.emptyAppointmentByCount == 0
+    // },
     shouldDisplayFacility: function shouldDisplayFacility() {
       var now = new Date();
-      var isAppointedExpire = this.appointment.appointment_schedules.every(function (sched) {
-        var AppointedDate = new Date("".concat(sched.appointed_date));
-        return AppointedDate <= now;
+      var hasValidAppointment = this.appointment.appointment_schedules.some(function (sched) {
+        var appointmentDatetime = new Date("".concat(sched.appointed_date, " ").concat(sched.appointed_time));
+        return appointmentDatetime > now;
       });
-      return !isAppointedExpire;
-      //&& !this.emptyAppointmentByCount == 0
+      return hasValidAppointment;
     },
     balanceSlotThisMonth: function balanceSlotThisMonth() {
       var usedCount = 0;
@@ -19363,25 +19412,71 @@ __webpack_require__.r(__webpack_exports__);
       var currentyear = now.getFullYear();
       var currentmonth = now.getMonth();
       if (this.appointment && this.appointment.appointment_schedules) {
-        this.appointment.appointment_schedules.forEach(function (sched) {
+        // Step 1: Filter schedules by appointed_date (current mnoth and year)
+        var filteredSchedules = this.appointment.appointment_schedules.filter(function (sched) {
           var appointedDate = new Date(sched.appointed_date);
           var appointedYear = appointedDate.getFullYear();
           var appointedMonth = appointedDate.getMonth();
-          if (appointedYear === currentyear && appointedMonth === currentmonth) {
-            var appointedDatetime = new Date("".concat(sched.appointed_date, "T").concat(sched.appointed_time));
-            if (appointedDatetime > now) {
-              sched.telemed_assigned_doctor.forEach(function (doctor) {
-                if (doctor.appointment_by) {
-                  usedCount++;
-                }
-              });
-            } else {
-              expiredCount++;
-            }
+          return appointedYear === currentyear && appointedMonth === currentmonth;
+        });
+        var appointmentIdToDate = filteredSchedules.reduce(function (acc, sched) {
+          acc[sched.id] = sched.appointed_date;
+          return acc;
+        }, {});
+        var groupedDoctorByDate = {};
+        this.appointment.appointment_schedules.forEach(function (schedule) {
+          var doctors = schedule.telemed_assigned_doctor;
+          if (doctors && Array.isArray(doctors)) {
+            doctors.forEach(function (doctor) {
+              var appointedDate = appointmentIdToDate[doctor.appointment_id];
+              if (appointedDate) {
+                if (!groupedDoctorByDate[appointedDate]) groupedDoctorByDate[appointedDate] = [];
+                groupedDoctorByDate[appointedDate].push(doctor);
+              }
+            });
           }
+        });
+        console.log("Grouped doctors by appointed_date:", groupedDoctorByDate);
+        Object.entries(groupedDoctorByDate).forEach(function (_ref) {
+          var _ref2 = _slicedToArray(_ref, 2),
+            appointedDate = _ref2[0],
+            doctors = _ref2[1];
+          var doctorsByAppointmentId = doctors.reduce(function (acc, doctor) {
+            if (!acc[doctor.appointment_id]) acc[doctor.appointment_id] = [];
+            acc[doctor.appointment_id].push(doctor);
+            return acc;
+          }, {});
+          Object.values(doctorsByAppointmentId).forEach(function (appointmentDoctors) {
+            // Find the schedule associated with this appointmentDoctors group
+            var schedule = filteredSchedules.find(function (sched) {
+              return sched.id === appointmentDoctors[0].appointment_id;
+            });
+            if (schedule) {
+              var appointedDatetime = new Date("".concat(schedule.appointed_date, "T").concat(schedule.appointed_time));
+              var allAssigned = appointmentDoctors.every(function (doctor) {
+                return doctor.appointment_by !== null;
+              });
+              if (allAssigned) {
+                usedCount++;
+              }
+              // Check if the appointment is in the future or past (expired)
+              if (appointedDatetime > now) {
+                // If all doctors are assigned, increase the used count
+              } else {
+                // If the appointment has expired, but at least one doctor is assigned, count as expired
+                var someAssigned = appointmentDoctors.some(function (doctor) {
+                  return doctor.appointment_by === null;
+                });
+                if (someAssigned) {
+                  expiredCount++;
+                }
+              }
+            }
+          });
         });
       }
       var totalcount = usedCount + expiredCount;
+      console.log("Used count: ".concat(usedCount, ", Expired count: ").concat(expiredCount));
       return totalcount;
     }
   },
@@ -19814,7 +19909,7 @@ var _hoisted_9 = /*#__PURE__*/_withScopeId(function () {
       "background-color": "rgb(255 214 214)",
       "color": "#ffff"
     }
-  }, " Full Slot ")], -1 /* HOISTED */);
+  }, " Not Available ")], -1 /* HOISTED */);
 });
 var _hoisted_10 = {
   "class": "box box-solid"
@@ -19904,7 +19999,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[3] || (_cache[3] = function () {
       return $options.proceedAppointment && $options.proceedAppointment.apply($options, arguments);
     })
-  }, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Appointment ")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_16, [_hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" All appointments are full ")]))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])])])]);
+  }, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_16, [_hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  All appointments are full ")]))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])])])]);
 }
 
 /***/ }),

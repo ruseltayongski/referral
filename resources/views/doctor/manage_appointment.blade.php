@@ -570,7 +570,7 @@
                     });
                 }
             });
-        
+            let deleteCount = 0;
         function addTimeInput(ok) {
             let currentCount = $(".appointment_count").val();
             $(".appointment_count").val(++currentCount);
@@ -618,14 +618,14 @@
             $('#additionalTimeContainer').append(timeInputGroup);
 
             timeInputGroup.find('.delete-time-input').on('click', function () {
+                deleteCount++;
                 timeInputGroup.remove();
+                slotFormFields(); 
             });
-            // Reinitialize the select2 plugin after adding a new element
-            $(`.available_doctor${currentCount}`).select2();
-
-            $('#additionalTimeContainer').show();
-            $(document).ready(function() {
+          
+            // $(document).ready(function() {
                 $('.select2').select2();
+                
                 $.each(query_doctor_store, function (index, userData) {
                     $(`.available_doctor${currentCount}`).append($('<option>', {
                         value: userData.id,
@@ -633,9 +633,45 @@
                     }));
                 });
 
-                $('.select2').select2();
-            });
+                // $('.select2').select2();
+            // });
+
+              // Reinitialize the select2 plugin after adding a new element
+            $(`.available_doctor${currentCount}`).select2();
+
+            $('#additionalTimeContainer').show();
+
+           slotFormFields(); 
         }
+        //disabled Add appointment button
+
+        function initializeSelect2() {
+            $('.available_doctor').select2(); // Adjust the selector as needed
+        }
+
+        function slotFormFields(){
+            let allfilled = true;
+  
+            $('.time-input-group').each(function() {
+                const timefrom = $(this).find('input[type="time"]').first().val();
+                const timeTo = $(this).find('input[type="time"]').last().val();
+                const opdCategory = $(this).find('select[name^="opdCategory"]').val();
+                const availableDoctor = $(this).find('select[name^="available_doctor"]').val();
+                console.log('opdCaregory:',opdCategory,'timefrom:',timefrom,'timeTo:', timeTo, 'availableDoctor:', availableDoctor);
+                if(!timefrom || !timeTo || !opdCategory || !availableDoctor) {
+                    allfilled = false;
+                }
+            });
+
+            $('#add_slots').prop('disabled', !allfilled);
+        }
+
+        $(document).on('input change', 'input[type="time"],select[name^="opdCategory"],select[name^="available_doctor"]', function() {
+            slotFormFields();
+        })
+        $(document).ready(function(){
+            slotFormFields();
+        });
 
 //-----------------My Append Update Edit appointment Time---------------------------//
 
@@ -979,14 +1015,21 @@ function deleteTimeInput(appointment){
     });
     function generateDoctorsOptions(doctorData){
         var options = '';
-        if(Array.isArray(doctorData)){
+        var selectedDoctor = new Set();
+
+        if(Array.isArray(doctorData)){  
             doctorData.forEach(function (doctor){
-            console.log("doctorData::", doctor.doctor.id);
-            options += `<option value="${doctor.doctor.id}" selected>${doctor.doctor.fname} ${doctor.doctor.lname}</option>`;
+                selectedDoctor.add(doctor.doctor.id);// Add the doctor ID to the set
+                options += `<option value="${doctor.doctor.id}" selected>${doctor.doctor.fname} ${doctor.doctor.lname}</option>`;
             });
-        }else if(typeof doctorData === 'object' && doctorData !== null){
-        options += `<option value="${doctorData.id}" selected>${doctorData.fname} ${doctorData.lname}</option>`;
         }
+        $.each(query_doctor_store, function (index, userData){
+
+            if(!selectedDoctor.has(userData.id)){// Exclude selected doctors
+                options += `<option value="${userData.id}">${userData.fname} ${userData.lname}</option>`;
+            }
+        });
+
         return options;
     }
     //----------------------Trapping Appointment Time From and Time To and Date----------------------------//    
@@ -994,38 +1037,12 @@ function deleteTimeInput(appointment){
     document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
     console.log('today', today);
 
-    $(document).ready(function() {
-        $.ajax({
-            url: "{{ route('get-booked-dates') }}",
-            type: 'GET',
-            success: function(response){
-                //  console.log("response", response);
-
-                $(function() {
-                    $('#appointment_date').on('input', function() { 
-                        var selectedDate = $(this).val();
-                        if (response.includes(selectedDate)) {
-                            $(this).val('');
-                            $(this).addClass('already-appointed');
-                            alert('This date is Already Appointed. Please select another date.');
-                        }else{
-                            $(this).removeClass('already-appointed');
-                        }
-                    });
-                });
-    
-            },
-            error: function(xhr, status, error){
-                console.error(xhr, responseText);
-            }
-        });
-    });
 
     $(document).ready(function() {
 
         var allAppointmentTimes = [];
         var currentCounts = 1;
-
+    
         function checkConflicts() {
             for (let i = 0; i < allAppointmentTimes.length; i++) {
                 for (let j = i + 1; j < allAppointmentTimes.length; j++) {
@@ -1047,13 +1064,17 @@ function deleteTimeInput(appointment){
         }
 
         function clearSelectElement(selectElement) {
-            selectElement.find('option:selected').prop('selected', false);
-            selectElement.trigger('change');
+            // selectElement.find('option:selected').prop('selected', false);
+            // selectElement.trigger('change');
+            if(selectElement.length > 0){
+                selectElement.val(null).trigger('change'); 
+            }else {
+                console.warn('Select2 element not found:', selectElement); // Log an error for debugging
+            }
         }
-
             
-        $(document).on('change', 'input[type="time"]', function() {
-
+        $(document).on('change', 'input[type="time"], [name^="available_doctor"]', function() {
+          
             var UpdateDate = $("#updateAppointmentId").val();
             var appointmentDate = $("#appointment_date").val().trim();
             
@@ -1062,32 +1083,129 @@ function deleteTimeInput(appointment){
             currentCounts = index + 1;
             var fromInput = timeInputGroup.find('input[name^="appointed_time' + currentCounts + '"]');
             var toInput = timeInputGroup.find('input[name^="appointed_time_to' + currentCounts + '"]');
-            var selectedDoctors = $(`.available_doctor${currentCounts}`).val();
 
             var fromTime = fromInput.val();
             var toTime = toInput.val();
 
+            // console.log("toTimeObj", fromTime);
+
+            let currentFrom = [];
+            let currentTo = [];
+            let currentDoctors = [];
+            let timeSlots = [];
+            let cleardoctors = [];
+            $('.time-input-group').each(function() {
+                // Capture the "from" time and "to" time
+                let fromTimeObj = $(this).find('input[name^="appointed_time"]').val();
+                let toTimeObj = $(this).find('input[name^="appointed_time_to"]').val();
+
+                // Capture the selected doctors from the select2 dropdown
+                let selectedDoctors = $(this).find('select[name^="available_doctor"]').val() || [];
+                
+                // If both times are selected, construct the object
+                if (fromTimeObj && toTimeObj) {
+                    var timeObject = {
+                        from: fromTimeObj,
+                        to: toTimeObj,
+                        doctors: selectedDoctors
+                    };
+                    timeSlots.push(timeObject);
+                }
+            });
+           
+            timeSlots.forEach(function(slot, index) {
+                currentFrom.push(slot.from);
+                currentTo.push(slot.to)
+                currentDoctors.push(slot.doctors)
+                cleardoctors.push(index);
+            });
+
             var fromTimeObj = new Date(appointmentDate + "T" + fromTime);
             var toTimeObj = new Date(appointmentDate + "T" + toTime);
-            // console.log("toTimeObj", fromTime);
-            
+
+            // var toTimeCur = new Date(appointmentDate + "T" + currentTo);
+            // var FromTimeCur = new Date(appointmentDate + "T" + currentFrom);
+            var toTimeCur = currentTo.length > 0 ?  new Date(appointmentDate + "T" + currentTo[currentCounts - 1]) : null;
+            var FromTimeCur =currentFrom.length > 0 ? new Date(appointmentDate + "T" + currentFrom[currentCounts -1]) : null;
+            var selectedDoctors = $(`.available_doctor${currentCounts}`).val() ? $(`.available_doctor${currentCounts}`).val() : currentDoctors[currentCounts - 1];
+
             var isUnique = true;
             var timeObject = {
-                from: fromTimeObj,
-                to: toTimeObj,
+                from: FromTimeCur,
+                to:  toTimeCur,
                 doctors: selectedDoctors
             };
-    
-                if(UpdateDate || appointmentDate){
-                    
-                }else{
-                    if(!appointmentDate || !UpdateDate){
-                        alert('Please select Date first!');
-                        fromInput.val('');
-                        toInput.val('');
+            //  console.log("toTimeCur::",  toTimeCur, "toTimeObj::", toTimeObj);
+            console.log("timeObject??", timeObject);
+            $.ajax({
+                    url: "{{ route('get-booked-dates') }}",
+                    type: 'GET',
+                    success: function(response){
+                            // console.log("response::", response);
+                            var timeConflict = false;
+                            var dateConflict = false;
+                      
+                            response.forEach(function(appoint){
+                                if(appoint.appointed_date === appointmentDate){
+
+                                    dateConflict = true;
+                                    var existDoctor = [];
+
+                                    var existFromtime = new Date(appointmentDate + "T" + appoint.appointed_time);
+                                    var existTotime = new Date(appointmentDate + "T" + appoint.appointedTime_to);
+                                 
+                                    if(Array.isArray(appoint.telemed_assigned_doctor)){
+                                        existDoctor = appoint.telemed_assigned_doctor.map(function(doctor){
+                                            return doctor.doctor_id;
+                                        });
+                                    }
+                                    
+                                   var timeROverlap = (timeObject.from >= existFromtime && timeObject.from < existTotime) ||
+                                      (timeObject.to > existFromtime && timeObject.to <= existTotime) ||
+                                      (timeObject.from <= existFromtime && timeObject.to >= existTotime);
+
+                                    var doctorSOverlap =  Array.isArray(existDoctor) && Array.isArray(timeObject.doctors) && existDoctor.some(function(doctorId) {
+                                        return timeObject.doctors.includes(String(doctorId));
+                                    });
+
+                                    // $(document).on('change', '[name^="available_doctor"]', function () {
+                                    //     var selectedDoctors = $(this).val();
+                                        
+                                    // });
+
+                                    if(timeROverlap && doctorSOverlap){
+                                        timeConflict = true;
+                                        return false; // Break the loop
+                                    }
+                                }
+                            });
+                            // console.log("timeConflict", timeConflict);
+                            if (timeConflict) {
+                                // fromInput.val('');
+                                // toInput.val('');
+                                clearSelectElement($(`.available_doctor${currentCounts}`));
+                                alert('This time and doctor is already taken. From this Appointed Date!');
+                                return;
+                            }
+                            
+                    },
+                    error: function(xhr, status, error){
+                        console.error(xhr, responseText);
                     }
-                }
+                });
+
+    
+            if(UpdateDate || appointmentDate){
+                
+            }else{
             
+                if(!appointmentDate || !UpdateDate){
+                    alert('Please select Date first!');
+                    fromInput.val('');
+                    toInput.val('');
+                }
+            }
+        
 
             if(!Array.isArray(allAppointmentTimes)){
                 allAppointmentTimes = [];
@@ -1110,8 +1228,9 @@ function deleteTimeInput(appointment){
 
             if(!isUnique) {
                 alert('Appointment time and Assigned Doctor is already taken');
-                fromInput.val('');
-                toInput.val('');
+                var selectElement = $(`.available_doctor${currentCounts + deleteCount}`);
+                
+                clearSelectElement(selectElement);
                 return;
             }
 
@@ -1143,7 +1262,7 @@ function deleteTimeInput(appointment){
             allAppointmentTimes = allAppointmentTimes.filter(appointment =>appointment.to instanceof Date && !isNaN(appointment.to));
 
             
-            console.log("selectedDoctors", timeObject);
+            console.log("selectedDoctors::", timeObject);
             console.log('slot', index);
 
             $('input[name="appointed_date"]').data('fromTimeObj', fromTimeObj);
@@ -1152,29 +1271,29 @@ function deleteTimeInput(appointment){
             $('input[name="appointed_date"]').trigger('change');
         });  
            
-        $(document).on('change', '[name^="available_doctor"]', function () {
-            var selectedDoctors = $(this).val();
-            var selectedDoctorsElement = $(this);
+        // $(document).on('change', '[name^="available_doctor"]', function () {
+        //     var selectedDoctors = $(this).val();
+        //     var selectedDoctorsElement = $(this);
 
-            var timeInputGroup = $(this).closest('.time-input-group');
-            var index = $('.time-input-group').index(timeInputGroup);
+        //     var timeInputGroup = $(this).closest('.time-input-group');
+        //     var index = $('.time-input-group').index(timeInputGroup);
 
-            if(allAppointmentTimes[index]){
-                // Update the doctors field in the specific slot
-                allAppointmentTimes[index].doctors = selectedDoctors;
+        //     if(allAppointmentTimes[index]){
+        //         // Update the doctors field in the specific slot
+        //         allAppointmentTimes[index].doctors = selectedDoctors;
 
-                if (checkConflicts()) {
+        //         if (checkConflicts()) {
 
-                    alert('Appointment time and Assigned Doctor is already taken');
+        //             alert('Appointment time and Assigned Doctor is already taken');
                     
-                    clearSelectElement(selectedDoctorsElement);
-                    allAppointmentTimes[index].doctors = []; // Clear the doctors for this slot
-                }
-            }   
+        //             clearSelectElement(selectedDoctorsElement);
+        //             allAppointmentTimes[index].doctors = []; // Clear the doctors for this slot
+        //         }
+        //     }   
 
-            console.log('slot', index);
-            console.log("Updated appointment slot", allAppointmentTimes[index]);
-        });
+        //     console.log('slot', index);
+        //     console.log("Updated appointment slot", allAppointmentTimes[index]);
+        // });
 
     });   
         

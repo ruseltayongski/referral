@@ -55,9 +55,10 @@ class PatientCtrl extends Controller
             'brgy' => $req->brgy,
             'province_others' => $req->province_others,
             'muncity_others' => $req->muncity_others,
-            'brgy_others' => $req->brgy_others
+            'brgy_others' => $req->brgy_others,
+            'telemedicine' => $req->telemedicine
         );
-        Session::put('profileSearch',$data);
+        Session::put('profileSearch', $data);
         return self::index();
     }
 
@@ -65,7 +66,7 @@ class PatientCtrl extends Controller
     {
         ParamCtrl::lastLogin();
         $session = Session::get('profileSearch');
-        if(isset($session)) {
+        if (isset($session)) {
             $keyword = $session['keyword'];
             $reg = $session['region'];
             $prov = $session['province'];
@@ -75,48 +76,47 @@ class PatientCtrl extends Controller
             $mun_others = $session['muncity_others'];
             $brgy_others = $session['brgy_others'];
 
-            $tsekap = Profile::orderBy('lname','asc')
-                ->where(function($q) use($keyword){
-                    $q->where('lname',"like","%$keyword%")
-                        ->orWhere('fname','like',"%$keyword%")
-                        ->orwhere(DB::raw('concat(fname," ",lname)'),"like","%$keyword%");
+            $tsekap = Profile::orderBy('lname', 'asc')
+                ->where(function ($q) use ($keyword) {
+                    $q->where('lname', "like", "%$keyword%")
+                        ->orWhere('fname', 'like', "%$keyword%")
+                        ->orwhere(DB::raw('concat(fname," ",lname)'), "like", "%$keyword%");
                 })
-                ->where('barangay_id',$brgy)
-                ->where('muncity_id',$mun)
+                ->where('barangay_id', $brgy)
+                ->where('muncity_id', $mun)
                 ->get();
 
-            foreach($tsekap as $req) {
+            foreach ($tsekap as $req) {
                 $unique = array(
                     $req->fname,
                     $req->mname,
                     $req->lname,
-                    date('Ymd',strtotime($req->dob)),
+                    date('Ymd', strtotime($req->dob)),
                     $req->barangay_id
                 );
                 $unique = implode($unique);
 
-                $match = array('unique_id'=>$unique);
+                $match = array('unique_id' => $unique);
                 $data = array(
-                    'phic_status' => ($req->phic_status) ? $req->phic_status: '',
-                    'phic_id' => ($req->phicID) ? $req->phicID: '',
-                    'fname' => ($req->fname) ? $req->fname: '',
-                    'mname' => ($req->mname) ? $req->mname: '',
-                    'lname' => ($req->lname) ? $req->lname: '',
-                    'dob' => ($req->dob) ? $req->dob: '',
-                    'sex' => ($req->sex) ? $req->sex: '',
+                    'phic_status' => ($req->phic_status) ? $req->phic_status : '',
+                    'phic_id' => ($req->phicID) ? $req->phicID : '',
+                    'fname' => ($req->fname) ? $req->fname : '',
+                    'mname' => ($req->mname) ? $req->mname : '',
+                    'lname' => ($req->lname) ? $req->lname : '',
+                    'dob' => ($req->dob) ? $req->dob : '',
+                    'sex' => ($req->sex) ? $req->sex : '',
                     'muncity' => ($req->muncity_id) ? $req->muncity_id : '',
                     'province' => ($req->province_id) ? $req->province_id : '',
-                    'brgy' => ($req->barangay_id) ? $req->barangay_id: '',
+                    'brgy' => ($req->barangay_id) ? $req->barangay_id : '',
                     'region' => "Region VII"
                 );
 
-                $pt = Patients::where('fname',$req->fname)->where('lname',$req->lname)->where('dob',$req->dob)->get();
-                if(count($pt) == 0) {
-                    Patients::updateOrCreate($match,$data);
+                $pt = Patients::where('fname', $req->fname)->where('lname', $req->lname)->where('dob', $req->dob)->get();
+                if (count($pt) == 0) {
+                    Patients::updateOrCreate($match, $data);
                 }
             }
-        }
-        else {
+        } else {
             $keyword = 'empty_data';
             $reg = 'empty_data';
             $prov = 'empty_data';
@@ -128,35 +128,35 @@ class PatientCtrl extends Controller
         }
 
         $source = 'referral';
-        $data = Patients::
-            where(function($q) use($keyword) {
-                $q->where('lname',"like","%".$keyword."%")
-                    ->orWhere('fname','like',"%".$keyword."%")
-                    ->orWhereRaw("concat(fname,' ',lname) like '%$keyword%'");
-            })
-            ->where('region',$reg)
-            ->where('province',$prov)
-            ->where('muncity',$mun)
-            ->where('brgy',$brgy)
-            ->orderBy('lname','asc');
-            
-        if($prov_others) {
-            $data = $data->where('province_others',$prov_others);
+        $data = Patients::where(function ($q) use ($keyword) {
+            $q->where('lname', "like", "%" . $keyword . "%")
+                ->orWhere('fname', 'like', "%" . $keyword . "%")
+                ->orWhereRaw("concat(fname,' ',lname) like '%$keyword%'");
+        })
+            ->where('region', $reg)
+            ->where('province', $prov)
+            ->where('muncity', $mun)
+            ->where('brgy', $brgy)
+            ->orderBy('lname', 'asc');
+
+        if ($prov_others) {
+            $data = $data->where('province_others', $prov_others);
         }
-        if($mun_others) {
-            $data = $data->where('muncity_others',$mun_others);
+        if ($mun_others) {
+            $data = $data->where('muncity_others', $mun_others);
         }
-        if($brgy_others) {
-            $data = $data->where('brgy_others',$brgy_others);
+        if ($brgy_others) {
+            $data = $data->where('brgy_others', $brgy_others);
         }
-        
+
         $data = $data->paginate(15);
 
-        return view('doctor.patient',[
+        return view('doctor.patient', [
             'title' => 'Patient List',
             'data' => $data,
             'province' => Province::get(),
-            'source' => $source
+            'source' => $source,
+            'telemedicine' => $session['telemedicine'],
         ]);
     }
 
@@ -166,15 +166,15 @@ class PatientCtrl extends Controller
             $req->fname,
             $req->mname,
             $req->lname,
-            date('Ymd',strtotime($req->dob)),
+            date('Ymd', strtotime($req->dob)),
             $req->brgy
         );
         $unique = implode($unique);
 
-        $match = array('unique_id'=>$unique);
+        $match = array('unique_id' => $unique);
         $data = array(
             'phic_status' => $req->phic_status,
-            'phic_id' => ($req->phicID) ? $req->phicID: '',
+            'phic_id' => ($req->phicID) ? $req->phicID : '',
             'fname' => $req->fname,
             'mname' => $req->mname,
             'lname' => $req->lname,
@@ -191,10 +191,10 @@ class PatientCtrl extends Controller
             'brgy_others' => $req->brgy_others
         );
 
-        Patients::updateOrCreate($match,$data);
+        Patients::updateOrCreate($match, $data);
 
         $data = array(
-            'keyword' => $req->fname.' '.$req->lname,
+            'keyword' => $req->fname . ' ' . $req->lname,
             'region' => $req->region,
             'province' => $req->province,
             'muncity' => $req->muncity,
@@ -203,10 +203,10 @@ class PatientCtrl extends Controller
             'muncity_others' => $req->muncity_others,
             'brgy_others' => $req->brgy_others
         );
-        Session::put('profileSearch',$data);
-        if($req->from_consultation) {
+        Session::put('profileSearch', $data);
+        if ($req->from_consultation) {
             //return str_replace(' ', '', $unique).'&appointment='.$req->from_consultation;
-            return redirect('doctor/patient?appointmentKey='.$unique.'&appointment='.urlencode(json_encode($req->from_consultation)));
+            return redirect('doctor/patient?appointmentKey=' . $unique . '&appointment=' . urlencode(json_encode($req->from_consultation)));
         }
 
         return redirect('doctor/patient');
@@ -214,19 +214,22 @@ class PatientCtrl extends Controller
 
     public function addPatient()
     {
+        $session = Session::get('profileSearch');
         $province = Province::get();
-        return view('doctor.patient_add',[
+        return view('doctor.patient_add', [
             'title' => 'Add New Patient',
             'province' => $province,
-            'method' => 'store'
+            'method' => 'store',
+            'telemedAppointment' => $session['telemedicine'],
         ]);
     }
 
-    public function updatePatient(Request $request){
+    public function updatePatient(Request $request)
+    {
         $data = Patients::find($request->patient_id);
 
-        if($request->patient_update_button){
-            if($request->region != 'Region VII') {
+        if ($request->patient_update_button) {
+            if ($request->region != 'Region VII') {
                 $request->merge([
                     'province' => null,
                     'muncity' => null,
@@ -244,19 +247,19 @@ class PatientCtrl extends Controller
 
             $data->update($data_update);
 
-            Session::put('patient_update_save',true);
-            Session::put('patient_message','Successfully updated patient');
+            Session::put('patient_update_save', true);
+            Session::put('patient_message', 'Successfully updated patient');
 
-            if($data->region == 'Region VII') { //tsekap update
-                $pt = Profile::where('fname',$old_fname)
-                    ->where('lname',$old_lname)
-                    ->where('dob',$old_dob)
-                    ->where('province_id',$request->province)
-                    ->where('muncity_id',$request->muncity)
-                    ->where('barangay_id',$request->brgy)
+            if ($data->region == 'Region VII') { //tsekap update
+                $pt = Profile::where('fname', $old_fname)
+                    ->where('lname', $old_lname)
+                    ->where('dob', $old_dob)
+                    ->where('province_id', $request->province)
+                    ->where('muncity_id', $request->muncity)
+                    ->where('barangay_id', $request->brgy)
                     ->first();
 
-                if($pt) {
+                if ($pt) {
                     $pt->fname = $request->fname;
                     $pt->mname = $request->mname;
                     $pt->lname = $request->lname;
@@ -272,7 +275,7 @@ class PatientCtrl extends Controller
             }
 
             $search_patient = array(
-                'keyword' => $data->fname.' '.$data->lname,
+                'keyword' => $data->fname . ' ' . $data->lname,
                 'region' => $data->region,
                 'province' => $data->province,
                 'muncity' => $data->muncity,
@@ -281,12 +284,12 @@ class PatientCtrl extends Controller
                 'muncity_others' => $data->muncity_others,
                 'brgy_others' => $data->brgy_others
             );
-            Session::put('profileSearch',$search_patient); //seach patient so it still display in table
+            Session::put('profileSearch', $search_patient); //seach patient so it still display in table
             return Redirect::back();
         }
 
         $province = Province::get();
-        return view('doctor.patient_body',[
+        return view('doctor.patient_body', [
             "data" => $data,
             "province" => $province
         ]);
@@ -300,7 +303,7 @@ class PatientCtrl extends Controller
         $muncity = Muncity::find($data->muncity)->description;
         $province = Province::find($data->province)->description;
 
-        if($data->region == "Region VII")
+        if ($data->region == "Region VII")
             $data->address = "$data->region, $province, $muncity, $brgy";
         else
             $data->address = "$data->region, $data->province_others, $data->muncity_others, $data->brgy_others";
@@ -308,7 +311,7 @@ class PatientCtrl extends Controller
         $data->patient_name = "$data->fname $data->mname $data->lname";
         $data->age = ParamCtrl::getAge($data->dob);
         $data->ageType = "y";
-        if($data->age == 0) {
+        if ($data->age == 0) {
             $data->age = ParamCtrl::getMonths($data->dob);
             $data->ageType = "m";
         }
@@ -318,13 +321,12 @@ class PatientCtrl extends Controller
     public function showTsekapProfile($id)
     {
         $data = Profile::find($id);
-        if($data->barangay_id)
-        {
+        if ($data->barangay_id) {
             $brgy = Barangay::find($data->barangay_id)->description;
             $muncity = Muncity::find($data->muncity_id)->description;
             $province = Province::find($data->province_id)->description;
             $data->address = "$brgy, $muncity, $province";
-        }else{
+        } else {
             $data->address = 'N/A';
         }
         $data->patient_name = "$data->fname $data->mname $data->lname";
@@ -342,7 +344,7 @@ class PatientCtrl extends Controller
             'brgy' => $req->brgy,
             'muncity' => $req->muncity
         );
-        Session::put('tsekapSearch',$data);
+        Session::put('tsekapSearch', $data);
         return self::tsekap();
     }
 
@@ -353,35 +355,34 @@ class PatientCtrl extends Controller
         $brgy = '';
         $mun = '';
         $session = Session::get('tsekapSearch');
-        if(isset($session))
-        {
+        if (isset($session)) {
             $keyword = $session['keyword'];
             $brgy = $session['brgy'];
             $mun = $session['muncity'];
         }
         $user = Session::get('auth');
-        $muncity = Muncity::where('province_id',$user->province)->orderby('description','asc')->get();
+        $muncity = Muncity::where('province_id', $user->province)->orderby('description', 'asc')->get();
 
         $data = array();
 
-        if(isset($keyword) && isset($brgy) && isset($mun)){
-            $data = Profile::orderBy('lname','asc');
-            if(isset($brgy)){
-                $data = $data->where('barangay_id',$brgy);
-            }else if(isset($mun)){
-                $data = $data->where('muncity_id',$mun);
+        if (isset($keyword) && isset($brgy) && isset($mun)) {
+            $data = Profile::orderBy('lname', 'asc');
+            if (isset($brgy)) {
+                $data = $data->where('barangay_id', $brgy);
+            } else if (isset($mun)) {
+                $data = $data->where('muncity_id', $mun);
             }
 
-            $data = $data->where(function($q) use($keyword){
-                    $q->where('lname',"$keyword")
-                        ->orwhere(DB::raw('concat(fname," ",lname)'),"$keyword");
-                });
+            $data = $data->where(function ($q) use ($keyword) {
+                $q->where('lname', "$keyword")
+                    ->orwhere(DB::raw('concat(fname," ",lname)'), "$keyword");
+            });
 
-            $data = $data->where('barangay_id','>',0)
-                        ->paginate(20);
+            $data = $data->where('barangay_id', '>', 0)
+                ->paginate(20);
         }
 
-        return view('doctor.tsekap',[
+        return view('doctor.tsekap', [
             'title' => 'Patient List: Tsekap Profiles',
             'data' => $data,
             'muncity' => $muncity,
@@ -390,7 +391,7 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function addTracking($code,$patient_id,$user,$req,$type,$form_id,$status='')
+    public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '')
     {
         $match = array(
             'code' => $code
@@ -398,44 +399,44 @@ class PatientCtrl extends Controller
         $track = array(
             'patient_id' => $patient_id,
             'date_referred' => date('Y-m-d H:i:s'),
-            'referred_from' => ($status=='walkin') ? $req->referring_facility_walkin : $user->facility_id,
-            'referred_to' => ($status=='walkin') ? $user->facility_id : $req->referred_facility,
+            'referred_from' => ($status == 'walkin') ? $req->referring_facility_walkin : $user->facility_id,
+            'referred_to' => ($status == 'walkin') ? $user->facility_id : $req->referred_facility,
             'department_id' => $req->referred_department,
-            'referring_md' => ($status=='walkin') ? 0 : $user->id,
+            'referring_md' => ($status == 'walkin') ? 0 : $user->id,
             'action_md' => '',
             'type' => $type,
             'form_id' => $form_id,
-            'remarks' => ($req->reason) ? $req->reason: '',
-            'status' => ($status=='walkin') ? 'accepted' : 'referred',
+            'remarks' => ($req->reason) ? $req->reason : '',
+            'status' => ($status == 'walkin') ? 'accepted' : 'referred',
             'walkin' => 'no',
             'telemedicine' => $req->telemedicine
         );
 
-        if($status=='walkin'){
+        if ($status == 'walkin') {
             $track['date_seen'] = date('Y-m-d H:i:s');
             $track['date_accepted'] = date('Y-m-d H:i:s');
             $track['action_md'] = $user->id;
             $track['walkin'] = 'yes';
         }
 
-        $tracking = Tracking::updateOrCreate($match,$track);
+        $tracking = Tracking::updateOrCreate($match, $track);
 
         $activity = array(
             'code' => $code,
             'patient_id' => $patient_id,
             'date_referred' => date('Y-m-d H:i:s'),
-            'date_seen' => ($status=='walkin') ? date('Y-m-d H:i:s') : '',
-            'referred_from' => ($status=='walkin') ? $req->referring_facility_walkin : $user->facility_id,
-            'referred_to' => ($status=='walkin') ? $user->facility_id : $req->referred_facility,
+            'date_seen' => ($status == 'walkin') ? date('Y-m-d H:i:s') : '',
+            'referred_from' => ($status == 'walkin') ? $req->referring_facility_walkin : $user->facility_id,
+            'referred_to' => ($status == 'walkin') ? $user->facility_id : $req->referred_facility,
             'department_id' => $req->referred_department,
-            'referring_md' => ($status=='walkin') ? 0 : $user->id,
+            'referring_md' => ($status == 'walkin') ? 0 : $user->id,
             'action_md' => '',
-            'remarks' => ($req->reason) ? $req->reason: '',
+            'remarks' => ($req->reason) ? $req->reason : '',
             'status' => 'referred'
         );
         Activity::create($activity);
 
-        if($status=='walkin'){
+        if ($status == 'walkin') {
             $activity['date_seen'] = date('Y-m-d H:i:s');
             $activity['status'] = 'accepted';
             $activity['remarks'] = 'Walk-In Patient';
@@ -445,13 +446,13 @@ class PatientCtrl extends Controller
 
         //start websocket
         $patient = Patients::find($patient_id);
-        $redirect_track = asset("doctor/referred?referredCode=").$code;
+        $redirect_track = asset("doctor/referred?referredCode=") . $code;
         $new_referral = [
-            "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
-            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "patient_name" => ucfirst($patient->fname) . ' ' . ucfirst($patient->lname),
+            "referring_md" => ucfirst($user->fname) . ' ' . ucfirst($user->lname),
             "referring_name" => Facility::find($user->facility_id)->name,
             "referred_name" => Facility::find($req->referred_facility)->name,
-            "referred_to" => (int)$req->referred_facility,
+            "referred_to" => (int) $req->referred_facility,
             "referred_department" => Department::find($req->referred_department)->description,
             "referred_from" => $user->facility_id,
             "form_type" => $type,
@@ -470,12 +471,12 @@ class PatientCtrl extends Controller
         //end websocket
     }
 
-    public function referPatient(Request $req,$type)
+    public function referPatient(Request $req, $type)
     {
         $user = Session::get('auth');
-        if($req->telemedicine) {
-            $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id',$req->appointmentId)->where('doctor_id',$req->doctorId)->first();
-            if($telemedAssignDoctor->appointment_by) {
+        if ($req->telemedicine) {
+            $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
+            if ($telemedAssignDoctor->appointment_by) {
                 return 'consultation_rejected';
             }
             $telemedAssignDoctor->appointment_by = $user->id;
@@ -483,12 +484,11 @@ class PatientCtrl extends Controller
         }
 
         $patient_id = $req->patient_id;
-        $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
-        $code = date('ymd').'-'.$user_code.'-'.date('His')."$user->facility_id"."$user->id";
-        $unique_id = "$patient_id-$user->facility_id-".date('ymdHis');
-        if($type==='normal')
-        {
-            Patients::where('id',$patient_id)
+        $user_code = str_pad($user->facility_id, 3, 0, STR_PAD_LEFT);
+        $code = date('ymd') . '-' . $user_code . '-' . date('His') . "$user->facility_id" . "$user->id";
+        $unique_id = "$patient_id-$user->facility_id-" . date('ymdHis');
+        if ($type === 'normal') {
+            Patients::where('id', $patient_id)
                 ->update([
                     'sex' => $req->patient_sex,
                     'civil_status' => $req->civil_status,
@@ -512,7 +512,7 @@ class PatientCtrl extends Controller
                 'reco_summary' => $req->reco_summary,
                 'diagnosis' => $req->diagnosis,
                 'referring_md' => $user->id,
-                'referred_md' => ($req->reffered_md) ? $req->reffered_md: 0,
+                'referred_md' => ($req->reffered_md) ? $req->reffered_md : 0,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
@@ -521,14 +521,14 @@ class PatientCtrl extends Controller
             $form = PatientForm::create($data);
 
             $file_paths = "";
-            if($_FILES["file_upload"]["name"]) {
+            if ($_FILES["file_upload"]["name"]) {
                 ApiController::fileUpload($req);
-                for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+                for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
                     $file = $_FILES['file_upload']['name'][$i];
-                    if(isset($file) && !empty($file)) {
+                    if (isset($file) && !empty($file)) {
                         $username = $user->username;
-                        $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
-                        if($i + 1 != count($_FILES["file_upload"]["name"])) {
+                        $file_paths .= ApiController::fileUploadUrl() . $username . "/" . $file;
+                        if ($i + 1 != count($_FILES["file_upload"]["name"])) {
                             $file_paths .= "|";
                         }
                     }
@@ -537,7 +537,7 @@ class PatientCtrl extends Controller
             $form->file_path = $file_paths;
             $form->save();
 
-            foreach($req->icd_ids as $i) {
+            foreach ($req->icd_ids as $i) {
                 $icd = new Icd();
                 $icd->code = $form->code;
                 $icd->icd_id = $i;
@@ -545,11 +545,11 @@ class PatientCtrl extends Controller
             }
 
             //if($req->referred_facility == 790 && $user->id == 1687) {
-            if($req->referred_facility == 790 || $req->referred_facility == 23) {
+            if ($req->referred_facility == 790 || $req->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
-                $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
+                $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname) . ' ' . strtoupper($patient->mname[0]) . '. ' . ucfirst($patient->lname) : ucfirst($patient->fname) . ' ' . ucfirst($patient->lname);
                 $this->referred_patient_data = array(
-                    "age" => (int)ParamCtrl::getAge($patient->dob),
+                    "age" => (int) ParamCtrl::getAge($patient->dob),
                     "chiefComplaint" => $req->case_summary,
                     "department" => Department::find($req->referred_department)->description,
                     "patient" => $patient_name,
@@ -561,27 +561,25 @@ class PatientCtrl extends Controller
                     "patient_code" => $form->code
                 );
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
-            }//push notification for cebu south medical center
+            } //push notification for cebu south medical center
 
-            self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'refer');
-        }
-        else if($type==='pregnant')
-        {
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id, 'refer');
+        } else if ($type === 'pregnant') {
             $baby = array(
-                'fname' => ($req->baby_fname) ? $req->baby_fname: '',
-                'mname' => ($req->baby_mname) ? $req->baby_mname: '',
-                'lname' => ($req->baby_lname) ? $req->baby_lname: '',
-                'dob' => ($req->baby_dob) ? $req->baby_dob: '',
+                'fname' => ($req->baby_fname) ? $req->baby_fname : '',
+                'mname' => ($req->baby_mname) ? $req->baby_mname : '',
+                'lname' => ($req->baby_lname) ? $req->baby_lname : '',
+                'dob' => ($req->baby_dob) ? $req->baby_dob : '',
                 'civil_status' => 'Single'
             );
-            $baby_id = self::storeBabyAsPatient($baby,$patient_id);
+            $baby_id = self::storeBabyAsPatient($baby, $patient_id);
 
             $baby2 = Baby::updateOrCreate([
                 'baby_id' => $baby_id,
                 'mother_id' => $patient_id
-            ],[
-                'weight' => ($req->baby_weight) ? $req->baby_weight:'',
-                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: ''
+            ], [
+                'weight' => ($req->baby_weight) ? $req->baby_weight : '',
+                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age : ''
             ]);
 
             $baby2->birth_date = ($req->baby_dob) ? $req->baby_dob : '';
@@ -590,33 +588,33 @@ class PatientCtrl extends Controller
             $data = array(
                 'unique_id' => $unique_id,
                 'code' => $code,
-                'referring_facility' => ($user->facility_id) ? $user->facility_id: '',
-                'referred_by' => ($user->id) ? $user->id: '',
-                'record_no' => ($req->record_no) ? $req->record_no: '',
+                'referring_facility' => ($user->facility_id) ? $user->facility_id : '',
+                'referred_by' => ($user->id) ? $user->id : '',
+                'record_no' => ($req->record_no) ? $req->record_no : '',
                 'referred_date' => date('Y-m-d H:i:s'),
-                'referred_to' => ($req->referred_facility) ? $req->referred_facility: '',
-                'department_id' => ($req->referred_department) ? $req->referred_department:'',
+                'referred_to' => ($req->referred_facility) ? $req->referred_facility : '',
+                'department_id' => ($req->referred_department) ? $req->referred_department : '',
                 'covid_number' => $req->covid_number,
                 'refer_clinical_status' => $req->clinical_status,
                 'refer_sur_category' => $req->sur_category,
-                'health_worker' => ($req->health_worker) ? $req->health_worker: '',
+                'health_worker' => ($req->health_worker) ? $req->health_worker : '',
                 'patient_woman_id' => $patient_id,
-                'woman_reason' => ($req->woman_reason) ? $req->woman_reason: '',
-                'woman_major_findings' => ($req->woman_major_findings) ? $req->woman_major_findings: '',
-                'woman_before_treatment' => ($req->woman_before_treatment) ? $req->woman_before_treatment: '',
-                'woman_before_given_time' => ($req->woman_before_given_time) ? $req->woman_before_given_time: '',
-                'woman_during_transport' => ($req->woman_during_treatment) ? $req->woman_during_treatment: '',
-                'woman_transport_given_time' => ($req->woman_during_given_time) ? $req->woman_during_given_time: '',
-                'woman_information_given' => ($req->woman_information_given) ? $req->woman_information_given: '',
+                'woman_reason' => ($req->woman_reason) ? $req->woman_reason : '',
+                'woman_major_findings' => ($req->woman_major_findings) ? $req->woman_major_findings : '',
+                'woman_before_treatment' => ($req->woman_before_treatment) ? $req->woman_before_treatment : '',
+                'woman_before_given_time' => ($req->woman_before_given_time) ? $req->woman_before_given_time : '',
+                'woman_during_transport' => ($req->woman_during_treatment) ? $req->woman_during_treatment : '',
+                'woman_transport_given_time' => ($req->woman_during_given_time) ? $req->woman_during_given_time : '',
+                'woman_information_given' => ($req->woman_information_given) ? $req->woman_information_given : '',
                 'patient_baby_id' => $baby_id,
-                'baby_reason' => ($req->baby_reason) ? $req->baby_reason: '',
-                'baby_major_findings' => ($req->baby_major_findings) ? $req->baby_major_findings: '',
-                'baby_last_feed' => ($req->baby_last_feed) ? $req->baby_last_feed: '',
-                'baby_before_treatment' => ($req->baby_before_treatment) ? $req->baby_before_treatment: '',
-                'baby_before_given_time' => ($req->baby_before_given_time) ? $req->baby_before_given_time: '',
-                'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment: '',
-                'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
-                'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
+                'baby_reason' => ($req->baby_reason) ? $req->baby_reason : '',
+                'baby_major_findings' => ($req->baby_major_findings) ? $req->baby_major_findings : '',
+                'baby_last_feed' => ($req->baby_last_feed) ? $req->baby_last_feed : '',
+                'baby_before_treatment' => ($req->baby_before_treatment) ? $req->baby_before_treatment : '',
+                'baby_before_given_time' => ($req->baby_before_given_time) ? $req->baby_before_given_time : '',
+                'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment : '',
+                'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time : '',
+                'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given : '',
                 'notes_diagnoses' => $req->notes_diagnosis,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
@@ -626,14 +624,14 @@ class PatientCtrl extends Controller
 
             $file_paths = "";
 
-            if($_FILES["file_upload"]["name"]) {
+            if ($_FILES["file_upload"]["name"]) {
                 ApiController::fileUpload($req);
-                for($i = 0; $i < count($_FILES["file_upload"]["name"]); $i++) {
+                for ($i = 0; $i < count($_FILES["file_upload"]["name"]); $i++) {
                     $file = $_FILES['file_upload']['name'][$i];
-                    if(isset($file) && !empty($file)) {
+                    if (isset($file) && !empty($file)) {
                         $username = $user->username;
-                        $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
-                        if($i + 1 != count($_FILES["file_upload"]["name"])) {
+                        $file_paths .= ApiController::fileUploadUrl() . $username . "/" . $file;
+                        if ($i + 1 != count($_FILES["file_upload"]["name"])) {
                             $file_paths .= "|";
                         }
                     }
@@ -642,7 +640,7 @@ class PatientCtrl extends Controller
             $form->file_path = $file_paths;
             $form->save();
 
-            foreach($req->icd_ids as $i) {
+            foreach ($req->icd_ids as $i) {
                 $icd = new Icd();
                 $icd->code = $form->code;
                 $icd->icd_id = $i;
@@ -650,9 +648,9 @@ class PatientCtrl extends Controller
             }
 
             //if($req->referred_facility == 790 && $user->id == 1687) {
-            if($req->referred_facility == 790 || $req->referred_facility == 23) {
+            if ($req->referred_facility == 790 || $req->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
-                $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
+                $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname) . ' ' . strtoupper($patient->mname[0]) . '. ' . ucfirst($patient->lname) : ucfirst($patient->fname) . ' ' . ucfirst($patient->lname);
                 $this->referred_patient_data = array(
                     "age" => ParamCtrl::getAge($patient->dob),
                     "chiefComplaint" => $req->woman_major_findings,
@@ -666,40 +664,38 @@ class PatientCtrl extends Controller
                     "patient_code" => $form->code
                 );
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
-            }//push notification for cebu south medical center
+            } //push notification for cebu south medical center
 
-            self::addTracking($code,$patient_id,$user,$req,$type,$form->id);
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id);
         }
 
-        if($req->referred_facility == 790 || $req->referred_facility == 23) {
+        if ($req->referred_facility == 790 || $req->referred_facility == 23) {
             return $this->referred_patient_data;
         } else {
-            Session::put("refer_patient",true);
+            Session::put("refer_patient", true);
         }
     }
 
-    function referPatientWalkin(Request $req,$type)
+    function referPatientWalkin(Request $req, $type)
     {
         $user = Session::get('auth');
         $patient_id = $req->patient_id;
-        $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
-        $code = date('ymd').'-'.$user_code.'-'.date('His');
+        $user_code = str_pad($user->facility_id, 3, 0, STR_PAD_LEFT);
+        $code = date('ymd') . '-' . $user_code . '-' . date('His');
         $tracking_id = 0;
-        if($req->source==='tsekap')
-        {
-            $patient_id = self::importTsekap($req->patient_id,$req->patient_status,$req->phic_id,$req->phic_status);
+        if ($req->source === 'tsekap') {
+            $patient_id = self::importTsekap($req->patient_id, $req->patient_status, $req->phic_id, $req->phic_status);
         }
 
-        $unique_id = "$patient_id-$user->facility_id-".date('ymdH');
+        $unique_id = "$patient_id-$user->facility_id-" . date('ymdH');
         $match = array(
             'unique_id' => $unique_id
         );
 
         $patient_code = "";
 
-        if($type==='normal')
-        {
-            Patients::where('id',$patient_id)
+        if ($type === 'normal') {
+            Patients::where('id', $patient_id)
                 ->update([
                     'sex' => $req->patient_sex,
                     'civil_status' => $req->civil_status,
@@ -718,108 +714,106 @@ class PatientCtrl extends Controller
                 'reco_summary' => $req->reco_summary,
                 'diagnosis' => $req->diagnosis,
                 'referring_md' => 0,
-                'referred_md' => ($req->referred_md) ? $req->referred_md: 0,
+                'referred_md' => ($req->referred_md) ? $req->referred_md : 0,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnoses,
             );
-            $form = PatientForm::updateOrCreate($match,$data);
+            $form = PatientForm::updateOrCreate($match, $data);
             $patient_code = $form->code;
 
-            foreach($req->icd_ids as $i) {
+            foreach ($req->icd_ids as $i) {
                 $icd = new Icd();
                 $icd->code = $code;
                 $icd->icd_id = $i;
                 $icd->save();
             }
 
-            if($form->wasRecentlyCreated){
-                PatientForm::where('unique_id',$unique_id)
+            if ($form->wasRecentlyCreated) {
+                PatientForm::where('unique_id', $unique_id)
                     ->update([
                         'code' => $code
                     ]);
                 $req->reffered_to = $user->facility_id;
 
-                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'walkin');
+                $tracking_id = self::addTracking($code, $patient_id, $user, $req, $type, $form->id, 'walkin');
             }
-        }
-        else if($type==='pregnant')
-        {
+        } else if ($type === 'pregnant') {
             $baby = array(
-                'fname' => ($req->baby_fname) ? $req->baby_fname: '',
-                'mname' => ($req->baby_mname) ? $req->baby_mname: '',
-                'lname' => ($req->baby_lname) ? $req->baby_lname: '',
-                'dob' => ($req->baby_dob) ? $req->baby_dob: '',
+                'fname' => ($req->baby_fname) ? $req->baby_fname : '',
+                'mname' => ($req->baby_mname) ? $req->baby_mname : '',
+                'lname' => ($req->baby_lname) ? $req->baby_lname : '',
+                'dob' => ($req->baby_dob) ? $req->baby_dob : '',
                 'civil_status' => 'Single'
             );
 
-            $baby_id = self::storeBabyAsPatient($baby,$patient_id);
+            $baby_id = self::storeBabyAsPatient($baby, $patient_id);
 
             $baby2 = Baby::updateOrCreate([
                 'baby_id' => $baby_id,
                 'mother_id' => $patient_id
-            ],[
-                'weight' => ($req->baby_weight) ? $req->baby_weight:'',
-                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age: ''
+            ], [
+                'weight' => ($req->baby_weight) ? $req->baby_weight : '',
+                'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age : ''
             ]);
 
             $baby2->birth_date = ($req->baby_dob) ? $req->baby_dob : '';
             $baby2->save();
 
             $data = array(
-                'referring_facility' => ($req->referring_facility_walkin) ? $req->referring_facility_walkin: '',
+                'referring_facility' => ($req->referring_facility_walkin) ? $req->referring_facility_walkin : '',
                 'referred_by' => '',
-                'record_no' => ($req->record_no) ? $req->record_no: '',
+                'record_no' => ($req->record_no) ? $req->record_no : '',
                 'referred_date' => date('Y-m-d H:i:s'),
-                'referred_to' => ($user->facility_id) ? $user->facility_id: '',
-                'department_id' => ($req->referred_department) ? $req->referred_department:'',
-                'health_worker' => ($req->health_worker) ? $req->health_worker: '',
+                'referred_to' => ($user->facility_id) ? $user->facility_id : '',
+                'department_id' => ($req->referred_department) ? $req->referred_department : '',
+                'health_worker' => ($req->health_worker) ? $req->health_worker : '',
                 'patient_woman_id' => $patient_id,
-                'woman_reason' => ($req->woman_reason) ? $req->woman_reason: '',
-                'woman_major_findings' => ($req->woman_major_findings) ? $req->woman_major_findings: '',
-                'woman_before_treatment' => ($req->woman_before_treatment) ? $req->woman_before_treatment: '',
-                'woman_before_given_time' => ($req->woman_before_given_time) ? $req->woman_before_given_time: '',
-                'woman_during_transport' => ($req->woman_during_treatment) ? $req->woman_during_treatment: '',
-                'woman_transport_given_time' => ($req->woman_during_given_time) ? $req->woman_during_given_time: '',
-                'woman_information_given' => ($req->woman_information_given) ? $req->woman_information_given: '',
+                'woman_reason' => ($req->woman_reason) ? $req->woman_reason : '',
+                'woman_major_findings' => ($req->woman_major_findings) ? $req->woman_major_findings : '',
+                'woman_before_treatment' => ($req->woman_before_treatment) ? $req->woman_before_treatment : '',
+                'woman_before_given_time' => ($req->woman_before_given_time) ? $req->woman_before_given_time : '',
+                'woman_during_transport' => ($req->woman_during_treatment) ? $req->woman_during_treatment : '',
+                'woman_transport_given_time' => ($req->woman_during_given_time) ? $req->woman_during_given_time : '',
+                'woman_information_given' => ($req->woman_information_given) ? $req->woman_information_given : '',
                 'patient_baby_id' => $baby_id,
-                'baby_reason' => ($req->baby_reason) ? $req->baby_reason: '',
-                'baby_major_findings' => ($req->baby_major_findings) ? $req->baby_major_findings: '',
-                'baby_last_feed' => ($req->baby_last_feed) ? $req->baby_last_feed: '',
-                'baby_before_treatment' => ($req->baby_before_treatment) ? $req->baby_before_treatment: '',
-                'baby_before_given_time' => ($req->baby_before_given_time) ? $req->baby_before_given_time: '',
-                'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment: '',
-                'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time: '',
-                'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given: '',
+                'baby_reason' => ($req->baby_reason) ? $req->baby_reason : '',
+                'baby_major_findings' => ($req->baby_major_findings) ? $req->baby_major_findings : '',
+                'baby_last_feed' => ($req->baby_last_feed) ? $req->baby_last_feed : '',
+                'baby_before_treatment' => ($req->baby_before_treatment) ? $req->baby_before_treatment : '',
+                'baby_before_given_time' => ($req->baby_before_given_time) ? $req->baby_before_given_time : '',
+                'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment : '',
+                'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time : '',
+                'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given : '',
                 'notes_diagnoses' => $req->notes_diagnosis,
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
             );
-            $form = PregnantForm::updateOrCreate($match,$data);
+            $form = PregnantForm::updateOrCreate($match, $data);
             $patient_code = $form->code;
 
-            foreach($req->icd_ids as $i) {
+            foreach ($req->icd_ids as $i) {
                 $icd = new Icd();
                 $icd->code = $code;
                 $icd->icd_id = $i;
                 $icd->save();
             }
 
-            if($form->wasRecentlyCreated){
-                PregnantForm::where('unique_id',$unique_id)
+            if ($form->wasRecentlyCreated) {
+                PregnantForm::where('unique_id', $unique_id)
                     ->update([
                         'code' => $code
                     ]);
-                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'walkin');
+                $tracking_id = self::addTracking($code, $patient_id, $user, $req, $type, $form->id, 'walkin');
             }
         }
 
-        $pt_walkin = Patients::select('fname', 'lname')->where('id',$patient_id)->first();
+        $pt_walkin = Patients::select('fname', 'lname')->where('id', $patient_id)->first();
         $referred_to = Facility::where('id', $form->referred_to)->first()->name;
         broadcast(new AdminNotifs([
             "patient_code" => $patient_code,
-            "patient_name" => $pt_walkin->fname." ".$pt_walkin->lname,
+            "patient_name" => $pt_walkin->fname . " " . $pt_walkin->lname,
             "referred_to" => $referred_to,
             "date_referred" => date_format($form->updated_at, 'M d, Y h:i a'),
             "notif_type" => "new walkin"
@@ -832,17 +826,17 @@ class PatientCtrl extends Controller
         );
     }
 
-    static function storeBabyAsPatient($data,$mother_id)
+    static function storeBabyAsPatient($data, $mother_id)
     {
-        if($data['fname']){
-            if($data['mname'] == "")
+        if ($data['fname']) {
+            if ($data['mname'] == "")
                 $data['mname'] = " ";
 
             $mother = Patients::find($mother_id);
             $data['brgy'] = $mother->brgy;
             $data['muncity'] = $mother->muncity;
             $data['province'] = $mother->province;
-            $dob = date('ymd',strtotime($data['dob']));
+            $dob = date('ymd', strtotime($data['dob']));
 
             $tmp = array(
                 $data['fname'],
@@ -856,14 +850,14 @@ class PatientCtrl extends Controller
                 'unique_id' => $unique
             );
 
-            $patient = Patients::updateOrCreate($match,$data);
+            $patient = Patients::updateOrCreate($match, $data);
             return $patient->id;
-        }else{
+        } else {
             return '0';
         }
     }
 
-    function importTsekap($patient_id,$civil_status='',$phic_id='',$phic_status='')
+    function importTsekap($patient_id, $civil_status = '', $phic_id = '', $phic_status = '')
     {
         $profile = Profile::find($patient_id);
 
@@ -871,7 +865,7 @@ class PatientCtrl extends Controller
             $profile->fname,
             $profile->mname,
             $profile->lname,
-            date('Ymd',strtotime($profile->dob)),
+            date('Ymd', strtotime($profile->dob)),
             $profile->barangay_id
         );
         $unique = implode($unique);
@@ -884,15 +878,15 @@ class PatientCtrl extends Controller
             'lname' => $profile->lname,
             'dob' => $profile->dob,
             'sex' => $profile->sex,
-            'civil_status' => ($civil_status) ? $civil_status: 'N/A',
-            'phic_id' => ($phic_id) ? $phic_id: 'N/A',
-            'phic_status' => ($phic_status) ? $phic_status: 'N/A',
+            'civil_status' => ($civil_status) ? $civil_status : 'N/A',
+            'phic_id' => ($phic_id) ? $phic_id : 'N/A',
+            'phic_status' => ($phic_status) ? $phic_status : 'N/A',
             'brgy' => $profile->barangay_id,
             'muncity' => $profile->muncity_id,
             'province' => $profile->province_id,
             'tsekap_patient' => 1
         );
-        $patient = Patients::updateOrCreate($match,$data);
+        $patient = Patients::updateOrCreate($match, $data);
         return $patient->id;
     }
 
@@ -903,7 +897,7 @@ class PatientCtrl extends Controller
         $start = Session::get('startAcceptedDate');
         $end = Session::get('endAcceptedDate');
 
-        if($start && $end){
+        if ($start && $end) {
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
         } else {
@@ -914,9 +908,9 @@ class PatientCtrl extends Controller
 
         $data = \DB::connection('mysql')->select("call AcceptedFunc('$user->facility_id','$start','$end','$keyword')");
         $patient_count = count($data);
-        $data = $this->MyPagination($data,15,$request);
+        $data = $this->MyPagination($data, 15, $request);
 
-        return view('doctor.accepted',[
+        return view('doctor.accepted', [
             'title' => 'Accepted Patients',
             'data' => $data,
             'start' => $start,
@@ -925,7 +919,7 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function MyPagination($list,$perPage,Request $request)
+    public function MyPagination($list, $perPage, Request $request)
     {
         // Get current page form url e.x. &page=1
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
@@ -937,7 +931,7 @@ class PatientCtrl extends Controller
         $currentPageItems = $itemCollection->slice(($currentPage * $perPage) - $perPage, $perPage)->all();
 
         // Create our paginator and pass it to the view
-        $paginatedItems= new LengthAwarePaginator($currentPageItems , count($itemCollection), $perPage);
+        $paginatedItems = new LengthAwarePaginator($currentPageItems, count($itemCollection), $perPage);
 
         // set url path for generted links
         $paginatedItems->setPath($request->url());
@@ -960,33 +954,33 @@ class PatientCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("DATE_FORMAT(tracking.date_accepted,'%M %d, %Y %h:%i %p') as date_accepted")
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->join('patients','patients.id','=','tracking.patient_id')
-            ->where('referred_to',$user->facility_id)
-            ->where(function($q){
-                $q->where('tracking.status','accepted')
-                    ->orwhere('tracking.status','admitted')
-                    ->orwhere('tracking.status','arrived');
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->join('patients', 'patients.id', '=', 'tracking.patient_id')
+            ->where('referred_to', $user->facility_id)
+            ->where(function ($q) {
+                $q->where('tracking.status', 'accepted')
+                    ->orwhere('tracking.status', 'admitted')
+                    ->orwhere('tracking.status', 'arrived');
             });
-        if($keyword){
-            $data = $data->where(function($q) use ($keyword){
-                $q->where('patients.fname','like',"%$keyword%")
-                    ->orwhere('patients.mname','like',"%$keyword%")
-                    ->orwhere('patients.lname','like',"%$keyword%")
-                    ->orwhere('tracking.code','like',"%$keyword%");
+        if ($keyword) {
+            $data = $data->where(function ($q) use ($keyword) {
+                $q->where('patients.fname', 'like', "%$keyword%")
+                    ->orwhere('patients.mname', 'like', "%$keyword%")
+                    ->orwhere('patients.lname', 'like', "%$keyword%")
+                    ->orwhere('tracking.code', 'like', "%$keyword%");
             });
         }
 
-        if($start && $end){
+        if ($start && $end) {
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
-            $data = $data->whereBetween('tracking.date_accepted',[$start,$end]);
+            $data = $data->whereBetween('tracking.date_accepted', [$start, $end]);
         }
 
-        $data = $data->orderBy('tracking.date_accepted','desc')
+        $data = $data->orderBy('tracking.date_accepted', 'desc')
             ->paginate(15);
 
-        return view('doctor.accepted',[
+        return view('doctor.accepted', [
             'title' => 'Accepted Patients',
             'data' => $data
         ]);
@@ -994,19 +988,20 @@ class PatientCtrl extends Controller
 
     public function searchAccepted(Request $req)
     {
-        $range = explode('-',str_replace(' ', '', $req->daterange));
+        $range = explode('-', str_replace(' ', '', $req->daterange));
 
         $start = $range[0];
         $end = $range[1];
 
-        Session::put('startAcceptedDate',$start);
-        Session::put('endAcceptedDate',$end);
-        Session::put('keywordAccepted',$req->keyword);
+        Session::put('startAcceptedDate', $start);
+        Session::put('endAcceptedDate', $end);
+        Session::put('keywordAccepted', $req->keyword);
 
         return redirect('/doctor/accepted');
     }
 
-    function getTrackingData($keyword, $start, $end, $status){
+    function getTrackingData($keyword, $start, $end, $status)
+    {
         $user = Session::get('auth');
         $data = Tracking::select(
             'tracking.id',
@@ -1017,31 +1012,31 @@ class PatientCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->join('patients','patients.id','=','tracking.patient_id')
-            ->where('tracking.referred_to',$user->facility_id);
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->join('patients', 'patients.id', '=', 'tracking.patient_id')
+            ->where('tracking.referred_to', $user->facility_id);
 
-        if($keyword){
-            $data = $data->where(function($q) use ($keyword){
-                $q->where('patients.fname','like',"%$keyword%")
-                    ->orwhere('patients.mname','like',"%$keyword%")
-                    ->orwhere('patients.lname','like',"%$keyword%")
-                    ->orwhere('tracking.code','like',"%$keyword%");
+        if ($keyword) {
+            $data = $data->where(function ($q) use ($keyword) {
+                $q->where('patients.fname', 'like', "%$keyword%")
+                    ->orwhere('patients.mname', 'like', "%$keyword%")
+                    ->orwhere('patients.lname', 'like', "%$keyword%")
+                    ->orwhere('tracking.code', 'like', "%$keyword%");
             });
         }
 
-        if($start && $end){
+        if ($start && $end) {
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
             $data = $data
-                ->leftJoin('activity','activity.code','=','tracking.code')
+                ->leftJoin('activity', 'activity.code', '=', 'tracking.code')
                 ->where(function ($q) use ($status) {
-                    $q->where('activity.status',$status);
+                    $q->where('activity.status', $status);
                 })
-                ->whereBetween('activity.date_referred',[$start,$end]);
-        }else{
-            $data = $data->where(function($q) use ($status){
-                $q->where('tracking.status',$status);
+                ->whereBetween('activity.date_referred', [$start, $end]);
+        } else {
+            $data = $data->where(function ($q) use ($status) {
+                $q->where('tracking.status', $status);
             });
         }
 
@@ -1055,10 +1050,10 @@ class PatientCtrl extends Controller
         $end = Session::get('endDischargedDate');
 
         $data = $this->getTrackingData($keyword, $start, $end, 'discharged');
-        $data = $data->orderBy('tracking.updated_at','desc')
+        $data = $data->orderBy('tracking.updated_at', 'desc')
             ->paginate(15);
 
-        return view('doctor.discharge',[
+        return view('doctor.discharge', [
             'title' => 'Discharged Patients',
             'data' => $data
         ]);
@@ -1066,57 +1061,60 @@ class PatientCtrl extends Controller
 
     public function searchDischarged(Request $req)
     {
-        $range = explode('-',str_replace(' ', '', $req->daterange));
-        $tmp1 = explode('/',$range[0]);
-        $tmp2 = explode('/',$range[1]);
+        $range = explode('-', str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/', $range[0]);
+        $tmp2 = explode('/', $range[1]);
 
-        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
-        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+        $start = $tmp1[2] . '-' . $tmp1[0] . '-' . $tmp1[1];
+        $end = $tmp2[2] . '-' . $tmp2[0] . '-' . $tmp2[1];
 
-        Session::put('startDischargedDate',$start);
-        Session::put('endDischargedDate',$end);
-        Session::put('keywordDischarged',$req->keyword);
+        Session::put('startDischargedDate', $start);
+        Session::put('endDischargedDate', $end);
+        Session::put('keywordDischarged', $req->keyword);
 
         return redirect('/doctor/discharge');
     }
 
-    public function transferred(Request $req){
+    public function transferred(Request $req)
+    {
         $keyword = Session::get('keywordTransferred');
         $start = Session::get('startTransferredDate');
         $end = Session::get('endTransferredDate');
 
         $data = $this->getTrackingData($keyword, $start, $end, 'transferred');
-        $data = $data->orderBy('tracking.updated_at','desc')
+        $data = $data->orderBy('tracking.updated_at', 'desc')
             ->paginate(15);
 
-        return view('doctor.transferred',[
+        return view('doctor.transferred', [
             'title' => 'Transferred Patients',
             'data' => $data
         ]);
     }
 
-    public function searchTransferred(Request $req){
-        $range = explode('-',str_replace(' ', '', $req->daterange));
-        $tmp1 = explode('/',$range[0]);
-        $tmp2 = explode('/',$range[1]);
+    public function searchTransferred(Request $req)
+    {
+        $range = explode('-', str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/', $range[0]);
+        $tmp2 = explode('/', $range[1]);
 
-        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
-        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+        $start = $tmp1[2] . '-' . $tmp1[0] . '-' . $tmp1[1];
+        $end = $tmp2[2] . '-' . $tmp2[0] . '-' . $tmp2[1];
 
-        Session::put('startTransferredDate',$start);
-        Session::put('endTransferredDate',$end);
-        Session::put('keywordTransferred',$req->keyword);
+        Session::put('startTransferredDate', $start);
+        Session::put('endTransferredDate', $end);
+        Session::put('keywordTransferred', $req->keyword);
 
         return redirect('/doctor/transferred');
     }
 
-    public function redirectReco(Request $req){
+    public function redirectReco(Request $req)
+    {
         $keyword = Session::get('keywordRedirectReco');
         $start = Session::get('startRedirectRecoDate');
         $end = Session::get('endRedirectRecoDate');
         $faci_filter = Session::get('faciRedirectReco');
 
-        if(!$start){
+        if (!$start) {
             $start = Carbon::now()->startOfYear()->format('m/d/Y');
             $end = Carbon::now()->endOfYear()->format('m/d/Y');
         }
@@ -1131,71 +1129,72 @@ class PatientCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->join('patients','patients.id','=','tracking.patient_id')
-            ->where('tracking.referred_to',$user->facility_id)
-            ->where('tracking.status','rejected');
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->join('patients', 'patients.id', '=', 'tracking.patient_id')
+            ->where('tracking.referred_to', $user->facility_id)
+            ->where('tracking.status', 'rejected');
 
         $facilities = Tracking::select(
             'facility.id',
             'facility.name'
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->where('tracking.referred_to',$user->facility_id)
-            ->where('tracking.status','rejected')
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->where('tracking.referred_to', $user->facility_id)
+            ->where('tracking.status', 'rejected')
             ->groupBy('facility.name')
-            ->orderBy('facility.name','asc')
+            ->orderBy('facility.name', 'asc')
             ->get();
 
-        if($keyword){
-            $data = $data->where(function($q) use ($keyword){
-                $q->where('patients.fname','like',"%$keyword%")
-                    ->orwhere('patients.mname','like',"%$keyword%")
-                    ->orwhere('patients.lname','like',"%$keyword%")
-                    ->orwhere('tracking.code','like',"%$keyword%");
+        if ($keyword) {
+            $data = $data->where(function ($q) use ($keyword) {
+                $q->where('patients.fname', 'like', "%$keyword%")
+                    ->orwhere('patients.mname', 'like', "%$keyword%")
+                    ->orwhere('patients.lname', 'like', "%$keyword%")
+                    ->orwhere('tracking.code', 'like', "%$keyword%");
             });
         }
 
-        if($faci_filter) {
+        if ($faci_filter) {
             $data = $data->where('tracking.referred_from', $faci_filter);
         }
 
-        if($start && $end) {
+        if ($start && $end) {
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
             $data = $data
                 ->whereBetween('tracking.updated_at', [$start, $end]);
         }
 
-        $data = $data->orderBy('tracking.updated_at','desc')
+        $data = $data->orderBy('tracking.updated_at', 'desc')
             ->paginate(15);
 
-        return view('doctor.redirect_reco',[
+        return view('doctor.redirect_reco', [
             'title' => 'Recommended to be Redirected Patients',
             'data' => $data,
             'facilities' => $facilities
         ]);
     }
 
-    public function searchRedirectReco(Request $req){
-        $range = explode('-',str_replace(' ', '', $req->daterange));
-        $tmp1 = explode('/',$range[0]);
-        $tmp2 = explode('/',$range[1]);
+    public function searchRedirectReco(Request $req)
+    {
+        $range = explode('-', str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/', $range[0]);
+        $tmp2 = explode('/', $range[1]);
 
-        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
-        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+        $start = $tmp1[2] . '-' . $tmp1[0] . '-' . $tmp1[1];
+        $end = $tmp2[2] . '-' . $tmp2[0] . '-' . $tmp2[1];
 
         $keyword = $req->keyword;
         $faci_filter = $req->faci_filter;
-        if($req->view_all) {
+        if ($req->view_all) {
             $keyword = '';
             $faci_filter = '';
         }
 
-        Session::put('startRedirectRecoDate',$start);
-        Session::put('endRedirectRecoDate',$end);
-        Session::put('keywordRedirectReco',$keyword);
-        Session::put('faciRedirectReco',$faci_filter);
+        Session::put('startRedirectRecoDate', $start);
+        Session::put('endRedirectRecoDate', $end);
+        Session::put('keywordRedirectReco', $keyword);
+        Session::put('faciRedirectReco', $faci_filter);
 
         return redirect('/doctor/redirect/reco');
     }
@@ -1215,30 +1214,30 @@ class PatientCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->join('patients','patients.id','=','tracking.patient_id')
-            ->where('referred_to',$user->facility_id)
-            ->where('tracking.status','cancelled');
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->join('patients', 'patients.id', '=', 'tracking.patient_id')
+            ->where('referred_to', $user->facility_id)
+            ->where('tracking.status', 'cancelled');
 
-        if($keyword){
-            $data = $data->where(function($q) use ($keyword){
-                $q->where('patients.fname','like',"%$keyword%")
-                    ->orwhere('patients.mname','like',"%$keyword%")
-                    ->orwhere('patients.lname','like',"%$keyword%")
-                    ->orwhere('tracking.code','like',"%$keyword%");
+        if ($keyword) {
+            $data = $data->where(function ($q) use ($keyword) {
+                $q->where('patients.fname', 'like', "%$keyword%")
+                    ->orwhere('patients.mname', 'like', "%$keyword%")
+                    ->orwhere('patients.lname', 'like', "%$keyword%")
+                    ->orwhere('tracking.code', 'like', "%$keyword%");
             });
         }
 
-        if($start && $end){
+        if ($start && $end) {
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
-            $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
+            $data = $data->whereBetween('tracking.updated_at', [$start, $end]);
         }
 
-        $data = $data->orderBy('date_referred','asc')
+        $data = $data->orderBy('date_referred', 'asc')
             ->paginate(15);
 
-        return view('doctor.cancel',[
+        return view('doctor.cancel', [
             'title' => 'Cancelled Patients',
             'data' => $data
         ]);
@@ -1246,16 +1245,16 @@ class PatientCtrl extends Controller
 
     public function searchCancelled(Request $req)
     {
-        $range = explode('-',str_replace(' ', '', $req->daterange));
-        $tmp1 = explode('/',$range[0]);
-        $tmp2 = explode('/',$range[1]);
+        $range = explode('-', str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/', $range[0]);
+        $tmp2 = explode('/', $range[1]);
 
-        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
-        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+        $start = $tmp1[2] . '-' . $tmp1[0] . '-' . $tmp1[1];
+        $end = $tmp2[2] . '-' . $tmp2[0] . '-' . $tmp2[1];
 
-        Session::put('startCancelledDate',$start);
-        Session::put('endCancelledDate',$end);
-        Session::put('keywordCancelled',$req->keyword);
+        Session::put('startCancelledDate', $start);
+        Session::put('endCancelledDate', $end);
+        Session::put('keywordCancelled', $req->keyword);
 
         return redirect('/doctor/cancelled');
     }
@@ -1275,36 +1274,36 @@ class PatientCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->join('patients','patients.id','=','tracking.patient_id')
-            ->where('referred_to',$user->facility_id)
-            ->where(function($q){
-                $q->where('tracking.status','referred')
-                    ->orwhere('tracking.status','seen')
-                    ->orWhere('tracking.status','archived');
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->join('patients', 'patients.id', '=', 'tracking.patient_id')
+            ->where('referred_to', $user->facility_id)
+            ->where(function ($q) {
+                $q->where('tracking.status', 'referred')
+                    ->orwhere('tracking.status', 'seen')
+                    ->orWhere('tracking.status', 'archived');
             })
-            ->where(DB::raw("TIMESTAMPDIFF(MINUTE,tracking.date_referred,now())"),">",4320);
+            ->where(DB::raw("TIMESTAMPDIFF(MINUTE,tracking.date_referred,now())"), ">", 4320);
 
-        if($keyword){
-            $data = $data->where(function($q) use ($keyword){
-                $q->where('patients.fname','like',"%$keyword%")
-                    ->orwhere('patients.mname','like',"%$keyword%")
-                    ->orwhere('patients.lname','like',"%$keyword%")
-                    ->orwhere('tracking.code','like',"%$keyword%");
+        if ($keyword) {
+            $data = $data->where(function ($q) use ($keyword) {
+                $q->where('patients.fname', 'like', "%$keyword%")
+                    ->orwhere('patients.mname', 'like', "%$keyword%")
+                    ->orwhere('patients.lname', 'like', "%$keyword%")
+                    ->orwhere('tracking.code', 'like', "%$keyword%");
             });
         }
 
-        if($start && $end){
+        if ($start && $end) {
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
-            $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
+            $data = $data->whereBetween('tracking.updated_at', [$start, $end]);
         }
 
-        Session::put("export_archived_excel",$data->get());
-        $data = $data->orderBy('date_referred','desc')
-                     ->paginate(15);
+        Session::put("export_archived_excel", $data->get());
+        $data = $data->orderBy('date_referred', 'desc')
+            ->paginate(15);
 
-        return view('doctor.archive',[
+        return view('doctor.archive', [
             'title' => 'Archived Patients',
             'data' => $data
         ]);
@@ -1312,21 +1311,22 @@ class PatientCtrl extends Controller
 
     public function searchArchived(Request $req)
     {
-        $range = explode('-',str_replace(' ', '', $req->daterange));
-        $tmp1 = explode('/',$range[0]);
-        $tmp2 = explode('/',$range[1]);
+        $range = explode('-', str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/', $range[0]);
+        $tmp2 = explode('/', $range[1]);
 
-        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
-        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+        $start = $tmp1[2] . '-' . $tmp1[0] . '-' . $tmp1[1];
+        $end = $tmp2[2] . '-' . $tmp2[0] . '-' . $tmp2[1];
 
-        Session::put('startArchivedDate',$start);
-        Session::put('endArchivedDate',$end);
-        Session::put('keywordArchived',$req->keyword);
+        Session::put('startArchivedDate', $start);
+        Session::put('endArchivedDate', $end);
+        Session::put('keywordArchived', $req->keyword);
 
         return redirect('/doctor/archived');
     }
 
-    function redirected() {
+    function redirected()
+    {
         $user = Session::get('auth');
         $keyword = Session::get('keywordRedirected');
         $start = Session::get('startRedirectedDate');
@@ -1341,128 +1341,130 @@ class PatientCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             DB::raw("DATE_FORMAT(tracking.updated_at,'%M %d, %Y %h:%i %p') as date_accepted")
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->join('patients','patients.id','=','tracking.patient_id')
-            ->where('referred_to',$user->facility_id)
-            ->where('tracking.status','redirected');
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->join('patients', 'patients.id', '=', 'tracking.patient_id')
+            ->where('referred_to', $user->facility_id)
+            ->where('tracking.status', 'redirected');
 
         $facilities = Tracking::select(
             'facility.id',
             'facility.name'
         )
-            ->join('facility','facility.id','=','tracking.referred_from')
-            ->where('referred_to',$user->facility_id)
-            ->where('tracking.status','redirected')
+            ->join('facility', 'facility.id', '=', 'tracking.referred_from')
+            ->where('referred_to', $user->facility_id)
+            ->where('tracking.status', 'redirected')
             ->groupBy('facility.name')
-            ->orderBy('facility.name','asc')
+            ->orderBy('facility.name', 'asc')
             ->get();
 
-        if($keyword){
-            $data = $data->where(function($q) use ($keyword){
-                $q->where('patients.fname','like',"%$keyword%")
-                    ->orwhere('patients.mname','like',"%$keyword%")
-                    ->orwhere('patients.lname','like',"%$keyword%")
-                    ->orwhere('tracking.code','like',"%$keyword%");
+        if ($keyword) {
+            $data = $data->where(function ($q) use ($keyword) {
+                $q->where('patients.fname', 'like', "%$keyword%")
+                    ->orwhere('patients.mname', 'like', "%$keyword%")
+                    ->orwhere('patients.lname', 'like', "%$keyword%")
+                    ->orwhere('tracking.code', 'like', "%$keyword%");
             });
         }
 
-        if($faci_filter) {
-            $data = $data->where('tracking.referred_from',$faci_filter);
+        if ($faci_filter) {
+            $data = $data->where('tracking.referred_from', $faci_filter);
         }
 
-        if($start && $end){
+        if ($start && $end) {
             $start = Carbon::parse($start)->startOfDay();
             $end = Carbon::parse($end)->endOfDay();
-            $data = $data->whereBetween('tracking.updated_at',[$start,$end]);
+            $data = $data->whereBetween('tracking.updated_at', [$start, $end]);
         }
 
-        $data = $data->orderBy('date_referred','desc')
+        $data = $data->orderBy('date_referred', 'desc')
             ->paginate(15);
 
-        return view('doctor.redirected',[
+        return view('doctor.redirected', [
             'title' => 'Redirected Patients',
             'data' => $data,
             'facilities' => $facilities
         ]);
     }
 
-    public function searchRedirected(Request $req) {
-        $range = explode('-',str_replace(' ', '', $req->daterange));
-        $tmp1 = explode('/',$range[0]);
-        $tmp2 = explode('/',$range[1]);
+    public function searchRedirected(Request $req)
+    {
+        $range = explode('-', str_replace(' ', '', $req->daterange));
+        $tmp1 = explode('/', $range[0]);
+        $tmp2 = explode('/', $range[1]);
 
-        $start = $tmp1[2].'-'.$tmp1[0].'-'.$tmp1[1];
-        $end = $tmp2[2].'-'.$tmp2[0].'-'.$tmp2[1];
+        $start = $tmp1[2] . '-' . $tmp1[0] . '-' . $tmp1[1];
+        $end = $tmp2[2] . '-' . $tmp2[0] . '-' . $tmp2[1];
 
         $keyword = $req->keyword;
         $faci_filter = $req->facility_filter;
-        if($req->view_all) {
+        if ($req->view_all) {
             $keyword = '';
             $faci_filter = '';
         }
 
-        Session::put('startRedirectedDate',$start);
-        Session::put('endRedirectedDate',$end);
-        Session::put('keywordRedirected',$keyword);
-        Session::put('faciRedirected',$faci_filter);
+        Session::put('startRedirectedDate', $start);
+        Session::put('endRedirectedDate', $end);
+        Session::put('keywordRedirected', $keyword);
+        Session::put('faciRedirected', $faci_filter);
 
         return redirect('/doctor/redirected');
     }
 
     static function getRedirectedDate($status, $code)
     {
-        $date = Tracking::where('code',$code)
-            ->where('status',$status)
+        $date = Tracking::where('code', $code)
+            ->where('status', $status)
             ->first();
-        if($date)
+        if ($date)
             $date = $date->updated_at;
         else
             return false;
 
-        return date('F d, Y h:i A',strtotime($date));
+        return date('F d, Y h:i A', strtotime($date));
     }
 
     static function getCancellationReason($status, $code)
     {
-        $act = Activity::where('code',$code)
-                    ->where('status',$status)
-                    ->first();
-        if($act)
+        $act = Activity::where('code', $code)
+            ->where('status', $status)
+            ->first();
+        if ($act)
             return $act->remarks;
         return 'No Reason';
     }
 
     static function getDischargeDate($status, $code)
     {
-        $date = Activity::where('code',$code)
-                    ->where('status',$status)
-                    ->first();
-        if($date)
+        $date = Activity::where('code', $code)
+            ->where('status', $status)
+            ->first();
+        if ($date)
             $date = $date->date_referred;
         else
             return false;
 
-        return date('F d, Y h:i A',strtotime($date));
+        return date('F d, Y h:i A', strtotime($date));
     }
 
     public function history($code)
     {
-        Session::put('keywordDischarged',$code);
+        Session::put('keywordDischarged', $code);
         return redirect('doctor/referred');
     }
 
-    public function walkinPatient(Request $request){
+    public function walkinPatient(Request $request)
+    {
         $user = Session::get('auth');
-        if(isset($request->date_range)){
-            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
-            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        if (isset($request->date_range)) {
+            $date_start = date('Y-m-d', strtotime(explode(' - ', $request->date_range)[0])) . ' 00:00:00';
+            $date_end = date('Y-m-d', strtotime(explode(' - ', $request->date_range)[1])) . ' 23:59:59';
         } else {
-            $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+            $date_start = Carbon::now()->startOfYear()->format('Y-m-d') . ' 00:00:00';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d') . ' 23:59:59';
         }
 
         $walkin_patient = \DB::connection('mysql')->select("call walkin('$date_start','$date_end','$user->facility_id')");
-        return view('doctor.walkin',[
+        return view('doctor.walkin', [
             "walkin_patient" => $walkin_patient,
             "user_level" => $user->level,
             "date_start" => $date_start,

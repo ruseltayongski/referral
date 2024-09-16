@@ -130,7 +130,9 @@ class TelemedicineCtrl extends Controller
     public function getBookedDates(){
         $user = Session::get('auth');
 
-        $bookDates = AppointmentSchedule::where('facility_id', $user->facility_id)->pluck('appointed_date')->toArray();
+        // $bookDates = AppointmentSchedule::where('facility_id', $user->facility_id)->pluck('appointed_date')->toArray();
+        $bookDates = AppointmentSchedule::with(['telemedAssignedDoctor'])
+                    ->where('facility_id', $user->facility_id)->get();
         return response()->json($bookDates);
     }
     //-------------End of get all booked dates-------------------------------

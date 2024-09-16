@@ -102,7 +102,8 @@ export default {
     },
     eventRenderFunction(event, element) {
       //console.log(event,event.start.format('YYYY-MM-DD'))
-      let currentDate = new Date().toISOString().split("T")[0];
+      // let currentDate = new Date().toISOString().split("T")[0];
+      let currentDateTime = new Date().toISOString().split("T")[0]; // get the current date and time
       this.$nextTick(() => {
         const targetTd = $(
           ".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']"
@@ -118,26 +119,33 @@ export default {
             const slotOndate = appointment.appointment_schedules.filter(
               (slot) => slot.appointed_date === date
             );
-            // if (slotOndate.length > 0) {
-            //   slotOndate.map((slot) => {
-            //     console.log(slot.telemed_assigned_doctor[0].appointment_by);
-            //   });
-            // }
-            return (
-              slotOndate.length > 0 &&
-              slotOndate.every(
-                (slot) => slot.telemed_assigned_doctor[0].appointment_by
+
+            // Group by appointment_id
+            const groupedByAppointmentId = slotOndate.reduce((acc, slot) => {
+              const id = slot.appointment_id;
+              if (!acc[id]) acc[id] = [];
+              acc[id].push(
+                slot.telemed_assigned_doctor.map(
+                  (doctor) => doctor.appointment_by
+                )
+              );
+              return acc;
+            }, {});
+            // Check if all appointment_by for each appointment_id are assigned
+            return Object.values(groupedByAppointmentId).some((appointments) =>
+              appointments.every((appointment_by_list) =>
+                appointment_by_list.every((appointment_by) => appointment_by)
               )
             );
           }
           return false;
         });
 
-        if (date < currentDate || isfullyBooked) {
-          targetTd.css("background-color", "rgb(255 214 214)"); //color the td of day in calendar'
+        if (date < currentDateTime || isfullyBooked) {
+          targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
           targetTd.css("border-color", "rgb(230 193 193)");
         } else {
-          targetTd.css("background-color", "#00a65a"); //color the td of day in calendar'
+          targetTd.css("background-color", "#00a65a"); //available color green'
           targetdrag.css("border-color", "#00a65a");
         }
         targetGrid.remove();

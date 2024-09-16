@@ -720,7 +720,15 @@
                             ?>
                             @if($act->status=='rejected')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -734,7 +742,15 @@
                                 </tr>
                             @elseif($act->status=='referred' || $act->status=='redirected')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         @if($act->referring_md_id!=0)
                                             <?php
@@ -754,7 +770,15 @@
                                 </tr>
                             @elseif($act->status=='transferred')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -762,7 +786,15 @@
                                 </tr>
                             @elseif($act->status=='calling')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span> is requesting a call from <span class="txtHospital">{{ $old_facility }}</span>.
                                         @if($user->facility_id==$act->referred_from)
@@ -772,7 +804,15 @@
                                 </tr>
                             @elseif($act->status=='accepted' || $act->status=='examined' || $act->status=='treated' || $act->status=='upward' || $act->status=='followup')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -780,7 +820,15 @@
                                 </tr>
                             @elseif($act->status=='arrived')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->created_at)) }}
+                                        </div>
+                                        <div  class="time-small">
+                                            {{ date('h:i A', strtotime($act->created_at)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> arrived at <span class="txtHospital">{{ $new_facility }}</span>.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -788,7 +836,15 @@
                                 </tr>
                             @elseif($act->status=='admitted')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->created_at)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->created_at)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was admitted at <span class="txtHospital">{{ $new_facility }}</span>.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -796,7 +852,15 @@
                                 </tr>
                             @elseif($act->status=='discharged')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->created_at)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->created_at)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was discharged from <span class="txtHospital">{{ $new_facility }}</span>.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -811,7 +875,15 @@
                                 </tr>
                             @elseif($act->status=='archived')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->created_at)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->created_at)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -822,7 +894,15 @@
                                 $doctor = \App\User::find($act->action_md);
                                 ?>
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         Referral was cancelled by
                                         <span class="txtDoctor">
@@ -839,14 +919,30 @@
                                 </tr>
                             @elseif($act->status=='travel')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  has departed by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
                                     </td>
                                 </tr>
                             @elseif($act->status=='form_updated')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> form was updated by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
@@ -854,7 +950,15 @@
                                 </tr>
                             @elseif($act->status=='queued')
                                 <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
-                                    <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td>
+                                    <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
+                                    <td>
+                                        <div class="date-large">
+                                            {{ date('M d, Y',strtotime($act->date_referred)) }}
+                                        </div>
+                                        <div class="time-small">
+                                            {{ date('h:i A', strtotime($act->date_referred)) }}
+                                        </div>
+                                    </td>
                                     <td>
                                         <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> was queued by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>
                                         <span class="remarks">Remarks: Queued at <b>{{ $act->remarks }}</b></span>
@@ -1403,6 +1507,15 @@ function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,posi
 </script>
 <style>
 /** ---------------My changes File Folder Modal -------------- */
+.date-large {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.time-small {
+    font-size: 11px;
+}
+
 .card-body-folder{
         margin-bottom: 5px; /* Adjust as needed */
         margin-right: 30px;

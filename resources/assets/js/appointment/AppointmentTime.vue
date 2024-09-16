@@ -162,7 +162,7 @@ export default {
                     class="external-event"
                     style="background-color: rgb(255 214 214); color: #ffff"
                   >
-                    Full Slot
+                    Not Available
                   </div>
                 </div>
                 <div class="box box-solid">
@@ -244,7 +244,7 @@ export default {
                       class="btn btn-success bt-md btn-block"
                       @click="proceedAppointment"
                     >
-                      <i class="fa fa-calendar"></i>&nbsp;Appointment
+                      <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
                     </button>
                     <button
                       v-else
@@ -253,8 +253,8 @@ export default {
                       class="btn btn-danger bt-md btn-block"
                       disabled
                     >
-                      <i class="fa fa-calendar"></i>&nbsp;All appointments are
-                      full
+                      <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments
+                      are full
                     </button>
                   </div>
                 </div>

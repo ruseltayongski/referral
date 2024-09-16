@@ -4,6 +4,7 @@
     </div>
     <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit">
         {{ csrf_field() }}
+        <input type="hidden" name="telemedicine" class="Appointment" value="">
         <div class="panel-body">
             <div class="form-group">
                 <input type="text" placeholder="Search Keyword..." class="form-control" name="keyword" required />
@@ -34,7 +35,7 @@
                 <select class="form-control province" name="province" onchange="filterSidebar($(this),'muncity')" required>
                     <option value="">Please select province</option>
                     @foreach($province as $prov)
-                        <option value="{{ $prov->id }}">{{ $prov->description }}</option>
+                    <option value="{{ $prov->id }}">{{ $prov->description }}</option>
                     @endforeach
                 </select>
             </div>

@@ -95,7 +95,7 @@ export default {
         console.log(error);
       });
 
-    this.hideDivAfterTimeout();
+    //this.hideDivAfterTimeout();
     window.addEventListener("click", this.showDivAgain);
   },
   beforeUnmount() {
@@ -227,15 +227,15 @@ export default {
       this.audioStreaming = this.audioStreaming ? false : true;
       this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
     },
-    hideDivAfterTimeout() {
-      setTimeout(() => {
-        $(".iconCall").removeClass("fade-in");
-        this.showDiv = false;
-      }, 10000);
-    },
+    // hideDivAfterTimeout() {
+    // setTimeout(() => {
+    //   $(".iconCall").removeClass("fade-in");
+    //   this.showDiv = false;
+    // }, 10000);
+    // },
     showDivAgain() {
       this.showDiv = true;
-      this.hideDivAfterTimeout();
+      //  this.hideDivAfterTimeout();
     },
     clearTimeout() {
       // Clear the timeout if the component is about to be unmounted
@@ -338,110 +338,124 @@ export default {
           <Transition name="fade">
             <div class="tooltip-container">
               <div class="iconCall position-absolute fade-in" v-if="showDiv">
-                <div
-                  v-if="showTooltip"
-                  class="tooltip-text"
-                  style="background-color: #007bff"
-                >
-                  lab Request
+                <div class="button-container">
+                  <div
+                    v-if="showMic"
+                    class="tooltip-text"
+                    style="background-color: #138496"
+                  >
+                    Audio
+                  </div>
+                  <button
+                    class="btn btn-info btn-lg mic-button"
+                    :class="{ 'mic-button-slash': !audioStreaming }"
+                    @click="audioStreamingOnAnddOff"
+                    type="button"
+                    @mouseover="showMic = true"
+                    @mouseleave="showMic = false"
+                  >
+                    <i class="bi-mic-fill"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showPrescription"
-                  class="tooltip-text"
-                  style="background-color: #218838"
-                >
-                  Prescription
+                &nbsp;
+                <div class="button-container">
+                  <div
+                    v-if="showVedio"
+                    class="tooltip-text"
+                    style="background-color: #218838"
+                  >
+                    Video
+                  </div>
+                  <button
+                    class="btn btn-success btn-lg video-button"
+                    :class="{ 'video-button-slash': !videoStreaming }"
+                    @click="videoStreamingOnAndOff"
+                    type="button"
+                    @mouseover="showVedio = true"
+                    @mouseleave="showVedio = false"
+                  >
+                    <i class="bi-camera-video-fill"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showUpward"
-                  class="tooltip-text"
-                  style="background-color: #e0a800"
-                >
-                  Upward
+                &nbsp;
+                <div class="button-container">
+                  <div
+                    v-if="showEndcall"
+                    class="tooltip-text"
+                    style="background-color: #c82333"
+                  >
+                    End Call
+                  </div>
+                  <button
+                    class="btn btn-danger btn-lg decline-button"
+                    @click="leaveChannel"
+                    type="button"
+                    @mouseover="showEndcall = true"
+                    @mouseleave="showEndcall = false"
+                  >
+                    <i class="bi-telephone-x-fill"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showEndcall"
-                  class="tooltip-text"
-                  style="background-color: #c82333"
-                >
-                  End Call
+                &nbsp;
+                <div class="button-container">
+                  <div
+                    v-if="showUpward"
+                    class="tooltip-text"
+                    style="background-color: #e0a800"
+                  >
+                    Upward
+                  </div>
+                  <button
+                    class="btn btn-warning btn-lg upward-button"
+                    @click="endorseUpward"
+                    type="button"
+                    v-if="referring_md == 'no'"
+                    @mouseover="showUpward = true"
+                    @mouseleave="showUpward = false"
+                  >
+                    <i class="bi-hospital"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showVedio"
-                  class="tooltip-text"
-                  style="background-color: #218838"
-                >
-                  Video
+                <div class="button-container">
+                  <div
+                    v-if="showPrescription"
+                    class="tooltip-text"
+                    style="background-color: #218838"
+                  >
+                    Prescription
+                  </div>
+                  <button
+                    class="btn btn-success btn-lg prescription-button"
+                    data-toggle="modal"
+                    data-target="#prescriptionModal"
+                    type="button"
+                    v-if="referring_md == 'no'"
+                    @mouseover="showPrescription = true"
+                    @mouseleave="showPrescription = false"
+                  >
+                    <i class="bi bi-prescription"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showMic"
-                  class="tooltip-text"
-                  style="background-color: #138496"
-                >
-                  Audio
+                <div class="button-container">
+                  <div
+                    v-if="showTooltip"
+                    class="tooltip-text"
+                    style="background-color: #007bff"
+                  >
+                    lab Request
+                  </div>
+                  <button
+                    class="btn btn-primary btn-lg prescription-button"
+                    data-toggle="modal"
+                    data-target="#labRequestModal"
+                    type="button"
+                    v-if="referring_md == 'no'"
+                    @mouseover="showTooltip = true"
+                    @mouseleave="showTooltip = false"
+                  >
+                    <i class="bi bi-prescription2"></i>
+                  </button>
                 </div>
-                <button
-                  class="btn btn-info btn-lg mic-button"
-                  :class="{ 'mic-button-slash': !audioStreaming }"
-                  @click="audioStreamingOnAnddOff"
-                  type="button"
-                  @mouseover="showMic = true"
-                  @mouseleave="showMic = false"
-                >
-                  <i class="bi-mic-fill"></i></button
-                >&nbsp;
-                <button
-                  class="btn btn-success btn-lg video-button"
-                  :class="{ 'video-button-slash': !videoStreaming }"
-                  @click="videoStreamingOnAndOff"
-                  type="button"
-                  @mouseover="showVedio = true"
-                  @mouseleave="showVedio = false"
-                >
-                  <i class="bi-camera-video-fill"></i></button
-                >&nbsp;
-                <button
-                  class="btn btn-danger btn-lg decline-button"
-                  @click="leaveChannel"
-                  type="button"
-                  @mouseover="showEndcall = true"
-                  @mouseleave="showEndcall = false"
-                >
-                  <i class="bi-telephone-x-fill"></i></button
-                >&nbsp;
-                <button
-                  class="btn btn-warning btn-lg upward-button"
-                  @click="endorseUpward"
-                  type="button"
-                  v-if="referring_md == 'no'"
-                  @mouseover="showUpward = true"
-                  @mouseleave="showUpward = false"
-                >
-                  <i class="bi-hospital"></i>
-                </button>
-                <button
-                  class="btn btn-success btn-lg prescription-button"
-                  data-toggle="modal"
-                  data-target="#prescriptionModal"
-                  type="button"
-                  v-if="referring_md == 'no'"
-                  @mouseover="showPrescription = true"
-                  @mouseleave="showPrescription = false"
-                >
-                  <i class="bi bi-prescription"></i>
-                </button>
-
-                <button
-                  class="btn btn-primary btn-lg prescription-button"
-                  data-toggle="modal"
-                  data-target="#labRequestModal"
-                  type="button"
-                  v-if="referring_md == 'no'"
-                  @mouseover="showTooltip = true"
-                  @mouseleave="showTooltip = false"
-                >
-                  <i class="bi bi-prescription2"></i>
-                </button>
               </div>
             </div>
           </Transition>
