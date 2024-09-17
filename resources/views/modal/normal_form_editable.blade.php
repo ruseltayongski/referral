@@ -1,6 +1,6 @@
 <?php
 // $appointmentParam = $_GET['appointment'];
-$appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : null;
+$appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : session('telemed');
 
 $facility_id_telemedicine = json_decode(json_decode($appointmentParam, true), true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
 $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true), true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
@@ -31,7 +31,7 @@ $appoitment_sched = \App\AppointmentSchedule::select('id', 'department_id')
     ->where('id', $telemedicine_appointment_id)->get();
 
 $department_id = $appoitment_sched[0]->department_id;
-//  dd($appointmentParam);
+
 ?>
 
 <style>

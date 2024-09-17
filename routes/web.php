@@ -193,6 +193,12 @@ Route::match(["get","post"],'doctor/referred/track','doctor\ReferralCtrl@trackRe
 Route::get('doctor/patient','doctor\PatientCtrl@index');
 Route::post('doctor/patient','doctor\PatientCtrl@searchProfile');
 
+Route::post('pass/appointment', function (Illuminate\Http\Request $request) { // adding this session
+    // Save the appointment to session or process as needed
+    session(['telemed' => $request->telemed]);
+    return response()->json(['success' => true]);
+});
+
 Route::get('doctor/patient/info/{id}','doctor\PatientCtrl@showPatientProfile');
 Route::get('doctor/patient/add','doctor\PatientCtrl@addPatient');
 Route::post('doctor/patient/store','doctor\PatientCtrl@storePatient');

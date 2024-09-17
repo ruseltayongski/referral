@@ -255,16 +255,17 @@
                 {{-- {!! $redirected_rejected_track || $redirected_cancelled_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : 
                        ($redirected_queued_track && !$redirected_accepted_track? '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>')  !!} --}}
             </div>
-            <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}"><?php
-                                                                                                                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
-                                                                                                                        echo 'Declined';
-                                                                                                                    elseif ($redirected_cancelled_track)
-                                                                                                                        echo 'Cancelled';
-                                                                                                                    elseif ($redirected_queued_track && !$redirected_accepted_track)
-                                                                                                                        echo "Queued at <br><b>" . $queue_redirected . "</b>";
-                                                                                                                    else
-                                                                                                                        echo "Accepted"
-                                                                                                                        ?>
+            <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}">
+                <?php
+                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
+                        echo 'Declined';
+                    elseif ($redirected_cancelled_track)
+                        echo 'Cancelled';
+                    elseif ($redirected_queued_track && !$redirected_accepted_track)
+                        echo "Queued at <br><b>" . $queue_redirected . "</b>";
+                    else
+                        echo "Accepted"
+                ?>
             </div>
         </div>
         <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">

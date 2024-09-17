@@ -563,6 +563,7 @@ class PatientCtrl extends Controller
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
             } //push notification for cebu south medical center
 
+            session()->forget('profileSearch.telemedicine');
             self::addTracking($code, $patient_id, $user, $req, $type, $form->id, 'refer');
         } else if ($type === 'pregnant') {
             $baby = array(
@@ -665,7 +666,7 @@ class PatientCtrl extends Controller
                 );
                 ApiController::pushNotificationCCMC($this->referred_patient_data);
             } //push notification for cebu south medical center
-
+            session()->forget('profileSearch.telemedicine');
             self::addTracking($code, $patient_id, $user, $req, $type, $form->id);
         }
 

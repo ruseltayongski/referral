@@ -76,7 +76,7 @@
 </style>
 
 <div class="modal fade" role="dialog" id="editProfileModal" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-md" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <form method="POST" action="{{ asset('doctor/editProfile') }}">
             {{ csrf_field() }}
             <div class="modal-content">
@@ -85,41 +85,75 @@
                     <fieldset>
                         <legend><i class="fa fa-user-md"></i> Edit Profile</legend>
                     </fieldset>
-
-                    <div class="form-group">
-                        <label>First Name:</label>
-                        <input type="text" class="form-control fname" autofocus name="fname" value="{{ $user->fname }}" required>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span> <label for="fname">First Name:</label>
+                                </div>
+                                <input type="text" class="form-control fname" autofocus name="fname" value="{{ $user->fname }}" required>
+                                <small class="form-text text-muted">Your given name (e.g., John).</small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span><label for="mname"> Middle Name:</label>
+                                </div>
+                                <input type="text" class="form-control mname" name="mname" value="{{ $user->mname }}">
+                                <small class="form-text text-muted">Your middle name (optional).</small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span><label for="lname"> Last Name:</label>
+                                </div>
+                                <input type="text" class="form-control lname" name="lname" value="{{ $user->lname }}" required>
+                                <small class="form-text text-muted">Your surname or family name.</small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Middle Name:</label>
-                        <input type="text" class="form-control mname" name="mname" value="{{ $user->mname }}">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phone"></i></span> <label for="contact">Contact Number:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control contact" name="contact" value="{{ $user->contact }}" required >
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span><label for="email"> Email Address:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control email" name="email" value="{{ $user->email }}" required>
+                        </div>
+                        <div class="form-group col-md-4">                          
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-briefcase"></i></span><label for="designation"> Designation:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control designation" name="designation" value="{{ $user->designation }}" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Last Name:</label>
-                        <input type="text" class="form-control lname" name="lname" value="{{ $user->lname }}" required>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-credit-card"></i></span><label for="license"> License No.:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control license" name="license" value="{{ $user->license }}" autocomplete="license">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Contact Number:</label>
-                        <input type="text" class="form-control contact" name="contact" value="{{ $user->contact }}" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Email Address:</label>
-                        <input type="text" class="form-control email" name="email" value="{{ $user->email }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Designation:</label>
-                        <input type="text" class="form-control designation" name="designation" value="{{ $user->designation }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>License No.:</label>
-                        <input type="text" class="form-control license" name="license" value="{{ $user->license }}">
-                    </div>
-
+                  
                     @if($user->level == "doctor")
                         <div class="form-group">
-                            <label>Signature:</label>
+                            <label for="signature"><i class="fa fa-pencil"></i> Signature:</label>
                             <input type="hidden" name="signature" id="signature_final" value="">
                             <input type="hidden" name="sign_type" id="sign_type" value="">
                             <div class="text-center" id="signature_field">

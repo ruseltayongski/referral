@@ -619,7 +619,7 @@ class ReferralCtrl extends Controller
             })
             ->orderBy('date_referred','desc')
             ->paginate(15);
-
+            session()->forget('profileSearch.telemedicine');
         return view('doctor.referred',[
             'title' => 'Referred Patients',
             'data' => $data
@@ -763,7 +763,7 @@ class ReferralCtrl extends Controller
 
             $data = $data->paginate(10);
         }
-
+        session()->forget('profileSearch.telemedicine');
         //  $new_referral = $request->query();
 
         return view('doctor.referred2',[

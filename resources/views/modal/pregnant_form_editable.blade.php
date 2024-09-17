@@ -1,6 +1,8 @@
 <?php
 
-    $appointmentParam = $_GET['appointment']; // I add this
+    // $appointmentParam = $_GET['appointment']; // I add this
+    $appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : session('telemed');
+    
     $facility_id_telemed = json_decode(json_decode($appointmentParam, true), true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
     $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
     $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];

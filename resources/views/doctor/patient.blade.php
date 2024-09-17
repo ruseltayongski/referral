@@ -317,48 +317,49 @@ $counter = 0;
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
 @include('script.datetime')
 <script>
+
     $(document).ready(function() {
         $(".patient-emergency").removeClass('hidden');
         $(".patient-consultation").removeClass('hidden');
-        
-        const telemedicineAppoinmentSlot = decodeURIComponent(new URL(window.location.href).searchParams.get('appointment'));
-        // var appointment = @json($telemedicine);
 
-        // if (telemedicineAppoinmentSlot && telemedicineAppoinmentSlot !== 'null') {
-        //     $(".Appointment").val(telemedicineAppoinmentSlot);
-        // }
+        const telemedicineAppoinmentSlot = decodeURIComponent(new URL(window.location.href).searchParams.get('appointment'));
+        var appointment = @json($telemedicine);
+        //let url = new URL(window.location.href);
+        if (telemedicineAppoinmentSlot && telemedicineAppoinmentSlot !== 'null') {
+            $(".Appointment").val(telemedicineAppoinmentSlot);
+        }
 
         if (JSON.parse(telemedicineAppoinmentSlot)) {
             $(".patient-emergency").remove();
+        
             setCookie('telemedicineAppointment', telemedicineAppoinmentSlot, 1);
+            
             console.log("telemedicineAppoinmentSlot", telemedicineAppoinmentSlot);
+            
+        }else if(appointment){
+
+            $(".patient-emergency").remove();
+            $(".Appointment").val(appointment);
+
+            $.ajax({
+                url: "{{ url('pass/appointment') }}",
+                method: 'POST',
+                data: {
+                    telemed: appointment,
+                    _token: '{{ csrf_token() }}'  // Include the CSRF token for security
+                },
+                success: function(response) {
+                    console.log("Appointment successfully passed to the backend.");
+                }
+            });
+
+            console.log("appointment-search", appointment)
+
         } else {
             $(".patient-consultation").remove();
+            $(".Appointment").val('');
             setCookie('telemedicineAppointment', false, 1);
         }
-
-        // function updateAppointmentInURL(appointment) {
-        //     let url = new URL(window.location.href);
-        //     url.searchParams.set('appointment', appointment);
-        //     window.history.pushState({}, '', url); // Update the URL without reloading the page
-        // }
-
-        // if (JSON.parse(appointment)) {
-
-        //     updateAppointmentInURL(appointment); 
-
-        //     $(".Appointment").val(appointment);
-        //     $(".patient-emergency").remove();
-        //     setCookie('telemedicineAppointment', appointment, 1);
-        //     console.log("Appointment", appointment);
-        // } else if (JSON.parse(telemedicineAppoinmentSlot)) {
-        //     $(".patient-emergency").remove();
-        //     setCookie('telemedicineAppointment', telemedicineAppoinmentSlot, 1);
-        //     console.log("telemedicineAppoinmentSlot", telemedicineAppoinmentSlot);
-        // } else {
-        //     $(".patient-consultation").remove();
-        //     setCookie('telemedicineAppointment', false, 1);
-        // }
     });
 
     function handleRefer() {
@@ -633,6 +634,7 @@ $counter = 0;
         e.preventDefault();
         $('.loading').show();
         $('.btn-submit').attr('disabled', true);
+    
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
         department_name = $('.select_department_normal option:selected').html();
@@ -641,6 +643,7 @@ $counter = 0;
             type: 'POST',
             success: function(data) {
                 console.log(data);
+                
                 if (data == 'consultation_rejected') {
                     $('.loading').hide();
                     $('#pregnantModal').modal('hide');
