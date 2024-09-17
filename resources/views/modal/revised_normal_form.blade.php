@@ -1,16 +1,28 @@
 @extends('layouts.app')
 
 <?php
-$user = Session::get('auth');
-$facilities = \App\Facility::select('id', 'name')
-    ->where('id', '!=', $user->facility_id)
-    ->where('status', 1)
-    ->where('referral_used', 'yes')
-    ->orderBy('name', 'asc')->get();
-$myfacility = \App\Facility::find($user->facility_id);
-$facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
-$inventory = \App\Inventory::where("facility_id", $myfacility->id)->get();
-$reason_for_referral = \App\ReasonForReferral::get();
+ $appointmentParam = $_GET['appointment'];
+ $facility_id_telemedicine = json_decode(json_decode($appointmentParam, true),true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
+ $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
+ $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
+
+ $user = Session::get('auth');
+ $facilities = \App\Facility::select('id','name')
+     ->where('id','!=',$user->facility_id)
+     ->where('status',1)
+     ->where('referral_used','yes');
+ if($facility_id_telemedicine) {
+     $facilities = $facilities->where('id', $facility_id_telemedicine);
+ }
+
+ $facilities = $facilities
+     ->orderBy('name','asc')
+     ->get();
+
+ $myfacility = \App\Facility::find($user->facility_id);
+ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
+ $inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
+ $reason_for_referral = \App\ReasonForReferral::get();
 ?>
 
 <style>
@@ -186,10 +198,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 </style>
 
-<div class="modal fade" role="dialog" id="revisednormalFormModal" opacity="2">
+<div class="modal fade" role="dialog" id="revisednormalFormModal">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content" >
-            <form action="{{ url('doctor/patient/revised/new/submit') }}" method="POST" class="form-submit new_normal_form">
+        <div class="modal-content">
+            <form action="{{ route('doctor/patient') }}" method="POST" class="form-submit normal_form">
                 <div class="jim-content">
                     @include('include.header_form')
                     <div class="form-group-sm form-inline">
@@ -2272,7 +2284,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             </div><!-- /.modal-content -->
         </div>
     </div><!-- /.modal-dialog -->
-</div>/.modal
+</div><!-- /.modal -->
 
 <div class="modal fade" id="icd-modal">
     <div class="modal-dialog modal-lg">
@@ -2302,7 +2314,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
 @section('js')
 <script>
-    $("#revisednormalFormModal").modal("hide");
+    $("#revisednormalFormModal").modal("show");
 
     //    $('#pedia_show').hide();
     //    $('#menarche_show').hide();

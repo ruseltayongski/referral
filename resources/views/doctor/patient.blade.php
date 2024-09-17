@@ -329,8 +329,8 @@ $counter = 0;
         </div>
     </div>
 
-
     @include('modal.pregnantModal')
+    @include('modal.normal_form_editable')
     @include('modal.form_version')
     @include('modal.normal_form_editable_walkin')
     @include('modal.pregnant_form_editable')
@@ -754,69 +754,89 @@ $counter = 0;
 
         });
 
-
-        $('.new_normal_form').on('submit',function(e){
-            e.preventDefault();
-            $('.loading').show();
-            reason = $('.reason_referral').val();
-            form_type = '#revisednormalFormModal';
-            department_id = $('.select_department_normal').val();
-            department_name = $('.select_department_normal option:selected').html();
-            $(this).ajaxSubmit({
-                url: "{{ url('doctor/patient/refer/revised/version2') }}",
-                type: 'POST',
-                success: function(data){
-                    console.log(data);
-                    setTimeout(function(){
-                        window.location.reload(false);
-                    },500);
-                },
-                error: function(){
-                    $('#serverModal').modal();
-                }
-            });
-        });
-
-
-         function setVersion(version) {
-                    $.ajax({
-                        url: "{{ url('doctor/patient/refer/pregnant/') }}/" + version,
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}'
-                        },
-                    success: function(response) {
-                            // console.log('Form version response:', response);
-                            console.log('response here');
-
-                            // Hide the version selection modal
-                            $('#form_version').modal('hide');
-
-                            if (version === "version1") {
-                                // Load version 1 form
-                                $('#pregnantFormModal').modal('show');
-                            } else if (version === "version2") {
-                                console.log('version', version);
-                                // Fetch and load the content for the revised normal form
-                                $('#revisednormalFormModal').modal('show');
-
-                                $.get("{{ url('doctor/patient/sample') }}", function(result){
-                                    $('.new_normal_form').append(result);
-                                });
-                    
-
-
-                            }
-                        },
-                     error: function(xhr, status, error) {
-                         console.error('Error selecting form version:', error);
-                          Lobibox.alert("error", {
-                              msg: "An error occurred while selecting the form version."
-                         });
+        $('.new_pregnant_form').on('submit', function(e) {
+                e.preventDefault();
+                $('.loading').show();
+                form_type = '#revisednormalFormModal';
+                sex = 'Female';
+                reason = $('.woman_information_given').val();
+                department_id = $('.select_department_pregnant').val();
+                department_name = $('.select_department_pregnant :selected').text();
+                
+                $(this).ajaxSubmit({
+                    url: "{{ url('doctor/patient/revised/new/submit') }}",
+                    type: 'POST',
+                    success: function(data) {
+                        console.log("patient", data);
+                        if (data.referred_to == 790 || data.referred_to == 23) {
+                            data.age = parseInt(data.age);
+                            var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+                            sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                            $('.loading').hide();
+                            $('#revisednormalFormModal').modal('hide');
+                            $('.btn-submit').attr('disabled', false);
+                            Lobibox.alert("success", {
+                                msg: "Successfully referred the patient!"
+                            });
+                        } else {
+                            $(location).attr('href', "{{ asset('doctor/referred') }}");
+                        }
+                    },
+                    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                        $('.loading').hide();
+                        $('#revisednormalFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled', false);
+                        Lobibox.notify('error', {
+                            title: "Error",
+                            msg: "Status: " + textStatus + " Error: " + errorThrown
+                        });
                     }
                 });
-        }
+            });
 
+            function setVersion(version) {
+                $.ajax({
+                    url: "{{ url('doctor/patient/refer/pregnant/') }}" + version,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}'
+                    },
+                    success: function(response) {
+                        console.log('Initial AJAX response:', response);
+                        $('#form_version').modal('hide');
+
+                        if (version === "version1") {
+                            setClinicalFormTile("pregnant");
+                            $('#pregnantFormModal').modal('show');
+                        } else if (version === "version2") {
+                            // Fetch content for the revisednormalFormModal
+                            console.log("version: ",version);
+                            $.ajax({
+                                url: "{{ url('doctor/patient/refer/revised') }}",
+                                type: 'GET',
+                                success: function(referralContent) {
+                                    console.log('Revised modal content:', referralContent);
+                                    $('#revisednormalFormModal').modal('show'); // Show the modal after receiving content
+                                    // Insert the content into the modal
+                                    $('#revisednormalFormModal .modal-content').html(referralContent.content);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error fetching revised form content:', error);
+                                    Lobibox.alert("error", {
+                                        msg: "An error occurred while loading the referral form."
+                                    });
+                                }
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error selecting form version:', error);
+                        Lobibox.alert("error", {
+                            msg: "An error occurred while selecting the form version."
+                        });
+                    }
+                });
+            }
 
 
         $('.pregnant_form_walkin').on('submit',function(e){

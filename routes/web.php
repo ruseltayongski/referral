@@ -688,3 +688,6 @@ Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@redirect_r
 Route::post('submit-referral', 'doctor\NewFormCtrl@saveReferral')->name('submit-referral');
 Route::get('/generate-pdf/{patient_id}', 'doctor\NewFormCtrl@generatePdf')->name('generate-pdf');
 Route::post('/update-referral/{patient_id}', 'doctor\NewFormCtrl@updateReferral')->name('post-update-referral');
+
+Route::get('doctor/patient/refer/revised', 'doctor\NewFormCtrl@view_modal');
+Route::post('doctor/patient/revised/new/submit', 'doctor\NewFormCtrl@saveReferral');
