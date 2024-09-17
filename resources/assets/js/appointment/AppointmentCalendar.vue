@@ -141,7 +141,7 @@ export default {
           return false;
         });
 
-        if (date < currentDateTime || isfullyBooked) {
+        if (date <= currentDateTime || isfullyBooked) {
           targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
           targetTd.css("border-color", "rgb(230 193 193)");
         } else {
