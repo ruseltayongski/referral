@@ -329,8 +329,9 @@ $counter = 0;
         </div>
     </div>
 
+
     @include('modal.pregnantModal')
-    @include('modal.normal_form_editable')
+    @include('modal.form_version')
     @include('modal.normal_form_editable_walkin')
     @include('modal.pregnant_form_editable')
     @include('modal.pregnant_form_editable_walkin')
@@ -373,6 +374,13 @@ $counter = 0;
             else {
                 selectFormTitle("Clinical ");
             }
+        }
+
+        function handlePregnantClick() {
+            $('#pregnantModal').modal('hide');
+            $('#normalFormModal').modal('hide');
+            $('#form_version').modal('show');
+            // setClinicalFormTile('pregnant');
         }
 
         function selectFormTitle(initialTitle) {
@@ -745,6 +753,71 @@ $counter = 0;
             });
 
         });
+
+
+        $('.new_normal_form').on('submit',function(e){
+            e.preventDefault();
+            $('.loading').show();
+            reason = $('.reason_referral').val();
+            form_type = '#revisednormalFormModal';
+            department_id = $('.select_department_normal').val();
+            department_name = $('.select_department_normal option:selected').html();
+            $(this).ajaxSubmit({
+                url: "{{ url('doctor/patient/refer/revised/version2') }}",
+                type: 'POST',
+                success: function(data){
+                    console.log(data);
+                    setTimeout(function(){
+                        window.location.reload(false);
+                    },500);
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            });
+        });
+
+
+         function setVersion(version) {
+                    $.ajax({
+                        url: "{{ url('doctor/patient/refer/pregnant/') }}/" + version,
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}'
+                        },
+                    success: function(response) {
+                            // console.log('Form version response:', response);
+                            console.log('response here');
+
+                            // Hide the version selection modal
+                            $('#form_version').modal('hide');
+
+                            if (version === "version1") {
+                                // Load version 1 form
+                                $('#pregnantFormModal').modal('show');
+                            } else if (version === "version2") {
+                                console.log('version', version);
+                                // Fetch and load the content for the revised normal form
+                                $('#revisednormalFormModal').modal('show');
+
+                                $.get("{{ url('doctor/patient/sample') }}", function(result){
+                                    $('.new_normal_form').append(result);
+                                });
+                    
+
+
+                            }
+                        },
+                     error: function(xhr, status, error) {
+                         console.error('Error selecting form version:', error);
+                          Lobibox.alert("error", {
+                              msg: "An error occurred while selecting the form version."
+                         });
+                    }
+                });
+        }
+
+
 
         $('.pregnant_form_walkin').on('submit',function(e){
             e.preventDefault();

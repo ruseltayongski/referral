@@ -186,10 +186,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 </style>
 
-<div class="modal fade" role="dialog" id="normalFormModal">
+<div class="modal fade" role="dialog" id="revisednormalFormModal" opacity="2">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <form action="{{ route('submit-referral') }}" method="POST" class="form-submit normal_form">
+        <div class="modal-content" >
+            <form action="{{ url('doctor/patient/revised/new/submit') }}" method="POST" class="form-submit new_normal_form">
                 <div class="jim-content">
                     @include('include.header_form')
                     <div class="form-group-sm form-inline">
@@ -2272,7 +2272,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             </div><!-- /.modal-content -->
         </div>
     </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+</div>/.modal
 
 <div class="modal fade" id="icd-modal">
     <div class="modal-dialog modal-lg">
@@ -2302,7 +2302,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
 @section('js')
 <script>
-    $("#normalFormModal").modal("show");
+    $("#revisednormalFormModal").modal("hide");
 
     //    $('#pedia_show').hide();
     //    $('#menarche_show').hide();

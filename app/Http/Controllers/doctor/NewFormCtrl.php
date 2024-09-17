@@ -16,6 +16,9 @@ use App\GlasgoComaScale;
 use App\LatestVitalSigns;
 use App\PertinentLaboratory;
 use App\Pregnancy;
+use App\Patients;
+use App\PatientForm;
+use App\Facility;
 use DB;
 use Anouar\Fpdf\Fpdf;;
 
@@ -24,12 +27,107 @@ class NewFormCtrl extends Controller
     // Views
     public function index()
     {
-        return view('modal/revised_normal_form');
+        // return view('modal/revised_normal_form');
+        return view('modal/revised_normal_form', [
+            // 'myfacility' => $myfacility,
+            // 'source' => 'some_source_value', // Pass any other data needed
+        ]);
     }
 
-    public function view_info()
+    public function version_form($version) {
+        // Logic to handle form version selection
+        if ($version == 'version1') {
+            return response()->json(['status' => 'success', 'version' => 'version1']);
+        } elseif ($version == 'version2') {
+            return view('modal.revised_normal_form');
+        }
+    }
+    
+    public function loadRevisedForm() {
+        // Load and return the revised form content (blade view or HTML string)
+        return view('modal.revised_normal_form');  // Adjust the path to your revised form view
+    }
+    
+    public function referPatient(Request $req,$type)
     {
-        return view('revised_form\revised_referral_info');
+        $user = Session::get('auth');
+        $patient_id = $req->patient_id;
+        $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
+        $code = date('ymd').'-'.$user_code.'-'.date('His');
+        $tracking_id = 0;
+        if($req->source==='tsekap')
+        {
+            $patient_id = self::importTsekap($req->patient_id,$req->patient_status,$req->phic_id,$req->phic_status);
+        }
+
+        $unique_id = "$patient_id-$user->facility_id-".date('ymdH');
+        $match = array(
+            'unique_id' => $unique_id
+        );
+
+        $patient_code = "";
+        if($type==='normal')
+        {
+            Patients::where('id',$patient_id)
+                ->update([
+                    'sex' => $req->patient_sex,
+                    'civil_status' => $req->civil_status,
+                    'phic_status' => $req->phic_status,
+                    'phic_id' => $req->phic_id
+                ]);
+
+            $data = array(
+                'referring_facility' => $req->referring_facility_walkin,
+                'referred_to' => $user->facility_id,
+                'department_id' => $req->referred_department,
+                'time_referred' => date('Y-m-d H:i:s'),
+                'time_transferred' => '',
+                'patient_id' => $patient_id,
+                'case_summary' => $req->case_summary,
+                'reco_summary' => $req->reco_summary,
+                'diagnosis' => $req->diagnosis,
+                'referring_md' => 0,
+                'referred_md' => ($req->referred_md) ? $req->referred_md: 0,
+                'reason_referral' => $req->reason_referral1,
+                'other_reason_referral' => $req->other_reason_referral,
+                'other_diagnoses' => $req->other_diagnoses,
+            );
+            $form = PatientForm::updateOrCreate($match,$data);
+            $patient_code = $form->code;
+
+            foreach($req->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
+
+            if($form->wasRecentlyCreated){
+                PatientForm::where('unique_id',$unique_id)
+                    ->update([
+                        'code' => $code
+                    ]);
+                $req->reffered_to = $user->facility_id;
+
+                $tracking_id = self::addTracking($code,$patient_id,$user,$req,$type,$form->id,'walkin');
+            }
+        }
+
+        $pt_walkin = Patients::select('fname', 'lname')->where('id',$patient_id)->first();
+        $referred_to = Facility::where('id', $form->referred_to)->first()->name;
+        broadcast(new AdminNotifs([
+            "patient_code" => $patient_code,
+            "patient_name" => $pt_walkin->fname." ".$pt_walkin->lname,
+            "referred_to" => $referred_to,
+            "date_referred" => date_format($form->updated_at, 'M d, Y h:i a'),
+            "notif_type" => "new walkin"
+        ]));
+
+        return array(
+            'id' => $tracking_id,
+            'patient_code' => $code,
+            'referred_date' => date('M d, Y h:i A')
+        );
     }
 
 
@@ -1499,5 +1597,9 @@ class NewFormCtrl extends Controller
         }
         $wrappedText .= $line;
         return $wrappedText;
+    }
+
+    public function display_sample(){
+        return view('modal.sample_revised');
     }
 }
