@@ -687,5 +687,5 @@ Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
 
-Route::get('/HighIncoming/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');
-Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoIncoming');
+Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');
+Route::get('/HighIncoming/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoIncoming');
