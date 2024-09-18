@@ -875,68 +875,68 @@
                 }
             } 
 
-            // console.log("hass",existingTimeSlots );
-            // function hasTimeConflict(newfromTime, newToTime, doctor) {
-            //     for(let slot of existingTimeSlots){
-            //         if(newfromTime < slot.to && newToTime > slot.from && doctor){
-            //             return true;
-            //         }
-            //     }
-            //     return false;
-            // }
-
-            // $(document).on('change', `#empty_appointed_time, #empty_appointedTime_to, [name^="available_doctor"]`, function () {
-            //     let newfromTime = new Date("2000-01-01T" + $('#empty_appointed_time').val());
-            //     let newTotime = new Date("2000-01-01T" + $('#empty_appointedTime_to').val());
-            //     let newdoctor =  $(`.available_doctor${currentCount}`).val();
-            //     console.log('update doctor', doctor);
-            //     if(hasTimeConflict(newfromTime, newTotime, doctor)){
-            //         Lobibox.alert("error",
-            //         {
-            //             msg: `Time conflict detected! Please choose a different time slot.`
-            //         });
-            //         $('#empty_appointedTime_to').val('');
-            //     }
-
-            //     if(newTotime <= newfromTime){
-            //         $('#empty_appointedTime_to').val('');
-            //         Lobibox.alert("error",
-            //             {
-            //                 msg: `End time must be after start time.`
-            //             });
-            //     }
-            // });
-//-----------------------for update fix
-            let appointmentSlot = [];
-            function addOrUpdateSlot(slotIndex, fromtime, toTime, doctors){
-                const slotData = {
-                    appointed_time: fromtime,
-                    appointed_time_to: toTime,
-                    avai_doctors: doctors
+            console.log("hass",existingTimeSlots );
+            function hasTimeConflict(newfromTime, newToTime, doctor) {
+                for(let slot of existingTimeSlots){
+                    if(newfromTime < slot.to && newToTime > slot.from && doctor){
+                        return true;
+                    }
                 }
-
-                console.log("slotData:", slotData);
+                return false;
             }
 
-           // Event listener for updating appointed time and doctors
             $(document).on('change', `#empty_appointed_time, #empty_appointedTime_to, [name^="available_doctor"]`, function () {
-                let newfromTime = $('#empty_appointed_time').val();
-                let newTotime = $('#empty_appointedTime_to').val();
-                let newdoctor = $(`#update_available_doctor`).val();
+                let newfromTime = new Date("2000-01-01T" + $('#empty_appointed_time').val());
+                let newTotime = new Date("2000-01-01T" + $('#empty_appointedTime_to').val());
+                let newdoctor =  $(`.available_doctor${currentCount}`).val();
+                console.log('update doctor', doctor);
+                if(hasTimeConflict(newfromTime, newTotime, doctor)){
+                    Lobibox.alert("error",
+                    {
+                        msg: `Time conflict detected! Please choose a different time slot.`
+                    });
+                    $('#empty_appointedTime_to').val('');
+                }
 
-                // Assuming `currentCount` is the index for the new slot
-                addOrUpdateSlot(currentCount, newfromTime, newTotime, newdoctor);
+                if(newTotime <= newfromTime){
+                    $('#empty_appointedTime_to').val('');
+                    Lobibox.alert("error",
+                        {
+                            msg: `End time must be after start time.`
+                        });
+                }
             });
+//-----------------------for update fix
+        //     let appointmentSlot = [];
+        //     function addOrUpdateSlot(slotIndex, fromtime, toTime, doctors){
+        //         const slotData = {
+        //             appointed_time: fromtime,
+        //             appointed_time_to: toTime,
+        //             avai_doctors: doctors
+        //         }
 
-            // Event listener for existing slots
-            $(document).on('change', `[name^="update_appointed_time"], [name^="update_appointed_time_to"], [name^="available_doctor"]`, function () {
-                let slotIndex = $(this).attr('name').match(/\d+/); // Get the slot index from the element's name
-                let fromTime = $(`#update_appointed_time${slotIndex}`).val();
-                let toTime = $(`#update_appointedTime_to${slotIndex}`).val();
-                let doctor = $(`#Update_available_doctor${slotIndex}`).val();
+        //         console.log("slotData:", slotData);
+        //     }
 
-                addOrUpdateSlot(slotIndex, fromTime, toTime, doctor);
-            });
+        //    // Event listener for updating appointed time and doctors
+        //     $(document).on('change', `#empty_appointed_time, #empty_appointedTime_to, [name^="available_doctor"]`, function () {
+        //         let newfromTime = $('#empty_appointed_time').val();
+        //         let newTotime = $('#empty_appointedTime_to').val();
+        //         let newdoctor = $(`#update_available_doctor`).val();
+
+        //         // Assuming `currentCount` is the index for the new slot
+        //         addOrUpdateSlot(currentCount, newfromTime, newTotime, newdoctor);
+        //     });
+
+        //     // Event listener for existing slots
+        //     $(document).on('change', `[name^="update_appointed_time"], [name^="update_appointed_time_to"], [name^="available_doctor"]`, function () {
+        //         let slotIndex = $(this).attr('name').match(/\d+/); // Get the slot index from the element's name
+        //         let fromTime = $(`#update_appointed_time${slotIndex}`).val();
+        //         let toTime = $(`#update_appointedTime_to${slotIndex}`).val();
+        //         let doctor = $(`#Update_available_doctor${slotIndex}`).val();
+
+        //         addOrUpdateSlot(slotIndex, fromTime, toTime, doctor);
+        //     });
 //-----------------------for update fix
 
             if(assignedDoc){

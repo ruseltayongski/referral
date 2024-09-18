@@ -88,6 +88,13 @@ export default {
       // // $('.hours_radio').setAttribute('min', currentDate);
       return doctors.every((doctor) => doctor.appointment_by);
     },
+    isPastDatetime(appointedDate, appointedTime){
+       const now = new Date();
+       const appointmentDateTime = new Date(`${appointedDate}T${appointedTime}`);
+
+    // If the appointment time is before the current time, return true (disabled)
+        return appointmentDateTime < now;
+    },
     proceedAppointment() {
       if (!this.selectedAppointmentTime) {
         Lobibox.alert("error", {
@@ -192,7 +199,7 @@ export default {
                             appointment.telemed_assigned_doctor,
                             appointment.appointed_date,
                             appointment.appointed_time
-                          )
+                          ) || isPastDatetime(appointment.appointed_date,appointment.appointed_time)
                         "
                       />&nbsp;&nbsp;
                       <span
