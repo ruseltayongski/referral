@@ -71,6 +71,7 @@
         background: white;
     }
 </style>
+
 <div class="panel panel-jim">
     <div class="panel-heading">
         <h3 class="panel-title">
