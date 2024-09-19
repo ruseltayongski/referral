@@ -1,3 +1,61 @@
+<style>
+    .widget-primary-card.flat-card, .flat-card.widget-purple-card {
+        border-top: none;
+        background-color: #1abc9c;
+        color: #fff;
+    }
+    .card {
+        box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        transition: box-shadow 0.2s ease-in-out;
+        border-top: 3px solid #8CDDCD;
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0px solid rgba(0, 0, 0, 0.125);
+        border-radius: 2px;
+    }
+    .widget-primary-card.flat-card .row-table > [class*=col-]:first-child, .flat-card.widget-purple-card .row-table > [class*=col-]:first-child {
+        background-color: #17a689;
+        text-align: center;
+    }
+    .widget-primary-card.flat-card .row-table > [class*=col-], .flat-card.widget-purple-card .row-table > [class*=col-] {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .flat-card .row-table > [class*=col-] {
+        display: table-cell;
+        float: none;
+        table-layout: fixed;
+        vertical-align: middle;
+    }
+    .card .card-block, .card .card-body {
+        padding: 20px;
+    }
+    .card-body {
+        flex: 1 1 auto;
+    }
+    .custom-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+    }
+    .clickable-card {
+        cursor: pointer;
+    }
+    .lobibox .lobibox-footer .btn {
+        margin: 8px 8px 8px 0 !important;
+    }
+
+</style>
+
 <template>
     <div class="row">
         <div class="col-md-9">
@@ -7,6 +65,37 @@
                         <i class="fa fa-times"></i> Error switching account! Please try again.
                     </span>
                 </div>
+
+                <h3 class="page-header">Referral Activity</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card flat-card widget-primary-card clickable-card" @click="redirectToReferredView">
+                            <div class="row-table">
+                                <div class="col-sm-3 card-body">
+                                    <i class="fa fa-ambulance custom-icon"></i>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h4>{{ incoming_total }}</h4>
+                                    <h5>Referred Patients {{ year }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card flat-card widget-primary-card clickable-card" @click="redirectToIncomingView">
+                            <div class="row-table">
+                                <div class="col-sm-3 card-body">
+                                    <i class="fa fa-users custom-icon"></i>
+                                </div>
+                                <div class="col-sm-9">
+                                    <h4>{{ incoming_reffered }}</h4>
+                                    <h5>Incoming Patients {{ year }}</h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <h3 class="page-header">Monthly Activity</h3>
                 <div class="chart">
                     <canvas id="barChart"></canvas>
@@ -20,7 +109,7 @@
                                 <!--<a href="#dashboard_modal" @click="showIncomingModal('incoming_total')">{{ incoming_total }}</a>-->
                                 {{ incoming_total }}
                             </h5>
-                            <span class="description-text">Incoming</span>
+                            <span class="description-text">Referred</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
@@ -116,7 +205,14 @@
 <script>
     export default {
         name : "DoctorApp",
-        props : ["date_start","date_end","user","error"],
+        props : [
+            "date_start",
+            "date_end",
+            "user",
+            "error", 
+            "incoming_reffered",
+            "year",
+        ],
         data() {
             return {
                 incoming_statistics : Object,
@@ -126,7 +222,7 @@
                 accept_percent : 0,
                 seen_only : 0,
                 data : "",
-                loading : $('#loadingGif').val()
+                loading : $('#loadingGif').val(),
             }
         },
         async created(){
@@ -137,6 +233,12 @@
             await this.optionLastTransaction()
         },
         methods : {
+            redirectToReferredView() {
+                window.location.href = 'doctor/referred';
+            },
+            redirectToIncomingView() {
+                window.location.href = 'doctor/referral';
+            },
             showIncomingModal(type) {
                 console.log(type);
                 $('#dashboard_modal').modal('show');
@@ -150,12 +252,40 @@
                 $('.dashboard-modal-title').html('');
             },
             proceedForm() {
-                if(this.user.level !== "support") {
+                if (this.user.level !== "support") {
                     Lobibox.confirm({
-                        msg: "Do you want to proceed to referral form?",
-                        callback: function ($this, type, ev) {
-                            if (type === 'yes')
+                        msg: "Where do you want to proceed?",
+                        buttons: {
+                            referredPatients: {
+                                'class': 'btn btn-success',
+                                text: 'Referred Patients',
+                                closeOnClick: true
+                            },
+                            incomingPatients: {
+                                'class': 'btn btn-primary',
+                                text: 'Incoming Patients',
+                                closeOnClick: true
+                            },
+                            referralForm: {
+                                'class': 'btn btn-info',
+                                text: 'Referral Form',
+                                closeOnClick: true
+                            },
+                            cancel: {
+                                'class': 'btn btn-danger',
+                                text: 'Close',
+                                closeOnClick: true
+                            }
+                        },
+                        callback: (lobibox, type, ev) => {
+                            if (type === 'referredPatients') {
+                                window.location.replace("doctor/referred");
+                            } else if (type === 'incomingPatients') {
+                                window.location.replace("doctor/referral");
+                            } else if (type === 'referralForm') {
                                 window.location.replace("doctor/patient");
+                            } else if (type === 'cancel') {
+                            }
                         }
                     });
                 }
@@ -366,7 +496,7 @@
                     }
 
                 });
-            }
+            },
         }
     }
 </script>
