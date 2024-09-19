@@ -63,13 +63,15 @@
         background: white;
     }
 </style>
+
 <div class="panel panel-jim">
     <div class="panel-heading">
         <h3 class="panel-title">
             Filter Results
-            <span class="pull-right badge">Result: {{ $data->total() }}</span>
+            <span class="pull-right badge">Result: {{ $data->total() }}</span>  <!-- Incoming Results -->
         </h3>
     </div>
+  
     <div class="panel-body">
         <form action="{{ url('doctor/referral/') }}" method="GET">
             {{ csrf_field() }}

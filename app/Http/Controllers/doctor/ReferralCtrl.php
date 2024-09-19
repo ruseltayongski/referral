@@ -87,7 +87,7 @@ class ReferralCtrl extends Controller
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as action','action.id','=','tracking.action_md')
             ->where('referred_to',$user->facility_id);
-
+        
         if($request->search)
         {
             $keyword = $request->search;
@@ -97,7 +97,7 @@ class ReferralCtrl extends Controller
                     ->orwhere('tracking.code',"$keyword");
             });
         }
-
+       
         if($request->department_filter)
         {
             $dept = $request->department_filter;
@@ -202,6 +202,8 @@ class ReferralCtrl extends Controller
 
         $provinces = Province::get();
 
+        Session::put('data_total_for_Dashboard', $data->total());
+       
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
             'data' => $data,
@@ -760,7 +762,6 @@ class ReferralCtrl extends Controller
 
             $referred_excel = $data->get();
             Session::put("export_referred_excel",$referred_excel);
-
             $data = $data->paginate(10);
         }
         session()->forget('profileSearch.telemedicine');

@@ -27,6 +27,36 @@ class HomeCtrl extends Controller
         //$this->middleware('doctor');
     }
 
+    //==================================================================
+    public function countIncomingPatients()
+    {
+        // Replicating the logic from ReferralCtrl@index to count the referred patients
+        $currentYear = now()->year;
+
+        // // Assuming 'status' is the column that identifies referred patients
+        // $incomingPatientsCount = Referral::where('status', 'referred')
+        //                                  ->whereYear('created_at', $currentYear)
+        //                                  ->count();
+
+        // // Return the count as JSON response
+        // return response()->json(['count' => $incomingPatientsCount]);
+
+        // SQL query equivalent: grouping by date, filtering by 'referred_to' and specific statuses
+        $incomingPatientsCount = DB::table('activity')
+                            ->select(DB::raw('DATE(created_at) as day'), DB::raw('COUNT(*) as incoming'))
+                            ->where('referred_to')  // Filtering based on referred_to
+                            ->whereIn('status', ['referred', 'redirected', 'transferred'])  // Filtering based on statuses
+                            ->whereYear('created_at', $currentYear)  // Filter based on the current year
+                            ->groupBy(DB::raw('DATE(created_at)'))  // Grouping by date
+                            ->orderBy('incoming', 'desc')  // Sorting to get the highest count
+                            ->limit(1)  // Limiting the result to the top entry
+                            ->first();  // Retrieving the first result
+
+        // Return the result as JSON
+        return response()->json($incomingPatientsCount);
+    }
+    //==================================================================
+
     public function index()
     {
         ParamCtrl::lastLogin();
@@ -98,11 +128,18 @@ class HomeCtrl extends Controller
 
     public function index1()
     {
-        //ParamCtrl::lastLogin();
-        $date_start = Carbon::now()->startOfYear()->format('Y-m-d').' 00:00:00';
+        $date_start = Carbon::now()->startOfYear();
+        $formatted_date_start = $date_start->format('F d, Y');
+        $formatted_date_end = Carbon::now()->format('F d, Y');
+        $year = $date_start->year;
+
+        $totalDataIncoming = Session::get('data_total_for_Dashboard');
+      
         return view('doctor.home1',[
-            "date_start" => date('F d,Y',strtotime($date_start)),
-            "date_end" => date('F d,Y',strtotime(Carbon::now()->format('Y-m-d')))
+            "totalIncoming" => $totalDataIncoming,
+            "date_start" => $formatted_date_start,
+            "date_end" => $formatted_date_end,
+            "year" => $year,
         ]);
     }
 
@@ -324,4 +361,6 @@ class HomeCtrl extends Controller
             'affiliated' => $affiliated
         ]);
     }
+
+    
 }
