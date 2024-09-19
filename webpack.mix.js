@@ -25,5 +25,13 @@ mix.js('resources/assets/js/app.js', 'public/js').vue()
     .js('resources/assets/js/app_qr_referred.js', 'public/js').vue()
     .js('resources/assets/js/app_qr_edit.js', 'public/js').vue()
     .js('resources/assets/js/app_appointment.js', 'public/js').vue()
-    .sass('resources/assets/sass/refer_panel.scss', 'public/css')
-    .sass('resources/assets/sass/telemedicine_panel.scss', 'public/css');
+    .sass('resources/assets/sass/refer_panel.scss', 'public/css',
+        {
+            implementation: require('sass')
+        }
+    )
+    .sass('resources/assets/sass/telemedicine_panel.scss', 'public/css', 
+        {
+            implementation: require('sass')
+        }
+    );
