@@ -23,7 +23,7 @@
         ->where('status',1)
         ->where('referral_used','yes')
         ->orderBy('name','asc')->get();
-    }
+    }   
         
     $reason_for_referral = \App\ReasonForReferral::get();
     $department = \App\Department::all();
