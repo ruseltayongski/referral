@@ -1,5 +1,3 @@
-@extends('layouts.app')
-
 <?php
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id', 'name')
@@ -14,7 +12,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
 ?>
 
 <style>
-    .file-upload {
+    /* .file-upload {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
@@ -140,15 +138,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
         width: 100%;
     }*/
 
-    .glasgow-dot {
+    /* .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;
     }
 
     .referral-radio-btn {
-        height: 18px;
-        width: 18px;
+        height:18px;
+        width:18px;
         vertical-align: middle;
     }
 
@@ -164,21 +162,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
         white-space: nowrap;
     }
 
-    #glasgow_table_1,
-    tr td:nth-child(1) {
-        width: 35%;
-    }
-
-    #glasgow_table_2 tr td:nth-child(2) {
-        width: 35%;
-    }
+    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;} */ 
 
     @media only screen and (max-width: 720px) {
         .web-view {
             display: none;
             visibility: hidden;
         }
-
         .mobile-view {
             display: block;
             visibility: visible;
@@ -186,10 +177,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 </style>
 
-<div class="modal fade" role="dialog" id="normalFormModal">
+<div class="modal fade" role="dialog" id="revisednormalFormModal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form action="{{ route('submit-referral') }}" method="POST" class="form-submit normal_form">
+            <form action="{{ route('submit-referral') }}" method="POST" class="form-submit revised_normal_form">
                 <div class="jim-content">
                     @include('include.header_form')
                     <div class="form-group-sm form-inline">
@@ -2300,9 +2291,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
     </div><!-- /.modal-dialog -->
 </div>
 
-@section('js')
+
 <script>
-    $("#normalFormModal").modal("show");
+    // $("#revisednormalFormModal").modal("show");
 
     //    $('#pedia_show').hide();
     //    $('#menarche_show').hide();
@@ -3136,4 +3127,3 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('.image-upload-wrap').removeClass('image-dropping');
     });
 </script>
-@endsection

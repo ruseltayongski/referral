@@ -328,12 +328,14 @@ $counter = 0;
             </div>
         </div>
     </div>
-
+       
     @include('modal.pregnantModal')
+    @include('modal.choose_version')
     @include('modal.normal_form_editable')
     @include('modal.normal_form_editable_walkin')
     @include('modal.pregnant_form_editable')
     @include('modal.pregnant_form_editable_walkin')
+    @include('modal.revised_normal_form')  
 @endsection
 
 @section('js')
@@ -365,15 +367,30 @@ $counter = 0;
             $(".telemedicine").val(1);
             selectFormTitle("Clinical ");
         }
-
         function setClinicalFormTile(type) {
-            if(type == "pregnant") {
-                selectFormTitle("BEmONC/ CEmONC ");
-            }
-            else {
-                selectFormTitle("Clinical ");
+            referred_facility = "{{ $user->facility_id }}";// Get facility_id from server-side
+            console.log("Facility Test: ",referred_facility);
+            if (referred_facility == 63) {
+                if (type == 'pregnant') {
+                    $('#pregnantchooseVersionModal').modal('show');
+                    selectFormTitle("BEmONC/ CEmONC ");
+                } else if (type == 'normal') {
+                    $('#nonPregnantChooseVersionModal').modal('show');
+                    selectFormTitle("Clinical");
+                }
+            } else {
+                if(type == "pregnant") {
+                    selectFormTitle("BEmONC/ CEmONC ");
+                    $('#pregnantFormModal').modal('show');
+                }
+                else {
+                    selectFormTitle("Clinical ");
+                    $('#normalFormModal').modal('show');
+                }
             }
         }
+
+
 
         function selectFormTitle(initialTitle) {
             const telemedicine = parseInt($(".telemedicine").val());
@@ -639,6 +656,7 @@ $counter = 0;
                         $('.loading').hide();
                         $('#pregnantModal').modal('hide');
                         $('#normalFormModal').modal('hide');
+                        $('#revisednormalFormModal').modal('hide');
                         Lobibox.alert("error",
                         {
                             msg: "This appoinment schedule is not available, please select other schedule in the calendar."
@@ -691,6 +709,7 @@ $counter = 0;
                 url: "{{ url('doctor/patient/refer/walkin/normal') }}",
                 type: 'POST',
                 success: function(data){
+                    $('.loading').hide();
                     console.log(data);
                     setTimeout(function(){
                         window.location.reload(false);
@@ -700,6 +719,73 @@ $counter = 0;
                     $('#serverModal').modal();
                 }
             });
+        });
+
+        $('.revised_normal_form').on('submit',function(e){
+            e.preventDefault();
+            $('.loading').show();
+            reason = $('.reason_referral').val();
+            form_type = '#revisednormalFormModal';
+            department_id = $('.select_department_normal').val();
+            department_name = $('.select_department_normal option:selected').html();
+            facility_id = "{{ $facility_id }}"; // Assuming facility_id is passed in the blade template
+
+            if (facility_id == 63) {
+                // Provide access to the new form version
+                $(this).ajaxSubmit({
+                    url: "{{ route('submit-referral') }}",
+                    type: 'POST',
+                    success: function(res){
+                        console.log(res);
+                        setTimeout(function(){
+                            window.location.reload(false);
+                        },500);
+                    },
+                    error: function(){
+                        $('#serverModal').modal();
+                    }
+                });
+            }
+            //  else {
+            //     // Redirect or show an error message if facility is not allowed
+            //     Lobibox.alert("error", {
+            //         msg: "Your facility does not have access to this form version."
+            //     });
+            //     $('.loading').hide();
+            // }
+        });
+
+
+        $('.choose_version').on('submit', function(e){
+            e.preventDefault();
+            $('.loading').show();
+            form_type = '#pregnantchooseVersionModal';
+            $(this).ajaxSubmit({
+                url:"{{ route('show-choose-version') }}",
+                type: 'GET',
+                success: function(res){
+                    $('#pregnantModal').modal('hide');
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            })
+        });
+
+        $('.choose_version').on('submit', function(e){
+            e.preventDefault();
+            $('.loading').show();
+            form_type = '#nonPregnantChooseVersionModal';
+            $(this).ajaxSubmit({
+                url:"{{ route('show-choose-version') }}",
+                type: 'GET',
+                success: function(res){
+                    $('#pregnantModal').modal('hide');      
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            })
         });
 
         $('.pregnant_form').on('submit',function(e){
@@ -723,6 +809,7 @@ $counter = 0;
                         $('.loading').hide();
                         $('#pregnantModal').modal('hide');
                         $('#pregnantFormModal').modal('hide');
+                        $('#revisednormalFormModal').modal('hide');
                         $('.btn-submit').attr('disabled',false);
                         Lobibox.alert("success",
                             {

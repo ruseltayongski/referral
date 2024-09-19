@@ -24,12 +24,16 @@ class NewFormCtrl extends Controller
     // Views
     public function index()
     {
-        return view('modal/revised_normal_form');
+        return view('modal.revised_normal_form');
     }
 
-    public function view_info()
+    public function view_info(Request $request)
     {
-        return view('revised_form\revised_referral_info');
+        dd($request->all());
+        return view('revised_form.revised_referral_info');
+    }
+    public function view_choose_versionModal(){
+        return view('modal.choose_version');
     }
 
 
@@ -920,11 +924,21 @@ class NewFormCtrl extends Controller
         ];
     }
 
+    // public function revisedreferPatient(Request $req,$type){
+    //     if ($type == "normal"){
+    //         dd($req->all());
+    //     }
+    // }
+
 
     public function saveReferral(Request $request)
     {
 
-        $patient_id = 2;
+        // if ($type == "normal"){
+        //     dd($request->all());
+        // }
+
+        $patient_id = $request->patient_id;
 
         $data = $this->prepareData($request, $patient_id);
 

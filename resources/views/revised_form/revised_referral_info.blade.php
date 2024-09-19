@@ -1,4 +1,4 @@
-@extends('layouts.app')
+
 
 <?php
 $user = Session::get('auth');
@@ -147,8 +147,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 
     .referral-radio-btn {
-        height: 18px;
-        width: 18px;
+        height:18px;
+        width:18px;
         vertical-align: middle;
     }
 
@@ -164,21 +164,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
         white-space: nowrap;
     }
 
-    #glasgow_table_1,
-    tr td:nth-child(1) {
-        width: 35%;
-    }
-
-    #glasgow_table_2 tr td:nth-child(2) {
-        width: 35%;
-    }
+    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}
 
     @media only screen and (max-width: 720px) {
         .web-view {
             display: none;
             visibility: hidden;
         }
-
         .mobile-view {
             display: block;
             visibility: visible;
@@ -2386,7 +2379,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
     </div><!-- /.modal-dialog -->
 </div>
 
-@section('js')
+
 <script>
     $("#normalFormModal").modal("show");
 
@@ -3229,4 +3222,3 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('.image-upload-wrap').removeClass('image-dropping');
     });
 </script>
-@endsection
