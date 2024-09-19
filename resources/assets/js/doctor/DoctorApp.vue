@@ -1,61 +1,3 @@
-<style>
-    .widget-primary-card.flat-card, .flat-card.widget-purple-card {
-        border-top: none;
-        background-color: #1abc9c;
-        color: #fff;
-    }
-    .card {
-        box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
-        margin-bottom: 30px;
-        transition: box-shadow 0.2s ease-in-out;
-        border-top: 3px solid #8CDDCD;
-    }
-    .card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        word-wrap: break-word;
-        background-color: #fff;
-        background-clip: border-box;
-        border: 0px solid rgba(0, 0, 0, 0.125);
-        border-radius: 2px;
-    }
-    .widget-primary-card.flat-card .row-table > [class*=col-]:first-child, .flat-card.widget-purple-card .row-table > [class*=col-]:first-child {
-        background-color: #17a689;
-        text-align: center;
-    }
-    .widget-primary-card.flat-card .row-table > [class*=col-], .flat-card.widget-purple-card .row-table > [class*=col-] {
-        display: inline-block;
-        vertical-align: middle;
-    }
-    .flat-card .row-table > [class*=col-] {
-        display: table-cell;
-        float: none;
-        table-layout: fixed;
-        vertical-align: middle;
-    }
-    .card .card-block, .card .card-body {
-        padding: 20px;
-    }
-    .card-body {
-        flex: 1 1 auto;
-    }
-    .custom-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-        display: inline-block;
-    }
-    .clickable-card {
-        cursor: pointer;
-    }
-    .lobibox .lobibox-footer .btn {
-        margin: 8px 8px 8px 0 !important;
-    }
-
-</style>
-
 <template>
     <div class="row">
         <div class="col-md-9">
@@ -500,3 +442,60 @@
         }
     }
 </script>
+
+<style>
+    .widget-primary-card.flat-card, .flat-card.widget-purple-card {
+        border-top: none;
+        background-color: #1abc9c;
+        color: #fff;
+    }
+    .card {
+        box-shadow: 0 2px 1px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+        transition: box-shadow 0.2s ease-in-out;
+        border-top: 3px solid #8CDDCD;
+    }
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0px solid rgba(0, 0, 0, 0.125);
+        border-radius: 2px;
+    }
+    .widget-primary-card.flat-card .row-table > [class*=col-]:first-child, .flat-card.widget-purple-card .row-table > [class*=col-]:first-child {
+        background-color: #17a689;
+        text-align: center;
+    }
+    .widget-primary-card.flat-card .row-table > [class*=col-], .flat-card.widget-purple-card .row-table > [class*=col-] {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .flat-card .row-table > [class*=col-] {
+        display: table-cell;
+        float: none;
+        table-layout: fixed;
+        vertical-align: middle;
+    }
+    .card .card-block, .card .card-body {
+        padding: 20px;
+    }
+    .card-body {
+        flex: 1 1 auto;
+    }
+    .custom-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+        display: inline-block;
+    }
+    .clickable-card {
+        cursor: pointer;
+    }
+    .lobibox .lobibox-footer .btn {
+        margin: 8px 8px 8px 0 !important;
+    }
+</style>
