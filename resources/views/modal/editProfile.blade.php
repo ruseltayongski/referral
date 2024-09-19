@@ -73,11 +73,79 @@
         padding: 0 15px 15px 15px;
         color: #222;
     }
+/* for image and sign upload signature */
+    section {
+        display: flex;
+        flex-flow: row wrap;
+    }
+    section > div {
+        flex: 1;
+        padding: 0.5rem;
+    }
+    .radioSig {
+        display: none;
+        &:not(:disabled) ~ label {
+            cursor: pointer;
+        }
+        &:disabled ~ label {
+            color: hsla(150, 5%, 75%, 1);
+            border-color: hsla(150, 5%, 75%, 1);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+    }
+    .label-sign {
+        height: 100%;
+        display: block;
+        background: white;
+        border: 2px solid hsla(150, 75%, 50%, 1);
+        border-radius: 20px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        //margin: 1rem;
+        text-align: center;
+        box-shadow: 0px 3px 10px -2px hsla(150, 5%, 65%, 0.5);
+        position: relative;
+    }
+
+    input[type="radio"]:checked + .label-sign {
+        background: hsla(150, 75%, 50%, 1);
+        color: hsla(215, 0%, 100%, 1);
+        box-shadow: 0px 0px 20px hsla(150, 100%, 50%, 0.75);
+        &::after {
+            color: hsla(215, 5%, 25%, 1);
+            font-family: FontAwesome;
+            border: 2px solid hsla(150, 75%, 45%, 1);
+            content: "\f00c";
+            font-size: 24px;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0px 2px 5px -2px hsla(0, 0%, 0%, 0.25);
+        }
+    }
+    input[type="radio"]#control_05:checked + .label-sign {
+        background: red;
+        border-color: red;
+    }
+
+    @media only screen and (max-width: 500px) {
+    section {
+        flex-direction: column;
+    }
+    }
 </style>
 
 <div class="modal fade" role="dialog" id="editProfileModal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
-        <form method="POST" action="{{ asset('doctor/editProfile') }}">
+        <form method="POST" action="{{ asset('doctor/editProfile') }}" id="profile_Upload">
             {{ csrf_field() }}
             <div class="modal-content">
                 <div class="modal-body">
@@ -158,16 +226,37 @@
                             <input type="hidden" name="sign_type" id="sign_type" value="">
                             <div class="text-center" id="signature_field">
                             @if(isset($user->signature) && $user->signature != null)
-                                <img src="{{ asset($user->signature.'?cache='.$cacheBuster) }}" id="stored_sign" style="border: 1px solid black;"><br><br>
+                                <img src="{{ asset($user->signature.'?cache='.$cacheBuster) }}" id="stored_sign"  width="408" height="245" style="border: 1px solid black;"><br><br>
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="replaceSignature()">
                             @else
-                                {{--<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;--}}
-                                <input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">
+                                <!-- <input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;
+                                <input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()"> -->
+
+                                <!-- <h2>Select Signature&hellip;</h2> -->
+                                <section>
+                                    <div>
+                                        <!-- <input type="radio" id="control_01" name="select" value="1" checked> -->
+                                        <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
+                                        <label for="sign_upload" class="label-sign">
+                                            <h2>Upload Image</h2>
+                                            <p>Signature</p>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <!-- <input type="radio" id="control_02" name="select" value="2"> -->
+                                        <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)"> 
+                                        <label for="sign_draw" class="label-sign">
+                                            <h2>Draw</h2>
+                                            <p>Signature</p>
+                                        </label>
+                                    </div>
+                                </section>
+
                             @endif
                             </div>
                         </div>
                     @endif
-                    <hr />
+                    <!-- <hr /> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" onclick="resetSignatureField()"><i class="fa fa-times"></i> Cancel</button>
@@ -181,24 +270,46 @@
 {{--<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script> NOT USED--}}
 <script>
 
-    var signaturePad, sign_type;
+    var signaturePad, sign_type, finalImage;
 
     $('#update_btn').on('click', function(e) {
+        e.preventDefault();
         $('#stored_sign').src = null;
         $('.loading').show();
+      
         if(sign_type === "upload") {
-
+            $('#signature_final').val(finalImage);
+            $('#sign_type').val(sign_type);
         } else if(sign_type === "draw") {
             var data = signaturePad.toDataURL('image/png');
             $('#signature_final').val(data);
             $('#sign_type').val(sign_type);
         }
+        $('#profile_Upload').submit();
     });
 
     function replaceSignature() {
         $('#signature_field').html(
-//            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
-            '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+            //'<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
+            //'<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+            `
+             <section>
+                    <div>
+                        <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
+                        <label for="sign_upload" class="label-sign">
+                            <h2>Upload Image</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)"> 
+                        <label for="sign_draw" class="label-sign">
+                            <h2>Draw</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                </section>
+            `
         )
     }
 
@@ -212,14 +323,31 @@
             );
         } else {
             $('#signature_field').html(
-//                '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
-                '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+               // '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
+               // '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+              ` <section>
+                    <div>
+                        <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
+                        <label for="sign_upload" class="label-sign">
+                            <h2>Upload Image</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)"> 
+                        <label for="sign_draw" class="label-sign">
+                            <h2>Draw</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                </section>`
             );
         }
     }
 
     function showUploadField(){
         sign_type = "upload";
+        console.log('sign_type::',sign_type)
         var src = '{{ asset('resources/img/add_file.png') }}';
         $('#signature_field').html(
             '<div class="file_upload">\n' +
@@ -243,8 +371,8 @@
             if(file && file !== null) {
                 var reader = new FileReader();
                 reader.onloadend = function(e) {
-//                    $('#file_upload_image').attr('src', e.target.result);
-//                    $('#tempo').attr('src',e.target.result);
+                   $('#file_upload_image').attr('src', e.target.result);
+                   $('#tempo').attr('src',e.target.result);
                     filterImage(e.target.result);
                 };
                 $('#image_upload_wrap').hide();
@@ -255,42 +383,47 @@
         $('#remove_signature').show();
     }
 
-    function filterImage(img) {
+    function filterImage(imgSrc) {
         var canvas = document.getElementById("file_upload_image"),
             ctx = canvas.getContext("2d");
+            
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img,0,0,canvas.width, canvas.height);
+            console.log("canvas width:",canvas.width, canvas.height);
+            var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height),
+                pix = imgd.data,
+                newColor = {r:0,g:0,b:0, a:0};
 
-        ctx.drawImage(img,0,0);
+            for (var i = 0, n = pix.length; i <n; i += 4) {
+                var r = pix[i],
+                    g = pix[i+1],
+                    b = pix[i+2];
 
-        var imgd = ctx.getImageData(0, 0, 135, 135),
-            pix = imgd.data,
-            newColor = {r:0,g:0,b:0, a:0};
-
-        for (var i = 0, n = pix.length; i <n; i += 4) {
-            var r = pix[i],
-                g = pix[i+1],
-                b = pix[i+2];
-
-            if(r == 255&& g == 255 && b == 255){
-                // Change the white to the new color.
-                pix[i] = newColor.r;
-                pix[i+1] = newColor.g;
-                pix[i+2] = newColor.b;
-                pix[i+3] = newColor.a;
+                if(r == 255 && g == 255 && b == 255){
+                    // Change the white to the new color.
+                    pix[i] = newColor.r;
+                    pix[i+1] = newColor.g;
+                    pix[i+2] = newColor.b;
+                    pix[i+3] = newColor.a;
+                }
             }
-        }
 
-        ctx.putImageData(imgd, 0, 0);
-        var final = new Image();
-        final.src = canvas.toDataURL();
-        console.log(final);
+            ctx.putImageData(imgd, 0, 0);
+            var final = new Image();
+            final.src = canvas.toDataURL();
+            console.log(final);
+        };
+        img.src = imgSrc;
+        finalImage = img.src;
     }
 
     function showDrawField() {
         sign_type = "draw";
         $('#signature_field').html(
             '<canvas class="canvas_sign" style="border: 2px solid black;" width="450" height="200" id="signature-pad"></canvas><br><br>' +
-            '<button type="button" class="btn btn-md btn-danger" id="remove_signature" onclick="removeSign(\'draw\')">Remove Signature</button><br><br>'
-//            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">'
+            '<button type="button" class="btn btn-md btn-danger" id="remove_signature" onclick="removeSign(\'draw\')">Remove Signature</button><br><br>'+
+           '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">'
         );
         triggerDraw();
     }

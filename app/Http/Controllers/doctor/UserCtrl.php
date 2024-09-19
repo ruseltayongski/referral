@@ -187,7 +187,7 @@ class UserCtrl extends Controller
         unset($data['_token'], $data['id']);
 
         if(isset($data['sign_type']) && isset($data['signature'])) {
-            if($data['sign_type'] == "draw") {
+            if($data['sign_type'] == "draw" || $data['sign_type'] == "upload") {
                 $sign = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['signature']));
                 $file_path = base_path()."/public/signatures/";
                 $name = $user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
@@ -196,9 +196,12 @@ class UserCtrl extends Controller
                     mkdir($file_path);
                 }
                 file_put_contents($filename, $sign);
-            } else if($data['sign_type'] == "upload") {
-
-            }
+            } 
+            // else if($data['sign_type'] == "upload") {
+            //     $sign = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['signature']));
+            //     $file_path = base_path()."/public/signatures/";
+            //     $name = $user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
+            // }
         }
 
         if(isset($data['signature']))
