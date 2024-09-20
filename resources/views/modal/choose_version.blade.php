@@ -15,12 +15,12 @@
                 <i class="fa fa-user-secret"></i> SELECT OPTION
             </div>
             <div class="modal-body">
-                <button  data-target="#pregnantFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6" onclick="setClinicalFormTile('pregnant')">
+                <button  data-target="#pregnantFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6">
                 <img src="{{ url('resources/img/forms_icon.png') }}" width="100" />
                     <br />
                     Version 1
                 </button>
-                <button data-target="#revisednormalFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="setClinicalFormTile('pregnant')">
+                <button data-target="#revisedpregnantFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6">
                 <img src="{{ url('resources/img/forms_ver2_icon.png') }}" width="100" />
                     <br />
                     Version 2

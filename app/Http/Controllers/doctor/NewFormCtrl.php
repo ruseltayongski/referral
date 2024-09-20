@@ -931,55 +931,52 @@ class NewFormCtrl extends Controller
     // }
 
 
-    public function saveReferral(Request $request)
+    public function saveReferral(Request $request, $type)
     {
 
-        // if ($type == "normal"){
-        //     dd($request->all());
-        // }
+        if ($type == "normal"){
+            $patient_id = $request->patient_id;
 
-        $patient_id = $request->patient_id;
-
-        $data = $this->prepareData($request, $patient_id);
-
-        PastMedicalHistory::create($data['past_medical_history_data']);
-        PertinentLaboratory::create($data['pertinent_lab']);
-        PediatricHistory::create($data['pediatric_history']);
-        ObstetricAndGynecologicHistory::create($data['obstetric_history']);
-        PersonalAndSocialHistory::create($data['personal_history']);
-        ReviewOfSystems::create($data['review_of_system']);
-        NutritionalStatus::create($data['nutritional_status']);
-        GlasgoComaScale::create($data['glasgocoma_scale']);
-        LatestVitalSigns::create($data['vital_signs']);
-
-
-        $orders = $request->input('pregnancy_history_order');
-        $years = $request->input('pregnancy_history_year');
-        $gestations = $request->input('pregnancy_history_gestation');
-        $outcomes = $request->input('pregnancy_history_outcome');
-        $placesOfBirth = $request->input('pregnancy_history_placeofbirth');
-        $sexes = $request->input('prenatal_history_sex');
-        $birthWeights = $request->input('pregnancy_history_birthweight');
-        $presentStatuses = $request->input('pregnancy_history_presentstatus');
-        $complications = $request->input('pregnancy_history_complications');
-
-        foreach ($orders as $key => $order) {
-            Pregnancy::create([
-                'patient_id' => $patient_id,
-                'pregnancy_order' => $order,
-                'pregnancy_year' => $years[$key],
-                'pregnancy_gestation_completed' => $gestations[$key],
-                'pregnancy_outcome' => $outcomes[$key],
-                'pregnancy_place_of_birth' => $placesOfBirth[$key],
-                'pregnancy_sex' => $sexes[$key],
-                'pregnancy_birth_weight' => $birthWeights[$key],
-                'pregnancy_present_status' => $presentStatuses[$key],
-                'pregnancy_complication' => $complications[$key],
-            ]);
+            $data = $this->prepareData($request, $patient_id);
+    
+            PastMedicalHistory::create($data['past_medical_history_data']);
+            PertinentLaboratory::create($data['pertinent_lab']);
+            PediatricHistory::create($data['pediatric_history']);
+            ObstetricAndGynecologicHistory::create($data['obstetric_history']);
+            PersonalAndSocialHistory::create($data['personal_history']);
+            ReviewOfSystems::create($data['review_of_system']);
+            NutritionalStatus::create($data['nutritional_status']);
+            GlasgoComaScale::create($data['glasgocoma_scale']);
+            LatestVitalSigns::create($data['vital_signs']);
+    
+    
+            $orders = $request->input('pregnancy_history_order');
+            $years = $request->input('pregnancy_history_year');
+            $gestations = $request->input('pregnancy_history_gestation');
+            $outcomes = $request->input('pregnancy_history_outcome');
+            $placesOfBirth = $request->input('pregnancy_history_placeofbirth');
+            $sexes = $request->input('prenatal_history_sex');
+            $birthWeights = $request->input('pregnancy_history_birthweight');
+            $presentStatuses = $request->input('pregnancy_history_presentstatus');
+            $complications = $request->input('pregnancy_history_complications');
+    
+            foreach ($orders as $key => $order) {
+                Pregnancy::create([
+                    'patient_id' => $patient_id,
+                    'pregnancy_order' => $order,
+                    'pregnancy_year' => $years[$key],
+                    'pregnancy_gestation_completed' => $gestations[$key],
+                    'pregnancy_outcome' => $outcomes[$key],
+                    'pregnancy_place_of_birth' => $placesOfBirth[$key],
+                    'pregnancy_sex' => $sexes[$key],
+                    'pregnancy_birth_weight' => $birthWeights[$key],
+                    'pregnancy_present_status' => $presentStatuses[$key],
+                    'pregnancy_complication' => $complications[$key],
+                ]);
+            }
+            // return redirect("/revised/referral/info/{$patient_id}");
         }
 
-
-        return redirect("/revised/referral/info/{$patient_id}");
     }
 
     public function updateReferral(Request $request, $patient_id)

@@ -336,6 +336,7 @@ $counter = 0;
     @include('modal.pregnant_form_editable')
     @include('modal.pregnant_form_editable_walkin')
     @include('modal.revised_normal_form')  
+    @include('modal.revised_pregnant_form')
 @endsection
 
 @section('js')
@@ -729,11 +730,10 @@ $counter = 0;
             department_id = $('.select_department_normal').val();
             department_name = $('.select_department_normal option:selected').html();
             facility_id = "{{ $facility_id }}"; // Assuming facility_id is passed in the blade template
-
             if (facility_id == 63) {
                 // Provide access to the new form version
                 $(this).ajaxSubmit({
-                    url: "{{ route('submit-referral') }}",
+                    url: "{{ url('submit-referral/normal') }}",
                     type: 'POST',
                     success: function(res){
                         console.log(res);
@@ -746,13 +746,32 @@ $counter = 0;
                     }
                 });
             }
-            //  else {
-            //     // Redirect or show an error message if facility is not allowed
-            //     Lobibox.alert("error", {
-            //         msg: "Your facility does not have access to this form version."
-            //     });
-            //     $('.loading').hide();
-            // }
+        });
+
+        $('.revised_pregnant_form').on('submit', function(e){
+            e.preventDefault();
+            $('.loading').show();
+            reason = $('.reason_referral').val();
+            form_type = '#revisedpregnantFormModal';
+            department_id = $('.select_department_normal').val();
+            department_name = $('.select_department_normal option:selected').html();
+            facility_id = "{{ $facility_id }}"; // Assuming facility_id is passed in the blade template
+            if (facility_id == 63) {
+                // Provide access to the new form version
+                $(this).ajaxSubmit({
+                    url: "{{ url('submit-referral/pregnant') }}",
+                    type: 'POST',
+                    success: function(res){
+                        console.log(res);
+                        setTimeout(function(){
+                            window.location.reload(false);
+                        },500);
+                    },
+                    error: function(){
+                        $('#serverModal').modal();
+                    }
+                });
+            }
         });
 
 
