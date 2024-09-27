@@ -17,7 +17,7 @@
                                     <i class="fa fa-ambulance custom-icon"></i>
                                 </div>
                                 <div class="col-sm-9">
-                                    <h4>{{ incoming_total }}</h4>
+                                    <h4>{{ total_referred }}</h4>
                                     <h5>Referred Patients {{ year }}</h5>
                                 </div>
                             </div>
@@ -51,7 +51,7 @@
                                 <!--<a href="#dashboard_modal" @click="showIncomingModal('incoming_total')">{{ incoming_total }}</a>-->
                                 {{ incoming_total }}
                             </h5>
-                            <span class="description-text">Referred</span>
+                            <span class="description-text">Incoming</span>
                         </div>
                         <!-- /.description-block -->
                     </div>
@@ -153,6 +153,7 @@
             "user",
             "error", 
             "incoming_reffered",
+            "total_referred",
             "year",
         ],
         data() {
