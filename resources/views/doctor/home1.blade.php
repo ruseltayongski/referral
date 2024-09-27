@@ -20,6 +20,7 @@
                         :user="{{ $user }}" 
                         :error="{{ json_encode($error) }}"
                         :incoming_reffered="{{ json_encode($totalIncoming) }}"
+                        :total_referred="{{ json_encode($totalReferred) }}"
                         :year="{{ $year }}">
             </doctor-app>
         </div>

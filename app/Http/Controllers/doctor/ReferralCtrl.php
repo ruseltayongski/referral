@@ -202,7 +202,7 @@ class ReferralCtrl extends Controller
 
         $provinces = Province::get();
 
-        Session::put('data_total_for_Dashboard', $data->total());
+        Session::put('totalIncoming_for_Dashboard', $data->total());
        
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
@@ -282,8 +282,8 @@ class ReferralCtrl extends Controller
 
         $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
 
-//        $path = self::securedFile($file_link);
-//        $file_name = basename($path);
+        //        $path = self::securedFile($file_link);
+        //        $file_name = basename($path);
 
         $path = [];
         $file_name = [];
@@ -628,6 +628,7 @@ class ReferralCtrl extends Controller
         ]);
     }
 
+    //============== REFERRED ================
     public function referred(Request $request)
     {
         $user = Session::get('auth');
@@ -766,6 +767,8 @@ class ReferralCtrl extends Controller
         }
         session()->forget('profileSearch.telemedicine');
         //  $new_referral = $request->query();
+
+        Session::put('totalReffered_for_Dashboard', $data->total());
 
         return view('doctor.referred2',[
             'title' => 'Referred Patients',
