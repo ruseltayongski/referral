@@ -177,12 +177,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 </style>
 
-<div class="modal fade" role="dialog" id="revisednormalFormModal">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <form action="{{ url('submit-referral') }}" method="POST" class="form-submit revised_normal_form">
-                <div class="jim-content">
-                    @include('include.header_form')
+@php
+    $modals = [
+        ['id' => 'revisednormalFormModal', 'actionUrl' => url('submit-referral/normal')],
+        ['id' => 'revisedpregnantFormModal', 'actionUrl' => url('submit-referral/pregnant')],
+    ];
+@endphp
+
+@foreach($modals as $modal)
+    <div class="modal fade" role="dialog" id="{{ $modal['id'] }}">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <form action="{{ $modal['actionUrl'] }}" method="POST" class="form-submit revised_normal_form">
+                    <div class="jim-content">
+                        @include('include.header_form')
+
                     <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
@@ -234,7 +243,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Department</small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control-select select_department select_department_normal" style="width: 100%;" required>
+                                <select name="referred_department" class="form-control-select select_department select_department" style="width: 100%;" required>
                                     <option value="">Select Option</option>
                                 </select>
                             </div>
@@ -301,12 +310,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normal" aria-expanded="false" aria-controls="collapse_illness_history_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
                                         <b>HISTORY OF PRESENT ILLNESS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_illness_history_normal" style="width: 100%">
+                                <div class="collapse" id="collapse_illness_history" style="width: 100%">
                                     <b>CASE SUMMARY:</b>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
                                     <b>SUMMARY OF RECO:</b>
@@ -318,12 +327,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normal" aria-expanded="false" aria-controls="collapse_diagnosis_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
                                         <b>DIAGNOSIS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse " id="collapse_diagnosis_normal" style="width: 100%">
+                                <div class="collapse " id="collapse_diagnosis" style="width: 100%">
                                     <b>Diagnosis/Impression: </b>
                                     <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
                                 </div>
@@ -333,12 +342,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history_normal" aria-expanded="false" aria-controls="collapse_medical_history_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
                                         <b>PAST MEDICAL HISTORY</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_medical_history_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_medical_history" style="width: 100%;">
                                     <b>COMORBIDITIES</b>
                                     <div class="container-referral">
                                         <div class="row">
@@ -558,18 +567,20 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
+                        
+                        <input type="hidden" id="isPregnant">
 
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        <div class="row" id="pedia_show_normal" style="display:none;">
+                        <div class="row" id="pedia_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history_normal" aria-expanded="false" aria-controls="collapse_pedia_history_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
                                         <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_pedia_history_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_pedia_history" style="width: 100%;">
                                     <b>PRENATAL</b>
                                     <div class="container-referral">
                                         <div class="row">
@@ -699,16 +710,16 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         </div>
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
-                        <div class="row" id="menarche_show_normal" style="display:none;">
+                        <div class="row" id="menarche_show" style="display:none;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history_normal" aria-expanded="false" aria-controls="collapse_gyne_history_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
                                         <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_gyne_history_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
                                     <b>MENARCHE </b> @ <input type="number" min="9" style="width: 10%;" name="menarche"> years old &emsp;&emsp;&emsp;&emsp;
                                     <b>MENOPAUSE: </b>&emsp;
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes">
@@ -862,13 +873,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history_normal" aria-expanded="false" aria-controls="collapse_persocial_history_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history" aria-expanded="false" aria-controls="collapse_persocial_history">
                                         <div class="web-view"><b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>PERSONAL and SOCIAL HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_persocial_history_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_persocial_history" style="width: 100%;">
                                     <b>SMOKING</b>
                                     <div class="container-referral">
                                         <div class="row">
@@ -973,12 +984,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication_normal" aria-expanded="false" aria-controls="collapse_medication_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
                                         <b>CURRENT MEDICATION(S)</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_medication_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_medication" style="width: 100%;">
                                     <i>Specify number of doses given and time of last dose given.</i>
                                     <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5"></textarea><br><br>
                                 </div>
@@ -988,7 +999,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures_normal" aria-expanded="false" aria-controls="collapse_lab_procedures_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
                                         <div class="web-view">
                                             <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b> <i>(include Dates)</i>
                                             <span class="pull-right"><i class="fa fa-plus"></i></span>
@@ -999,7 +1010,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_lab_procedures_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_lab_procedures" style="width: 100%;">
                                     <i> Attach all applicable labs in one file.</i>
                                     <div class="container-referral">
                                         <div class="row">
@@ -1052,12 +1063,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system_normal" aria-expanded="false" aria-controls="collapse_review_system_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
                                         <b>REVIEW OF SYSTEMS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_review_system_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_review_system" style="width: 100%;">
                                     <b>SKIN</b>
                                     <div class="container-referral">
                                         <div class="row">
@@ -1827,12 +1838,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status_normal" aria-expanded="false" aria-controls="collapse_nutri_status_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
                                         <b>NUTRITIONAL STATUS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_nutri_status_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_nutri_status" style="width: 100%;">
                                     <b>Diet</b>
                                     <div class="container-referral">
                                         <div class="row">
@@ -1870,12 +1881,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs_normal" aria-expanded="false" aria-controls="collapse_vital_signs_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
                                         <b>LATEST VITAL SIGNS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_vital_signs_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_vital_signs" style="width: 100%;">
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -1904,12 +1915,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow_normal" aria-expanded="false" aria-controls="collapse_glasgow_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
                                         <b>GLASGOW COMA SCALE</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_glasgow_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_glasgow" style="width: 100%;">
                                     <b>Pupil Size Chart</b> &emsp;
                                     <input type="button" class="btn-m btn-warning btn-rounded" onclick="resetPupilSize()" value="Reset">
                                     <div class="container-referral">
@@ -2219,22 +2230,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normal" aria-expanded="false" aria-controls="collapse_reason_referral_normal">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
                                         <b>REASON FOR REFERRAL</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_reason_referral_normal" style="width: 100%;">
+                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
                                         <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
-                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                             @endforeach
                                         </select><br><br>
-                                        <div id="other_reason_referral"></div>
+                                        <div id="other_reason_referral_div" style="display:none;">
+                                            <span>Other Reason for Referral:</span> <br/>
+                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -2290,7 +2304,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
-
+@endforeach
 
 <script>
     // $("#revisednormalFormModal").modal("show");
@@ -3078,20 +3092,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
     //     }
     // });
 
-    $('.reason_referral').on('change', function() {
-        var value = $(this).val();
-        if (value == '-1') {
-            $("#other_reason_referral").html(loading);
-            setTimeout(function() {
-                $("#other_reason_referral").html('<span>Other Reason for Referral:</span>\n' +
-                    '                                <br />\n' +
-                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            }, 500);
-            $("#other_reason_referral").show();
-        } else {
-            clearOtherReasonReferral();
-        }
-    });
+   
+        $('.reason_referral').on('change', function() {
+            var value = $(this).val();
+            
+            if (value == -1) {
+                // Show the "Other Reason for Referral" textarea if "-1" is selected
+                console.log("VALUE: ", value);
+                $('#other_reason_referral_div').show();
+            } else {
+                // Hide the "Other Reason for Referral" textarea if another option is selected
+                console.log("VALUE: ", value);  
+                $('#other_reason_referral_div').hide();
+            }
+        });
+
 
     function readURL(input) {
         if (input.files && input.files[0]) {

@@ -1,5 +1,3 @@
-
-
 <?php
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id', 'name')
@@ -178,10 +176,10 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     }
 </style>
-<div class="modal fade" role="dialog" id="normalFormModal" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" role="dialog" id="revisednormalFormModalUpdateInfo" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form action="{{ route('post-update-referral', ['patient_id' => $data->patient_id]) }}" method="POST" class="form-submit normal_form">
+            <form action="{{ url('post-update-referral', ['patient_id' => $data->patient_id]) }}" method="POST" class="form-submit revised_normal_form_info">
                 <div class="jim-content">
                     @include('include.header_form')
                     <div class="form-group-sm form-inline">

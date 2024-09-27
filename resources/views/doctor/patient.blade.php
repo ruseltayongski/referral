@@ -271,6 +271,42 @@ $counter = 0;
                                                 <i class="fa fa-stethoscope"></i>
                                                 Walk-In
                                             </a>
+                                        @elseif ($user->facility_id == 63)
+                                        <a href="#nonPregnantChooseVersionModal"
+                                               data-patient_id="{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               style="width:100%;margin-bottom:5px;"
+                                               onclick="handleRefer()"
+                                               class="btn btn-primary btn-xs profile_info patient-emergency hidden">
+                                                <i class="fa fa-ambulance"></i>
+                                                Refer
+                                            </a>
+                                            <a href="#normalFormModal"
+                                                data-patient_id="{{ $row->id }}"
+                                                data-backdrop="static"
+                                                data-toggle="modal"
+                                                data-type="normal"
+                                                onclick="handleTelemedicine()"
+                                                style="width:100%;margin-bottom:5px;"
+                                                class="btn btn-success btn-xs profile_info patient-consultation hidden">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Consultation
+                                            </a><br>
+                                            <a href="#"
+                                               id="walkinNormal{{ $counter }}"
+                                               data-patient_id="{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               onclick="promptWalkinNormal(<?php echo $counter++ ?>)"
+                                               style="width:100%;"
+                                               class="btn btn-warning btn-xs profile_info patient-emergency hidden">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Walk-In
+                                            </a>
+                                        
                                         @else
                                             <a href="#normalFormModal"
                                                data-patient_id="{{ $row->id }}"
@@ -336,7 +372,6 @@ $counter = 0;
     @include('modal.pregnant_form_editable')
     @include('modal.pregnant_form_editable_walkin')
     @include('modal.revised_normal_form')  
-    @include('modal.revised_pregnant_form')
 @endsection
 
 @section('js')
@@ -368,28 +403,75 @@ $counter = 0;
             $(".telemedicine").val(1);
             selectFormTitle("Clinical ");
         }
+
+        $(document).ready(function() {
+            var isPregnant = $('#isPregnant').val(); // or use a JavaScript variable
+            
+            if (isPregnant == 1) {  // Assuming 1 means pregnant, or use true if it's a boolean
+                $('#menarche_show_normal').show();
+                $('#pedia_show_normal').show();
+            } else {
+                $('#menarche_show_normal').hide();
+                $('#pedia_show_normal').hide();
+            }
+        });
+
+
         function setClinicalFormTile(type) {
-            referred_facility = "{{ $user->facility_id }}";// Get facility_id from server-side
-            console.log("Facility Test: ",referred_facility);
+            // Get facility_id and pregnancy status from server-side
+            var referred_facility = "{{ $user->facility_id }}";
+
+            console.log("Facility ID: ", referred_facility);
+            console.log("Is Pregnant: ", isPregnant);
+
+            // Check if facility_id is 63 (allowed to access the new form)
             if (referred_facility == 63) {
                 if (type == 'pregnant') {
                     $('#pregnantchooseVersionModal').modal('show');
                     selectFormTitle("BEmONC/ CEmONC ");
+                    $('#menarche_show').show();
+                    $('#pedia_show').show();
+                
                 } else if (type == 'normal') {
+                    $('#isPregnant').val(0);
                     $('#nonPregnantChooseVersionModal').modal('show');
                     selectFormTitle("Clinical");
+                    $('#menarche_show').hide();
+                    $('#pedia_show').hide();
+                } else if (type == 'pregnant_walkin') {
+                    $('#pregnantChooseVersionModal_walkin').modal('show');
+                    selectFormTitle("BEmONC/ CEmONC ");
+                    $('#menarche_show').show();
+                    $('#pedia_show').show();
+                 
+                } else if (type == 'normal_walkin') {
+                    $('#nonPregnantChooseVersionModal_walkin').modal('show');
+                    selectFormTitle("Clinical");
+                    $('#menarche_show').hide();
+                    $('#pedia_show').hide();
                 }
-            } else {
+            } 
+            // For all other facilities, show the default forms
+            else {
                 if(type == "pregnant") {
                     selectFormTitle("BEmONC/ CEmONC ");
                     $('#pregnantFormModal').modal('show');
-                }
-                else {
+                } else if(type == "normal") {
                     selectFormTitle("Clinical ");
                     $('#normalFormModal').modal('show');
+                } else if (type == "pregnant_walkin") {
+                    selectFormTitle("BEmONC/ CEmONC ");
+                    $('#pregnantFormModalWalkIn').modal('show');
+                } else if (type == "normal_walkin") {
+                    selectFormTitle("Clinical ");
+                    $('#normalFormModalWalkIn').modal('show');
                 }
+                
+                $('#menarche_show_normal').hide();
+                $('#pedia_show_normal').hide();
             }
         }
+
 
 
 
@@ -729,55 +811,74 @@ $counter = 0;
             form_type = '#revisednormalFormModal';
             department_id = $('.select_department_normal').val();
             department_name = $('.select_department_normal option:selected').html();
-            facility_id = "{{ $facility_id }}"; // Assuming facility_id is passed in the blade template
-            if (facility_id == 63) {
+            facility_id = "{{ $facility_id }}";
+            // if (facility_id == 63) {
                 // Provide access to the new form version
                 $(this).ajaxSubmit({
                     url: "{{ url('submit-referral/normal') }}",
                     type: 'POST',
                     success: function(res){
                         console.log(res);
+                        $('.loading').hide(); // Hide loading animation on success
                         setTimeout(function(){
-                            window.location.reload(false);
-                        },500);
+                            $(location).attr('href', "{{ asset('doctor/referred') }}");
+                        }, 500);
                     },
-                    error: function(){
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", error);
+                        console.error("Response: ", xhr.responseText);
                         $('#serverModal').modal();
+                        $('.loading').hide(); // Hide loading animation on error
                     }
+
                 });
-            }
+            // }
         });
 
-        $('.revised_pregnant_form').on('submit', function(e){
+        $('.revised_normal_form').on('submit', function(e){
             e.preventDefault();
             $('.loading').show();
-            reason = $('.reason_referral').val();
             form_type = '#revisedpregnantFormModal';
-            department_id = $('.select_department_normal').val();
-            department_name = $('.select_department_normal option:selected').html();
-            facility_id = "{{ $facility_id }}"; // Assuming facility_id is passed in the blade template
-            if (facility_id == 63) {
-                // Provide access to the new form version
-                $(this).ajaxSubmit({
+            sex = 'Female';
+            reason = $('.woman_information_given').val();
+            department_id = $('.select_department_pregnant').val();
+            department_name = $('.select_department_pregnant :selected').text();
+            $(this).ajaxSubmit({
                     url: "{{ url('submit-referral/pregnant') }}",
                     type: 'POST',
-                    success: function(res){
-                        console.log(res);
+                    success: function(data){
+                        console.log("patient", data);
+                        if(data.referred_to == 790 || data.referred_to == 23) {
+                        data.age = parseInt(data.age);
+                        var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#revisedpregnantFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled',false);
+                        Lobibox.alert("success",
+                            {
+                                msg: "Successfully referred the patient!"
+                            });
+                    } else {
+                        $('.loading').hide(); // Hide loading animation on success
                         setTimeout(function(){
-                            window.location.reload(false);
-                        },500);
+                            $(location).attr('href', "{{ asset('doctor/referred') }}");
+                        }, 500);
+                    }
                     },
-                    error: function(){
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", error);
+                        console.error("Response: ", xhr.responseText);
                         $('#serverModal').modal();
+                        $('.loading').hide(); // Hide loading animation on error
                     }
                 });
-            }
         });
-
 
         $('.choose_version').on('submit', function(e){
             e.preventDefault();
-            $('.loading').show();
+            // $('.loading').show();
             form_type = '#pregnantchooseVersionModal';
             $(this).ajaxSubmit({
                 url:"{{ route('show-choose-version') }}",
@@ -793,7 +894,7 @@ $counter = 0;
 
         $('.choose_version').on('submit', function(e){
             e.preventDefault();
-            $('.loading').show();
+            // $('.loading').show();
             form_type = '#nonPregnantChooseVersionModal';
             $(this).ajaxSubmit({
                 url:"{{ route('show-choose-version') }}",
@@ -828,7 +929,6 @@ $counter = 0;
                         $('.loading').hide();
                         $('#pregnantModal').modal('hide');
                         $('#pregnantFormModal').modal('hide');
-                        $('#revisednormalFormModal').modal('hide');
                         $('.btn-submit').attr('disabled',false);
                         Lobibox.alert("success",
                             {
