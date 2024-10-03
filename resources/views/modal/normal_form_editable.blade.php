@@ -365,6 +365,8 @@ $department_id = $appoitment_sched[0]->department_id;
     <!-- /.modal-dialog -->
 </div>
 
+
+
 <script>
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();
     $("#sbmitBtn").on('click', function(e) {
@@ -474,31 +476,60 @@ $department_id = $appoitment_sched[0]->department_id;
         var word = '{{ asset('resources/img/document_icon.png') }}';
         var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
         var excel = '{{ asset('resources/img/sheet_icon.png') }}';
+        var imgSize = {width: '100px', height: '100px'};
         if (input.files && input.files[0]) {
             var tmp_pos = pos;
             for(var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
+                let file = input.files[i];
                 if(file && file !== null) {
-                    var reader = new FileReader();
-                    var type = file.type;
+                    let reader = new FileReader();
+                    let type = file.type;
+                    let filename = file.name;
+                    let isFirstSlide = i === 0 ? 'active' : '';
+
+                    let slideContent = '';
+
                     if(type === 'application/pdf') {
-                        $('#file-upload-image'+pos).attr('src',pdf);
+
+                        $('#file-upload-image'+pos).attr('src',pdf)
+                        .attr('title', filename).css(imgSize);
+                        // .attr('onclick', 'showPreviewFile(' + filename + ', ' + isFirstSlide + ')');;
                         pos+=1;
                     } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#file-upload-image'+pos).attr('src',word);
+                        $('#file-upload-image'+pos).attr('src',word)
+                        .attr('title', filename).css(imgSize);
+                        // .attr('onclick', 'showPreviewFile(' + filename + ', '+ isFirstSlide +')');
                         pos+=1;
                     } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#file-upload-image'+pos).attr('src',excel);
+                        $('#file-upload-image'+pos).attr('src',excel)
+                        .attr('title', filename).css(imgSize);
+                        // .attr('onclick', 'showPreviewFile(' + filename + ', ' + isFirstSlide + ')');
                         pos+=1;
                     } else {
-                        reader.onloadend = function(e) {
-                            $('#file-upload-image'+pos).attr('src', e.target.result);
-                            pos+=1;
-                        };
+                        // reader.onloadend = function(e) {
+                        //     $('#file-upload-image'+pos).attr('src', e.target.result).attr('title', filename);
+                        //     pos+=1;
+                        // };
+                        reader.onloadend = (function(currentPos, currentFilename) {
+                            return function(e) {
+                                $('#file-upload-image' + currentPos)
+                                    .attr('src', e.target.result)
+                                    .attr('title', currentFilename)
+                                    .css(imgSize) 
+                                    .attr('onclick', 'showPreviewFile(' + filename + ', '+ isFirstSlide +')');
+                            };
+                        })(pos, filename); 
+                        pos += 1;
                     }
+                
                     $('#image-upload-wrap'+tmp_pos).hide();
                     $('#file-upload-content'+tmp_pos).show();
-                    $('#image-title' + tmp_pos++).html(file.name);
+
+                    var maxLength = 12;
+                    var truncateName = filename.length > maxLength ? filename.substring(0, maxLength) + '...' : filename;
+
+                    $('#image-title' + tmp_pos++).html(truncateName).attr('title', filename);
+
                     reader.readAsDataURL(file);
                     upload_count+=1;
 
@@ -509,6 +540,20 @@ $department_id = $appoitment_sched[0]->department_id;
         $('#remove_files_btn').show();
     }
 
+    // function showPreviewFile(filename, isActive){
+    //     $('#carousel-inner').html('');
+    //       // Create a slide for the preview
+    //     let newSlide = `
+    //         <div class="carousel-item active">
+    //             <img class="d-block w-100" src="${filename}" alt="${filename}">
+    //         </div>
+    //     `;
+    //      // Add slide to the carousel
+    //     $('#carousel-inner').append(newSlide);
+    //     // Show the modal
+    //     $('#filePreviewModal').modal('show');
+    // }
+
     function addFile() {
         var src = '{{ asset('resources/img/add_file.png') }}';
         if(upload_count % 4 == 0) {
@@ -517,7 +562,7 @@ $department_id = $appoitment_sched[0]->department_id;
             );
         }
         $('.attachment').append(
-            '<div class="col-md-3" id="upload'+upload_pos+'">\n' +
+            '<div class="col-md-3" id="upload'+upload_pos+'" style="position: relative;">\n' +
             '   <div class="file-upload">\n' +
             '       <div class="text-center image-upload-wrap" id="image-upload-wrap'+upload_pos+'">\n' +
             '           <input class="file-upload-input files" multiple id="file_upload_input'+upload_pos+'" type="file" name="file_upload[]" onchange="readUrl(this, '+upload_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
@@ -527,12 +572,13 @@ $department_id = $appoitment_sched[0]->department_id;
             '           <img class="file-upload-image" id="file-upload-image'+upload_pos+'" src="#"/>\n' +
             '           <div class="image-title-wrap">\n' +
             '               <b><small class="image-title" id="image-title'+upload_pos+'" style="display:block; word-wrap: break-word;"></small></b>\n' +
-            /*'               <button type="button" onclick="removeFile('+upload_pos+')" class="remove-image"> Remove </button>\n' +*/
+            '               <button type="button" onclick="removeOneFile('+upload_pos+')" class="remove-icon-btn"> <i class="fa fa-trash"></i> </button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
             '</div>'
         );
+
         upload_pos+=1;
     }
 
@@ -542,6 +588,21 @@ $department_id = $appoitment_sched[0]->department_id;
         upload_pos = 1;
         $('#remove_files_btn').hide();
         addFile();
+    }
+    function removeOneFile(uploadCount){
+        $('#upload' + uploadCount).remove();
+
+        upload_count -= 1;
+
+        if(upload_pos > uploadCount){
+            upload_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+
+       console.log("upload_pos:", upload_pos);
+
     }
 
     $(document).ready(function() {

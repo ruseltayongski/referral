@@ -560,7 +560,7 @@ class PatientCtrl extends Controller
                     "userid" => $user->id,
                     "patient_code" => $form->code
                 );
-                ApiController::pushNotificationCCMC($this->referred_patient_data);
+                ApiController::notifierPushNotification($this->referred_patient_data);
             } //push notification for cebu south medical center
 
             session()->forget('profileSearch.telemedicine');
@@ -664,7 +664,7 @@ class PatientCtrl extends Controller
                     "userid" => $user->id,
                     "patient_code" => $form->code
                 );
-                ApiController::pushNotificationCCMC($this->referred_patient_data);
+                ApiController::notifierPushNotification($this->referred_patient_data);
             } //push notification for cebu south medical center
             session()->forget('profileSearch.telemedicine');
             self::addTracking($code, $patient_id, $user, $req, $type, $form->id);

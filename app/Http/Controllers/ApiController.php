@@ -2153,41 +2153,105 @@ class ApiController extends Controller
         ]);
     }
 
-    public static function pushNotificationCCMC($push) {
-        /*if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
-            $topic = "/topics/referrals_ER";
-        } else {
-            $topic = "/topics/referrals_TRIAGGE";
-        }*/
+    // public static function pushNotificationCCMCOld($push) {
+    //     /*if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
+    //         $topic = "/topics/referrals_ER";
+    //     } else {
+    //         $topic = "/topics/referrals_TRIAGGE";
+    //     }*/
 
-        $topic = "/topics/referrals_TRIAGGE";
-        $data = [
-            "age" => $push['age'],
-            "patient" => $push['patient'],
-            "hospital_referrer" => $push['referring_hospital'],
-            "sex"=> $push['sex']
-        ];
-        $CURL_POST_FIELDS = ["to"=>$topic,"data"=>$data];
+    //     $topic = "/topics/referrals_TRIAGGE";
+    //     $data = [
+    //         "age" => $push['age'],
+    //         "patient" => $push['patient'],
+    //         "hospital_referrer" => $push['referring_hospital'],
+    //         "sex"=> $push['sex']
+    //     ];
+    //     $CURL_POST_FIELDS = ["to"=>$topic,"data"=>$data];
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => 'https://fcm.googleapis.com/fcm/send',
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode($CURL_POST_FIELDS),
-            CURLOPT_HTTPHEADER => array(
-                'Authorization: key=AAAAU6ekIBA:APA91bEtfmASYObVAvEasSdtyaBqz6e0yi9gJrZ0J9fSxdYpDCdf6JWeN-Kbs7O-sEwEGoGxIn6cIw52RLi-Z2iRH2XfmHf2KH3xDdPWV4Of5C_GxJlq1rstQoNVCFzs_K_W3INFD0ks',
-                'Content-Type: application/json'
-            ),
-        ));
+    //     $curl = curl_init();
+    //     curl_setopt_array($curl, array(
+    //         CURLOPT_URL => 'https://fcm.googleapis.com/fcm/send',
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => '',
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 0,
+    //         CURLOPT_FOLLOWLOCATION => true,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'POST',
+    //         CURLOPT_POSTFIELDS => json_encode($CURL_POST_FIELDS),
+    //         CURLOPT_HTTPHEADER => array(
+    //             'Authorization: key=AAAAU6ekIBA:APA91bEtfmASYObVAvEasSdtyaBqz6e0yi9gJrZ0J9fSxdYpDCdf6JWeN-Kbs7O-sEwEGoGxIn6cIw52RLi-Z2iRH2XfmHf2KH3xDdPWV4Of5C_GxJlq1rstQoNVCFzs_K_W3INFD0ks',
+    //             'Content-Type: application/json'
+    //         ),
+    //     ));
 
-        curl_exec($curl);
-        curl_close($curl);
+    //     curl_exec($curl);
+    //     curl_close($curl);
+    // }
+
+    // public function pushNotificationCCMC($push)
+    public static function notifierPushNotification($push)
+    {
+        if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
+             $topic = "referrals_ER";
+         } else {
+             $topic = "referrals_TRIAGGE";
+         }
+
+        // $topic = "referrals_TRIAGGE";
+
+        try {
+            // static data
+            // $post_params = [
+            //     "topic" => "referrals_TRIAGGE",
+            //     "hospital_referrer" => "CSMC",
+            //     "patient" => "Sample P. Patient",
+            //     "age" => "23",
+            //     "sex" => "Male"
+            // ];
+            //dynamic data
+            $post_params  = [
+                "topic" => $topic,
+                "hospital_referrer" => $push['hospital_referrer'],
+                "patient" => $push['patient'],
+                "age"=> $push['age'],
+                "sex"=> $push['sex']
+            ];
+           
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://dohcsmc.com/notifier/api/send_push_notification',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode($post_params),
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json'
+                ),
+                CURLOPT_SSL_VERIFYHOST => 0,  // Disable SSL host verification
+                CURLOPT_SSL_VERIFYPEER => 0   // Disable SSL certificate verification
+            ));
+
+            $response = curl_exec($curl);
+
+            if ($response === false) {
+                // cURL error occurred
+                $error = curl_error($curl);
+                curl_close($curl);
+                return 'Curl error: ' . $error;
+            }
+
+            curl_close($curl);
+            return $response;
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
     }
 
     public function verifyTracking($code) {

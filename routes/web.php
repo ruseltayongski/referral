@@ -689,3 +689,7 @@ Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescription
 
 Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');
 Route::get('/HighIncoming/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoIncoming');
+
+//sample
+Route::get('/test_push',  'ApiController@notifierPushNotification');
+// Route::post('/notifier/api/send_push_notification', 'ApiController@notifierPushNotification');

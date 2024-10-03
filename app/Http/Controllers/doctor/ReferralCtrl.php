@@ -1434,28 +1434,29 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
-            "push_diagnosis" => $diagnosis,
+            "push_diagnosis" =>  $diagnosis->isEmpty() ? $patientform->other_diagnoses : $diagnosis,
             "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
-
-        /*if($req->referred_facility != 23) {
-            try {
-                ApiController::pushNotificationCCMC(array(
-                    "age" => ParamCtrl::getAge($patient->dob),
-                    "chiefComplaint" => $req->facility,
-                    "department" => Department::find($req->department)->description,
-                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
-                    "sex" => $patient->sex,
-                    "referring_hospital" => Facility::find($user->facility_id)->name,
-                    "referred_to" => $req->referred_facility,
-                    "date_referred" => $date
-                ));
-            } catch (Exception $e) {
+       
+        if($req->facility == 790 || $req->facility == 23) {
+             try {
+                 ApiController::notifierPushNotification(array(
+                "age" => (string) ParamCtrl::getAge($patient->dob),
+                //"chiefComplaint" => $req->facility,
+                "department" => (string) Department::find($req->department)->description,
+                "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                "sex" => (string) $patient->sex,
+                "hospital_referrer" => (string) Facility::find($user->facility_id)->name,
+                "referred_to" => (string) $req->facility,
+                "date_referred" => (string) $date
+               
+                 ));
+             } catch (Exception $e) {
                 return Redirect::back();
             }
-        }//push notification for cebu south medical center*/
-
+        }//push notification for cebu south medical center
+   
         // return Redirect::back()->with('new_referral', $new_referral);
         if($req->facility == 790 || $req->facility == 23) {
             session()->put('for_firebase_data', $new_referral);

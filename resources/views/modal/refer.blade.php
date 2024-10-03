@@ -413,7 +413,6 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 }); 
 //end of my changes
 </script>
-
 <div class="modal fade" role="dialog" id="referFormModal">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
@@ -819,8 +818,10 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
 <script>// jondy changes
 
-function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {
+let firebase_key = "";
+function sendNotifierData(key_firebase,age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {
         // Check if Firebase app with name '[DEFAULT]' already exists
+     
         if (!firebase.apps.length) {
             // Your web app's Firebase configuration
             var firebaseConfig = {
@@ -841,7 +842,6 @@ function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, s
         var dbRef = firebase.database();
         //create table
         var requestRef = dbRef.ref('23');
-
         const newRef = requestRef.push({
             age: age,
             chiefComplaint: chiefComplaint,
@@ -854,21 +854,21 @@ function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, s
             patient_code : patient_code
         });
 
-        const firebase_key = newRef.key;
+        firebase_key = newRef.key;
         console.log(firebase_key)
 
 
         var form = new FormData();
-        form.append("age", age);
-        form.append("chiefComplaint", chiefComplaint);
-        form.append("department", department);
-        form.append("diagnosis", diagnosis);
-        form.append("patient", patient);
-        form.append("sex", sex);
-        form.append("referring_hospital", referring_hospital);
-        form.append("date_referred", moment(date_referred).format("YYYY-MM-DD HH:mm:ss"));
-        form.append("patient_code", patient_code);
-        form.append("firebase_key", firebase_key);
+            form.append("age", age);
+            form.append("chiefComplaint", chiefComplaint);
+            form.append("department", department);
+            form.append("diagnosis", diagnosis);
+            form.append("patient", patient);
+            form.append("sex", sex);
+            form.append("referring_hospital", referring_hospital);
+            form.append("date_referred", moment(date_referred).format("YYYY-MM-DD HH:mm:ss"));
+            form.append("patient_code", patient_code);
+            form.append("firebase_key", firebase_key);
 
         var settings = {
             "url": "https://dohcsmc.com/notifier/api/insert_referral_5pm",
@@ -882,18 +882,36 @@ function sendNotifierData(age, chiefComplaint, department, diagnosis, patient, s
 
         $.ajax(settings).done(function (response) {
             console.log(response);
+
+            if(firebase_key) {
+                requestRef.child(firebase_key).remove()
+                    .then(function() {
+                        console.log("Firebase record deleted:", firebase_key);
+
+                        firebase_key = "";
+                    })
+                    .catch(function(error){
+                        console.error("Error deleting Firebase record:", error);
+                    });
+            }
         });
     }
 
     document.addEventListener('DOMContentLoaded', function () {
         let datastore = @json(Session::get('for_firebase_data'));
         if(datastore) {
+            let pushDiagnosis = Array.isArray(datastore.push_diagnosis) ?
+                datastore.push_diagnosis.join(', ') : 
+                datastore.push_diagnosis;
+
             sendNotifierData(
+                firebase_key,
                 datastore.age,
                 datastore.chiefComplaint, 
                 datastore.referred_department, 
                 // datastore.push_diagnosis, 
-                datastore.push_diagnosis.join(', '),
+                // datastore.push_diagnosis.join(', '),
+                pushDiagnosis,
                 datastore.patient_name,
                 datastore.patient_sex, 
                 datastore.referring_name,

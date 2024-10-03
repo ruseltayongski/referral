@@ -598,7 +598,7 @@
             '           <img class="file-upload-image" id="pregnant_file-upload-image'+pregnant_pos+'"/>\n' +
             '           <div class="image-title-wrap">\n' +
             '               <b><small class="image-title" id="pregnant_image-title'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
-            '               {{--<button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+')" class="btn-sm remove-image">Remove</button>--}}\n' +
+            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
@@ -613,6 +613,22 @@
         pregnant_pos = 1;
         $('#preg_remove_files').hide();
         addFilePregnant();
+    }
+
+    function removeUploadPregnant(uploadCount){
+        $('#pregnant_upload' + uploadCount).remove();
+
+        upload_count -= 1;
+
+        if(pregnant_pos > uploadCount){
+            pregnant_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+
+        console.log("upload_pos:", pregnant_pos);
+
     }
 
     $(document).ready(function() {

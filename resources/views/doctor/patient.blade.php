@@ -167,6 +167,26 @@ $counter = 0;
             visibility: visible;
         }
     }
+
+    .remove-icon-btn{
+        position: absolute;
+        top: -2px; /* Adjust as needed */
+        right: 12px; /* Adjust as needed */
+        background: transparent;
+        border: none;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ff0000; /* Optional: Trash icon color */
+        font-size: 18px; /* Optional: Adjust icon size */
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .remove-icon-btn:hover {
+        transform: scale(1.1); /* Slightly increase size on hover */
+    }
+    .remove-icon-btn i {
+        pointer-events: none; /* To ensure the button handles the click, not the icon */
+    }
 </style>
 
 <div class="row">
@@ -303,6 +323,34 @@ $counter = 0;
         </div>
     </div>
 </div>
+
+<!-- <div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="filePreviewModalLabel">File Preview</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="filePreviewCarousel" class="carousel slide" data-ride="carousel">
+          <div class="carousel-inner" id="carousel-inner"> -->
+            <!-- Carousel items will be added dynamically here -->
+          <!-- </div>
+          <a class="carousel-control-prev" href="#filePreviewCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="carousel-control-next" href="#filePreviewCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
 
 @include('modal.pregnantModal')
 @include('modal.normal_form_editable')
