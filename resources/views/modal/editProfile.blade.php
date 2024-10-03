@@ -186,7 +186,7 @@
                         <div class="form-group col-md-4">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text"><i class="fa fa-phone"></i></span> <label for="contact">Contact Number:</label>
+                                    <span class="input-group-text"><i class="fa fa-phon"></i></span> <label for="contact">Contact Number:</label>
                                 </div>
                             </div>
                             <input type="text" class="form-control contact" name="contact" value="{{ $user->contact }}" required >
@@ -218,7 +218,45 @@
                             <input type="text" class="form-control license" name="license" value="{{ $user->license }}" autocomplete="license">
                         </div>
                     </div>
-                  
+                    <div>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"></span> <label for="Privacy">Privacy Policy</label>
+                        </div>
+                        <div id="privacy-policy-container" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                            <p>This Privacy Policy will enable you to better understand how DOHCVCHD collects, processes, retains and uses your data. We hope you read through the policy. Statement of Policy The DOHCVCHD is the regional arm in Central Visayas of the Department of Health. It is the principal health agency in the country and is responsible for the enforcement of laws on health, ensuring access to basic public health services and quality health care, and regulation of health facilities, goods and services.</p>
+                            <p>Guided by the Data Privacy Principles, we collect, process, retain, use and share your data when you visit our office premises, avail of our services and systems, file for applications/renewals, submit requests and inquiries, lodge complaints, or when it is necessary in the performance of our statutory and regulatory mandates, including the operation of health information services, and implementation of disease surveillance and response initiatives, among others, subject to your consent or when expressly allowed by law.</p>
+                            <p>The DOHCVCHD faithfully adheres to the requirements of the Data Privacy Act, its implementing rules, and the regulations promulgated by the National Privacy Commission. We highly value the security of your data and your rights as data subjects.</p>
+                            <p>Collection and Use of Data</p>
+                            <p>Data is collected when the DOHCVCHD performs its governmental functions such as, but not limited to, provision of technical assistance to government and private partners, disease surveillance and health events response per Republic Act No. 11332 and related statutes, management of public health information systems, enforcement of regulatory authority (e.g. receipt of applications of health facilities), handling of complaints, and operations of health and laboratory services. Data is also collected when you avail of our programs and services such as the E-health Referral System and the DOHCVCHD Telemedicine, provided you have granted your consent.</p>
+                            <p>Data Retention, Protection and Disposition</p>
+                            <p>For the services and systems available to the public, the DOHCVCHD may necessarily store and retain your data as part of its inherent and operational functions, without prejudice to the enforcement of the relevant rights of data subjects. </p>
+                            <p>Data collected are retained depending on the nature of the data being handled. Physical data are retained by the respective end-users or program managers through proper record filing and keeping. Electronic data which passes through online systems are saved in our local and cloud servers using encryption, firewall, or similar security features. It may also require entering a One-Time Password (OTP) as an added layer of protection. Access to these data is granted only to select personnel, all of whom are required to execute a Non-Disclosure Agreement.</p>
+                            <p>The DOHCVCHD does not warrant a foolproof or 100% breach-free data system. However, it commits to continually update its security features, review existing data protection policies, coordinate with the NPC for any data incidents, and keep you informed in all stages.</p>
+                            <p>The data subject may request for the deletion of his/her data, subject to the provisions of the data privacy act. As such, upon the data subject’s request or when necessitated by the circumstances, the DOHCVCHD shall fully dispose of the data retained in the most prompt manner. The length of time in the retention and subsequent disposition of data, as the case may be, shall be in accordance with the records retention and disposition schedule of the National Archives of the Philippines and pertinent internal office protocols, taking into account the legitimate purpose(s) of the collection. When applicable, data shall be returned to the data owners. At all times, the data subject shall be informed that the data has been deleted and disposed of by issuing a certification to such effect. </p>
+                            <p>Data Subject's Rights</p>
+                            <p>Pursuant to the DPA, the data subject is entitled to the following rights: </p>
+                            <p>Right to be informed.
+                                The data subject has a right to be informed whether personal data pertaining to him or her shall be, are being, or have been processed, including the existence of automated decision-making and profiling.
+                                The data subject shall be notified and furnished with information indicated hereunder before the entry of his or her personal data into the processing system of the personal information controller, or at the next practical opportunity:
+                                Description of the personal data to be entered into the system
+                                Purposes for which they are being or will be processed, including processing for direct marketing, profiling or historical, statistical or scientific purpose;
+                                Basis of processing, when processing is not based on the consent of the data subject;
+                                Scope and method of the personal data processing;
+                                Methods utilized for automated access, if the same is allowed by the data subject, and the extent to which such access is authorized, including meaningful information about the logic involved, as well as the significance and the envisaged consequences of such processing for the data subject;
+                                The identity and contact details of the personal data controller or its representative;
+                                The period for which the information will be stored; and
+                                The existence of their rights as data subjects, including the right to access, correction, and object to the processing, as well as the right to lodge a complaint before the Commission.
+                                Right to object. The data subject shall have the right to object to the processing of his or her personal data, including processing for direct marketing, automated processing or profiling. The data subject shall also be notified and given an opportunity to withhold consent to the processing in case of changes or any amendment to the information supplied or declared to the data subject in the preceding paragraph.
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" id="terms" name="terms" value="accepted" {{ old('terms') ? 'checked' : '' }}> 
+                             <a>I Agree.</a>
+                        </label>
+                    </div>
+
                     @if($user->level == "doctor")
                         <div class="form-group">
                             <label for="signature"><i class="fa fa-pencil"></i> Signature:</label>
@@ -226,14 +264,16 @@
                             <input type="hidden" name="sign_type" id="sign_type" value="">
                             <div class="text-center" id="signature_field">
                             @if(isset($user->signature) && $user->signature != null)
+
                                 <img src="{{ asset($user->signature.'?cache='.$cacheBuster) }}" id="stored_sign"  width="408" height="245" style="border: 1px solid black;"><br><br>
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="replaceSignature()">
-                            @else
+                            @else                            
                                 <!-- <input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()"> -->
 
                                 <!-- <h2>Select Signature&hellip;</h2> -->
                                 <section>
+                                    
                                     <div>
                                         <!-- <input type="radio" id="control_01" name="select" value="1" checked> -->
                                         <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
@@ -270,9 +310,30 @@
 {{--<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script> NOT USED--}}
 <script>
 
+    document.addEventListener('DOMContentLoaded', function() {
+        var termsCheckbox = document.getElementById('terms');
+        var signature_field = document.getElementById('signature_field');
+
+        // Initially hide or show the signature section based on checkbox state
+            if (termsCheckbox.checked) {
+                signature_field.style.display = 'block';
+        } else {
+                signature_field.style.display = 'none';
+        }
+
+        // Add event listener to the checkbox to show/hide signature section
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                    signature_field.style.display = 'block';
+            } else {
+                    signature_field.style.display = 'none';
+            }
+        });
+    });
+
     var signaturePad, sign_type, finalImage;
 
-    $('#update_btn').on('click', function(e) {
+    $('#update_btn').on('click', function(e) {  
         e.preventDefault();
         $('#stored_sign').src = null;
         $('.loading').show();

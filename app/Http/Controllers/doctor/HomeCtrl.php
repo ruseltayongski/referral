@@ -133,10 +133,12 @@ class HomeCtrl extends Controller
         $formatted_date_end = Carbon::now()->format('F d, Y');
         $year = $date_start->year;
 
-        $totalDataIncoming = Session::get('data_total_for_Dashboard');
+        $totalDataIncoming = Session::get('totalIncoming_for_Dashboard');
+        $totalDataReferred = Session::get('totalReffered_for_Dashboard');
       
         return view('doctor.home1',[
             "totalIncoming" => $totalDataIncoming,
+            "totalReferred" => $totalDataReferred,
             "date_start" => $formatted_date_start,
             "date_end" => $formatted_date_end,
             "year" => $year,
