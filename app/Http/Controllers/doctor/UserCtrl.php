@@ -197,11 +197,6 @@ class UserCtrl extends Controller
                 }
                 file_put_contents($filename, $sign);
             } 
-            // else if($data['sign_type'] == "upload") {
-            //     $sign = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $data['signature']));
-            //     $file_path = base_path()."/public/signatures/";
-            //     $name = $user->id."-".strtolower($user->lname)."-".strtolower($user->fname).".png";
-            // }
         }
 
         if(isset($data['signature']))

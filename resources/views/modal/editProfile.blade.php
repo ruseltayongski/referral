@@ -252,7 +252,7 @@
                     </div>
                     <div>
                         <label>
-                            <input type="checkbox" id="terms" name="terms" value="accepted" {{ old('terms') ? 'checked' : '' }}> 
+                            <input type="checkbox" id="terms" value="accepted" {{ old('terms') ? 'checked' : '' }}> 
                              <a>I Agree.</a>
                         </label>
                     </div>
