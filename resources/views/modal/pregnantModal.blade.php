@@ -14,13 +14,13 @@
             </div>
             <div class="modal-body">
                 <!-- <button  data-target="#nonPregnantChooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6"> -->
-                <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6" onclick="setClinicalFormTile('normal')">    
+                <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6" onclick="openNewForms('normal')">    
                     <img src="{{ url('resources/img/female.png') }}" width="100" />
                     <br />
                     Non-Pregnant
                 </button>
                 <!-- <button data-target="#pregnantchooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6"> -->
-                <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="setClinicalFormTile('pregnant')">
+                <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="openNewForms('pregnant')">
                     <img src="{{ url('resources/img/pregnant.png') }}" width="100" />
                     <br />
                     Pregnant
@@ -38,12 +38,12 @@
                 <i class="fa fa-user-secret"></i> SELECT OPTION
             </div>
             <div class="modal-body">
-                <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6" onclick="setClinicalFormTile('normal_walkin')">
+                <button  data-target="#normalFormModalWalkIn" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-warning col-sm-6" onclick="setClinicalFormTile('normal')">
                     <img src="{{ url('resources/img/female.png') }}" width="100" />
                     <br />
                     Non-Pregnant
                 </button>
-                <button data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="setClinicalFormTile('pregnant_walkin')">
+                <button data-target="#pregnantFormModalWalkIn" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="setClinicalFormTile('pregnant')">
                     <img src="{{ url('resources/img/pregnant.png') }}" width="100" />
                     <br />
                     Pregnant

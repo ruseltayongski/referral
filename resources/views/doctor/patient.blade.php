@@ -367,6 +367,7 @@ $counter = 0;
        
     @include('modal.pregnantModal')
     @include('modal.choose_version')
+    @include('modal.revised_pregnant_form')
     @include('modal.normal_form_editable')
     @include('modal.normal_form_editable_walkin')
     @include('modal.pregnant_form_editable')
@@ -416,62 +417,49 @@ $counter = 0;
             }
         });
 
-
         function setClinicalFormTile(type) {
-            // Get facility_id and pregnancy status from server-side
-            var referred_facility = "{{ $user->facility_id }}";
-
-            console.log("Facility ID: ", referred_facility);
-            console.log("Is Pregnant: ", isPregnant);
-
-            // Check if facility_id is 63 (allowed to access the new form)
-            if (referred_facility == 63) {
-                if (type == 'pregnant') {
-                    $('#pregnantchooseVersionModal').modal('show');
-                    selectFormTitle("BEmONC/ CEmONC ");
-                    $('#menarche_show').show();
-                    $('#pedia_show').show();
-                
-                } else if (type == 'normal') {
-                    $('#isPregnant').val(0);
-                    $('#nonPregnantChooseVersionModal').modal('show');
-                    selectFormTitle("Clinical");
-                    $('#menarche_show').hide();
-                    $('#pedia_show').hide();
-                } else if (type == 'pregnant_walkin') {
-                    $('#pregnantChooseVersionModal_walkin').modal('show');
-                    selectFormTitle("BEmONC/ CEmONC ");
-                    $('#menarche_show').show();
-                    $('#pedia_show').show();
-                 
-                } else if (type == 'normal_walkin') {
-                    $('#nonPregnantChooseVersionModal_walkin').modal('show');
-                    selectFormTitle("Clinical");
-                    $('#menarche_show').hide();
-                    $('#pedia_show').hide();
-                }
-            } 
-            // For all other facilities, show the default forms
-            else {
-                if(type == "pregnant") {
-                    selectFormTitle("BEmONC/ CEmONC ");
-                    $('#pregnantFormModal').modal('show');
-                } else if(type == "normal") {
-                    selectFormTitle("Clinical ");
-                    $('#normalFormModal').modal('show');
-                } else if (type == "pregnant_walkin") {
-                    selectFormTitle("BEmONC/ CEmONC ");
-                    $('#pregnantFormModalWalkIn').modal('show');
-                } else if (type == "normal_walkin") {
-                    selectFormTitle("Clinical ");
-                    $('#normalFormModalWalkIn').modal('show');
-                }
-                
-                $('#menarche_show_normal').hide();
-                $('#pedia_show_normal').hide();
+            if (type == "pregnant") {
+                selectFormTitle("BEmONC/ CEmONC ");
+            } else {
+                selectFormTitle("Clinical ");
             }
         }
 
+        function openNewForms(type){
+                // Get facility_id and pregnancy status from server-side
+                var referred_facility = "{{ $user->facility_id }}";
+
+                console.log("Facility ID: ", referred_facility);
+                console.log("Is Pregnant: ", isPregnant);
+
+                // Check if facility_id is 63 (allowed to access the new form)
+                if (referred_facility == 63) {
+                    if (type == 'pregnant') {
+                        $('#pregnantchooseVersionModal').modal('show');
+                        selectFormTitle("BEmONC/ CEmONC ");
+                        $('#menarche_show').show();
+                        $('#pedia_show').show();
+                    
+                    } else if (type == 'normal') {
+                        $('#isPregnant').val(0);
+                        $('#nonPregnantChooseVersionModal').modal('show');
+                        selectFormTitle("Clinical");
+                        $('#menarche_show').hide();
+                        $('#pedia_show').hide();
+                        $('#baby_show').hide();
+                    }
+                } else {
+                    if(type == "pregnant") {
+                        selectFormTitle("BEmONC/ CEmONC ");
+                        $('#pregnantFormModal').modal('show');
+                    } else if(type == "normal") {
+                        selectFormTitle("Clinical ");
+                        $('#normalFormModal').modal('show');
+                    }
+                    $('#menarche_show_normal').hide();
+                    $('#pedia_show_normal').hide();
+                }
+        }
 
 
 
@@ -739,7 +727,6 @@ $counter = 0;
                         $('.loading').hide();
                         $('#pregnantModal').modal('hide');
                         $('#normalFormModal').modal('hide');
-                        $('#revisednormalFormModal').modal('hide');
                         Lobibox.alert("error",
                         {
                             msg: "This appoinment schedule is not available, please select other schedule in the calendar."
@@ -781,7 +768,7 @@ $counter = 0;
             });
         });
 
-        $('.normal_form_walkin').on('submit',function(e){
+        $('.normal_form_walkin').on('submit', function(e) {
             e.preventDefault();
             $('.loading').show();
             reason = $('.reason_referral').val();
@@ -791,30 +778,25 @@ $counter = 0;
             $(this).ajaxSubmit({
                 url: "{{ url('doctor/patient/refer/walkin/normal') }}",
                 type: 'POST',
-                success: function(data){
-                    $('.loading').hide();
+                success: function(data) {
                     console.log(data);
-                    setTimeout(function(){
+                    setTimeout(function() {
                         window.location.reload(false);
-                    },500);
+                    }, 500);
                 },
-                error: function(){
+                error: function() {
                     $('#serverModal').modal();
                 }
             });
         });
 
         $('.revised_normal_form').on('submit',function(e){
-            e.preventDefault();
             $('.loading').show();
-            reason = $('.reason_referral').val();
+            $('.btn-submit').attr('disabled',true);
             form_type = '#revisednormalFormModal';
             department_id = $('.select_department_normal').val();
             department_name = $('.select_department_normal option:selected').html();
-            facility_id = "{{ $facility_id }}";
-            // if (facility_id == 63) {
-                // Provide access to the new form version
-                $(this).ajaxSubmit({
+            $(this).ajaxSubmit({
                     url: "{{ url('submit-referral/normal') }}",
                     type: 'POST',
                     success: function(res){
@@ -830,12 +812,11 @@ $counter = 0;
                         $('#serverModal').modal();
                         $('.loading').hide(); // Hide loading animation on error
                     }
-
                 });
-            // }
+            
         });
 
-        $('.revised_normal_form').on('submit', function(e){
+        $('.revised_pregnant_form').on('submit', function(e){
             e.preventDefault();
             $('.loading').show();
             form_type = '#revisedpregnantFormModal';
@@ -952,7 +933,7 @@ $counter = 0;
 
         });
 
-        $('.pregnant_form_walkin').on('submit',function(e){
+        $('.pregnant_form_walkin').on('submit', function(e) {
             e.preventDefault();
             $('.loading').show();
             form_type = '#pregnantFormModal';
@@ -963,17 +944,18 @@ $counter = 0;
             $(this).ajaxSubmit({
                 url: "{{ url('doctor/patient/refer/walkin/pregnant') }}",
                 type: 'POST',
-                success: function(data){
+                success: function(data) {
                     console.log(data);
-                    setTimeout(function(){
+                    setTimeout(function() {
                         window.location.reload(false);
-                    },500);
+                    }, 500);
                 },
-                error: function(XMLHttpRequest, textStatus, errorThrown){
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
                     console.log(XMLHttpRequest);
                     console.log(textStatus);
                     console.log(errorThrown);
-                    console.log("Status: " + textStatus); console.log("Error: " + errorThrown);
+                    console.log("Status: " + textStatus);
+                    console.log("Error: " + errorThrown);
                     $('#serverModal').modal();
                 }
             });

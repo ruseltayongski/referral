@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ParamCtrl;
 
-
+use App\Baby;
 use App\Tracking;
 use App\Department;
 use App\Activity;
@@ -970,8 +970,6 @@ class NewFormCtrl extends Controller
 
         if ($type == "normal"){
          
-            // from PatientCtrl
-
             Patients::where('id',$patient_id)
             ->update([
                 'sex' => $request->patient_sex,
@@ -1050,6 +1048,26 @@ class NewFormCtrl extends Controller
             self::addTracking($code,$patient_id,$user,$request,$type,$form->id,'refer');
          
         }else if ($type == "pregnant") {
+            $baby = array(
+                'fname' => ($request->baby_fname) ? $request->baby_fname: '',
+                'mname' => ($request->baby_mname) ? $request->baby_mname: '',
+                'lname' => ($request->baby_lname) ? $request->baby_lname: '',
+                'dob' => ($request->baby_dob) ? $request->baby_dob: '',
+                'civil_status' => 'Single'
+            );
+            $baby_id = self::storeBabyAsPatient($baby,$patient_id);
+
+            $baby2 = Baby::updateOrCreate([
+                'baby_id' => $baby_id,
+                'mother_id' => $patient_id
+            ],[
+                'weight' => ($request->baby_weight) ? $request->baby_weight:'',
+                'gestational_age' => ($request->baby_gestational_age) ? $request->baby_gestational_age: ''
+            ]);
+
+            $baby2->birth_date = ($request->baby_dob) ? $request->baby_dob : '';
+            $baby2->save();
+
 
             $data = array(
                 'unique_id' => $unique_id,
@@ -1072,7 +1090,7 @@ class NewFormCtrl extends Controller
                 'woman_during_transport' => ($request->woman_during_treatment) ? $request->woman_during_treatment: '',
                 'woman_transport_given_time' => ($request->woman_during_given_time) ? $request->woman_during_given_time: '',
                 'woman_information_given' => ($request->woman_information_given) ? $request->woman_information_given: '',
-                'patient_baby_id' => '',
+                'patient_baby_id' => $baby_id,
                 'baby_reason' => ($request->baby_reason) ? $request->baby_reason: '',
                 'baby_major_findings' => ($request->baby_major_findings) ? $request->baby_major_findings: '',
                 'baby_last_feed' => ($request->baby_last_feed) ? $request->baby_last_feed: '',
@@ -1110,8 +1128,45 @@ class NewFormCtrl extends Controller
             self::newFormPregnant($request);
             self::addTracking($code,$patient_id,$user,$request,$type,$form->id);
         }
-        
+            if($request->referred_facility == 790 || $request->referred_facility == 23) {
+                return $this->referred_patient_data;
+            } else {
+                Session::put("refer_patient",true);
+            }
     }
+
+
+    public function storeBabyAsPatient($data,$mother_id)
+    {
+        if($data['fname']){
+            if($data['mname'] == "")
+                $data['mname'] = " ";
+
+            $mother = Patients::find($mother_id);
+            $data['brgy'] = $mother->brgy;
+            $data['muncity'] = $mother->muncity;
+            $data['province'] = $mother->province;
+            $dob = date('ymd',strtotime($data['dob']));
+
+            $tmp = array(
+                $data['fname'],
+                $data['mname'],
+                $data['lname'],
+                $data['brgy'],
+                $dob
+            );
+            $unique = implode($tmp);
+            $match = array(
+                'unique_id' => $unique
+            );
+
+            $patient = Patients::updateOrCreate($match,$data);
+            return $patient->id;
+        }else{
+            return '0';
+        }
+    }
+
     public function newFormPregnant($request){
         $patient_id = $request->patient_id;
 
