@@ -1000,7 +1000,7 @@ class NewFormCtrl extends Controller
                 'other_diagnoses' => $request->other_diagnosis,
             );
 
-            $form = PatientForm::create($data);
+            $form = PatientForm::updateOrCreate( ['unique_id' => $unique_id],$data);
             
             $file_paths = "";
             if($_FILES["file_upload"]["name"]) {

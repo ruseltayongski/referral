@@ -791,27 +791,45 @@ $counter = 0;
         });
 
         $('.revised_normal_form').on('submit',function(e){
+            e.preventDefault();
             $('.loading').show();
             $('.btn-submit').attr('disabled',true);
             form_type = '#revisednormalFormModal';
             department_id = $('.select_department_normal').val();
             department_name = $('.select_department_normal option:selected').html();
             $(this).ajaxSubmit({
-                    url: "{{ url('submit-referral/normal') }}",
-                    type: 'POST',
-                    success: function(res){
-                        console.log(res);
-                        $('.loading').hide(); // Hide loading animation on success
-                        setTimeout(function(){
-                            $(location).attr('href', "{{ asset('doctor/referred') }}");
-                        }, 500);
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error: ", error);
-                        console.error("Response: ", xhr.responseText);
-                        $('#serverModal').modal();
-                        $('.loading').hide(); // Hide loading animation on error
+                url: "{{ url('submit-referral/normal') }}",
+                type: 'POST',
+                success: function(data) {
+                    console.log(data);
+                    if(data == 'consultation_rejected') {
+                        $('.loading').hide();
+                        $('#revisedpregnantModal').modal('hide');
+                        $('#revisednormalFormModal').modal('hide');
+                        Lobibox.alert("error",
+                        {
+                            msg: "This appoinment schedule is not available, please select other schedule in the calendar."
+                        });
+                        return;
                     }
+                    //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+                    if(data.referred_to == 790 || data.referred_to == 23) {
+                        var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                        data.age = parseInt(data.age);
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#revisedpregnantModal').modal('hide');
+                        $('#revisednormalFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled',false);
+                        Lobibox.alert("success",
+                            {
+                                msg: "Successfully referred the patient!"
+                            });
+                    } //push notification for CCMD
+                    else {
+                        $(location).attr('href', "{{ asset('doctor/referred') }}");
+                    }
+                }
                 });
             
         });
