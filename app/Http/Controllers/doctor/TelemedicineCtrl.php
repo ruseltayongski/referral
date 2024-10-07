@@ -130,7 +130,9 @@ class TelemedicineCtrl extends Controller
     public function getBookedDates(){
         $user = Session::get('auth');
 
-        $bookDates = AppointmentSchedule::where('facility_id', $user->facility_id)->pluck('appointed_date')->toArray();
+        // $bookDates = AppointmentSchedule::where('facility_id', $user->facility_id)->pluck('appointed_date')->toArray();
+        $bookDates = AppointmentSchedule::with(['telemedAssignedDoctor'])
+                    ->where('facility_id', $user->facility_id)->get();
         return response()->json($bookDates);
     }
     //-------------End of get all booked dates-------------------------------
@@ -271,7 +273,6 @@ class TelemedicineCtrl extends Controller
     {
         
         $user = Session::get('auth');
-
         $appointmentDate = $request->input('update_appointment_date');
         
         $appointed_id = $request->input("appointment_id");
@@ -300,8 +301,7 @@ class TelemedicineCtrl extends Controller
                     
                    // $appointment->telemedAssignedDoctor()->delete();
 
-                    $doctor_ids = $request->input('available_doctor' . $i);
-                    
+                    $doctor_ids = $request->input('Update_available_doctor' . $i);
                     if(!is_array($doctor_ids)){
                         $doctor_ids = [$doctor_ids];
                     }
@@ -330,8 +330,8 @@ class TelemedicineCtrl extends Controller
        
            
         for($i=1; $i<=$request->appointment_count; $i++) { 
-            
-                if(empty($request['appointed_time'.$i]) || empty($request['appointed_time_to'.$i]) || empty($request['opdCategory'.$i])) {
+                
+                if(empty($request['Add_appointed_time'.$i]) || empty($request['Add_appointed_time_to'.$i]) || empty($request['opdCategory'.$i])) {
                     continue;
                 }
                 
@@ -339,15 +339,15 @@ class TelemedicineCtrl extends Controller
                 $Update_appointment_data->appointed_date = $appointmentDate;
                 $Update_appointment_data->facility_id = $request->facility_id;
                 $Update_appointment_data->department_id = 5;
-                $Update_appointment_data->appointed_time = $request['appointed_time'.$i];
-                $Update_appointment_data->appointedTime_to = $request['appointed_time_to'.$i];
+                $Update_appointment_data->appointed_time = $request['Add_appointed_time'.$i];
+                $Update_appointment_data->appointedTime_to = $request['Add_appointed_time_to'.$i];
                 $Update_appointment_data->opdCategory = $request['opdCategory'.$i];
                 $Update_appointment_data->created_by = $user->id;
                 $Update_appointment_data->save();
                 
-                $availableDoctors = is_array($request['available_doctor'.$i])
-                ? $request['available_doctor'.$i]
-                : [$request['available_doctor'.$i]];
+                $availableDoctors = is_array($request['Add_Update_available_doctor'.$i])
+                ? $request['Add_Update_available_doctor'.$i]
+                : [$request['Add_Update_available_doctor'.$i]];
     
                 foreach($availableDoctors as $doctorId){
                     $tele_assign_doctor = new TelemedAssignDoctor();

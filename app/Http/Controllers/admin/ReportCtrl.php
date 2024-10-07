@@ -2372,4 +2372,30 @@ class ReportCtrl extends Controller
             'date_range' => $date_range
         ]);
     }
+
+    public function PinakaDakoRerferVecenteSottoOutgoing(){
+        $latestActivity = DB::table('activity')
+        ->select(DB::raw('DATE(created_at) as day'), DB::raw('COUNT(*) as outgoing'))
+        ->where('referred_from', 24)
+        ->whereIn('status', ['referred', 'redirected', 'transferred'])
+        ->groupBy(DB::raw('DATE(created_at)'))
+        ->orderBy('outgoing', 'desc')
+        ->limit(1)
+        ->first();
+
+        return response()->json($latestActivity);
+    }
+
+    public function PinakaDakoRerferVecenteSottoIncoming(){
+        $latestActivity = DB::table('activity')
+        ->select(DB::raw('DATE(created_at) as day'), DB::raw('COUNT(*) as incoming'))
+        ->where('referred_to', 24)
+        ->whereIn('status', ['referred', 'redirected', 'transferred'])
+        ->groupBy(DB::raw('DATE(created_at)'))
+        ->orderBy('incoming', 'desc')
+        ->limit(1)
+        ->first();
+
+        return response()->json($latestActivity);
+    }
 }

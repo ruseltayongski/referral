@@ -63,20 +63,20 @@ class PDFPrescription extends FPDF
         $this->Cell(0, 2, iconv('UTF-8', 'windows-1252', $this->header), 0, 1, 'C');
         $this->Setx(10);
         $this->SetFont('Arial', '', 9);
-        $this->Cell(0, 10, iconv('UTF-8', 'windows-1252',  $this->department), 0, 1, 'C');
+        $this->Cell(0, 10, iconv('UTF-8', 'windows-1252', $this->department), 0, 1, 'C');
         $this->Ln(5);
 
         $this->Setx(10);
-        $this->SetFont('Arial', 'B', 10);
-        $this->Cell(0, 0,  iconv('UTF-8', 'windows-1252', $this->facility),  0, "", "C");
+        $this->SetFont('Arial','B',10);
+        $this->Cell(0,0, iconv('UTF-8', 'windows-1252', $this->facility), 0,"","C");
         $this->Ln();
 
         $this->Setx(10);
-        $this->SetFont('Arial', '', 9);
-        $this->Cell(0, 12, iconv('UTF-8', 'windows-1252',  $this->facility_address),  0, "", "C");
+        $this->SetFont('Arial','',9);
+        $this->Cell(0,12, iconv('UTF-8', 'windows-1252', $this->facility_address), 0,"","C");
         $this->Ln();
         $this->Setx(10);
-        $this->Cell(0, 0,  iconv('UTF-8', 'windows-1252', $this->facility_email),  0, "", "C");
+        $this->Cell(0,0, iconv('UTF-8', 'windows-1252', $this->facility_email), 0,"","C");
         $this->Ln();
         $this->Setx(10);
         $this->Cell(0, 12, $this->facility_contact, 0, "", "C");
@@ -88,15 +88,14 @@ class PDFPrescription extends FPDF
         $this->Ln(3);
     }
 
-    public function Footer()
-    {
+    public function Footer() {
 
         $headerPath = realpath(__DIR__.'/../../../../resources/img/video/wave_footer.png');
         $this->Image($headerPath, 0, 262, 210, 35);
 
-        $this->SetY(-40);
+        $this->SetY(-40);   
         $this->Setx(105);
-        $this->SetTextColor(0, 0, 0);
+        $this->SetTextColor(0,0,0);
 
         $this->SetFont('Arial', 'B', 11);
         $headerLength = strlen($this->header);

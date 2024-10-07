@@ -15,7 +15,14 @@
 
         <div id="app_doctor">
             <input type="hidden" value="{{ asset('resources/img/loading.gif') }}" id="loadingGif">
-            <doctor-app :date_start="{{ json_encode($date_start) }}" :date_end="{{ json_encode($date_end) }}" :user="{{ $user }}" :error="{{ json_encode($error) }}"></doctor-app>
+            <doctor-app :date_start="{{ json_encode($date_start) }}" 
+                        :date_end="{{ json_encode($date_end) }}" 
+                        :user="{{ $user }}" 
+                        :error="{{ json_encode($error) }}"
+                        :incoming_reffered="{{ json_encode($totalIncoming) }}"
+                        :total_referred="{{ json_encode($totalReferred) }}"
+                        :year="{{ $year }}">
+            </doctor-app>
         </div>
     @endif
 

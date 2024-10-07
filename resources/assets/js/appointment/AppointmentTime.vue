@@ -88,6 +88,13 @@ export default {
       // // $('.hours_radio').setAttribute('min', currentDate);
       return doctors.every((doctor) => doctor.appointment_by);
     },
+    isPastDatetime(appointedDate, appointedTime){
+       const now = new Date();
+       const appointmentDateTime = new Date(`${appointedDate}T${appointedTime}`);
+
+    // If the appointment time is before the current time, return true (disabled)
+        return appointmentDateTime < now;
+    },
     proceedAppointment() {
       if (!this.selectedAppointmentTime) {
         Lobibox.alert("error", {
@@ -162,7 +169,7 @@ export default {
                     class="external-event"
                     style="background-color: rgb(255 214 214); color: #ffff"
                   >
-                    Full Slot
+                    Not Available
                   </div>
                 </div>
                 <div class="box box-solid">
@@ -192,7 +199,7 @@ export default {
                             appointment.telemed_assigned_doctor,
                             appointment.appointed_date,
                             appointment.appointed_time
-                          )
+                          ) || isPastDatetime(appointment.appointed_date,appointment.appointed_time)
                         "
                       />&nbsp;&nbsp;
                       <span
@@ -244,7 +251,7 @@ export default {
                       class="btn btn-success bt-md btn-block"
                       @click="proceedAppointment"
                     >
-                      <i class="fa fa-calendar"></i>&nbsp;Appointment
+                      <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
                     </button>
                     <button
                       v-else
@@ -253,8 +260,8 @@ export default {
                       class="btn btn-danger bt-md btn-block"
                       disabled
                     >
-                      <i class="fa fa-calendar"></i>&nbsp;All appointments are
-                      full
+                      <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments
+                      are full
                     </button>
                   </div>
                 </div>

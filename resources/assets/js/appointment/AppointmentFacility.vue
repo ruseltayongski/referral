@@ -79,33 +79,70 @@ export default {
       const now = new Date();
       console.log("user", this.appointment);
       if (this.appointment && this.appointment.appointment_schedules) {
+        const appointmentIdMap = new Map();
+
         this.appointment.appointment_schedules.forEach((sched) => {
           // Combine appointed_date and appointed_time into a single Date object
           const appointedDatetime = new Date(
             `${sched.appointed_date}T${sched.appointed_time}`
           );
+
           // Check if the schedule is in the future
           if (appointedDatetime > now) {
             sched.telemed_assigned_doctor.forEach((doctor) => {
-              if (!doctor.appointment_by) {
-                count++;
+              const appointmentId = doctor.appointment_id;
+              // Initialize the map for this appointment_id if not done already
+              if (!appointmentIdMap.has(appointmentId)) {
+                appointmentIdMap.set(appointmentId, {
+                  allNull: true, // Assume all appointment_by are null initially
+                  hasNull: false, // Track if there's at least one null
+                });
+              }
+              // Initialize the map for this appointment_id if not done already
+              const status = appointmentIdMap.get(appointmentId);
+              if (doctor.appointment_by) {
+                status.allNull = false;
+              } else {
+                status.hasNull = true;
               }
             });
+          }
+        });
+        // Count the number of appointment_ids where all appointment_by are null
+        appointmentIdMap.forEach((status, appointmentId) => {
+          if (status.hasNull) {
+            count++;
           }
         });
       }
       return count;
     },
+    // shouldDisplayFacility() {
+    //   const now = new Date();
+    //   const isAppointedExpire = this.appointment.appointment_schedules.every(
+    //     (sched) => {
+    //       const AppointedDate = new Date(`${sched.appointed_date}`);
+    //       console.log(AppointedDate);
+    //       return AppointedDate <= now;
+    //     }
+    //   );
+    //   return !isAppointedExpire;
+    //   //&& !this.emptyAppointmentByCount == 0
+    // },
     shouldDisplayFacility() {
       const now = new Date();
-      const isAppointedExpire = this.appointment.appointment_schedules.every(
+
+      const hasValidAppointment = this.appointment.appointment_schedules.some(
         (sched) => {
-          const AppointedDate = new Date(`${sched.appointed_date}`);
-          return AppointedDate <= now;
+          const appointmentDatetime = new Date(
+            `${sched.appointed_date} ${sched.appointed_time}`
+          );
+
+          return appointmentDatetime > now;
         }
       );
-      return !isAppointedExpire;
-      //&& !this.emptyAppointmentByCount == 0
+
+      return hasValidAppointment;
     },
     balanceSlotThisMonth() {
       let usedCount = 0;
@@ -113,34 +150,86 @@ export default {
       const now = new Date();
       const currentyear = now.getFullYear();
       const currentmonth = now.getMonth();
-
       if (this.appointment && this.appointment.appointment_schedules) {
-        this.appointment.appointment_schedules.forEach((sched) => {
-          const appointedDate = new Date(sched.appointed_date);
-          const appointedYear = appointedDate.getFullYear();
-          const appointedMonth = appointedDate.getMonth();
-
-          if (
-            appointedYear === currentyear &&
-            appointedMonth === currentmonth
-          ) {
-            const appointedDatetime = new Date(
-              `${sched.appointed_date}T${sched.appointed_time}`
+        // Step 1: Filter schedules by appointed_date (current mnoth and year)
+        const filteredSchedules = this.appointment.appointment_schedules.filter(
+          (sched) => {
+            const appointedDate = new Date(sched.appointed_date);
+            const appointedYear = appointedDate.getFullYear();
+            const appointedMonth = appointedDate.getMonth();
+            return (
+              appointedYear === currentyear && appointedMonth === currentmonth
             );
+          }
+        );
 
-            if (appointedDatetime > now) {
-              sched.telemed_assigned_doctor.forEach((doctor) => {
-                if (doctor.appointment_by) {
-                  usedCount++;
-                }
-              });
-            } else {
-              expiredCount++;
-            }
+        const appointmentIdToDate = filteredSchedules.reduce((acc, sched) => {
+          acc[sched.id] = sched.appointed_date;
+          return acc;
+        }, {});
+
+        const groupedDoctorByDate = {};
+        this.appointment.appointment_schedules.forEach((schedule) => {
+          const doctors = schedule.telemed_assigned_doctor;
+          if (doctors && Array.isArray(doctors)) {
+            doctors.forEach((doctor) => {
+              const appointedDate = appointmentIdToDate[doctor.appointment_id];
+              if (appointedDate) {
+                if (!groupedDoctorByDate[appointedDate])
+                  groupedDoctorByDate[appointedDate] = [];
+                groupedDoctorByDate[appointedDate].push(doctor);
+              }
+            });
           }
         });
+        console.log("Grouped doctors by appointed_date:", groupedDoctorByDate);
+
+        Object.entries(groupedDoctorByDate).forEach(
+          ([appointedDate, doctors]) => {
+            const doctorsByAppointmentId = doctors.reduce((acc, doctor) => {
+              if (!acc[doctor.appointment_id]) acc[doctor.appointment_id] = [];
+              acc[doctor.appointment_id].push(doctor);
+              return acc;
+            }, {});
+
+            Object.values(doctorsByAppointmentId).forEach(
+              (appointmentDoctors) => {
+                // Find the schedule associated with this appointmentDoctors group
+                const schedule = filteredSchedules.find(
+                  (sched) => sched.id === appointmentDoctors[0].appointment_id
+                );
+
+                if (schedule) {
+                  const appointedDatetime = new Date(
+                    `${schedule.appointed_date}T${schedule.appointed_time}`
+                  );
+                  const allAssigned = appointmentDoctors.every(
+                    (doctor) => doctor.appointment_by !== null
+                  );
+
+                  if (allAssigned) {
+                    usedCount++;
+                  }
+                  // Check if the appointment is in the future or past (expired)
+                  if (appointedDatetime > now) {
+                    // If all doctors are assigned, increase the used count
+                  } else {
+                    // If the appointment has expired, but at least one doctor is assigned, count as expired
+                    const someAssigned = appointmentDoctors.some(
+                      (doctor) => doctor.appointment_by === null
+                    );
+                    if (someAssigned) {
+                      expiredCount++;
+                    }
+                  }
+                }
+              }
+            );
+          }
+        );
       }
       const totalcount = usedCount + expiredCount;
+      console.log(`Used count: ${usedCount}, Expired count: ${expiredCount}`);
       return totalcount;
     },
   },

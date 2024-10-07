@@ -95,7 +95,7 @@ export default {
         console.log(error);
       });
 
-    this.hideDivAfterTimeout();
+    //this.hideDivAfterTimeout();
     window.addEventListener("click", this.showDivAgain);
   },
   beforeUnmount() {
@@ -227,15 +227,15 @@ export default {
       this.audioStreaming = this.audioStreaming ? false : true;
       this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
     },
-    hideDivAfterTimeout() {
-      setTimeout(() => {
-        $(".iconCall").removeClass("fade-in");
-        this.showDiv = false;
-      }, 10000);
-    },
+    // hideDivAfterTimeout() {
+    // setTimeout(() => {
+    //   $(".iconCall").removeClass("fade-in");
+    //   this.showDiv = false;
+    // }, 10000);
+    // },
     showDivAgain() {
       this.showDiv = true;
-      this.hideDivAfterTimeout();
+      //  this.hideDivAfterTimeout();
     },
     clearTimeout() {
       // Clear the timeout if the component is about to be unmounted
@@ -338,110 +338,124 @@ export default {
           <Transition name="fade">
             <div class="tooltip-container">
               <div class="iconCall position-absolute fade-in" v-if="showDiv">
-                <div
-                  v-if="showTooltip"
-                  class="tooltip-text"
-                  style="background-color: #007bff"
-                >
-                  lab Request
+                <div class="button-container">
+                  <div
+                    v-if="showMic"
+                    class="tooltip-text"
+                    style="background-color: #138496"
+                  >
+                    Audio
+                  </div>
+                  <button
+                    class="btn btn-info btn-lg mic-button"
+                    :class="{ 'mic-button-slash': !audioStreaming }"
+                    @click="audioStreamingOnAnddOff"
+                    type="button"
+                    @mouseover="showMic = true"
+                    @mouseleave="showMic = false"
+                  >
+                    <i class="bi-mic-fill"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showPrescription"
-                  class="tooltip-text"
-                  style="background-color: #218838"
-                >
-                  Prescription
+                &nbsp;
+                <div class="button-container">
+                  <div
+                    v-if="showVedio"
+                    class="tooltip-text"
+                    style="background-color: #218838"
+                  >
+                    Video
+                  </div>
+                  <button
+                    class="btn btn-success btn-lg video-button"
+                    :class="{ 'video-button-slash': !videoStreaming }"
+                    @click="videoStreamingOnAndOff"
+                    type="button"
+                    @mouseover="showVedio = true"
+                    @mouseleave="showVedio = false"
+                  >
+                    <i class="bi-camera-video-fill"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showUpward"
-                  class="tooltip-text"
-                  style="background-color: #e0a800"
-                >
-                  Upward
+                &nbsp;
+                <div class="button-container">
+                  <div
+                    v-if="showEndcall"
+                    class="tooltip-text"
+                    style="background-color: #c82333"
+                  >
+                    End Call
+                  </div>
+                  <button
+                    class="btn btn-danger btn-lg decline-button"
+                    @click="leaveChannel"
+                    type="button"
+                    @mouseover="showEndcall = true"
+                    @mouseleave="showEndcall = false"
+                  >
+                    <i class="bi-telephone-x-fill"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showEndcall"
-                  class="tooltip-text"
-                  style="background-color: #c82333"
-                >
-                  End Call
+                &nbsp;
+                <div class="button-container">
+                  <div
+                    v-if="showUpward"
+                    class="tooltip-text"
+                    style="background-color: #e0a800"
+                  >
+                    Upward
+                  </div>
+                  <button
+                    class="btn btn-warning btn-lg upward-button"
+                    @click="endorseUpward"
+                    type="button"
+                    v-if="referring_md == 'no'"
+                    @mouseover="showUpward = true"
+                    @mouseleave="showUpward = false"
+                  >
+                    <i class="bi-hospital"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showVedio"
-                  class="tooltip-text"
-                  style="background-color: #218838"
-                >
-                  Video
+                <div class="button-container">
+                  <div
+                    v-if="showPrescription"
+                    class="tooltip-text"
+                    style="background-color: #218838"
+                  >
+                    Prescription
+                  </div>
+                  <button
+                    class="btn btn-success btn-lg prescription-button"
+                    data-toggle="modal"
+                    data-target="#prescriptionModal"
+                    type="button"
+                    v-if="referring_md == 'no'"
+                    @mouseover="showPrescription = true"
+                    @mouseleave="showPrescription = false"
+                  >
+                    <i class="bi bi-prescription"></i>
+                  </button>
                 </div>
-                <div
-                  v-if="showMic"
-                  class="tooltip-text"
-                  style="background-color: #138496"
-                >
-                  Audio
+                <div class="button-container">
+                  <div
+                    v-if="showTooltip"
+                    class="tooltip-text"
+                    style="background-color: #007bff"
+                  >
+                    lab Request
+                  </div>
+                  <button
+                    class="btn btn-primary btn-lg prescription-button"
+                    data-toggle="modal"
+                    data-target="#labRequestModal"
+                    type="button"
+                    v-if="referring_md == 'no'"
+                    @mouseover="showTooltip = true"
+                    @mouseleave="showTooltip = false"
+                  >
+                    <i class="bi bi-prescription2"></i>
+                  </button>
                 </div>
-                <button
-                  class="btn btn-info btn-lg mic-button"
-                  :class="{ 'mic-button-slash': !audioStreaming }"
-                  @click="audioStreamingOnAnddOff"
-                  type="button"
-                  @mouseover="showMic = true"
-                  @mouseleave="showMic = false"
-                >
-                  <i class="bi-mic-fill"></i></button
-                >&nbsp;
-                <button
-                  class="btn btn-success btn-lg video-button"
-                  :class="{ 'video-button-slash': !videoStreaming }"
-                  @click="videoStreamingOnAndOff"
-                  type="button"
-                  @mouseover="showVedio = true"
-                  @mouseleave="showVedio = false"
-                >
-                  <i class="bi-camera-video-fill"></i></button
-                >&nbsp;
-                <button
-                  class="btn btn-danger btn-lg decline-button"
-                  @click="leaveChannel"
-                  type="button"
-                  @mouseover="showEndcall = true"
-                  @mouseleave="showEndcall = false"
-                >
-                  <i class="bi-telephone-x-fill"></i></button
-                >&nbsp;
-                <button
-                  class="btn btn-warning btn-lg upward-button"
-                  @click="endorseUpward"
-                  type="button"
-                  v-if="referring_md == 'no'"
-                  @mouseover="showUpward = true"
-                  @mouseleave="showUpward = false"
-                >
-                  <i class="bi-hospital"></i>
-                </button>
-                <button
-                  class="btn btn-success btn-lg prescription-button"
-                  data-toggle="modal"
-                  data-target="#prescriptionModal"
-                  type="button"
-                  v-if="referring_md == 'no'"
-                  @mouseover="showPrescription = true"
-                  @mouseleave="showPrescription = false"
-                >
-                  <i class="bi bi-prescription"></i>
-                </button>
-
-                <button
-                  class="btn btn-primary btn-lg prescription-button"
-                  data-toggle="modal"
-                  data-target="#labRequestModal"
-                  type="button"
-                  v-if="referring_md == 'no'"
-                  @mouseover="showTooltip = true"
-                  @mouseleave="showTooltip = false"
-                >
-                  <i class="bi bi-prescription2"></i>
-                </button>
               </div>
             </div>
           </Transition>
@@ -477,187 +491,189 @@ export default {
             </div>
             <div class="tableForm">
               <table class="table table-striped formTable">
-                <tr>
-                  <td colspan="12">
-                    Name of Referring Facility:
-                    <span class="forDetails"> {{ form.referring_name }} </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Facility Contact #:
-                    <span class="forDetails">
-                      {{ form.referring_contact }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Address:
-                    <span class="forDetails">
-                      {{ form.referring_address }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="6">
-                    Referred to:
-                    <span class="forDetails"> {{ form.referred_name }} </span>
-                  </td>
-                  <td colspan="6">
-                    Department:
-                    <span class="forDetails"> {{ form.department }} </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Address:
-                    <span class="forDetails">
-                      {{ form.referred_address }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="6">
-                    Date/Time Referred (ReCo):
-                    <span class="dateReferred"> {{ form.time_referred }} </span>
-                  </td>
-                  <td colspan="6">
-                    Date/Time Transferred:<span class="forDetails">
-                      {{ form.time_transferred }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="4">
-                    Name of Patient:
-                    <span class="forDetails"> {{ form.patient_name }} </span>
-                  </td>
-                  <td colspan="4">
-                    Age: <span class="forDetails"> {{ patient_age }} </span>
-                  </td>
-                  <td colspan="4">
-                    Sex:
-                    <span class="forDetails"> {{ form.patient_sex }} </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="6">
-                    Address:
-                    <span class="forDetails"> {{ form.patient_address }} </span>
-                  </td>
-                  <td colspan="6">
-                    Status:
-                    <span class="forDetails"> {{ form.patient_status }} </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="6">
-                    Philhealth status:
-                    <span class="forDetails"> {{ form.phic_status }} </span>
-                  </td>
-                  <td colspan="6">
-                    Philhealth #:
-                    <span class="forDetails"> {{ form.phic_id }} </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Covid Number:
-                    <span class="forDetails"> {{ form.covid_number }} </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Clinical Status:
-                    <span class="forDetails">
-                      {{ form.refer_clinical_status }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Surviellance Category:
-                    <span class="forDetails">
-                      {{ form.refer_sur_category }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Case Summary (pertinent Hx/PE, including meds, labs, course
-                    etc.): <br /><span class="caseforDetails">{{
-                      form.case_summary
-                    }}</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Summary of ReCo (pls. refer to ReCo Guide in Referring
-                    Patients Checklist):<br /><span class="recoSummary">
-                      {{ form.reco_summary }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    ICD-10 Code and Description:
-                    <li v-for="i in icd">
-                      <span class="caseforDetails"
-                        >{{ i.code }} - {{ i.description }}</span
-                      >
-                    </li>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Reason for referral:
-                    <span class="forDetails">
-                      {{ form.other_reason_referral }}
-                    </span>
-                  </td>
-                </tr>
-                <tr v-if="file_path">
-                  <td colspan="12">
-                    <span v-if="file_path.length > 1">File Attachments: </span>
-                    <span v-else>File Attachment: </span>
-                    <span v-for="(path, index) in file_path" :key="index">
-                      <a
-                        :href="path"
-                        :key="index"
-                        id="file_download"
-                        class="reason"
-                        target="_blank"
-                        download
-                        >{{ file_name[index] }}</a
-                      >
-                      <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Name of Referring MD/HCW:
-                    <span class="forDetails"> {{ form.md_referring }} </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Contact # of Referring MD/HCW:
-                    <span class="forDetails">
-                      {{ form.referring_md_contact }}
-                    </span>
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="12">
-                    Name of referred MD/HCW-Mobile Contact # (ReCo): <br /><span
-                      class="mdHcw"
-                    >
-                      {{ form.md_referred }}
-                    </span>
-                  </td>
-                </tr>
+                <tbody>
+                    <tr>
+                    <td colspan="12">
+                        Name of Referring Facility:
+                        <span class="forDetails"> {{ form.referring_name }} </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Facility Contact #:
+                        <span class="forDetails">
+                        {{ form.referring_contact }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Address:
+                        <span class="forDetails">
+                        {{ form.referring_address }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="6">
+                        Referred to:
+                        <span class="forDetails"> {{ form.referred_name }} </span>
+                    </td>
+                    <td colspan="6">
+                        Department:
+                        <span class="forDetails"> {{ form.department }} </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Address:
+                        <span class="forDetails">
+                        {{ form.referred_address }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="6">
+                        Date/Time Referred (ReCo):
+                        <span class="dateReferred"> {{ form.time_referred }} </span>
+                    </td>
+                    <td colspan="6">
+                        Date/Time Transferred:<span class="forDetails">
+                        {{ form.time_transferred }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="4">
+                        Name of Patient:
+                        <span class="forDetails"> {{ form.patient_name }} </span>
+                    </td>
+                    <td colspan="4">
+                        Age: <span class="forDetails"> {{ patient_age }} </span>
+                    </td>
+                    <td colspan="4">
+                        Sex:
+                        <span class="forDetails"> {{ form.patient_sex }} </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="6">
+                        Address:
+                        <span class="forDetails"> {{ form.patient_address }} </span>
+                    </td>
+                    <td colspan="6">
+                        Status:
+                        <span class="forDetails"> {{ form.patient_status }} </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="6">
+                        Philhealth status:
+                        <span class="forDetails"> {{ form.phic_status }} </span>
+                    </td>
+                    <td colspan="6">
+                        Philhealth #:
+                        <span class="forDetails"> {{ form.phic_id }} </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Covid Number:
+                        <span class="forDetails"> {{ form.covid_number }} </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Clinical Status:
+                        <span class="forDetails">
+                        {{ form.refer_clinical_status }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Surviellance Category:
+                        <span class="forDetails">
+                        {{ form.refer_sur_category }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Case Summary (pertinent Hx/PE, including meds, labs, course
+                        etc.): <br /><span class="caseforDetails">{{
+                        form.case_summary
+                        }}</span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Summary of ReCo (pls. refer to ReCo Guide in Referring
+                        Patients Checklist):<br /><span class="recoSummary">
+                        {{ form.reco_summary }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        ICD-10 Code and Description:
+                        <li v-for="i in icd">
+                        <span class="caseforDetails"
+                            >{{ i.code }} - {{ i.description }}</span
+                        >
+                        </li>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Reason for referral:
+                        <span class="forDetails">
+                        {{ form.other_reason_referral }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr v-if="file_path">
+                    <td colspan="12">
+                        <span v-if="file_path.length > 1">File Attachments: </span>
+                        <span v-else>File Attachment: </span>
+                        <span v-for="(path, index) in file_path" :key="index">
+                        <a
+                            :href="path"
+                            :key="index"
+                            id="file_download"
+                            class="reason"
+                            target="_blank"
+                            download
+                            >{{ file_name[index] }}</a
+                        >
+                        <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Name of Referring MD/HCW:
+                        <span class="forDetails"> {{ form.md_referring }} </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Contact # of Referring MD/HCW:
+                        <span class="forDetails">
+                        {{ form.referring_md_contact }}
+                        </span>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td colspan="12">
+                        Name of referred MD/HCW-Mobile Contact # (ReCo): <br /><span
+                        class="mdHcw"
+                        >
+                        {{ form.md_referred }}
+                        </span>
+                    </td>
+                    </tr>
+                </tbody>
               </table>
               <div v-if="referring_md == 'yes'">
                 <button

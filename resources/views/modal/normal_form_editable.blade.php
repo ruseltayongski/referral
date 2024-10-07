@@ -1,26 +1,37 @@
 <?php
-    $appointmentParam = $_GET['appointment'];
-    $facility_id_telemedicine = json_decode(json_decode($appointmentParam, true),true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
-    $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
-    $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
+// $appointmentParam = $_GET['appointment'];
+$appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : session('telemed');
 
-    $user = Session::get('auth');
-    $facilities = \App\Facility::select('id','name')
-        ->where('id','!=',$user->facility_id)
-        ->where('status',1)
-        ->where('referral_used','yes');
-    if($facility_id_telemedicine) {
-        $facilities = $facilities->where('id', $facility_id_telemedicine);
-    }
+$facility_id_telemedicine = json_decode(json_decode($appointmentParam, true), true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
+$telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true), true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
+$telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true), true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
 
-    $facilities = $facilities
-        ->orderBy('name','asc')
-        ->get();
+$user = Session::get('auth');
+$facilities = \App\Facility::select('id', 'name', 'address')
+    ->where('id', '!=', $user->facility_id)
+    ->where('status', 1)
+    ->where('referral_used', 'yes');
+if ($facility_id_telemedicine) {
+    $facilities = $facilities->where('id', $facility_id_telemedicine);
+}
 
-    $myfacility = \App\Facility::find($user->facility_id);
-    $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
-    $inventory = \App\Inventory::where("facility_id",$myfacility->id)->get();
-    $reason_for_referral = \App\ReasonForReferral::get();
+$facilities = $facilities
+    ->orderBy('name', 'asc')
+    ->get();
+
+$myfacility = \App\Facility::find($user->facility_id);
+$facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
+$inventory = \App\Inventory::where("facility_id", $myfacility->id)->get();
+$reason_for_referral = \App\ReasonForReferral::get();
+$department = \App\Department::all();
+
+$doctor = \App\User::select('id', 'fname', 'mname', 'lname', 'contact')->get();
+
+$appoitment_sched = \App\AppointmentSchedule::select('id', 'department_id')
+    ->where('id', $telemedicine_appointment_id)->get();
+
+$department_id = $appoitment_sched[0]->department_id;
+
 ?>
 
 <style>
@@ -32,7 +43,7 @@
     }
 </style>
 
-<div class="modal fade" role="dialog" id="normalFormModal" >
+<div class="modal fade" role="dialog" id="normalFormModal">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form">
@@ -56,18 +67,18 @@
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>ADDRESS:</b></small><br>
-                                &nbsp;<span >{{ $facility_address['address'] }}</span>
+                                &nbsp;<span>{{ $facility_address['address'] }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>NAME OF REFERRING MD/HCW:</b></small><br>
-                                &nbsp;<span >Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
+                                &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
                         </div><br>
 
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success"><b>DATE/TIME REFERRED (ReCo):</b></small><br>
-                                &nbsp;<span >{{ date('l F d, Y h:i A') }}</span>
+                                &nbsp;<span>{{ date('l F d, Y h:i A') }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>NAME OF PATIENT:</b></small><br>
@@ -82,22 +93,52 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success"><b>REFERRED TO:</b></small> &nbsp;<span class="text-red">*</span><br>
+
+                                @if($appointmentParam)
+                                <input type="hidden" name="referred_facility" value="{{$facilities->find($facility_id_telemedicine)->id}}">
+                                <select class="select2 select_facility form-control" disabled>
+                                    <option>{{$facilities->find($facility_id_telemedicine)->name}}</option>
+                                </select>
+                                @else
                                 <select name="referred_facility" class="select2 select_facility form-control" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                     @endforeach
                                 </select>
+                                @endif
+
+                                {{-- <select name="referred_facility" class="select2 select_facility form-control" required>
+                                    <option value="">Select Facility...</option>
+                                    @foreach($facilities as $row)
+                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                @endforeach
+                                </select> --}}
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
+                                @if($appointmentParam)
+                                <input type="hidden" name="referred_department" value="{{$department->find($department_id)->id}}">
+                                <select class="form-control select_department select_department_normal" style="width: 100%;" disabled>
+                                    <option>{{$department->find($department_id)->description}}</option>
+                                </select>
+                                @else
                                 <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
                                     <option value="">Select Department...</option>
                                 </select>
+                                @endif
+                                <!-- <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
+                                    <option value="">Select Department...</option>
+                                </select> -->
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>ADDRESS:</b></small><br>
+
+                                @if($appointmentParam)
+                                &nbsp;<span class="text-yellow facility_address">{{$facilities->find($facility_id_telemedicine)->address}}</span>
+                                @else
                                 &nbsp;<span class="text-yellow facility_address"></span>
+                                @endif
                             </div>
                         </div><br>
 
@@ -211,7 +252,7 @@
                                     <option value="">Select reason for referral</option>
                                     <option value="-1">Other reason for referral</option>
                                     @foreach($reason_for_referral as $reason_referral)
-                                        <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                    <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -225,11 +266,27 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                @if($appointmentParam)
+                                <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%" disabled>
+                                    <option value="{{$doctor->find($telemedicine_doctor_id)->id}}">Doctor {{ $doctor->find($telemedicine_doctor_id)->fname}} {{$doctor->find($telemedicine_doctor_id)->mname}} {{$doctor->find($telemedicine_doctor_id)->lname}} - {{$doctor->find($telemedicine_doctor_id)->contact}}</option>
+                                </select>
+                                @else
+                                <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
+                                    <option value="">Any...</option>
+                                </select>
+                                @endif
+
+                            </div>
+                        </div><br>
+
+                        <!-- <div class="row">
+                            <div class="col-md-12">
+                                <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
                                 <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
                                     <option value="">Any...</option>
                                 </select>
                             </div>
-                        </div><br>
+                        </div><br> -->
 
                         <div class="row">
                             <div class="col-md-12">
@@ -240,11 +297,11 @@
                                     <div class="col-md-3" id="upload1">
                                         <div class="file-upload">
                                             <div class="text-center image-upload-wrap" id="image-upload-wrap1">
-                                                <input class="file-upload-input files" multiple id="file_upload_input1" type='file' name="file_upload[]" onchange="readUrl(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                <input class="file-upload-input files" multiple id="file_upload_input1" type='file' name="file_upload[]" onchange="readUrl(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
                                                 <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
                                             </div>
                                             <div class="file-upload-content" id="file-upload-content1">
-                                                <img class="file-upload-image" id="file-upload-image1" src="#"/>
+                                                <img class="file-upload-image" id="file-upload-image1" src="#" />
                                                 <div class="image-title-wrap">
                                                     <b><small class="image-title" id="image-title1" style="display:block; word-wrap: break-word;"></small></b>
                                                     {{--<button type="button" onclick="removeFile(1)" class="remove-image"> Remove </button>--}}
@@ -308,51 +365,58 @@
     <!-- /.modal-dialog -->
 </div>
 
+
+
 <script>
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();
-    $("#sbmitBtn").on('click',function(e){
-        if(!($("#icd").val()) && !($("#other_diag").val())){
+    $("#sbmitBtn").on('click', function(e) {
+        if (!($("#icd").val()) && !($("#other_diag").val())) {
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
         }
     });
+
     function clearICD() {
         $("#icd_selected").html("");
         $("#clear_icd, #icd_selected").hide();
     }
+
     function clearOtherDiagnosis() {
         $("#others_diagnosis").html("");
         $("#clear_other_diag").hide();
     }
+
     function clearNotesDiagnosis() {
         $("#add_notes_diagnosis").html("");
         $("#clear_notes").hide();
     }
+
     function clearOtherReasonReferral() {
         $("#other_reason_referral").html("");
     }
+
     function addNotesDiagnosis() {
         $("#add_notes_diagnosis").html(loading);
         $("#clear_notes").show();
-        setTimeout(function(){
+        setTimeout(function() {
             $("#add_notes_diagnosis").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control add_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
-        },500);
+        }, 500);
     }
     $('.reason_referral').on('change', function() {
         var value = $(this).val();
-        if(value == '-1') {
+        if (value == '-1') {
             $("#other_reason_referral").html(loading);
-            setTimeout(function(){
+            setTimeout(function() {
                 $("#other_reason_referral").html('<small class="text-success">OTHER REASON FOR REFERRAL:</small> <span class="text-red">*</span>\n' +
                     '                                <br />\n' +
                     '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            },500);
+            }, 500);
             $("#other_reason_referral").show();
-        }else{
+        } else {
             clearOtherReasonReferral();
         }
     });
@@ -362,27 +426,28 @@
         $(".icd_body").html(loading);
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "icd_keyword" : $("#icd10_keyword").val()
+            "_token": "<?php echo csrf_token(); ?>",
+            "icd_keyword": $("#icd10_keyword").val()
         };
-        $.post(url,json,function(result){
-            setTimeout(function(){
+        $.post(url, json, function(result) {
+            setTimeout(function() {
                 $(".icd_body").html(result);
-            },500);
+            }, 500);
         });
     }
 
     var push_notification_diagnosis_ccmc = "";
+
     function getAllCheckBox() {
         $('#icd-modal').modal('toggle');
         $('#clear_icd, #icd_selected').show();
         var values = [];
-        $('input[name="icd_checkbox[]"]:checked').each(function () {
+        $('input[name="icd_checkbox[]"]:checked').each(function() {
             values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
             var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
             var id = $(this).val();
-            if(this.checked){
-                $("#icd_selected").append('=> '+icd_description+' '+'<br><input id="icd" type="hidden" name="icd_ids[]" value="'+id+'">');
+            if (this.checked) {
+                $("#icd_selected").append('=> ' + icd_description + ' ' + '<br><input id="icd" type="hidden" name="icd_ids[]" value="' + id + '">');
                 console.log("icd id: " + id);
             }
             clearOtherDiagnosis();
@@ -391,15 +456,16 @@
         push_notification_diagnosis_ccmc = values.join(","); //diagnosis for CCMD for their push notification
         console.log(values);
     }
-    function othersDiagnosis(){
+
+    function othersDiagnosis() {
         $('#icd-modal').modal('hide');
         $("#others_diagnosis").html(loading);
         $("#clear_other_diag").show();
-        setTimeout(function(){
+        setTimeout(function() {
             $("#others_diagnosis").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea id="other_diag" class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
-        },500);
+        }, 500);
     }
 </script>
 
@@ -410,31 +476,60 @@
         var word = '{{ asset('resources/img/document_icon.png') }}';
         var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
         var excel = '{{ asset('resources/img/sheet_icon.png') }}';
+        var imgSize = {width: '100px', height: '100px'};
         if (input.files && input.files[0]) {
             var tmp_pos = pos;
             for(var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
+                let file = input.files[i];
                 if(file && file !== null) {
-                    var reader = new FileReader();
-                    var type = file.type;
+                    let reader = new FileReader();
+                    let type = file.type;
+                    let filename = file.name;
+                    let isFirstSlide = i === 0 ? 'active' : '';
+
+                    let slideContent = '';
+
                     if(type === 'application/pdf') {
-                        $('#file-upload-image'+pos).attr('src',pdf);
+
+                        $('#file-upload-image'+pos).attr('src',pdf)
+                        .attr('title', filename).css(imgSize);
+                        // .attr('onclick', 'showPreviewFile(' + filename + ', ' + isFirstSlide + ')');;
                         pos+=1;
                     } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#file-upload-image'+pos).attr('src',word);
+                        $('#file-upload-image'+pos).attr('src',word)
+                        .attr('title', filename).css(imgSize);
+                        // .attr('onclick', 'showPreviewFile(' + filename + ', '+ isFirstSlide +')');
                         pos+=1;
                     } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#file-upload-image'+pos).attr('src',excel);
+                        $('#file-upload-image'+pos).attr('src',excel)
+                        .attr('title', filename).css(imgSize);
+                        // .attr('onclick', 'showPreviewFile(' + filename + ', ' + isFirstSlide + ')');
                         pos+=1;
                     } else {
-                        reader.onloadend = function(e) {
-                            $('#file-upload-image'+pos).attr('src', e.target.result);
-                            pos+=1;
-                        };
+                        // reader.onloadend = function(e) {
+                        //     $('#file-upload-image'+pos).attr('src', e.target.result).attr('title', filename);
+                        //     pos+=1;
+                        // };
+                        reader.onloadend = (function(currentPos, currentFilename) {
+                            return function(e) {
+                                $('#file-upload-image' + currentPos)
+                                    .attr('src', e.target.result)
+                                    .attr('title', currentFilename)
+                                    .css(imgSize) 
+                                    .attr('onclick', 'showPreviewFile(' + filename + ', '+ isFirstSlide +')');
+                            };
+                        })(pos, filename); 
+                        pos += 1;
                     }
+                
                     $('#image-upload-wrap'+tmp_pos).hide();
                     $('#file-upload-content'+tmp_pos).show();
-                    $('#image-title' + tmp_pos++).html(file.name);
+
+                    var maxLength = 12;
+                    var truncateName = filename.length > maxLength ? filename.substring(0, maxLength) + '...' : filename;
+
+                    $('#image-title' + tmp_pos++).html(truncateName).attr('title', filename);
+
                     reader.readAsDataURL(file);
                     upload_count+=1;
 
@@ -445,6 +540,20 @@
         $('#remove_files_btn').show();
     }
 
+    // function showPreviewFile(filename, isActive){
+    //     $('#carousel-inner').html('');
+    //       // Create a slide for the preview
+    //     let newSlide = `
+    //         <div class="carousel-item active">
+    //             <img class="d-block w-100" src="${filename}" alt="${filename}">
+    //         </div>
+    //     `;
+    //      // Add slide to the carousel
+    //     $('#carousel-inner').append(newSlide);
+    //     // Show the modal
+    //     $('#filePreviewModal').modal('show');
+    // }
+
     function addFile() {
         var src = '{{ asset('resources/img/add_file.png') }}';
         if(upload_count % 4 == 0) {
@@ -453,7 +562,7 @@
             );
         }
         $('.attachment').append(
-            '<div class="col-md-3" id="upload'+upload_pos+'">\n' +
+            '<div class="col-md-3" id="upload'+upload_pos+'" style="position: relative;">\n' +
             '   <div class="file-upload">\n' +
             '       <div class="text-center image-upload-wrap" id="image-upload-wrap'+upload_pos+'">\n' +
             '           <input class="file-upload-input files" multiple id="file_upload_input'+upload_pos+'" type="file" name="file_upload[]" onchange="readUrl(this, '+upload_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
@@ -463,12 +572,13 @@
             '           <img class="file-upload-image" id="file-upload-image'+upload_pos+'" src="#"/>\n' +
             '           <div class="image-title-wrap">\n' +
             '               <b><small class="image-title" id="image-title'+upload_pos+'" style="display:block; word-wrap: break-word;"></small></b>\n' +
-            /*'               <button type="button" onclick="removeFile('+upload_pos+')" class="remove-image"> Remove </button>\n' +*/
+            '               <button type="button" onclick="removeOneFile('+upload_pos+')" class="remove-icon-btn"> <i class="fa fa-trash"></i> </button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
             '</div>'
         );
+
         upload_pos+=1;
     }
 
@@ -478,6 +588,21 @@
         upload_pos = 1;
         $('#remove_files_btn').hide();
         addFile();
+    }
+    function removeOneFile(uploadCount){
+        $('#upload' + uploadCount).remove();
+
+        upload_count -= 1;
+
+        if(upload_pos > uploadCount){
+            upload_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+
+       console.log("upload_pos:", upload_pos);
+
     }
 
     $(document).ready(function() {

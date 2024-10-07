@@ -193,6 +193,12 @@ Route::match(["get", "post"], 'doctor/referred/track', 'doctor\ReferralCtrl@trac
 Route::get('doctor/patient', 'doctor\PatientCtrl@index');
 Route::post('doctor/patient', 'doctor\PatientCtrl@searchProfile');
 
+Route::post('pass/appointment', function (Illuminate\Http\Request $request) { // adding this session
+    // Save the appointment to session or process as needed
+    session(['telemed' => $request->telemed]);
+    return response()->json(['success' => true]);
+});
+
 Route::get('doctor/patient/info/{id}', 'doctor\PatientCtrl@showPatientProfile');
 Route::get('doctor/patient/add', 'doctor\PatientCtrl@addPatient');
 Route::post('doctor/patient/store', 'doctor\PatientCtrl@storePatient');
@@ -689,3 +695,11 @@ Route::match(['GET','POST'],'submit-referral/{type}', 'doctor\NewFormCtrl@saveRe
 Route::get('/generate-pdf/{patient_id}', 'doctor\NewFormCtrl@generatePdf')->name('generate-pdf');
 Route::post('/update-referral/{patient_id}', 'doctor\NewFormCtrl@updateReferral')->name('post-update-referral');
 Route::get('show-choose-version', 'doctor/NewFormCtrl@view_choose_versionModal')->name('show-choose-version');
+
+
+Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');
+Route::get('/HighIncoming/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoIncoming');
+
+//sample
+Route::get('/test_push',  'ApiController@notifierPushNotification');
+// Route::post('/notifier/api/send_push_notification', 'ApiController@notifierPushNotification');

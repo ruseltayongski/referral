@@ -1,6 +1,8 @@
 <?php
 
-    $appointmentParam = $_GET['appointment']; // I add this
+    // $appointmentParam = $_GET['appointment']; // I add this
+    $appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : session('telemed');
+    
     $facility_id_telemed = json_decode(json_decode($appointmentParam, true), true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
     $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
     $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
@@ -9,7 +11,7 @@
     $myfacility = \App\Facility::find($user->facility_id);
 
     if($facility_id_telemed){
-        $facilities = \App\Facility::select('id','name')
+        $facilities = \App\Facility::select('id','name', 'address')
         ->where('id','!=',$user->facility_id)
         ->where('id', $facility_id_telemed) // I am adding this to get the specific facility name
         ->where('status',1)
@@ -21,9 +23,16 @@
         ->where('status',1)
         ->where('referral_used','yes')
         ->orderBy('name','asc')->get();
-    }
+    }   
         
     $reason_for_referral = \App\ReasonForReferral::get();
+    $department = \App\Department::all();
+    
+    $appoitment_sched = \App\AppointmentSchedule::select('id', 'department_id')
+                        ->where('id', $telemedicine_appointment_id)->get();
+
+    $department_id = $appoitment_sched[0]->department_id;
+    
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">
     <div class="modal-dialog modal-lg" role="document">
@@ -98,17 +107,33 @@
                             <small class="text-success"><b>REFERRED TO: </b></small>
                         </div>
                         <div class="col-md-6">
+                            @if($appointmentParam)
+                            <input type="hidden" name="referred_facility" value="{{ $facilities->find($facility_id_telemed)->id }}">
+                            <select class="form-control-select select2 select_facility" style="width: 100%" required disabled>
+                                <option>{{$facilities->find($facility_id_telemed)->name }}</option>                               
+                            </select>
+                            @else
                             <select name="referred_facility" class="form-control-select select2 select_facility" style="width: 100%" required>
                                 <option value="">Select Facility...</option>
                                 @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                 @endforeach
                             </select>
+                            @endif
+                           
                         </div><br class="mobile-view">
                         <div class="col-md-4">
+                            @if($appointmentParam)
+                            <input type="hidden" name="referred_department" value="{{ $department->find($department_id)->id }}">
+                            <select class="form-control-select select_department select_department_pregnant" required disabled>
+                                <option>{{$department->find($department_id)->description}}</option>
+                            </select>
+                            @else
                             <select name="referred_department" class="form-control-select select_department select_department_pregnant" required>
                                 <option value="">Select Department...</option>
                             </select>
+                            @endif
+                            
                     </div>
                     </div><br>
 
@@ -117,7 +142,11 @@
                             <small class="text-success"><b>ADDRESS: </b></small>
                         </div>
                         <div class="col-md-9">
-                            <span class="text-primary facility_address"></span>
+                        @if($appointmentParam)
+                        <span class="text-primary facility_address">{{$facilities->find($facility_id_telemed)->address}}</span>
+                        @else
+                        <span class="text-primary facility_address"></span>
+                        @endif
                         </div>
                     </div><br>
 
@@ -569,7 +598,7 @@
             '           <img class="file-upload-image" id="pregnant_file-upload-image'+pregnant_pos+'"/>\n' +
             '           <div class="image-title-wrap">\n' +
             '               <b><small class="image-title" id="pregnant_image-title'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
-            '               {{--<button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+')" class="btn-sm remove-image">Remove</button>--}}\n' +
+            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
@@ -584,6 +613,22 @@
         pregnant_pos = 1;
         $('#preg_remove_files').hide();
         addFilePregnant();
+    }
+
+    function removeUploadPregnant(uploadCount){
+        $('#pregnant_upload' + uploadCount).remove();
+
+        upload_count -= 1;
+
+        if(pregnant_pos > uploadCount){
+            pregnant_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+
+        console.log("upload_pos:", pregnant_pos);
+
     }
 
     $(document).ready(function() {

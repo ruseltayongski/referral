@@ -73,11 +73,79 @@
         padding: 0 15px 15px 15px;
         color: #222;
     }
+/* for image and sign upload signature */
+    section {
+        display: flex;
+        flex-flow: row wrap;
+    }
+    section > div {
+        flex: 1;
+        padding: 0.5rem;
+    }
+    .radioSig {
+        display: none;
+        &:not(:disabled) ~ label {
+            cursor: pointer;
+        }
+        &:disabled ~ label {
+            color: hsla(150, 5%, 75%, 1);
+            border-color: hsla(150, 5%, 75%, 1);
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+    }
+    .label-sign {
+        height: 100%;
+        display: block;
+        background: white;
+        border: 2px solid hsla(150, 75%, 50%, 1);
+        border-radius: 20px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        //margin: 1rem;
+        text-align: center;
+        box-shadow: 0px 3px 10px -2px hsla(150, 5%, 65%, 0.5);
+        position: relative;
+    }
+
+    input[type="radio"]:checked + .label-sign {
+        background: hsla(150, 75%, 50%, 1);
+        color: hsla(215, 0%, 100%, 1);
+        box-shadow: 0px 0px 20px hsla(150, 100%, 50%, 0.75);
+        &::after {
+            color: hsla(215, 5%, 25%, 1);
+            font-family: FontAwesome;
+            border: 2px solid hsla(150, 75%, 45%, 1);
+            content: "\f00c";
+            font-size: 24px;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 50px;
+            width: 50px;
+            line-height: 50px;
+            text-align: center;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0px 2px 5px -2px hsla(0, 0%, 0%, 0.25);
+        }
+    }
+    input[type="radio"]#control_05:checked + .label-sign {
+        background: red;
+        border-color: red;
+    }
+
+    @media only screen and (max-width: 500px) {
+    section {
+        flex-direction: column;
+    }
+    }
 </style>
 
 <div class="modal fade" role="dialog" id="editProfileModal" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-md" role="document">
-        <form method="POST" action="{{ asset('doctor/editProfile') }}">
+    <div class="modal-dialog modal-lg" role="document">
+        <form method="POST" action="{{ asset('doctor/editProfile') }}" id="profile_Upload">
             {{ csrf_field() }}
             <div class="modal-content">
                 <div class="modal-body">
@@ -85,55 +153,150 @@
                     <fieldset>
                         <legend><i class="fa fa-user-md"></i> Edit Profile</legend>
                     </fieldset>
-
-                    <div class="form-group">
-                        <label>First Name:</label>
-                        <input type="text" class="form-control fname" autofocus name="fname" value="{{ $user->fname }}" required>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span> <label for="fname">First Name:</label>
+                                </div>
+                                <input type="text" class="form-control fname" autofocus name="fname" value="{{ $user->fname }}" required>
+                                <small class="form-text text-muted">Your given name (e.g., John).</small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span><label for="mname"> Middle Name:</label>
+                                </div>
+                                <input type="text" class="form-control mname" name="mname" value="{{ $user->mname }}">
+                                <small class="form-text text-muted">Your middle name (optional).</small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user"></i></span><label for="lname"> Last Name:</label>
+                                </div>
+                                <input type="text" class="form-control lname" name="lname" value="{{ $user->lname }}" required>
+                                <small class="form-text text-muted">Your surname or family name.</small>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Middle Name:</label>
-                        <input type="text" class="form-control mname" name="mname" value="{{ $user->mname }}">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-phon"></i></span> <label for="contact">Contact Number:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control contact" name="contact" value="{{ $user->contact }}" required >
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span><label for="email"> Email Address:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control email" name="email" value="{{ $user->email }}" required>
+                        </div>
+                        <div class="form-group col-md-4">                          
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-briefcase"></i></span><label for="designation"> Designation:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control designation" name="designation" value="{{ $user->designation }}" required>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Last Name:</label>
-                        <input type="text" class="form-control lname" name="lname" value="{{ $user->lname }}" required>
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-credit-card"></i></span><label for="license"> License No.:</label>
+                                </div>
+                            </div>
+                            <input type="text" class="form-control license" name="license" value="{{ $user->license }}" autocomplete="license">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Contact Number:</label>
-                        <input type="text" class="form-control contact" name="contact" value="{{ $user->contact }}" required>
+                    <div>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"></span> <label for="Privacy">Privacy Policy</label>
+                        </div>
+                        <div id="privacy-policy-container" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px;">
+                            <p>This Privacy Policy will enable you to better understand how DOHCVCHD collects, processes, retains and uses your data. We hope you read through the policy. Statement of Policy The DOHCVCHD is the regional arm in Central Visayas of the Department of Health. It is the principal health agency in the country and is responsible for the enforcement of laws on health, ensuring access to basic public health services and quality health care, and regulation of health facilities, goods and services.</p>
+                            <p>Guided by the Data Privacy Principles, we collect, process, retain, use and share your data when you visit our office premises, avail of our services and systems, file for applications/renewals, submit requests and inquiries, lodge complaints, or when it is necessary in the performance of our statutory and regulatory mandates, including the operation of health information services, and implementation of disease surveillance and response initiatives, among others, subject to your consent or when expressly allowed by law.</p>
+                            <p>The DOHCVCHD faithfully adheres to the requirements of the Data Privacy Act, its implementing rules, and the regulations promulgated by the National Privacy Commission. We highly value the security of your data and your rights as data subjects.</p>
+                            <p>Collection and Use of Data</p>
+                            <p>Data is collected when the DOHCVCHD performs its governmental functions such as, but not limited to, provision of technical assistance to government and private partners, disease surveillance and health events response per Republic Act No. 11332 and related statutes, management of public health information systems, enforcement of regulatory authority (e.g. receipt of applications of health facilities), handling of complaints, and operations of health and laboratory services. Data is also collected when you avail of our programs and services such as the E-health Referral System and the DOHCVCHD Telemedicine, provided you have granted your consent.</p>
+                            <p>Data Retention, Protection and Disposition</p>
+                            <p>For the services and systems available to the public, the DOHCVCHD may necessarily store and retain your data as part of its inherent and operational functions, without prejudice to the enforcement of the relevant rights of data subjects. </p>
+                            <p>Data collected are retained depending on the nature of the data being handled. Physical data are retained by the respective end-users or program managers through proper record filing and keeping. Electronic data which passes through online systems are saved in our local and cloud servers using encryption, firewall, or similar security features. It may also require entering a One-Time Password (OTP) as an added layer of protection. Access to these data is granted only to select personnel, all of whom are required to execute a Non-Disclosure Agreement.</p>
+                            <p>The DOHCVCHD does not warrant a foolproof or 100% breach-free data system. However, it commits to continually update its security features, review existing data protection policies, coordinate with the NPC for any data incidents, and keep you informed in all stages.</p>
+                            <p>The data subject may request for the deletion of his/her data, subject to the provisions of the data privacy act. As such, upon the data subject’s request or when necessitated by the circumstances, the DOHCVCHD shall fully dispose of the data retained in the most prompt manner. The length of time in the retention and subsequent disposition of data, as the case may be, shall be in accordance with the records retention and disposition schedule of the National Archives of the Philippines and pertinent internal office protocols, taking into account the legitimate purpose(s) of the collection. When applicable, data shall be returned to the data owners. At all times, the data subject shall be informed that the data has been deleted and disposed of by issuing a certification to such effect. </p>
+                            <p>Data Subject's Rights</p>
+                            <p>Pursuant to the DPA, the data subject is entitled to the following rights: </p>
+                            <p>Right to be informed.
+                                The data subject has a right to be informed whether personal data pertaining to him or her shall be, are being, or have been processed, including the existence of automated decision-making and profiling.
+                                The data subject shall be notified and furnished with information indicated hereunder before the entry of his or her personal data into the processing system of the personal information controller, or at the next practical opportunity:
+                                Description of the personal data to be entered into the system
+                                Purposes for which they are being or will be processed, including processing for direct marketing, profiling or historical, statistical or scientific purpose;
+                                Basis of processing, when processing is not based on the consent of the data subject;
+                                Scope and method of the personal data processing;
+                                Methods utilized for automated access, if the same is allowed by the data subject, and the extent to which such access is authorized, including meaningful information about the logic involved, as well as the significance and the envisaged consequences of such processing for the data subject;
+                                The identity and contact details of the personal data controller or its representative;
+                                The period for which the information will be stored; and
+                                The existence of their rights as data subjects, including the right to access, correction, and object to the processing, as well as the right to lodge a complaint before the Commission.
+                                Right to object. The data subject shall have the right to object to the processing of his or her personal data, including processing for direct marketing, automated processing or profiling. The data subject shall also be notified and given an opportunity to withhold consent to the processing in case of changes or any amendment to the information supplied or declared to the data subject in the preceding paragraph.
+                            </p>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>Email Address:</label>
-                        <input type="text" class="form-control email" name="email" value="{{ $user->email }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Designation:</label>
-                        <input type="text" class="form-control designation" name="designation" value="{{ $user->designation }}" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label>License No.:</label>
-                        <input type="text" class="form-control license" name="license" value="{{ $user->license }}">
+                    <div>
+                        <label>
+                            <input type="checkbox" id="terms" value="accepted" {{ old('terms') ? 'checked' : '' }}> 
+                             <a>I Agree.</a>
+                        </label>
                     </div>
 
                     @if($user->level == "doctor")
                         <div class="form-group">
-                            <label>Signature:</label>
+                            <label for="signature"><i class="fa fa-pencil"></i> Signature:</label>
                             <input type="hidden" name="signature" id="signature_final" value="">
                             <input type="hidden" name="sign_type" id="sign_type" value="">
                             <div class="text-center" id="signature_field">
                             @if(isset($user->signature) && $user->signature != null)
-                                <img src="{{ asset($user->signature.'?cache='.$cacheBuster) }}" id="stored_sign" style="border: 1px solid black;"><br><br>
+
+                                <img src="{{ asset($user->signature.'?cache='.$cacheBuster) }}" id="stored_sign"  width="408" height="245" style="border: 1px solid black;"><br><br>
                                 <input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="replaceSignature()">
-                            @else
-                                {{--<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;--}}
-                                <input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">
+                            @else                            
+                                <!-- <input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;
+                                <input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()"> -->
+
+                                <!-- <h2>Select Signature&hellip;</h2> -->
+                                <section>
+                                    
+                                    <div>
+                                        <!-- <input type="radio" id="control_01" name="select" value="1" checked> -->
+                                        <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
+                                        <label for="sign_upload" class="label-sign">
+                                            <h2>Upload Image</h2>
+                                            <p>Signature</p>
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <!-- <input type="radio" id="control_02" name="select" value="2"> -->
+                                        <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)"> 
+                                        <label for="sign_draw" class="label-sign">
+                                            <h2>Draw</h2>
+                                            <p>Signature</p>
+                                        </label>
+                                    </div>
+                                </section>
+
                             @endif
                             </div>
                         </div>
                     @endif
-                    <hr />
+                    <!-- <hr /> -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" onclick="resetSignatureField()"><i class="fa fa-times"></i> Cancel</button>
@@ -147,24 +310,67 @@
 {{--<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script> NOT USED--}}
 <script>
 
-    var signaturePad, sign_type;
+    document.addEventListener('DOMContentLoaded', function() {
+        var termsCheckbox = document.getElementById('terms');
+        var signature_field = document.getElementById('signature_field');
 
-    $('#update_btn').on('click', function(e) {
+        // Initially hide or show the signature section based on checkbox state
+            if (termsCheckbox.checked) {
+                signature_field.style.display = 'block';
+        } else {
+                signature_field.style.display = 'none';
+        }
+
+        // Add event listener to the checkbox to show/hide signature section
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                    signature_field.style.display = 'block';
+            } else {
+                    signature_field.style.display = 'none';
+            }
+        });
+    });
+
+    var signaturePad, sign_type, finalImage;
+
+    $('#update_btn').on('click', function(e) {  
+        e.preventDefault();
         $('#stored_sign').src = null;
         $('.loading').show();
+      
         if(sign_type === "upload") {
-
+            $('#signature_final').val(finalImage);
+            $('#sign_type').val(sign_type);
         } else if(sign_type === "draw") {
             var data = signaturePad.toDataURL('image/png');
             $('#signature_final').val(data);
             $('#sign_type').val(sign_type);
         }
+        $('#profile_Upload').submit();
     });
 
     function replaceSignature() {
         $('#signature_field').html(
-//            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
-            '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+            //'<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
+            //'<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+            `
+             <section>
+                    <div>
+                        <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
+                        <label for="sign_upload" class="label-sign">
+                            <h2>Upload Image</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)"> 
+                        <label for="sign_draw" class="label-sign">
+                            <h2>Draw</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                </section>
+            `
         )
     }
 
@@ -178,14 +384,31 @@
             );
         } else {
             $('#signature_field').html(
-//                '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
-                '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+               // '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">&emsp;&emsp;&emsp;\n' +
+               // '<input class="btn btn-info btn-flat" id="sign_draw" value="Draw" readonly onclick="showDrawField()">'
+              ` <section>
+                    <div>
+                        <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
+                        <label for="sign_upload" class="label-sign">
+                            <h2>Upload Image</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                    <div>
+                        <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)"> 
+                        <label for="sign_draw" class="label-sign">
+                            <h2>Draw</h2>
+                            <p>Signature</p>
+                        </label>
+                    </div>
+                </section>`
             );
         }
     }
 
     function showUploadField(){
         sign_type = "upload";
+        console.log('sign_type::',sign_type)
         var src = '{{ asset('resources/img/add_file.png') }}';
         $('#signature_field').html(
             '<div class="file_upload">\n' +
@@ -209,8 +432,8 @@
             if(file && file !== null) {
                 var reader = new FileReader();
                 reader.onloadend = function(e) {
-//                    $('#file_upload_image').attr('src', e.target.result);
-//                    $('#tempo').attr('src',e.target.result);
+                   $('#file_upload_image').attr('src', e.target.result);
+                   $('#tempo').attr('src',e.target.result);
                     filterImage(e.target.result);
                 };
                 $('#image_upload_wrap').hide();
@@ -221,42 +444,47 @@
         $('#remove_signature').show();
     }
 
-    function filterImage(img) {
+    function filterImage(imgSrc) {
         var canvas = document.getElementById("file_upload_image"),
             ctx = canvas.getContext("2d");
+            
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(img,0,0,canvas.width, canvas.height);
+            console.log("canvas width:",canvas.width, canvas.height);
+            var imgd = ctx.getImageData(0, 0, canvas.width, canvas.height),
+                pix = imgd.data,
+                newColor = {r:0,g:0,b:0, a:0};
 
-        ctx.drawImage(img,0,0);
+            for (var i = 0, n = pix.length; i <n; i += 4) {
+                var r = pix[i],
+                    g = pix[i+1],
+                    b = pix[i+2];
 
-        var imgd = ctx.getImageData(0, 0, 135, 135),
-            pix = imgd.data,
-            newColor = {r:0,g:0,b:0, a:0};
-
-        for (var i = 0, n = pix.length; i <n; i += 4) {
-            var r = pix[i],
-                g = pix[i+1],
-                b = pix[i+2];
-
-            if(r == 255&& g == 255 && b == 255){
-                // Change the white to the new color.
-                pix[i] = newColor.r;
-                pix[i+1] = newColor.g;
-                pix[i+2] = newColor.b;
-                pix[i+3] = newColor.a;
+                if(r == 255 && g == 255 && b == 255){
+                    // Change the white to the new color.
+                    pix[i] = newColor.r;
+                    pix[i+1] = newColor.g;
+                    pix[i+2] = newColor.b;
+                    pix[i+3] = newColor.a;
+                }
             }
-        }
 
-        ctx.putImageData(imgd, 0, 0);
-        var final = new Image();
-        final.src = canvas.toDataURL();
-        console.log(final);
+            ctx.putImageData(imgd, 0, 0);
+            var final = new Image();
+            final.src = canvas.toDataURL();
+            console.log(final);
+        };
+        img.src = imgSrc;
+        finalImage = img.src;
     }
 
     function showDrawField() {
         sign_type = "draw";
         $('#signature_field').html(
             '<canvas class="canvas_sign" style="border: 2px solid black;" width="450" height="200" id="signature-pad"></canvas><br><br>' +
-            '<button type="button" class="btn btn-md btn-danger" id="remove_signature" onclick="removeSign(\'draw\')">Remove Signature</button><br><br>'
-//            '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">'
+            '<button type="button" class="btn btn-md btn-danger" id="remove_signature" onclick="removeSign(\'draw\')">Remove Signature</button><br><br>'+
+           '<input class="btn btn-success btn-flat" id="sign_upload" value="Upload Image" readonly onclick="showUploadField()">'
         );
         triggerDraw();
     }

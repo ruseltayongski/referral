@@ -87,7 +87,7 @@ class ReferralCtrl extends Controller
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as action','action.id','=','tracking.action_md')
             ->where('referred_to',$user->facility_id);
-
+        
         if($request->search)
         {
             $keyword = $request->search;
@@ -97,7 +97,7 @@ class ReferralCtrl extends Controller
                     ->orwhere('tracking.code',"$keyword");
             });
         }
-
+       
         if($request->department_filter)
         {
             $dept = $request->department_filter;
@@ -202,6 +202,8 @@ class ReferralCtrl extends Controller
 
         $provinces = Province::get();
 
+        Session::put('totalIncoming_for_Dashboard', $data->total());
+       
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
             'data' => $data,
@@ -280,8 +282,8 @@ class ReferralCtrl extends Controller
 
         $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
 
-//        $path = self::securedFile($file_link);
-//        $file_name = basename($path);
+        //        $path = self::securedFile($file_link);
+        //        $file_name = basename($path);
 
         $path = [];
         $file_name = [];
@@ -619,13 +621,14 @@ class ReferralCtrl extends Controller
             })
             ->orderBy('date_referred','desc')
             ->paginate(15);
-
+            session()->forget('profileSearch.telemedicine');
         return view('doctor.referred',[
             'title' => 'Referred Patients',
             'data' => $data
         ]);
     }
 
+    //============== REFERRED ================
     public function referred(Request $request)
     {
         $user = Session::get('auth');
@@ -760,11 +763,14 @@ class ReferralCtrl extends Controller
 
             $referred_excel = $data->get();
             Session::put("export_referred_excel",$referred_excel);
-
             $data = $data->paginate(10);
         }
 
         //  $new_referral = $request->query();
+        session()->forget('profileSearch.telemedicine');
+        //  $new_referral = $request->query();
+
+        Session::put('totalReffered_for_Dashboard', $data->total());
 
         return view('doctor.referred2',[
             'title' => 'Referred Patients',
@@ -1433,28 +1439,29 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
-            "push_diagnosis" => $diagnosis,
+            "push_diagnosis" =>  $diagnosis->isEmpty() ? $patientform->other_diagnoses : $diagnosis,
             "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
-
-        /*if($req->referred_facility != 23) {
-            try {
-                ApiController::pushNotificationCCMC(array(
-                    "age" => ParamCtrl::getAge($patient->dob),
-                    "chiefComplaint" => $req->facility,
-                    "department" => Department::find($req->department)->description,
-                    "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
-                    "sex" => $patient->sex,
-                    "referring_hospital" => Facility::find($user->facility_id)->name,
-                    "referred_to" => $req->referred_facility,
-                    "date_referred" => $date
-                ));
-            } catch (Exception $e) {
+       
+        if($req->facility == 790 || $req->facility == 23) {
+             try {
+                 ApiController::notifierPushNotification(array(
+                "age" => (string) ParamCtrl::getAge($patient->dob),
+                //"chiefComplaint" => $req->facility,
+                "department" => (string) Department::find($req->department)->description,
+                "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
+                "sex" => (string) $patient->sex,
+                "hospital_referrer" => (string) Facility::find($user->facility_id)->name,
+                "referred_to" => (string) $req->facility,
+                "date_referred" => (string) $date
+               
+                 ));
+             } catch (Exception $e) {
                 return Redirect::back();
             }
-        }//push notification for cebu south medical center*/
-
+        }//push notification for cebu south medical center
+   
         // return Redirect::back()->with('new_referral', $new_referral);
         if($req->facility == 790 || $req->facility == 23) {
             session()->put('for_firebase_data', $new_referral);
