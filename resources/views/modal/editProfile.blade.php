@@ -309,7 +309,6 @@
 
 {{--<script src="https://www.marvinj.org/releases/marvinj-1.0.js"></script> NOT USED--}}
 <script>
-
     document.addEventListener('DOMContentLoaded', function() {
         var termsCheckbox = document.getElementById('terms');
         var signature_field = document.getElementById('signature_field');

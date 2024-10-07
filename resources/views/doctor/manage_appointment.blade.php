@@ -278,7 +278,7 @@
                                           <div id="update_additionalTimeContainer" style="display: none;"></div>
                                                 <input type="hidden" class="form-control selected_date" id="update_appointed_date" value="{{$row->appointed_date}}" required>
                                                 <div style="margin-top: 15px;">
-                                                    <button type="button" class="btn btn-info btn-sm" id="update_add_slots" data-appointed-date="{{$row->appointed_date}}" onclick="updateAddTimeInput()">Add Slot</button>
+                                                    <button type="button" class="btn btn-info btn-sm" id="update_add_slots" data-appointed-date="{{$row->appointed_date}}" onclick="updateAddTimeInput()" disabled>Add Slot</button>
                                                 </div>    
                                            </div>    
                                         </div>
@@ -676,7 +676,7 @@
 
     function updateAddTimeInput(appointment, assignedDoc) 
     {
-            console.log('welcome appointment', appointment)
+            // console.log('welcome appointment', appointment)
             let currentCount = $(".appointment_count").val();
             $(".appointment_count").val(++currentCount);
             var timeInputGroup = $('<div class="time-input-group">');
@@ -862,43 +862,93 @@
         //-----------------------for update fix
  
         let appointmentSlot = [];
+    
+        function checkConflict(slotIndex, fromTime, toTime, doctors) {
+            for (let i = 0; i < appointmentSlot.length; i++) {
+                if (i === slotIndex) continue; // Skip checking against itself for updates
+
+                const slot = appointmentSlot[i];
+                
+                // Check for time overlap
+                const timeOverlap = (fromTime < slot.to && toTime > slot.from);
+
+                if (timeOverlap) {
+                    // Check for doctor conflict
+                    const conflictingDoctors = doctors.filter(doctor => slot.doctors.includes(doctor));
+                    if (conflictingDoctors.length > 0) {
+                        return {
+                            hasConflict: true,
+                            message: `Time slot ${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} conflicts with existing appointment ${slot.from.toLocaleTimeString()} - ${slot.to.toLocaleTimeString()} and doctor(s) ${conflictingDoctors.join(', ')} are already scheduled.`
+                        };
+                    }
+                }
+            }
+            return { hasConflict: false };
+        }
+
+        // for disabled and enabled the button
+
+        function checkslotFilled(slotIndex){
+            const fromtime = $(`#update_appointed_time${slotIndex + 1}`).val();
+            const totime = $(`#update_appointedTime_to${slotIndex + 1}`).val();
+            const category = $(`#update_opdCategory${slotIndex + 1}`).val();
+            const doctors = $(`#Update_available_doctor${slotIndex + 1}`).val();
+
+            return fromtime && totime && category && doctors.length > 0;
+        }
+
+        function toggleAddslotBtn(){
+            let allSlotfilled = true;
+
+            $('.time-input-group').each(function(index){
+
+                if(!checkslotFilled(index)) {
+                    allSlotfilled = false;
+                    return false;
+                }
+
+            });
+
+            $('#update_add_slots').prop('disabled', !allSlotfilled);
+        }
+                
         function addOrUpdateSlot(slotIndex, fromTime, toTime, doctors) {
-            let OrigslotIndex = slotIndex - 1;  // Adjusting slot index to match array position (0-based)
-            const slotData = {
+
+            console.log("Add update Slot slotIndex:", slotIndex);
+            let OrigslotIndex = slotIndex - 1;  
+            const conflict = checkConflict(OrigslotIndex, fromTime, toTime, doctors);
+            if (conflict.hasConflict) {
+                console.log(conflict.message);
+                
+                Lobibox.alert("error", {
+                    msg: conflict.message
+                 });
+
+                $(`#Update_available_doctor${slotIndex + 1}`).val('').trigger('change');
+                $(`#Add_Update_available_doctor${slotIndex + 1}`).val('').trigger('change');
+                return true;
+            }
+
+            const newSlot = {
                 from: fromTime,
                 to: toTime,
                 doctors: doctors,
             };
 
-            // Check for time and doctor conflicts in other slots
-            const timedoctorConflict = appointmentSlot.findIndex((slot, index) => {
-                if (index === OrigslotIndex) return false; 
-
-                const timeOverlap = (fromTime < slot.to && toTime > slot.from);
-                const doctorsOverlap = Array.isArray(doctors) && Array.isArray(slot.doctors) &&
-                                    doctors.some(doctor => slot.doctors.includes(doctor));
-
-                return timeOverlap && doctorsOverlap;
-            });
-
-            if (timedoctorConflict !== -1) {
-              
-                Lobibox.alert("error", {
-                    msg: "Conflict detected: This time slot overlaps with an existing appointment for the same doctor!"
-                });
-                $(`#Update_available_doctor${slotIndex + 1}`).val('').trigger('change');
-                $(`#Add_Update_available_doctor${slotIndex + 1}`).val('').trigger('change');
-                return false;
-            }
-                console.log("appointmentSlot.length",appointmentSlot.length, "slotIndex", slotIndex);
-            if (appointmentSlot[OrigslotIndex]) {
-                appointmentSlot[OrigslotIndex] = slotData;
+            console.log("OrigslotIndex", OrigslotIndex, "appointmentSlot.length", appointmentSlot.length);
+            
+            if (OrigslotIndex < appointmentSlot.length) {
+                // Update existing slot
+                appointmentSlot[OrigslotIndex] = newSlot;
             } else {
-                appointmentSlot.push(slotData);
+                // Add new slot
+                appointmentSlot.push(newSlot);
             }
 
-            console.log("Updated appointmentSlot array:", appointmentSlot);
+            console.log("appointmentSlot after update:", appointmentSlot);
+            toggleAddslotBtn();
             return true;
+
         }
 
         function validateTimeSlot(fromTime, toTime) {
@@ -923,7 +973,8 @@
                 let newfromTime = new Date(appointedDate + "T" + $(`#empty_appointed_time${index+1}`).val());
                 let newtoTime = new Date(appointedDate + "T" + $(`#empty_appointedTime_to${index+1}`).val());
 
-                console.log("newfromTime::::",newfromTime);
+                console.log("newfromTime:",newfromTime);
+                
                 let indexes = index+1;
                 //existing slot
                 if (!appointmentSlot[index]) {
@@ -954,16 +1005,21 @@
                     }else{
                         console.log("No slot found at index:", index);
                     }
+                    toggleAddslotBtn();
                 });
+                
             });
 
             appointmentSlot = appointmentSlot.filter(slot => {
                 return !isNaN(slot.from.getTime()) && !isNaN(slot.to.getTime());
             });
-           
             console.log("Initial appointmentSlot array:", appointmentSlot);
 
-          
+            $('.time-input-group input, .time-input-group select').on('input change', function() {
+                toggleAddslotBtn();
+            });
+            
+            toggleAddslotBtn();
         });
 
 
@@ -1009,7 +1065,7 @@
             let newTotime = $(`#empty_appointedTime_to${index+1}`).val();
             let newdoctor = $(`#Update_available_doctor${index+1}`).val() || [];
             var UpdateDate = $("#updateAppointmentId").val();
-
+           
             if (!newfromTime || !newTotime || !UpdateDate) {
                 console.log("Missing time or date input");
                 return;
@@ -1200,12 +1256,9 @@ function deleteTimeInput(appointment){
             currentCounts = index + 1;
             counts = index;
 
-            console.log("index::", index);
-
             var fromInput = timeInputGroup.find('input[name^="appointed_time' + currentCounts + '"]');
             var toInput = timeInputGroup.find('input[name^="appointed_time_to' + currentCounts + '"]');
-            console.log("count Update:", counts);
-            console.log("count fromInput:", fromInput);
+         
             var fromTime = fromInput.val();
             var toTime = toInput.val();
             console.log("fromTime::", fromTime);
@@ -1395,7 +1448,7 @@ function deleteTimeInput(appointment){
 
             // });
 
-            console.log("allAppointmentTimes", allAppointmentTimes);
+            // console.log("allAppointmentTimes", allAppointmentTimes);
             allAppointmentTimes = allAppointmentTimes.filter(appointment =>appointment.to instanceof Date && !isNaN(appointment.to));
 
             
