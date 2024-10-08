@@ -210,7 +210,6 @@ class UserCtrl extends Controller
         $user = User::where('username',$user->username)->first();
 
         Session::put('auth', $user);
-
         return Redirect::back();
     }
 
