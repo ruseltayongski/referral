@@ -693,8 +693,10 @@ Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@view_info'
 Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@redirect_referral_info')->name('redirect-referral-info');
 Route::match(['GET','POST'],'submit-referral/{type}', 'doctor\NewFormCtrl@saveReferral')->name('submit-referral');
 Route::get('/generate-pdf/{patient_id}', 'doctor\NewFormCtrl@generatePdf')->name('generate-pdf');
-Route::post('/update-referral/{patient_id}', 'doctor\NewFormCtrl@updateReferral')->name('post-update-referral');
-Route::get('show-choose-version', 'doctor/NewFormCtrl@view_choose_versionModal')->name('show-choose-version');
+Route::match(['GET','POST'],'/update-referral/{patient_id}', 'doctor\NewFormCtrl@updateReferral')->name('post-update-referral');
+Route::get('show-choose-version', 'doctor\NewFormCtrl@view_choose_versionModal')->name('show-choose-version');
+Route::get('get-form-type/{form_id}', 'doctor\NewFormCtrl@getFormType')->name('get-form-type');
+Route::get('doctor/revised/referral/data/normal/{id}/{referral_status}/{form_type}', 'doctor\NewFormCtrl@getViewForm');
 
 
 Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');

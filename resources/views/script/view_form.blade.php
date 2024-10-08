@@ -10,45 +10,67 @@
         patient_name = $(this).data('patient_name');
         facility = $(item).find('.facility').html();
         var referral_status = $(this).data('referral_status');
-       
-        
-        if(type === 'normal') {
-            
-            form_type = '#referralForm';
-            var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
-            $(".referral_body").html(loading);
-            $.ajax({
-                url: form_url,
-                type: "GET",
-                success: function(data) {
-                    console.log("normal");
-                    setTimeout(function(){
-                        $(".referral_body").html(data);
-                    },300);
-                },
-                error: function(){
-                    $('#serverModal').modal();
-                }
-            });
-        }
-        else if(type === 'pregnant') {
-            form_type = '#referralForm';
-            $(".referral_body").html(loading);
-            console.log("pregnant");
-            $.ajax({
-                url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id+"/"+referral_status+"/"+type,
-                type: "GET",
-                success: function(request){
-                    setTimeout(function() {
-                        $(".referral_body").html(request);
-                    },300);
-                },
-                error: function(){
-                    $('#serverModal').modal();
-                }
-            });
 
-        }
+       
+        $.ajax({
+            url: "{{ url('get-form-type/') }}/" + form_id,
+            type: 'GET',
+            success: function(response){
+                var form_type = response.form_type;
+                console.log('Form Type:', form_type);
+                
+                var form_selector; // New variable to hold form identifier
+
+                if (form_type === 'version1') {
+                    if (type === 'normal') {
+                        var form_url = "{{ url('doctor/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
+                        $(".referral_body").html(loading);
+                        $.ajax({
+                            url: form_url,
+                            type: "GET",
+                            success: function(data) {
+                                console.log("normal");
+                                setTimeout(function() {
+                                    $(".referral_body").html(data);
+                                }, 300);
+                            },
+                            error: function() {
+                                $('#serverModal').modal();
+                            }
+                        });
+                    } else if (type === 'pregnant') {
+                        $(".referral_body").html(loading);
+                        console.log("pregnant");
+                        $.ajax({
+                            url: "{{ url('doctor/referral/data/pregnant') }}/" + form_id + "/" + referral_status + "/" + type,
+                            type: "GET",
+                            success: function(request) {
+                                setTimeout(function() {
+                                    $(".referral_body").html(request);
+                                }, 300);
+                            },
+                            error: function() {
+                                $('#serverModal').modal();
+                            }
+                        });
+                    }
+                } else if (form_type === 'version2') {
+                    
+                    if (type === 'normal') {
+                       
+                        $(".revised_normal_form_info").html(loading);
+
+
+                        $("#referralForm").modal('hide');
+                    } else if (type === 'pregnant') {
+                        // Handle form_type == 2 and type == 'pregnant'
+                        // Add relevant code here
+                        $("#referralForm").modal('hide');
+                    }
+                }  
+            },
+        });
+
 
         if(referral_status === 'referred' || referral_status === 'redirected' || referral_status === 'transferred') {
             var seenUrl = "{{ url('doctor/referral/seenBy_save/') }}/"+form_id+"/"+code;
@@ -149,62 +171,28 @@
     $('#referralForm').show();
 });
 
-$('body').on('click', '.edit_form_btn', function (e) {
-    $('#referralForm').hide();
+$('body').on('click','.edit_form_btn',function(e) {
+        $('#referralForm').hide();
+        form_id = $(this).data('id');
+        type = $(this).data('type');
+        status = $(this).data('referral_status');
 
-    // Get data from the button
-    var form_id = $(this).data('id');
-    var type = $(this).data('type');
-    var status = $(this).data('referral_status');
-    var patient_id = $(this).data('patient_id'); // Make sure patient_id is defined
-    var refer_facility = "{{$user->facility_id}}";
-    var form_url;
-    var patient_id = "{{ $form->patient_id }}";
-
-    console.log("Referred facility ID: " + refer_facility);
-    console.log(patient_id);
-
-    // If referred facility is 63
-    // if (refer_facility == 63) {
-    //     form_url = "{{url('revised/referral/info')}}/" + patient_id;
-    //     $(".edit_referral_body").html(loading);
-
-    //     $.ajax({
-    //         url: form_url,
-    //         type: "GET",
-    //         success: function (data) {
-    //             console.log("Form URL: " + form_url);
-    //             console.log("data: "+ data);
-    //             setTimeout(function () {
-    //                 $('.edit_referral_body').html(data); // Insert server response
-    //             }, 300); // Optional delay
-    //         },
-    //         error: function (xhr, status, error) {
-    //             console.log("Error: " + error); // Log the actual error
-    //             $('#serverModal').modal();
-    //         }
-    //     });
-    // } else {
-        // For other facilities
-        form_url = "{{ url('doctor/referral/edit_info') }}/" + form_id + "/" + type + "/" + status;
+        var form_url = "{{ url('doctor/referral/edit_info') }}/"+form_id+"/"+type+"/"+status;
         $(".edit_referral_body").html(loading);
-
         $.ajax({
             url: form_url,
             type: "GET",
-            success: function (data) {
-                console.log("Form URL: " + form_url);
-                setTimeout(function () {
-                    $('.edit_referral_body').html(data); // Insert server response
-                }, 300); // Optional delay
+            success: function(data) {
+                console.log("form url: " + form_url);
+                setTimeout(function(){
+                    $('.edit_referral_body').html(data);
+                },300);
             },
-            error: function (xhr, status, error) {
-                console.log("Error: " + error); // Log the actual error
+            error: function(){
                 $('#serverModal').modal();
             }
         });
-    // }
-});
+    });
 
 
     $('body').on('click','.undo_cancel_btn',function(e) {

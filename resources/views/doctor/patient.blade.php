@@ -289,7 +289,7 @@ $counter = 0;
                                         Walk-In
                                     </a>
                                         @elseif ($user->facility_id == 63)
-                                        <a href="#nonPregnantChooseVersionModal"
+                                        <a href="#pregnantModal"
                                                data-patient_id="{{ $row->id }}"
                                                data-backdrop="static"
                                                data-toggle="modal"
@@ -389,6 +389,9 @@ $counter = 0;
 </div> -->
 
 @include('modal.pregnantModal')
+@include('modal.choose_version')
+@include('modal.revised_normal_form')
+@include('modal.revised_pregnant_form')  
 @include('modal.normal_form_editable')
 @include('modal.normal_form_editable_walkin')
 @include('modal.pregnant_form_editable')
@@ -465,11 +468,11 @@ $counter = 0;
         }
 
         function openNewForms(type){
-                // Get facility_id and pregnancy status from server-side
-                var referred_facility = "{{ $user->facility_id }}";
+                 // Get facility_id and pregnancy status from server-side
+                 var referred_facility = "{{ $user->facility_id }}";
 
                 console.log("Facility ID: ", referred_facility);
-                console.log("Is Pregnant: ", isPregnant);
+        
 
                 // Check if facility_id is 63 (allowed to access the new form)
                 if (referred_facility == 63) {
@@ -480,7 +483,6 @@ $counter = 0;
                         $('#pedia_show').show();
                     
                     } else if (type == 'normal') {
-                        $('#isPregnant').val(0);
                         $('#nonPregnantChooseVersionModal').modal('show');
                         selectFormTitle("Clinical");
                         $('#menarche_show').hide();

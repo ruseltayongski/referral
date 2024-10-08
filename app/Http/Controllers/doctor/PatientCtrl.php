@@ -406,6 +406,7 @@ class PatientCtrl extends Controller
             'action_md' => '',
             'type' => $type,
             'form_id' => $form_id,
+            'form_type' => 'version2',
             'remarks' => ($req->reason) ? $req->reason : '',
             'status' => ($status == 'walkin') ? 'accepted' : 'referred',
             'walkin' => 'no',

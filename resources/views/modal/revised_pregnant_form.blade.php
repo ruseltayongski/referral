@@ -607,7 +607,7 @@
                             </div>
                         </div>
                         
-                        <input type="hidden" id="isPregnant">
+                      
 
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
                         <div class="row" id="pedia_show_pregnant">

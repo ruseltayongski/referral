@@ -10,6 +10,8 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content" id="pregnant-content">
             <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
                 <i class="fa fa-user-secret"></i> SELECT OPTION
             </div>
             <div class="modal-body">
@@ -35,6 +37,8 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content" id="pregnant-content">
             <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
                 <i class="fa fa-user-secret"></i> SELECT OPTION
             </div>
             <div class="modal-body">

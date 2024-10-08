@@ -25,6 +25,7 @@ class Tracking extends Model
         'status',
         'type',
         'form_id',
+        'form_type',
         'walkin',
         'source',
         'telemedicine'
