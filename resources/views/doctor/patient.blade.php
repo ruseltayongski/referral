@@ -390,12 +390,12 @@ $counter = 0;
 
 @include('modal.pregnantModal')
 @include('modal.choose_version')
-@include('modal.revised_normal_form')
-@include('modal.revised_pregnant_form')  
-@include('modal.normal_form_editable')
-@include('modal.normal_form_editable_walkin')
+@include('modal.revised_pregnant_form')
 @include('modal.pregnant_form_editable')
 @include('modal.pregnant_form_editable_walkin')
+@include('modal.normal_form_editable')
+@include('modal.normal_form_editable_walkin')
+@include('modal.revised_normal_form')
 @endsection
 
 @section('js')

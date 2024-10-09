@@ -13,11 +13,13 @@ use App\Http\Controllers\doctor\ReferralCtrl;
 use Illuminate\Support\Facades\Response;
 
 use App\Baby;
+use App\Icd;
 use App\Tracking;
 use App\Department;
 use App\Activity;
 use App\Facility;
 use App\TelemedAssignDoctor;
+use App\ReasonForReferral;
 use App\PatientForm;
 use App\PregnantForm;
 use App\Patients;
@@ -1155,7 +1157,7 @@ class NewFormCtrl extends Controller
         if($file_link != null && $file_link != "") {
             $explode = explode("|",$file_link);
             foreach($explode as $link) {
-                $path_tmp = self::securedFile($link);
+                $path_tmp = ReferralCtrl::securedFile($link);
                 if($path_tmp != '') {
                     array_push($path, $path_tmp);
                     array_push($file_name, basename($path_tmp));
@@ -1186,7 +1188,7 @@ class NewFormCtrl extends Controller
             Session::put('telemed',false);
             return $arr;
         } else {
-            return view("doctor.referral_body_normal",$arr);
+            return view("modal.revised_normal_form_info",$arr);
         }
     }
 

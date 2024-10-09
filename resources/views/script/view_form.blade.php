@@ -57,15 +57,25 @@
                 } else if (form_type === 'version2') {
                     
                     if (type === 'normal') {
-                       
-                        $(".revised_normal_form_info").html(loading);
-
-
-                        $("#referralForm").modal('hide');
+                        var form_url_v2 = "{{ url('doctor/revised/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
+                        $(".referral_body").html(loading);
+                        $.ajax({
+                            url: form_url_v2,
+                            type: "GET",
+                            success: function(data){
+                                
+                                setTimeout(function() {
+                                    $(".referral_body").html(data);
+                                }, 300); 
+                            },
+                            error: function(){
+                                $('#serverModal').modal();
+                            }
+                        });         
                     } else if (type === 'pregnant') {
                         // Handle form_type == 2 and type == 'pregnant'
                         // Add relevant code here
-                        $("#referralForm").modal('hide');
+                       
                     }
                 }  
             },

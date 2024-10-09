@@ -1,11 +1,186 @@
+<?php
+$user = Session::get('auth');
+$facilities = \App\Facility::select('id', 'name')
+    ->where('id', '!=', $user->facility_id)
+    ->where('status', 1)
+    ->where('referral_used', 'yes')
+    ->orderBy('name', 'asc')->get();
+$myfacility = \App\Facility::find($user->facility_id);
+$facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
+$inventory = \App\Inventory::where("facility_id", $myfacility->id)->get();
+$reason_for_referral = \App\ReasonForReferral::get();
+?>
 
-<div class="modal fade" role="dialog" id="revisednormalFormModalInfo" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <form action="{{ url('post-update-referral', ['patient_id' => $data->patient_id]) }}" method="POST" class="form-submit revised_normal_form_info">
-                <div class="jim-content">
-                    @include('include.header_form')
-                    <div class="form-group-sm form-inline">
+<style>
+     .file-upload {
+        background-color: #ffffff;
+        width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #1FB264;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #15824B;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .file-upload-btn:hover {
+        background: #1AA059;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+
+    .file-upload-btn:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+
+    .file-upload-content {
+        display: none;
+        text-align: center;
+    }
+
+    .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .image-upload-wrap {
+        margin-top: 20px;
+        border: 4px dashed #1FB264;
+        position: relative;
+    }
+
+    .image-dropping,
+    .image-upload-wrap:hover {
+        background-color: #1FB264;
+        border: 4px dashed #ffffff;
+    }
+
+    .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+    }
+
+    .drag-text {
+        text-align: center;
+    }
+
+    .drag-text h3 {
+        font-weight: 100;
+        text-transform: uppercase;
+        color: #15824B;
+        padding: 60px 0;
+    }
+
+    .file-upload-image {
+        max-height: 200px;
+        max-width: 200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .remove-image {
+        width: 200px;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    .remove-image:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+
+    .remove-image:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+
+    .container-referral {
+        border: 1px solid lightgrey;
+        width: 100%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .glasgow-table {
+        border: 1px solid lightgrey;
+        width: 100%;
+    }
+
+     .glasgow-dot {
+        background-color: #494646;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .referral-radio-btn {
+        height:18px;
+        width:18px;
+        vertical-align: middle;
+    }
+
+    .mobile-view {
+        display: none;
+        visibility: hidden;
+    }
+
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+
+    @media only screen and (max-width: 720px) {
+        .web-view {
+            display: none;
+            visibility: hidden;
+        }
+        .mobile-view {
+            display: block;
+            visibility: visible;
+        }
+    }
+</style>
+
+<form action="{{ url('post-update-referral', ['patient_id' => $data->patient_id]) }}" method="GET" class="form-submit revised_normal_form_info">  
+                @include('include.header_form')
+ 
+                <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
                         <input type="hidden" class="pt_age" />
@@ -17,11 +192,11 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Name of Referring Facility</small><br>
-                                &nbsp;<span>{{ $myfacility->name }}</span>
+                                &nbsp;<span>{{ $form->referring_name }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                &nbsp;<span>{{ $facility_address['address'] }}</span>
+                                &nbsp;<span>{{ $form->referring_address }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Name of referring MD/HCW</small><br>
@@ -32,62 +207,117 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Date/Time Referred (ReCo)</small><br>
-                                <span>{{ date('l F d, Y h:i A') }}</span>
+                                <span>{{ $form->date_referred }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Name of Patient</small><br>
-                                <span class="patient_name"></span>
+                                <span class="patient_name">{{ $form->patient_name }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                <span class="patient_address"></span>
+                                <span class="patient_address">{{ $form->patient_address }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
-                                <select name="referred_facility" class="select2 select_facility" required>
-                                    <option value="">Select Facility...</option>
+                                <select name="referred_facility" class="form-control select2 select_facility" required style="width:250px;">
+                                    <option value="">{{ $form->referred_name }}</option>
                                     @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Department</small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control-select select_department select_department_normal" style="width: 100%;" required>
-                                    <option value="">Select Option</option>
+                                <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
+                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
+                                    <option value="">{{ $form->department }}</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                <span class="text-yellow facility_address"></span>
+                                <span class="text-yellow facility_address">{{ $form->referred_address }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Age</small><br>
-                                <span class="patient_age"></span>
+                                <span class="patient_age">
+                                @if($age_type == "y")
+                                    @if($patient_age == 1)
+                                        {{ $patient_age }} year old
+                                    @else
+                                        {{ $patient_age }} years old
+                                    @endif
+                                @elseif($age_type == "m")
+                                    @if($patient_age['month'])
+                                        {{ $patient_age['month'] }} mo,
+                                    @else
+                                        {{ $patient_age['month'] }} mos,
+                                    @endif
+                                    @if($patient_age['days'] == 1)
+                                        {{ $patient_age['days'] }} day old
+                                    @else
+                                        {{ $patient_age['days'] }} days old
+                                    @endif
+                                @endif
+                                </span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Sex</small> <span class="text-red">*</span><br>
                                 <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
-                                    <option value="">Select...</option>
+                                    @if( $form->patient_sex == "Male")
                                     <option>Male</option>
                                     <option>Female</option>
+                                    @else
+                                    <option>Female</option>
+                                    <option>Male</option>
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
                                 <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
-                                    <option value="">Select...</option>
+                                @if ( $form->patient_status == "Single")
                                     <option>Single</option>
                                     <option>Married</option>
                                     <option>Divorced</option>
                                     <option>Separated</option>
                                     <option>Widowed</option>
+                                    @elseif($form->patient_status == "Married")
+                                    <option>Married</option>
+                                    <option>Divorced</option>
+                                    <option>Separated</option>
+                                    <option>Widowed</option>
+                                    <option>Single</option>
+                                    @elseif($form->patient_status == "Divorced")
+                                    <option>Divorced</option>
+                                    <option>Separated</option>
+                                    <option>Widowed</option>
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    @elseif($form->patient_status == "Separated")
+                                    <option>Separated</option>
+                                    <option>Widowed</option>
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    <option>Divorced</option>
+                                    @elseif($form->patient_status == "Widowed")
+                                    <option>Widowed</option>
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    <option>Divorced</option>
+                                    <option>Separated</option>
+                                    @else
+                                    <option value="">Select...</option>    
+                                    <option>Single</option>
+                                    <option>Married</option>
+                                    <option>Divorced</option>
+                                    <option>Separated</option>
+                                    <option>Widowed</option>
+                                    @endif
                                 </select>
                             </div>
                         </div>
@@ -95,27 +325,82 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Covid Number</small><br>
-                                <input type="text" name="covid_number" style="width: 100%;">
+                                <input type="text" name="covid_number" style="width: 100%;" value="{{ $form->covid_number }}">
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Clinical Status</small><br>
                                 <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
-                                    <option value="">Select option</option>
+
+                                @if($form->refer_clinical_status == "Asymptomatic")
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
                                     <option value="moderate">Moderate</option>
                                     <option value="severe">Severe</option>
                                     <option value="critical">Critical</option>
+                                    @elseif($form->refer_clinical_status == "Mild")
+                                    <option value="mild">Mild</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="severe">Severe</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="asymptomatic">Asymptomatic</option>
+                                    @elseif($form->refer_clinical_status == "Moderate")
+                                    <option value="moderate">Moderate</option>
+                                    <option value="severe">Severe</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="asymptomatic">Asymptomatic</option>
+                                    <option value="mild">Mild</option>
+                                    @elseif($form->refer_clinical_status == "Severe")
+                                    <option value="severe">Severe</option>
+                                    <option value="critical">Critical</option>
+                                    <option value="asymptomatic">Asymptomatic</option>
+                                    <option value="mild">Mild</option>
+                                    <option value="moderate">Moderate</option>
+                                    @elseif($form->refer_clinical_status == "Critical")
+                                    <option value="critical">Critical</option>
+                                    <option value="asymptomatic">Asymptomatic</option>
+                                    <option value="mild">Mild</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="severe">Severe</option>
+                                    @else
+                                    <option value="">Select option</option>   
+                                    <option value="asymptomatic">Asymptomatic</option>
+                                    <option value="mild">Mild</option>
+                                    <option value="moderate">Moderate</option>
+                                    <option value="severe">Severe</option>
+                                    <option value="critical">Critical</option>
+                                    @endif
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Surveillance Category</small><br>
                                 <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                                @if ($form->refer_sur_category == "Contact (PUM)")
+                                    <option value="contact_pum">Contact (PUM)</option>
+                                    <option value="suspect">Suspect</option>
+                                    <option value="probable">Probable</option>
+                                    <option value="confirmed">Confirmed</option>
+                                @elseif ($form->refer_sur_category == "Suspect")
+                                    <option value="suspect">Suspect</option>
+                                    <option value="probable">Probable</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="contact_pum">Contact (PUM)</option>
+                                @elseif ($form->refer_sur_category == "Probable")
+                                    <option value="probable">Probable</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="contact_pum">Contact (PUM)</option>
+                                    <option value="suspect">Suspect</option>
+                                @elseif ($form->refer_sur_category == "Confirmed")
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="contact_pum">Contact (PUM)</option>
+                                    <option value="suspect">Suspect</option>
+                                    <option value="probable">Probable</option>
+                                @else
                                     <option value="">Select option</option>
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
                                     <option value="probable">Probable</option>
                                     <option value="confirmed">Confirmed</option>
+                                    @endif
                                 </select>
                             </div>
                         </div><br>
@@ -123,7 +408,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
                                         <b>HISTORY OF PRESENT ILLNESS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -140,7 +425,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
                                         <b>DIAGNOSIS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -172,7 +457,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
                                         <b>PAST MEDICAL HISTORY</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -394,7 +679,7 @@
                         <div class="row" id="pedia_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
                                         <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
@@ -587,7 +872,7 @@
                         <div class="row" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
                                         <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view">
                                             <b>OBSTETRIC AND GYNECOLOGIC<br> HISTORY</b><br> <i> (as applicable)</i></div>
@@ -759,7 +1044,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_personal_history" aria-expanded="false" aria-controls="collapse_personal_history">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_personal_history" aria-expanded="false" aria-controls="collapse_personal_history">
                                         <div class="web-view"><b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i></div>
                                         <div class="mobile-view"><b>PERSONAL and SOCIAL HISTORY</b><br> <i> (as applicable)</i></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
@@ -870,7 +1155,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
                                         <b>CURRENT MEDICATION(S)</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -885,7 +1170,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
                                         <div class="web-view">
                                             <b>PERTINENT LABORATORY and OTHER ANCILLARY PROCEDURES</b><br> <i>(include Dates)</i>
                                             <span class="pull-right"><i class="fa fa-plus"></i></span>
@@ -950,7 +1235,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
                                         <b>REVIEW OF SYSTEMS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -1724,7 +2009,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
                                         <b>NUTRITIONAL STATUS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -1767,7 +2052,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
                                         <b>LATEST VITAL SIGNS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -1801,7 +2086,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
                                         <b>GLASGOW COMA SCALE</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2116,7 +2401,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%; font-size: 16px;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
                                         <b>REASON FOR REFERRAL</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2156,7 +2441,6 @@
                         </div>
                         <div class="clearfix"></div>
                     </div>{{--/.form-group--}}
-                </div> {{--/.jim-content--}}
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -2203,7 +2487,7 @@
 
 <script>
     $("#normalFormModal").modal("show");
-
+    // $('.select_facility').select2();
     //    $('#pedia_show').hide();
     //    $('#menarche_show').hide();
     //
@@ -3043,3 +3327,4 @@
         $('.image-upload-wrap').removeClass('image-dropping');
     });
 </script>
+
