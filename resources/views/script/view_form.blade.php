@@ -17,7 +17,11 @@
             type: 'GET',
             success: function(response){
                 var form_type = response.form_type;
+                var patient_data = response.patient_data;
                 console.log('Form Type:', form_type);
+                console.log('patient_data: ', patient_data);
+                console.log('link:',response.Link);
+                console.log('patient_id: ', response.patient_id)
                 
                 var form_selector; // New variable to hold form identifier
 

@@ -64,7 +64,7 @@ class NewFormCtrl extends Controller
     public function fetchDataFromDB($patient_id)
     {
         $data = Patients::table('patients')
-            ->joint('past_medical_history', 'patients.id', '=', 'past_medical_history.patient_id')
+            ->join('past_medical_history', 'patients.id', '=', 'past_medical_history.patient_id')
             ->join('pediatric_history', 'patients.id', '=', 'pediatric_history.patient_id')
             ->join('nutritional_status', 'patients.id', '=', 'nutritional_status.patient_id')
             ->join('glasgow_coma_scale', 'patients.id', '=', 'glasgow_coma_scale.patient_id')
@@ -1196,9 +1196,46 @@ class NewFormCtrl extends Controller
         try {
             // Check if form_id exists and is correct
             $form_type = Tracking::select('form_type')->where('id', $form_id)->first();
+            $patient_id = Tracking::select('patient_id')->where('id', $form_id)->first();
+            $patient = Patients::find($patient_id);
+            $past_medical_history_data = PastMedicalHistory::where('patient_id', $patient_id)->first();
+
+
+            // $data = DB::table('patients')
+            // ->join('past_medical_history', 'patients.id', '=', 'past_medical_history.patient_id')
+            // ->join('pediatric_history', 'patients.id', '=', 'pediatric_history.patient_id')
+            // ->join('nutritional_status', 'patients.id', '=', 'nutritional_status.patient_id')
+            // ->join('glasgow_coma_scale', 'patients.id', '=', 'glasgow_coma_scale.patient_id')
+            // ->join('review_of_system', 'patients.id', '=', 'review_of_system.patient_id')
+            // ->join('obstetric_and_gynecologic_history', 'patients.id', '=', 'obstetric_and_gynecologic_history.patient_id')
+            // ->join('latest_vital_signs', 'patients.id', '=', 'latest_vital_signs.patient_id')
+            // ->join('personal_and_social_history', 'patients.id', '=', 'personal_and_social_history.patient_id')
+            // ->join('pertinent_laboratory', 'patients.id', '=', 'pertinent_laboratory.patient_id')
+            // ->select(
+            //     'patients.*',
+            //     'past_medical_history.*',
+            //     'pediatric_history.*',
+            //     'nutritional_status.*',
+            //     'glasgow_coma_scale.*',
+            //     'review_of_system.*',
+            //     'obstetric_and_gynecologic_history.*',
+            //     'latest_vital_signs.*',
+            //     'personal_and_social_history.*',
+            //     'pertinent_laboratory.*',
+            // )
+            // ->where('patients.id', $patient_id)
+            // ->first();
+
     
             if ($form_type) {
-                return Response::json($form_type);
+                return Response::json([
+                    'form_type' => $form_type,
+                    'patient_data' => $patient,
+                    'Link'=>"http://localhost:8080/referral/get-form-type/",
+                    'patient_id' => $patient_id,
+                    'past_medical_history_data' => $past_medical_history_data
+                ]);
+                
             } else {
                 return Response::json(['error' => 'Form not found'], 404);
             }

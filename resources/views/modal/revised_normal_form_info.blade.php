@@ -995,7 +995,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach($pregnancy_data as $pregnancy)
+                                               
                                                 <tr style="font-size: 10pt">
                                                     <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
                                                     <td>
@@ -1018,7 +1018,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                     <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
                                                 </tr>
-                                                @endforeach
+                                              
                                             </tbody>
                                         </table>
                                         <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
