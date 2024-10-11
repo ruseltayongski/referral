@@ -696,7 +696,8 @@ Route::get('/generate-pdf/{patient_id}', 'doctor\NewFormCtrl@generatePdf')->name
 Route::match(['GET','POST'],'/update-referral/{patient_id}', 'doctor\NewFormCtrl@updateReferral')->name('post-update-referral');
 Route::get('show-choose-version', 'doctor\NewFormCtrl@view_choose_versionModal')->name('show-choose-version');
 Route::get('get-form-type/{form_id}', 'doctor\NewFormCtrl@getFormType')->name('get-form-type');
-Route::get('doctor/revised/referral/data/normal/{id}/{referral_status}/{form_type}', 'doctor\NewFormCtrl@getViewForm');
+Route::get('doctor/revised/referral/data/normal/{id}/{referral_status}/{form_type}', 'doctor\NewFormCtrl@getViewForm_normal');
+Route::get('doctor/revised/referral/data/pregnant/{id}/{referral_status}/{form_type}', 'doctor\NewFormCtrl@getViewForm_pregnant');
 
 
 Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');

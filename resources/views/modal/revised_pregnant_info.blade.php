@@ -176,6 +176,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     }
 </style>
+{{dd($form)}}
 <form action="{{ url('post-update-referral', ['patient_id' => $data->patient_id]) }}" method="GET" class="form-submit revised_normal_form_info">  
                 @include('include.header_form')
  
@@ -191,7 +192,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Name of Referring Facility</small><br>
-                                &nbsp;<span>{{ $form->referring_name }}</span>
+                                &nbsp;<span>{{ $form->pregnant->referring_name }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
@@ -679,7 +680,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         </div>
 
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        <div class="row" id="pedia_show" style="display:none;">
+                        <div class="row" id="pedia_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
@@ -872,7 +873,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         ?>
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
-                        <div class="row" id="menarche_show" style="display:none;">
+                        <div class="row" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">

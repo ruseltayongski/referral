@@ -17,11 +17,7 @@
             type: 'GET',
             success: function(response){
                 var form_type = response.form_type;
-                var patient_data = response.patient_data;
-                console.log('Form Type:', form_type);
-                console.log('patient_data: ', patient_data);
-                console.log('link:',response.Link);
-                console.log('patient_id: ', response.patient_id)
+                console.log('Form Type:', type);
                 
                 var form_selector; // New variable to hold form identifier
 
@@ -66,10 +62,9 @@
                         $.ajax({
                             url: form_url_v2,
                             type: "GET",
-                            success: function(data){
-                                
+                            success: function(request){
                                 setTimeout(function() {
-                                    $(".referral_body").html(data);
+                                    $(".referral_body").html(request);
                                 }, 300); 
                             },
                             error: function(){
@@ -77,13 +72,26 @@
                             }
                         });         
                     } else if (type === 'pregnant') {
-                        // Handle form_type == 2 and type == 'pregnant'
-                        // Add relevant code here
+                        var form_url_v2 = "{{ url('doctor/revised/referral/data/pregnant') }}/" + form_id + "/" + referral_status + "/" + type;
+                        $(".referral_body").html(loading);
+                        $.ajax({
+                            url: form_url_v2,
+                            type: "GET",
+                            success: function(request){
+                                setTimeout(function() {
+                                    $(".referral_body").html(request);
+                                }, 300); 
+                            },
+                            error: function(){
+                                $('#serverModal').modal();
+                            }
+                        });         
                        
                     }
                 }  
             },
         });
+
 
 
         if(referral_status === 'referred' || referral_status === 'redirected' || referral_status === 'transferred') {

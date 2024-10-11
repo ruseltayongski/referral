@@ -36,6 +36,7 @@ use App\Pregnancy;
 
 use DB;
 use Anouar\Fpdf\Fpdf;
+use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 use function PHPSTORM_META\type;
 
@@ -63,7 +64,7 @@ class NewFormCtrl extends Controller
     // Get data from Database
     public function fetchDataFromDB($patient_id)
     {
-        $data = Patients::table('patients')
+        $data = DB::table('patients')
             ->join('past_medical_history', 'patients.id', '=', 'past_medical_history.patient_id')
             ->join('pediatric_history', 'patients.id', '=', 'pediatric_history.patient_id')
             ->join('nutritional_status', 'patients.id', '=', 'nutritional_status.patient_id')
@@ -74,7 +75,7 @@ class NewFormCtrl extends Controller
             ->join('personal_and_social_history', 'patients.id', '=', 'personal_and_social_history.patient_id')
             ->join('pertinent_laboratory', 'patients.id', '=', 'pertinent_laboratory.patient_id')
             ->select(
-                'patients.id.*',
+                'patients.*',
                 'past_medical_history.*',
                 'pediatric_history.*',
                 'nutritional_status.*',
@@ -1140,7 +1141,175 @@ class NewFormCtrl extends Controller
             }
     }
 
-    public function getViewForm($id,$referral_status,$form_type){
+    public function getViewForm_pregnant($id,$referral_status){
+        $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
+        $icd = Icd::select('icd10.code', 'icd10.description')
+            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+            ->where('icd.code',$track->code)->get();
+
+        $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+
+        $path = [];
+        $file_name = [];
+
+        if($file_link != null && $file_link != "") {
+            $explode = explode("|",$file_link);
+            foreach($explode as $link) {
+                $path_tmp = self::securedFile($link);
+                if($path_tmp != '') {
+                    array_push($path, $path_tmp);
+                    array_push($file_name, basename($path_tmp));
+                }
+            }
+        }
+
+        $reason = ReasonForReferral::select("reason_referral.id", "reason_referral.reason")
+            ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+            ->where('pregnant_form.code', $track->code)->first();
+
+        $arr = [
+            "form" => self::pregnantFormData($id),
+            "id" => $id,
+            "reason" => $reason,
+            "icd" => $icd,
+            "file_path" => $path,
+            "file_name" => $file_name,
+            "referral_status" => $referral_status,
+            "cur_status" => $track->status,
+            "referring_fac_id" => $track->referring_fac_id,
+            "form_type" => "pregnant"
+        ];
+      
+        if(Session::get('telemed')) {
+            Session::put('telemed',false);
+            return $arr;
+        } else {
+            return view("modal.revised_pregnant_info",$arr);
+        }
+    }
+
+    public static function pregnantFormData($id) {
+        $form = PregnantForm::select(
+            DB::raw("'$id' as tracking_id"),
+            'tracking.action_md',
+            'tracking.telemedicine', // I add this a piece of code for accessing telemedicine
+            'tracking.referring_md',
+            'pregnant_form.patient_baby_id',
+            'pregnant_form.code',
+            'pregnant_form.record_no',
+            'pregnant_form.other_reason_referral',
+            'pregnant_form.notes_diagnoses',
+            'pregnant_form.other_diagnoses',
+            DB::raw("DATE_FORMAT(pregnant_form.referred_date,'%M %d, %Y %h:%i %p') as referred_date"),
+            DB::raw("DATE_FORMAT(pregnant_form.arrival_date,'%M %d, %Y %h:%i %p') as arrival_date"),
+            DB::raw('CONCAT(
+                if(users.level="doctor","Dr. ","")
+            ,users.fname," ",users.mname," ",users.lname) as md_referring'),
+            'users.id as md_referring_id',
+            'facility.name as referring_facility',
+            'b.description as facility_brgy',
+            'm.description as facility_muncity',
+            'p.description as facility_province',
+            'ff.name as referred_facility',
+            'ff.id as referred_facility_id',
+            'bb.description as ff_brgy',
+            'mm.description as ff_muncity',
+            'pp.description as ff_province',
+            'pregnant_form.health_worker',
+            DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as woman_name'),
+            DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
+            'patients.sex',
+            DB::raw("if(
+                patients.brgy,
+                concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),
+                concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
+            ) as patient_address"),
+            'pregnant_form.woman_reason',
+            'pregnant_form.woman_major_findings',
+            'pregnant_form.woman_before_treatment',
+            DB::raw("DATE_FORMAT(pregnant_form.woman_before_given_time,'%M %d, %Y %h:%i %p') as woman_before_given_time"),
+            'pregnant_form.woman_during_transport',
+            DB::raw("DATE_FORMAT(pregnant_form.woman_transport_given_time,'%M %d, %Y %h:%i %p') as woman_transport_given_time"),
+            'pregnant_form.woman_information_given',
+            'facility.contact as referring_contact',
+            'ff.contact as referred_contact',
+            'users.contact as referring_md_contact',
+            'department.description as department',
+            'department.id as department_id',
+            'pregnant_form.covid_number',
+            'pregnant_form.refer_clinical_status',
+            'pregnant_form.refer_sur_category',
+            'pregnant_form.dis_clinical_status',
+            'pregnant_form.dis_sur_category',
+            'patients.id as mother_id',
+            'patients.dob',
+            DB::raw("DATE_FORMAT(tracking.date_referred,'%m/%e/%Y') as date_referral")
+        )
+            ->leftJoin('patients','patients.id','=','pregnant_form.patient_woman_id')
+            ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
+            ->leftJoin('facility','facility.id','=','tracking.referred_from')
+            ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
+            ->leftJoin('users','users.id','=','pregnant_form.referred_by')
+            ->leftJoin('barangay','barangay.id','=','patients.brgy')
+            ->leftJoin('muncity','muncity.id','=','patients.muncity')
+            ->leftJoin('province','province.id','=','patients.province')
+            ->leftJoin('barangay as b','b.id','=','facility.brgy')
+            ->leftJoin('muncity as m','m.id','=','facility.muncity')
+            ->leftJoin('province as p','p.id','=','facility.province')
+            ->leftJoin('barangay as bb','bb.id','=','ff.brgy')
+            ->leftJoin('muncity as mm','mm.id','=','ff.muncity')
+            ->leftJoin('province as pp','pp.id','=','ff.province')
+            ->leftJoin('department','department.id','=','pregnant_form.department_id')
+            ->where('tracking.id',$id)
+            ->first();
+
+        $baby = array();
+        if(isset($form->patient_baby_id) && $form->patient_baby_id > 0)
+        {
+            $baby = PregnantForm::select(
+                DB::raw('CONCAT(baby.fname," ",baby.mname," ",baby.lname) as baby_name'),
+                'pregnant_form.patient_baby_id as baby_id',
+                'baby.fname as baby_fname',
+                'baby.mname as baby_mname',
+                'baby.lname as baby_lname',
+                DB::raw("DATE_FORMAT(bb.birth_date,'%M %d, %Y %h:%i %p') as baby_dob"),
+                'bb.weight',
+                'bb.gestational_age',
+                'pregnant_form.baby_reason',
+                'pregnant_form.baby_major_findings',
+                DB::raw("DATE_FORMAT(pregnant_form.baby_last_feed,'%M %d, %Y %h:%i %p') as baby_last_feed"),
+                'pregnant_form.baby_before_treatment',
+                DB::raw("DATE_FORMAT(pregnant_form.baby_before_given_time,'%M %d, %Y %h:%i %p') as baby_before_given_time"),
+                'pregnant_form.baby_during_transport',
+                DB::raw("DATE_FORMAT(pregnant_form.baby_transport_given_time,'%M %d, %Y %h:%i %p') as baby_transport_given_time"),
+                'pregnant_form.baby_information_given'
+            )
+                ->join('baby as bb','bb.baby_id','=','pregnant_form.patient_baby_id')
+                ->join('patients as baby','baby.id','=','pregnant_form.patient_baby_id')
+                ->join('tracking','tracking.form_id','=','pregnant_form.id')
+                ->where('tracking.id',$id)
+                ->first();
+
+            if($baby['baby_dob'] === null) {
+                $dob_ = Patients::select(DB::raw("DATE_FORMAT(patients.dob,'%M %d, %Y %h:%i %p') as baby_dob"))
+                    ->join('pregnant_form as pregnant','pregnant.patient_baby_id','=','patients.id')
+                    ->join('tracking','tracking.code','=','pregnant.code')
+                    ->where('tracking.id',$id)
+                    ->first();
+                $baby['baby_dob'] = $dob_->baby_dob;
+            }
+        }
+
+        Session::put('date_referral', $form['date_referral']);
+        $form['woman_age'] = ParamCtrl::getAge($form['dob']);
+
+        return array(
+            'pregnant' => $form,
+            'baby' => $baby
+        );
+    }
+
+    public function getViewForm_normal($id,$referral_status,$form_type){
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
@@ -1170,6 +1339,15 @@ class NewFormCtrl extends Controller
             ->where('patient_form.code', $track->code)->first();
 
         $form = ReferralCtrl::normalFormData($id);
+        $patient_id = Tracking::select('patient_id')->where('id', $id)->first()->patient_id;
+        $past_medical_history = PastMedicalHistory::where('patient_id', $patient_id)->first();
+        $personal_and_social_history = PersonalAndSocialHistory::where('patient_id', $patient_id)->first();
+        $pertinent_laboratory = PertinentLaboratory::where('patient_id', $patient_id)->first();
+        $review_of_system = ReviewOfSystems::where('patient_id', $patient_id)->first();
+        $nutritional_status = NutritionalStatus::where('patient_id', $patient_id)->first();
+        $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
+        $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
+
         $arr = [
             "form" => $form['form'],
             "id" => $id,
@@ -1182,13 +1360,21 @@ class NewFormCtrl extends Controller
             "referral_status" => $referral_status,
             "cur_status" => $track->status,
             "referring_fac_id" => $track->referring_fac_id,
-            "form_type" => $form_type
+            "form_type" => $form_type,
+            "patient_id" => $patient_id,
+            "past_medical_history" => $past_medical_history,
+            "personal_and_social_history" => $personal_and_social_history,
+            "pertinent_laboratory" => $pertinent_laboratory,
+            "review_of_system" => $review_of_system,
+            "nutritional_status" => $nutritional_status,
+            "latest_vital_signs" => $latest_vital_signs,
+            "glasgocoma_scale" => $glasgocoma_scale
         ];
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
         } else {
-            return view("modal.revised_normal_form_info",$arr);
+                return view("modal.revised_normal_form_info",$arr);
         }
     }
 
@@ -1196,46 +1382,9 @@ class NewFormCtrl extends Controller
         try {
             // Check if form_id exists and is correct
             $form_type = Tracking::select('form_type')->where('id', $form_id)->first();
-            $patient_id = Tracking::select('patient_id')->where('id', $form_id)->first();
-            $patient = Patients::find($patient_id);
-            $past_medical_history_data = PastMedicalHistory::where('patient_id', $patient_id)->first();
-
-
-            // $data = DB::table('patients')
-            // ->join('past_medical_history', 'patients.id', '=', 'past_medical_history.patient_id')
-            // ->join('pediatric_history', 'patients.id', '=', 'pediatric_history.patient_id')
-            // ->join('nutritional_status', 'patients.id', '=', 'nutritional_status.patient_id')
-            // ->join('glasgow_coma_scale', 'patients.id', '=', 'glasgow_coma_scale.patient_id')
-            // ->join('review_of_system', 'patients.id', '=', 'review_of_system.patient_id')
-            // ->join('obstetric_and_gynecologic_history', 'patients.id', '=', 'obstetric_and_gynecologic_history.patient_id')
-            // ->join('latest_vital_signs', 'patients.id', '=', 'latest_vital_signs.patient_id')
-            // ->join('personal_and_social_history', 'patients.id', '=', 'personal_and_social_history.patient_id')
-            // ->join('pertinent_laboratory', 'patients.id', '=', 'pertinent_laboratory.patient_id')
-            // ->select(
-            //     'patients.*',
-            //     'past_medical_history.*',
-            //     'pediatric_history.*',
-            //     'nutritional_status.*',
-            //     'glasgow_coma_scale.*',
-            //     'review_of_system.*',
-            //     'obstetric_and_gynecologic_history.*',
-            //     'latest_vital_signs.*',
-            //     'personal_and_social_history.*',
-            //     'pertinent_laboratory.*',
-            // )
-            // ->where('patients.id', $patient_id)
-            // ->first();
-
     
             if ($form_type) {
-                return Response::json([
-                    'form_type' => $form_type,
-                    'patient_data' => $patient,
-                    'Link'=>"http://localhost:8080/referral/get-form-type/",
-                    'patient_id' => $patient_id,
-                    'past_medical_history_data' => $past_medical_history_data
-                ]);
-                
+                return Response::json($form_type);
             } else {
                 return Response::json(['error' => 'Form not found'], 404);
             }
