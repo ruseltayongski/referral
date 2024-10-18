@@ -176,7 +176,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     }
     </style>
- 
+
             <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>$type, 'status' => $status]) }}" method="POST" class="form-submit revised_normal_form_info">
                 <div class="jim-content">
                     @include('include.header_form')
@@ -221,23 +221,26 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
-                                <select name="referred_facility" class="form-control select2 select_facility" required style="width:250px;">
-                                    <option value="">{{ $form->referred_name }}</option>
+                            <small class="text-success"><b>REFERRED TO: </b></small><br>
+                                <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
+                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" required>
+                                    <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                     @endforeach
                                 </select>
+                                {{--<span class="referred_name">{{ $form->referred_name }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;">
-                                    <option value="">{{ $form->department }}</option>
+                                <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
+                                <select name="department_id" class="form-control-select edit_department_pregnant" required>
+                                    <option value="">Select Department...</option>
                                 </select>
+                                {{--<span class="department_name">{{ $form->department }}</span>--}}
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                <span class="text-yellow facility_address">{{ $form->referred_address }}</span>
+                                <span class="text-yellow facility_address">{{ $referred_to_address }}</span>
                             </div>
                         </div>
                         <br>
@@ -2966,4 +2969,5 @@ $reason_for_referral = \App\ReasonForReferral::get();
         $('.image-upload-wrap').removeClass('image-dropping');
     });
 </script>
-
+@include('script.datetime')
+@include('script.edit_referred_pregnant')

@@ -223,20 +223,22 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
-                                <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
-                                <select name="referred_facility" class="form-control select2 select_facility" required style="width:250px;">
-                                    <option value="">{{  $form['pregnant']->referred_facility }}</option>
+                            <small class="text-success"><b>REFERRED TO: </b></small><br>
+                                <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
+                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" required>
+                                    <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                     @endforeach
                                 </select>
+                                {{--<span class="referred_name">{{ $form['pregnant']->referred_facility }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" >
-                                    <option value="">{{  $form['pregnant']->department  }}</option>
+                                <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
+                                <select name="department_id" class="form-control-select edit_department_pregnant" required>
+                                    <option value="">Select Department...</option>
                                 </select>
+                                {{--<span class="department_name">{{ $form['pregnant']->department }}</span>--}}
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
@@ -398,6 +400,44 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
+                                    <b>TREATMENTS GIVE TIME</b>
+                                    <span class="pull-right"><i class="fa fa-plus"></i></span>    
+                                </button><br><br>
+                                </div>
+                               
+                                <div class="collapse" id="patient_treatment_give_time" style="width: 100%;">
+                                <b>MAIN REASON FOR REFERRAL: </b>
+                                    <div class="container-referral">
+                                        <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
+                                        <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
+                                        <label><input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                        <label><input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
+                                    </div><br>
+                                
+                                    <div class="continer-referral">
+                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)</i> <br />
+                                    <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
+                                    </div><br>
+
+                                    <div class="container-referral" style="padding:5px">
+                                    <b>BEFORE REFERRAL</b>
+                                        <input type="text" class="form-control" name="woman_before_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="woman_before_given_time" placeholder="Date/Time Given" /><br>
+                                    <b>DURING TRANSPORT </b>
+                                        <input type="text" class="form-control" name="woman_during_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
+                                    </div><br>
+
+                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea><br><br>
+                                </div>
+                            </div>
+                        </div>          
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
                                         <b>HISTORY OF PRESENT ILLNESS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
@@ -444,6 +484,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         }
 
                         ?>
+
+                        
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -3400,3 +3442,5 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
 </script>
 
+@include('script.datetime')
+@include('script.edit_referred_pregnant')

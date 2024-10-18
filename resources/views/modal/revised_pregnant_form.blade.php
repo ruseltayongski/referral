@@ -313,6 +313,45 @@
                             </div>
                         </div><br>
 
+                        
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
+                                    <b>TREATMENTS GIVE TIME</b>
+                                    <span class="pull-right"><i class="fa fa-plus"></i></span>    
+                                </button><br><br>
+                                </div>
+                               
+                                <div class="collapse" id="patient_treatment_give_time" style="width: 100%;">
+                                <b>MAIN REASON FOR REFERRAL: </b>
+                                    <div class="container-referral">
+                                        <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
+                                        <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
+                                        <label><input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                        <label><input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
+                                    </div><br>
+                                
+                                    <div class="continer-referral">
+                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)</i> <br />
+                                    <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
+                                    </div><br>
+
+                                    <div class="container-referral" style="padding:5px">
+                                    <b>BEFORE REFERRAL</b>
+                                        <input type="text" class="form-control" name="woman_before_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="woman_before_given_time" placeholder="Date/Time Given" /><br>
+                                    <b>DURING TRANSPORT </b>
+                                        <input type="text" class="form-control" name="woman_during_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
+                                    </div><br>
+
+                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea><br><br>
+                                </div>
+                            </div>
+                        </div>    
+
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
