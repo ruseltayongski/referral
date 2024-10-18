@@ -176,13 +176,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     }
 </style>
-{{dd($form)}}
-<form action="{{ url('post-update-referral', ['patient_id' => $data->patient_id]) }}" method="GET" class="form-submit revised_normal_form_info">  
+
+<form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>$form_type, 'status' => $status]) }}" method="POST" class="form-submit revised_normal_form_info">  
                 @include('include.header_form')
  
                 <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
-                        <input type="hidden" name="patient_id" class="patient_id" value="" />
+                      
+                        <input type="hidden" name="mother_id" value="{{ $patient_id }}">
+                        <input type="hidden" name="form_type" value="pregnant">
                         <input type="hidden" class="pt_age" />
                         <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
                         <input type="hidden" name="code" value="" />
@@ -192,11 +194,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Name of Referring Facility</small><br>
-                                &nbsp;<span>{{ $form->pregnant->referring_name }}</span>
+                                &nbsp;<span>{{ $form['pregnant']->referring_facility }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                &nbsp;<span>{{ $form->referring_address }}</span>
+                                &nbsp;<span>{{ $form['pregnant']->facility_brgy }}, {{ $form['pregnant']->facility_muncity }}, {{ $form['pregnant']->facility_province }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Name of referring MD/HCW</small><br>
@@ -207,23 +209,24 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Date/Time Referred (ReCo)</small><br>
-                                <span>{{ $form->date_referred }}</span>
+                                <span>{{ $form['pregnant']->referred_date }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Name of Patient</small><br>
-                                <span class="patient_name">{{ $form->patient_name }}</span>
+                                <span class="patient_name">{{ $form['pregnant']->woman_name }}</span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                <span class="patient_address">{{ $form->patient_address }}</span>
+                                <span class="patient_address">{{ $form['pregnant']->patient_address }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
+                                <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
                                 <select name="referred_facility" class="form-control select2 select_facility" required style="width:250px;">
-                                    <option value="">{{ $form->referred_name }}</option>
+                                    <option value="">{{  $form['pregnant']->referred_facility }}</option>
                                     @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
                                     @endforeach
@@ -231,13 +234,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
-                                    <option value="">{{ $form->department }}</option>
+                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" >
+                                    <option value="">{{  $form['pregnant']->department  }}</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Address</small><br>
-                                <span class="text-yellow facility_address">{{ $form->referred_address }}</span>
+                                <span class="text-yellow facility_address">{{ $referred_to_address }}</span>
                             </div>
                         </div>
                         <br>
@@ -245,30 +248,17 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-md-4">
                                 <small class="text-success">Age</small><br>
                                 <span class="patient_age">
-                                @if($age_type == "y")
-                                    @if($patient_age == 1)
-                                        {{ $patient_age }} year old
+                                    @if($form['pregnant']->woman_age == 1)
+                                        {{ $form['pregnant']->woman_age }} year old
                                     @else
-                                        {{ $patient_age }} years old
+                                        {{ $form['pregnant']->woman_age }} years old
                                     @endif
-                                @elseif($age_type == "m")
-                                    @if($patient_age['month'])
-                                        {{ $patient_age['month'] }} mo,
-                                    @else
-                                        {{ $patient_age['month'] }} mos,
-                                    @endif
-                                    @if($patient_age['days'] == 1)
-                                        {{ $patient_age['days'] }} day old
-                                    @else
-                                        {{ $patient_age['days'] }} days old
-                                    @endif
-                                @endif
                                 </span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Sex</small> <span class="text-red">*</span><br>
                                 <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
-                                    @if( $form->patient_sex == "Male")
+                                    @if( $form['pregnant']->sex == "Male")
                                     <option>Male</option>
                                     <option>Female</option>
                                     @else
@@ -280,31 +270,31 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-md-4">
                                 <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
                                 <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
-                                @if ( $form->patient_status == "Single")
+                                @if ( $civil_status == "Single")
                                     <option>Single</option>
                                     <option>Married</option>
                                     <option>Divorced</option>
                                     <option>Separated</option>
                                     <option>Widowed</option>
-                                    @elseif($form->patient_status == "Married")
+                                    @elseif($civil_status == "Married")
                                     <option>Married</option>
                                     <option>Divorced</option>
                                     <option>Separated</option>
                                     <option>Widowed</option>
                                     <option>Single</option>
-                                    @elseif($form->patient_status == "Divorced")
+                                    @elseif($civil_status == "Divorced")
                                     <option>Divorced</option>
                                     <option>Separated</option>
                                     <option>Widowed</option>
                                     <option>Single</option>
                                     <option>Married</option>
-                                    @elseif($form->patient_status == "Separated")
+                                    @elseif($civil_status == "Separated")
                                     <option>Separated</option>
                                     <option>Widowed</option>
                                     <option>Single</option>
                                     <option>Married</option>
                                     <option>Divorced</option>
-                                    @elseif($form->patient_status == "Widowed")
+                                    @elseif($civil_status == "Widowed")
                                     <option>Widowed</option>
                                     <option>Single</option>
                                     <option>Married</option>
@@ -325,37 +315,37 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Covid Number</small><br>
-                                <input type="text" name="covid_number" style="width: 100%;" value="{{ $form->covid_number }}">
+                                <input type="text" name="covid_number" style="width: 100%;" value="{{ $form['pregnant']->covid_number }}">
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Clinical Status</small><br>
                                 <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
 
-                                @if($form->refer_clinical_status == "Asymptomatic")
+                                @if($form['pregnant']->refer_clinical_status == "asymptomatic")
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
                                     <option value="moderate">Moderate</option>
                                     <option value="severe">Severe</option>
                                     <option value="critical">Critical</option>
-                                    @elseif($form->refer_clinical_status == "Mild")
+                                    @elseif($form['pregnant']->refer_clinical_status == "mild")
                                     <option value="mild">Mild</option>
                                     <option value="moderate">Moderate</option>
                                     <option value="severe">Severe</option>
                                     <option value="critical">Critical</option>
                                     <option value="asymptomatic">Asymptomatic</option>
-                                    @elseif($form->refer_clinical_status == "Moderate")
+                                    @elseif($form['pregnant']->refer_clinical_status == "moderate")
                                     <option value="moderate">Moderate</option>
                                     <option value="severe">Severe</option>
                                     <option value="critical">Critical</option>
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
-                                    @elseif($form->refer_clinical_status == "Severe")
+                                    @elseif($form['pregnant']->refer_clinical_status == "severe")
                                     <option value="severe">Severe</option>
                                     <option value="critical">Critical</option>
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
                                     <option value="moderate">Moderate</option>
-                                    @elseif($form->refer_clinical_status == "Critical")
+                                    @elseif($form['pregnant']->refer_clinical_status == "critical")
                                     <option value="critical">Critical</option>
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
@@ -374,22 +364,22 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             <div class="col-md-4">
                                 <small class="text-success">Surveillance Category</small><br>
                                 <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
-                                @if ($form->refer_sur_category == "Contact (PUM)")
+                                @if ($form['pregnant']->refer_sur_category == "contact_pum")
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
                                     <option value="probable">Probable</option>
                                     <option value="confirmed">Confirmed</option>
-                                @elseif ($form->refer_sur_category == "Suspect")
+                                @elseif ($form['pregnant']->refer_sur_category == "suspect")
                                     <option value="suspect">Suspect</option>
                                     <option value="probable">Probable</option>
                                     <option value="confirmed">Confirmed</option>
                                     <option value="contact_pum">Contact (PUM)</option>
-                                @elseif ($form->refer_sur_category == "Probable")
+                                @elseif ($form['pregnant']->refer_sur_category == "probable")
                                     <option value="probable">Probable</option>
                                     <option value="confirmed">Confirmed</option>
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
-                                @elseif ($form->refer_sur_category == "Confirmed")
+                                @elseif ($form['pregnant']->refer_sur_category == "confirmed")
                                     <option value="confirmed">Confirmed</option>
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
@@ -415,9 +405,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                                 <div class="collapse" id="collapse_illness_history" style="width: 100%">
                                     <b>CASE SUMMARY:</b>
-                                    <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required>{{$form->case_summary}}</textarea><br><br>
+                                    <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" >{{$form['pregnant']->case_summary}}</textarea><br><br>
                                     <b>SUMMARY OF RECO:</b>
-                                    <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required>{{$form->reco_summary}}</textarea><br><br>
+                                    <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" >{{$form['pregnant']->reco_summary}}</textarea><br><br>
                                 </div>
                             </div>
                         </div>
@@ -432,7 +422,8 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis" style="width: 100%">
                                     <b>Diagnosis/Impression: </b>
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required>{{$form->diagnosis}}</textarea><br><br>
+                                    <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%">{{$form['pregnant']->notes_diagnoses}}</textarea><br><br>
                                 </div>
                             </div>
                         </div>
@@ -695,11 +686,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <span>A <input type="number" name="prenatal_age" style="width: 8%" min="0" value="{{$data->prenatal_a}}">
-                                                    year old G <input type="number" name="prenatal_g" style="width: 8%" min="0" value="{{$data->prenatal_g}}"> P <input type="number" style="width: 8%" min="0" name="prenatal_p" value="{{$data->prenatal_p}}"> mother
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowith" value="with" <?= isChecked($data, 'prenatal_radiowith_or_without', 'with'); ?>> with
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowout" value="without" <?= isChecked($data, 'prenatal_radiowith_or_without', 'without'); ?>> without
+                                                    year old G <input type="number" name="prenatal_g" style="width: 8%" min="0" value="{{$data->prenatal_g}}"> P <input type="number" style="width: 8%" min="0" name="prenatal_p" value="{{$pediatric_history->prenatal_p}}"> mother
+                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowith" value="with" <?= isChecked($pediatric_history, 'prenatal_radiowith_or_without', 'with'); ?>> with
+                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowout" value="without" <?= isChecked($pediatric_history, 'prenatal_radiowith_or_without', 'without'); ?>> without
                                                     MATERNAL ILLNESS, if Yes (specify)
-                                                    <textarea class="form-control" id="prenatal_mat_illness" name="prenatal_maternal_illness" style="resize: none;width: 50%;" rows="2">{{$data->prenatal_with_maternal_illness}}</textarea>
+                                                    <textarea class="form-control" id="prenatal_mat_illness" name="prenatal_maternal_illness" style="resize: none;width: 50%;" rows="2">{{$pediatric_history->prenatal_with_maternal_illness}}</textarea>
                                                 </span>
                                             </div>
                                         </div>
@@ -711,21 +702,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="col-md-12">
                                                 <span>Born at
                                                     <select class="form-control-select" name="natal_bornat">
-                                                        <option value="home" <?php echo ($data->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
-                                                        <option value="clinic" <?php echo ($data->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
-                                                        <option value="hospital" <?php echo ($data->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
+                                                        <option value="home" <?php echo ($pediatric_history->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
+                                                        <option value="clinic" <?php echo ($pediatric_history->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
+                                                        <option value="hospital" <?php echo ($pediatric_history->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
                                                     </select>
                                                     <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where" value="{{ $data->natal_born_address }}">
                                                     by
                                                     <select class="form-control-select" name="natal_by">
-                                                        <option value="md" <?php echo ($data->natal_by == 'md') ? 'selected' : ''; ?>>MD</option>
-                                                        <option value="midwife" <?php echo ($data->natal_by == 'midwife') ? 'selected' : ''; ?>>Midwife</option>
-                                                        <option value="hilot" <?php echo ($data->natal_by == 'hilot') ? 'selected' : ''; ?>>Hilot</option>
+                                                        <option value="md" <?php echo ($pediatric_history->natal_by == 'md') ? 'selected' : ''; ?>>MD</option>
+                                                        <option value="midwife" <?php echo ($pediatric_history->natal_by == 'midwife') ? 'selected' : ''; ?>>Midwife</option>
+                                                        <option value="hilot" <?php echo ($pediatric_history->natal_by == 'hilot') ? 'selected' : ''; ?>>Hilot</option>
                                                     </select>
                                                     via
                                                     <select class="form-control-select" name="natal_via">
-                                                        <option value="nsd" <?php echo ($data->natal_via == 'nsd') ? 'selected' : ''; ?>>NSD</option>
-                                                        <option value="cs" <?php echo ($data->natal_via == 'cs') ? 'selected' : ''; ?>>CS</option>
+                                                        <option value="nsd" <?php echo ($pediatric_history->natal_via == 'nsd') ? 'selected' : ''; ?>>NSD</option>
+                                                        <option value="cs" <?php echo ($pediatric_history->natal_via == 'cs') ? 'selected' : ''; ?>>CS</option>
                                                     </select>
                                                     (indication)
                                                     <input type="text" id="cs_indication" name="cs_indication" style="width: 20%;" value="{{ $data->natal_indication }}">
@@ -736,15 +727,15 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="col-md-12">
                                                 <span>
                                                     <select class="form-control-select" name="natal_term">
-                                                        <option value="preterm" <?php echo ($data->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
-                                                        <option value="fullterm" <?php echo ($data->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
-                                                        <option value="postterm" <?php echo ($data->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
+                                                        <option value="preterm" <?php echo ($pediatric_history->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
+                                                        <option value="fullterm" <?php echo ($pediatric_history->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
+                                                        <option value="postterm" <?php echo ($pediatric_history->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
                                                     </select>
                                                     , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01" value="{{$data->natal_weight}}"> kg,
                                                     BR <input type="text" name="natal_br" style="width: 20%" value="{{$data->natal_br}}">, with Good Cry
                                                     <select class="form-control-select" name="natal_withGoodCry">
-                                                        <option value="1" <?php echo ($data->natal_with_good_cry == 1) ? 'selected' : ''; ?>>Yes</option>
-                                                        <option value="0" <?php echo ($data->natal_with_good_cry == 0) ? 'selected' : ''; ?>>No</option>
+                                                        <option value="1" <?php echo ($pediatric_history->natal_with_good_cry == 1) ? 'selected' : ''; ?>>Yes</option>
+                                                        <option value="0" <?php echo ($pediatric_history->natal_with_good_cry == 0) ? 'selected' : ''; ?>>No</option>
                                                     </select><br>
                                                     Other complications:
                                                     <textarea class="form-control" name="natal_complications" style="resize: none;width: 30%;" rows="2">{{ $data->natal_other_complications }}</textarea>
@@ -753,22 +744,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </div>
                                     </div><br>
                                     <?php
-                                    $postnatal_data = [
-                                        'postnatal_bfeed_xmos' => $data->post_natal_bfeedx_month,
-                                        'postnatal_ffeed_specify' => $data->post_natal_ffeed_specify,
-                                        'postnatal_started_semisolidfood_at' => $data->post_natal_started_semifoods,
-                                        'immu_dpt_doses' => $data->post_dpt_doses,
-                                        'immu_hepb_doses' => $data->post_natal_hepB_x_doses,
-                                        'immu_others' => $data->post_natal_others,
-
-                                    ];
-
-                                    $postnatal_bfeed_xmos_value = htmlspecialchars($postnatal_data['postnatal_bfeed_xmos']);
-                                    $postnatal_ffeed_specify_value = htmlspecialchars($postnatal_data['postnatal_ffeed_specify']);
-                                    $postnatal_started_semisolidfood_at_value = htmlspecialchars($postnatal_data['postnatal_started_semisolidfood_at']);
-                                    $immu_dpt_doses_value = htmlspecialchars($postnatal_data['immu_dpt_doses']);
-                                    $immu_hepb_doses_value = htmlspecialchars($postnatal_data['immu_hepb_doses']);
-                                    $immu_others_value = htmlspecialchars($postnatal_data['immu_others']);
+                                    $postnatal_bfeed_xmos_value = htmlspecialchars($pediatric_history['postnatal_bfeed_xmos']);
+                                    $postnatal_ffeed_specify_value = htmlspecialchars($pediatric_history['postnatal_ffeed_specify']);
+                                    $postnatal_started_semisolidfood_at_value = htmlspecialchars($pediatric_history['postnatal_started_semisolidfood_at']);
+                                    $immu_dpt_doses_value = htmlspecialchars($pediatric_history['immu_dpt_doses']);
+                                    $immu_hepb_doses_value = htmlspecialchars($pediatric_history['immu_hepb_doses']);
+                                    $immu_others_value = htmlspecialchars($pediatric_history['immu_others']);
                                     ?>
 
                                     <b>POST NATAL</b>
@@ -778,12 +759,12 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                                 <i>Feeding History</i><br>&emsp;
                                                 <span>
                                                     <input type="hidden" name="postnatal_bfeed" value="No">
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?= isChecked($data, 'post_natal_bfeed', 'Yes'); ?>> Breastfed
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bfeed', 'Yes'); ?>> Breastfed
                                                     <span id="breastfed">
                                                         x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
                                                     </span>
                                                     <input type="hidden" name="postnatal_ffeed" value="No">
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?= isChecked($data, 'post_natal_formula_feed', 'Yes'); ?>> Formula Fed,
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_formula_feed', 'Yes'); ?>> Formula Fed,
                                                     <span id="formula_fed">
                                                         (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify" value="<?php echo $postnatal_ffeed_specify_value; ?>">
                                                     </span>
@@ -796,23 +777,23 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                             <div class="col-md-12">
                                                 <i>Immunization History</i><br>&emsp;
                                                 <input type="hidden" name="immu_bcg_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?= isChecked($data, 'post_natal_bcg', 'Yes'); ?>> BCG
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bcg', 'Yes'); ?>> BCG
                                                 <input type="hidden" name="immu_dpt_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?= isChecked($data, 'post_natal_dpt_opv_x', 'Yes'); ?>> DPT/OPV
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_dpt_opv_x', 'Yes'); ?>> DPT/OPV
                                                 <span id="immu_dpt">
                                                     x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0" value="<?php echo $immu_dpt_doses_value; ?>"> doses
                                                 </span>
                                                 <input type="hidden" name="immu_hepb_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?= isChecked($data, 'post_natal_hepB_cbox', 'Yes'); ?>> Hep B
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_hepB_cbox', 'Yes'); ?>> Hep B
                                                 <span id="immu_hepb">
                                                     x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0" value="<?php echo $immu_hepb_doses_value; ?>"> doses
                                                 </span>
                                                 <input type="hidden" name="immu_measles_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?= isChecked($data, 'post_natal_immu_measles_cbox', 'Yes'); ?>> Measles
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_immu_measles_cbox', 'Yes'); ?>> Measles
                                                 <input type="hidden" name="immu_mmr_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?= isChecked($data, 'post_natal_mmr_cbox', 'Yes'); ?>> MMR
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_mmr_cbox', 'Yes'); ?>> MMR
                                                 <input type="hidden" name="immu_others_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?= isChecked($data, 'post_natal_others_cbox', 'Yes'); ?>> Other(s)
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_others_cbox', 'Yes'); ?>> Other(s)
                                                 <span id="immu_others">
                                                     <input type="text" name="immu_others" style="width: 20%;" value="<?php echo $immu_others_value; ?>">
                                                 </span>
@@ -821,9 +802,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <i>Developmental Milestones</i><br>&emsp;
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under" value="Under developed" <?= isChecked($data, 'post_natal_development_milestones', 'Under developed'); ?>>
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under" value="Under developed" <?= isChecked($pediatric_history, 'post_natal_development_milestones', 'Under developed'); ?>>
                                                 <label for="dev_miles_under">Under developed</label>
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par" value="At par with age" <?= isChecked($data, 'post_natal_development_milestones', 'At par with age'); ?>>
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par" value="At par with age" <?= isChecked($pediatric_history, 'post_natal_development_milestones', 'At par with age'); ?>>
                                                 <label for="dev_miles_par">At par with age</label>
                                             </div>
                                         </div>
@@ -833,25 +814,25 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         </div>
                         <?php
 
-                        $menarche = $data->menarche;
+                        $menarche = $obstetric_and_gynecologic_history->menarche;
                         $gynecological_data = [
                             'menarche' => (int) $menarche,
-                            'menopausal_age' => $data->menopausal_age,
-                            'mens_irreg_xmos' => $data->mens_irreg_xmos,
-                            'menstrual_cycle_duration' => $data->menstrual_cycle_duration,
-                            'menstrual_cycle_padsperday' => $data->menstrual_cycle_padsperday,
-                            'menstrual_cycle_medication' => $data->menstrual_cycle_medication,
-                            'contraceptive_others' => $data->contraceptive_others,
-                            'parity_g' => $data->parity_g,
-                            'parity_p' => $data->parity_p,
-                            'parity_ft' => $data->parity_ft,
-                            'parity_pt' => $data->parity_pt,
-                            'parity_a' => $data->parity_a,
-                            'parity_l' => $data->parity_l,
-                            'parity_lnmp' => $data->parity_lnmp,
-                            'parity_edc' => $data->parity_edc,
-                            'aog_lnmp' => $data->aog_lnmp,
-                            'aog_eutz' => $data->aog_eutz,
+                            'menopausal_age' => $obstetric_and_gynecologic_history->menopausal_age,
+                            'mens_irreg_xmos' => $obstetric_and_gynecologic_history->mens_irreg_xmos,
+                            'menstrual_cycle_duration' => $obstetric_and_gynecologic_history->menstrual_cycle_duration,
+                            'menstrual_cycle_padsperday' => $obstetric_and_gynecologic_history->menstrual_cycle_padsperday,
+                            'menstrual_cycle_medication' => $obstetric_and_gynecologic_history->menstrual_cycle_medication,
+                            'contraceptive_others' => $obstetric_and_gynecologic_history->contraceptive_others,
+                            'parity_g' => $obstetric_and_gynecologic_history->parity_g,
+                            'parity_p' => $obstetric_and_gynecologic_history->parity_p,
+                            'parity_ft' => $obstetric_and_gynecologic_history->parity_ft,
+                            'parity_pt' => $obstetric_and_gynecologic_history->parity_pt,
+                            'parity_a' => $obstetric_and_gynecologic_history->parity_a,
+                            'parity_l' => $obstetric_and_gynecologic_history->parity_l,
+                            'parity_lnmp' => $obstetric_and_gynecologic_history->parity_lnmp,
+                            'parity_edc' => $obstetric_and_gynecologic_history->parity_edc,
+                            'aog_lnmp' => $obstetric_and_gynecologic_history->aog_lnmp,
+                            'aog_eutz' => $obstetric_and_gynecologic_history->aog_eutz,
                         ];
 
                         $menarche_value = htmlspecialchars($gynecological_data['menarche']);
@@ -872,6 +853,97 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
                         ?>
 
+                        <div class="row" id="baby_show_pregnant">
+                            <div class="col-lg-12">
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
+                                        <div class="web-view"><b>BABY DELIVERED</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view"><b>BABY DELIVERED</b><br> <i> (as applicable)</i></div>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
+                                <div class="collapse" id="baby_collapsed_pregnant" style="width: 100%;">
+                                <div class="container-referral">
+                                    <table class="table container-referral">
+                                    <tr>
+                                        <td colspan="2"><small class="text-success"><b>NAME: </b></small><br />
+                                            <input type="text" class="form-control" style="width: 100%" name="baby_fname" placeholder="First Name" value="{{$form['baby']->baby_fname}}"/><br />
+                                            <input type="text" class="form-control" style="width: 100%" name="baby_mname" placeholder="Middle Name" value="{{$form['baby']->baby_mname}}"/><br />
+                                            <input type="text" class="form-control" style="width: 100%" name="baby_lname" placeholder="Last Name" value="{{$form['baby']->baby_lname}}"/>
+                                        </td>
+                                        <td style="vertical-align: top !important;"><small class="text-success"><b>DATE AND HOUR OF BIRTH: </b></small>
+                                            <br />
+                                            <input type="text" class="form-control  form_datetime" name="baby_dob" placeholder="Date/Time" value="{{$form['baby']->baby_dob}}"/><br />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2"><small class="text-success"><b>BIRTH WEIGHT: </b></small> <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" value="{{$form['baby']->weight}}"/><br /></td>
+                                        <td><small class="text-success"><b>GESTATIONAL AGE: </b></small> <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" value="{{$form['baby']->gestational_age}}"/><br /></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <small class="text-success"><b>MAIN REASON FOR REFERRAL: </b></small>
+                                            @if($form['baby']->baby_reason === "None")
+                                            <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
+                                            <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                            @elseif($form['baby']->baby_reason === "Emergency")
+                                            <label><input type="radio" name="baby_reason" value="None"/> None </label>
+                                            <label><input type="radio" name="baby_reason" value="Emergency" checked/> Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                            @elseif($form['baby']->baby_reason === "Non-Emergency")
+                                            <label><input type="radio" name="baby_reason" value="None"/> None </label>
+                                            <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="Non-Emergency" checked/> Non-Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                            @elseif($form['baby']->baby_reason === "to accompany the mother")
+                                            <label><input type="radio" name="baby_reason" value="None"/> None </label>
+                                            <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="To accompany the mother" checked/> To accompany the mother </label>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><small class="text-success"><b>MAJOR FINDINGS: </b><i>(Clinica and BP,Temp,Lab)</i></small>
+                                            <br />
+                                            <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5">{{$form['baby']->baby_major_findings}}</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><small class="text-success"><b>LAST (BREAST) FEED (TIME): </b></small><input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br /></td>
+                                    </tr>
+                                    <tr class="bg-gray">
+                                        <td colspan="4">Treatments Give Time</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><small class="text-success"><b>BEFORE REFERRAL</b></small>
+                                            <br />
+                                            <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_before_treatment}}"/>
+                                            <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_before_given_time}}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><small class="text-success"><b>DURING TRANSPORT</b></small>
+                                            <br />
+                                            <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_during_transport}}"/>
+                                            <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_transport_given_time}}"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4"><small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
+                                            <br />
+                                            <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given">{{$form['baby']->baby_information_given}}</textarea>
+                                        </td>
+                                    </tr>
+                                    </table>
+                                </div>
+                                </div>
+                            </div>
+                        </div> 
+
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                         <div class="row" id="menarche_show">
                             <div class="col-lg-12">
@@ -886,9 +958,9 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
                                     <b>MENARCHE</b> @ <input type="number" min="9" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
                                     <b>MENOPAUSE:</b> &emsp;
-                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes" <?= isChecked($data, 'menopause', 'Yes'); ?>>
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'Yes'); ?>>
                                     <label for="menopausal">Yes</label>
-                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal" value="No" <?= isChecked($data, 'menopause', 'No'); ?>>
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'No'); ?>>
                                     <label for="non_menopausal">No</label>
                                     <span id="menopausal_age">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9" value="<?php echo $menopausal_age_value; ?>"></span><br><br>
 
@@ -896,17 +968,17 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio" value="regular" <?= isChecked($data, 'menstrual_cycle', 'regular'); ?>>
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio" value="regular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'regular'); ?>>
                                                 <label for="mens_reg_radio">Regular</label>
-                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_cycle_irreg" value="irregular" <?= isChecked($data, 'menstrual_cycle', 'irregular'); ?>>
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_cycle_irreg" value="irregular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'irregular'); ?>>
                                                 <label for="mens_cycle_irreg">Irregular</label>
                                                 <span id="mens_irreg">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0" value="<?php echo $mens_irreg_xmos_value; ?>"> mos</span>
                                             </div>
                                             <div class="col-md-6">
                                                 <b>Dysmenorrhea:</b> &emsp;
-                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes" value="Yes" <?= isChecked($data, 'menstrual_cycle_dysmenorrhea', 'Yes'); ?>>
+                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'Yes'); ?>>
                                                 <label for="dysmenorrhea_yes">Yes</label>
-                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_no" value="No" <?= isChecked($data, 'menstrual_cycle_dysmenorrhea', 'No'); ?>>
+                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_no" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'No'); ?>>
                                                 <label for="dysmenorrhea_no">No</label><br>
                                             </div>
                                         </div>
@@ -925,24 +997,24 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_none" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_none_cbox" value="none" <?= isChecked($data, 'contraceptive_history', 'none'); ?>> None
+                                                <input class="form-check-input" id="contraceptive_none" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_none_cbox" value="none" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'none'); ?>> None
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_pills" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_pills_cbox" value="Pills" <?= isChecked($data, 'contraceptive_history', 'Pills'); ?>> Pills
+                                                <input class="form-check-input" id="contraceptive_pills" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_pills_cbox" value="Pills" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Pills'); ?>> Pills
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="IUD" <?= isChecked($data, 'contraceptive_history', 'IUD'); ?>> IUD
+                                                <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="IUD" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'IUD'); ?>> IUD
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Rhythm" <?= isChecked($data, 'contraceptive_history', 'Rhythm'); ?>> Rhythm
+                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Rhythm" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Rhythm'); ?>> Rhythm
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($data, 'contraceptive_history', 'Condom'); ?>> Condom
+                                                <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Condom'); ?>> Condom
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_other_cbox" value="Other(s)" <?= isChecked($data, 'contraceptive_history', 'Other'); ?>> Other(s)
+                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_other_cbox" value="Other(s)" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Other'); ?>> Other(s)
                                                 <textarea class="form-control" id="contraceptive_others_text" name="contraceptive_others" style="resize: none;width: 50%;" rows="2"><?php echo htmlspecialchars($contraceptive_others_value); ?></textarea><br>
                                             </div>
                                         </div>
@@ -982,7 +1054,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                     </div><br>
 
                                     <b>PRENATAL HISTORY</b><br>
-                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $data->prenatal_history; ?>></textarea><br><br>
+                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
                                     <div class="table-responsive" style="overflow-x: auto">
                                         <table class="table table-bordered" id="prenatal_table">
                                             <thead>

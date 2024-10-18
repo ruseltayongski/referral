@@ -412,7 +412,7 @@ $counter = 0;
         const telemedicineAppoinmentSlot = decodeURIComponent(new URL(window.location.href).searchParams.get('appointment'));
         var appointment = @json($telemedicine);
         //let url = new URL(window.location.href);
-        if (telemedicineAppoinmentSlot && telemedicineAppoinmentSlot !== 'null') {
+        if (telemedicineAppoinmentSlot && telemedicineAppoinmentSlot !== null) {
             $(".Appointment").val(telemedicineAppoinmentSlot);
         }
 
@@ -477,12 +477,14 @@ $counter = 0;
                 // Check if facility_id is 63 (allowed to access the new form)
                 if (referred_facility == 63) {
                     if (type == 'pregnant') {
+                        $('#pregnantModal').modal('hide');
                         $('#pregnantchooseVersionModal').modal('show');
                         selectFormTitle("BEmONC/ CEmONC ");
                         $('#menarche_show').show();
                         $('#pedia_show').show();
                     
                     } else if (type == 'normal') {
+                        $('#pregnantModal').modal('hide');
                         $('#nonPregnantChooseVersionModal').modal('show');
                         selectFormTitle("Clinical");
                         $('#menarche_show').hide();

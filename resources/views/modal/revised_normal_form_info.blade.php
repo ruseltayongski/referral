@@ -175,12 +175,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
             visibility: visible;
         }
     }
-</style>
-<form action="{{ url('post-update-referral', ['patient_id' => $data->patient_id]) }}" method="GET" class="form-submit revised_normal_form_info">  
-                @include('include.header_form')
+    </style>
  
-                <div class="form-group-sm form-inline">
-                        {{ csrf_field() }}
+            <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>$type, 'status' => $status]) }}" method="POST" class="form-submit revised_normal_form_info">
+                <div class="jim-content">
+                    @include('include.header_form')
+                    <div class="form-group-sm form-inline">
+                       {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
                         <input type="hidden" class="pt_age" />
                         <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
@@ -230,7 +231,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
+                                <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;">
                                     <option value="">{{ $form->department }}</option>
                                 </select>
                             </div>
@@ -674,360 +675,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                                     <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
                                     <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
-                                </div>
-                            </div>
-                        </div>
-
-                        {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        <div class="row" id="pedia_show" style="display:none;">
-                            <div class="col-lg-12">
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
-                                        <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
-                                        <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
-                                <div class="collapse" id="collapse_pedia_history" style="width: 100%;">
-                                    <b>PRENATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>A <input type="number" name="prenatal_age" style="width: 8%" min="0" value="{{$data->prenatal_a}}">
-                                                    year old G <input type="number" name="prenatal_g" style="width: 8%" min="0" value="{{$data->prenatal_g}}"> P <input type="number" style="width: 8%" min="0" name="prenatal_p" value="{{$data->prenatal_p}}"> mother
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowith" value="with" <?= isChecked($data, 'prenatal_radiowith_or_without', 'with'); ?>> with
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowout" value="without" <?= isChecked($data, 'prenatal_radiowith_or_without', 'without'); ?>> without
-                                                    MATERNAL ILLNESS, if Yes (specify)
-                                                    <textarea class="form-control" id="prenatal_mat_illness" name="prenatal_maternal_illness" style="resize: none;width: 50%;" rows="2">{{$data->prenatal_with_maternal_illness}}</textarea>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <b>NATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>Born at
-                                                    <select class="form-control-select" name="natal_bornat">
-                                                        <option value="home" <?php echo ($data->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
-                                                        <option value="clinic" <?php echo ($data->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
-                                                        <option value="hospital" <?php echo ($data->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
-                                                    </select>
-                                                    <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where" value="{{ $data->natal_born_address }}">
-                                                    by
-                                                    <select class="form-control-select" name="natal_by">
-                                                        <option value="md" <?php echo ($data->natal_by == 'md') ? 'selected' : ''; ?>>MD</option>
-                                                        <option value="midwife" <?php echo ($data->natal_by == 'midwife') ? 'selected' : ''; ?>>Midwife</option>
-                                                        <option value="hilot" <?php echo ($data->natal_by == 'hilot') ? 'selected' : ''; ?>>Hilot</option>
-                                                    </select>
-                                                    via
-                                                    <select class="form-control-select" name="natal_via">
-                                                        <option value="nsd" <?php echo ($data->natal_via == 'nsd') ? 'selected' : ''; ?>>NSD</option>
-                                                        <option value="cs" <?php echo ($data->natal_via == 'cs') ? 'selected' : ''; ?>>CS</option>
-                                                    </select>
-                                                    (indication)
-                                                    <input type="text" id="cs_indication" name="cs_indication" style="width: 20%;" value="{{ $data->natal_indication }}">
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>
-                                                    <select class="form-control-select" name="natal_term">
-                                                        <option value="preterm" <?php echo ($data->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
-                                                        <option value="fullterm" <?php echo ($data->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
-                                                        <option value="postterm" <?php echo ($data->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
-                                                    </select>
-                                                    , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01" value="{{$data->natal_weight}}"> kg,
-                                                    BR <input type="text" name="natal_br" style="width: 20%" value="{{$data->natal_br}}">, with Good Cry
-                                                    <select class="form-control-select" name="natal_withGoodCry">
-                                                        <option value="1" <?php echo ($data->natal_with_good_cry == 1) ? 'selected' : ''; ?>>Yes</option>
-                                                        <option value="0" <?php echo ($data->natal_with_good_cry == 0) ? 'selected' : ''; ?>>No</option>
-                                                    </select><br>
-                                                    Other complications:
-                                                    <textarea class="form-control" name="natal_complications" style="resize: none;width: 30%;" rows="2">{{ $data->natal_other_complications }}</textarea>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div><br>
-                                    <?php
-                                    $postnatal_data = [
-                                        'postnatal_bfeed_xmos' => $data->post_natal_bfeedx_month,
-                                        'postnatal_ffeed_specify' => $data->post_natal_ffeed_specify,
-                                        'postnatal_started_semisolidfood_at' => $data->post_natal_started_semifoods,
-                                        'immu_dpt_doses' => $data->post_dpt_doses,
-                                        'immu_hepb_doses' => $data->post_natal_hepB_x_doses,
-                                        'immu_others' => $data->post_natal_others,
-
-                                    ];
-
-                                    $postnatal_bfeed_xmos_value = htmlspecialchars($postnatal_data['postnatal_bfeed_xmos']);
-                                    $postnatal_ffeed_specify_value = htmlspecialchars($postnatal_data['postnatal_ffeed_specify']);
-                                    $postnatal_started_semisolidfood_at_value = htmlspecialchars($postnatal_data['postnatal_started_semisolidfood_at']);
-                                    $immu_dpt_doses_value = htmlspecialchars($postnatal_data['immu_dpt_doses']);
-                                    $immu_hepb_doses_value = htmlspecialchars($postnatal_data['immu_hepb_doses']);
-                                    $immu_others_value = htmlspecialchars($postnatal_data['immu_others']);
-                                    ?>
-
-                                    <b>POST NATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Feeding History</i><br>&emsp;
-                                                <span>
-                                                    <input type="hidden" name="postnatal_bfeed" value="No">
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?= isChecked($data, 'post_natal_bfeed', 'Yes'); ?>> Breastfed
-                                                    <span id="breastfed">
-                                                        x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
-                                                    </span>
-                                                    <input type="hidden" name="postnatal_ffeed" value="No">
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?= isChecked($data, 'post_natal_formula_feed', 'Yes'); ?>> Formula Fed,
-                                                    <span id="formula_fed">
-                                                        (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify" value="<?php echo $postnatal_ffeed_specify_value; ?>">
-                                                    </span>
-                                                </span>
-                                                started semi solid foods at
-                                                <input type="number" name="postnatal_started_semisolidfood_at" style="width: 10%" min="0" value="<?php echo $postnatal_started_semisolidfood_at_value; ?>"> mos
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Immunization History</i><br>&emsp;
-                                                <input type="hidden" name="immu_bcg_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?= isChecked($data, 'post_natal_bcg', 'Yes'); ?>> BCG
-                                                <input type="hidden" name="immu_dpt_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?= isChecked($data, 'post_natal_dpt_opv_x', 'Yes'); ?>> DPT/OPV
-                                                <span id="immu_dpt">
-                                                    x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0" value="<?php echo $immu_dpt_doses_value; ?>"> doses
-                                                </span>
-                                                <input type="hidden" name="immu_hepb_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?= isChecked($data, 'post_natal_hepB_cbox', 'Yes'); ?>> Hep B
-                                                <span id="immu_hepb">
-                                                    x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0" value="<?php echo $immu_hepb_doses_value; ?>"> doses
-                                                </span>
-                                                <input type="hidden" name="immu_measles_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?= isChecked($data, 'post_natal_immu_measles_cbox', 'Yes'); ?>> Measles
-                                                <input type="hidden" name="immu_mmr_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?= isChecked($data, 'post_natal_mmr_cbox', 'Yes'); ?>> MMR
-                                                <input type="hidden" name="immu_others_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?= isChecked($data, 'post_natal_others_cbox', 'Yes'); ?>> Other(s)
-                                                <span id="immu_others">
-                                                    <input type="text" name="immu_others" style="width: 20%;" value="<?php echo $immu_others_value; ?>">
-                                                </span>
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Developmental Milestones</i><br>&emsp;
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under" value="Under developed" <?= isChecked($data, 'post_natal_development_milestones', 'Under developed'); ?>>
-                                                <label for="dev_miles_under">Under developed</label>
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par" value="At par with age" <?= isChecked($data, 'post_natal_development_milestones', 'At par with age'); ?>>
-                                                <label for="dev_miles_par">At par with age</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <?php
-
-                        $menarche = $data->menarche;
-                        $gynecological_data = [
-                            'menarche' => (int) $menarche,
-                            'menopausal_age' => $data->menopausal_age,
-                            'mens_irreg_xmos' => $data->mens_irreg_xmos,
-                            'menstrual_cycle_duration' => $data->menstrual_cycle_duration,
-                            'menstrual_cycle_padsperday' => $data->menstrual_cycle_padsperday,
-                            'menstrual_cycle_medication' => $data->menstrual_cycle_medication,
-                            'contraceptive_others' => $data->contraceptive_others,
-                            'parity_g' => $data->parity_g,
-                            'parity_p' => $data->parity_p,
-                            'parity_ft' => $data->parity_ft,
-                            'parity_pt' => $data->parity_pt,
-                            'parity_a' => $data->parity_a,
-                            'parity_l' => $data->parity_l,
-                            'parity_lnmp' => $data->parity_lnmp,
-                            'parity_edc' => $data->parity_edc,
-                            'aog_lnmp' => $data->aog_lnmp,
-                            'aog_eutz' => $data->aog_eutz,
-                        ];
-
-                        $menarche_value = htmlspecialchars($gynecological_data['menarche']);
-                        $menopausal_age_value = htmlspecialchars($gynecological_data['menopausal_age']);
-                        $mens_irreg_xmos_value = htmlspecialchars($gynecological_data['mens_irreg_xmos']);
-                        $menstrual_cycle_duration_value = htmlspecialchars($gynecological_data['menstrual_cycle_duration']);
-                        $menstrual_cycle_padsperday_value = htmlspecialchars($gynecological_data['menstrual_cycle_padsperday']);
-                        $menstrual_cycle_medication_value = htmlspecialchars($gynecological_data['menstrual_cycle_medication']);
-                        $contraceptive_others_value = htmlspecialchars($gynecological_data['contraceptive_others']);
-                        $parity_g_value = htmlspecialchars($gynecological_data['parity_g']);
-                        $parity_p_value = htmlspecialchars($gynecological_data['parity_p']);
-                        $parity_pt_value = htmlspecialchars($gynecological_data['parity_pt']);
-                        $parity_a_value = htmlspecialchars($gynecological_data['parity_a']);
-                        $parity_l_value = htmlspecialchars($gynecological_data['parity_l']);
-                        $parity_lnmp_value = htmlspecialchars($gynecological_data['parity_lnmp']);
-                        $parity_edc_value = htmlspecialchars($gynecological_data['parity_edc']);
-                        $aog_lnmp_value = htmlspecialchars($gynecological_data['aog_lnmp']);
-                        $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
-                        ?>
-
-                        {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
-                        <div class="row" id="menarche_show" style="display:none;">
-                            <div class="col-lg-12">
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
-                                        <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
-                                        <div class="mobile-view">
-                                            <b>OBSTETRIC AND GYNECOLOGIC<br> HISTORY</b><br> <i> (as applicable)</i></div>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
-                                <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
-                                    <b>MENARCHE</b> @ <input type="number" min="9" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
-                                    <b>MENOPAUSE:</b> &emsp;
-                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes" <?= isChecked($data, 'menopause', 'Yes'); ?>>
-                                    <label for="menopausal">Yes</label>
-                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal" value="No" <?= isChecked($data, 'menopause', 'No'); ?>>
-                                    <label for="non_menopausal">No</label>
-                                    <span id="menopausal_age">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9" value="<?php echo $menopausal_age_value; ?>"></span><br><br>
-
-                                    <b>MENSTRUAL CYCLE</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio" value="regular" <?= isChecked($data, 'menstrual_cycle', 'regular'); ?>>
-                                                <label for="mens_reg_radio">Regular</label>
-                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_cycle_irreg" value="irregular" <?= isChecked($data, 'menstrual_cycle', 'irregular'); ?>>
-                                                <label for="mens_cycle_irreg">Irregular</label>
-                                                <span id="mens_irreg">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0" value="<?php echo $mens_irreg_xmos_value; ?>"> mos</span>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <b>Dysmenorrhea:</b> &emsp;
-                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes" value="Yes" <?= isChecked($data, 'menstrual_cycle_dysmenorrhea', 'Yes'); ?>>
-                                                <label for="dysmenorrhea_yes">Yes</label>
-                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_no" value="No" <?= isChecked($data, 'menstrual_cycle_dysmenorrhea', 'No'); ?>>
-                                                <label for="dysmenorrhea_no">No</label><br>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <b>Duration:</b> <input type="number" style="width:15%;" min="0" name="mens_duration" value="<?php echo $menstrual_cycle_duration_value; ?>"> days &emsp;
-                                                <b>Pads/day:</b> <input type="number" style="width:15%;" min="0" name="mens_padsperday" value="<?php echo $menstrual_cycle_padsperday_value; ?>">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <b>Medication:</b> <input type="text" style="width:70%;" name="mens_medication" value="<?php echo $menstrual_cycle_medication_value; ?>">
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <b>CONTRACEPTIVE HISTORY</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_none" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_none_cbox" value="none" <?= isChecked($data, 'contraceptive_history', 'none'); ?>> None
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_pills" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_pills_cbox" value="Pills" <?= isChecked($data, 'contraceptive_history', 'Pills'); ?>> Pills
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="IUD" <?= isChecked($data, 'contraceptive_history', 'IUD'); ?>> IUD
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Rhythm" <?= isChecked($data, 'contraceptive_history', 'Rhythm'); ?>> Rhythm
-                                            </div>
-                                            <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($data, 'contraceptive_history', 'Condom'); ?>> Condom
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_other_cbox" value="Other(s)" <?= isChecked($data, 'contraceptive_history', 'Other'); ?>> Other(s)
-                                                <textarea class="form-control" id="contraceptive_others_text" name="contraceptive_others" style="resize: none;width: 50%;" rows="2"><?php echo htmlspecialchars($contraceptive_others_value); ?></textarea><br>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <b>PARITY</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-9">
-                                                <b>G</b> <input type="number" min="0" style="width:8%;" name="parity_g" value="<?php echo $parity_g_value; ?>">
-                                                <b>P</b> <input type="number" min="0" style="width:8%;" name="parity_p" value="<?php echo $parity_p_value; ?>">&emsp;
-                                                <b>(FT</b> <input type="text" style="width:8%;" name="parity_ft" value="{{$data->parity_ft}}">
-                                                <b>PT</b> <input type="text" style="width:8%;" name="parity_pt" value="<?php echo $parity_pt_value; ?>">
-                                                <b>A</b> <input type="text" style="width:8%;" name="parity_a" value="<?php echo $parity_a_value; ?>">
-                                                <b>L</b> <input type="text" style="width:8%;" name="parity_l" value="<?php echo $parity_l_value; ?>"><b>)</b>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <div class="container-referral">
-                                        <b>LNMP</b>
-                                        <input type="text" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
-                                        <b>EDC</b><i>(if pregnant)</i>
-                                        <input type="text" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
-                                    </div><br>
-
-                                    <b>AOG</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <b>by LNMP</b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <b>by EUTZ</b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <b>PRENATAL HISTORY</b><br>
-                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $data->prenatal_history; ?>></textarea><br><br>
-                                    <div class="table-responsive" style="overflow-x: auto">
-                                        <table class="table table-bordered" id="prenatal_table">
-                                            <thead>
-                                                <tr style="font-size: 10pt;">
-                                                    <th class="text-center" style="width:50%;">Pregnancy Order</th>
-                                                    <th class="text-center" style="width:20%;">Year</th>
-                                                    <th class="text-center">Gestation Completed</th>
-                                                    <th class="text-center">Pregnancy Outcome</th>
-                                                    <th class="text-center">Place of Birth</th>
-                                                    <th class="text-center">Sex</th>
-                                                    <th class="text-center" style="width:50%;">Birth Weight</th>
-                                                    <th class="text-center">Present Status</th>
-                                                    <th class="text-center">Complication(s)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                               
-                                                <tr style="font-size: 10pt">
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
-                                                    <td>
-                                                        <select class="form-control select" name="pregnancy_history_year[]">
-                                                            @foreach(range(date('Y'), 1950) as $year)
-                                                            <option value="{{ $year }}" {{ $year == $pregnancy->pregnancy_year ? 'selected' : '' }}>{{ $year }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </td>
-                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{$pregnancy->pregnancy_gestation_completed}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{$pregnancy->pregnancy_outcome}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
-                                                    <td>
-                                                        <select class="select form-control" name="prenatal_history_sex[]">
-                                                            <option value="M" {{ $pregnancy->pregnancy_sex == 'M' ? 'selected' : '' }}>Male</option>
-                                                            <option value="F" {{ $pregnancy->pregnancy_sex == 'F' ? 'selected' : '' }}>Female</option>
-                                                        </select>
-                                                    </td>
-                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
-                                                </tr>
-                                              
-                                            </tbody>
-                                        </table>
-                                        <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
-                                            <i class="fa fa-plus"> Add Row</i>
-                                        </button><br><br>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2400,7 +2047,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
-                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                        <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2415,35 +2062,28 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <hr />
                         <div class="form-fotter pull-right">
-                        <button type="button" id="pdfBtn" class="btn btn-warning">Generate PDF</button>
-
-                        <script>
-                            window.onload = function() {
+                            <button type="button" id="pdfBtn" class="btn btn-warning">Generate PDF</button>
+                            <script>
                                 document.getElementById('pdfBtn').addEventListener('click', function() {
-                                    var patientId = '{{ $patient_id }}'; // Dynamically fetch patient_id
-                                    console.log("Patient ID: ", patientId); // Check if patient_id is passed correctly
+                                    // Assuming patient_id is dynamically available
+                                    var patientId = '{{ $data->patient_id }}'; // Replace with actual logic to get patient_id if needed
 
+                                    // Open the PDF in a new tab
                                     var url = "{{ route('generate-pdf', ':id') }}";
                                     url = url.replace(':id', patientId);
-
-                                    console.log("Generated URL: ", url); // Check if the URL is being generated correctly
-
-                                    // Try opening the generated URL in a new tab
                                     window.open(url, '_blank');
                                 });
-                            };
-                        </script>
-
-
-                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
+                            </script>
+                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
                             <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>{{--/.form-group--}}
+                </div> {{--/.jim-content--}}
             </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
+        
+   
+
 
 <div class="modal fade" role="dialog" id="patient_modal">
     <div class="modal-dialog modal-sm" role="document">

@@ -313,21 +313,26 @@
         var termsCheckbox = document.getElementById('terms');
         var signature_field = document.getElementById('signature_field');
 
-        // Initially hide or show the signature section based on checkbox state
+        // Check if both elements are present
+        if (termsCheckbox && signature_field) {
+            // Initially hide or show the signature section based on checkbox state
             if (termsCheckbox.checked) {
                 signature_field.style.display = 'block';
-        } else {
-                signature_field.style.display = 'none';
-        }
-
-        // Add event listener to the checkbox to show/hide signature section
-        termsCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                    signature_field.style.display = 'block';
             } else {
-                    signature_field.style.display = 'none';
+                signature_field.style.display = 'none';
             }
-        });
+
+            // Add event listener to the checkbox to show/hide signature section
+            termsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    signature_field.style.display = 'block';
+                } else {
+                    signature_field.style.display = 'none';
+                }
+            });
+        } else {
+            console.error('termsCheckbox or signature_field not found in the DOM');
+        }
     });
 
     var signaturePad, sign_type, finalImage;
