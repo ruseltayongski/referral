@@ -7,7 +7,7 @@
             e.preventDefault();
             $('#diag_prompt').show();
             $('#diag_prompt').focus();
-            return false;
+            return false; 
         }
     });
 
@@ -19,6 +19,7 @@
     function setDepartment() {
         var id = $('.edit_facility_normal').val();
         var url = "{{ url('location/facility/') }}";
+        console.log('id: ',id);
         $.ajax({
             url: url+'/'+id,
             type: 'GET',

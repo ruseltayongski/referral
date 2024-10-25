@@ -11,7 +11,11 @@ use App\Http\Controllers\ApiController;
 use App\Http\Controllers\ParamCtrl;
 use App\Http\Controllers\doctor\ReferralCtrl;
 use Illuminate\Support\Facades\Response;
+use App\Events\SocketReferralSeen;
+use App\Events\SocketReferralUpdate;
 
+use App\Feedback;
+use App\Seen;
 use App\Baby;
 use App\Icd;
 use App\Tracking;
@@ -1155,7 +1159,7 @@ class NewFormCtrl extends Controller
         if($file_link != null && $file_link != "") {
             $explode = explode("|",$file_link);
             foreach($explode as $link) {
-                $path_tmp = self::securedFile($link);
+                $path_tmp = ReferralCtrl::securedFile($link);
                 if($path_tmp != '') {
                     array_push($path, $path_tmp);
                     array_push($file_name, basename($path_tmp));
@@ -1588,17 +1592,29 @@ class NewFormCtrl extends Controller
         ];
     
         broadcast(new NewReferral($new_referral));
+        return redirect()->back();
         //end websocket
     }
     
 
     public function updateReferral(Request $request, $patient_id,$id,$type,$status)
-    {
-
+    { 
+        $data = $this->prepareData($request, $patient_id);
+  
         if ($type === "normal"){
+         
+            PastMedicalHistory::where('patient_id', $patient_id)->update($data['past_medical_history_data']);
+            PertinentLaboratory::where('patient_id', $patient_id)->update($data['pertinent_lab']);
+            PersonalAndSocialHistory::where('patient_id', $patient_id)->update($data['personal_history']);
+            ReviewOfSystems::where('patient_id', $patient_id)->update($data['review_of_system']);
+            NutritionalStatus::where('patient_id', $patient_id)->update($data['nutritional_status']);
+            GlasgoComaScale::where('patient_id', $patient_id)->update($data['glasgocoma_scale']);
+            LatestVitalSigns::where('patient_id', $patient_id)->update($data['vital_signs']);
 
+            self::editForm($request,$status,$type,$patient_id);
+            return redirect()->back();
         }else if ($type === "pregnant"){
-            $data = $this->prepareData($request, $patient_id);
+           
 
         PastMedicalHistory::where('patient_id', $patient_id)->update($data['past_medical_history_data']);
         PertinentLaboratory::where('patient_id', $patient_id)->update($data['pertinent_lab']);
@@ -1638,19 +1654,62 @@ class NewFormCtrl extends Controller
                     'pregnancy_complication' => $complications[$key],
                 ]
             );
-        }   
-        
-        self::editForm($request);
+        }
 
+        $data_preg = [
+            "referral_status" => "referring",
+            "form_type" => "pregnant",
+            "baby_id" => "384888",
+            "mother_id" => "384886",
+            "username" => "opcen",
+            "old_facility" => "100",
+            "referred_to" => "100",
+            "department_id" => "5",
+            "covid_number" => "592",
+            "refer_clinical_status" => "mild",
+            "refer_sur_category" => "suspect",
+            "woman_reason" => "None",
+            "woman_major_findings" => "Excepteur voluptatem",
+            "woman_before_treatment" => "Impedit et qui quam",
+            "woman_before_given_time" => null,
+            "woman_during_transport" => "Magnam libero proide",
+            "woman_transport_given_time" => null,
+            "woman_information_give,n" => "Et beatae aliquid co",
+            "icd_cleared" => null,
+            "icd_ids" => "",
+            "notes_diag_cleared" => null,
+            "notes_diagnoses" => null,
+            "other_diag_cleared" => null,
+            "other_diagnoses" => null,
+            "reason_referral" => "4",
+            "baby_fname" => "Shelley Manning",
+            "baby_mname" => "Dorian Patton",
+            "baby_lname" => "Kirk Harris",
+            "baby_dob" => "January 01, 1970 08:00 AM",
+            "baby_weight" => "0",
+            "baby_gestational_age" => "0",
+            "baby_reason" => "None",
+            "baby_major_findings" => "Voluptas eu aut repr",
+            "baby_last_feed" => null,
+            "baby_before_treatment" => "Delectus quam ad du",
+            "baby_before_given_time" => "October 23, 2024 05:00 AM",
+            "baby_during_transport" => "Id maxime ducimus",
+            "baby_transport_given_time" => "October 23, 2024 05:00 AM",
+            "baby_information_given" => "Cupidatat labore sit",
+            "file_cleared" => null,
+        ];
+        
+        self::editForm($request,$status,$type,$patient_id);
+        return redirect()->back();
         }
        
         
         // return redirect("/revised/referral/info/{$patient_id}");
     }
 
-    public static function editForm($req)
-    {
-       
+    public static function editForm($req,$status,$type,$patient_id)
+    {   
+    
         $user = Session::get('auth');
         $id = $req->id;
         $old_facility = (int) $req->old_facility;
@@ -1671,14 +1730,86 @@ class NewFormCtrl extends Controller
         $dob = date('Y-m-d h:i:s', strtotime($req->baby_dob));
         $data = '';
 
-        $data_update = $req->all();
+      
 
-        dd($data_update);
+        $request_arr = [
+            "id" => $id,
+            "referral_status" => $status,
+            "form_type" => $type,
+            "baby_id" => $req->baby_id,
+            "mother_id" => $patient_id,
+            "username" => $req->username,
+            "old_facility" => $req->old_facility,
+            "referred_to" => $req->referred_to,
+            "department_id" => $req->department_id,
+            "covid_number" => $req->covid_number,
+            "refer_clinical_status" => $req->refer_clinical_status,
+            "refer_sur_category" => $req->sur_category,
+            "woman_reason" => $req->woman_reason,
+            "woman_major_findings" => $req->woman_major_findings,
+            "woman_before_treatment" => $req->woman_before_treatment,
+            "woman_before_given_time" => $req->woman_before_given_time,
+            "woman_during_transport" => $req->woman_during_transport,
+            "woman_transport_given_time" => $req->woman_transport_given_time,
+            "woman_information_given" => $req->woman_information_given,
+            "icd_cleared" => $req->icd_cleared ?? '',
+            "icd_ids" => $req->icd ?? '',
+            "notes_diag_cleared" => $req->notes_diag_cleared ?? '',
+            "notes_diagnoses" => $req->notes_diagnoses,
+            "other_diag_cleared" => $req->other_diag_cleared ?? '',
+            "other_diagnoses" => $req->other_dignoses ?? '',
+            "reason_referral" => $req->reason_referral,
+            "baby_fname" => $req->baby_fname,
+            "baby_mname" => $req->baby_mname,
+            "baby_lname" => $req->baby_lname,
+            "baby_dob" => $req->baby_dob,
+            "baby_weight" => $req->baby_weight,
+            "baby_gestational_age" => $req->baby_gestational_age,
+            "baby_reason" => $req->baby_reason,
+            "baby_major_findings" => $req->baby_major_findings,
+            "baby_last_feed" => $req->baby_last_feed,
+            "baby_before_treatment" => $req->baby_before_treatment,
+            "baby_before_given_time" => $req->baby_before_given_time,
+            "baby_during_transport" => $req->baby_during_transport,
+            "baby_transport_given_time" => $req->baby_transport_given_time,
+            "baby_information_given" => $req->baby_information_given,
+            "file_cleared" => null,
+        ];
+
+        $request_arr2 = [
+            "id" => $id,
+            "referral_status" => $status,
+            "form_type" => $type,
+            "username" => $req->username,
+            "old_facility" => $req->old_facility,
+            "referred_to" =>  $req->referred_to,
+            "department_id" => $req->department_id,
+            "covid_number" => $req->covid_number,
+            "refer_clinical_status" => $req->refer_clinical_status,
+            "refer_sur_category" => $req->sur_category,
+            "case_summary" => $req->case_summary,
+            "reco_summary" => $req->reco_summary,
+            "icd_cleared" =>  $req->icd_cleared ?? '',
+            "icd_ids" => $req->icd_cleared ?? '',
+            "notes_diag_cleared" => $req->notes_dig_cleared ?? '',
+            "diagnosis" => $req->diagnosis,
+            "other_diag_cleared" => $req->other_diag_cleared ?? '',
+            "other_diagnoses" => $req->other_dignoses ?? '',
+            "reason_referral" => $req->reason_referral,
+            "other_reason_referral" => $req->reason_referral,
+            "file_cleared" => null,
+            "referred_md" => $req->referred_md,
+        ];
+
+        
+        
+    //    dd($request_arr2);
         /* FACILITY AND DEPARTMENT */
         if($old_facility != $req->referred_facility)
             $updated .= "Referred facility, Department";
 
         if($form_type === 'normal') {
+            $data_update = $request_arr2;
             $data = PatientForm::where('code', $track)->first();
 
             /* DIAGNOSIS NOTES */
@@ -1694,6 +1825,7 @@ class NewFormCtrl extends Controller
                 $data->update(['time_referred' => date('Y-m-d H:i:s')]);
         }
         else if($form_type === 'pregnant') {
+            $data_update = $request_arr;
             $data = PregnantForm::where('code', $track)->first();
             $baby_id = $req->baby_id;
             $match = Patients::where('id', $baby_id)->first();
@@ -2012,7 +2144,6 @@ class NewFormCtrl extends Controller
         ];
 
         broadcast(new SocketReferralUpdate($update));
-        return redirect()->back();
     }
 
 
@@ -2062,10 +2193,10 @@ class NewFormCtrl extends Controller
 
     // generate pdf functions.
 
-    public function generatePdf($patient_id)
+    public function generatePdf($patient_id,$track_id)
     {
 
-
+       
         $data = $this->fetchDataFromDB($patient_id);
         $comor_string = $data->commordities;
         $comor_explodedData = explode(',', $comor_string);
@@ -2085,6 +2216,8 @@ class NewFormCtrl extends Controller
 
         $pdf = new Fpdf();
         $x = ($pdf->w) - 20;
+
+     
 
         $pdf->setTopMargin(10);
         $pdf->setTitle($data->patient_id);

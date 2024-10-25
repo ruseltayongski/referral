@@ -1,14 +1,10 @@
 <?php
 $user = Session::get('auth');
-$facilities = \App\Facility::select('id', 'name')
-    ->where('id', '!=', $user->facility_id)
-    ->where('status', 1)
-    ->where('referral_used', 'yes')
-    ->orderBy('name', 'asc')->get();
-$myfacility = \App\Facility::find($user->facility_id);
-$facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
-$inventory = \App\Inventory::where("facility_id", $myfacility->id)->get();
 $reason_for_referral = \App\ReasonForReferral::get();
+$facilities = \App\Facility::select('id','name')
+    ->where('status',1)
+    ->where('referral_used','yes')
+    ->orderBy('name','asc')->get();
 ?>
 
 <style>
@@ -176,77 +172,63 @@ $reason_for_referral = \App\ReasonForReferral::get();
         }
     }
     </style>
-
-            <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>$type, 'status' => $status]) }}" method="POST" class="form-submit revised_normal_form_info">
-                <div class="jim-content">
-                    @include('include.header_form')
-                    <div class="form-group-sm form-inline">
-                       {{ csrf_field() }}
-                        <input type="hidden" name="patient_id" class="patient_id" value="" />
-                        <input type="hidden" class="pt_age" />
-                        <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
-                        <input type="hidden" name="code" value="" />
-                        <input type="hidden" name="source" value="{{ $source }}" />
-                        <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" />
-                        <br>
-                        <div class="row">
+   
+    <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>'normal', 'status' => $status]) }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">
+        <div class="jim-content">
+        @include('include.header_form', ['optionHeader' => 'edit'])<br>
+                <div class="form-group-sm form-inline">
+                        {{ csrf_field() }}
+                    <input type="hidden" name="id" value="{{ $id }}">
+                    <input type="hidden" name="referral_status" value="{{ $referral_status }}">
+                    <input type="hidden" name="form_type" value="normal">
+                    <input type="hidden" name="username" value="{{ $username }}">
+                    
+                    <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Name of Referring Facility</small><br>
+                                <small >Name of Referring Facility</small><br>
                                 &nbsp;<span>{{ $form->referring_name }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
-                                &nbsp;<span>{{ $form->referring_address }}</span>
+                                <small >Address</small><br>
+                                &nbsp;<span> {{ $form->referring_address }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Name of referring MD/HCW</small><br>
+                                <small >Name of referring MD/HCW</small><br>
                                 &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
+                    </div>
+
+                    <br>
+                <div class="row">
+                    <div class="col-md-4">
+                        <small ><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
+                        <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
+                        <select name="referred_to" class="select2 edit_facility_normal form-control" style="width: 250px;" required>
+                            <option value="">Select Facility...</option>
+                            @foreach($facilities as $row)
+                                @if($row->id == $form->referred_fac_id)
+                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}" selected>{{ $row->name }}</option>
+                                @else
+                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <small ><b>DEPARTMENT: </b></small> <span class="text-red">*</span><br>
+                        <select name="department_id" class="form-control edit_department_normal" style="width: 250px;" required>
+                            <option value="">Select Option</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <small ><b>ADDRESS:</b></small><br>
+                        &nbsp;<span class="text-yellow edit_fac_address_normal"></span>
+                        </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Date/Time Referred (ReCo)</small><br>
-                                <span>{{ $form->date_referred }}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-success">Name of Patient</small><br>
-                                <span class="patient_name">{{ $form->patient_name }}</span>
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
-                                <span class="patient_address">{{ $form->patient_address }}</span>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-4">
-                            <small class="text-success"><b>REFERRED TO: </b></small><br>
-                                <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
-                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" required>
-                                    <option value="">Select Facility...</option>
-                                    @foreach($facilities as $row)
-                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                    @endforeach
-                                </select>
-                                {{--<span class="referred_name">{{ $form->referred_name }}</span>--}}
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
-                                <select name="department_id" class="form-control-select edit_department_pregnant" required>
-                                    <option value="">Select Department...</option>
-                                </select>
-                                {{--<span class="department_name">{{ $form->department }}</span>--}}
-                            </div>
-                            <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
-                                <span class="text-yellow facility_address">{{ $referred_to_address }}</span>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="row">
-                            <div class="col-md-4">
-                                <small class="text-success">Age</small><br>
+                                <small >Age</small><br>
                                 <span class="patient_age">
                                 @if($age_type == "y")
                                     @if($patient_age == 1)
@@ -269,69 +251,22 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Sex</small> <span class="text-red">*</span><br>
-                                <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
-                                    @if( $form->patient_sex == "Male")
-                                    <option>Male</option>
-                                    <option>Female</option>
-                                    @else
-                                    <option>Female</option>
-                                    <option>Male</option>
-                                    @endif
-                                </select>
+                                    <small ><b>SEX: </b></small><br>&nbsp;
+                                    <span class="patient_sex"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small ><b>STATUS: </b></small><br> &nbsp;
+                                    <span class="civil_status"></span>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
-                                <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
-                                @if ( $form->patient_status == "Single")
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    @elseif($form->patient_status == "Married")
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    @elseif($form->patient_status == "Divorced")
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    @elseif($form->patient_status == "Separated")
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    @elseif($form->patient_status == "Widowed")
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    @else
-                                    <option value="">Select...</option>    
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Covid Number</small><br>
+                                <small >Covid Number</small><br>
                                 <input type="text" name="covid_number" style="width: 100%;" value="{{ $form->covid_number }}">
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Clinical Status</small><br>
+                                <small >Clinical Status</small><br>
                                 <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
 
                                 @if($form->refer_clinical_status == "Asymptomatic")
@@ -375,7 +310,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Surveillance Category</small><br>
+                                <small >Surveillance Category</small><br>
                                 <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
                                 @if ($form->refer_sur_category == "Contact (PUM)")
                                     <option value="contact_pum">Contact (PUM)</option>
@@ -2038,7 +1973,6 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </div>
                             </div>
                         </div>
-
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -2050,7 +1984,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
-                                        <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                        <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%">
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2065,27 +1999,39 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <hr />
                         <div class="form-fotter pull-right">
-                            <button type="button" id="pdfBtn" class="btn btn-warning">Generate PDF</button>
-                            <script>
-                                document.getElementById('pdfBtn').addEventListener('click', function() {
-                                    // Assuming patient_id is dynamically available
-                                    var patientId = '{{ $data->patient_id }}'; // Replace with actual logic to get patient_id if needed
+                       
+                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
 
-                                    // Open the PDF in a new tab
-                                    var url = "{{ route('generate-pdf', ':id') }}";
-                                    url = url.replace(':id', patientId);
-                                    window.open(url, '_blank');
-                                });
+                            <div class="form-fotter pull-right">
+                            {{--@if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form->department_id === 5 && $user->id == $form->md_referring_id)
+                                <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
+                                <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
+                            @endif--}}
+                            @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
+                                <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
+                            @endif
+                            @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
+                                <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
+                            @endif
+                            @if($referral_status == 'referred' || $referral_status == 'redirected')
+                                @if(!$form->telemedicine)
+                                    <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue</button>
+                                    <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
+                                    <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
+                                @endif
+                                <button class="btn-sm btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
+                            @endif
+                            <button type="button" id="pdfBtn" onclick="generatePDF()" class="btn btn-warning">Generate PDF</button>
+                            <a href="{{ url('generate-pdf').'/'.$patient_id }}" target="_blank" class="btn-refer-pregnant btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
                             </script>
-                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                            <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
                         <div class="clearfix"></div>
-                    </div>{{--/.form-group--}}
-                </div> {{--/.jim-content--}}
-            </form>
-        
-   
+
+                        </div>
+                    <div class="clearfix"></div>
+                </div>{{--/.form-group--}}
+        </div>
+    </form>
 
 
 <div class="modal fade" role="dialog" id="patient_modal">
@@ -2970,4 +2916,4 @@ $reason_for_referral = \App\ReasonForReferral::get();
     });
 </script>
 @include('script.datetime')
-@include('script.edit_referred_pregnant')
+@include('script.edit_referred')

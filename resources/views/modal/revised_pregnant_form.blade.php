@@ -380,7 +380,7 @@
                                 <div class="collapse " id="collapse_diagnosis_pregnant" style="width: 100%">
 
                                     <b>Diagnosis/Impression: </b>
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
+                                    <textarea class="form-control" rows="7" name="notes_diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>

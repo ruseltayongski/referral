@@ -1,14 +1,10 @@
 <?php
 $user = Session::get('auth');
-$facilities = \App\Facility::select('id', 'name')
-    ->where('id', '!=', $user->facility_id)
-    ->where('status', 1)
-    ->where('referral_used', 'yes')
-    ->orderBy('name', 'asc')->get();
-$myfacility = \App\Facility::find($user->facility_id);
-$facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
-$inventory = \App\Inventory::where("facility_id", $myfacility->id)->get();
 $reason_for_referral = \App\ReasonForReferral::get();
+$facilities = \App\Facility::select('id','name')
+    ->where('status',1)
+    ->where('referral_used','yes')
+    ->orderBy('name','asc')->get();
 ?>
 
 <style>
@@ -177,55 +173,57 @@ $reason_for_referral = \App\ReasonForReferral::get();
     }
 </style>
 
-<form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>$form_type, 'status' => $status]) }}" method="POST" class="form-submit revised_normal_form_info">  
+<form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>'pregnant', 'status' => $status]) }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">  
                 @include('include.header_form')
- 
                 <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
                       
                         <input type="hidden" name="mother_id" value="{{ $patient_id }}">
                         <input type="hidden" name="form_type" value="pregnant">
+                        <input type="hidden" name="referral_status" value="{{ $referral_status }}">
                         <input type="hidden" class="pt_age" />
-                        <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
+                        <input type="hidden" name="referred_date" class="referred_date" value="{{ date('Y-m-d H:i:s') }}" />
                         <input type="hidden" name="code" value="" />
                         <input type="hidden" name="source" value="{{ $source }}" />
                         <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" />
+                        <input type="hidden" name="username" value="{{ $username }}">
+                        <input type="hidden" name="baby_id" value="{{ $form['baby']->baby_id }}">
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Name of Referring Facility</small><br>
+                                <small >Name of Referring Facility</small><br>
                                 &nbsp;<span>{{ $form['pregnant']->referring_facility }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
+                                <small >Address</small><br>
                                 &nbsp;<span>{{ $form['pregnant']->facility_brgy }}, {{ $form['pregnant']->facility_muncity }}, {{ $form['pregnant']->facility_province }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Name of referring MD/HCW</small><br>
+                                <small >Name of referring MD/HCW</small><br>
                                 &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Date/Time Referred (ReCo)</small><br>
+                                <small >Date/Time Referred (ReCo)</small><br>
                                 <span>{{ $form['pregnant']->referred_date }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Name of Patient</small><br>
+                                <small >Name of Patient</small><br>
                                 <span class="patient_name">{{ $form['pregnant']->woman_name }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
+                                <small >Address</small><br>
                                 <span class="patient_address">{{ $form['pregnant']->patient_address }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                            <small class="text-success"><b>REFERRED TO: </b></small><br>
-                                <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
-                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" required>
+                            <small ><b>REFERRED TO: </b></small><br>
+                                <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
+                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" require>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
                                         <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -234,21 +232,21 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 {{--<span class="referred_name">{{ $form['pregnant']->referred_facility }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
+                                <small ><b>DEPARTMENT: </b></small><br>&emsp;
                                 <select name="department_id" class="form-control-select edit_department_pregnant" required>
                                     <option value="">Select Department...</option>
                                 </select>
                                 {{--<span class="department_name">{{ $form['pregnant']->department }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Address</small><br>
+                                <small >Address</small><br>
                                 <span class="text-yellow facility_address">{{ $referred_to_address }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Age</small><br>
+                                <small >Age</small><br>
                                 <span class="patient_age">
                                     @if($form['pregnant']->woman_age == 1)
                                         {{ $form['pregnant']->woman_age }} year old
@@ -258,7 +256,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Sex</small> <span class="text-red">*</span><br>
+                                <small >Sex</small> <span class="text-red">*</span><br>
                                 <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
                                     @if( $form['pregnant']->sex == "Male")
                                     <option>Male</option>
@@ -270,7 +268,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
+                                <small >Civil Status</small> <span class="text-red">*</span><br>
                                 <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
                                 @if ( $civil_status == "Single")
                                     <option>Single</option>
@@ -316,11 +314,11 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Covid Number</small><br>
+                                <small >Covid Number</small><br>
                                 <input type="text" name="covid_number" style="width: 100%;" value="{{ $form['pregnant']->covid_number }}">
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Clinical Status</small><br>
+                                <small >Clinical Status</small><br>
                                 <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
 
                                 @if($form['pregnant']->refer_clinical_status == "asymptomatic")
@@ -364,7 +362,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Surveillance Category</small><br>
+                                <small >Surveillance Category</small><br>
                                 <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
                                 @if ($form['pregnant']->refer_sur_category == "contact_pum")
                                     <option value="contact_pum">Contact (PUM)</option>
@@ -409,28 +407,29 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse" id="patient_treatment_give_time" style="width: 100%;">
                                 <b>MAIN REASON FOR REFERRAL: </b>
                                     <div class="container-referral">
-                                        <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
-                                        <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
-                                        <label><input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                        <label><input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
+                                    <label><input <?php if($form['pregnant']->woman_reason=='None') echo 'checked'; ?> type="radio" name="woman_reason" value="None" checked /> None </label>
+                                    <label><input <?php if($form['pregnant']->woman_reason=='Emergency') echo 'checked'; ?> type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
+                                    <label><input <?php if($form['pregnant']->woman_reason=='Non-Emergency') echo 'checked'; ?> type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                    <label><input <?php if($form['pregnant']->woman_reason=='To accompany the baby') echo 'checked'; ?> type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
                                     </div><br>
                                 
                                     <div class="continer-referral">
                                     <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)</i> <br />
-                                    <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
+                                    <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5">{{ $form['pregnant']->woman_major_findings }}</textarea>
                                     </div><br>
 
                                     <div class="container-referral" style="padding:5px">
                                     <b>BEFORE REFERRAL</b>
-                                        <input type="text" class="form-control" name="woman_before_treatment" placeholder="Treatment Given" />
-                                        <input type="text" class="form-control form_datetime" name="woman_before_given_time" placeholder="Date/Time Given" /><br>
+                                    <input type="text" class="form-control woman_before_treatment" name="woman_before_treatment" placeholder="Treatment Given" />
+                                    <input type="text" class="form-control form_datetime woman_before_given_time" name="woman_before_given_time" placeholder="Date/Time Given" /></br>
                                     <b>DURING TRANSPORT </b>
-                                        <input type="text" class="form-control" name="woman_during_treatment" placeholder="Treatment Given" />
-                                        <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
+                                        <input type="text" class="form-control" name="woman_during_transport" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime woman_transport_given_time" name="woman_transport_given_time" placeholder="Date/Time Given" />
                                     </div><br>
 
+
                                     <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
-                                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea><br><br>
+                                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5">{{ $form['pregnant']->woman_information_given }}</textarea><br><br>
                                 </div>
                             </div>
                         </div>          
@@ -463,7 +462,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse " id="collapse_diagnosis" style="width: 100%">
                                     <b>Diagnosis/Impression: </b>
                                     <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%">{{$form['pregnant']->notes_diagnoses}}</textarea><br><br>
+                                    <textarea class="form-control" rows="7" name="notes_diagnoses" style="resize: none;width: 100%;margin-top: 1%">{{$form['pregnant']->notes_diagnoses}}</textarea><br><br>
                                 </div>
                             </div>
                         </div>
@@ -908,23 +907,23 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="container-referral">
                                     <table class="table container-referral">
                                     <tr>
-                                        <td colspan="2"><small class="text-success"><b>NAME: </b></small><br />
+                                        <td colspan="2"><small ><b>NAME: </b></small><br />
                                             <input type="text" class="form-control" style="width: 100%" name="baby_fname" placeholder="First Name" value="{{$form['baby']->baby_fname}}"/><br />
                                             <input type="text" class="form-control" style="width: 100%" name="baby_mname" placeholder="Middle Name" value="{{$form['baby']->baby_mname}}"/><br />
                                             <input type="text" class="form-control" style="width: 100%" name="baby_lname" placeholder="Last Name" value="{{$form['baby']->baby_lname}}"/>
                                         </td>
-                                        <td style="vertical-align: top !important;"><small class="text-success"><b>DATE AND HOUR OF BIRTH: </b></small>
+                                        <td style="vertical-align: top !important;"><small ><b>DATE AND HOUR OF BIRTH: </b></small>
                                             <br />
                                             <input type="text" class="form-control  form_datetime" name="baby_dob" placeholder="Date/Time" value="{{$form['baby']->baby_dob}}"/><br />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2"><small class="text-success"><b>BIRTH WEIGHT: </b></small> <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" value="{{$form['baby']->weight}}"/><br /></td>
-                                        <td><small class="text-success"><b>GESTATIONAL AGE: </b></small> <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" value="{{$form['baby']->gestational_age}}"/><br /></td>
+                                        <td colspan="2"><small ><b>BIRTH WEIGHT: </b></small> <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" value="{{$form['baby']->weight}}"/><br /></td>
+                                        <td><small ><b>GESTATIONAL AGE: </b></small> <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" value="{{$form['baby']->gestational_age}}"/><br /></td>
                                     </tr>
                                     <tr>
                                         <td colspan="4">
-                                            <small class="text-success"><b>MAIN REASON FOR REFERRAL: </b></small>
+                                            <small ><b>MAIN REASON FOR REFERRAL: </b></small>
                                             @if($form['baby']->baby_reason === "None")
                                             <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
                                             <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
@@ -949,33 +948,33 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"><small class="text-success"><b>MAJOR FINDINGS: </b><i>(Clinica and BP,Temp,Lab)</i></small>
+                                        <td colspan="4"><small ><b>MAJOR FINDINGS: </b><i>(Clinica and BP,Temp,Lab)</i></small>
                                             <br />
                                             <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5">{{$form['baby']->baby_major_findings}}</textarea>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"><small class="text-success"><b>LAST (BREAST) FEED (TIME): </b></small><input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br /></td>
+                                        <td colspan="4"><small ><b>LAST (BREAST) FEED (TIME): </b></small><input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br /></td>
                                     </tr>
                                     <tr class="bg-gray">
                                         <td colspan="4">Treatments Give Time</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"><small class="text-success"><b>BEFORE REFERRAL</b></small>
+                                        <td colspan="4"><small ><b>BEFORE REFERRAL</b></small>
                                             <br />
                                             <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_before_treatment}}"/>
                                             <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_before_given_time}}"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"><small class="text-success"><b>DURING TRANSPORT</b></small>
+                                        <td colspan="4"><small ><b>DURING TRANSPORT</b></small>
                                             <br />
-                                            <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_during_transport}}"/>
-                                            <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_transport_given_time}}"/>
+                                            <input type="text" class="form-control" name="baby_during_transport" placeholder="Treatment Given" value="{{$form['baby']->baby_during_transport}}"/>
+                                            <input type="text" class="form-control form_datetime" name="baby_transport_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_transport_given_time}}"/>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="4"><small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
+                                        <td colspan="4"><small ><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
                                             <br />
                                             <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given">{{$form['baby']->baby_information_given}}</textarea>
                                         </td>
@@ -2515,7 +2514,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                                 <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
-                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                        <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2530,35 +2529,33 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
                         <hr />
                         <div class="form-fotter pull-right">
-                        <button type="button" id="pdfBtn" class="btn btn-warning">Generate PDF</button>
+                        
+                            <button class="btn btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form['pregnant']->code}}"><i class="fa fa-times"></i> Close</button>
+                            {{--@if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form->department_id === 5 && $user->id == $form->md_referring_id)
+                                <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
+                                <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
+                            @endif--}}
+                            @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
+                                <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
+                            @endif
+                            @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
+                                <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
+                            @endif
+                            @if($referral_status == 'referred' || $referral_status == 'redirected')
+                                @if(!$form->telemedicine)
+                                    <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue</button>
+                                    <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
+                                    <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
+                                @endif
+                                <button class="btn-sm btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
+                            @endif
+                            <a href="{{ url('generate-pdf').'/'.$patient_id.'/'.$id }}" target="_blank" class="btn-refer-pregnant btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 
-                        <script>
-                            window.onload = function() {
-                                document.getElementById('pdfBtn').addEventListener('click', function() {
-                                    var patientId = '{{ $patient_id }}'; // Dynamically fetch patient_id
-                                    console.log("Patient ID: ", patientId); // Check if patient_id is passed correctly
-
-                                    var url = "{{ route('generate-pdf', ':id') }}";
-                                    url = url.replace(':id', patientId);
-
-                                    console.log("Generated URL: ", url); // Check if the URL is being generated correctly
-
-                                    // Try opening the generated URL in a new tab
-                                    window.open(url, '_blank');
-                                });
-                            };
-                        </script>
-
-
-                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                            <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>{{--/.form-group--}}
             </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div>
+
 
 <div class="modal fade" role="dialog" id="patient_modal">
     <div class="modal-dialog modal-sm" role="document">
@@ -3004,11 +3001,13 @@ $reason_for_referral = \App\ReasonForReferral::get();
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
     function resetPupilSize() {
-        $('input[name="glasgow_btn"]:checked').each(function() {
-            if ($(this).is(':checked'))
-                $(this).prop('checked', false);
-        })
+    $('#gcs_score').val(0);
+    $('input[name="motor_radio"]').prop('checked', false);
+    $('input[name="verbal_radio"]').prop('checked', false);
+    $('input[name="eye_radio"]').prop('checked', false);
+    last_motor = last_verbal = last_eye = 0;
     }
+
     var last_motor = last_verbal = last_eye = 0;
     $('input[name="motor_radio"]').on('change', function() {
         var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
@@ -3020,7 +3019,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             total = (gcs - last_motor) + motor;
 
         last_motor = motor;
-        $('#gcs_score').val(total);
+        check_total(total);
     });
     $('input[name="verbal_radio"]').on('change', function() {
         var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
@@ -3032,7 +3031,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
             total = (gcs - last_verbal) + verbal;
 
         last_verbal = verbal;
-        $('#gcs_score').val(total);
+        check_total(total);
     });
     $('input[name="eye_radio"]').on('change', function() {
         var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
@@ -3044,8 +3043,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
             total = (gcs - last_eye) + eye;
 
         last_eye = eye;
-        $('#gcs_score').val(total);
+        check_total(total);
     });
+    function check_total(total) {
+        if (total >= 16) {
+            total=0;
+        }
+        $('#gcs_score').val(total); // Update the field regardless
+    }
 
     /* *****REVIEW OF SYSTEMS***** */
     /* SKIN */
