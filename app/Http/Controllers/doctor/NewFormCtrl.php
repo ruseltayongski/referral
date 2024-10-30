@@ -16,6 +16,7 @@ use App\Events\SocketReferralUpdate;
 
 use App\Feedback;
 use App\Seen;
+use App\User;
 use App\Baby;
 use App\Icd;
 use App\Tracking;
@@ -39,7 +40,11 @@ use App\PertinentLaboratory;
 use App\Pregnancy;
 
 use DB;
+use DateTime;
 use Anouar\Fpdf\Fpdf;
+use App\Barangay;
+use App\Muncity;
+use App\Province;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 
 use function PHPSTORM_META\type;
@@ -92,6 +97,40 @@ class NewFormCtrl extends Controller
             )
             ->where('patients.id', $patient_id)
             ->first();
+        return $data;
+    }
+
+    public function fetchDataNormal($patient_id){
+        $data = DB::table('patients')
+        ->join('past_medical_history', 'patients.id', '=', 'past_medical_history.patient_id')
+        ->join('nutritional_status', 'patients.id', '=', 'nutritional_status.patient_id')
+        ->join('glasgow_coma_scale', 'patients.id', '=', 'glasgow_coma_scale.patient_id')
+        ->join('review_of_system', 'patients.id', '=', 'review_of_system.patient_id')
+        ->join('latest_vital_signs', 'patients.id', '=', 'latest_vital_signs.patient_id')
+        ->join('personal_and_social_history', 'patients.id', '=', 'personal_and_social_history.patient_id')
+        ->join('pertinent_laboratory', 'patients.id', '=', 'pertinent_laboratory.patient_id')
+        ->select(
+            'patients.*',
+            'past_medical_history.*',
+            'nutritional_status.*',
+            'glasgow_coma_scale.*',
+            'review_of_system.*',
+            'latest_vital_signs.*',
+            'personal_and_social_history.*',
+            'pertinent_laboratory.*',
+        )
+        ->where('patients.id', $patient_id)
+        ->first();
+
+        return $data;
+    }
+    
+
+
+    public function fetchPatientsData($id){
+        $data = DB::table('patients')
+        ->where('id', $id)
+        ->first();
 
         return $data;
     }
@@ -2193,11 +2232,65 @@ class NewFormCtrl extends Controller
 
     // generate pdf functions.
 
-    public function generatePdf($patient_id,$track_id)
+    public function calculateAge($dateOfBirth)
     {
+        $dob = new DateTime($dateOfBirth); // Convert string to DateTime
+        $now = new DateTime();             // Current date
+        $age = $dob->diff($now)->y;        // Get the difference in years
+        return $age;
+    }
 
-       
-        $data = $this->fetchDataFromDB($patient_id);
+
+    public function generatePdf($patient_id,$track_id,$form_type)
+    {
+        $data = [];
+        
+        if ($form_type === 'pregnant'){
+           $data = $this->fetchDataFromDB($patient_id);
+        }else if ($form_type === 'normal'){
+            $data = $this->fetchDataNormal($patient_id);
+        }
+
+        
+        $tracking_code = Tracking::select('code')->where('id', $track_id)->first();
+        $patients_data = self::fetchPatientsData($patient_id);
+        $patients_form = DB::table('patient_form')->where('code',$tracking_code->code)->first();
+        $pregnant_form = DB::table('pregnant_form')->where('code', $tracking_code->code)->first();
+        $referred_to = Facility::select('name','address')->where('id',$pregnant_form->referred_to)->first();
+        $referred_to_normal = Facility::select('name','address')->where('id',$patients_form->referred_to)->first();
+        $department = Department::select('description')->where('id',$pregnant_form->department_id)->first();
+        $department_normal = Department::select('description')->where('id',$patients_form->department_id)->first();
+        $referring_facility = Facility::select('name','contact')->where('id',$pregnant_form->referring_facility)->first();
+        $referring_facility_normal = Facility::select('name','contact','address')->where('id',$patients_form->referring_facility)->first();
+        $referring_md = User::select('fname','mname','lname')->where('id',$pregnant_form->referred_by)->first();
+        $patients_name = Patients::select('fname','mname','lname','dob', 'brgy', 'province', 'muncity','region','sex','civil_status','phic_id')->where('id',$patient_id)->first();
+        $referring_md_name = 'Dr. '. $referring_md->fname . ', ' . $referring_md->mname . ', ' . $referring_md->lname; 
+        $woman_name = $patients_name->fname . ' '.$patients_name->mname.' '.$patients_name->lname;
+        $barangay = Barangay::select('description')->where('id', $patients_name->brgy)->first();
+        $province = Province::select('description')->where('id', $patients_name->province)->first();
+        $muncity = Muncity::select('description')->where('id', $patients_name->muncity)->first();
+        $patient_address = $patients_name->region.', '.$province->description.', '.$muncity->description.', '.$barangay->description;
+        $baby_data = Baby::select('baby_id','birth_date','weight','gestational_age')->where('mother_id', $patient_id)->first();
+        $baby_name = self::fetchPatientsData($baby_data->baby_id);
+        $baby_fullname = $baby_name->fname.', '.$baby_name->mname.', '.$baby_name->lname;
+
+        // dd($data,
+        // $patients_data,
+        // $tracking_code->code,
+        // $patients_form,
+        // $pregnant_form,
+        // $referred_to->name,
+        // $department->description,
+        // $referring_md_name, 
+        // $woman_name,
+        // $barangay->description,
+        // $province->description,
+        // $muncity->description,
+        // $patients_name->region,
+        // $patient_address,
+        // $baby_id,
+        // $baby_fullname);
+
         $comor_string = $data->commordities;
         $comor_explodedData = explode(',', $comor_string);
         $comorbidities = ['Hypertension', 'Diabetes', 'Asthma', 'Cancer', 'Others'];
@@ -2217,11 +2310,253 @@ class NewFormCtrl extends Controller
         $pdf = new Fpdf();
         $x = ($pdf->w) - 20;
 
-     
-
         $pdf->setTopMargin(10);
-        $pdf->setTitle($data->patient_id);
+        $pdf->setTitle($woman_name .': '.$form_type.' '.$patient_id.'-'.$track_id);
         $pdf->addPage();
+
+        
+        if ($form_type === 'normal'){
+            
+            $pdf->SetFont('Arial', 'B', 12);
+            $pdf->Cell(0, 0, "CENTRAL VISAYAS HEALTH REFERRAL SYSTEM", 0, "", "C");
+            $pdf->ln();
+            $pdf->Cell(0, 12, "Clinical Referral Form", 0, "", "C");
+            $pdf->Ln(20);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf,  $tracking_code->code, "Patient Code :"), 0, 'L');
+            $pdf->Ln(5);
+            $pdf->MultiCell(0, 7, self::black($pdf, "Name of Referring Facility: ") . self::orange($pdf, $referring_facility_normal->name, "Name of Referring Facility:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $referring_facility_normal->contact, "Facility Contact #:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referring_facility_normal->address, "Address:"), 0, 'L');
+    
+    
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred to: ") . self::orange($pdf, $referred_to_normal->name, "Referred to:"), 0, 'L');
+            $y = $pdf->getY();
+            $pdf->SetXY($x / 2 + 10, $y - 7);
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, $department_normal->description, "Department:"), 0);
+    
+            $pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referred_to_normal->address, "Address:"), 0, 'L');
+    
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Referred (ReCo): ") . self::orange($pdf, $patients_form->time_referred, "Date/Time Referred (ReCo):"), 0, 'L');
+            $y = $pdf->getY();
+            $pdf->SetXY($x / 2 + 10, $y - 7);
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, $patients_form->time_transferred, "Date/Time Transferred:"), 0);
+    
+            // $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::orange($pdf, $woman_name, "Name of Patient:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::staticGreen($pdf, $woman_name), 0, 'L');
+            $y = $pdf->getY();
+            $pdf->SetXY($x / 2 + 10, $y - 7);
+    
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Age: ") . self::orange($pdf, $this->calculateAge($patients_name->dob), "age:"), 0);
+    
+            $y = $pdf->getY();
+            $pdf->SetXY(($x / 2) + ($x / 4) - 5, $y - 7);
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "Sex: ") . self::orange($pdf, $patients_name->sex, "sex:"), 0);
+            $y = $pdf->getY();
+            $pdf->SetXY(($x / 2) + ($x / 2) - 30, $y - 7);
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "Status: ") . self::orange($pdf, $patients_name->civil_status, "Status:"), 0);
+    
+            $pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $patient_address, "address:"), 0, 'L');
+    
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "PhilHealth Status: ") . self::orange($pdf, $patients_name->phic_status, "PhilHealth status:"), 0, 'L');
+            $y = $pdf->getY();
+            $pdf->SetXY($x / 2 + 10, $y - 7);
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "PhilHealth # : ") . self::orange($pdf, $patients_name->phic_id, "PhilHealth # :"), 0);
+    
+    
+            $pdf->MultiCell(0, 7, self::black($pdf, "Covid Number: ") . self::orange($pdf, $patients_form->covid_number, "Covid Number: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Clinical Status: ") . self::orange($pdf, $patients_form->refer_clinical_status, "Clinical Status: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Surveillance Category: ") . self::orange($pdf, $patients_form->refer_sur_category, "Surveillance Category: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Discharge Clinical Status: ") . self::orange($pdf, $patients_form->dis_clinical_status, "Discharge Clinical Status: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Discharge Surveillance Category: ") . self::orange($pdf, $patients_form->dis_sur_category, "Discharge Surveillance Category: "), 0, 'L');
+    
+            $pdf->MultiCell(0, 7, self::black($pdf, "Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), 0, 'L');
+            $pdf->SetTextColor(102, 56, 0);
+            $pdf->SetFont('Arial', 'I', 10);
+            $pdf->MultiCell(0, 5, $data->case_summary, 0, 'L');
+            $pdf->Ln();
+    
+            $pdf->MultiCell(0, 7, self::black($pdf, "Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), 0, 'L');
+            $pdf->SetTextColor(102, 56, 0);
+            $pdf->SetFont('Arial', 'I', 10);
+            $pdf->MultiCell(0, 5, $data->reco_summary, 0, 'L');
+            $pdf->Ln();
+    
+            // $pdf->MultiCell(0, 7, self::black($pdf,"Diagnosis/Impression: "), 0, 'L');
+            // $pdf->SetTextColor(102,56,0);
+            // $pdf->SetFont('Arial','I',10);
+            // $pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');
+            // $pdf->Ln();
+    
+            // $pdf->MultiCell(0, 7, self::black($pdf,"Reason for referral: "), 0, 'L');
+            // $pdf->SetTextColor(102,56,0);
+            // $pdf->SetFont('Arial','I',10);
+            // $pdf->MultiCell(0, 5, $data->reason, 0, 'L');
+            // $pdf->Ln();
+    
+            if (isset($data->icd[0])) {
+                $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 0, 'L');
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                foreach ($data->icd as $icd) {
+                    $pdf->MultiCell(0, 5, $icd->code . " - " . $icd->description, 0, 'L');
+                }
+                $pdf->Ln();
+            }
+    
+            if (isset($data->diagnosis)) {
+                $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 0, 'L');
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                $pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');
+                $pdf->Ln();
+            }
+    
+            if (isset($data->other_diagnoses)) {
+                $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: "), 0, 'L');
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                $pdf->MultiCell(0, 5, $data->other_diagnoses, 0, 'L');
+                $pdf->Ln();
+            }
+    
+            if (isset($data->reason)) {
+                $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: "), 0, 'L');
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                $pdf->MultiCell(0, 5, $data->reason['reason'], 0, 'L');
+                $pdf->Ln();
+            }
+    
+            if (isset($data->other_reason_referral)) {
+                $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: "), 0, 'L');
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                $pdf->MultiCell(0, 5, $data->other_reason_referral, 0, 'L');
+                $pdf->Ln();
+            }
+    
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, $data->md_referring, "Name of referring MD/HCW:"), 0, 'L');
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $data->referring_md_contact, "Contact # of referring MD/HCW:"), 0, 'L');
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referred MD/HCW- Mobile Contact # (ReCo): ") . self::orange($pdf, $data->md_referred, "Name of referred MD/HCW- Mobile Contact # (ReCo):"), 0, 'L');
+
+        }else if ($form_type === 'pregnant'){
+            $pdf->SetFont('Arial', 'B', 12);
+            $pdf->Cell(0, 0, "BEmONC/ CEmONC REFERRAL FORM", 0, "", "C");
+            $pdf->ln(10);
+            $pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf, $tracking_code->code, "Patient Code :"), 0, 'L');
+            $pdf->Ln(5);
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->MultiCell(0, 7, self::black($pdf, "REFERRAL RECORD"), 0, 'L');
+            $pdf->SetFont('Arial', '', 10);
+    
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "Who is Referring"), 0, 'L');
+            $y = $pdf->getY();
+            $pdf->SetXY(60, $y - 7);
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "Record Number: ") . self::orange($pdf, $pregnant_form->record_no, "Record Number:"), 0);
+            $y = $pdf->getY();
+            $pdf->SetXY(125, $y - 7);
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred Date: ") . self::orange($pdf, $pregnant_form->referred_date, "Referred Date:"), 0);
+    
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, $pregnant_form->md_referring, "Name of referring MD/HCW:"), 0, 'L');
+            $y = $pdf->getY();
+            $pdf->SetXY(125, $y - 7);
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Arrival Date: ") . self::orange($pdf, $pregnant_form->arrival_date, "Arrival Date:"), 0);
+    
+            $pdf->MultiCell(0, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $referring_md_name, "Contact # of referring MD/HCW:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Facility: ") . self::orange($pdf, $referring_facility->name, "Facility:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $referring_facility->contact, "Facility Contact #:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Accompanied by the Health Worker: ") . self::orange($pdf, $pregnant_form->health_worker, "Accompanied by the Health Worker:"), 0, 'L');
+    
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred To: ") . self::orange($pdf, $referred_to->name, "Referred To:"), 0, 'L');
+            $y = $pdf->getY();
+            $pdf->SetXY($x / 2 + 40, $y - 7);
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, $department->description, "Department:"), 0);
+    
+            $pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referred_to->address, "Address:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Covid Number: ") . self::orange($pdf, $pregnant_form->covid_number, "Covid Number: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Clinical Status: ") . self::orange($pdf, $pregnant_form->refer_clinical_status, "Clinical Status: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Surveillance Category: ") . self::orange($pdf, $pregnant_form->refer_sur_category, "Surveillance Category: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Discharge Clinical Status: ") . self::orange($pdf, $pregnant_form->dis_clinical_status, "Discharge Clinical Status: "), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Discharge Surveillance Category: ") . self::orange($pdf, $pregnant_form->dis_sur_category, "Discharge Surveillance Category: "), 0, 'L');
+            $pdf->Ln(3);
+
+            $pdf->SetFillColor(200, 200, 200);
+            $pdf->SetTextColor(30);
+            $pdf->SetDrawColor(200);
+            $pdf->SetLineWidth(.3);
+            
+            $this->titleHeader($pdf, "WOMAN");
+    
+            $pdf->SetFillColor(255, 250, 205);
+            $pdf->SetTextColor(40);
+            $pdf->SetDrawColor(230);
+            $pdf->SetLineWidth(.3);
+    
+            $pdf->MultiCell(0, 7, "Name: " . self::green($pdf, $woman_name, 'name'), 1, 'L');
+            $pdf->MultiCell(0, 7, "Age: " . self::green($pdf, $this->calculateAge($patients_name->dob), 'Age'), 1, 'L');
+            $pdf->MultiCell(0, 7, "Address: " . self::green($pdf, $patient_address, 'Address'), 1, 'L');
+            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $pregnant_form->woman_reason), 1, 'L');
+            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, $pregnant_form->woman_major_findings), 1, 'L');
+    
+            $pdf->SetFillColor(200, 200, 200);
+            $pdf->SetTextColor(30);
+            $pdf->SetDrawColor(200);
+            $pdf->SetLineWidth(.3);
+            
+            $this->titleHeader($pdf, "Treatments Give Time");
+    
+            $pdf->SetFillColor(255, 250, 205);
+            $pdf->SetTextColor(40);
+            $pdf->SetDrawColor(230);
+            $pdf->SetLineWidth(.3);
+    
+            $pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $pregnant_form->woman_before_treatment . '-' . $pregnant_form->woman_before_given_time, 'Before Referral'), 1, 'L');
+            $pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $pregnant_form->woman_before_given_time . '-' . $pregnant_form->woman_before_given_time, 'During Transport'), 1, 'L');
+            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, $pregnant_form->woman_information_given), 1, 'L');
+    
+           
+                $pdf->Ln(8);
+    
+                $pdf->SetFillColor(200, 200, 200);
+                $pdf->SetTextColor(30);
+                $pdf->SetDrawColor(200);
+                $pdf->SetLineWidth(.3);
+
+                $pdf->addPage();
+               
+                $this->titleHeader($pdf, "BABY");
+    
+                $pdf->SetFillColor(255, 250, 205);
+                $pdf->SetTextColor(40);
+                $pdf->SetDrawColor(230);
+                $pdf->SetLineWidth(.3);
+    
+                $pdf->MultiCell(0, 7, "Name: " . self::green($pdf, $baby_fullname, 'name'), 1, 'L');
+                $pdf->MultiCell(0, 7, "Date of Birth: " . self::green($pdf, $baby_data->birth_date, "Date of Birth"), 1, 'L');
+                $pdf->MultiCell(0, 7, "Body Weight: " . self::green($pdf, $baby_data->weight, 'body weight'), 1, 'L');
+                $pdf->MultiCell(0, 7, "Gestational Age: " . self::green($pdf, $baby_data->gestational_age, 'Gestational Age'), 1, 'L');
+                $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_reason), 1, 'L');
+                $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_major_findings), 1, 'L');
+                $pdf->MultiCell(0, 7, "Last (Breast) Feed (Time): " . self::green($pdf, $pregnant_form->baby_last_feed, "Last (Breast) Feed (Time)"), 1, 'L');
+    
+                $pdf->SetFillColor(200, 200, 200);
+                $pdf->SetTextColor(30);
+                $pdf->SetDrawColor(200);
+                $pdf->SetLineWidth(.3);
+    
+                $pdf->MultiCell(0, 7, "Treatments Give Time", 1, 'L', true);
+    
+                $pdf->SetFillColor(255, 250, 205);
+                $pdf->SetTextColor(40);
+                $pdf->SetDrawColor(230);
+                $pdf->SetLineWidth(.3);
+    
+                $pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $pregnant_form->baby_before_treatment . '-' . $pregnant_form->baby_before_given_time, 'Before Referral'), 1, 'L');
+                $pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $pregnant_form->baby_during_transport . '-' . $pregnant_form->baby_transport_given_time, 'During Transport'), 1, 'L');
+                $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_information_given), 1, 'L');
+          
+        }
 
         $this->titleHeader($pdf, "PAST MEDICAL HISTORY");
 
@@ -2273,9 +2608,8 @@ class NewFormCtrl extends Controller
         }
         $pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, $data->previous_hospitalization), 1, 'L');
 
-
-
-        $this->titleHeader($pdf, "PEDIATRIC HISTORY");
+        if ($form_type === 'pregnant'){
+            $this->titleHeader($pdf, "PEDIATRIC HISTORY");
         $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
         $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
         $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
@@ -2298,6 +2632,8 @@ class NewFormCtrl extends Controller
         $pdf->SetFillColor(235, 235, 235);
         $pdf->SetTextColor(40);
         $pdf->ln(1);
+        
+
         $pdf->MultiCell(0, 7, "Feeding History", 1, 'L', true);
         if ($data->post_natal_bfeed == "Yes") {
             $pdf->MultiCell(0, 7, "Breast Feed:" . self::green($pdf, $data->post_natal_bfeed, 'Breast Feed'), 1, 'L');
@@ -2355,11 +2691,9 @@ class NewFormCtrl extends Controller
             $dataArray[] = (array) $row;
         }
 
-        // Create the styled table in the PDF
-        $this->obstetricPage($pdf, $header, $dataArray, $data);
-
-
-
+             // Create the styled table in the PDF
+            $this->obstetricPage($pdf, $header, $dataArray, $data);
+        }
 
         $pdf->addPage();
         $this->titleHeader($pdf, "PERSONAL AND SOCIAL HISTORY");
@@ -2436,9 +2770,6 @@ class NewFormCtrl extends Controller
         $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Endocrine: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->endocrine)), 1, 'L');
         $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Psychiatric: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->psychiatric)), 1, 'L');
         $pdf->addPage();
-
-
-
 
         $pdf->Output();
         exit();
@@ -2531,7 +2862,7 @@ class NewFormCtrl extends Controller
 
 
         $pdf->SetMargins(6.35, 6.35, 6.35);
-        $pdf->AddPage('L');
+        $pdf->AddPage('P');
 
         $contraceptive_other = $data->contraceptive_history;
         $other_explodedData = explode(',', $contraceptive_other);
