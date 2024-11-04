@@ -513,7 +513,7 @@ class PatientCtrl extends Controller
                 'reco_summary' => $req->reco_summary,
                 'diagnosis' => $req->diagnosis,
                 'referring_md' => $user->id,
-                'referred_md' => ($req->reffered_md) ? $req->reffered_md : $req->reffered_md_telemed,
+                'referred_md' => ($req->reffered_md ? $req->reffered_md : ($req->reffered_md_telemed ? $req->reffered_md_telemed : '')),
                 'reason_referral' => $req->reason_referral1,
                 'other_reason_referral' => $req->other_reason_referral,
                 'other_diagnoses' => $req->other_diagnosis,
