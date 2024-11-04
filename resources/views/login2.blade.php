@@ -10,7 +10,7 @@
     <meta content="" name="keywords">
 
     <!-- Favicons -->
-    <link href="{{ asset('resources/img/favicon.png') }}" rel="icon">
+    <link href="{{ asset('resources/img/favicon1.png') }}" rel="icon" type="image/x-icon">
     <link href="{{ asset('resources/medilab/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
 
     <!-- Google Fonts -->

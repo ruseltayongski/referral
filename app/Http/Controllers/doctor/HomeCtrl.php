@@ -135,7 +135,10 @@ class HomeCtrl extends Controller
 
         $totalDataIncoming = Session::get('totalIncoming_for_Dashboard');
         $totalDataReferred = Session::get('totalReffered_for_Dashboard');
-      
+
+        session()->forget('profileSearch.telemedicine');
+        session()->forget('telemed');
+        
         return view('doctor.home1',[
             "totalIncoming" => $totalDataIncoming,
             "totalReferred" => $totalDataReferred,

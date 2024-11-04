@@ -24,7 +24,8 @@ $counter = 0;
         background-color: #ffffff;
         /*width: 100%!*200px*!;*/
         margin: 0 auto;
-        padding: 20px;
+        /* padding: 20px; */
+        padding: 10px;
         border: 1px dashed dimgrey;
     }
 
@@ -187,6 +188,107 @@ $counter = 0;
     .remove-icon-btn i {
         pointer-events: none; /* To ensure the button handles the click, not the icon */
     }
+
+      /********************* for file upload NORMAL FORM *********************/
+    .fileuploadBackground{
+        background-color: rgba(0, 0, 0, 0.7); 
+    }
+   .modal-backdrop {
+        background-color: rgba(0, 0, 0, 0.7); 
+    }
+
+    /* Center the modal vertically */
+    .modal-dialog-centered {
+        display: flex;
+        align-items: center;
+        min-height: calc(100% - 1rem);
+    }
+
+    @media (min-width: 576px) {
+        .modal-dialog-centered {
+            min-height: calc(100% - 3.5rem);
+        }
+    }
+
+    /* Full width modal content */
+    .modal-content {
+        width: 100%;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    /* Uniform file preview container */
+    .file-preview-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    /* Carousel styling */
+    #filePreviewCarousel {
+        flex-grow: 1;
+        margin: 0 15px;
+        max-width: 800px;
+    }
+
+    /* Navigation buttons */
+    .nav-button {
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #333;
+        opacity: 0.7;
+        transition: opacity 0.3s;
+    }
+
+    .nav-button:hover {
+        opacity: 1;
+    }
+
+    .prev-icon-file,
+    .next-icon-file {
+        background-color: #007bff;
+        color: white;
+        border-radius: 50%;
+        padding: 10px;
+    }
+
+    /* Ensure uniform preview display */
+    .carousel-item {
+        text-align: center;
+    }
+
+    .carousel-item img, 
+    .carousel-item embed {
+        max-width: 100%;
+        max-height: 70vh;
+        margin: auto;
+        display: block;
+        width: auto;
+        height: auto;
+    }
+
+    /* Set default size for different file types */
+    .pdf-preview,
+    .image-preview {
+        width: 100%;
+        height: 600px; /* Standard height for all previews */
+    }
+
+    /* Word/Excel file unsupported message */
+    .file-not-supported {
+        text-align: center;
+        margin-top: 20px;
+        color: #dc3545;
+    }
+
+    div#filePreviewModal {
+        background-color: rgba(0,0,0,0.99);
+    }
+
 </style>
 
 <div class="row">
@@ -324,33 +426,33 @@ $counter = 0;
     </div>
 </div>
 
-<!-- <div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="filePreviewModalLabel">File Preview</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div id="filePreviewCarousel" class="carousel slide" data-ride="carousel">
-          <div class="carousel-inner" id="carousel-inner"> -->
-            <!-- Carousel items will be added dynamically here -->
-          <!-- </div>
-          <a class="carousel-control-prev" href="#filePreviewCarousel" role="button" data-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="carousel-control-next" href="#filePreviewCarousel" role="button" data-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-          </a>
+<div class="modal fade" id="filePreviewModal" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- <div class="modal-header"> -->
+                <!-- <h4 class="modal-title" id="filePreviewModalLabel">File Preview</h4> -->
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div> -->
+            <div class="modal-body">
+                <div class="file-preview-container">
+                    <button class="nav-button prev-button" onclick="navigateCarousel('prev')">
+                        <span class="prev-icon-file glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </button>
+                    <div id="filePreviewCarousel" class="carousel slide" data-ride="carousel" data-interval="false">
+                        <div class="carousel-inner" id="carousel-inner">
+                            <!-- File previews will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <button class="nav-button next-button" onclick="navigateCarousel('next')">
+                        <span class="next-icon-file glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
-</div> -->
+</div>
 
 @include('modal.pregnantModal')
 @include('modal.normal_form_editable')
@@ -389,18 +491,17 @@ $counter = 0;
             $(".patient-emergency").remove();
             $(".Appointment").val(appointment);
 
-            $.ajax({
-                url: "{{ url('pass/appointment') }}",
-                method: 'POST',
-                data: {
-                    telemed: appointment,
-                    _token: '{{ csrf_token() }}'  // Include the CSRF token for security
-                },
-                success: function(response) {
-                    console.log("Appointment successfully passed to the backend.");
-                }
-            });
-
+            // $.ajax({
+            //     url: "{{ url('pass/appointment') }}",
+            //     method: 'POST',
+            //     data: {
+            //         telemed: appointment,
+            //         _token: '{{ csrf_token() }}'  // Include the CSRF token for security
+            //     },
+            //     success: function(response) {
+            //         console.log("Appointment successfully passed to the backend.", appointment);
+            //     },
+            // });
             console.log("appointment-search", appointment)
 
         } else {
@@ -682,10 +783,24 @@ $counter = 0;
         e.preventDefault();
         $('.loading').show();
         $('.btn-submit').attr('disabled', true);
-    
+     
+        // const formData = new FormData(this);
+
+        // const activFiles =  fileInfoArray.filter(file => file && !file.removed);
+
+        // formData.delete('file_upload[]');
+
+        // activFiles.forEach(fileInfo => {
+        //     if(fileInfo.file){
+        //         formData.append('file_upload[]', fileInfo.file);
+        //     }
+        // });
+        // console.log("remaining file to upload", formData);
+
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
         department_name = $('.select_department_normal option:selected').html();
+
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',

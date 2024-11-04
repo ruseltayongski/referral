@@ -622,6 +622,9 @@ class ReferralCtrl extends Controller
             ->orderBy('date_referred','desc')
             ->paginate(15);
             session()->forget('profileSearch.telemedicine');
+            
+            session()->forget('telemed');
+            
         return view('doctor.referred',[
             'title' => 'Referred Patients',
             'data' => $data
@@ -766,6 +769,7 @@ class ReferralCtrl extends Controller
             $data = $data->paginate(10);
         }
         session()->forget('profileSearch.telemedicine');
+            session()->forget('telemed');
         //  $new_referral = $request->query();
 
         Session::put('totalReffered_for_Dashboard', $data->total());
@@ -1860,8 +1864,8 @@ class ReferralCtrl extends Controller
 
         if($form_type == 'normal') {
             $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
-//            $path = self::securedFile($file_link);
-//            $file_name = basename($path);
+        //    $path = self::securedFile($file_link);
+        //    $file_name = basename($path);
 
             $path = array();
             $file_name = array();
@@ -1881,6 +1885,7 @@ class ReferralCtrl extends Controller
                 ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
                 ->where('patient_form.code', $track->code)->first();
             $form = self::normalFormData($id);
+       
             return view("doctor.edit_referral_normal", [
                 "form" => $form['form'],
                 "id" => $id,

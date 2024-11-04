@@ -193,11 +193,14 @@ Route::match(["get","post"],'doctor/referred/track','doctor\ReferralCtrl@trackRe
 Route::get('doctor/patient','doctor\PatientCtrl@index');
 Route::post('doctor/patient','doctor\PatientCtrl@searchProfile');
 
-Route::post('pass/appointment', function (Illuminate\Http\Request $request) { // adding this session
-    // Save the appointment to session or process as needed
-    session(['telemed' => $request->telemed]);
-    return response()->json(['success' => true]);
-});
+// Route::post('pass/appointment', function (Illuminate\Http\Request $request) { // adding this session
+//     // Save the appointment to session or process as needed
+//     // session(['telemed' => $request->telemed]);
+//     Session::put('telemed',  $request->telemed);
+//     \Log::info('Session telemed121: ' . json_encode(session('telemed')));
+
+//     return response()->json(['success' => true]);
+// });
 
 Route::get('doctor/patient/info/{id}','doctor\PatientCtrl@showPatientProfile');
 Route::get('doctor/patient/add','doctor\PatientCtrl@addPatient');
@@ -690,6 +693,6 @@ Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescription
 Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');
 Route::get('/HighIncoming/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoIncoming');
 
-//sample
+//samplegit 
 Route::get('/test_push',  'ApiController@notifierPushNotification');
 // Route::post('/notifier/api/send_push_notification', 'ApiController@notifierPushNotification');

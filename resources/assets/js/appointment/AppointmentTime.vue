@@ -112,6 +112,8 @@ export default {
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
+        $("#AppointmentId").val(this.selectedAppointmentTime);
+        $("#DoctorId").val(this.selectedAppointmentDoctor);
         $("#followup_header").html("Follow Up Patient");
         $("#telemedicineFollowupFormModal").modal("show");
         $("#followup_facility_id").val(this.facilitySelectedId);
@@ -144,8 +146,9 @@ export default {
     handleAppointmentTimeChange() {
       this.selectedAppointmentDoctor = null;
     },
-    handleDoctorChange(doctorId) {
-      console.log(doctorId);
+    handleDoctorChange(doctorId, appointmentId) {
+      console.log(doctorId, 'appointmentId', appointmentId);
+
       this.selectedAppointmentDoctor = doctorId;
     },
   },
@@ -227,7 +230,7 @@ export default {
                             v-model="selectedAppointmentDoctor"
                             :value="assignedDoctor.doctor.id"
                             @change="
-                              handleDoctorChange(assignedDoctor.doctor.id)
+                              handleDoctorChange(assignedDoctor.doctor.id, appointment.id)
                             "
                             :disabled="assignedDoctor.appointment_by"
                           />&nbsp;&nbsp;

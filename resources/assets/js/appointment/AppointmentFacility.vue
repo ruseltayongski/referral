@@ -25,7 +25,7 @@
               <h5 class="description-header">
                 {{ balanceSlotThisMonth }}
               </h5>
-              <span class="description-text">Total Appointment</span>
+              <span class="description-text">Total Appointments</span>
             </div>
           </div>
           <div class="col-sm-4 border-right">
@@ -129,6 +129,27 @@ export default {
     //   return !isAppointedExpire;
     //   //&& !this.emptyAppointmentByCount == 0
     // },
+    // shouldDisplayFacility() {
+    //   const now = new Date();
+
+    //   const hasValidAppointment = this.appointment.appointment_schedules.some(
+    //     (sched) => {
+    //       const appointmentDatetime = new Date(
+    //         `${sched.appointed_date} ${sched.appointed_time}`
+    //       );
+
+    //       const midnightTonight = new Date();
+            
+    //         midnightTonight.setHours(23,59,59,999);
+            
+    //       console.log("appointmentDatetime", appointmentDatetime >= now);
+    //       console.log("midnightTonight", midnightTonight);
+    //       return appointmentDatetime >= now && appointmentDatetime < midnightTonight;
+    //     }
+    //   );
+
+    //   return hasValidAppointment;
+    // },
     shouldDisplayFacility() {
       const now = new Date();
 
@@ -138,7 +159,12 @@ export default {
             `${sched.appointed_date} ${sched.appointed_time}`
           );
 
-          return appointmentDatetime > now;
+          // Set midnight of the appointment date
+          const midnightAppointmentDay = new Date(appointmentDatetime);
+          midnightAppointmentDay.setHours(24, 0, 0, 0);
+          
+          // Display facility if current time is before midnight of the appointment day
+          return now < midnightAppointmentDay;
         }
       );
 
@@ -215,6 +241,7 @@ export default {
                     // If all doctors are assigned, increase the used count
                   } else {
                     // If the appointment has expired, but at least one doctor is assigned, count as expired
+                    console.log("appointmentDoctors", appointmentDoctors);
                     const someAssigned = appointmentDoctors.some(
                       (doctor) => doctor.appointment_by === null
                     );

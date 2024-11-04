@@ -9,7 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
+    <link rel="icon" href="{{ asset('resources/img/favicon1.png') }}" type="image/x-icon">
     <meta http-equiv="cache-control" content="max-age=0" />
     <title>{{ (isset($title)) ? $title : 'Referral System'}}</title>
     {{--<audio id="carteSoudCtrl">
