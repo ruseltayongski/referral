@@ -796,10 +796,10 @@ $counter = 0;
         //     }
         // });
         // console.log("remaining file to upload", formData);
-
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
         department_name = $('.select_department_normal option:selected').html();
+        telemed = $('.telemedicine').val();
 
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
@@ -830,7 +830,7 @@ $counter = 0;
                     });
                 } //push notification for CCMD
                 else {
-                    $(location).attr('href', "{{ asset('doctor/referred') }}");
+                    $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
                 }
             }
             /*,
@@ -880,6 +880,7 @@ $counter = 0;
         reason = $('.woman_information_given').val();
         department_id = $('.select_department_pregnant').val();
         department_name = $('.select_department_pregnant :selected').text();
+        telemed = $('.telemedicine').val();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
@@ -898,7 +899,7 @@ $counter = 0;
                         msg: "Successfully referred the patient!"
                     });
                 } else {
-                    $(location).attr('href', "{{ asset('doctor/referred') }}");
+                    $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
                 }
             }
             /*,
