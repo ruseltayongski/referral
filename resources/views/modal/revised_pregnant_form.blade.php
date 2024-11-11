@@ -385,31 +385,31 @@
                                         <div class="col-md-12">
                                             <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
                                             <br><br>
-                                            <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                                <i class="fa fa-medkit"></i> Add ICD-10
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                                        <a data-toggle="modal" data-target="#icd-modal-pregnant_revised" type="button" class="btn btn-sm btn-success" onclick="searchICD10PregnantRevised()">
+                                            <i class="fa fa-medkit"></i>  Add ICD-10
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosisPregnantRevised()" hidden="hidden"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                         </div>
                                     </div>
 
                                     <div class="row" style="padding-top: 10px;">
                                         <div class="col-md-12">
-                                            <button type="button" id="clear_icd" class="btn btn-xs btn-danger" onclick="clearICD()"> Clear ICD-10</button><br>
-                                            <div class="text-success" id="icd_selected" style="padding-top: 5px"></div>
+                                            <button type="button" id="clear_icd_pregnant_revised" class="btn btn-sm btn-danger" onclick="clearICDPregnantRevised()" hidden="hidden"> Clear ICD-10</button>
+                                            <div class="text-green" id="icd_selected_pregnant_revised" style="padding-top: 5px;"></div>
                                         </div>
                                     </div>
 
                                     <div class="row" style="padding-top: 10px;">
                                         <div class="col-md-12">
-                                            <button type="button" id="clear_notes" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                            <div id="add_notes_diagnosis" style="padding-top: 5px"></div>
+                                        <button type="button" id="clear_notes_pregnant_revised" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregnantRevised()" hidden="hidden"> Clear notes diagnosis</button>
+                                        <div id="add_notes_diagnosis_pregnant_revised" style="padding-top: 5px;"></div>
                                         </div>
                                     </div>
 
                                     <div class="row" style="padding-top: 10px">
                                         <div class="col-md-12">
-                                            <button type="button" id="clear_other_diag" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis()"> Clear other diagnosis</button>
-                                            <div id="others_diagnosis" style="padding-top: 5px"></div>
+                                        <button type="button" id="clear_other_diag_pregnant_revised" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregnantRevised()" hidden="hidden"> Clear other diagnosis</button>
+                                        <div id="others_diagnosis_pregnant_revised" style="padding-top: 5px;"></div>
                                         </div>
                                 </div>
 
@@ -445,6 +445,7 @@
                                                 <input class="form-check-input" id="comor_hyper_cbox_pregnant" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Hypertension
                                                 <span id="comor_hyper_pregnant"> since
                                                     <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
+                                                    <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year) {
                                                             echo "<option>$year</option>\n";
@@ -458,6 +459,7 @@
                                                 <input class="form-check-input" id="comor_diab_cbox_pregnant" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Diabetes Mellitus
                                                 <span id="comor_diab_pregnant"> since
                                                     <select class="form-control select" name="diab_year" style="font-size: 10pt;">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year) {
                                                             echo "<option>$year</option>\n";
@@ -471,6 +473,7 @@
                                                 <input class="form-check-input" id="comor_asthma_cbox_pregnant" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Bronchial Asthma
                                                 <span id="comor_asthma_pregnant"> since
                                                     <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year) {
                                                             echo "<option>$year</option>\n";
@@ -569,6 +572,7 @@
                                                 <input class="form-check-input" id="heredo_hyper_cbox_pregnant" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Hypertension: </span>
                                                 <select class="form-control-select" id="heredo_hyper_pregnant" name="heredo_hypertension_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -580,6 +584,7 @@
                                                 <input class="form-check-input" id="heredo_diab_cbox_pregnant" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Diabetes Mellitus: </span>
                                                 <select class="form-control-select" id="heredo_diab_pregnant" name="heredo_diabetes_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -591,6 +596,7 @@
                                                 <input class="form-check-input" id="heredo_asthma_cbox_pregnant" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Bronchial Asthma: </span>
                                                 <select class="form-control-select" id="heredo_asthma_pregnant" name="heredo_asthma_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -602,6 +608,7 @@
                                                 <input class="form-check-input" id="heredo_cancer_cbox_pregnant" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer: </span>
                                                 <select class="form-control-select" id="heredo_cancer_pregnant" name="heredo_cancer_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -615,6 +622,7 @@
                                                 <input class="form-check-input" id="heredo_kidney_cbox_pregnant" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Kidney: </span>
                                                 <select class="form-control-select" id="heredo_kidney_pregnant" name="heredo_kidney_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -626,6 +634,7 @@
                                                 <input class="form-check-input" id="heredo_thyroid_cbox_pregnant" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease: </span>
                                                 <select class="form-control-select" id="heredo_thyroid_pregnant" name="heredo_thyroid_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -680,6 +689,7 @@
                                             <div class="col-md-12">
                                                 <span>Born at
                                                     <select class="form-control-select" name="natal_bornat">
+                                                        <option value="">Select Option</option>
                                                         <option value="home">Home</option>
                                                         <option value="clinic">Clinic</option>
                                                         <option value="hospital">Hospital</option>
@@ -687,12 +697,14 @@
                                                     <input type="text" id="hospital_name_pregnant" name="natal_born_address" style="width: 30%;" placeholder="Specify where">
                                                     by
                                                     <select class="form-control-select" name="natal_by">
+                                                        <option value="">Select Option</option>
                                                         <option value="md">MD</option>
                                                         <option value="midwife">Midwife</option>
                                                         <option value="hilot">"Hilot"</option>
                                                     </select>
                                                     via
                                                     <select class="form-control-select" name="natal_via">
+                                                        <option value="">Select Option</option>
                                                         <option value="nsd">NSD</option>
                                                         <option value="cs">CS</option>
                                                     </select>
@@ -705,6 +717,7 @@
                                             <div class="col-md-12">
                                                 <span>
                                                     <select class="form-control-select" name="natal_term">
+                                                        <option value="">Select Option</option>
                                                         <option value="preterm">Preterm</option>
                                                         <option value="fullterm">Full Term</option>
                                                         <option value="postterm">Post Term</option>
@@ -712,6 +725,7 @@
                                                     , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01"> kg,
                                                     BR <input type="text" name="natal_br" style="width: 20%">, with Good Cry
                                                     <select class="form-control-select" name="natal_withGoodCry">
+                                                        <option value="">Select Option</option>
                                                         <option value="Yes">Yes</option>
                                                         <option value="No">No</option>
                                                     </select><br>
@@ -728,12 +742,10 @@
                                             <div class="col-md-12">
                                                 <i>Feeding History</i><br>&emsp;
                                                 <span>
-                                                    <input type="hidden" name="postnatal_bfeed" value="No">
                                                     <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed_pregnant" name="postnatal_bfeed" value="Yes"> Breastfed
                                                     <span id="breastfed_pregnant">
                                                         x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0"> mos.
-                                                    </span>
-                                                    <input type="hidden" name="postnatal_ffeed" value="No">
+                                                    </span>       
                                                     <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed_pregnant" type="checkbox" name="postnatal_ffeed" value="Yes"> Formula Fed,
                                                     <span id="formula_fed_pregnant">
                                                         (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify">
@@ -968,9 +980,9 @@
                                     </div><br>
 
                                     <b>PRENATAL HISTORY</b><br>
-                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"></textarea><br><br>
+                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
                                     <div class="table-responsive" style="overflow-x: auto">
-                                        <table class="table table-bordered" id="prenatal_table_pregnant">
+                                        <table class="table table-bordered" id="prenatal_table">
                                             <thead>
                                                 <tr style="font-size: 10pt;">
                                                     <th class="text-center" style="width:50%;">Pregnancy Order</th>
@@ -985,20 +997,20 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                               
                                                 <tr style="font-size: 10pt">
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_order[]"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
                                                     <td>
                                                         <select class="form-control select" name="pregnancy_history_year[]">
-                                                            <?php
-                                                            foreach (range(date('Y'), 1950) as $year) {
-                                                                echo "<option>" . $year . "</option>";
-                                                            }
-                                                            ?>
+                                                            <option value="">Choose...</option>
+                                                            @foreach(range(date('Y'), 1950) as $year)
+                                                            <option value="{{ $year }}">{{ $year }}</option>
+                                                            @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" id="gestation_pregnant" type="text" name="pregnancy_history_gestation[]"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>
+                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{$pregnancy->pregnancy_gestation_completed}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{$pregnancy->pregnancy_outcome}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
                                                     <td>
                                                         <select class="select form-control" name="prenatal_history_sex[]">
                                                             <option value="">Choose...</option>
@@ -1006,13 +1018,14 @@
                                                             <option value="F">Female</option>
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]"></td>
-                                                    <td><input class="form-control" type="text" maxlength="38" name="pregnancy_history_complications[]"></td>
+                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
                                                 </tr>
+                                              
                                             </tbody>
                                         </table>
-                                        <button class="btn-sm btn-success" id="prenatal_add_row_pregnant" type="button">
+                                        <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
                                             <i class="fa fa-plus"> Add Row</i>
                                         </button><br><br>
                                     </div>
@@ -1047,6 +1060,7 @@
                                                 <label for="smoke_quit">Quit</label>
                                                 <span id="smoking_quit_year_pregnant"> since
                                                     <select class="form-control select" name="smoking_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -1078,6 +1092,7 @@
                                                 <label for="alcohol_quit_radio">Quit</label>
                                                 <span id="alcohol_quit_year_pregnant"> since
                                                     <select class="form-control select" name="alcohol_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -1112,6 +1127,7 @@
                                                 <label for="drugs_quit_radio">Quit</label>
                                                 <span id="drugs_quit_year_pregnant"> since
                                                     <select class="form-control select" name="drugs_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -2429,7 +2445,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" id="icd-modal">
+<div class="modal fade" id="icd-modal-pregnant_revised">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -2439,20 +2455,22 @@
             </div>
             <div class="modal-body">
                 <div class="input-group input-group-lg">
-                    <input type="text" id="icd10_keyword" class="form-control">
+                    <input type="text" id="icd10_keyword_pregnant_revised" class="form-control">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-info btn-flat" onclick="searchICD10()">Find</button>
+                        <button type="button" class="btn btn-info btn-flat" onclick="searchICD10PregnantRevised()">Find</button>
                     </span>
                 </div><br>
                 <div class="icd_body"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="othersDiagnosis()"> Other Diagnosis</button>
-                <button type="button" class="btn btn-success" onclick="getAllCheckBox()"><i class="fa fa-save"></i> Save selected check</button>
+                <button type="button" class="btn btn-warning" onclick="othersDiagnosisPregnant()"> Other Diagnosis</button>
+                <button type="button" class="btn btn-success" onclick="getAllCheckBoxPregnant()"><i class="fa fa-save"></i> Save selected check</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <script>
@@ -2466,6 +2484,50 @@
     //        $('#pedia_show').show();
     //    if($('.patient_sex').val() === "Female")
     //        $('#menarche_show').show();
+    $("#clear_icd_pregnant_revised").hide();
+    $("#clear_notes_pregnant_revised").hide();
+    $("#clear_other_diag_pregnant_revised").hide();
+
+    function clearICDPregnantRevised() {
+        $("#icd_selected_pregnant_revised").html("");
+        $("#clear_icd_pregnant_revised").hide();
+    }
+
+    function clearNotesDiagnosisPregnantRevised() {
+        $("#add_notes_diagnosis_pregnant_revised").html("");
+        $("#clear_notes_pregnant_revised").hide();
+    }
+
+    function clearOtherDiagnosisPregnantRevised() {
+        $("#others_diagnosis_pregnant_revised").html("");
+        $("#clear_other_diag_pregnant_revised").hide();
+    }
+
+    function searchICD10PregnantRevised() {
+        $(".icd_body").html(loading);
+        var url = "<?php echo asset('icd/search'); ?>";
+        var json = {
+            "_token" : "<?php echo csrf_token(); ?>",
+            "icd_keyword" : $("#icd10_keyword_pregnant_revised").val()
+        };
+        $.post(url,json,function(result){
+            setTimeout(function(){
+                $(".icd_body").html(result);
+            },500);
+        });
+    }
+
+    function addNotesDiagnosisPregnantRevised() {
+        $("#add_notes_diagnosis_pregnant_revised").html(loading);
+        $("#clear_notes_pregnant_revised").show();
+        setTimeout(function(){
+            $("#add_notes_diagnosis_pregnant_revised").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
+                '                                <br />\n' +
+                '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+        },500);
+    }
+
+
 
     $(".collapse").on('show.bs.collapse', function() {
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");
@@ -2481,14 +2543,15 @@
     ?>
     var select_year = "<?php echo $select_year; ?>";
 
-    $('#prenatal_add_row_pregnant').on('click', function() {
+    $('#prenatal_add_row').on('click', function() {
         var rowCount = $('#prenatal_table tr').length;
         $('#prenatal_table').append('<tr style="font-size: 11pt">\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_order[]"></td>\n' +
             '<td><select class="form-control select" name="pregnancy_history_year[]">\n' +
+            '<option value="">Choose...</option>\n' +
             select_year +
             '</select></td>\n' +
-            '<td><input class="form-control" id="gestation_id" type="text" name="pregnancy_history_gestation[]"></td>\n' +
+            '<td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>\n' +
             '<td width="150%">\n' +

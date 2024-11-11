@@ -338,6 +338,29 @@
                                 <div class="collapse " id="collapse_diagnosis" style="width: 100%">
                                     <b>Diagnosis/Impression: </b>
                                     <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
+                                    <br><br>
+                                        <a data-toggle="modal" data-target="#icd-modal_revised" type="button" class="btn btn-sm btn-success" onclick="searchICD10Revised()">
+                                            <i class="fa fa-medkit"></i> Add ICD-10
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosisRevised()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                                        <div class="row" style="padding-top: 10px;">
+                                        <div class="col-md-12">
+                                            <button type="button" id="clear_icd_revised" class="btn btn-xs btn-danger" onclick="clearICDRevised()"> Clear ICD-10</button><br>
+                                            <div class="text-success" id="icd_selected_revised" style="padding-top: 5px"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 10px;">
+                                        <div class="col-md-12">
+                                            <button type="button" id="clear_notes_revised" class="btn btn-xs btn-info" onclick="clearNotesDiagnosisRevised()"> Clear notes diagnosis</button>
+                                            <div id="add_notes_diagnosis_revised" style="padding-top: 5px"></div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 10px">
+                                    <div class="col-md-12">
+                                        <button type="button" id="clear_other_diag_revised" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosisRevised()"> Clear other diagnosis</button>
+                                        <div id="others_diagnosis_revised" style="padding-top: 5px"></div>
+                                        </div>
+                                    </div><br>
                                 </div>
                             </div>
                         </div>
@@ -370,6 +393,7 @@
                                                 <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Hypertension
                                                 <span id="comor_hyper"> since
                                                     <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
+                                                        <option value="">Select</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year) {
                                                             echo "<option>$year</option>\n";
@@ -383,6 +407,7 @@
                                                 <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Diabetes Mellitus
                                                 <span id="comor_diab"> since
                                                     <select class="form-control select" name="diab_year" style="font-size: 10pt;">
+                                                        <option value="">Select</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year) {
                                                             echo "<option>$year</option>\n";
@@ -396,6 +421,7 @@
                                                 <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Bronchial Asthma
                                                 <span id="comor_asthma"> since
                                                     <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
+                                                        <option value="">Select</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year) {
                                                             echo "<option>$year</option>\n";
@@ -494,6 +520,7 @@
                                                 <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Hypertension: </span>
                                                 <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
+                                                    <option value="">Select</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -505,6 +532,7 @@
                                                 <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Diabetes Mellitus: </span>
                                                 <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
+                                                    <option value="">Select</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -516,6 +544,7 @@
                                                 <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Bronchial Asthma: </span>
                                                 <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
+                                                    <option value="">Select</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -527,6 +556,7 @@
                                                 <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer: </span>
                                                 <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
+                                                    <option value="">Select</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -540,6 +570,7 @@
                                                 <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Kidney: </span>
                                                 <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
+                                                    <option value="">Select</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -551,6 +582,7 @@
                                                 <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease: </span>
                                                 <select class="form-control-select" id="heredo_thyroid" name="heredo_thyroid_side">
+                                                    <option value="">Select</option>
                                                     <option value="Maternal">Maternal</option>
                                                     <option value="Paternal">Paternal</option>
                                                     <option value="Both">Both</option>
@@ -867,7 +899,7 @@
                                                 </tr>
                                             </tbody>
                                         </table>
-                                        <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
+                                        <button class="btn-sm btn-success" id="prenatal_add_row_normal" type="button">
                                             <i class="fa fa-plus"> Add Row</i>
                                         </button><br><br>
                                     </div>
@@ -933,6 +965,7 @@
                                                 <label for="alcohol_quit_radio">Quit</label>
                                                 <span id="alcohol_quit_year"> since
                                                     <select class="form-control select" name="alcohol_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -2284,7 +2317,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<div class="modal fade" id="icd-modal">
+<div class="modal fade" id="icd-modal_revised">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -2294,20 +2327,22 @@
             </div>
             <div class="modal-body">
                 <div class="input-group input-group-lg">
-                    <input type="text" id="icd10_keyword" class="form-control">
+                    <input type="text" id="icd10_keyword_revised" class="form-control">
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-info btn-flat" onclick="searchICD10()">Find</button>
+                        <button type="button" class="btn btn-info btn-flat" onclick="searchICD10Revised()">Find</button>
                     </span>
                 </div><br>
                 <div class="icd_body"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="othersDiagnosis()"> Other Diagnosis</button>
-                <button type="button" class="btn btn-success" onclick="getAllCheckBox()"><i class="fa fa-save"></i> Save selected check</button>
+                <button type="button" class="btn btn-warning" onclick="othersDiagnosisRevised()"> Other Diagnosis</button>
+                <button type="button" class="btn btn-success" onclick="getAllCheckBoxRevised()"><i class="fa fa-save"></i> Save selected check</button>
             </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 
 
@@ -2323,6 +2358,91 @@
     //    if($('.patient_sex').val() === "Female")
     //        $('#menarche_show').show();
 
+    $('#clear_icd_revised, #clear_notes_revised, #clear_other_diag_revised, #icd_selected_revised').hide();
+    $("#sbmitBtn").on('click', function(e) {
+        if (!($("#icd").val()) && !($("#other_diag").val())) {
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 / Other diagnosis!"
+            });
+            return false;
+        }
+    });
+
+    function clearICDRevised() {
+        $("#icd_selected_revised").html("");
+        $("#clear_icd_revised, #icd_selected_revised").hide();
+    }
+
+    function clearNotesDiagnosisRevised() {
+        $("#add_notes_diagnosis_revised").html("");
+        $("#clear_notes_revised").hide();
+    }
+    function addNotesDiagnosisRevised() {
+        $("#add_notes_diagnosis_revised").html(loading);
+        $("#clear_notes_revised").show();
+        setTimeout(function() {
+            $("#add_notes_diagnosis_revised").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
+                '                                <br />\n' +
+                '                                <textarea class="form-control add_notes_diagnosis_revised" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+        }, 500);
+    }
+
+    function getAllCheckBoxRevised() {
+        $('#icd-modal_revised').modal('toggle');
+        $('#clear_icd_revised, #icd_selected_revised').show();
+        var values = [];
+        $('input[name="icd_checkbox[]"]:checked').each(function() {
+            values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
+            var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
+            var id = $(this).val();
+            if (this.checked) {
+                $("#icd_selected_revised").append('=> ' + icd_description + ' ' + '<br><input id="icd" type="hidden" name="icd_ids[]" value="' + id + '">');
+                console.log("icd id: " + id);
+            }
+            clearOtherDiagnosisRevised();
+        });
+
+        push_notification_diagnosis_ccmc = values.join(","); //diagnosis for CCMD for their push notification
+        console.log(values);
+    }
+
+    function othersDiagnosisRevised() {
+        $('#icd-modal_revised').modal('hide');
+        $("#others_diagnosis_revised").html(loading);
+        $("#clear_other_diag_revised").show();
+        setTimeout(function() {
+            $("#others_diagnosis_revised").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
+                '                                <br />\n' +
+                '                                <textarea id="other_diag" class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+        }, 500);
+    }
+
+    function othersDiagnosisRevised() {
+        $('#icd-modal_revised').modal('hide');
+        $("#others_diagnosis_revised").html(loading);
+        $("#clear_other_diag_revised").show();
+        setTimeout(function() {
+            $("#others_diagnosis_revised").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
+                '                                <br />\n' +
+                '                                <textarea id="other_diag" class="form-control reason_referral" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+        }, 500);
+    }
+
+    function searchICD10Revised() {
+        $(".icd_body").html(loading);
+        var url = "<?php echo asset('icd/search'); ?>";
+        var json = {
+            "_token": "<?php echo csrf_token(); ?>",
+            "icd_keyword": $("#icd10_keyword_revised").val()
+        };
+        $.post(url, json, function(result) {
+            setTimeout(function() {
+                $(".icd_body").html(result);
+            }, 500);
+        });
+    }
+  
+
     $(".collapse").on('show.bs.collapse', function() {
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");
     }).on('hide.bs.collapse', function() {
@@ -2337,7 +2457,7 @@
     ?>
     var select_year = "<?php echo $select_year; ?>";
 
-    $('#prenatal_add_row').on('click', function() {
+    $('#prenatal_add_row_normal').on('click', function() {
         var rowCount = $('#prenatal_table tr').length;
         $('#prenatal_table').append('<tr style="font-size: 11pt">\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_order[]"></td>\n' +

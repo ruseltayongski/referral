@@ -222,7 +222,7 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row">
                             <div class="col-md-4">
                             <small ><b>REFERRED TO: </b></small><br>
-                                <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
+                                <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
                                 <select name="referred_to" class="select2 edit_facility_pregnant form-control" require>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
@@ -515,6 +515,7 @@ $facilities = \App\Facility::select('id','name')
                                                 Hypertension
                                                 <span id="comor_hyper"> since
                                                     <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($past_medical_history->commordities_hyper_year) ? 'selected' : '') . ">$year</option>";
@@ -528,6 +529,7 @@ $facilities = \App\Facility::select('id','name')
                                                 Diabetes Mellitus
                                                 <span id="comor_diab"> since
                                                     <select class="form-control select" name="diab_year" style="font-size: 10pt;">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($past_medical_history->commordities_diabetes_year) ? 'selected' : '') . ">$year</option>";
@@ -541,6 +543,7 @@ $facilities = \App\Facility::select('id','name')
                                                 Bronchial Asthma
                                                 <span id="comor_asthma"> since
                                                     <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($past_medical_history->commordities_asthma_year) ? 'selected' : '') . ">$year</option>";
@@ -639,6 +642,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Hypertension'); ?>>
                                                 <span>Hypertension:</span>
                                                 <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal" <?php echo ($past_medical_history->heredo_hyper_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
                                                     <option value="Paternal" <?php echo ($past_medical_history->heredo_hyper_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
                                                     <option value="Both" <?php echo ($past_medical_history->heredo_hyper_side === 'Both') ? 'selected' : ''; ?>>Both</option>
@@ -649,6 +653,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Diabetes'); ?>>
                                                 <span>Diabetes Mellitus:</span>
                                                 <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal" <?php echo ($past_medical_history->heredo_diab_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
                                                     <option value="Paternal" <?php echo ($past_medical_history->heredo_diab_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
                                                     <option value="Both" <?php echo ($past_medical_history->heredo_diab_side === 'Both') ? 'selected' : ''; ?>>Both</option>
@@ -659,6 +664,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Asthma'); ?>>
                                                 <span>Bronchial Asthma:</span>
                                                 <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal" <?php echo ($past_medical_history->heredo_asthma_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
                                                     <option value="Paternal" <?php echo ($past_medical_history->heredo_asthma_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
                                                     <option value="Both" <?php echo ($past_medical_history->heredo_asthma_side === 'Both') ? 'selected' : ''; ?>>Both</option>
@@ -669,6 +675,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Cancer'); ?>>
                                                 <span>Cancer:</span>
                                                 <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal" <?php echo ($past_medical_history->heredo_cancer_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
                                                     <option value="Paternal" <?php echo ($past_medical_history->heredo_cancer_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
                                                     <option value="Both" <?php echo ($past_medical_history->heredo_cancer_side === 'Both') ? 'selected' : ''; ?>>Both</option>
@@ -681,6 +688,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Kidney Disease'); ?>>
                                                 <span>Kidney:</span>
                                                 <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
                                                     <option value="Paternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
                                                     <option value="Both" <?php echo ($past_medical_history->heredo_kidney_side === 'Both') ? 'selected' : ''; ?>>Both</option>
@@ -691,6 +699,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Thyroid Disease'); ?>>
                                                 <span>Thyroid Disease:</span>
                                                 <select class="form-control-select" id="heredo_thyroid" name="heredo_thyroid_side">
+                                                    <option value="">Select Option</option>
                                                     <option value="Maternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
                                                     <option value="Paternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
                                                     <option value="Both" <?php echo ($past_medical_history->heredo_kidney_side === 'Both') ? 'selected' : ''; ?>>Both</option>
@@ -743,6 +752,7 @@ $facilities = \App\Facility::select('id','name')
                                             <div class="col-md-12">
                                                 <span>Born at
                                                     <select class="form-control-select" name="natal_bornat">
+                                                        <option value="">Select Option</option>
                                                         <option value="home" <?php echo ($pediatric_history->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
                                                         <option value="clinic" <?php echo ($pediatric_history->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
                                                         <option value="hospital" <?php echo ($pediatric_history->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
@@ -750,12 +760,14 @@ $facilities = \App\Facility::select('id','name')
                                                     <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where" value="{{ $data->natal_born_address }}">
                                                     by
                                                     <select class="form-control-select" name="natal_by">
+                                                        <option value="">Select Option</option>
                                                         <option value="md" <?php echo ($pediatric_history->natal_by == 'md') ? 'selected' : ''; ?>>MD</option>
                                                         <option value="midwife" <?php echo ($pediatric_history->natal_by == 'midwife') ? 'selected' : ''; ?>>Midwife</option>
                                                         <option value="hilot" <?php echo ($pediatric_history->natal_by == 'hilot') ? 'selected' : ''; ?>>Hilot</option>
                                                     </select>
                                                     via
                                                     <select class="form-control-select" name="natal_via">
+                                                        <option value="">Select Option</option>
                                                         <option value="nsd" <?php echo ($pediatric_history->natal_via == 'nsd') ? 'selected' : ''; ?>>NSD</option>
                                                         <option value="cs" <?php echo ($pediatric_history->natal_via == 'cs') ? 'selected' : ''; ?>>CS</option>
                                                     </select>
@@ -768,6 +780,7 @@ $facilities = \App\Facility::select('id','name')
                                             <div class="col-md-12">
                                                 <span>
                                                     <select class="form-control-select" name="natal_term">
+                                                        <option value="">Select Option</option>
                                                         <option value="preterm" <?php echo ($pediatric_history->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
                                                         <option value="fullterm" <?php echo ($pediatric_history->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
                                                         <option value="postterm" <?php echo ($pediatric_history->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
@@ -775,6 +788,7 @@ $facilities = \App\Facility::select('id','name')
                                                     , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01" value="{{$data->natal_weight}}"> kg,
                                                     BR <input type="text" name="natal_br" style="width: 20%" value="{{$data->natal_br}}">, with Good Cry
                                                     <select class="form-control-select" name="natal_withGoodCry">
+                                                        <option value="">Select Option</option>
                                                         <option value="1" <?php echo ($pediatric_history->natal_with_good_cry == 1) ? 'selected' : ''; ?>>Yes</option>
                                                         <option value="0" <?php echo ($pediatric_history->natal_with_good_cry == 0) ? 'selected' : ''; ?>>No</option>
                                                     </select><br>
@@ -799,7 +813,6 @@ $facilities = \App\Facility::select('id','name')
                                             <div class="col-md-12">
                                                 <i>Feeding History</i><br>&emsp;
                                                 <span>
-                                                    <input type="hidden" name="postnatal_bfeed" value="No">
                                                     <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bfeed', 'Yes'); ?>> Breastfed
                                                     <span id="breastfed">
                                                         x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
@@ -1117,6 +1130,7 @@ $facilities = \App\Facility::select('id','name')
                                                     <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
                                                     <td>
                                                         <select class="form-control select" name="pregnancy_history_year[]">
+                                                            <option value="">Choose...</option>
                                                             @foreach(range(date('Y'), 1950) as $year)
                                                             <option value="{{ $year }}" {{ $year == $pregnancy->pregnancy_year ? 'selected' : '' }}>{{ $year }}</option>
                                                             @endforeach
@@ -1127,6 +1141,7 @@ $facilities = \App\Facility::select('id','name')
                                                     <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
                                                     <td>
                                                         <select class="select form-control" name="prenatal_history_sex[]">
+                                                            <option value="">Choose...</option>
                                                             <option value="M" {{ $pregnancy->pregnancy_sex == 'M' ? 'selected' : '' }}>Male</option>
                                                             <option value="F" {{ $pregnancy->pregnancy_sex == 'F' ? 'selected' : '' }}>Female</option>
                                                         </select>
@@ -1173,6 +1188,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <label for="smoke_quit">Quit</label>
                                                 <span id="smoking_quit_year"> since
                                                     <select class="form-control select" name="smoking_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($personal_and_social_history->smoking_quit_year) ? 'selected' : '') . ">$year</option>";
@@ -1204,6 +1220,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <label for="alcohol_quit_radio">Quit</label>
                                                 <span id="alcohol_quit_year"> since
                                                     <select class="form-control select" name="alcohol_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($personal_and_social_history->alcohol_drinking_quit_year) ? 'selected' : '') . ">$year</option>";
@@ -1238,6 +1255,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <label for="drugs_quit_radio">Quit</label>
                                                 <span id="drugs_quit_year"> since
                                                     <select class="form-control select" name="drugs_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option " . ($year == htmlspecialchars($personal_and_social_history->illicit_drugs_quit_year) ? 'selected' : '') . ">$year</option>";
@@ -2146,7 +2164,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                Specify Diets: <textarea class="form-control" name="specify_diets" style="resize: none;width: 100%;" rows="3"><?php echo htmlspecialchars($nutritional_status->specify_diets); ?></textarea><br><br>
+                                                Specify Diets: <textarea class="form-control" name="diet" style="resize: none;width: 100%;" rows="3"><?php echo htmlspecialchars($nutritional_status->specify_diets); ?></textarea><br><br>
                                             </div>
                                         </div>
                                     </div>
@@ -2527,34 +2545,40 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <hr />
+                      
                         <div class="form-fotter pull-right">
-                        
-                            <button class="btn btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form['pregnant']->code}}"><i class="fa fa-times"></i> Close</button>
-                            {{--@if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form->department_id === 5 && $user->id == $form->md_referring_id)
-                                <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
-                                <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
-                            @endif--}}
-                            @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
-                                <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
+                            @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form['pregnant']->md_referring_id)
+                            <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                             @endif
-                            @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
-                                <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
+                            @if($referral_status == 'referring')
+                            <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'pregnant' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
+                            @endif
+                        </div>
+                        <div class="clearfix"></div> 
+                                          
+                </div>{{--/.form-group--}}
+        </div>
+    </form>
+
+                        <div class="form-fotter pull-right">
+                            @if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form['pregnant']->department_id === 5 && $user->id == $form['pregnant']->md_referring_id)
+                                <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form['pregnant']->tracking_id }}','{{ $form['pregnant']->code }}','{{ $form['pregnant']->action_md }}','{{ $form['pregnant']->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
+                                <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
+                            @endif
+                            @if($cur_status == 'cancelled' && $user->id == $form['pregnant']->md_referring_id)
+                            <button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
                             @endif
                             @if($referral_status == 'referred' || $referral_status == 'redirected')
-                                @if(!$form->telemedicine)
-                                    <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue</button>
-                                    <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
-                                    <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
+                                @if(!$form['pregnant']->getAttribute('telemedicine'))
+                                    <button class="btn btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue </button>
+                                    <button class="btn btn-info btn_call_request btn-flat btn-call button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request</button>
+                                    <button class="btn btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
                                 @endif
-                                <button class="btn-sm btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
-                            @endif
-                            <a href="{{ url('generate-pdf').'/'.$patient_id.'/'.$id }}" target="_blank" class="btn-refer-pregnant btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
-
+                            <button class="btn btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
+                            <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'pregnant' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
+                            @endif 
                         </div>
-                        <div class="clearfix"></div>
-                    </div>{{--/.form-group--}}
-            </form>
+                        <div class="clearfix"></div> 
 
 
 <div class="modal fade" role="dialog" id="patient_modal">
@@ -2635,6 +2659,7 @@ $facilities = \App\Facility::select('id','name')
         $('#prenatal_table').append('<tr style="font-size: 11pt">\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_order[]"></td>\n' +
             '<td><select class="form-control select" name="pregnancy_history_year[]">\n' +
+            '<option value="">Choose...</option>\n' +
             select_year +
             '</select></td>\n' +
             '<td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>\n' +
