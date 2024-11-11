@@ -2199,6 +2199,14 @@ class ApiController extends Controller
     // public function pushNotificationCCMC($push)
     public static function notifierPushNotification($push)
     {
+
+        // try {
+        //     \Log::info('Inside notifierPushNotification with data:', $push);
+        //     // Notification logic
+        // } catch (\Exception $e) {
+        //     \Log::error('Error in notifierPushNotification: '.$e->getMessage());
+        // }
+
         if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
              $topic = "referrals_ER";
          } else {
@@ -2219,12 +2227,11 @@ class ApiController extends Controller
             //dynamic data
             $post_params  = [
                 "topic" => $topic,
-                "hospital_referrer" => $push['hospital_referrer'],
+                "hospital_referrer" => $push['referring_hospital'],
                 "patient" => $push['patient'],
                 "age"=> $push['age'],
                 "sex"=> $push['sex']
             ];
-           
             $curl = curl_init();
 
             curl_setopt_array($curl, array(

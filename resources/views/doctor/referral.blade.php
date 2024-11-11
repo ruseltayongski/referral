@@ -103,6 +103,7 @@ $user = Session::get('auth');
             @include('sidebar.filter_referral')
             @include('sidebar.quick')
         </div>
+ 
         <div class="col-md-9">
             <div class="jim-content">
                 @if(count($data) > 0)
@@ -119,7 +120,7 @@ $user = Session::get('auth');
                     </div>
                 @endif
                 <h3 class="page-header">
-                    Incoming Patients
+                   {{$title}} <!-- Incoming Patients  {{$option}} -->
                 </h3>
                 @if(count($data) > 0)
                     <div class="row">
@@ -241,7 +242,7 @@ $user = Session::get('auth');
                             @endforeach
                         </ul>
                         <div class="text-center">
-                            {{ $data->links() }}
+                                {{ $data->appends(['filterRef' => request('filterRef')])->links() }}
                         </div>
                     </div>
                 @else

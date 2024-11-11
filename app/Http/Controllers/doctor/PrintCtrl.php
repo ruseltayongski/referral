@@ -155,6 +155,7 @@ class PrintCtrl extends Controller
     }
 
     public function printPrescription($tracking_id,$activity_id,Request $request) {
+
         if($request->prescription_new) {
             $code = Activity::find($activity_id)->code;
             $activity_id = Activity::where("code",$code)
@@ -342,6 +343,8 @@ class PrintCtrl extends Controller
     }
 
     public function printLabResult($activity_id) {
+        // $facility = Facility::select('id','name')->get();
+
         $activity = Activity::with([
             'patient',
             'referredTo',
@@ -393,7 +396,6 @@ class PrintCtrl extends Controller
 
         $imageWidth = 20;
         $pageWidth = $pdf->GetPageWidth();
-
         $pdf->SetFont('Arial','B',15);
         $pdf->Cell(0,20,"LABORATORY REQUEST",0,"","C");
         $pdf->Ln();
@@ -419,26 +421,63 @@ class PrintCtrl extends Controller
             $patient_age .= $patient_age_month['days']." day old";
         else
             $patient_age .= $patient_age_month['days']." days old"; 
+
+
+        //===============================================================================
+        $formattedDate = date("m/d/Y", strtotime($patient->prescription_date));
+        $pdf->SetFillColor(222, 250, 238);  
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Name: ", 0, 0, '', true); 
+
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(130, 8, "$patient->fname $patient->lname", 0, 0, 'L', true);
+        $pdf->Cell(2, 8, '', 0, 0);
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Date: ", 0, 0, '', true);
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(0, 8, $formattedDate, 0, 1, '', true);
+        $pdf->Ln(2); 
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Age: ", 0, 0, '', true); 
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(130, 8, "{$patient_age}", 0, 0, 'L', true); 
+        $pdf->Cell(2, 8, '', 0, 0);
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(13, 8, "Sex: ", 0, 0, '', true);   
+        $pdf->SetFont('Arial', 'I', 10);
+        $pdf->Cell(0, 8, "{$patient->sex}", 0, 1, '', true); 
+        $pdf->Ln(2);
+
+        $pdf->SetFont('Arial', 'B', 10); 
+        $pdf->Cell(19, 8, "Address: ", 0, 0, '', true); 
+        $pdf->SetFont('Arial', 'I', 10); 
+        $pdf->Cell(0, 8, iconv('UTF-8', 'windows-1252', "{$patient->muncity}"), 0, 1, '', true);
+        $pdf->Ln(10);
+
+        //===============================================================================
         
-        $pdf->MultiCell($x/2, 7, self::black($pdf,"Name: ").self::orange($pdf,$patient->fname.' '.$patient->lname,"Name: "), 0, 'L');
-        $y = $pdf->getY();
-        $pdf->SetXY($x/2+40, $y-7);
-        $pdf->MultiCell($x/2, 7, self::black($pdf,"Date: ").self::orange($pdf,date("m/d/Y",strtotime($activity->created_at)),"Date: "), 0);
-        $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"Age: "), 0, 'L');
-        $y = $pdf->getY();
-        $pdf->SetXY($x/2+40, $y-7);
-        $pdf->MultiCell($x/2, 7, self::black($pdf,"Sex: ").self::orange($pdf,$patient->sex,"Sex: "), 0);
-        $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,'Day-as, Cebu City, Cebu',"Address:"), 0, 'L');
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Name: ").self::orange($pdf,$patient->fname.' '.$patient->lname,"Name: "), 0, 'L');
+        // $y = $pdf->getY();
+        // $pdf->SetXY($x/2+40, $y-7);
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Date: ").self::orange($pdf,date("m/d/Y",strtotime($activity->created_at)),"Date: "), 0);
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Age: ").self::orange($pdf,$patient_age,"Age: "), 0, 'L');
+        // $y = $pdf->getY();
+        // $pdf->SetXY($x/2+40, $y-7);
+        // $pdf->MultiCell($x/2, 7, self::black($pdf,"Sex: ").self::orange($pdf,$patient->sex,"Sex: "), 0);
+        // $pdf->MultiCell(0, 7, self::black($pdf,"Address: ").self::orange($pdf,'Day-as, Cebu City, Cebu',"Address:"), 0, 'L');
 
 
-        $prescriptionSetY = 140;
-        $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
-        $pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
-        $pdf->setY($prescriptionSetY);
+        //$prescriptionSetY = 140;
+        //$rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx.png');
+        //$pdf->Image($rxPath, 10, $prescriptionSetY, 30, 0);
+        //$pdf->setY($prescriptionSetY);
 
         $pdf->SetTextColor(102,56,0);
         $pdf->SetFont('Arial','I',10);
-        $leftMargin = 50;
+        $leftMargin = 20;
         $pdf->SetLeftMargin($leftMargin);  
 
         // Initialize a counter to keep track of prescriptions

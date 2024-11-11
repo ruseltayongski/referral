@@ -13,7 +13,7 @@ $multi_faci = Session::get('multiple_login');
 </div>
 <input type="hidden" id="reco_count_val" value="{{ $reco_count }}">
 <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
-    <ul class="nav navbar-nav">
+  <ul class="nav navbar-nav">   <!-- id="navbar-main" -->
         @if(!$multi_faci && ($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor' || $user->level=='dmo'))
             <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
             @if($user->level != 'mayor' && $user->level != 'dmo')
@@ -40,12 +40,13 @@ $multi_faci = Session::get('multiple_login');
             <!--
                 <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory </a></li>
              -->
+                
             @if($user->level != 'mayor' && $user->level != 'dmo')
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-wheelchair"></i> Referral <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('doctor/referral') }}"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">{{ $count }}</span> New</span></a></li>
-                    <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-user"></i>&nbsp; Referred Patients</a></li>
+                    <li><a href="{{ url('doctor/referral') }}?filterRef=0"><i class="fa fa-ambulance"></i> Incoming &nbsp;&nbsp; <span class="badge"><span class="count_referral">{{ $count }}</span> New</span></a></li>
+                    <li><a href="{{ url('doctor/referred') }}?filterRef=0"><i class="fa fa-user"></i>&nbsp; Referred Patients</a></li>
                     <li class="divider"></li>
                     <li><a href="{{ url('doctor/duplicate') }}"><i class="fa fa-files-o"></i> Duplicate Referrals</a></li>
                     <!--
@@ -53,6 +54,35 @@ $multi_faci = Session::get('multiple_login');
                     <li><a href="{{ url('doctor/report/incoming') }}"><i class="fa fa-sign-in"></i> Incoming Referral Report</a></li>
                     <li><a href="{{ url('doctor/report/outgoing') }}"><i class="fa fa-sign-out"></i> Outgoing Referral Report</a></li>
                     -->
+                </ul>
+            </li>
+
+            <!-- Telemed Dropdown -->
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-video-camera"></i> Telemed 
+                    <span class="badge" style="font-size: 8pt;">
+                        <span class="count_referral_telemed">{{ $countTelemed }}</span> New
+                    </span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="{{ url('doctor/referral') }}?filterRef=1">
+                            <i class="fa fa-ambulance incoming_nav"></i> Incoming &nbsp;&nbsp; 
+                            <span class="badge">
+                                <span class="count_referral_telemed">{{ $countTelemed }}</span> New
+                            </span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ url('doctor/referred') }}?filterRef=1">
+                            <i class="fa fa-ambulance outgoing_nav"></i> Outgoing &nbsp;&nbsp; 
+                            <!-- <span class="badge">
+                                <span class="count_referral_telemed">{{ $countTelemed }}</span> New
+                            </span> -->
+                        </a>
+                    </li>
                 </ul>
             </li>
             @endif
@@ -194,36 +224,53 @@ $multi_faci = Session::get('multiple_login');
             <li><a href="{{ url('monitoring') }}"><i class="fa fa-clock-o"></i> NA within 30 minutes </a></li>
             <li><a href="{{ url('issue/concern') }}"><i class="fa fa fa-exclamation-triangle"></i> IAC </a></li>
             {{--<li><a href="{{ url('chat') }}"><i class="fa fa-wechat"></i> Chat <span class="badge bg-green"><span>{{ $count_chat }}</span> New</span></a></li>--}}
-            <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></li>
-        @endif
-        @if(!$multi_faci)
-        <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
-        @endif
         <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                More <span class="caret"></span>
+            </a>
             <ul class="dropdown-menu">
-                @if($user->level == 'opcen')
-                    <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As </a></li>
-                @endif
-                <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
-                <li><a href="#editProfileModal" data-toggle="modal"><i class="fa fa-pencil"></i> Edit Profile</a></li>
-                <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li>
-                @if($user->level=='doctor' || $user->level=='midwife')
-                    <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i> Change Login Status</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-users"></i> Switch User</a></li>
-                @else
-                    <li class="divider"></li>
-                @endif
-                <li>
-                    <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+                <li class="dropdown-submenu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-wechat"></i> Reco Messages
+                    </a>
+                    <ul class="dropdown-menu"><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></ul>
                 </li>
-                @if(Session::get('admin'))
-                    <?php
-                    $check_login_as = \App\User::find($user->id);
-                    ?>
-                    <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> <?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : 'Back as Agent'; ?></a></li>
+                <li class="dropdown-submenu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-user-md"></i> Who's Online
+                    </a>
                 @endif
+                @if(!$multi_faci)
+                    <ul class="dropdown-menu"><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></ul>
+                </li>
+                @endif
+                <li class="dropdown-submenu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        @if($user->level == 'opcen')
+                            <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As </a></li>
+                        @endif
+                        <li><a href="#setLogoutTime" data-toggle="modal" onclick="openLogoutTime();"><i class="fa fa-clock-o"></i> Set Time to Logout</a></li>
+                        <li><a href="#editProfileModal" data-toggle="modal"><i class="fa fa-pencil"></i> Edit Profile</a></li>
+                        <li><a href="#resetPasswordModal" data-toggle="modal"><i class="fa fa-key"></i> Change Password</a></li>
+                        @if($user->level=='doctor' || $user->level=='midwife')
+                            <li><a href="#dutyModal" data-toggle="modal"><i class="fa fa-user-md"></i> Change Login Status</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#loginModal" data-toggle="modal"><i class="fa fa-users"></i> Switch User</a></li>
+                        @else
+                            <li class="divider"></li>
+                        @endif
+                        <li>
+                            <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+                        </li>
+                        @if(Session::get('admin'))
+                            <?php
+                            $check_login_as = \App\User::find($user->id);
+                            ?>
+                            <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> <?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : 'Back as Agent'; ?></a></li>
+                        @endif
+                    </ul>
+                </li>
             </ul>
         </li>
     </ul>

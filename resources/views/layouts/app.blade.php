@@ -97,6 +97,14 @@
             font-size: 12pt;
             color: #e08e0b;;
         }
+        .incoming_nav {
+            transform: rotateY(0deg); /* Faces right (default) */
+        }
+
+        .outgoing_nav {
+            transform: rotateY(180deg); /* Flips to face left */
+        }
+
         @if($user->level == 'admin')
         @media screen and (min-width: 1920px) {
             #container-nav {
@@ -116,6 +124,7 @@
                 <div style="padding: 2px;">
                     <?php
                         $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
+                        $countTelemed = \App\Http\Controllers\doctor\ReferralCtrl::countTelemed();
                         $reco_count = \App\Http\Controllers\FeedbackCtrl::recoCount();
 
                         $user = Session::get('auth');
