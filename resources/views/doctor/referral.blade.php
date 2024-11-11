@@ -96,7 +96,11 @@ $user = Session::get('auth');
             transform-origin: top left;
         }
     </style>
+    @php
 
+        $filterFef = request()->query('filterRef');
+
+    @endphp
     <div class="row">
         <input type="hidden" id="referral_page_check" value="1">
         <div class="col-md-3">
@@ -107,20 +111,27 @@ $user = Session::get('auth');
         <div class="col-md-9">
             <div class="jim-content">
                 @if(count($data) > 0)
+                    @if($filterFef == '0')
                     <div class="alert alert-warning">
-                        <div class="text-warning">
-                            <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a><br>
-                            <i class="fa fa-warning"></i> Referrals that are not accepted within 30 minutes will get a call from 711 DOH CVCHD HealthLine
+                            <div class="text-warning">
+                                <i class="fa fa-warning"></i> Referrals that are not accepted within 72 hours will be <a href="{{ asset('doctor/archived') }}" style="color: #ff405f"> <b><u>archived</u></b></a><br>
+                                <i class="fa fa-warning"></i> Referrals that are not accepted within 30 minutes will get a call from 711 DOH CVCHD HealthLine
+                            </div>
                         </div>
-                    </div>
-                    <div class="alert alert-info">
-                        <div class="text-info">
-                            <i class="fa fa-info-circle"></i> Incoming patients referred to a particular department can only be accepted by those registered doctors who are assigned in that department.
+                        <div class="alert alert-info">
+                            <div class="text-info">
+                                <i class="fa fa-info-circle"></i> Incoming patients referred to a particular department can only be accepted by those registered doctors who are assigned in that department.
+                            </div>
                         </div>
-                    </div>
+                    @endif          
                 @endif
                 <h3 class="page-header">
-                   {{$title}} <!-- Incoming Patients  {{$option}} -->
+                    @if($filterFef == '0')
+                     {{$title}} <!-- Incoming Patients  {{$option}} -->
+                    @else
+                        Incoming Consultation
+                    @endif
+                  
                 </h3>
                 @if(count($data) > 0)
                     <div class="row">
