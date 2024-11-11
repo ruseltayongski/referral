@@ -160,7 +160,7 @@ export default {
       <h3 class="page-header">Time Slot</h3>
       <div class="calendar-container">
         <section class="content">
-          <div class="row">
+          <!-- <div class="row"> -->
             <div class="box box-primary">
               <div class="box-body no-padding">
                 <!-- <div class="box-header with-border">
@@ -270,7 +270,7 @@ export default {
                 </div>
               </div>
             </div>
-          </div>
+          <!-- </div> -->
         </section>
       </div>
     </div>
