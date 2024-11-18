@@ -383,12 +383,14 @@ $department_id = $appoitment_sched[0]->department_id;
 <script>
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();
     $("#sbmitBtn").on('click', function(e) {
-        if (!($("#icd").val()) && !($("#other_diag").val())) {
+        const otherDiagValue = $("#other_diag").val()?.trim();
+        if (!($("#icd").val()) && (!otherDiagValue || otherDiagValue === "")) {
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
         }
+
     });
 
     function clearICD() {
