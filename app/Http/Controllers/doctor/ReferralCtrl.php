@@ -1402,7 +1402,6 @@ class ReferralCtrl extends Controller
     {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
-
         $track = Tracking::where("code",$req->code)->first();
 
         if(!$track) {
@@ -1445,6 +1444,7 @@ class ReferralCtrl extends Controller
         $diagnosis = Icd10::whereIn('id', $icds)->pluck('description');
         $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();//I am added this
         $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
+        $finalDiagnosis = $diagnosis->toArray() ? $diagnosis->toArray() : ($patientform->other_diagnoses ? $patientform->other_diagnoses : $pregnantForm->other_diagnoses);
         $position = Activity::where("code",$req->code)
             ->where(function($query) {
                 $query->where("status","redirected")
@@ -1470,7 +1470,7 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
-            "push_diagnosis" =>  $diagnosis->isEmpty() ? $patientform->other_diagnoses : $diagnosis,
+            "push_diagnosis" => $finalDiagnosis,
             "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
