@@ -17,7 +17,7 @@
         .label-border {
             border: 1px solid #ccc;
             padding: 5px 5px 10px 5px;
-            margin-top: 12px;
+            margin-top: 5px;
             border-radius: 5px;
             display: block;
             width: 100%;
@@ -42,6 +42,38 @@
     border-radius: .2rem;
     }
    
+    /* for Config-Appointment */
+
+    .appointment-container {
+        border: 1px solid #007bff; /* Blue border */
+        border-radius: 8px;
+        padding: 3px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        /* max-width: 210px; Limit the container width */
+        /*  margin: auto;Center horizontally */
+        background-color: #f9f9f9; /* Light gray background */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        transition: box-shadow 0.3s ease;
+    }
+    .custom-label-config{
+        padding: 0 0 !important;
+    }
+
+    .appointment-container:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+    }
+
+    @media (max-width: 768px) {
+        .appointment-container {
+            max-width: 90%; /* Adjust width for smaller screens */
+            padding: 10px;
+        }
+    }
+
+
+    /* End for Config-Appointment */
 
     </style>
 @endsection
@@ -160,6 +192,13 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-4">
+                                    <div class="appointment-container">
+                                        <div class="form-check form-check-inline d-flex">
+                                            <input type="checkbox" class="form-check-input custom-checkbox" id="enable_appointment" name="enable_appointment">
+                                            <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config</label>
+                                        </div>
+                                    </div>
+                                    
                                     <div class="label-border">
                                         <label for="appointed_date">Appointment Date:</label>
                                         <input type="date" class="form-control appointment_date" name="appointed_date" id="appointment_date" required>

@@ -8,6 +8,7 @@ use App\Facility;
 use App\TelemedAssignDoctor;
 use App\Tracking;
 use App\User;
+use App\Cofig_schedule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -75,6 +76,55 @@ class TelemedicineCtrl extends Controller
             'date' => $req->input('date_filter', ''),
         ];
         return view('doctor.manage_appointment', $data);
+    }
+
+    public function configSched(){
+        $user = Session::get('auth');
+        $department = Department::all();
+        $config_sched = Cofig_schedule::select('id','department_id','facility_id','created_by','description','category','days','time')->get();
+        
+        $facility = Facility::select('id','name')->where('id', $user->facility_id)->get();
+        
+        return view('doctor.config_schedule',[
+            'department' => $department,
+            'fact' => $facility,
+            'config' => $config_sched
+        ]
+    );
+
+    }
+
+    public function AddconfigSched(Request $req){
+       $user = Session::get('auth');
+      
+       $config_sched = new Cofig_schedule();
+
+       $config_sched->description = $req->configdesc;
+       $config_sched->department_id = $req->department_id;
+       $config_sched->category = $req->default_category;
+       $config_sched->facility_id = $req->facility_id;
+      
+       $scheduleData = [];
+
+       foreach($req->days as $day){
+            
+            if(isset($req->time_from[$day]) && isset($req->time_to[$day])){
+
+                $timeSlots = [];
+                foreach($req->time_from[$day] as $index => $timeFrom){
+                    $timeTo = $req->time_to[$day][$index] ?? '';
+                    $timeSlots[] = "{$timeFrom}-{$timeTo}";
+                }
+
+                $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
+            }
+       }
+
+       $config_sched->days = implode('|', $req->days);
+       $config_sched->time = implode('|', $scheduleData);
+       $config_sched->created_by = $user->id;
+       $config_sched->save();
+
     }
 
     public function appointmentCalendar() {

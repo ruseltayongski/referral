@@ -260,7 +260,7 @@ export default {
                       v-else
                       type="button"
                       id="consultation"
-                      class="btn btn-danger bt-md btn-block"
+                      class="btn bt-md btn-block" style="background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)"
                       disabled
                     >
                       <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments
