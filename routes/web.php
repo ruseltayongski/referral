@@ -193,11 +193,14 @@ Route::match(["get", "post"], 'doctor/referred/track', 'doctor\ReferralCtrl@trac
 Route::get('doctor/patient', 'doctor\PatientCtrl@index');
 Route::post('doctor/patient', 'doctor\PatientCtrl@searchProfile');
 
-Route::post('pass/appointment', function (Illuminate\Http\Request $request) { // adding this session
-    // Save the appointment to session or process as needed
-    session(['telemed' => $request->telemed]);
-    return response()->json(['success' => true]);
-});
+// Route::post('pass/appointment', function (Illuminate\Http\Request $request) { // adding this session
+//     // Save the appointment to session or process as needed
+//     // session(['telemed' => $request->telemed]);
+//     Session::put('telemed',  $request->telemed);
+//     \Log::info('Session telemed121: ' . json_encode(session('telemed')));
+
+//     return response()->json(['success' => true]);
+// });
 
 Route::get('doctor/patient/info/{id}', 'doctor\PatientCtrl@showPatientProfile');
 Route::get('doctor/patient/add', 'doctor\PatientCtrl@addPatient');
@@ -682,7 +685,8 @@ Route::get('/user/get/{id}', 'doctor\TelemedicineCtrl@getUserData')->name('get-u
 Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacilityDetails')->name('get-Facility-Details');
 Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
-
+Route::get('/configSchedule',  'doctor\TelemedicineCtrl@configSched')->name('ConfigSchedule');
+Route::post('/add/configSched', 'doctor\TelemedicineCtrl@AddconfigSched')->name('add.configSched');
 Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
@@ -703,6 +707,6 @@ Route::get('doctor/revised/referral/data/pregnant/{id}/{referral_status}/{form_t
 Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');
 Route::get('/HighIncoming/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoIncoming');
 
-//sample
+//samplegit 
 Route::get('/test_push',  'ApiController@notifierPushNotification');
 // Route::post('/notifier/api/send_push_notification', 'ApiController@notifierPushNotification');

@@ -39,7 +39,7 @@
 
         console.log('upward', alreadyUpward, !treatedIsCompleted, !alreadyTreated);
 
-        if(alreadyUpward && upwardIsCompleted && (!alreadyTreated || !treatedIsCompleted)){ // I add this condition para sa error nga treated kung ma upward na siya
+        if((alreadyUpward || upwardIsCompleted) && (!alreadyTreated || !treatedIsCompleted)){ // I add this condition para sa error nga treated kung ma upward na siya
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been upward!"

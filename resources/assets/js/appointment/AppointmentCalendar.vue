@@ -101,9 +101,10 @@ export default {
       }
     },
     eventRenderFunction(event, element) {
+      console.log("event dateTime", event);
       //console.log(event,event.start.format('YYYY-MM-DD'))
       // let currentDate = new Date().toISOString().split("T")[0];
-      let currentDateTime = new Date().toISOString().split("T")[0]; // get the current date and time
+      let currentDateTime = new Date(); // get the current date and time
       this.$nextTick(() => {
         const targetTd = $(
           ".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']"
@@ -112,16 +113,16 @@ export default {
           ".fc-draggable[data-date='" + event.start.format("YYYY-MM-DD") + "']"
         );
         const targetGrid = $(".fc-day-grid-event");
-        const date = targetTd.attr("data-date");
-
+        const dateString = targetTd.attr("data-date");
+        let timeslot = null;
         const isfullyBooked = this.appointmentSlot.some((appointment) => {
           if (appointment.appointment_schedules.length > 0) {
             const slotOndate = appointment.appointment_schedules.filter(
-              (slot) => slot.appointed_date === date
+              (slot) => slot.appointed_date === dateString
             );
-
             // Group by appointment_id
             const groupedByAppointmentId = slotOndate.reduce((acc, slot) => {
+              timeslot = slot.appointed_time;
               const id = slot.appointment_id;
               if (!acc[id]) acc[id] = [];
               acc[id].push(
@@ -140,8 +141,10 @@ export default {
           }
           return false;
         });
-
-        if (date <= currentDateTime || isfullyBooked) {
+         const dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
+              console.log("appointment Slot",timeslot);
+        //  console.log("date for calendar", dateTimeAppointed, "date with CurrentTime", currentDateTime);
+        if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
           targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
           targetTd.css("border-color", "rgb(230 193 193)");
         } else {

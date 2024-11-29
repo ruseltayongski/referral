@@ -442,7 +442,9 @@
     $("#clear_other_diag_pregnant").hide();
 
     $("#sbmtPreg").on('click',function(e){
-        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
+        const otherDiagPregnantValue = $("#other_diag_preg").val()?.trim();
+
+        if(!($("#icd_preg").val()) && (!otherDiagPregnantValue || otherDiagPregnantValue === "")){
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
             });

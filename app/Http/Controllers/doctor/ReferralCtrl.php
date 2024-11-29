@@ -68,7 +68,9 @@ class ReferralCtrl extends Controller
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
         $user = Session::get('auth');
-
+        
+        $telemedOrReferral = $request->query('filterRef', null);
+       
         $data = Tracking::select(
             'tracking.*',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -87,7 +89,11 @@ class ReferralCtrl extends Controller
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as action','action.id','=','tracking.action_md')
             ->where('referred_to',$user->facility_id);
-        
+           
+        if ($telemedOrReferral !== null) {
+            $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+        }
+
         if($request->search)
         {
             $keyword = $request->search;
@@ -225,6 +231,7 @@ class ReferralCtrl extends Controller
     {
         $user = Session::get('auth');
         $count = Tracking::where('referred_to',$user->facility_id)
+        ->where('telemedicine', 0)
             ->where(function($q){
                 $q->where('status','referred')
                     ->orwhere('status','seen')
@@ -235,6 +242,23 @@ class ReferralCtrl extends Controller
             ->count();
         return $count;
     }
+
+    static function countTelemed()
+    {
+        $user = Session::get('auth');
+        $count = Tracking::where('referred_to',$user->facility_id)
+            ->where('telemedicine', 1)
+            ->where(function($q){
+                $q->where('status','referred')
+                    ->orwhere('status','seen')
+                    ->orWhere('status','redirected')
+                    ->orWhere('status','transferred');
+            })
+            ->where(DB::raw("TIMESTAMPDIFF(MINUTE,date_referred,now())"),"<=",4320)
+            ->count();
+        return $count;
+    }
+
 
     function seen($track_id) {
 
@@ -622,6 +646,9 @@ class ReferralCtrl extends Controller
             ->orderBy('date_referred','desc')
             ->paginate(15);
             session()->forget('profileSearch.telemedicine');
+            
+            session()->forget('telemed');
+            
         return view('doctor.referred',[
             'title' => 'Referred Patients',
             'data' => $data
@@ -631,6 +658,8 @@ class ReferralCtrl extends Controller
     //============== REFERRED ================
     public function referred(Request $request)
     {
+        $telemedOrReferral = $request->query('filterRef', null);
+
         $user = Session::get('auth');
         ParamCtrl::lastLogin();
         $search = $request->search;
@@ -683,6 +712,9 @@ class ReferralCtrl extends Controller
                 ->leftJoin('users','users.id','=',DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
                 ->where('activity.referred_from',$user->facility_id);
 
+            if ($telemedOrReferral !== null) {
+                $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+            }
 
             if($request->more_position) {
                 $data = $data->where(DB::raw("(SELECT count(act1.code) from activity act1 where act1.code = tracking.code and (act1.status = 'redirected' or act1.status = 'transferred'))"),$request->more_position == 5 ? ">" : "=",$request->more_position);
@@ -768,6 +800,7 @@ class ReferralCtrl extends Controller
 
         //  $new_referral = $request->query();
         session()->forget('profileSearch.telemedicine');
+            session()->forget('telemed');
         //  $new_referral = $request->query();
 
         Session::put('totalReffered_for_Dashboard', $data->total());
@@ -1371,7 +1404,6 @@ class ReferralCtrl extends Controller
     {
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
-
         $track = Tracking::where("code",$req->code)->first();
 
         if(!$track) {
@@ -1414,6 +1446,7 @@ class ReferralCtrl extends Controller
         $diagnosis = Icd10::whereIn('id', $icds)->pluck('description');
         $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();//I am added this
         $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
+        $finalDiagnosis = $diagnosis->toArray() ? $diagnosis->toArray() : ($patientform->other_diagnoses ? $patientform->other_diagnoses : $pregnantForm->other_diagnoses);
         $position = Activity::where("code",$req->code)
             ->where(function($query) {
                 $query->where("status","redirected")
@@ -1439,7 +1472,7 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
-            "push_diagnosis" =>  $diagnosis->isEmpty() ? $patientform->other_diagnoses : $diagnosis,
+            "push_diagnosis" => $finalDiagnosis,
             "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
@@ -1452,10 +1485,9 @@ class ReferralCtrl extends Controller
                 "department" => (string) Department::find($req->department)->description,
                 "patient" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
                 "sex" => (string) $patient->sex,
-                "hospital_referrer" => (string) Facility::find($user->facility_id)->name,
+                "referring_hospital" => (string) Facility::find($user->facility_id)->name,
                 "referred_to" => (string) $req->facility,
                 "date_referred" => (string) $date
-               
                  ));
              } catch (Exception $e) {
                 return Redirect::back();
@@ -1862,8 +1894,8 @@ class ReferralCtrl extends Controller
 
         if($form_type == 'normal') {
             $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
-//            $path = self::securedFile($file_link);
-//            $file_name = basename($path);
+        //    $path = self::securedFile($file_link);
+        //    $file_name = basename($path);
 
             $path = array();
             $file_name = array();
@@ -1883,6 +1915,7 @@ class ReferralCtrl extends Controller
                 ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
                 ->where('patient_form.code', $track->code)->first();
             $form = self::normalFormData($id);
+       
             return view("doctor.edit_referral_normal", [
                 "form" => $form['form'],
                 "id" => $id,

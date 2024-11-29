@@ -8,6 +8,7 @@ use App\Facility;
 use App\TelemedAssignDoctor;
 use App\Tracking;
 use App\User;
+use App\Cofig_schedule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -77,6 +78,55 @@ class TelemedicineCtrl extends Controller
         return view('doctor.manage_appointment', $data);
     }
 
+    public function configSched(){
+        $user = Session::get('auth');
+        $department = Department::all();
+        $config_sched = Cofig_schedule::select('id','department_id','facility_id','created_by','description','category','days','time')->get();
+        
+        $facility = Facility::select('id','name')->where('id', $user->facility_id)->get();
+        
+        return view('doctor.config_schedule',[
+            'department' => $department,
+            'fact' => $facility,
+            'config' => $config_sched
+        ]
+    );
+
+    }
+
+    public function AddconfigSched(Request $req){
+       $user = Session::get('auth');
+      
+       $config_sched = new Cofig_schedule();
+
+       $config_sched->description = $req->configdesc;
+       $config_sched->department_id = $req->department_id;
+       $config_sched->category = $req->default_category;
+       $config_sched->facility_id = $req->facility_id;
+      
+       $scheduleData = [];
+
+       foreach($req->days as $day){
+            
+            if(isset($req->time_from[$day]) && isset($req->time_to[$day])){
+
+                $timeSlots = [];
+                foreach($req->time_from[$day] as $index => $timeFrom){
+                    $timeTo = $req->time_to[$day][$index] ?? '';
+                    $timeSlots[] = "{$timeFrom}-{$timeTo}";
+                }
+
+                $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
+            }
+       }
+
+       $config_sched->days = implode('|', $req->days);
+       $config_sched->time = implode('|', $scheduleData);
+       $config_sched->created_by = $user->id;
+       $config_sched->save();
+
+    }
+
     public function appointmentCalendar() {
         $user = Session::get('auth');
         $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
@@ -99,7 +149,7 @@ class TelemedicineCtrl extends Controller
         $user = Session::get('auth');
         for($i=1; $i<=$request->appointment_count; $i++) {
 
-            if (empty($request['appointed_time'.$i]) || empty($request['appointed_time_to'.$i]) || empty($request->opdCategory.$i) || empty($request['available_doctor'.$i])) {
+            if (empty($request['add_appointed_time'.$i]) || empty($request['add_appointed_time_to'.$i]) || empty($request->add_opdCategory.$i) || empty($request['add_available_doctor'.$i])) {
                 continue;
             }
 
@@ -107,17 +157,17 @@ class TelemedicineCtrl extends Controller
             $appointment_schedule->appointed_date = $request->appointed_date;
             $appointment_schedule->facility_id = $request->facility_id;
             $appointment_schedule->department_id = 5;
-            $appointment_schedule->appointed_time = $request['appointed_time'.$i];
-            $appointment_schedule->appointedTime_to = $request['appointed_time_to'.$i];
-            $appointment_schedule->opdCategory = $request['opdCategory'.$i];
+            $appointment_schedule->appointed_time = $request['add_appointed_time'.$i];
+            $appointment_schedule->appointedTime_to = $request['add_appointed_time_to'.$i];
+            $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
             //$appointment_schedule->slot = $request->slot.$i;
             $appointment_schedule->created_by = $user->id;
             $appointment_schedule->save();
 
-            for($x=0; $x<count($request['available_doctor'.$i]); $x++) {
+            for($x=0; $x<count($request['add_available_doctor'.$i]); $x++) {
                 $tele_assign_doctor = new TelemedAssignDoctor();
                 $tele_assign_doctor->appointment_id = $appointment_schedule->id;
-                $tele_assign_doctor->doctor_id = $request['available_doctor'.$i][$x];
+                $tele_assign_doctor->doctor_id = $request['add_available_doctor'.$i][$x];
                 $tele_assign_doctor->created_by = $user->id;
                 $tele_assign_doctor->save();
             }

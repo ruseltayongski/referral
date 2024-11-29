@@ -12,7 +12,7 @@ $dateNow = date('Y-m-d');
     <!-- Font Awesome -->
     <link rel="stylesheet" href="{{ asset('resources/assets/css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('resources/assets/css/AdminLTE.min.css') }}">
-    <link rel="icon" href="{{ asset('resources/img/favicon.png') }}">
+    <link rel="icon" href="{{ asset('resources/img/favicon1.png') }}" type="image/x-icon">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9206765991148995"
           crossorigin="anonymous"></script>
   </head>

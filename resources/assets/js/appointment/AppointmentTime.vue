@@ -112,6 +112,8 @@ export default {
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
+        $("#AppointmentId").val(this.selectedAppointmentTime);
+        $("#DoctorId").val(this.selectedAppointmentDoctor);
         $("#followup_header").html("Follow Up Patient");
         $("#telemedicineFollowupFormModal").modal("show");
         $("#followup_facility_id").val(this.facilitySelectedId);
@@ -144,8 +146,9 @@ export default {
     handleAppointmentTimeChange() {
       this.selectedAppointmentDoctor = null;
     },
-    handleDoctorChange(doctorId) {
-      console.log(doctorId);
+    handleDoctorChange(doctorId, appointmentId) {
+      console.log(doctorId, 'appointmentId', appointmentId);
+
       this.selectedAppointmentDoctor = doctorId;
     },
   },
@@ -157,7 +160,7 @@ export default {
       <h3 class="page-header">Time Slot</h3>
       <div class="calendar-container">
         <section class="content">
-          <div class="row">
+          <!-- <div class="row"> -->
             <div class="box box-primary">
               <div class="box-body no-padding">
                 <!-- <div class="box-header with-border">
@@ -227,7 +230,7 @@ export default {
                             v-model="selectedAppointmentDoctor"
                             :value="assignedDoctor.doctor.id"
                             @change="
-                              handleDoctorChange(assignedDoctor.doctor.id)
+                              handleDoctorChange(assignedDoctor.doctor.id, appointment.id)
                             "
                             :disabled="assignedDoctor.appointment_by"
                           />&nbsp;&nbsp;
@@ -257,7 +260,7 @@ export default {
                       v-else
                       type="button"
                       id="consultation"
-                      class="btn btn-danger bt-md btn-block"
+                      class="btn bt-md btn-block" style="background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)"
                       disabled
                     >
                       <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments
@@ -267,7 +270,7 @@ export default {
                 </div>
               </div>
             </div>
-          </div>
+          <!-- </div> -->
         </section>
       </div>
     </div>

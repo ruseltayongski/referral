@@ -1,6 +1,8 @@
 <?php
 // $appointmentParam = $_GET['appointment'];
-$appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : session('telemed');
+$telemed = session('telemed');
+
+$appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : $telemed;
 
 $facility_id_telemedicine = json_decode(json_decode($appointmentParam, true), true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
 $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true), true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
@@ -40,6 +42,18 @@ $department_id = $appoitment_sched[0]->department_id;
         height: 100px;
         border-width: 2px;
         border-color: darkgray;
+    }
+
+    @media only screen and (max-width: 768px) {
+        embed {
+            height: 60vh; /* Adjust for smaller screens */
+        }
+    }
+
+    @media only screen and (max-width: 480px) {
+        embed {
+            height: 50vh; /* Further reduce height for extra small screens */
+        }
     }
 </style>
 
@@ -89,11 +103,10 @@ $department_id = $appoitment_sched[0]->department_id;
                                 &nbsp;<span class="patient_address"></span>
                             </div>
                         </div><br>
-
+                        
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success"><b>REFERRED TO:</b></small> &nbsp;<span class="text-red">*</span><br>
-
                                 @if($appointmentParam)
                                 <input type="hidden" name="referred_facility" value="{{$facilities->find($facility_id_telemedicine)->id}}">
                                 <select class="select2 select_facility form-control" disabled>
@@ -267,7 +280,8 @@ $department_id = $appoitment_sched[0]->department_id;
                             <div class="col-md-12">
                                 <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
                                 @if($appointmentParam)
-                                <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%" disabled>
+                                <input type="hidden" name="reffered_md_telemed" value="{{$doctor->find($telemedicine_doctor_id)->id}}">
+                                <select class="referred_md form-control-select select2" style="width: 100%" disabled>
                                     <option value="{{$doctor->find($telemedicine_doctor_id)->id}}">Doctor {{ $doctor->find($telemedicine_doctor_id)->fname}} {{$doctor->find($telemedicine_doctor_id)->mname}} {{$doctor->find($telemedicine_doctor_id)->lname}} - {{$doctor->find($telemedicine_doctor_id)->contact}}</option>
                                 </select>
                                 @else
@@ -366,16 +380,17 @@ $department_id = $appoitment_sched[0]->department_id;
 </div>
 
 
-
 <script>
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();
     $("#sbmitBtn").on('click', function(e) {
-        if (!($("#icd").val()) && !($("#other_diag").val())) {
+        const otherDiagValue = $("#other_diag").val()?.trim();
+        if (!($("#icd").val()) && (!otherDiagValue || otherDiagValue === "")) {
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
         }
+
     });
 
     function clearICD() {
@@ -472,89 +487,185 @@ $department_id = $appoitment_sched[0]->department_id;
 <script>
     var upload_pos = 2;
     var upload_count = 0;
+    let fileInfoArray = [];
+    let fileQueue = [];
+    let isProcessing = false;
+
     function readUrl(input, pos) {
-        var word = '{{ asset('resources/img/document_icon.png') }}';
-        var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
-        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
-        var imgSize = {width: '100px', height: '100px'};
-        if (input.files && input.files[0]) {
-            var tmp_pos = pos;
-            for(var i = 0; i < input.files.length; i++) {
-                let file = input.files[i];
-                if(file && file !== null) {
-                    let reader = new FileReader();
-                    let type = file.type;
-                    let filename = file.name;
-                    let isFirstSlide = i === 0 ? 'active' : '';
-
-                    let slideContent = '';
-
-                    if(type === 'application/pdf') {
-
-                        $('#file-upload-image'+pos).attr('src',pdf)
-                        .attr('title', filename).css(imgSize);
-                        // .attr('onclick', 'showPreviewFile(' + filename + ', ' + isFirstSlide + ')');;
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#file-upload-image'+pos).attr('src',word)
-                        .attr('title', filename).css(imgSize);
-                        // .attr('onclick', 'showPreviewFile(' + filename + ', '+ isFirstSlide +')');
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#file-upload-image'+pos).attr('src',excel)
-                        .attr('title', filename).css(imgSize);
-                        // .attr('onclick', 'showPreviewFile(' + filename + ', ' + isFirstSlide + ')');
-                        pos+=1;
-                    } else {
-                        // reader.onloadend = function(e) {
-                        //     $('#file-upload-image'+pos).attr('src', e.target.result).attr('title', filename);
-                        //     pos+=1;
-                        // };
-                        reader.onloadend = (function(currentPos, currentFilename) {
-                            return function(e) {
-                                $('#file-upload-image' + currentPos)
-                                    .attr('src', e.target.result)
-                                    .attr('title', currentFilename)
-                                    .css(imgSize) 
-                                    .attr('onclick', 'showPreviewFile(' + filename + ', '+ isFirstSlide +')');
-                            };
-                        })(pos, filename); 
-                        pos += 1;
-                    }
-                
-                    $('#image-upload-wrap'+tmp_pos).hide();
-                    $('#file-upload-content'+tmp_pos).show();
-
-                    var maxLength = 12;
-                    var truncateName = filename.length > maxLength ? filename.substring(0, maxLength) + '...' : filename;
-
-                    $('#image-title' + tmp_pos++).html(truncateName).attr('title', filename);
-
-                    reader.readAsDataURL(file);
-                    upload_count+=1;
-
-                    addFile();
-                }
+        if (input.files && input.files.length > 0) {
+            for (let i = 0; i < input.files.length; i++) {
+                fileQueue.push({
+                    file: input.files[i],
+                    pos: pos + i
+                });
             }
+            processFileQueue();
         }
-        $('#remove_files_btn').show();
     }
 
-    // function showPreviewFile(filename, isActive){
-    //     $('#carousel-inner').html('');
-    //       // Create a slide for the preview
-    //     let newSlide = `
-    //         <div class="carousel-item active">
-    //             <img class="d-block w-100" src="${filename}" alt="${filename}">
-    //         </div>
-    //     `;
-    //      // Add slide to the carousel
-    //     $('#carousel-inner').append(newSlide);
-    //     // Show the modal
-    //     $('#filePreviewModal').modal('show');
-    // }
+    function processFileQueue() {
+        if (isProcessing || fileQueue.length === 0) return;
+
+        isProcessing = true;
+        let { file, pos } = fileQueue.shift();
+        processFile(file, pos);
+    }
+
+    function processFile(file, pos) {
+        let reader = new FileReader();
+        let type = file.type;
+        let filename = file.name;
+
+        let fileIndex = fileInfoArray.length;
+   
+
+        reader.onloadend = function(e) {
+            let iconSrc;
+
+            fileInfoArray.push({
+                name: filename,
+                type: type,
+                src: e.target.result,
+                file: file
+            });
+
+            if (type === 'application/pdf') {
+                iconSrc = '{{ asset('resources/img/pdf_icon.png') }}';
+            } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                iconSrc = '{{ asset('resources/img/document_icon.png') }}';
+               
+            } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                iconSrc = '{{ asset('resources/img/sheet_icon.png') }}';
+               
+            } else if (type.startsWith('image/')) {
+                iconSrc = e.target.result;
+            } else {
+                iconSrc = '{{ asset('resources/img/file_icon.png') }}'; // Default icon
+            }
+
+            setFileUploadImage(pos, iconSrc, filename, {width: '150px', height: '120px'}, fileIndex);
+
+            $('#image-upload-wrap'+pos).hide();
+            $('#file-upload-content'+pos).show();
+
+            var maxLength = 12;
+            var truncateName = filename.length > maxLength ? filename.substring(0, maxLength) + '...' : filename;
+            $('#image-title' + pos).html(truncateName).attr('title', filename);
+
+            upload_count++;
+            addFile();
+
+            isProcessing = false;
+            processFileQueue(); // Process next file in queue
+            $('#remove_files_btn').show();
+        };
+
+        reader.onerror = function() {
+            console.error('File reading failed');
+            isProcessing = false;
+            processFileQueue(); // Process next file in queue even if this one failed
+        };
+
+        if (type === 'application/pdf' || type.startsWith('image/')) {
+            reader.readAsDataURL(file);
+        } else {
+            reader.readAsArrayBuffer(file); // Just to trigger onloadend for non-previewable files
+        }
+    }
+
+    
+    function setFileUploadImage(pos, src, filename, imgSize, fileIndex) {
+        $('#file-upload-image'+pos)
+            .attr('src', src)
+            .attr('title', filename)
+            .css(imgSize)
+            .off('click')  // Remove any existing click handlers
+            .on('click', function() {
+                showPreviewFile(fileIndex);
+            });
+            
+    }
+
+    function showPreviewFile(index) {
+        console.log("file Upload :", fileInfoArray);
+        let activeFiles = fileInfoArray.filter(file => file !== null);
+        console.log("Active files:", activeFiles);
+        
+        // If no valid files at this index, close modal
+        if (!activeFiles[index]) {
+            console.log("No file found at index:", index);
+            $('#filePreviewModal').modal('hide');
+            return;
+        }
+
+        let currentFile = activeFiles[index];
+        $('#carousel-inner').empty();
+        console.log("Showing preview for file:", currentFile.name);
+
+        let content = '';
+
+        if (currentFile.type === 'application/pdf') {
+            // Use PDF.js to render the PDF with uniform height and width
+            content = `
+                <embed src="${currentFile.src}" type="application/pdf" style="width:100%;height:80vh;" />
+            `;
+        } else if (currentFile.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            content = `
+                <div class="file-not-supported">
+                    <p>Word document preview is not available.</p>
+                    <p>File Name: ${currentFile.name}</p>
+                    <button class="btn btn-primary" onclick="convertToWord(${index})">Download Word File</button>
+                </div>`;
+        } else if (currentFile.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+            content = `
+                <div class="file-not-supported">
+                    <p>Excel spreadsheet preview is not available.</p>
+                    <p>File Name: ${currentFile.name}</p>
+                    <button class="btn btn-primary" onclick="convertToExcel(${index})">Download Excel File</button>
+                </div>`;
+        } else if (currentFile.type.startsWith('image/')) {
+            // Display image with a default max size
+            content = `<img src="${currentFile.src}" alt="${currentFile.name}" class="image-preview">`;
+        } else {
+            content = `
+                <div class="file-not-supported">
+                    <p>Preview not available for this file type.</p>
+                    <p>File Type: ${currentFile.type}</p>
+                </div>`;
+        }
+
+        // Append content and show modal
+        $('#carousel-inner').append(`<div class="carousel-item active">${content}</div>`);
+
+        $('#filePreviewCarousel').attr('data-index', index);
+
+        $('#filePreviewModal').modal('show');
+
+        $('#filePreviewModal').css('z-index', parseInt($('#normalFormModal').css('z-index')) + 10);
+        $('.modal-backdrop:last').css('z-index', parseInt($('#normalFormModal').css('z-index')) + 5);
+    }
+
+    function convertToWord(index) {
+        downloadFile(index, 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    }
+
+    function convertToExcel(index) {
+        downloadFile(index, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    }
+
+    function downloadFile(index, mimeType) {
+        let file = fileInfoArray[index].file;
+        let blob = new Blob([file], { type: mimeType });
+        let link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = fileInfoArray[index].name;
+        link.click();
+    }
+
+
 
     function addFile() {
+
         var src = '{{ asset('resources/img/add_file.png') }}';
         if(upload_count % 4 == 0) {
             $('.attachment').append(
@@ -582,6 +693,15 @@ $department_id = $appoitment_sched[0]->department_id;
         upload_pos+=1;
     }
 
+    function navigateCarousel(direction){
+        let currentIndex = parseInt($('#filePreviewCarousel').attr('data-index'));
+        let newIndex = direction == 'next' ? currentIndex + 1 : currentIndex - 1;
+
+        if(newIndex >= 0 && newIndex < fileInfoArray.length){
+            showPreviewFile(newIndex);
+        }
+    }
+
     function removeFiles() {
         $('.attachment').html("");
         upload_count = 0;
@@ -589,21 +709,145 @@ $department_id = $appoitment_sched[0]->department_id;
         $('#remove_files_btn').hide();
         addFile();
     }
-    function removeOneFile(uploadCount){
-        $('#upload' + uploadCount).remove();
 
-        upload_count -= 1;
+    
+    function removeOneFile(uploadCount) {
+    // Close the modal and remove the file preview element
+    $('#filePreviewModal').modal('hide');
 
-        if(upload_pos > uploadCount){
-            upload_pos -= 1;
+    const fileElement = $('#upload' + uploadCount);
+    const fileName = fileElement.find('.image-title').attr('title');
+    
+    // Remove from fileInfoArray
+    if (fileName) {
+        const fileIndex = fileInfoArray.findIndex(file => file.name === fileName);
+        if (fileIndex !== -1) {
+            // Remove the file from fileInfoArray
+            fileInfoArray.splice(fileIndex, 1);
+            console.log("File removed successfully. Updated fileInfoArray:", fileInfoArray);
+            
+            // Remove all existing file upload elements except the last one (add file button)
+            $('.attachment').children().not(':last').remove();
+            
+            // Recreate elements for remaining files
+            fileInfoArray.forEach((fileInfo, index) => {
+                const position = index + 1;
+                
+                // Create new element for this file
+                var src = '{{ asset('resources/img/add_file.png') }}';
+                if(index % 4 == 0) {
+                    $('.attachment').prepend('<div class="clearfix"></div>');
+                }
+                
+                const newElement = $(
+                    '<div class="col-md-3" id="upload'+position+'" style="position: relative;">\n' +
+                    '   <div class="file-upload">\n' +
+                    '       <div class="text-center image-upload-wrap" id="image-upload-wrap'+position+'">\n' +
+                    '           <input class="file-upload-input files" multiple id="file_upload_input'+position+'" type="file" name="file_upload[]" onchange="readUrl(this, '+position+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+                    '           <img src="'+src+'" style="width: 50%; height: 50%;">\n' +
+                    '       </div>\n' +
+                    '       <div class="file-upload-content" id="file-upload-content'+position+'">\n' +
+                    '           <img class="file-upload-image" id="file-upload-image'+position+'" src="#"/>\n' +
+                    '           <div class="image-title-wrap">\n' +
+                    '               <b><small class="image-title" id="image-title'+position+'" style="display:block; word-wrap: break-word;"></small></b>\n' +
+                    '               <button type="button" onclick="removeOneFile('+position+')" class="remove-icon-btn"> <i class="fa fa-trash"></i> </button>\n' +
+                    '           </div>\n' +
+                    '       </div>\n' +
+                    '   </div>\n' +
+                    '</div>'
+                );
+                
+                // Insert before the last element (add file button)
+                $('.attachment').children().last().before(newElement);
+                console.log("fileInfo", fileInfo);
+                // Set up the file input with the correct file
+                const currentInput = document.getElementById('file_upload_input' + position);
+                if (currentInput) {
+                    const dt = new DataTransfer();
+                    dt.items.add(fileInfo.file);
+                    currentInput.files = dt.files;
+                    
+                    // Update the preview
+                    const iconSrc = fileInfo.type.startsWith('image/') ? fileInfo.src : getIconSrc(fileInfo.type);
+                    
+                    $('#image-upload-wrap'+position).hide();
+                    $('#file-upload-content'+position).show();
+                    
+                    setFileUploadImage(
+                        position,
+                        iconSrc,
+                        fileInfo.name,
+                        {width: '150px', height: '120px'},
+                        index
+                    );
+
+                    // Update filename display
+                    const maxLength = 12;
+                    const truncateName = fileInfo.name.length > maxLength ? 
+                        fileInfo.name.substring(0, maxLength) + '...' : 
+                        fileInfo.name;
+                    $('#image-title' + position).html(truncateName).attr('title', fileInfo.name);
+                }
+            });
         }
-        if(uploadCount === 0){
-            $('#remove_files_btn');
-        }
-
-       console.log("upload_pos:", upload_pos);
-
     }
+
+    // Update counts
+    upload_count = fileInfoArray.length;
+    
+    // Reset if no files remaining
+    if (upload_count === 0) {
+        upload_count = 0;
+        upload_pos = 1;
+        $('#remove_files_btn').hide();
+        addFile();
+    } else {
+        // Ensure upload_pos is correct for next file addition
+        upload_pos = upload_count + 1;
+    }
+
+    // Clear file queue
+    fileQueue = [];
+    isProcessing = false;
+}
+
+function getIconSrc(fileType) {
+    if (fileType === 'application/pdf') {
+        return '{{ asset('resources/img/pdf_icon.png') }}';
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        return '{{ asset('resources/img/document_icon.png') }}';
+    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        return '{{ asset('resources/img/sheet_icon.png') }}';
+    } else {
+        return '{{ asset('resources/img/file_icon.png') }}';
+    }
+}
+
+    // function removeOneFile(uploadCount){
+
+    //     $('#filePreviewModal').modal('hide');
+
+    //     $('#upload' + uploadCount).remove();
+
+    //     fileInfoArray.splice(uploadCount, 1);
+
+    //     upload_count = fileInfoArray.length;
+
+    //     $('.col-md-3').each(function(newIndex) {
+    //         $(this).attr('id', `upload${newIndex}`);
+    //         $(this).find('.remove-icon-btn').attr('onclick', `removeOneFile(${newIndex})`);
+    //     });
+        
+    //     showPreviewFile();
+
+    //     if (fileInfoArray.length === 0) {
+    //         upload_count = 0;
+    //         upload_pos = 1;
+    //         $('#remove_files_btn').hide();
+    //         addFile();
+    //     }
+
+    // }
 
     $(document).ready(function() {
         for (var i = 0; i < upload_count; i++) {

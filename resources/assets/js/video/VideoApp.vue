@@ -301,8 +301,9 @@ export default {
               .post(`${self.baseUrl}/api/video/upward`, endorseUpward)
               .then((response) => {
                 console.log(response.status);
+                console.log('data Upward:',response.data)
                 console.log("endorseUpward:", endorseUpward);
-                if (response.data === "success") {
+                if (response.data.trim() === "success") {
                   Lobibox.alert("success", {
                     msg: "Successfully endorse the patient for upward referral!",
                   });

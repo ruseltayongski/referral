@@ -184,7 +184,7 @@ class UserCtrl extends Controller
     public function editProfile(Request $req) {
         $user = Session::get('auth');
         $data = $req->all();
-        unset($data['_token'], $data['id']);
+        unset($data['_token'], $data['id'], $data['choose']);
 
         if(isset($data['sign_type']) && isset($data['signature'])) {
             if($data['sign_type'] == "draw" || $data['sign_type'] == "upload") {

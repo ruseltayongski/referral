@@ -29,6 +29,7 @@ use App\PrescribedPrescription;
 use App\LabRequest;
 use Illuminate\Http\Request;
 use App\User;
+use App\TelemedAssignDoctor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
@@ -657,10 +658,14 @@ class ApiController extends Controller
         $user = Session::get('auth');
         $patient_form = null;
         $patient_id = 0;
-
+        
         $tracking = Tracking::where("code",$request->code)->first();
         $tracking->status = 'followup';
         $tracking->save();
+
+        $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $request->Appointment_id)->where('doctor_id', $request->Doctor_id)->first();
+        $telemedAssignDoctor->appointment_by = $user->id;
+        $telemedAssignDoctor->save();
 
         if($tracking->type == 'normal') {
             $patient_form = PatientForm::where("code",$request->code)->first();
@@ -687,6 +692,7 @@ class ApiController extends Controller
             );
             Activity::create($activity);
         }
+
 
         //  ---------------------jondy changes--------------------------->
         if ($request->hasFile('files')) {
@@ -2193,6 +2199,14 @@ class ApiController extends Controller
     // public function pushNotificationCCMC($push)
     public static function notifierPushNotification($push)
     {
+
+        // try {
+        //     \Log::info('Inside notifierPushNotification with data:', $push);
+        //     // Notification logic
+        // } catch (\Exception $e) {
+        //     \Log::error('Error in notifierPushNotification: '.$e->getMessage());
+        // }
+
         if(date("H:i:s") >= "17:00:00" && date("H:i:s") <= "21:00:00") {
              $topic = "referrals_ER";
          } else {
@@ -2213,12 +2227,11 @@ class ApiController extends Controller
             //dynamic data
             $post_params  = [
                 "topic" => $topic,
-                "hospital_referrer" => $push['hospital_referrer'],
+                "hospital_referrer" => $push['referring_hospital'],
                 "patient" => $push['patient'],
                 "age"=> $push['age'],
                 "sex"=> $push['sex']
             ];
-           
             $curl = curl_init();
 
             curl_setopt_array($curl, array(

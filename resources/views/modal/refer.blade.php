@@ -257,6 +257,7 @@ function handleFileSelect(event) {
                         pdfContainer.remove();
                     
                     });
+                    
                     pdfContainer.appendChild(pdfPreview);
                     pdfContainer.appendChild(removeIcon);
                     // Append the container to the main preview container
@@ -586,6 +587,8 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         <input type="hidden" name="followup_id" id="telemedicine_follow_id" value="">
                         <input type="hidden" class="telemedicine" value="">
                         <input type="hidden" id="followup_facility_id" class="followup_facility_id" value="">
+                        <input type="hidden" id="AppointmentId" name="Appointment_id">
+                        <input type="hidden" id="DoctorId" name="Doctor_id">
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label style="padding:0px;">FACILITY:</label>
@@ -880,21 +883,27 @@ function sendNotifierData(key_firebase,age, chiefComplaint, department, diagnosi
             "data": form
         };
 
-        $.ajax(settings).done(function (response) {
-            console.log(response);
+        var currentTime = new Date().toLocaleTimeString('en-GB', {hour12: false});
 
-            if(firebase_key) {
-                requestRef.child(firebase_key).remove()
-                    .then(function() {
-                        console.log("Firebase record deleted:", firebase_key);
+        if(currentTime >= "17:00:00" && currentTime <= "21:00:00") {
 
-                        firebase_key = "";
-                    })
-                    .catch(function(error){
-                        console.error("Error deleting Firebase record:", error);
-                    });
-            }
-        });
+            $.ajax(settings).done(function (response) {
+                console.log(response);
+                
+                if(firebase_key) {
+                    requestRef.child(firebase_key).remove()
+                        .then(function() {
+                            console.log("Firebase record deleted:", firebase_key);
+
+                            firebase_key = "";
+                        })
+                        .catch(function(error){
+                            console.error("Error deleting Firebase record:", error);
+                        });
+                }
+            });
+        }
+       
     }
 
     document.addEventListener('DOMContentLoaded', function () {

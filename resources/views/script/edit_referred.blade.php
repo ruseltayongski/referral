@@ -100,6 +100,7 @@
                         }));
                     });
                     $('.edit_action_md').val("<?php echo $form->md_referred_id;?>");
+                    console.log("formd_referred_id:", <?php echo $form->md_referred_id; ?>);
                 },
                 error:function(){
                     $('#serverModal').modal();
@@ -277,29 +278,37 @@
         var excel = '{{ asset('resources/img/sheet_icon.png') }}';
         if (input.files && input.files[0]) {
             var tmp_pos = pos;
+            var imgSize = {width: '150px', height: '120px'};
             for(var i = 0; i < input.files.length; i++) {
                 var file = input.files[i];
                 if(file && file !== null) {
                     var reader = new FileReader();
                     var type = file.type;
                     if(type === 'application/pdf') {
-                        $('#file-upload-image'+pos).attr('src',pdf);
+                        $('#file-upload-image'+pos).attr('src',pdf).css(imgSize);
                         pos+=1;
                     } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#file-upload-image'+pos).attr('src',word);
+                        $('#file-upload-image'+pos).attr('src',word).css(imgSize);
                         pos+=1;
                     } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#file-upload-image'+pos).attr('src',excel);
+                        $('#file-upload-image'+pos).attr('src',excel).css(imgSize);
                         pos+=1;
                     } else {
                         reader.onloadend = function(e) {
-                            $('#file-upload-image'+pos).attr('src', e.target.result);
+                            $('#file-upload-image'+pos).attr('src', e.target.result).css(imgSize);
                             pos+=1;
                         };
                     }
                     $('#image-upload-wrap'+tmp_pos).hide();
                     $('#file-upload-content'+tmp_pos).show();
-                    $('#image-title' + tmp_pos++).html(file.name);
+                    // $('#image-title' + tmp_pos++).html(file.name);
+                    let filename = file.name;
+                    
+                    var maxLength = 12;
+                    
+                    var truncateName = filename.length > maxLength ? filename.substring(0, maxLength) + '...' : filename;
+                    $('#image-title'  + tmp_pos++).html(truncateName).attr('title', filename);
+
                     reader.readAsDataURL(file);
                     upload_count+=1;
 
@@ -329,12 +338,29 @@
             '           <div class="image-title-wrap">\n' +
             '               <b><small class="image-title" id="image-title'+upload_pos+'" style="display:block; word-wrap: break-word;"></small></b>\n' +
             /*'               <button type="button" onclick="removeFile('+upload_pos+')" class="remove-image"> Remove </button>\n' +*/
+            '                   <button type="button" onclick="removeOneFile('+upload_pos+')" class="remove-icon-btn"> <i class="fa fa-trash"></i> </button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
             '</div>'
         );
         upload_pos+=1;
+    }
+
+    function removeOneFile(uploadCount){
+        $('#upload' + uploadCount).remove();
+
+        upload_count -= 1;
+
+        if(upload_pos > uploadCount){
+            upload_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+
+       console.log("upload_pos:", upload_pos);
+
     }
 
     function removeFiles() {

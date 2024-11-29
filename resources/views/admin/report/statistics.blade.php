@@ -116,7 +116,7 @@
                 </div>
 
             </section>
-            <div class="box-header with-border" style="margin-top: -200px;">
+            <div class="box-header with-border" style="margin-top: -100px;">
                 <form action="{{ asset('admin/statistics') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group">

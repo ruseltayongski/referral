@@ -117,6 +117,27 @@ $facilities = \App\Facility::select('id','name')
             max-width: 50%;
         }
     }
+
+    .remove-icon-btn{
+        position: absolute;
+        top: -2px; /* Adjust as needed */
+        right: 12px; /* Adjust as needed */
+        background: transparent;
+        border: none;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ff0000; /* Optional: Trash icon color */
+        font-size: 18px; /* Optional: Adjust icon size */
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .remove-icon-btn:hover {
+        transform: scale(1.1); /* Slightly increase size on hover */
+    }
+    .remove-icon-btn i {
+        pointer-events: none; /* To ensure the button handles the click, not the icon */
+    }
+    
 </style>
 
 <form action="{{ url('doctor/referral/edit') }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">
