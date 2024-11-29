@@ -342,9 +342,20 @@
             if (this.checked) {
                     signature_field.style.display = 'block';
             } else {
-                    signature_field.style.display = 'none';
+                signature_field.style.display = 'none';
             }
-        });
+
+            // Add event listener to the checkbox to show/hide signature section
+            termsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    signature_field.style.display = 'block';
+                } else {
+                    signature_field.style.display = 'none';
+                }
+            });
+        } else {
+            console.error('termsCheckbox or signature_field not found in the DOM');
+        }
     });
 
 

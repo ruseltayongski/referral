@@ -797,6 +797,8 @@ class ReferralCtrl extends Controller
             Session::put("export_referred_excel",$referred_excel);
             $data = $data->paginate(10);
         }
+
+        //  $new_referral = $request->query();
         session()->forget('profileSearch.telemedicine');
             session()->forget('telemed');
         //  $new_referral = $request->query();

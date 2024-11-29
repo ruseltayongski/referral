@@ -28,8 +28,29 @@ $counter = 0;
         padding: 10px;
         border: 1px dashed dimgrey;
     }
+    .file-upload_ {
+        background-color: #ffffff;
+        /*width: 100%!*200px*!;*/
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px dashed dimgrey;
+    }
 
     .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #1FB264;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #15824B;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .file-upload-btn_ {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -50,8 +71,18 @@ $counter = 0;
         transition: all .2s ease;
         cursor: pointer;
     }
+    .file-upload-btn_:hover {
+        background: #1AA059;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
 
     .file-upload-btn:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    .file-upload-btn_:active {
         border: 0;
         transition: all .2s ease;
     }
@@ -60,8 +91,22 @@ $counter = 0;
         display: none;
         text-align: center;
     }
+    .file-upload-content_ {
+        display: none;
+        text-align: center;
+    }
 
     .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .file-upload-input_ {
         position: absolute;
         margin: 0;
         padding: 0;
@@ -77,6 +122,11 @@ $counter = 0;
         border: 4px dashed #1FB264;
         position: relative;
     }
+    .image-upload-wrap_ {
+        margin-top: 20px;
+        border: 4px dashed #1FB264;
+        position: relative;
+    }
 
     .image-dropping,
     .image-upload-wrap:hover {
@@ -85,8 +135,18 @@ $counter = 0;
             #1FB264;
         border: 4px dashed #ffffff;
     }
+    .image-upload-wrap_:hover {
+        background-color:
+            /*#6ab155*/
+            #1FB264;
+        border: 4px dashed #ffffff;
+    }
 
     .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+    }
+    .image-title-wrap_ {
         padding: 0 15px 15px 15px;
         color: #222;
     }
@@ -108,8 +168,29 @@ $counter = 0;
         margin: auto;
         padding: 20px;
     }
+    .file-upload-image_ {
+        max-height: 75%;
+        max-width: 75%;
+        margin: auto;
+        padding: 20px;
+    }
 
     .remove-image {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .remove-image_ {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -130,8 +211,18 @@ $counter = 0;
         transition: all .2s ease;
         cursor: pointer;
     }
+    .remove-image_:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
 
     .remove-image:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    .remove-image_:active {
         border: 0;
         transition: all .2s ease;
     }
@@ -152,6 +243,12 @@ $counter = 0;
 
     @media only screen and (max-width: 720px) {
         .file-upload {
+            background-color: #ffffff;
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .file-upload_ {
             background-color: #ffffff;
             width: 300px;
             margin: 0 auto;
@@ -182,7 +279,24 @@ $counter = 0;
         cursor: pointer;
         transition: transform 0.2s;
     }
+    
+    .remove-icon-btn_{
+        position: absolute;
+        top: -2px; /* Adjust as needed */
+        right: 12px; /* Adjust as needed */
+        background: transparent;
+        border: none;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ff0000; /* Optional: Trash icon color */
+        font-size: 18px; /* Optional: Adjust icon size */
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
     .remove-icon-btn:hover {
+        transform: scale(1.1); /* Slightly increase size on hover */
+    }
+    .remove-icon-btn_:hover {
         transform: scale(1.1); /* Slightly increase size on hover */
     }
     .remove-icon-btn i {
@@ -390,6 +504,42 @@ $counter = 0;
                                         <i class="fa fa-stethoscope"></i>
                                         Walk-In
                                     </a>
+                                        @elseif ($user->facility_id == 63)
+                                        <a href="#pregnantModal"
+                                               data-patient_id="{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               style="width:100%;margin-bottom:5px;"
+                                               onclick="handleRefer()"
+                                               class="btn btn-primary btn-xs profile_info patient-emergency hidden">
+                                                <i class="fa fa-ambulance"></i>
+                                                Refer
+                                            </a>
+                                            <a href="#normalFormModal"
+                                                data-patient_id="{{ $row->id }}"
+                                                data-backdrop="static"
+                                                data-toggle="modal"
+                                                data-type="normal"
+                                                onclick="handleTelemedicine()"
+                                                style="width:100%;margin-bottom:5px;"
+                                                class="btn btn-success btn-xs profile_info patient-consultation hidden">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Consultation
+                                            </a><br>
+                                            <a href="#"
+                                               id="walkinNormal{{ $counter }}"
+                                               data-patient_id="{{ $row->id }}"
+                                               data-backdrop="static"
+                                               data-toggle="modal"
+                                               data-type="normal"
+                                               onclick="promptWalkinNormal(<?php echo $counter++ ?>)"
+                                               style="width:100%;"
+                                               class="btn btn-warning btn-xs profile_info patient-emergency hidden">
+                                                <i class="fa fa-stethoscope"></i>
+                                                Walk-In
+                                            </a>
+                                        
                                     @else
                                     <a href="#normalFormModal" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" style="width:100%;margin-bottom:5px;" onclick="handleRefer()" class="btn btn-primary btn-xs profile_info patient-emergency hidden">
                                         <i class="fa fa-ambulance"></i>
@@ -455,10 +605,13 @@ $counter = 0;
 </div>
 
 @include('modal.pregnantModal')
-@include('modal.normal_form_editable')
-@include('modal.normal_form_editable_walkin')
+@include('modal.choose_version')
+@include('modal.revised_pregnant_form')
 @include('modal.pregnant_form_editable')
 @include('modal.pregnant_form_editable_walkin')
+@include('modal.normal_form_editable')
+@include('modal.normal_form_editable_walkin')
+@include('modal.revised_normal_form')
 @endsection
 
 @section('js')
@@ -475,7 +628,7 @@ $counter = 0;
         const telemedicineAppoinmentSlot = decodeURIComponent(new URL(window.location.href).searchParams.get('appointment'));
         var appointment = @json($telemedicine);
         //let url = new URL(window.location.href);
-        if (telemedicineAppoinmentSlot && telemedicineAppoinmentSlot !== 'null') {
+        if (telemedicineAppoinmentSlot && telemedicineAppoinmentSlot !== null) {
             $(".Appointment").val(telemedicineAppoinmentSlot);
         }
 
@@ -521,13 +674,52 @@ $counter = 0;
         selectFormTitle("Clinical ");
     }
 
-    function setClinicalFormTile(type) {
-        if (type == "pregnant") {
-            selectFormTitle("BEmONC/ CEmONC ");
-        } else {
-            selectFormTitle("Clinical ");
+        function setClinicalFormTile(type) {
+            if (type == "pregnant") {
+                selectFormTitle("BEmONC/ CEmONC ");
+            } else {
+                selectFormTitle("Clinical ");
+            }
         }
-    }
+
+        function openNewForms(type){
+                 // Get facility_id and pregnancy status from server-side
+                 var referred_facility = "{{ $user->facility_id }}";
+
+                console.log("Facility ID: ", referred_facility);
+        
+
+                // Check if facility_id is 63 (allowed to access the new form)
+                // if (referred_facility == 63) {
+                //     if (type == 'pregnant') {
+                //         $('#pregnantModal').modal('hide');
+                //         $('#pregnantchooseVersionModal').modal('show');
+                //         selectFormTitle("BEmONC/ CEmONC ");
+                //         $('#menarche_show').show();
+                //         $('#pedia_show').show();
+                    
+                //     } else if (type == 'normal') {
+                //         $('#pregnantModal').modal('hide');
+                //         $('#nonPregnantChooseVersionModal').modal('show');
+                //         selectFormTitle("Clinical");
+                //         $('#menarche_show').hide();
+                //         $('#pedia_show').hide();
+                //         $('#baby_show').hide();
+                //     }
+                // } else {
+                    if(type == "pregnant") {
+                        selectFormTitle("BEmONC/ CEmONC ");
+                        $('#pregnantFormModal').modal('show');
+                    } else if(type == "normal") {
+                        selectFormTitle("Clinical ");
+                        $('#normalFormModal').modal('show');
+                    }
+                    $('#menarche_show_normal').hide();
+                    $('#pedia_show_normal').hide();
+                // }
+        }
+
+
 
     function selectFormTitle(initialTitle) {
         const telemedicine = parseInt($(".telemedicine").val());
@@ -850,7 +1042,7 @@ $counter = 0;
         });
     });
 
-    $('.normal_form_walkin').on('submit', function(e) {
+    $('.normal_form_walkin').on('submit',  function(e)  {
         e.preventDefault();
         $('.loading').show();
         reason = $('.reason_referral').val();
@@ -860,16 +1052,133 @@ $counter = 0;
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/walkin/normal') }}",
             type: 'POST',
-            success: function(data) {
+            success: function(data)  {
                 console.log(data);
-                setTimeout(function() {
+                setTimeout(function()  {
                     window.location.reload(false);
-                }, 500);
+                },  500);
+                },
+                error: function() {
+                    $('#serverModal').modal();
+                }
+            });
+        });
+
+        $('.revised_normal_form').on('submit',function(e){
+            e.preventDefault();
+            $('.loading').show();
+            $('.btn-submit').attr('disabled',true);
+            form_type = '#revisednormalFormModal';
+            department_id = $('.select_department_normal').val();
+            department_name = $('.select_department_normal option:selected').html();
+            $(this).ajaxSubmit({
+                url: "{{ url('submit-referral/normal') }}",
+                type: 'POST',
+                success: function(data) {
+                    console.log(data);
+                    if(data == 'consultation_rejected') {
+                        $('.loading').hide();
+                        $('#revisedpregnantModal').modal('hide');
+                        $('#revisednormalFormModal').modal('hide');
+                        Lobibox.alert("error",
+                        {
+                            msg: "This appoinment schedule is not available, please select other schedule in the calendar."
+                        });
+                        return;
+                    }
+                    //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+                    if(data.referred_to == 790 || data.referred_to == 23) {
+                        var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                        data.age = parseInt(data.age);
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#revisedpregnantModal').modal('hide');
+                        $('#revisednormalFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled',false);
+                        Lobibox.alert("success",
+                            {
+                                msg: "Successfully referred the patient!"
+                            });
+                    } //push notification for CCMD
+                    else {
+                        $(location).attr('href', "{{ asset('doctor/referred') }}");
+                    }
+                }
+                });
+            
+        });
+
+        $('.revised_pregnant_form').on('submit', function(e){
+            e.preventDefault();
+            $('.loading').show();
+            form_type = '#revisedpregnantFormModal';
+            sex = 'Female';
+            reason = $('.woman_information_given').val();
+            department_id = $('.select_department_pregnant').val();
+            department_name = $('.select_department_pregnant :selected').text();
+            $(this).ajaxSubmit({
+                    url: "{{ url('submit-referral/pregnant') }}",
+                    type: 'POST',
+                    success: function(data){
+                        console.log("patient", data);
+                        if(data.referred_to == 790 || data.referred_to == 23) {
+                        data.age = parseInt(data.age);
+                        var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#revisedpregnantFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled',false);
+                        Lobibox.alert("success",
+                            {
+                                msg: "Successfully referred the patient!"
+                            });
+                    } else {
+                        $('.loading').hide(); // Hide loading animation on success
+                        setTimeout(function(){
+                            $(location).attr('href', "{{ asset('doctor/referred') }}");
+                        }, 500);
+                    }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error: ", error);
+                        console.error("Response: ", xhr.responseText);
+                        $('#serverModal').modal();
+                        $('.loading').hide(); // Hide loading animation on error
+                    }
+                });
+        });
+
+        $('.choose_version').on('submit', function(e){
+            e.preventDefault();
+            // $('.loading').show();
+            form_type = '#pregnantchooseVersionModal';
+            $(this).ajaxSubmit({
+                url:"{{ route('show-choose-version') }}",
+                type: 'GET',
+                success: function(res){
+                    $('#pregnantModal').modal('hide');
             },
             error: function() {
                 $('#serverModal').modal();
             }
+        })
         });
+
+        $('.choose_version').on('submit', function(e){
+            e.preventDefault();
+            // $('.loading').show();
+            form_type = '#nonPregnantChooseVersionModal';
+            $(this).ajaxSubmit({
+                url:"{{ route('show-choose-version') }}",
+                type: 'GET',
+                success: function(res){
+                    $('#pregnantModal').modal('hide');      
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            })
     });
 
     $('.pregnant_form').on('submit', function(e) {
