@@ -26,14 +26,14 @@
 ?>
 
 <style>
-    /* .file-upload {
+    /* .file-upload_ {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
         padding: 20px;
     }
 
-    .file-upload-btn {
+    .file-upload_-btn {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -48,24 +48,24 @@
         font-weight: 700;
     }
 
-    .file-upload-btn:hover {
+    .file-upload_-btn:hover {
         background: #1AA059;
         color: #ffffff;
         transition: all .2s ease;
         cursor: pointer;
     }
 
-    .file-upload-btn:active {
+    .file-upload_-btn:active {
         border: 0;
         transition: all .2s ease;
     }
 
-    .file-upload-content {
+    .file-upload_-content_ {
         display: none;
         text-align: center;
     }
 
-    .file-upload-input {
+    .file-upload_-input {
         position: absolute;
         margin: 0;
         padding: 0;
@@ -76,19 +76,19 @@
         cursor: pointer;
     }
 
-    .image-upload-wrap {
+    .image-upload-wrap_ {
         margin-top: 20px;
         border: 4px dashed #1FB264;
         position: relative;
     }
 
     .image-dropping,
-    .image-upload-wrap:hover {
+    .image-upload-wrap_:hover {
         background-color: #1FB264;
         border: 4px dashed #ffffff;
     }
 
-    .image-title-wrap {
+    .image-title_-wrap_ {
         padding: 0 15px 15px 15px;
         color: #222;
     }
@@ -104,7 +104,7 @@
         padding: 60px 0;
     }
 
-    .file-upload-image {
+    .file-upload_-image_ {
         max-height: 200px;
         max-width: 200px;
         margin: auto;
@@ -1089,7 +1089,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_quit_radio_pregnant" value="Yes">
-                                                <label for="alcohol_quit_radio">Quit</label>
+                                                <label for="alcohol_quit_radio_pregnant">Quit</label>
                                                 <span id="alcohol_quit_year_pregnant"> since
                                                     <select class="form-control select" name="alcohol_year_quit">
                                                         <option value="">Select Option</option>
@@ -1116,7 +1116,7 @@
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <input type="radio" name="illicit_drugs" id="drugs_yes_radio_pregnant" class="referral-radio-btn" value="Yes">
-                                                <label for="drugs_yes_radio">Yes</label>
+                                                <label for="drugs_yes_radio_pregnant">Yes</label>
                                             </div>
                                             <div class="col-md-2">
                                                 <input type="radio" name="illicit_drugs" id="drugs_no_radio_pregnant" class="referral-radio-btn" value="No">
@@ -1124,8 +1124,8 @@
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="radio" name="illicit_drugs" id="drugs_quit_radio_pregnant" class="referral-radio-btn" value="Quit">
-                                                <label for="drugs_quit_radio">Quit</label>
-                                                <span id="drugs_quit_year_pregnant"> since
+                                                <label for="drugs_quit_radio_pregnant">Quit</label>
+                                                <span id="drugs_quit_year_pregnant">  since
                                                     <select class="form-control select" name="drugs_year_quit">
                                                         <option value="">Select Option</option>
                                                         <?php
@@ -1202,25 +1202,30 @@
                                                 <input class="form-check-input" id="lab_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_others_cbox" value="Yes"> Others:
                                                 <textarea id="lab_others_pregnant" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"></textarea>
                                             </div>
-                                        </div>
+                                        </div></br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="file-upload">
-                                                    <div class="image-upload-wrap">
-                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
-                                                        <div class="drag-text">
-                                                            <h3>Drag and drop a file or select add Image</h3>
-                                                        </div>
-                                                    </div>
-                                                    <div class="file-upload-content">
-                                                        <img class="file-upload-image" src="#" alt="your image" />
-                                                        <div class="image-title-wrap">
-                                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnantRevised()">Remove Files</button><br><br>
+                                                <div class="pregnant_file_attachment_">
+                                                    <div class="col-md-3" id="pregnant_upload_1">
+                                                        <div class="file-upload_">
+                                                            <div class="text-center image-upload-wrap_" id="pregnant_image-upload-wrap_1">
+                                                                <input class="file-upload-input_" multiple type="file" name="file_upload[]" onchange="readURLPregnantRevised(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                                <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
+                                                            </div>
+                                                            <div class="file-upload-content_" id="pregnant_file-upload-content_1">
+                                                                <img class="file-upload-image_" id="pregnant_file-upload-image_1"/>
+                                                                <div class="image-title-wrap_">
+                                                                    <b><small class="image-title_" id="pregnant_image-title_1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
+                                                                    {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnantRevised(1)" class="btn-sm remove-image_">Remove</button>--}}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div><br>
+                                        </div></br>
                                     </div>
                                 </div>
                             </div>
@@ -2423,7 +2428,7 @@
                         <hr />
                         <div class="form-fotter pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                            <button type="submit" id="sbmitBtn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                            <button type="submit" id="sbmitBtnPregnantRevised" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>{{--/.form-group--}}
@@ -2464,8 +2469,8 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="othersDiagnosisPregnant()"> Other Diagnosis</button>
-                <button type="button" class="btn btn-success" onclick="getAllCheckBoxPregnant()"><i class="fa fa-save"></i> Save selected check</button>
+                <button type="button" class="btn btn-warning" onclick="othersDiagnosisPregnantRevised()"> Other Diagnosis</button>
+                <button type="button" class="btn btn-success" onclick="getAllCheckBoxPregnantRevised()"><i class="fa fa-save"></i> Save selected check</button>
             </div>
         </div>
         <!-- /.modal-content -->
@@ -2516,6 +2521,26 @@
             },500);
         });
     }
+    
+    var push_notification_diagnosis_ccmc_pregnant = "";
+    function getAllCheckBoxPregnantRevised() {
+        $('#icd-modal-pregnant_revised').modal('toggle');
+        $("#clear_icd_pregnant_revised").show();
+        var values = [];
+
+        $('input[name="icd_checkbox[]"]:checked').each(function () {
+            values[values.length] = (this.checked ? $(this).parent().parent().siblings("td").eq(1).text() : "");
+            var icd_description = $(this).parent().parent().siblings("td").eq(1).text();
+            var id = $(this).val();
+            if(this.checked){
+                $("#icd_selected_pregnant_revised").append('=> '+icd_description+' '+'<br><input id="icd_preg" type="hidden" name="icd_ids[]" value="'+id+'">');
+            }
+            clearOtherDiagnosisPregnantRevised();
+        });
+        console.log(values);
+        push_notification_diagnosis_ccmc_pregnant = values.join(","); //diagnosis for CCMD for their push notification
+    }
+
 
     function addNotesDiagnosisPregnantRevised() {
         $("#add_notes_diagnosis_pregnant_revised").html(loading);
@@ -2524,6 +2549,17 @@
             $("#add_notes_diagnosis_pregnant_revised").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
                 '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+        },500);
+    }
+
+    function othersDiagnosisPregnantRevised(){
+        $('#icd-modal-pregnant_revised').modal('hide');
+        $("#others_diagnosis_pregnant_revised").html(loading);
+        $("#clear_other_diag_pregnant_revised").show();
+        setTimeout(function(){
+            $("#others_diagnosis_pregnant_revised").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
+                '                                <br />\n' +
+                '                                <textarea class="form-control reason_referral" id="other_diag_preg" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         },500);
     }
 
@@ -2883,7 +2919,7 @@
             $('#alcohol_quit_year_pregnant').hide();
         }
     });
-    $('#alcohol_quit_radio').on('click', function() {
+    $('#alcohol_quit_radio_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#alcohol_quit_year_pregnant').show();
             $('#alcohol_bottles_pregnant').hide();
@@ -2894,19 +2930,19 @@
     /* *****ILLICIT DRUGS***** */
     $('#drugs_text_pregnant').hide();
     $('#drugs_quit_year_pregnant').hide();
-    $('#drugs_yes_radio').on('click', function() {
+    $('#drugs_yes_radio_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#drugs_text_pregnant').show();
             $('#drugs_quit_year_pregnant').hide();
         }
     });
-    $('#drugs_no_radio').on('click', function() {
+    $('#drugs_no_radio_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#drugs_text_pregnant').hide();
             $('#drugs_quit_year_pregnant').hide();
         }
     });
-    $('#drugs_quit_radio').on('click', function() {
+    $('#drugs_quit_radio_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#drugs_quit_year_pregnant').show();
             $('#drugs_text_pregnant').hide();
@@ -3295,14 +3331,14 @@
 
     /**************************************************************************/
 
-    // $("#sbmitBtn").on('click',function(e){
-    //     if(!($("#icd").val()) && !($("#other_diag").val())){
-    //         Lobibox.alert("error", {
-    //             msg: "Select ICD-10 diagnosis!"
-    //         });
-    //         return false;
-    //     }
-    // });
+    $("#sbmitBtnPregnantRevised").on('click',function(e){
+        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 / Other diagnosis!"
+            });
+            return false;
+        }
+    });
 
    
         $('.reason_referral').on('change', function() {
@@ -3320,37 +3356,146 @@
         });
 
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
+    // function readURL(input) {
+    //     if (input.files && input.files[0]) {
 
-            var reader = new FileReader();
+    //         var reader = new FileReader();
 
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
+    //         reader.onload = function(e) {
+    //             $('.image-upload-wrap_').hide();
 
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
+    //             $('.file-upload_-image_').attr('src', e.target.result);
+    //             $('.file-upload_-content_').show();
 
-                $('.image-title').html(input.files[0].name);
-            };
+    //             $('.image-title_').html(input.files[0].name);
+    //         };
 
-            reader.readAsDataURL(input.files[0]);
+    //         reader.readAsDataURL(input.files[0]);
 
-        } else {
-            removeUpload();
+    //     } else {
+    //         removeUpload();
+    //     }
+    // }
+
+    // function removeUpload() {
+    //     $('.file-upload_-input').replaceWith($('.file-upload_-input').clone());
+    //     $('.file-upload_-content_').hide();
+    //     $('.image-upload-wrap_').show();
+    // }
+
+    // $('.image-upload-wrap_').bind('dragover', function() {
+    //     $('.image-upload-wrap_').addClass('image-dropping');
+    // });
+    // $('.image-upload-wrap_').bind('dragleave', function() {
+    //     $('.image-upload-wrap_').removeClass('image-dropping');
+    // });
+
+    var pregnant_pos = 2;
+    var pregnant_count = 0 ;
+    function readURLPregnantRevised(input, pos) {
+        var word = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
+        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
+        if (input.files) {
+            var tmp_pos = pos;
+            for(var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+                if(file && file !== null) {
+                    var reader = new FileReader();
+                    var type = file.type;
+                    if(type === 'application/pdf') {
+                        $('#pregnant_file-upload-image_'+pos).attr('src',pdf);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#pregnant_file-upload-image_'+pos).attr('src',word);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#pregnant_file-upload-image_'+pos).attr('src',excel);
+                        pos+=1;
+                    } else {
+                        reader.onloadend = function(e) {
+                            $('#pregnant_file-upload-image_'+pos).attr('src',e.target.result);
+                            pos+=1;
+                        };
+                    }
+                    $('#pregnant_image-upload-wrap_'+tmp_pos).hide();
+                    $('#pregnant_file-upload-content_'+tmp_pos).show();
+                    $('#pregnant_image-title_'+tmp_pos++).html(file.name);
+                    reader.readAsDataURL(file);
+                    pregnant_count+=1;
+                }
+                addFilePregnant();
+            }
         }
+        $('#preg_remove_files_').show();
     }
 
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
+    function addFilePregnant() {
+        var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
+
+        if((pregnant_count % 4) == 0) {
+            $('.pregnant_file_attachment_').append(
+                '<div class="clearfix"></div>'
+            );
+        }
+        $('.pregnant_file_attachment_').append(
+            '<div class="col-md-3" id="pregnant_upload_'+pregnant_pos+'">\n' +
+            '   <div class="file-upload_">\n' +
+            '       <div class="text-center image-upload-wrap_" id="pregnant_image-upload-wrap_'+pregnant_pos+'">\n' +
+            '           <input class="file-upload-input_" multiple type="file" name="file_upload[]" onchange="readURLPregnantRevised(this, '+pregnant_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
+            '       </div>\n' +
+            '       <div class="file-upload-content_" id="pregnant_file-upload-content_'+pregnant_pos+'">\n' +
+            '           <img class="file-upload-image_" id="pregnant_file-upload-image_'+pregnant_pos+'"/>\n' +
+            '           <div class="image-title-wrap_">\n' +
+            '               <b><small class="image-title_" id="pregnant_image-title_'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
+            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnantRevised('+pregnant_pos+')" class="remove-icon-btn_"><i class="fa fa-trash"></i></button>\n' +
+            '           </div>\n' +
+            '       </div>\n' +
+            '   </div>\n' +
+            '</div>'
+        );
+        pregnant_pos+=1;
     }
 
-    $('.image-upload-wrap').bind('dragover', function() {
-        $('.image-upload-wrap').addClass('image-dropping');
+    
+    function removeUploadPregnantRevised(uploadCount){
+        $('#pregnant_upload_' + uploadCount).remove();
+
+        upload_count -= 1;
+
+        if(pregnant_pos > uploadCount){
+            pregnant_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#preg_remove_files_');
+        }
+
+        console.log("upload_pos:", pregnant_pos);
+
+    }
+
+    
+
+    function removeFilePregnantRevised() {
+        $('.pregnant_file_attachment_').html("");
+        pregnant_count = 0;
+        pregnant_pos = 1;
+        $('#preg_remove_files_').hide();
+        addFilePregnant();
+    }
+
+    
+    $(document).ready(function() {
+        for (var i = 0; i < pregnant_count; i++) {
+            $('#pregnant_image-upload-wrap_' + i).bind('dragover', function () {
+                $('#pregnant_image-upload-wrap_' + i).addClass('image-dropping');
+            });
+            $('#pregnant_image-upload-wrap_' + i).bind('dragleave', function () {
+                $('#pregnant_image-upload-wrap_' + i).removeClass('image-dropping');
+            });
+        }
+        $('#preg_remove_files_').hide();
     });
-    $('.image-upload-wrap').bind('dragleave', function() {
-        $('.image-upload-wrap').removeClass('image-dropping');
-    });
+
 </script>

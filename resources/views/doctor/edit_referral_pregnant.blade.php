@@ -316,10 +316,12 @@ $facilities = \App\Facility::select('id','name')
                             <div id="icd_selected" style="padding-top: 5px">
                                 @if(isset($icd))
                                     @foreach($icd as $i)
+                                    {{dd($i->id)}}
                                         <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
                                         <small> => {{ $i->description }}</small><br>
                                     @endforeach
                                 @endif
+                                {{dd($icd->id)}}
                             </div>
                         </td>
                     </tr>

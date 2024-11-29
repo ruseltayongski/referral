@@ -8,7 +8,7 @@ $facilities = \App\Facility::select('id','name')
 ?>
 
 <style>
-     .file-upload {
+  .file-upload {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
@@ -174,7 +174,7 @@ $facilities = \App\Facility::select('id','name')
     </style>
    
     <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>'normal', 'status' => $status]) }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">
-        <div class="jim-content">
+     
         @include('include.header_form', ['optionHeader' => 'edit'])<br>
                 <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
@@ -369,8 +369,50 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis" style="width: 100%">
-                                    <b>Diagnosis/Impression: </b>
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required>{{$form->diagnosis}}</textarea><br><br>
+                                <div class="row">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                    <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
+                                    <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                        <i class="fa fa-medkit"></i> Add ICD-10
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                                </div>
+                            </div><br>
+
+                            <div class="row icd_selected" style="padding-top: 10px;">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                                    <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                                    <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                                    <div id="icd_selected" style="padding-top: 5px">
+                                        @if(isset($icd))
+                                            @foreach($icd as $i)
+                                                <span> => {{ $i->description }}</span><br>
+                                                <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div><br>
+
+                            <div class="row notes_diagnosis" style="padding-top: 10px;">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                                    <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                    <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                    <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
+                                </div>
+                            </div><br>
+
+                            <div class="row other_diag" style="padding-top: 10px">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                                    <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
+                                    <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                </div>
+                            </div><br>
                                 </div>
                             </div>
                         </div>
@@ -2012,7 +2054,7 @@ $facilities = \App\Facility::select('id','name')
 
                         <div class="form-fotter pull-right">
                         @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
-                        <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
+                        <button type="submit" id="sbmitBtnNormalRevised" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         @endif
                         @if($referral_status == 'referring')
                         <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'normal' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
@@ -2020,11 +2062,11 @@ $facilities = \App\Facility::select('id','name')
                         </div>
                         <div class="clearfix"></div> 
                 </div>{{--/.form-group--}}
-        </div>
+      
     </form>     
                         <div class="form-fotter pull-right">
                         {{--@if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form->department_id === 5 && $user->id == $form->md_referring_id)
-                        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
+                        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicd-modalicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
                         <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
                         @endif--}}
                         
@@ -2058,7 +2100,7 @@ $facilities = \App\Facility::select('id','name')
     </div>
 </div>
 
-<div class="modal fade" id="icd-modal">
+<!-- <div class="modal fade" id="icd-modal">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -2082,7 +2124,7 @@ $facilities = \App\Facility::select('id','name')
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
 
 <script>
@@ -2868,14 +2910,14 @@ $facilities = \App\Facility::select('id','name')
 
     /**************************************************************************/
 
-    // $("#sbmitBtn").on('click',function(e){
-    //     if(!($("#icd").val()) && !($("#other_diag").val())){
-    //         Lobibox.alert("error", {
-    //             msg: "Select ICD-10 diagnosis!"
-    //         });
-    //         return false;
-    //     }
-    // });
+    $("#sbmitBtnNormalRevised").on('click',function(e){
+        if(!($("#icd").val()) && !($("#other_diag").val())){
+            Lobibox.alert("error", {
+                msg: "Select ICD-10 diagnosis!"
+            });
+            return false;
+        }
+    });
 
     $('.reason_referral').on('change', function() {
         var value = $(this).val();

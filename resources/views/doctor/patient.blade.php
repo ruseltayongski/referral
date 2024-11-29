@@ -27,8 +27,29 @@ $counter = 0;
         padding: 20px;
         border: 1px dashed dimgrey;
     }
+    .file-upload_ {
+        background-color: #ffffff;
+        /*width: 100%!*200px*!;*/
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px dashed dimgrey;
+    }
 
     .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #1FB264;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #15824B;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .file-upload-btn_ {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -49,8 +70,18 @@ $counter = 0;
         transition: all .2s ease;
         cursor: pointer;
     }
+    .file-upload-btn_:hover {
+        background: #1AA059;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
 
     .file-upload-btn:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    .file-upload-btn_:active {
         border: 0;
         transition: all .2s ease;
     }
@@ -59,8 +90,22 @@ $counter = 0;
         display: none;
         text-align: center;
     }
+    .file-upload-content_ {
+        display: none;
+        text-align: center;
+    }
 
     .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .file-upload-input_ {
         position: absolute;
         margin: 0;
         padding: 0;
@@ -76,6 +121,11 @@ $counter = 0;
         border: 4px dashed #1FB264;
         position: relative;
     }
+    .image-upload-wrap_ {
+        margin-top: 20px;
+        border: 4px dashed #1FB264;
+        position: relative;
+    }
 
     .image-dropping,
     .image-upload-wrap:hover {
@@ -84,8 +134,18 @@ $counter = 0;
             #1FB264;
         border: 4px dashed #ffffff;
     }
+    .image-upload-wrap_:hover {
+        background-color:
+            /*#6ab155*/
+            #1FB264;
+        border: 4px dashed #ffffff;
+    }
 
     .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+    }
+    .image-title-wrap_ {
         padding: 0 15px 15px 15px;
         color: #222;
     }
@@ -107,8 +167,29 @@ $counter = 0;
         margin: auto;
         padding: 20px;
     }
+    .file-upload-image_ {
+        max-height: 75%;
+        max-width: 75%;
+        margin: auto;
+        padding: 20px;
+    }
 
     .remove-image {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .remove-image_ {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -129,8 +210,18 @@ $counter = 0;
         transition: all .2s ease;
         cursor: pointer;
     }
+    .remove-image_:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
 
     .remove-image:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    .remove-image_:active {
         border: 0;
         transition: all .2s ease;
     }
@@ -151,6 +242,12 @@ $counter = 0;
 
     @media only screen and (max-width: 720px) {
         .file-upload {
+            background-color: #ffffff;
+            width: 300px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .file-upload_ {
             background-color: #ffffff;
             width: 300px;
             margin: 0 auto;
@@ -181,10 +278,30 @@ $counter = 0;
         cursor: pointer;
         transition: transform 0.2s;
     }
+    
+    .remove-icon-btn_{
+        position: absolute;
+        top: -2px; /* Adjust as needed */
+        right: 12px; /* Adjust as needed */
+        background: transparent;
+        border: none;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ff0000; /* Optional: Trash icon color */
+        font-size: 18px; /* Optional: Adjust icon size */
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
     .remove-icon-btn:hover {
         transform: scale(1.1); /* Slightly increase size on hover */
     }
+    .remove-icon-btn_:hover {
+        transform: scale(1.1); /* Slightly increase size on hover */
+    }
     .remove-icon-btn i {
+        pointer-events: none; /* To ensure the button handles the click, not the icon */
+    }
+    .remove-icon-btn_ i {
         pointer-events: none; /* To ensure the button handles the click, not the icon */
     }
 </style>
@@ -475,23 +592,23 @@ $counter = 0;
         
 
                 // Check if facility_id is 63 (allowed to access the new form)
-                if (referred_facility == 63) {
-                    if (type == 'pregnant') {
-                        $('#pregnantModal').modal('hide');
-                        $('#pregnantchooseVersionModal').modal('show');
-                        selectFormTitle("BEmONC/ CEmONC ");
-                        $('#menarche_show').show();
-                        $('#pedia_show').show();
+                // if (referred_facility == 63) {
+                //     if (type == 'pregnant') {
+                //         $('#pregnantModal').modal('hide');
+                //         $('#pregnantchooseVersionModal').modal('show');
+                //         selectFormTitle("BEmONC/ CEmONC ");
+                //         $('#menarche_show').show();
+                //         $('#pedia_show').show();
                     
-                    } else if (type == 'normal') {
-                        $('#pregnantModal').modal('hide');
-                        $('#nonPregnantChooseVersionModal').modal('show');
-                        selectFormTitle("Clinical");
-                        $('#menarche_show').hide();
-                        $('#pedia_show').hide();
-                        $('#baby_show').hide();
-                    }
-                } else {
+                //     } else if (type == 'normal') {
+                //         $('#pregnantModal').modal('hide');
+                //         $('#nonPregnantChooseVersionModal').modal('show');
+                //         selectFormTitle("Clinical");
+                //         $('#menarche_show').hide();
+                //         $('#pedia_show').hide();
+                //         $('#baby_show').hide();
+                //     }
+                // } else {
                     if(type == "pregnant") {
                         selectFormTitle("BEmONC/ CEmONC ");
                         $('#pregnantFormModal').modal('show');
@@ -501,7 +618,7 @@ $counter = 0;
                     }
                     $('#menarche_show_normal').hide();
                     $('#pedia_show_normal').hide();
-                }
+                // }
         }
 
 
