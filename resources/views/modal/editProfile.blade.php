@@ -330,7 +330,7 @@
 
 
         // Initially hide or show the signature section based on checkbox state
-            if (termsCheckbox.checked) {
+        if (termsCheckbox.checked) {
                 signature_field.style.display = 'block';
         } else {
                 signature_field.style.display = 'none';
@@ -353,9 +353,7 @@
                     signature_field.style.display = 'none';
                 }
             });
-        } else {
-            console.error('termsCheckbox or signature_field not found in the DOM');
-        }
+        });
     });
 
 
@@ -407,35 +405,36 @@
     }
 
 
-    function resetSignatureField(){
-        $('#stored_sign').src = null;
-        var esign = '{{ $user->signature }}';
-        if(esign !== null && esign !== '') {
-            $('#signature_field').html(
-                '<img src="{{ asset($user->signature) }}" style="border: 1px solid black;"><br><br>\n' +
-                '<input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="showDrawField()">'
-            );
-        } else {
-            $('#signature_field').html(
-              ` <section>
-                    <div>
-                        <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
-                        <label for="sign_upload" class="label-sign">
-                            <h2>Upload Image</h2>
-                            <p>Signature</p>
-                        </label>
-                    </div>
-                    <div>
-                        <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)">
-                        <label for="sign_draw" class="label-sign">
-                            <h2>Draw</h2>
-                            <p>Signature</p>
-                        </label>
-                    </div>
-                </section>`
-            );
-        }
-    }
+    // function resetSignatureField(){
+    //     $('#stored_sign').src = null;
+    //     var esign = '{{ $user->signature }}';
+    //     console.log("esign", esign);
+    //     if(esign !== null && esign !== '') {
+    //         $('#signature_field').html(
+    //             '<img src="{{ asset($user->signature) }}" style="border: 1px solid black;"><br><br>\n' +
+    //             '<input class="btn btn-info btn-flat" id="sign_draw" value="Replace Signature" readonly onclick="showDrawField()">'
+    //         );
+    //     } else {
+    //         $('#signature_field').html(
+    //           ` <section>
+    //                 <div>
+    //                     <input type="radio" class="btn btn-success btn-flat radioSig" name="choose" id="sign_upload" value="Upload Image" readonly onclick="setTimeout(showUploadField, 2000)">
+    //                     <label for="sign_upload" class="label-sign">
+    //                         <h2>Upload Image</h2>
+    //                         <p>Signature</p>
+    //                     </label>
+    //                 </div>
+    //                 <div>
+    //                     <input type="radio" class="btn btn-info btn-flat radioSig" name="choose" id="sign_draw" value="Draw" readonly onclick="setTimeout(showDrawField, 2000)">
+    //                     <label for="sign_draw" class="label-sign">
+    //                         <h2>Draw</h2>
+    //                         <p>Signature</p>
+    //                     </label>
+    //                 </div>
+    //             </section>`
+    //         );
+    //     }
+    // }
 
 
     function showUploadField(){
@@ -446,7 +445,7 @@
             '<div class="file_upload">\n' +
             '   <div class="text-center image_upload_wrap" id="image_upload_wrap">\n' +
             '       <input class="file_upload_input files" id="file_upload_input" type="file" onchange="readFile(this);" accept="image/png, image/jpeg, image/jpg"/>\n' +
-            '       <img src="'+src+'" style="width: 30%; height: 30%;">\n' +
+            '       <img src="'+src+'" style="width: 408; height: 245;">\n' +
             '   </div>\n' +
             '   <div class="file_upload_content" id="file_upload_content">\n' +
             '       <canvas width="408" height="245" style="border: 1px solid black" id="file_upload_image"/></canvas><br><br><br>\n' +

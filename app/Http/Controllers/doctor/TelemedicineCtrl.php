@@ -27,6 +27,8 @@ class TelemedicineCtrl extends Controller
     {
         $facility = Session::get('auth')->facility_id;
         
+        $config_sched = Cofig_schedule::select('id','department_id','facility_id','created_by','description','category','days','time')->get();
+
         $appointment_schedule = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
@@ -74,6 +76,7 @@ class TelemedicineCtrl extends Controller
             'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
+            'configs' => $config_sched
         ];
         return view('doctor.manage_appointment', $data);
     }

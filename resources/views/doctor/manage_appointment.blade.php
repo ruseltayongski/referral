@@ -45,7 +45,7 @@
     /* for Config-Appointment */
 
     .appointment-container {
-        border: 1px solid #007bff; /* Blue border */
+        border: 1px solid #CCCCCC;
         border-radius: 8px;
         padding: 3px;
         display: flex;
@@ -76,6 +76,7 @@
     /* End for Config-Appointment */
 
     </style>
+    
 @endsection
 
 @section('content')
@@ -84,7 +85,8 @@
         $department = null;
 
         $Getdepartment = \App\Department::select('id','description')->get();   
-        
+        $config_sched_data =  \App\Cofig_schedule::get(); 
+
         foreach ($Getdepartment as $row) {
             if($user->department_id === $row->id){
                 $department = $row->description;
@@ -194,32 +196,233 @@
                                 <div class="col-md-4">
                                     <div class="appointment-container">
                                         <div class="form-check form-check-inline d-flex">
-                                            <input type="checkbox" class="form-check-input custom-checkbox" id="enable_appointment" name="enable_appointment">
+                                            <input type="checkbox" class="form-check-input custom-checkbox" id="enable_config_appointment" name="enable_appointment" value="config appointment">
                                             <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config</label>
                                         </div>
                                     </div>
-                                    
                                     <div class="label-border">
-                                        <label for="appointed_date">Appointment Date:</label>
-                                        <input type="date" class="form-control appointment_date" name="appointed_date" id="appointment_date" required>
-                                        <input type="hidden" name="appointment_count" class="appointment_count" value="1">
-                                    
-                                        <label for="facility_id">Facility:</label>
-                                        @foreach($facility as $Facility)
-                                                <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
-                                                <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
-                                        @endforeach
+                                
+                                        <div style="display: none;" id="side_Config">
+                                            
+                                            <label for="defaultCategory" >Choose default schedule: </label><!-- Config Appointment -->
+                                            <select class="form-control select2" id="defaultCategorySelect" name="default_category" required>  <!-- Config Appointment -->
+                                                <option selected value="">Select Default Category</option>
+                                                @foreach($configs as $config)
+                                                    <option value="{{$config->id}}">{{$config->description}}</option>
+                                                @endforeach
+                                            </select>
+
+                                            <label for="appointed_date" id="effective_label">Effective Date:</label>   <!-- Config Appointment -->
+                                            <input type="date" class="form-control appointment_date" name="effective_date" id="effective_date" required>
                                         
-                                        <label for="department_id">Department:</label>
+                                        </div>
+
+                                        <label for="department_id">Department Category:</label>
                                         @if($department === 'OPD')
                                             <input type="text" class="form-control" name="department_id" id="department_id" value="{{ $department }}" readonly>
                                         @else
                                             <div class="alert-department" data-department="{{ $department }}"></div>
                                         @endif
-                                       
+
+                                        <label for="facility_id">Facility:</label>
+                                        @foreach($facility as $Facility)
+                                                <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
+                                                <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
+                                        @endforeach
+
+                                        <label for="appointed_date" id="appointment_date_label">Appointment Date:</label>
+
+                                        <input type="date" class="form-control appointment_date" name="appointed_date" id="appointment_date" required>
+                                        <input type="hidden" name="appointment_count" class="appointment_count" value="1">
+                                        
                                     </div>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-8" style="display: none;" id="week_time_slot">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <strong>Repeat</strong>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="day-checkbox" name="days[]" value="Monday"> Monday
+                                                    </label>
+                                                    <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="time_from[Monday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="time_to[Monday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Monday" style="margin-top: 10px;">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="day-checkbox" name="days[]" value="Tuesday"> Tuesday
+                                                    </label>
+                                                    <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="time_from[Tuesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="time_to[Tuesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Tuesday" style="margin-top: 10px;">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="day-checkbox" name="days[]" value="Wednesday"> Wednesday
+                                                    </label>
+                                                    <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="time_from[Wednesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="time_to[Wednesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Wednesday" style="margin-top: 10px;">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="day-checkbox" name="days[]" value="Thursday"> Thursday
+                                                    </label>
+                                                    <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="time_from[Thursday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="time_to[Thursday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Thursday" style="margin-top: 10px;">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="day-checkbox" name="days[]" value="Friday"> Friday
+                                                    </label>
+                                                    <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="time_from[Friday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="time_to[Friday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Friday" style="margin-top: 10px;">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="day-checkbox" name="days[]" value="Saturday"> Saturday
+                                                    </label>
+                                                    <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="time_from[Saturday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="time_to[Saturday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Saturday" style="margin-top: 10px;">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="day-checkbox" name="days[]" value="Sunday"> Sunday
+                                                    </label>
+                                                    <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="time_from[Sunday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="time_to[Sunday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Sunday" style="margin-top: 10px;">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <div class="col-md-8" id="Manual-time-slot">
                                     <div class ="time-input-group">
                                         <div class="label-border">
                                             <div id="opdCategoryContainer">
@@ -452,6 +655,222 @@
         });
         <?php Session::put('appointment_delete',false); ?>
         @endif
+        //---------------- for Config-Appointment ---------------//
+
+        $(document).ready(function () {
+            const $defaultCategorySelect = $("#defaultCategorySelect");
+            const $weekTimeSlot = $("#week_time_slot");
+
+            const configData = @json($config_sched_data);
+            
+            $defaultCategorySelect.on("change", function () {
+                const selectedConfigId = $(this).val();
+
+                const selectedConfig = configData.find(config => config.id == selectedConfigId);
+
+                if(selectedConfig){
+                   
+                    const days = selectedConfig.days.split('|');
+                    const timeSlots = selectedConfig.time.split('|');
+                    
+                    $('.day-checkbox').prop("checked", false);
+                    $('.time-slots').hide().find(".time-slot").remove();
+                    $("#week_time_slot").css("display", "block");
+
+                    const dayTimeMap = {};
+                    let currentDay = null;
+
+                    timeSlots.forEach(slot => {
+                        if(isNaN(slot[0])) {
+
+                            currentDay = slot;
+                            dayTimeMap[currentDay] = [];
+
+                        } else if(currentDay){
+                            dayTimeMap[currentDay].push(slot);
+                        }
+                    });
+                    console.log("days", days);
+                    days.forEach(day => {
+                        $(`.day-checkbox[value="${day}"]`).prop("checked", true);
+                        const $timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
+                        $timeSlotsDiv.show();
+
+                        if(dayTimeMap[day]) {
+
+                            dayTimeMap[day].forEach(range => {
+                                const [timeFrom, timeTo] = range.split('-');
+                                const timeSlotHtml = `
+                                                 <div class="row time-slot" id="append_timeslot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[${day}][]" class="form-control input-sm" value="${timeFrom}">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[${day}][]" class="form-control input-sm" value="${timeTo}">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div`;
+                                    $timeSlotsDiv.append(timeSlotHtml);
+                            });
+
+                        }
+                   });
+                }else{
+                    $("#week_time_slot").css("display", "none");
+                }
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const configCheckbox = document.getElementById('enable_config_appointment');
+            const elementsToToggle = [
+                { element: document.getElementById('appointment_date_label'), showOnCheck: false },
+                { element: document.getElementById('appointment_date'), showOnCheck: false },
+                { element: document.getElementById('side_Config'), showOnCheck: true },
+                // { element: document.getElementById('week_time_slot'), showOnCheck: true},
+                { element: document.getElementById('Manual-time-slot'), showOnCheck: false}
+            ];
+
+            configCheckbox.addEventListener('change', function () {
+                const isChecked = this.checked;
+
+                // Toggle visibility for each element based on checkbox state
+                elementsToToggle.forEach(({ element, showOnCheck }) => {
+                    element.style.display = isChecked === showOnCheck ? 'inline' : 'none';
+                });
+            });
+
+        });
+
+        $('#defaultCategory').change(function() {
+            var selectedCategory = $(this).val();
+            var today = new Date();
+            var tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1); // Tomorrow (one day after today)
+
+            var dateRangeInput = $('#config_date_range');
+
+            // Reset the input field if no category is selected
+            if (!selectedCategory) {
+                dateRangeInput.val('');
+                return;
+            }
+
+            var startDate = tomorrow;
+            var endDate;
+
+            if (selectedCategory === '1 Week') {
+                // Calculate one week from tomorrow
+                endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + 7); // Add 7 days
+            } else if (selectedCategory === '1 Month') {
+                // Calculate one month from tomorrow
+                endDate = new Date(startDate);
+                endDate.setMonth(startDate.getMonth() + 1); // Add 1 month
+            }
+
+            // Format the start and end dates as m/d/Y (for example, 12/1/2024)
+            var formattedStartDate = formatDate(startDate);
+            var formattedEndDate = formatDate(endDate);
+
+            // Set the date range value in the input field
+            dateRangeInput.val(formattedStartDate + ' - ' + formattedEndDate);
+        });
+
+        // Helper function to format the date as m/d/Y
+        function formatDate(date) {
+            var month = date.getMonth() + 1; // Month is 0-based, so we add 1
+            var day = date.getDate();
+            var year = date.getFullYear();
+            
+            return month + '/' + day + '/' + year;
+        }
+
+        $(document).on('click', '.add-time-slot', function() {
+            let day = $(this).data('day');
+            let timeSlot = `
+                <div class="row time-slot">
+                    <div class="col-md-5">
+                        <label>Time From:</label>
+                        <input type="time" name="time_from[${day}][]" class="form-control input-sm">
+                    </div>
+                    <div class="col-md-5">
+                        <label>Time To:</label>
+                        <input type="time" name="time_to[${day}][]" class="form-control input-sm">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger btn-sm remove-time-slots" style="margin-top: 32px;">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                    </div>
+                </div>`;
+            $(this).before(timeSlot);
+        });
+
+        $(document).on('click', '.remove-time-slots', function() {
+            $(this).closest('.time-slot').remove();
+        });
+
+        $(document).on('change', '.day-checkbox', function() {
+            let  checkboxContainer = $(this).closest('.checkbox');
+            if($(this).is(':checked')){
+                $(this).closest('.checkbox').find('.time-slots').slideDown(); // Show time-slots
+            }else{
+                let timeSlots =  checkboxContainer.find('.time-slots');
+                timeSlots.slideUp(); 
+                timeSlots.find('input[type="time"]').val('');
+                timeSlots.find('.time-slot:not(:first)').remove();
+            }
+        });
+
+        //---------------- for Config-Appointment ---------------//
+
+
+        // document.addEventListener('DOMContentLoaded', function () {
+
+        //     const configcheckBox = document.getElementById('enable_config_appointment');
+        //     const appointmentLabel = document.getElementById('appointment_date_label');
+        //     const effectiveLabel = document.getElementById('effective_label');
+
+        //     const appointDesclabel = document.getElementById('appointment_desc_label');
+        //     const configDescInput = document.getElementById('Configdesc');
+
+        //     const defaultCategLabel = document.getElementById('defaultCategLabel');
+        //     const defaultCategSelect = document.getElementById('defaultCategorySelect');
+
+        //     configcheckBox.addEventListener('change', function () {
+                
+        //         if(this.checked) {
+        //             appointmentLabel.style.display = 'none';
+        //             effectiveLabel.style.display = 'inline';
+
+        //             appointDesclabel.style.display = 'inline';
+        //             configDescInput.style.display = 'inline';
+
+        //             defaultCategLabel.style.display = 'inline';
+        //             defaultCategSelect.style.display = 'inline';
+        //         }else{
+        //             appointmentLabel.style.display = 'inline';
+        //             effectiveLabel.style.display = 'none';
+
+        //             appointDesclabel.style.display = 'none';
+        //             configDescInput.style.display = 'none';
+
+        //             defaultCategLabel.style.display = 'none';
+        //             defaultCategSelect.style.display = 'none';
+        //         }
+
+        //     });
+
+        // });
+
+
         //----------------------------------------------------------------
         // function UpdateModal(appointmentId) {
         //remove the older update version

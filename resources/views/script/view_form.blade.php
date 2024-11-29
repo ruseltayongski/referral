@@ -17,7 +17,7 @@
             type: 'GET',
             success: function(response){
                 var form_type = response.form_type;
-                console.log('Form Type:', type);
+                console.log('Form Type:', form_type);
                 
                 var form_selector; // New variable to hold form identifier
 

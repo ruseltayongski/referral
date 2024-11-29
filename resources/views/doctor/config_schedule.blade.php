@@ -219,188 +219,188 @@ use App\Facility;
                                 </div>
                             </div>
                             <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <strong>Repeat</strong>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <strong>Repeat</strong>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="day-checkbox" name="days[]" value="Monday"> Monday
+                                            </label>
+                                            <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                <div class="row time-slot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[Monday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[Monday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Monday" style="margin-top: 10px;">
+                                                    <i class="fa fa-plus"></i> Add Time Slot
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="day-checkbox" name="days[]" value="Tuesday"> Tuesday
+                                            </label>
+                                            <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                <div class="row time-slot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[Tuesday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[Tuesday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Tuesday" style="margin-top: 10px;">
+                                                    <i class="fa fa-plus"></i> Add Time Slot
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="day-checkbox" name="days[]" value="Wednesday"> Wednesday
+                                            </label>
+                                            <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                <div class="row time-slot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[Wednesday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[Wednesday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Wednesday" style="margin-top: 10px;">
+                                                    <i class="fa fa-plus"></i> Add Time Slot
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="day-checkbox" name="days[]" value="Thursday"> Thursday
+                                            </label>
+                                            <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                <div class="row time-slot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[Thursday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[Thursday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Thursday" style="margin-top: 10px;">
+                                                    <i class="fa fa-plus"></i> Add Time Slot
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="day-checkbox" name="days[]" value="Friday"> Friday
+                                            </label>
+                                            <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                <div class="row time-slot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[Friday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[Friday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Friday" style="margin-top: 10px;">
+                                                    <i class="fa fa-plus"></i> Add Time Slot
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="day-checkbox" name="days[]" value="Saturday"> Saturday
+                                            </label>
+                                            <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                <div class="row time-slot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[Saturday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[Saturday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Saturday" style="margin-top: 10px;">
+                                                    <i class="fa fa-plus"></i> Add Time Slot
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" class="day-checkbox" name="days[]" value="Sunday"> Sunday
+                                            </label>
+                                            <div class="time-slots" style="margin-left: 20px; display:none;">
+                                                <div class="row time-slot">
+                                                    <div class="col-md-5">
+                                                        <label>Time From:</label>
+                                                        <input type="time" name="time_from[Sunday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-5">
+                                                        <label>Time To:</label>
+                                                        <input type="time" name="time_to[Sunday][]" class="form-control input-sm">
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                            <i class="fa fa-trash"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Sunday" style="margin-top: 10px;">
+                                                    <i class="fa fa-plus"></i> Add Time Slot
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="panel-body">
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="day-checkbox" name="days[]" value="Monday"> Monday
-                                        </label>
-                                        <div class="time-slots" style="margin-left: 20px; display:none;">
-                                            <div class="row time-slot">
-                                                <div class="col-md-5">
-                                                    <label>Time From:</label>
-                                                    <input type="time" name="time_from[Monday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label>Time To:</label>
-                                                    <input type="time" name="time_to[Monday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 25px;">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Monday" style="margin-top: 10px;">
-                                                <i class="fa fa-plus"></i> Add Time Slot
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="day-checkbox" name="days[]" value="Tuesday"> Tuesday
-                                        </label>
-                                        <div class="time-slots" style="margin-left: 20px; display:none;">
-                                            <div class="row time-slot">
-                                                <div class="col-md-5">
-                                                    <label>Time From:</label>
-                                                    <input type="time" name="time_from[Tuesday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label>Time To:</label>
-                                                    <input type="time" name="time_to[Tuesday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 25px;">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Tuesday" style="margin-top: 10px;">
-                                                <i class="fa fa-plus"></i> Add Time Slot
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="day-checkbox" name="days[]" value="Wednesday"> Wednesday
-                                        </label>
-                                        <div class="time-slots" style="margin-left: 20px; display:none;">
-                                            <div class="row time-slot">
-                                                <div class="col-md-5">
-                                                    <label>Time From:</label>
-                                                    <input type="time" name="time_from[Wednesday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label>Time To:</label>
-                                                    <input type="time" name="time_to[Wednesday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 25px;">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Wednesday" style="margin-top: 10px;">
-                                                <i class="fa fa-plus"></i> Add Time Slot
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="day-checkbox" name="days[]" value="Thursday"> Thursday
-                                        </label>
-                                        <div class="time-slots" style="margin-left: 20px; display:none;">
-                                            <div class="row time-slot">
-                                                <div class="col-md-5">
-                                                    <label>Time From:</label>
-                                                    <input type="time" name="time_from[Thursday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label>Time To:</label>
-                                                    <input type="time" name="time_to[Thursday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 25px;">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Thursday" style="margin-top: 10px;">
-                                                <i class="fa fa-plus"></i> Add Time Slot
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="day-checkbox" name="days[]" value="Friday"> Friday
-                                        </label>
-                                        <div class="time-slots" style="margin-left: 20px; display:none;">
-                                            <div class="row time-slot">
-                                                <div class="col-md-5">
-                                                    <label>Time From:</label>
-                                                    <input type="time" name="time_from[Friday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label>Time To:</label>
-                                                    <input type="time" name="time_to[Friday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 25px;">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Friday" style="margin-top: 10px;">
-                                                <i class="fa fa-plus"></i> Add Time Slot
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="day-checkbox" name="days[]" value="Saturday"> Saturday
-                                        </label>
-                                        <div class="time-slots" style="margin-left: 20px; display:none;">
-                                            <div class="row time-slot">
-                                                <div class="col-md-5">
-                                                    <label>Time From:</label>
-                                                    <input type="time" name="time_from[Saturday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label>Time To:</label>
-                                                    <input type="time" name="time_to[Saturday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 25px;">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Saturday" style="margin-top: 10px;">
-                                                <i class="fa fa-plus"></i> Add Time Slot
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label>
-                                            <input type="checkbox" class="day-checkbox" name="days[]" value="Sunday"> Sunday
-                                        </label>
-                                        <div class="time-slots" style="margin-left: 20px; display:none;">
-                                            <div class="row time-slot">
-                                                <div class="col-md-5">
-                                                    <label>Time From:</label>
-                                                    <input type="time" name="time_from[Sunday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-5">
-                                                    <label>Time To:</label>
-                                                    <input type="time" name="time_to[Sunday][]" class="form-control input-sm">
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <button type="button" class="btn btn-danger btn-xs remove-time-slot" style="margin-top: 25px;">
-                                                        <i class="fa fa-minus"></i>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                            <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Sunday" style="margin-top: 10px;">
-                                                <i class="fa fa-plus"></i> Add Time Slot
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         </div>
                     </div>
