@@ -61,7 +61,7 @@ class NewFormCtrl extends Controller
 
     public function view_info(Request $request)
     {
-        dd($request->all());
+       
         return view('revised_form.revised_referral_info');
     }
     
@@ -153,7 +153,7 @@ class NewFormCtrl extends Controller
         $pregnancy_data = $this->fetchPregnant($patient_id);
 
         // // Debugging
-        // dd($data);
+    
 
         return view('revised_form.revised_referral_info', ['data' => $data, 'pregnancy_data' => $pregnancy_data]);
     }
@@ -995,7 +995,7 @@ class NewFormCtrl extends Controller
 
     // public function revisedreferPatient(Request $req,$type){
     //     if ($type == "normal"){
-    //         dd($req->all());
+
     //     }
     // }
 
@@ -1273,7 +1273,7 @@ class NewFormCtrl extends Controller
         //     "username" => Session::get('auth')->username
         // ];
         
-        // dd($track->code, $icd);
+      
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
@@ -2475,18 +2475,22 @@ class NewFormCtrl extends Controller
     
             $pdf->MultiCell($x / 4, 7, self::black($pdf, "Who is Referring"), 0, 'L');
             $y = $pdf->getY();
-            $pdf->SetXY(60, $y - 7);
+            // $pdf->SetXY(60, $y - 7);
             if(!empty($pregnant_form->record_no)){$pdf->MultiCell($x / 4, 7, self::black($pdf, "Record Number: ") . self::orange($pdf, $pregnant_form->record_no, "Record Number:"), 0);}
-            $y = $pdf->getY();
-            $pdf->SetXY(125, $y - 7);
+            //$y = $pdf->getY();
+            //$pdf->SetXY(125, $y - 7);
             if(!empty($pregnant_form->referred_date)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred Date: ") . self::orange($pdf, $pregnant_form->referred_date, "Referred Date:"), 0);}
     
             if(!empty($pregnant_form->md_referring)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, $pregnant_form->md_referring, "Name of referring MD/HCW:"), 0, 'L');}
-            $y = $pdf->getY();
-            $pdf->SetXY(125, $y - 7);
+            // $y = $pdf->getY();
+            // $pdf->SetXY(130, $y - 7);
             if(!empty($pregnant_form->arrival_date)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Arrival Date: ") . self::orange($pdf, $pregnant_form->arrival_date, "Arrival Date:"), 0);}
     
             if(!empty($referring_md_name)){$pdf->MultiCell(0, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $referring_md_name, "Contact # of referring MD/HCW:"), 0, 'L');}
+            //-------------------------------------------------------------------------------------------------------
+            
+            
+            
             if(!empty($referring_facility->name)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility: ") . self::orange($pdf, $referring_facility->name, "Facility:"), 0, 'L');}
             if(!empty($referring_facility->contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $referring_facility->contact, "Facility Contact #:"), 0, 'L');}
             if(!empty($pregnant_form->health_worker)){$pdf->MultiCell(0, 7, self::black($pdf, "Accompanied by the Health Worker: ") . self::orange($pdf, $pregnant_form->health_worker, "Accompanied by the Health Worker:"), 0, 'L');}
@@ -2554,7 +2558,7 @@ class NewFormCtrl extends Controller
                 $pdf->SetDrawColor(200);
                 $pdf->SetLineWidth(.3);
 
-                $pdf->addPage();
+                // $pdf->addPage();
                
                 if(!empty($baby_fullname) || !empty($baby_data->birth_date) || !empty($baby_data->weight) || !empty($baby_data->gestational_age) || !empty($pregnant_form->baby_reason) 
                 || !empty($pregnant_form->baby_major_findings) || !empty($pregnant_form->baby_last_feed)){
@@ -2753,7 +2757,7 @@ class NewFormCtrl extends Controller
            if(!empty($data->hematologic)){$pdf->MultiCell(0, 7, "Hematologic:" . self::green($pdf, $this->explodeString($data->hematologic), 'Hematologic'), 1, 'L');}
            if(!empty($data->endocrine)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Endocrine: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->endocrine)), 1, 'L');}
            if(!empty($data->psychiatric)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Psychiatric: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->psychiatric)), 1, 'L');}
-            $pdf->addPage();
+            // $pdf->addPage();
         }
 
 
@@ -2902,7 +2906,7 @@ class NewFormCtrl extends Controller
         }
         $pdf->Output();
         exit();
-        // dd($data);
+       
     }
 
     public function titleHeader($pdf, $title)

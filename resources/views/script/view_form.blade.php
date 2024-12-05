@@ -21,7 +21,74 @@
                 
                 var form_selector; // New variable to hold form identifier
 
-                if (form_type === 'version1') {
+                // if (form_type === 'version1') {
+                //     if (type === 'normal') {
+                //         var form_url = "{{ url('doctor/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
+                //         $(".referral_body").html(loading);
+                //         $.ajax({
+                //             url: form_url,
+                //             type: "GET",
+                //             success: function(data) {
+                //                 console.log("normal");
+                //                 setTimeout(function() {
+                //                     $(".referral_body").html(data);
+                //                 }, 300);
+                //             },
+                //             error: function() {
+                //                 $('#serverModal').modal();
+                //             }
+                //         });
+                //     } else if (type === 'pregnant') {
+                //         $(".referral_body").html(loading);
+                //         console.log("pregnant");
+                //         $.ajax({
+                //             url: "{{ url('doctor/referral/data/pregnant') }}/" + form_id + "/" + referral_status + "/" + type,
+                //             type: "GET",
+                //             success: function(request) {
+                //                 setTimeout(function() {
+                //                     $(".referral_body").html(request);
+                //                 }, 300);
+                //             },
+                //             error: function() {
+                //                 $('#serverModal').modal();
+                //             }
+                //         });
+                //     }
+                // } else if (form_type === 'version2') {
+                    
+                //     if (type === 'normal') {
+                //         var form_url_v2 = "{{ url('doctor/revised/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
+                //         $(".referral_body").html(loading);
+                //         $.ajax({
+                //             url: form_url_v2,
+                //             type: "GET",
+                //             success: function(request){
+                //                 setTimeout(function() {
+                //                     $(".referral_body").html(request);
+                //                 }, 300); 
+                //             },
+                //             error: function(){
+                //                 $('#serverModal').modal();
+                //             }
+                //         });         
+                //     } else if (type === 'pregnant') {
+                //         var form_url_v2 = "{{ url('doctor/revised/referral/data/pregnant') }}/" + form_id + "/" + referral_status + "/" + type;
+                //         $(".referral_body").html(loading);
+                //         $.ajax({
+                //             url: form_url_v2,
+                //             type: "GET",
+                //             success: function(request){
+                //                 setTimeout(function() {
+                //                     $(".referral_body").html(request);
+                //                 }, 300); 
+                //             },
+                //             error: function(){
+                //                 $('#serverModal').modal();
+                //             }
+                //         });         
+                       
+                //     }
+                // }  else{
                     if (type === 'normal') {
                         var form_url = "{{ url('doctor/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
                         $(".referral_body").html(loading);
@@ -54,41 +121,7 @@
                             }
                         });
                     }
-                } else if (form_type === 'version2') {
-                    
-                    if (type === 'normal') {
-                        var form_url_v2 = "{{ url('doctor/revised/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
-                        $(".referral_body").html(loading);
-                        $.ajax({
-                            url: form_url_v2,
-                            type: "GET",
-                            success: function(request){
-                                setTimeout(function() {
-                                    $(".referral_body").html(request);
-                                }, 300); 
-                            },
-                            error: function(){
-                                $('#serverModal').modal();
-                            }
-                        });         
-                    } else if (type === 'pregnant') {
-                        var form_url_v2 = "{{ url('doctor/revised/referral/data/pregnant') }}/" + form_id + "/" + referral_status + "/" + type;
-                        $(".referral_body").html(loading);
-                        $.ajax({
-                            url: form_url_v2,
-                            type: "GET",
-                            success: function(request){
-                                setTimeout(function() {
-                                    $(".referral_body").html(request);
-                                }, 300); 
-                            },
-                            error: function(){
-                                $('#serverModal').modal();
-                            }
-                        });         
-                       
-                    }
-                }  
+                // }
             },
         });
 

@@ -688,8 +688,7 @@ $counter = 0;
 
                 console.log("Facility ID: ", referred_facility);
         
-
-                // Check if facility_id is 63 (allowed to access the new form)
+               
                 // if (referred_facility == 63) {
                 //     if (type == 'pregnant') {
                 //         $('#pregnantModal').modal('hide');

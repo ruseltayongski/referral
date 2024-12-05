@@ -321,7 +321,7 @@
                                 <div class="collapse" id="collapse_illness_history" style="width: 100%">
                                     <b>CASE SUMMARY:</b>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
-                                    <b>SUMMARY OF RECO:</b>
+                                    <b>CHIEF COMPLAINTS:</b>
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
                                 </div>
                             </div>
