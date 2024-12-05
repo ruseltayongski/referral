@@ -363,7 +363,7 @@
                                 <div class="collapse" id="collapse_illness_history_pregnant" style="width: 100%">
                                     <b>CASE SUMMARY:</b>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
-                                    <b>SUMMARY OF RECO:</b>
+                                    <b>CHIEF COMPLAINTS:</b>
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
                                 </div>
                             </div>
@@ -378,9 +378,6 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis_pregnant" style="width: 100%">
-
-                                    <b>Diagnosis/Impression: </b>
-                                    <textarea class="form-control" rows="7" name="notes_diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
