@@ -1080,6 +1080,7 @@ var Lobibox = Lobibox || {};
             me.$el = notify;
             if (me.$options.sound){
                 var snd = new Audio(me.$options.sound); // buffers automatically when created
+                console.log("sample sound", snd);
                 snd.play();
             }
             me.$el.data('lobibox', me);

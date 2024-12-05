@@ -1438,15 +1438,24 @@ class ReferralCtrl extends Controller
         Activity::where('code',$track->code)->where('status','queued')->delete();
 
         $patient = Patients::find($track->patient_id);
-        $tracking = Tracking::where("code",$req->code)->first();
-        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $count_seen = Seen::where('tracking_id',$track->id)->count();
         $count_reco = Feedback::where("code",$req->code)->count();
         $redirect_track = asset("doctor/referred?referredCode=").$req->code;
         $icds = Icd::where('code', $req->code)->pluck('icd_id')->toArray();
         $diagnosis = Icd10::whereIn('id', $icds)->pluck('description');
-        $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();//I am added this
-        $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
-        $finalDiagnosis = $diagnosis->toArray() ? $diagnosis->toArray() : ($patientform->other_diagnoses ? $patientform->other_diagnoses : $pregnantForm->other_diagnoses);
+        if($diagnosis->toArray()) {
+            $finalDiagnosis = $diagnosis->toArray();
+        }
+        else {
+            if($track->type == 'normal') {
+                $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
+                $finalDiagnosis = $patientform->other_diagnoses;
+            }
+            else {
+                $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();
+                $finalDiagnosis = $pregnantForm->other_diagnoses;
+            }
+        }
         $position = Activity::where("code",$req->code)
             ->where(function($query) {
                 $query->where("status","redirected")
@@ -1476,7 +1485,7 @@ class ReferralCtrl extends Controller
             "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
-       
+       dd($new_referral);
         if($req->facility == 790 || $req->facility == 23) {
              try {
                  ApiController::notifierPushNotification(array(

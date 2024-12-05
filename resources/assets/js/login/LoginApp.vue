@@ -482,6 +482,22 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-lg-6">
+                            <div class="member d-flex align-items-start">
+                                <div class="pic"><img :src="mmanayon" class="img-fluid" alt=""></div>
+                                <div class="member-info">
+                                    <h4>Marte D. Manayon</h4>
+                                    <span>Computer Maintenance Technologist III</span>
+                                    <p>09992269381</p>
+                                    <div class="social">
+                                        <a href=""><i class="ri-twitter-fill"></i></a>
+                                        <a href=""><i class="ri-facebook-fill"></i></a>
+                                        <a href=""><i class="ri-instagram-fill"></i></a>
+                                        <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!--<div class="col-lg-6 mt-4 mt-lg-0">-->
                         <!--<div class="member d-flex align-items-start">-->
@@ -1118,9 +1134,10 @@
                 call_center: path + "/resources/medilab/assets/img/contact/call_center.jpg",
                 rtayong: path + "/resources/medilab/assets/img/contact/tayong_rusel.JPG",
                 ccatubig: path + "/resources/medilab/assets/img/contact/catubig.png",
-                JGonzales: path + "/resources/medilab/assets/img/contact/JGonzales.png",
+                JGonzales: path + "/resources/medilab/assets/img/contact/JGonzales1.png",
                 fmaningo: path + "/resources/medilab/assets/img/contact/maningo_fmj.png",
                 ggorosin: path + "/resources/medilab/assets/img/contact/gorosin.g.jpg",
+                mmanayon: path + "/resources/medilab/assets/img/contact/mmanayon1.png",
                 rsugabo: path + "/resources/medilab/assets/img/contact/reyan.jpg",
                 rsumalinog: path + "/resources/medilab/assets/img/contact/sumalinog.r.jpg",
                 hdivina: path + "/resources/medilab/assets/img/contact/divina_h.png",

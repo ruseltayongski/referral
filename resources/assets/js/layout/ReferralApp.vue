@@ -519,6 +519,14 @@
         },
         created() {
             console.log("VUE.JS 3")
+
+            const pass_vue_fact = document.getElementById("pass_to_vue_facility");
+            if(pass_vue_fact){
+                this.passToVueFacility = Number(pass_vue_fact.value);
+            }else{
+                this.passToVueFacility = 0;
+            }
+
             Echo.join('chat')
                 .here(users => {
                     //console.log(users)
@@ -529,8 +537,11 @@
             this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    console.log("my event", event);
-                    if(this.user.facility_id === event.payload.referred_to) {
+                    //console.log("my event", event);
+                    // console.log("new Referral 1 ", this.passToVueFacility, event.payload.referred_to);
+                    // console.log("new Referral 2 ", this.user.facility_id, event.payload.referred_to);
+                    //this.user.facility_id === this.passToVueFacility || this.user.facility_id === event.payload.referred_to || this.passToVueFacility === event.payload.referred_to
+                    if(this.user.facility_id === event.payload.referred_to || this.passToVueFacility === event.payload.referred_to) {
                         this.playAudio();
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {
@@ -614,57 +625,58 @@
             Echo.join('referral_seen')
                 .listen('SocketReferralSeen', (event) => {
                     $("#count_seen"+event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
-                      console.log("payload Facility Id",event.payload.referring_facility_id, "User facility id", this.user.facility_id);
-                    if(event.payload.referring_facility_id === this.user.facility_id) {
+                      console.log("Seen payload Facility Id",event.payload.referring_facility_id, "Pass to Vue Facility", this.passToVueFacility);
+                    if(event.payload.referring_facility_id === this.passToVueFacility || event.payload.referring_facility_id === this.user.facility_id) {
                         this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track)
                     }
                 });
 
             Echo.join('referral_accepted')
                 .listen('SocketReferralAccepted', (event) => {
-                    if(event.payload.referred_from === this.user.facility_id) {
+                      console.log("Accepted payload Facility Id",event.payload.referred_from, "User facility id", this.user.facility_id);
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id)
                     }
                 });
 
             Echo.join('referral_rejected')
                 .listen('SocketReferralRejected', (event) => {
-                    if(event.payload.referred_from === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from  === this.user.facility_id) {
                         this.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine)
                     }
                 });
 
             Echo.join('referral_call')
                 .listen('SocketReferralCall', (event) => {
-                    if(event.payload.called_to === this.user.facility_id) {
+                    if(event.payload.called_to === this.passToVueFacility || event.payload.called_to === this.user.facility_id) {
                         this.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact, event.payload.redirect_track)
                     }
                 });
 
             Echo.join('referral_departed')
                 .listen('SocketReferralDeparted', (event) => {
-                    if(event.payload.referred_to === this.user.facility_id) {
+                    if(event.payload.referred_to === this.passToVueFacility || event.payload.referred_to === this.user.facility_id) {
                         this.notifyReferralDeparted(event.payload.patient_name, event.payload.departed_by, event.payload.departed_by_facility, event.payload.departed_date, event.payload.mode_transportation, event.payload.redirect_track)
                     }
                 });
 
             Echo.join('referral_arrived')
                 .listen('SocketReferralArrived', (event) => {
-                    if(event.payload.referred_from === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                     }
                 });
 
             Echo.join('referral_not_arrived')
                 .listen('SocketReferralNotArrived', (event) => {
-                    if(event.payload.referred_from === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralNotArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                     }
                 });
 
             Echo.join('referral_admitted')
                 .listen('SocketReferralAdmitted', (event) => {
-                    if(event.payload.referred_from === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralAdmitted(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.redirect_track)
                     }
                 });
@@ -695,7 +707,8 @@
                             }
                         }
                     } else {
-                        if(event.payload.referred_from === this.user.facility_id) {
+                        console.log("evenPayload", event.payload.referred_from, 'user facility', this.user.facility_id,'passToVueFacility', this.passToVueFacility);
+                        if(event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
                     }

@@ -71,9 +71,31 @@
             padding: 10px;
         }
     }
-
-
     /* End for Config-Appointment */
+
+    /* range of the date Sched of "SchedCategory" */
+   
+    .schedule-output {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        margin-top: -10px !important;
+    }
+
+    .schedule-range {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .schedule-category {
+        font-weight: bold;
+        font-size: 16px;
+        color: #007bff; /* Use a theme color */
+    }
+
 
     </style>
     
@@ -203,7 +225,9 @@
                                     <div class="label-border">
                                 
                                         <div style="display: none;" id="side_Config">
-                                            
+                                            <label for="appointed_date" id="effective_label">Effective Date:</label>   <!-- Config Appointment -->
+                                            <input type="date" class="form-control Effective_date" name="effective_date" id="effective_date" required>
+
                                             <label for="defaultCategory" >Choose default schedule: </label><!-- Config Appointment -->
                                             <select class="form-control select2" id="defaultCategorySelect" name="default_category" required>  <!-- Config Appointment -->
                                                 <option selected value="">Select Default Category</option>
@@ -211,14 +235,12 @@
                                                     <option value="{{$config->id}}">{{$config->description}}</option>
                                                 @endforeach
                                             </select>
-
-                                            <label for="appointed_date" id="effective_label">Effective Date:</label>   <!-- Config Appointment -->
-                                            <input type="date" class="form-control appointment_date" name="effective_date" id="effective_date" required>
                                         
                                         </div>
 
                                         <label for="department_id">Department Category:</label>
                                         @if($department === 'OPD')
+                                           <?php $department ?>
                                             <input type="text" class="form-control" name="department_id" id="department_id" value="{{ $department }}" readonly>
                                         @else
                                             <div class="alert-department" data-department="{{ $department }}"></div>
@@ -237,6 +259,19 @@
                                         
                                     </div>
                                 </div>
+
+                                <div class="col-md-8" style="display: none;" id="please_select_categ">
+                                    <!-- <div class="text-center" style="display: flex; justify-content: center; align-items: center;"> -->
+                                        <div class="panel panel-default" style="padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                            <div class="panel-body">
+                                                <label class="text-center text-warning" style="margin-top: 10px; font-size: 14px;">
+                                                    Select a default schedule to proceed with the appointment setup.
+                                                </label>
+                                            </div>
+                                        </div>
+                                    <!-- </div> -->
+                                </div>
+
                                 <div class="col-md-8" style="display: none;" id="week_time_slot">
                                         <div class="panel panel-default">
                                             <div class="panel-heading">
@@ -420,6 +455,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <p id="SchedCategory"></p>
                                     </div>
 
                                 <div class="col-md-8" id="Manual-time-slot">
@@ -659,15 +695,17 @@
 
         $(document).ready(function () {
             const $defaultCategorySelect = $("#defaultCategorySelect");
+            const $effectiveDate = $("#effective_date");
             const $weekTimeSlot = $("#week_time_slot");
 
             const configData = @json($config_sched_data);
-            
-            $defaultCategorySelect.on("change", function () {
-                const selectedConfigId = $(this).val();
+            // const                   = $json($department);
+            function categslot(){
 
+                const selectedConfigId = $defaultCategorySelect.val();
+                const effectiveDateValue = $effectiveDate.val();
                 const selectedConfig = configData.find(config => config.id == selectedConfigId);
-
+        
                 if(selectedConfig){
                    
                     const days = selectedConfig.days.split('|');
@@ -676,6 +714,7 @@
                     $('.day-checkbox').prop("checked", false);
                     $('.time-slots').hide().find(".time-slot").remove();
                     $("#week_time_slot").css("display", "block");
+                    $('#please_select_categ').css("display", "none");
 
                     const dayTimeMap = {};
                     let currentDay = null;
@@ -721,10 +760,50 @@
 
                         }
                    });
+                    var OneweekToOneMonth = selectedConfig.category;
+                   
+                    console.log("effectiveDate::", effectiveDateValue);
+
+                    if(effectiveDateValue){
+                        const startDate = new Date(effectiveDateValue);
+                        let endDate;
+
+                        if(OneweekToOneMonth === "1 Week"){
+                            endDate = new Date(startDate);
+                            endDate.setDate(startDate.getDate() + 6);
+                        } else if (OneweekToOneMonth === "1 Month"){
+                            endDate = new Date(startDate);
+                            endDate.setMonth(startDate.getMonth() + 1);
+                            endDate.setDate(endDate.getDate() - 1);
+                        }
+                        const formattedSched = `<strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> - <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>`;
+                        $("#SchedCategory").html(`
+                          <div class="col-md-12 schedule-output text-center" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; margin-top: 10px;">
+                                <span class="schedule-range">
+                                    <i class="fa fa-calendar"></i> <strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> <strong> - </strong> 
+                                    <i class="fa fa-calendar"></i> <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>
+                                     &nbsp; <span class="schedule-category" style="font-weight: bold;"> (${OneweekToOneMonth})</span>
+                                </span>
+                            </div>
+
+                        `);
+                    }
+                 
                 }else{
+                    $('#please_select_categ').css("display", "block");
                     $("#week_time_slot").css("display", "none");
                 }
-            });
+            }
+
+            $defaultCategorySelect.on("change", categslot);
+            $effectiveDate.on("change", categslot);
+
+            function formatedSchedule(date){
+                const year = date.getFullYear();
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${month}-${day}-${year}`;
+            }
         });
 
         document.addEventListener('DOMContentLoaded', function () {
@@ -734,12 +813,17 @@
                 { element: document.getElementById('appointment_date'), showOnCheck: false },
                 { element: document.getElementById('side_Config'), showOnCheck: true },
                 // { element: document.getElementById('week_time_slot'), showOnCheck: true},
+                { element: document.getElementById('please_select_categ'), showOnCheck: true},
                 { element: document.getElementById('Manual-time-slot'), showOnCheck: false}
             ];
 
             configCheckbox.addEventListener('change', function () {
                 const isChecked = this.checked;
-
+                if(isChecked){
+                    $("#week_time_slot").css("display", "none");
+                }else{
+                    $("#week_time_slot").css("display", "none");
+                }
                 // Toggle visibility for each element based on checkbox state
                 elementsToToggle.forEach(({ element, showOnCheck }) => {
                     element.style.display = isChecked === showOnCheck ? 'inline' : 'none';
@@ -809,7 +893,8 @@
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
-                </div>`;
+                </div>
+                `;
             $(this).before(timeSlot);
         });
 

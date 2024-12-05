@@ -908,7 +908,9 @@ function sendNotifierData(key_firebase,age, chiefComplaint, department, diagnosi
 
     document.addEventListener('DOMContentLoaded', function () {
         let datastore = @json(Session::get('for_firebase_data'));
+    
         if(datastore) {
+            console.log("Check datastore:: ", datastore );
             let pushDiagnosis = Array.isArray(datastore.push_diagnosis) ?
                 datastore.push_diagnosis.join(', ') : 
                 datastore.push_diagnosis;
@@ -918,8 +920,6 @@ function sendNotifierData(key_firebase,age, chiefComplaint, department, diagnosi
                 datastore.age,
                 datastore.chiefComplaint, 
                 datastore.referred_department, 
-                // datastore.push_diagnosis, 
-                // datastore.push_diagnosis.join(', '),
                 pushDiagnosis,
                 datastore.patient_name,
                 datastore.patient_sex, 
@@ -927,7 +927,8 @@ function sendNotifierData(key_firebase,age, chiefComplaint, department, diagnosi
                 datastore.referred_date,
                 datastore.patient_code
             );
-            <?php session()->put('for_firebase_data', null); ?>
+
+            <?php  session()->put('for_firebase_data', null); ?>
         }
       
     });

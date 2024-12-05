@@ -152,8 +152,15 @@
             <div class="step-name">Discharged</div>
         </div>
     </div>
+    @php
+        $redirectedTrack = json_decode($redirected_track, true);
+        $referredFromArray = array_column($redirectedTrack, 'referred_from');
+
+    @endphp
+
     @if(count($redirected_track) > 0)
     @foreach($redirected_track as $redirect_track)
+
     <?php
     $queue_redirected = \App\Activity::where('code', $redirect_track->code)->where('status', 'queued')->orderBy('id', 'desc')->first()->remarks;
     $position_count++;
@@ -217,8 +224,16 @@
         ->where("created_at", ">=", $redirect_track->created_at)
         ->where("status", "discharged")
         ->exists();
+
+        $last_position_index = count($position[$position_count]) - 1; // Get the last index of the position array
+        $last_position = $position[$last_position_index]; // Retrieve the last position
+        $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
+        
     ?>
     <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
+    
+    <input type="hidden" id="pass_to_vue_facility" value="{{ end($referredFromArray)  }}">
+    
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
             <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
