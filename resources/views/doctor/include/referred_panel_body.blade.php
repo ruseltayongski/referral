@@ -230,10 +230,10 @@
         $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
         
     ?>
-    <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
     
+    <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>
     <input type="hidden" id="pass_to_vue_facility" value="{{ end($referredFromArray)  }}">
-    
+   
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
             <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>

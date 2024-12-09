@@ -22432,9 +22432,9 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     this.increment_referral = this.count_referral;
     Echo.join('new_referral').listen('NewReferral', function (event) {
       //console.log("my event", event);
-      // console.log("new Referral 1 ", this.passToVueFacility, event.payload.referred_to);
-      // console.log("new Referral 2 ", this.user.facility_id, event.payload.referred_to);
-      //this.user.facility_id === this.passToVueFacility || this.user.facility_id === event.payload.referred_to || this.passToVueFacility === event.payload.referred_to
+      console.log("new Referral 1 ", _this3.passToVueFacility, event.payload.referred_to);
+      console.log("new Referral 2 ", _this3.user.facility_id, event.payload.referred_to);
+      // this.user.facility_id === event.payload.referred_to -----> Original Code Populated
       if (_this3.user.facility_id === event.payload.referred_to || _this3.passToVueFacility === event.payload.referred_to) {
         _this3.playAudio();
         _this3.increment_referral++;
@@ -22488,17 +22488,19 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     });
     Echo.join('referral_accepted').listen('SocketReferralAccepted', function (event) {
-      console.log("Accepted payload Facility Id", event.payload.referred_from, "User facility id", _this3.user.facility_id);
       if (event.payload.referred_from === _this3.passToVueFacility || event.payload.referred_from === _this3.user.facility_id) {
+        // adding or and condition only
         _this3.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id, event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id);
       }
     });
     Echo.join('referral_rejected').listen('SocketReferralRejected', function (event) {
       if (event.payload.referred_from === _this3.passToVueFacility || event.payload.referred_from === _this3.user.facility_id) {
+        // adding or and condition only
         _this3.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine);
       }
     });
     Echo.join('referral_call').listen('SocketReferralCall', function (event) {
+      // adding or and condition only
       if (event.payload.called_to === _this3.passToVueFacility || event.payload.called_to === _this3.user.facility_id) {
         _this3.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact, event.payload.redirect_track);
       }
@@ -22509,6 +22511,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     });
     Echo.join('referral_arrived').listen('SocketReferralArrived', function (event) {
+      // adding or and condition only
       if (event.payload.referred_from === _this3.passToVueFacility || event.payload.referred_from === _this3.user.facility_id) {
         _this3.notifyReferralArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
       }

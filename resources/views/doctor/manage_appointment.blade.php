@@ -95,8 +95,18 @@
         font-size: 16px;
         color: #007bff; /* Use a theme color */
     }
+    .input-error-config {
+        border: 2px solid red;
+    }
 
+    .add-time-slot{
+        margin-top: 10px; 
+        padding: 0 5px;
+    }
 
+    .remove-time-slot{
+        margin-top: 32px;
+    }
     </style>
     
 @endsection
@@ -104,6 +114,8 @@
 @section('content')
     @php
         $user = Session::get('auth');
+        $department_id = $user->department_id;
+      
         $department = null;
 
         $Getdepartment = \App\Department::select('id','description')->get();   
@@ -232,15 +244,17 @@
                                             <select class="form-control select2" id="defaultCategorySelect" name="default_category" required>  <!-- Config Appointment -->
                                                 <option selected value="">Select Default Category</option>
                                                 @foreach($configs as $config)
-                                                    <option value="{{$config->id}}">{{$config->description}}</option>
+                                                    @if($department_id === $config->department_id)
+                                                        <option value="{{$config->id}}">{{$config->description}}</option>
+                                                    @endif
                                                 @endforeach
+                                                
                                             </select>
-                                        
                                         </div>
 
                                         <label for="department_id">Department Category:</label>
                                         @if($department === 'OPD')
-                                           <?php $department ?>
+                                           
                                             <input type="text" class="form-control" name="department_id" id="department_id" value="{{ $department }}" readonly>
                                         @else
                                             <div class="alert-department" data-department="{{ $department }}"></div>
@@ -293,12 +307,12 @@
                                                                 <input type="time" name="time_to[Monday][]" class="form-control input-sm">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Monday" style="margin-top: 10px;">
+                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Monday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
@@ -318,12 +332,12 @@
                                                                 <input type="time" name="time_to[Tuesday][]" class="form-control input-sm">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Tuesday" style="margin-top: 10px;">
+                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Tuesday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
@@ -343,12 +357,12 @@
                                                                 <input type="time" name="time_to[Wednesday][]" class="form-control input-sm">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Wednesday" style="margin-top: 10px;">
+                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Wednesday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
@@ -368,12 +382,12 @@
                                                                 <input type="time" name="time_to[Thursday][]" class="form-control input-sm">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Thursday" style="margin-top: 10px;">
+                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Thursday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
@@ -393,12 +407,12 @@
                                                                 <input type="time" name="time_to[Friday][]" class="form-control input-sm">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Friday" style="margin-top: 10px;">
+                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Friday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
@@ -418,12 +432,12 @@
                                                                 <input type="time" name="time_to[Saturday][]" class="form-control input-sm">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Saturday" style="margin-top: 10px;">
+                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Saturday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
@@ -443,12 +457,12 @@
                                                                 <input type="time" name="time_to[Sunday][]" class="form-control input-sm">
                                                             </div>
                                                             <div class="col-md-2">
-                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                                <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Sunday" style="margin-top: 10px;">
+                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Sunday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
@@ -697,15 +711,15 @@
             const $defaultCategorySelect = $("#defaultCategorySelect");
             const $effectiveDate = $("#effective_date");
             const $weekTimeSlot = $("#week_time_slot");
-
+    
             const configData = @json($config_sched_data);
-            // const                   = $json($department);
+           
             function categslot(){
 
                 const selectedConfigId = $defaultCategorySelect.val();
                 const effectiveDateValue = $effectiveDate.val();
                 const selectedConfig = configData.find(config => config.id == selectedConfigId);
-        
+                
                 if(selectedConfig){
                    
                     const days = selectedConfig.days.split('|');
@@ -750,7 +764,7 @@
                                                         <input type="time" name="time_to[${day}][]" class="form-control input-sm" value="${timeTo}">
                                                     </div>
                                                     <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot" style="margin-top: 32px;">
+                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
                                                     </div>
@@ -807,6 +821,31 @@
         });
 
         document.addEventListener('DOMContentLoaded', function () {
+
+            const effectiveDate = document.getElementById('effective_date');
+            const defaultCategorySelect = document.getElementById('defaultCategorySelect');
+               
+            function highlightEmptyFields() {
+                if (!effectiveDate.value) {
+                    effectiveDate.classList.add('input-error-config');
+                } else {
+                    effectiveDate.classList.remove('input-error-config');
+                }
+
+                if (!defaultCategorySelect.value) {
+                    defaultCategorySelect.classList.add('input-error-config');
+                } else {
+                    defaultCategorySelect.classList.remove('input-error-config');
+                }
+            }
+
+            $('#addAppointmentModal').on('show.bs.modal', function () {
+                highlightEmptyFields();
+            });
+            effectiveDate.addEventListener('input', highlightEmptyFields);
+            defaultCategorySelect.addEventListener('change', highlightEmptyFields);
+
+
             const configCheckbox = document.getElementById('enable_config_appointment');
             const elementsToToggle = [
                 { element: document.getElementById('appointment_date_label'), showOnCheck: false },

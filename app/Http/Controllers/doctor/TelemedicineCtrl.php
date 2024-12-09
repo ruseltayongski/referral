@@ -130,6 +130,40 @@ class TelemedicineCtrl extends Controller
 
     }
 
+    public function editconfigSched(Request $req){
+
+        $user = Session::get('auth');
+     
+        $config_sched = Cofig_schedule::where('id', $req->configId)->first();
+ 
+        $config_sched->description = $req->Updateconfigdesc;
+        $config_sched->department_id = $req->update_department_id;
+        $config_sched->category = $req->Update_default_category;
+        $config_sched->facility_id = $req->Updatefacility_id;
+       
+        $scheduleData = [];
+ 
+        foreach($req->updatedays as $day){
+             
+             if(isset($req->update_time_from[$day]) && isset($req->update_time_to[$day])){
+ 
+                 $timeSlots = [];
+                 foreach($req->update_time_from[$day] as $index => $timeFrom){
+                     $timeTo = $req->update_time_to[$day][$index] ?? '';
+                     $timeSlots[] = "{$timeFrom}-{$timeTo}";
+                 }
+ 
+                 $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
+             }
+        }
+ 
+        $config_sched->days = implode('|', $req->updatedays);
+        $config_sched->time = implode('|', $scheduleData);
+        $config_sched->created_by = $user->id;
+        $config_sched->save();
+        
+    }
+
     public function appointmentCalendar() {
         $user = Session::get('auth');
         $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
