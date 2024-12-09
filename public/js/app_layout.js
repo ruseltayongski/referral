@@ -22431,11 +22431,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     });
     this.increment_referral = this.count_referral;
     Echo.join('new_referral').listen('NewReferral', function (event) {
-      //console.log("my event", event);
+      //  console.log("my event Listener", event);
       console.log("new Referral 1 ", _this3.passToVueFacility, event.payload.referred_to);
       console.log("new Referral 2 ", _this3.user.facility_id, event.payload.referred_to);
       // this.user.facility_id === event.payload.referred_to -----> Original Code Populated
-      if (_this3.user.facility_id === event.payload.referred_to || _this3.passToVueFacility === event.payload.referred_to) {
+      if (_this3.user.facility_id === event.payload.referred_to || _this3.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred') {
         _this3.playAudio();
         _this3.increment_referral++;
         if ($("#referral_page_check").val()) {

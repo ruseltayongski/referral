@@ -521,6 +521,7 @@
             console.log("VUE.JS 3")
 
             const pass_vue_fact = document.getElementById("pass_to_vue_facility");
+           
             if(pass_vue_fact){
                 this.passToVueFacility = Number(pass_vue_fact.value);
             }else{
@@ -537,11 +538,11 @@
             this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    //console.log("my event", event);
+                    //  console.log("my event Listener", event);
                      console.log("new Referral 1 ", this.passToVueFacility, event.payload.referred_to);
                      console.log("new Referral 2 ", this.user.facility_id, event.payload.referred_to);
                     // this.user.facility_id === event.payload.referred_to -----> Original Code Populated
-                    if(this.user.facility_id === event.payload.referred_to || this.passToVueFacility === event.payload.referred_to) {
+                    if(this.user.facility_id === event.payload.referred_to || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred')) {
                         this.playAudio();
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {

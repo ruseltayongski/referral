@@ -1485,7 +1485,7 @@ class ReferralCtrl extends Controller
             "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
-      
+ 
         if($req->facility == 790 || $req->facility == 23) {
              try {
                  ApiController::notifierPushNotification(array(
