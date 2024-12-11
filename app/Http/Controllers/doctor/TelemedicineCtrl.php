@@ -12,6 +12,7 @@ use App\Cofig_schedule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Auth;
@@ -99,7 +100,7 @@ class TelemedicineCtrl extends Controller
 
     public function AddconfigSched(Request $req){
        $user = Session::get('auth');
-      
+      dd($req->all());
        $config_sched = new Cofig_schedule();
 
        $config_sched->description = $req->configdesc;
@@ -128,40 +129,97 @@ class TelemedicineCtrl extends Controller
        $config_sched->created_by = $user->id;
        $config_sched->save();
 
+       return redirect::back();
     }
 
     public function editconfigSched(Request $req){
 
         $user = Session::get('auth');
-     
         $config_sched = Cofig_schedule::where('id', $req->configId)->first();
- 
+        dd($req->all());
         $config_sched->description = $req->Updateconfigdesc;
         $config_sched->department_id = $req->update_department_id;
         $config_sched->category = $req->Update_default_category;
         $config_sched->facility_id = $req->Updatefacility_id;
        
         $scheduleData = [];
- 
+
+        // $validated = $req->validate([
+        //     'update_time_from.*.*' => 'required|date_format:H:i',
+        //     'update_time_to.*.*' => 'required|date_format:H:i|after:update_time_from.*.*',
+        // ]);
+
+        // removing null
+        // $update_time_from = array_filter(array_map(function ($times){
+        //     return array_filter($times, function ($time){
+        //         return !is_null($time);
+        //     });
+        // },  $req->update_time_from), function ($times){
+        //     return !empty($times);
+        // });
+
+        // $update_time_to = array_filter(array_map(function ($times){
+        //     return array_filter($times, function ($time){
+        //         return !is_null($time);
+        //     });
+        // }, $req->update_time_to), function ($times){
+        //     return !empty($times);
+        // });
+
         foreach($req->updatedays as $day){
-             
-             if(isset($req->update_time_from[$day]) && isset($req->update_time_to[$day])){
+            $timeSlots = [];
+
+            if (!empty($req->update_time_from[$day]) && !empty($req->update_time_to[$day])) {
  
-                 $timeSlots = [];
                  foreach($req->update_time_from[$day] as $index => $timeFrom){
                      $timeTo = $req->update_time_to[$day][$index] ?? '';
-                     $timeSlots[] = "{$timeFrom}-{$timeTo}";
+
+                     if(!empty($timeFrom) && !empty($timeTo)){
+
+                        $timeSlots[] = "{$timeFrom}-{$timeTo}";
+                     }
                  }
- 
-                 $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
-             }
+            }
+
+            if(!empty($timeSlots)){
+                $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
+            }else{
+
+            }
         }
- 
+
+
         $config_sched->days = implode('|', $req->updatedays);
         $config_sched->time = implode('|', $scheduleData);
         $config_sched->created_by = $user->id;
         $config_sched->save();
+
+        // foreach($req->updatedays as $day){
+             
+        //      if(isset($req->update_time_from[$day]) && isset($req->update_time_to[$day])){
+ 
+        //          $timeSlots = [];
+        //          foreach($req->update_time_from[$day] as $index => $timeFrom){
+        //              $timeTo = $req->update_time_to[$day][$index] ?? '';
+        //              $timeSlots[] = "{$timeFrom}-{$timeTo}";
+        //          }
+ 
+        //          $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
+        //      }
+        // }
+ 
+        // $config_sched->days = implode('|', $req->updatedays);
+        // $config_sched->time = implode('|', $scheduleData);
+        // $config_sched->created_by = $user->id;
+        // $config_sched->save();
         
+    }
+
+    public function removeconfigSched(Request $req){
+        $config_sched = Cofig_schedule::where('id', $req->configId)->first();
+        $config_sched->delete();
+
+        return redirect::back();
     }
 
     public function appointmentCalendar() {

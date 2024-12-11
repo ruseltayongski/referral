@@ -456,7 +456,7 @@
                             ?> 
                             <!-- @if ($pos == $position[$position_count]) -->
                            {{-- @foreach ($sortedFiles as $referredFile)
-                                <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $referredFile }}', '{{$referredActivities}}')">
+                                <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/PublicDoctor') }}', '{{ $referredFile }}', '{{$referredActivities}}')">
                                 <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
                                 @if(ends_with($referredFile, '.pdf'))
                                     <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;{{$referredFile}}
@@ -466,7 +466,7 @@
                                 </a>&nbsp;
                             @endforeach --}}
                             @if(empty($sortedFiles))
-                                <a href="javascript:void(0);" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{$referredFile}}','{{$referredActivities}}')">
+                                <a href="javascript:void(0);" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/PublicDoctor') }}','{{$referredFile}}','{{$referredActivities}}')">
                                     <div class="file-wrapper-icon">
                                         <img src="../public/fileupload/add_folder.ico"/><br>
                                         <label class="file-Icon-label">Add File</label>
@@ -475,7 +475,7 @@
                             @else
                             <!-- <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$jsonsortedFiles}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{ $referredFile }}', '{{$referredActivities}}')">
                             <i class="fa fa-folder folder-icon" style="color:#FFE68C;font-size: 30px; cursor:pointer;" data-toggle="modal" data-target="#folderModal"></i></a> -->
-                                <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$jsonsortedFiles}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{ $referredFile }}', '{{$referredActivities}}')">
+                                <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$jsonsortedFiles}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/PublicDoctor') }}','{{ $referredFile }}', '{{$referredActivities}}')">
                                     <div class="file-wrapper-icon">
                                         <img src="../public/fileupload/icon_checked_folder.ico"/><br>
                                         <label class="file-Icon-label">File upload</label>
@@ -983,6 +983,7 @@
 <script>
 //--------------> adding folder list
 function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUrl) {
+    console.log("baseUrl", baseUrl);
     //var sortedFiles = JSON.parse(sortedFiles);
     $(document).on('keydown', function(event) {
             if (event.keyCode === 27) { // Check if Escape key is pressed
