@@ -834,7 +834,8 @@ class ApiController extends Controller
             $filePaths = [];
             $fileNames2 = [];
             foreach ($uploadFiles as $file) {
-                $filepath = public_path() . '/fileupload/' . $user->username;
+                // $filepath = public_path() . '/fileupload/' . $user->username;
+                $filepath = public_path() . '/fileupload/PublicDoctor';
                 $originalName = $file->getClientOriginalName();
                 // Check if the file already exists, and rename if necessary
                 $counter = 1;

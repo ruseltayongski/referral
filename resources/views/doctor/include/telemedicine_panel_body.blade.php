@@ -419,16 +419,28 @@
              
                     <?php
                     // My changes in file Display
-                    $referredActivities = $user->activities()
-                        ->where('code', $follow_track->code) 
-                        ->where('id', $referred_track->id)
-                        ->get();
+
+                    // $referredActivities = $user->activities()
+                    //     ->where('code', $follow_track->code) 
+                    //     ->where('id', $referred_track->id)
+                    //     ->get();
+
+                    $referredActivities = \App\Activity::where([
+                            'code' => $referred_track->code,
+                            'referred_from' => $referred_track->referred_from,
+                            'status' => 'referred'
+                        ])->get();
+                        
+                    // $followActivities = $user->activities() //private files
+                    //     ->where('code', $follow_track->code)
+                    //     ->where("status","followup")
+                    //     ->get(); 
                     
-                    $followActivities = $user->activities()
-                        ->where('code', $follow_track->code)
+                    $followActivities = \App\Activity::where('code', $follow_track->code)
                         ->where("status","followup")
-                        ->get();  
-                    // dd($referredActivities, $followActivities);
+                        ->where('referred_to', $follow_track->referred_to)
+                        ->get(); 
+                   
                     ?>
                     <?php $pdfFiles = []; ?>
                     <?php $imageFiles = []; ?>
@@ -465,6 +477,7 @@
                                 @endif
                                 </a>&nbsp;
                             @endforeach --}}
+                            
                             @if(empty($sortedFiles))
                                 <a href="javascript:void(0);" onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/PublicDoctor') }}','{{$referredFile}}','{{$referredActivities}}')">
                                     <div class="file-wrapper-icon">
@@ -511,7 +524,7 @@
                             @if ($pos == $position[$position_count])
                                     {{--@foreach ($sortedFiles_follow as $followFile)   
                                   
-                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}', '{{ $followFile }}', '{{$followActivity}}')">
+                                    <a href="javascript:void(0);" class="d-file" onclick="openFileViewer('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/PublicDoctor' . $user->username . '/') }}', '{{ $followFile }}', '{{$followActivity}}')">
                                         <!-- <img src="path_to_icon_based_on_filetype" class="file-icon">{{ $referredFile }}  -->
                                         @if(ends_with($followFile, '.pdf'))
                                             <i class="fa fa-file-pdf-o" aria-hidden="true"></i>&nbsp;{{$followFile}} 
@@ -522,14 +535,15 @@
                                     </a>&nbsp;
                                     @endforeach --}}
                                     @if(empty($sortedFiles_follow))
-                                        <a href="#"  onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{$followFile}}')">
+                                    {{--<!--  <a href="#"  onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{$followFile}}')"> -->--}}
+                                        <a href="#"  onclick="addfilesInFollowupIfempty('{{$index}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/PublicDoctor') }}','{{$followFile}}')">
                                             <div class="file-wrapper-icon">
                                                 <img src="../public/fileupload/add_folder.ico"/><br>
                                                 <label class="file-Icon-label">Add File</label>
                                             </div>
                                         </a>&nbsp;
                                    @else 
-                                        <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$sortedFilesFollow}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/' . $user->username . '/') }}','{{ $followFile }}', '{{$followActivity}}')">
+                                        <a href="javascript:void(0);" onclick="FileFolder('{{$index}}','{{$sortedFilesFollow}}','{{$activity_code}}','{{$activity_id}}','{{$follow_id}}','{{ asset('public/fileupload/PublicDoctor') }}','{{ $followFile }}', '{{$followActivity}}')">
                                             <div class="file-wrapper-icon">
                                                 <img src="../public/fileupload/icon_checked_folder.ico"/><br>
                                                 <label class="file-Icon-label">File upload</label>

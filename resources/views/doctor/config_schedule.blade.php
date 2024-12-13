@@ -116,16 +116,13 @@ use App\Facility;
                             </tr>
                             <!-- Modal Structure for each schedule -->
                             <div class="modal fade" id="scheduleModal{{$schedule->id}}" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel{{$schedule->id}}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-medium" role="document">
+                                <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title" id="scheduleModalLabel{{$schedule->id}}">
                                                 <i class="fa fa-user-md" aria-hidden="true"></i>
-                                                <strong>Doctor Schedule</strong>
+                                                <strong>Doctor Schedule for {{$schedule->category}}</strong>
                                             </h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
                                         </div>
                                         <div class="modal-body">
                                             <div class="list-group">
@@ -149,7 +146,7 @@ use App\Facility;
                                                         }
                                                     }
                                                 @endphp
-
+                                                    
                                                 @foreach($dayTimes as $day => $times)
                                                     <div class="list-group-item d-flex justify-content-between align-items-center">
                                                         <div class="day">

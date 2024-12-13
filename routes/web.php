@@ -673,7 +673,7 @@ Route::match(['GET', 'POST'], 'doctor/telemedicine', 'doctor\TelemedicineCtrl@in
 
 Route::get('/get-booked-dates', 'doctor\TelemedicineCtrl@getBookedDates')->name('get-booked-dates'); // I add this to get all dates that booked by the user
 Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCalendar');
-Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment');
+Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment')->name('manage.appointment');
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
 Route::get('/appointment/data/{id}', 'doctor\TelemedicineCtrl@getAppointmentData')->name('get-appointment-data');
 Route::get('/display/appointment/{id}', 'doctor\TelemedicineCtrl@displayAppointment')->name('display-appointment'); // I add this route to retrieve a multiple time slot manage appointment

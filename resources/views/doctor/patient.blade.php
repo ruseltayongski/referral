@@ -504,7 +504,7 @@ $counter = 0;
                                         <i class="fa fa-stethoscope"></i>
                                         Walk-In
                                     </a>
-                                        @elseif ($user->facility_id == 63)
+                                        @elseif ($user->facility_id == 63 && $row->sex=='Female')
                                         <a href="#pregnantModal"
                                                data-patient_id="{{ $row->id }}"
                                                data-backdrop="static"
