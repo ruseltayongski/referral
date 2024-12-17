@@ -689,23 +689,23 @@ $counter = 0;
                 console.log("Facility ID: ", referred_facility);
         
                
-                // if (referred_facility == 63) {
-                //     if (type == 'pregnant') {
-                //         $('#pregnantModal').modal('hide');
-                //         $('#pregnantchooseVersionModal').modal('show');
-                //         selectFormTitle("BEmONC/ CEmONC ");
-                //         $('#menarche_show').show();
-                //         $('#pedia_show').show();
+                if (referred_facility == 63) {
+                    if (type == 'pregnant') {
+                        $('#pregnantModal').modal('hide');
+                        $('#pregnantchooseVersionModal').modal('show');
+                        selectFormTitle("BEmONC/ CEmONC ");
+                        $('#menarche_show').show();
+                        $('#pedia_show').show();
                     
-                //     } else if (type == 'normal') {
-                //         $('#pregnantModal').modal('hide');
-                //         $('#nonPregnantChooseVersionModal').modal('show');
-                //         selectFormTitle("Clinical");
-                //         $('#menarche_show').hide();
-                //         $('#pedia_show').hide();
-                //         $('#baby_show').hide();
-                //     }
-                // } else {
+                    } else if (type == 'normal') {
+                        $('#pregnantModal').modal('hide');
+                        $('#nonPregnantChooseVersionModal').modal('show');
+                        selectFormTitle("Clinical");
+                        $('#menarche_show').hide();
+                        $('#pedia_show').hide();
+                        $('#baby_show').hide();
+                    }
+                } else {
                     if(type == "pregnant") {
                         selectFormTitle("BEmONC/ CEmONC ");
                         $('#pregnantFormModal').modal('show');
@@ -715,7 +715,7 @@ $counter = 0;
                     }
                     $('#menarche_show_normal').hide();
                     $('#pedia_show_normal').hide();
-                // }
+                }
         }
 
 

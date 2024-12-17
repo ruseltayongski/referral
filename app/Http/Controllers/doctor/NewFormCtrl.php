@@ -1227,10 +1227,9 @@ class NewFormCtrl extends Controller
         $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
         $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
         $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
-        $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->first();
+        $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get(); 
         $status = Tracking::select('status')->where('id', $id)->first()->status;
 
-        
 
         $arr = [
             "form" => self::pregnantFormData($id),
@@ -1278,7 +1277,7 @@ class NewFormCtrl extends Controller
             Session::put('telemed',false);
             return $arr;
         } else {
-            return view("modal.revised_pregnant_info",$arr);
+            return view("doctor.referral_body_revised_pregnant",$arr);
         }
     }
 
@@ -1472,7 +1471,145 @@ class NewFormCtrl extends Controller
             Session::put('telemed',false);
             return $arr;
         } else {
-                return view("modal.revised_normal_form_info",$arr);
+                return view("doctor.referral_body_revised_normal",$arr);
+        }
+    }
+
+    public static function editInfo($id,$form_type,$referral_status)
+    {
+        $track = Tracking::select('code')->where('id', $id)->first();
+        $icd = Icd::select('icd10.code', 'icd10.description', 'icd.icd_id as id')
+            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+            ->where('icd.code',$track->code)->get();
+
+        if($form_type == 'normal') {
+            $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+        //    $path = self::securedFile($file_link);
+        //    $file_name = basename($path);
+
+            $path = array();
+            $file_name = array();
+
+            if($file_link != null) {
+                $explode = explode("|",$file_link);
+                foreach($explode as $link) {
+                    $path_tmp = ReferralCtrl::securedFile($link);
+                    if($path_tmp != '') {
+                        array_push($path, $path_tmp);
+                        array_push($file_name, basename($path_tmp));
+                    }
+                }
+            }
+
+            $reason = ReasonForReferral::select('patient_form.reason_referral as id', 'reason_referral.reason as reason')
+                ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
+                ->where('patient_form.code', $track->code)->first();
+            $form = ReferralCtrl::normalFormData($id);
+
+            $patient_id = Tracking::select('patient_id')->where('id', $id)->first()->patient_id;
+            $type =  Tracking::select('type')->where('id', $id)->first()->type;
+            $status = Tracking::select('status')->where('id', $id)->first()->status;
+            $past_medical_history = PastMedicalHistory::where('patient_id', $patient_id)->first();
+            $personal_and_social_history = PersonalAndSocialHistory::where('patient_id', $patient_id)->first();
+            $pertinent_laboratory = PertinentLaboratory::where('patient_id', $patient_id)->first();
+            $review_of_system = ReviewOfSystems::where('patient_id', $patient_id)->first();
+            $nutritional_status = NutritionalStatus::where('patient_id', $patient_id)->first();
+            $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
+            $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
+    
+       
+            return view("modal.revised_normal_form_info", [
+                "form" => $form['form'],
+                "id" => $id,
+                "patient_age" => $form['age'],
+                "age_type" => $form['ageType'],
+                "reason" => $reason,
+                "icd" => $icd,
+                "file_path" => $path,
+                "file_name" => $file_name,
+                "form_type" => $form_type,
+                "referral_status" => $referral_status,
+                "username" => Session::get('auth')->username,
+
+                "patient_id" => $patient_id,
+                "past_medical_history" => $past_medical_history,
+                "personal_and_social_history" => $personal_and_social_history,
+                "pertinent_laboratory" => $pertinent_laboratory,
+                "review_of_system" => $review_of_system,
+                "nutritional_status" => $nutritional_status,
+                "latest_vital_signs" => $latest_vital_signs,
+                "glasgocoma_scale" => $glasgocoma_scale,
+                "type"=>$type,
+                "status" => $status
+            ]);
+        } else if($form_type == 'pregnant') {
+            $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
+
+            $path = array();
+            $file_name = array();
+
+            if($file_link != null) {
+                $explode = explode("|",$file_link);
+                foreach($explode as $link) {
+                    $path_tmp = self::securedFile($link);
+                    if($path_tmp != '') {
+                        array_push($path, $path_tmp);
+                        array_push($file_name, basename($path_tmp));
+                    }
+                }
+            }
+
+            $reason = ReasonForReferral::select("reason_referral.id", "reason_referral.reason")
+            ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+            ->where('pregnant_form.code', $track->code)->first();
+            $patient_id = Tracking::select('patient_id')->where('id', $id)->first()->patient_id;
+            $facility_id = Tracking::select('referred_to')->where('id', $id)->first()->referred_to;
+            $referred_to_address = Facility::select('address')->where('id', $facility_id)->first()->address;
+            $civil_status = Patients::select('civil_status')->where('id', $patient_id)->first()->civil_status;
+            $past_medical_history = PastMedicalHistory::where('patient_id', $patient_id)->first();
+            $personal_and_social_history = PersonalAndSocialHistory::where('patient_id', $patient_id)->first();
+            $pertinent_laboratory = PertinentLaboratory::where('patient_id', $patient_id)->first();
+            $review_of_system = ReviewOfSystems::where('patient_id', $patient_id)->first();
+            $nutritional_status = NutritionalStatus::where('patient_id', $patient_id)->first();
+            $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
+            $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
+            $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
+            $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
+            $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->first(); 
+            $status = Tracking::select('status')->where('id', $id)->first()->status;
+
+            $reason = ReasonForReferral::select('pregnant_form.reason_referral as id', 'reason_referral.reason as reason')
+                ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+                ->where('pregnant_form.code', $track->code)->first();
+
+               
+
+            return view("modal.revised_pregnant_info", [
+                "form" => self::pregnantFormData($id),
+                "id" => $id,
+                "reason" => $reason,
+                "icd" => $icd,
+                "file_path" => $path,
+                "file_name" => $file_name,
+                "referral_status" => $referral_status,
+                "form_type" => $form_type,
+                "username" => Session::get('auth')->username,
+
+                "patient_id" => $patient_id,
+                "civil_status" =>$civil_status,
+                "referred_to_address" => $referred_to_address,
+                "past_medical_history" => $past_medical_history,
+                "personal_and_social_history" => $personal_and_social_history,
+                "pertinent_laboratory" => $pertinent_laboratory,
+                "review_of_system" => $review_of_system,
+                "nutritional_status" => $nutritional_status,
+                "latest_vital_signs" => $latest_vital_signs,
+                "glasgocoma_scale" => $glasgocoma_scale,
+                "pediatric_history"=>$pediatric_history,
+                "obstetric_and_gynecologic_history"=>$obstetric_and_gynecologic_history,
+                "pregnancy"=>$pregnancy_data,
+                "status"=>$status,
+            ]);
         }
     }
 

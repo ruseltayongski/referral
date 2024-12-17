@@ -26,14 +26,14 @@
 ?>
 
 <style>
-    /* .file-upload_ {
+    /* .file-upload {
         background-color: #ffffff;
-        width: 600px;
+        width: 250px;
         margin: 0 auto;
         padding: 20px;
     }
 
-    .file-upload_-btn {
+    .file-upload-btn {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -48,47 +48,47 @@
         font-weight: 700;
     }
 
-    .file-upload_-btn:hover {
+    .file-upload-btn:hover {
         background: #1AA059;
         color: #ffffff;
         transition: all .2s ease;
         cursor: pointer;
     }
 
-    .file-upload_-btn:active {
+    .file-upload-btn:active {
         border: 0;
         transition: all .2s ease;
     }
 
-    .file-upload_-content_ {
+    .file-upload-content {
         display: none;
         text-align: center;
     }
 
-    .file-upload_-input {
+    .file-upload-input {
         position: absolute;
         margin: 0;
         padding: 0;
-        width: 100%;
-        height: 100%;
+        width: 25%;
+        height: 25%;
         outline: none;
         opacity: 0;
         cursor: pointer;
-    }
-
-    .image-upload-wrap_ {
+    } */
+/* 
+    .image-upload-wrap {
         margin-top: 20px;
         border: 4px dashed #1FB264;
         position: relative;
     }
 
     .image-dropping,
-    .image-upload-wrap_:hover {
+    .image-upload-wrap:hover {
         background-color: #1FB264;
         border: 4px dashed #ffffff;
     }
 
-    .image-title_-wrap_ {
+    .image-title-wrap {
         padding: 0 15px 15px 15px;
         color: #222;
     }
@@ -104,7 +104,7 @@
         padding: 60px 0;
     }
 
-    .file-upload_-image_ {
+    .file-upload-image {
         max-height: 200px;
         max-width: 200px;
         margin: auto;
@@ -136,7 +136,7 @@
     .remove-image:active {
         border: 0;
         transition: all .2s ease;
-    }
+    } */
 
     .container-referral {
         border: 1px solid lightgrey;
@@ -147,12 +147,12 @@
         padding-right: 5px;
     }
 
-    /*.glasgow-table {
+    .glasgow-table {
         border: 1px solid lightgrey;
         width: 100%;
-    }*/
+    }
 
-    /* .glasgow-dot {
+     .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;
@@ -177,7 +177,7 @@
     }
 
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;} */ 
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
     @media only screen and (max-width: 720px) {
         .web-view {
@@ -1203,26 +1203,28 @@
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
-                                                <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnantRevised()">Remove Files</button><br><br>
-                                                <div class="pregnant_file_attachment_">
-                                                    <div class="col-md-3" id="pregnant_upload_1">
-                                                        <div class="file-upload_">
-                                                            <div class="text-center image-upload-wrap_" id="pregnant_image-upload-wrap_1">
-                                                                <input class="file-upload-input_" multiple type="file" name="file_upload[]" onchange="readURLPregnantRevised(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                <button type="button" class="btn btn-md btn-danger" id="preg_remove_files" onclick="removeFilePregnant()">Remove Files</button><br><br>
+                                                <div class="pregnant_file_attachment">
+                                                    <div class="col-md-3" id="pregnant_upload1">
+                                                        <div class="file-upload">
+                                                            <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap1">
+                                                                <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
                                                                 <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
                                                             </div>
-                                                            <div class="file-upload-content_" id="pregnant_file-upload-content_1">
-                                                                <img class="file-upload-image_" id="pregnant_file-upload-image_1"/>
-                                                                <div class="image-title-wrap_">
-                                                                    <b><small class="image-title_" id="pregnant_image-title_1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
-                                                                    {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnantRevised(1)" class="btn-sm remove-image_">Remove</button>--}}
+                                                            <div class="file-upload-content" id="pregnant_file-upload-content1">
+                                                                <img class="file-upload-image" id="pregnant_file-upload-image1"/>
+                                                                <div class="image-title-wrap">
+                                                                    <b><small class="image-title" id="pregnant_image-title1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
+                                                                    {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1)" class="btn-sm remove-image">Remove</button>--}}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div></br>
+                                        </div>
+                                    </div>
+                                    <table class="table table-striped col-sm-6"></table>
                                     </div>
                                 </div>
                             </div>
@@ -3387,112 +3389,112 @@
     //     $('.image-upload-wrap_').removeClass('image-dropping');
     // });
 
-    var pregnant_pos = 2;
-    var pregnant_count = 0 ;
-    function readURLPregnantRevised(input, pos) {
-        var word = '{{ asset('resources/img/document_icon.png') }}';
-        var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
-        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
-        if (input.files) {
-            var tmp_pos = pos;
-            for(var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
-                if(file && file !== null) {
-                    var reader = new FileReader();
-                    var type = file.type;
-                    if(type === 'application/pdf') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',pdf);
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',word);
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',excel);
-                        pos+=1;
-                    } else {
-                        reader.onloadend = function(e) {
-                            $('#pregnant_file-upload-image_'+pos).attr('src',e.target.result);
-                            pos+=1;
-                        };
-                    }
-                    $('#pregnant_image-upload-wrap_'+tmp_pos).hide();
-                    $('#pregnant_file-upload-content_'+tmp_pos).show();
-                    $('#pregnant_image-title_'+tmp_pos++).html(file.name);
-                    reader.readAsDataURL(file);
-                    pregnant_count+=1;
-                }
-                addFilePregnant();
-            }
-        }
-        $('#preg_remove_files_').show();
-    }
+    // var pregnant_pos = 2;
+    // var pregnant_count = 0 ;
+    // function readURLPregnant(input, pos) {
+    //     var word = '{{ asset('resources/img/document_icon.png') }}';
+    //     var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
+    //     var excel = '{{ asset('resources/img/sheet_icon.png') }}';
+    //     if (input.files) {
+    //         var tmp_pos = pos;
+    //         for(var i = 0; i < input.files.length; i++) {
+    //             var file = input.files[i];
+    //             if(file && file !== null) {
+    //                 var reader = new FileReader();
+    //                 var type = file.type;
+    //                 if(type === 'application/pdf') {
+    //                     $('#pregnant_file-upload-image'+pos).attr('src',pdf);
+    //                     pos+=1;
+    //                    pos+=1;
+    //                 } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+    //                     $('#pregnant_file-upload-image'+pos).attr('src',excel);
+    //                     pos+=1;
+    //                 }} else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    //                     $('#pregnant_file-upload-image'+pos).attr('src',word);
+    //                   else {
+    //                     reader.onloadend = function(e) {
+    //                         $('#pregnant_file-upload-image'+pos).attr('src',e.target.result);
+    //                         pos+=1;
+    //                     };
+    //                 }
+    //                 $('#pregnant_image-upload-wrap'+tmp_pos).hide();
+    //                 $('#pregnant_file-upload-content'+tmp_pos).show();
+    //                 $('#pregnant_image-title'+tmp_pos++).html(file.name);
+    //                 reader.readAsDataURL(file);
+    //                 pregnant_count+=1;
+    //             }
+    //             addFilePregnant();
+    //         }
+    //     }
+    //     $('#preg_remove_files').show();
+    // }
 
-    function addFilePregnant() {
-        var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
+    // function addFilePregnant() {
+    //     var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
 
-        if((pregnant_count % 4) == 0) {
-            $('.pregnant_file_attachment_').append(
-                '<div class="clearfix"></div>'
-            );
-        }
-        $('.pregnant_file_attachment_').append(
-            '<div class="col-md-3" id="pregnant_upload_'+pregnant_pos+'">\n' +
-            '   <div class="file-upload_">\n' +
-            '       <div class="text-center image-upload-wrap_" id="pregnant_image-upload-wrap_'+pregnant_pos+'">\n' +
-            '           <input class="file-upload-input_" multiple type="file" name="file_upload[]" onchange="readURLPregnantRevised(this, '+pregnant_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
-            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
-            '       </div>\n' +
-            '       <div class="file-upload-content_" id="pregnant_file-upload-content_'+pregnant_pos+'">\n' +
-            '           <img class="file-upload-image_" id="pregnant_file-upload-image_'+pregnant_pos+'"/>\n' +
-            '           <div class="image-title-wrap_">\n' +
-            '               <b><small class="image-title_" id="pregnant_image-title_'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
-            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnantRevised('+pregnant_pos+')" class="remove-icon-btn_"><i class="fa fa-trash"></i></button>\n' +
-            '           </div>\n' +
-            '       </div>\n' +
-            '   </div>\n' +
-            '</div>'
-        );
-        pregnant_pos+=1;
-    }
-
-    
-    function removeUploadPregnantRevised(uploadCount){
-        $('#pregnant_upload_' + uploadCount).remove();
-
-        upload_count -= 1;
-
-        if(pregnant_pos > uploadCount){
-            pregnant_pos -= 1;
-        }
-        if(uploadCount === 0){
-            $('#preg_remove_files_');
-        }
-
-        console.log("upload_pos:", pregnant_pos);
-
-    }
+    //     if((pregnant_count % 4) == 0) {
+    //         $('.pregnant_file_attachment').append(
+    //             '<div class="clearfix"></div>'
+    //         );
+    //     }
+    //     $('.pregnant_file_attachment').append(
+    //         '<div class="col-md-3" id="pregnant_upload'+pregnant_pos+'">\n' +
+    //         '   <div class="file-upload">\n' +
+    //         '       <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap'+pregnant_pos+'">\n' +
+    //         '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, '+pregnant_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+    //         '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
+    //         '       </div>\n' +
+    //         '       <div class="file-upload-content" id="pregnant_file-upload-content'+pregnant_pos+'">\n' +
+    //         '           <img class="file-upload-image" id="pregnant_file-upload-image'+pregnant_pos+'"/>\n' +
+    //         '           <div class="image-title-wrap_">\n' +
+    //         '               <b><small class="image-title" id="pregnant_image-title'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
+    //         '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+')" class="remove-icon-btn_"><i class="fa fa-trash"></i></button>\n' +
+    //         '           </div>\n' +
+    //         '       </div>\n' +
+    //         '   </div>\n' +
+    //         '</div>'
+    //     );
+    //     pregnant_pos+=1;
+    // }
 
     
+    // function removeUploadPregnant(uploadCount){
+    //     $('#pregnant_upload' + uploadCount).remove();
 
-    function removeFilePregnantRevised() {
-        $('.pregnant_file_attachment_').html("");
-        pregnant_count = 0;
-        pregnant_pos = 1;
-        $('#preg_remove_files_').hide();
-        addFilePregnant();
-    }
+    //     upload_count -= 1;
+
+    //     if(pregnant_pos > uploadCount){
+    //         pregnant_pos -= 1;
+    //     }
+    //     if(uploadCount === 0){
+    //         $('#preg_remove_files');
+    //     }
+
+    //     console.log("upload_pos:", pregnant_pos);
+
+    // }
+
+    
+
+    // function removeFilePregnant() {
+    //     $('.pregnant_file_attachment').html("");
+    //     pregnant_count = 0;
+    //     pregnant_pos = 1;
+    //     $('#preg_remove_files').hide();
+    //     addFilePregnant();
+    // }
 
     
     $(document).ready(function() {
         for (var i = 0; i < pregnant_count; i++) {
-            $('#pregnant_image-upload-wrap_' + i).bind('dragover', function () {
-                $('#pregnant_image-upload-wrap_' + i).addClass('image-dropping');
+            $('#pregnant_image-upload-wrap' + i).bind('dragover', function () {
+                $('#pregnant_image-upload-wrap' + i).addClass('image-dropping');
             });
-            $('#pregnant_image-upload-wrap_' + i).bind('dragleave', function () {
-                $('#pregnant_image-upload-wrap_' + i).removeClass('image-dropping');
+            $('#pregnant_image-upload-wrap' + i).bind('dragleave', function () {
+                $('#pregnant_image-upload-wrap' + i).removeClass('image-dropping');
             });
         }
-        $('#preg_remove_files_').hide();
+        $('#preg_remove_files').hide();
     });
 
 </script>

@@ -15,7 +15,7 @@ $facilities = \App\Facility::select('id','name')
         padding: 20px;
     }
 
-    .file-upload-btn {
+    .file-upload .file-upload-btn {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -30,24 +30,24 @@ $facilities = \App\Facility::select('id','name')
         font-weight: 700;
     }
 
-    .file-upload-btn:hover {
+    .file-upload .file-upload-btn:hover {
         background: #1AA059;
         color: #ffffff;
         transition: all .2s ease;
         cursor: pointer;
     }
 
-    .file-upload-btn:active {
+    .file-upload .file-upload-btn:active {
         border: 0;
         transition: all .2s ease;
     }
 
-    .file-upload-content {
+    .file-upload .file-upload-content {
         display: none;
         text-align: center;
     }
 
-    .file-upload-input {
+    .file-upload .file-upload-input {
         position: absolute;
         margin: 0;
         padding: 0;
@@ -58,42 +58,42 @@ $facilities = \App\Facility::select('id','name')
         cursor: pointer;
     }
 
-    .image-upload-wrap {
+    .file-upload .image-upload-wrap {
         margin-top: 20px;
         border: 4px dashed #1FB264;
         position: relative;
     }
 
-    .image-dropping,
-    .image-upload-wrap:hover {
+    .file-upload .image-dropping,
+    .file-upload .image-upload-wrap:hover {
         background-color: #1FB264;
         border: 4px dashed #ffffff;
     }
 
-    .image-title-wrap {
+    .file-upload .image-title-wrap {
         padding: 0 15px 15px 15px;
         color: #222;
     }
 
-    .drag-text {
+    .file-upload .drag-text {
         text-align: center;
     }
 
-    .drag-text h3 {
+    .file-upload .drag-text h3 {
         font-weight: 100;
         text-transform: uppercase;
         color: #15824B;
         padding: 60px 0;
     }
 
-    .file-upload-image {
+    .file-upload .file-upload-image {
         max-height: 200px;
         max-width: 200px;
         margin: auto;
         padding: 20px;
     }
 
-    .remove-image {
+    .file-upload .remove-image {
         width: 200px;
         margin: 0;
         color: #fff;
@@ -108,16 +108,25 @@ $facilities = \App\Facility::select('id','name')
         font-weight: 700;
     }
 
-    .remove-image:hover {
+    .file-upload .remove-image:hover {
         background: #c13b2a;
         color: #ffffff;
         transition: all .2s ease;
         cursor: pointer;
     }
 
-    .remove-image:active {
+    .file-upload .remove-image:active {
         border: 0;
         transition: all .2s ease;
+    }
+
+    .file-upload .container-referral {
+        border: 1px solid lightgrey;
+        width: 100%;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
     }
 
     .container-referral {
@@ -129,49 +138,49 @@ $facilities = \App\Facility::select('id','name')
         padding-right: 5px;
     }
 
-    .glasgow-table {
+    .file-upload .glasgow-table {
         border: 1px solid lightgrey;
         width: 100%;
     }
 
-     .glasgow-dot {
+    .file-upload .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;
     }
 
-    .referral-radio-btn {
+    .file-upload .referral-radio-btn {
         height:18px;
         width:18px;
         vertical-align: middle;
     }
 
-    .mobile-view {
+    .file-upload .mobile-view {
         display: none;
         visibility: hidden;
     }
 
-
-    table {
+    .file-upload table {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
     }
 
-    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+    .file-upload #glasgow_table_1, .file-upload tr td:nth-child(1) {width: 35%;}
+    .file-upload #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
     @media only screen and (max-width: 720px) {
-        .web-view {
+        .file-upload .web-view {
             display: none;
             visibility: hidden;
         }
-        .mobile-view {
+        .file-upload .mobile-view {
             display: block;
             visibility: visible;
         }
     }
-    </style>
+</style>
+
    
     <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>'normal', 'status' => $status]) }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">
      
@@ -183,7 +192,7 @@ $facilities = \App\Facility::select('id','name')
                     <input type="hidden" name="form_type" value="normal">
                     <input type="hidden" name="username" value="{{ $username }}">
                     
-                    <div class="row">
+                    <div class="row" style="margin:5px">
                             <div class="col-md-4">
                                 <small >Name of Referring Facility</small><br>
                                 &nbsp;<span>{{ $form->referring_name }}</span>
@@ -199,7 +208,7 @@ $facilities = \App\Facility::select('id','name')
                     </div>
 
                     <br>
-                <div class="row">
+                <div class="row" style="margin: 5px;">
                     <div class="col-md-4">
                         <small ><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
                         <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
@@ -226,7 +235,7 @@ $facilities = \App\Facility::select('id','name')
                         </div>
                         </div>
                         <br>
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-md-4">
                                 <small >Age</small><br>
                                 <span class="patient_age">
@@ -260,7 +269,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         <br>
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-md-4">
                                 <small >Covid Number</small><br>
                                 <input type="text" name="covid_number" style="width: 100%;" value="{{ $form->covid_number }}">
@@ -343,7 +352,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div><br>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
@@ -360,7 +369,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
@@ -434,7 +443,7 @@ $facilities = \App\Facility::select('id','name')
 
                         ?>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
@@ -668,7 +677,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_personal_history" aria-expanded="false" aria-controls="collapse_personal_history">
@@ -782,7 +791,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
@@ -797,7 +806,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
@@ -862,7 +871,7 @@ $facilities = \App\Facility::select('id','name')
                         </div>
 
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
@@ -1636,7 +1645,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
@@ -1679,7 +1688,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
@@ -1713,7 +1722,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
@@ -2027,7 +2036,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
@@ -2050,40 +2059,16 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="form-fotter pull-right">
-                        @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
+                        <div class="form-fotter pull-right" style="margin: 10px;">
                         <button type="submit" id="sbmitBtnNormalRevised" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
-                        @endif
-                        @if($referral_status == 'referring')
-                        <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'normal' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
-                        @endif
                         </div>
                         <div class="clearfix"></div> 
-                </div>{{--/.form-group--}}
-      
-    </form>     
-                        <div class="form-fotter pull-right">
-                        {{--@if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form->department_id === 5 && $user->id == $form->md_referring_id)
-                        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicd-modalicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
-                        <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
-                        @endif--}}
-                        
-                        @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
-                            <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
-                        @endif
-                        @if($referral_status == 'referred' || $referral_status == 'redirected')
-                            @if(!$form->telemedicine)
-                                <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue</button>
-                                <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
-                                <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
-                            @endif
-                            <button class="btn-sm btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
-                            <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'normal' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
-                        @endif
-                        </div>
-                        <div class="clearfix"></div> 
+                        </div>{{--/.form-group--}}
+                </div> {{--/.jim-content--}}
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
                     
                     
