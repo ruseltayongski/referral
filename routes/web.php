@@ -673,7 +673,7 @@ Route::match(['GET', 'POST'], 'doctor/telemedicine', 'doctor\TelemedicineCtrl@in
 
 Route::get('/get-booked-dates', 'doctor\TelemedicineCtrl@getBookedDates')->name('get-booked-dates'); // I add this to get all dates that booked by the user
 Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCalendar');
-Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment');
+Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment')->name('manage.appointment');
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
 Route::get('/appointment/data/{id}', 'doctor\TelemedicineCtrl@getAppointmentData')->name('get-appointment-data');
 Route::get('/display/appointment/{id}', 'doctor\TelemedicineCtrl@displayAppointment')->name('display-appointment'); // I add this route to retrieve a multiple time slot manage appointment
@@ -685,8 +685,12 @@ Route::get('/user/get/{id}', 'doctor\TelemedicineCtrl@getUserData')->name('get-u
 Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacilityDetails')->name('get-Facility-Details');
 Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
+
 Route::get('/configSchedule',  'doctor\TelemedicineCtrl@configSched')->name('ConfigSchedule');
 Route::post('/add/configSched', 'doctor\TelemedicineCtrl@AddconfigSched')->name('add.configSched');
+Route::post('edit/configSched', 'doctor\TelemedicineCtrl@editconfigSched')->name('edit.configSched');
+Route::post('delete/configSched', 'doctor\TelemedicineCtrl@removeconfigSched')->name('delete.configSched');
+
 Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');

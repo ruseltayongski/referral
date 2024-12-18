@@ -521,6 +521,7 @@
             console.log("VUE.JS 3")
 
             const pass_vue_fact = document.getElementById("pass_to_vue_facility");
+           
             if(pass_vue_fact){
                 this.passToVueFacility = Number(pass_vue_fact.value);
             }else{
@@ -537,11 +538,11 @@
             this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    //console.log("my event", event);
-                    // console.log("new Referral 1 ", this.passToVueFacility, event.payload.referred_to);
-                    // console.log("new Referral 2 ", this.user.facility_id, event.payload.referred_to);
-                    //this.user.facility_id === this.passToVueFacility || this.user.facility_id === event.payload.referred_to || this.passToVueFacility === event.payload.referred_to
-                    if(this.user.facility_id === event.payload.referred_to || this.passToVueFacility === event.payload.referred_to) {
+                    //  console.log("my event Listener", event);
+                     console.log("new Referral 1 ", this.passToVueFacility, event.payload.referred_to);
+                     console.log("new Referral 2 ", this.user.facility_id, event.payload.referred_to);
+                    // this.user.facility_id === event.payload.referred_to -----> Original Code Populated
+                    if(this.user.facility_id === event.payload.referred_to || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred')) {
                         this.playAudio();
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {
@@ -633,21 +634,20 @@
 
             Echo.join('referral_accepted')
                 .listen('SocketReferralAccepted', (event) => {
-                      console.log("Accepted payload Facility Id",event.payload.referred_from, "User facility id", this.user.facility_id);
-                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) { // adding or and condition only
                         this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id)
                     }
                 });
 
             Echo.join('referral_rejected')
                 .listen('SocketReferralRejected', (event) => {
-                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from  === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from  === this.user.facility_id) { // adding or and condition only
                         this.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine)
                     }
                 });
 
             Echo.join('referral_call')
-                .listen('SocketReferralCall', (event) => {
+                .listen('SocketReferralCall', (event) => { // adding or and condition only
                     if(event.payload.called_to === this.passToVueFacility || event.payload.called_to === this.user.facility_id) {
                         this.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact, event.payload.redirect_track)
                     }
@@ -661,7 +661,7 @@
                 });
 
             Echo.join('referral_arrived')
-                .listen('SocketReferralArrived', (event) => {
+                .listen('SocketReferralArrived', (event) => { // adding or and condition only
                     if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
                         this.notifyReferralArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                     }

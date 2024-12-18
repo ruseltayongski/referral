@@ -1445,15 +1445,25 @@ class ReferralCtrl extends Controller
         $diagnosis = Icd10::whereIn('id', $icds)->pluck('description');
         if($diagnosis->toArray()) {
             $finalDiagnosis = $diagnosis->toArray();
+            if($track->type == 'normal') {
+                $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
+                $chiefComplain = $patientform->case_summary;
+            }
+            else {
+                $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();
+                $chiefComplain = $pregnantForm->woman_major_findings;
+            }
         }
         else {
             if($track->type == 'normal') {
                 $patientform = PatientForm::where('patient_id', $track->patient_id)->first();
                 $finalDiagnosis = $patientform->other_diagnoses;
+                $chiefComplain = $patientform->case_summary;
             }
             else {
                 $pregnantForm = PregnantForm::where('patient_woman_id', $track->patient_id)->first();
                 $finalDiagnosis = $pregnantForm->other_diagnoses;
+                $chiefComplain = $pregnantForm->woman_major_findings;
             }
         }
         $position = Activity::where("code",$req->code)
@@ -1482,10 +1492,10 @@ class ReferralCtrl extends Controller
             "redirect_track" => $redirect_track,
             "position" => $position,
             "push_diagnosis" => $finalDiagnosis,
-            "chiefComplaint" =>  $pregnantForm->woman_major_findings ?: $patientform->case_summary,
+            "chiefComplaint" => $chiefComplain,
         ];
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
-       dd($new_referral);
+ 
         if($req->facility == 790 || $req->facility == 23) {
              try {
                  ApiController::notifierPushNotification(array(
