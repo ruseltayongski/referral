@@ -25,6 +25,10 @@ class AppointmentSchedule extends Model
         return $this->hasMany(TelemedAssignDoctor::class, 'appointment_id', 'id');
     }
 
+    public function configSchedule(){
+        return $this->belongsTo(Cofig_schedule::class, 'configId', 'id');
+    }
+
     // public function telemedDoctor() {
     //     return $this->hasOne(TelemedAssignedDoctor::class, 'appointment_id');
     // }

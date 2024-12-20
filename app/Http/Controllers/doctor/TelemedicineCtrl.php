@@ -147,7 +147,6 @@ class TelemedicineCtrl extends Controller
 
         $user = Session::get('auth');
         $config_sched = Cofig_schedule::where('id', $req->configId)->first();
-        dd($req->all());
         $config_sched->description = $req->Updateconfigdesc;
         $config_sched->department_id = $req->update_department_id;
         $config_sched->category = $req->Update_default_category;
@@ -226,6 +225,10 @@ class TelemedicineCtrl extends Controller
         
     }
 
+    public function updateDoctorConfig(Request $req){
+        // dd($req->all());
+    }
+
     public function removeconfigSched(Request $req){
         $config_sched = Cofig_schedule::where('id', $req->configId)->first();
         $config_sched->delete();
@@ -240,12 +243,17 @@ class TelemedicineCtrl extends Controller
          $facility_id = AppointmentSchedule::pluck('facility_id');
 
         $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor'])->find($facility_id);
-        
-        //  return $appointment_slot;
-        
+
+        $config = AppointmentSchedule::with(['configSchedule' => function($query) {
+            $query->select('id','category','days','time');
+        }])
+        ->select('configId','appointed_date','date_end')
+        ->get();
+
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,
+            'appointment_config' => $config,
             'user' => $user
         ]);
     }
@@ -342,6 +350,7 @@ class TelemedicineCtrl extends Controller
         }
 
     }
+
     //-------------Get all booked Dates--------------------------------------
     public function getBookedDates(){
         $user = Session::get('auth');

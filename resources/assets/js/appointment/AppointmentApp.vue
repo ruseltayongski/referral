@@ -5,12 +5,25 @@
         <h3 class="page-header">Select Facility</h3>
         <div class="row">
           <div class="scroll-container">
+
+            <!-- <div v-if="appointment_slot" v-for="appointment in appointment_slot" :key="appointment.id">
+                <appointment-facility
+                  v-for="config in appointment_config"
+                  :key="`${appointment.id}-${config.id}`"
+                  :config_appoint="config"
+                  :appointment="appointment"
+                  :user="user"
+                  @facilitySelected="facilitySelected"
+                ></appointment-facility>
+            </div> -->
+
             <appointment-facility
               v-if="appointment_slot"
               v-for="appointment in appointment_slot"
               :key="appointment.id"
               :facilitySelectedId="facilitySelectedId"
               :appointment="appointment"
+              :config_appoint="appointment_config"
               :user="user"
               @facilitySelected="facilitySelected"
             ></appointment-facility>
@@ -47,7 +60,7 @@ export default {
     AppointmentCalendar,
     AppointmentTime,
   },
-  props: ["user", "appointment_slot"],
+  props: ["user", "appointment_slot", "appointment_config"],
   data() {
     return {
       facilitySelectedId: 0,

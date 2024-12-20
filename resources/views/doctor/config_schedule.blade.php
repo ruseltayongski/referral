@@ -419,8 +419,8 @@ use App\Facility;
                                                         <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Add_Cancel_appointment">
                                                             <i class="fa fa-times"></i> Cancel
                                                         </button>
-                                                        <button type="submit" class="btn btn-success btn-sm">
-                                                            <i class="fa fa-send"></i> Submit
+                                                        <button type="submit" class="btn btn-danger btn-sm">
+                                                            <i class="fa fa-trash"></i> Delete
                                                         </button>
                                                     </div>
                                                 </form>

@@ -69,6 +69,9 @@ export default {
     appointment: {
       type: Object,
     },
+    config_appoint: {
+      type: Object,
+    },
     facilitySelectedId: {
       type: Number,
     },
@@ -76,8 +79,28 @@ export default {
   computed: {
     emptyAppointmentByCount() {
       let count = 0;
+      let totalTimeSlots = 0;
       const now = new Date();
-      console.log("user", this.appointment);
+
+      this.config_appoint.forEach(appointment => {
+          let strtDate = new Date(appointment.appointed_date);
+          let endDate = new Date(appointment.date_end);
+        const configSchedules = appointment.config_schedule;
+      
+          if(configSchedules && typeof configSchedules === 'object'){
+            const {time} = configSchedules;
+
+            const timeSlots = time.split('|').slice(1);
+            console.log("timeSlots::", timeSlots);
+            const daysDifference = Math.ceil((endDate - strtDate) / (1000 * 60 * 60 * 24)) + 1;
+
+            totalTimeSlots += timeSlots.length * daysDifference;
+           
+          }
+      });
+      
+      console.log("Total Time Slots:", totalTimeSlots);
+  
       if (this.appointment && this.appointment.appointment_schedules) {
         const appointmentIdMap = new Map();
 
@@ -152,7 +175,6 @@ export default {
     // },
     shouldDisplayFacility() {
       const now = new Date();
-
       const hasValidAppointment = this.appointment.appointment_schedules.some(
         (sched) => {
           const appointmentDatetime = new Date(

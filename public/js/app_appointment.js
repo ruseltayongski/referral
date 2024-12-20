@@ -22056,7 +22056,7 @@ __webpack_require__.r(__webpack_exports__);
     AppointmentCalendar: _AppointmentCalendar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     AppointmentTime: _AppointmentTime_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  props: ["user", "appointment_slot"],
+  props: ["user", "appointment_slot", "appointment_config"],
   data: function data() {
     return {
       facilitySelectedId: 0,
@@ -22359,6 +22359,7 @@ function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) 
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AppointmentFacility",
   data: function data() {
@@ -22373,6 +22374,9 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
     appointment: {
       type: Object
     },
+    config_appoint: {
+      type: Object
+    },
     facilitySelectedId: {
       type: Number
     }
@@ -22380,8 +22384,21 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   computed: {
     emptyAppointmentByCount: function emptyAppointmentByCount() {
       var count = 0;
+      var totalTimeSlots = 0;
       var now = new Date();
-      console.log("user", this.appointment);
+      this.config_appoint.forEach(function (appointment) {
+        var strtDate = new Date(appointment.appointed_date);
+        var endDate = new Date(appointment.date_end);
+        var configSchedules = appointment.config_schedule;
+        if (configSchedules && _typeof(configSchedules) === 'object') {
+          var time = configSchedules.time;
+          var timeSlots = time.split('|').slice(1);
+          console.log("timeSlots::", timeSlots);
+          var daysDifference = Math.ceil((endDate - strtDate) / (1000 * 60 * 60 * 24)) + 1;
+          totalTimeSlots += timeSlots.length * daysDifference;
+        }
+      });
+      console.log("Total Time Slots:", totalTimeSlots);
       if (this.appointment && this.appointment.appointment_schedules) {
         var appointmentIdMap = new Map();
         this.appointment.appointment_schedules.forEach(function (sched) {
@@ -22782,16 +22799,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_appointment_time = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("appointment-time");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "page-header"
-  }, "Select Facility", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [$props.appointment_slot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  }, "Select Facility", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-if=\"appointment_slot\" v-for=\"appointment in appointment_slot\" :key=\"appointment.id\">\r\n                <appointment-facility\r\n                  v-for=\"config in appointment_config\"\r\n                  :key=\"`${appointment.id}-${config.id}`\"\r\n                  :config_appoint=\"config\"\r\n                  :appointment=\"appointment\"\r\n                  :user=\"user\"\r\n                  @facilitySelected=\"facilitySelected\"\r\n                ></appointment-facility>\r\n            </div> "), $props.appointment_slot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointment_slot, function (appointment) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_appointment_facility, {
       key: appointment.id,
       facilitySelectedId: $data.facilitySelectedId,
       appointment: appointment,
+      config_appoint: $props.appointment_config,
       user: $props.user,
       onFacilitySelected: $options.facilitySelected
-    }, null, 8 /* PROPS */, ["facilitySelectedId", "appointment", "user", "onFacilitySelected"]);
+    }, null, 8 /* PROPS */, ["facilitySelectedId", "appointment", "config_appoint", "user", "onFacilitySelected"]);
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_calendar, {
     facilitySelectedId: $data.facilitySelectedId,
     appointmentSlot: $props.appointment_slot,
