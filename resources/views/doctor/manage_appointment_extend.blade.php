@@ -49,7 +49,7 @@
                                             <input type="hidden" class="form-control" name="department_id" id="department_id" value="5">
                                         @else
                                             <div class="alert-department" data-department="{{ $department }}"></div>
-                                        @endif
+                                        @endif  
 
                                         <label for="facility_id">Facility:</label>
                                         @foreach($facility as $Facility)
@@ -628,6 +628,9 @@ function UpdateConfig(config_appointment_id, config_id) {
 
     // Helper function to update time slots
     function updateTimeSlots(days, timeSlots) {
+
+        $('.edit-time-slots').hide().find('.edit_time-slot, .time-slot_edit').remove();
+
         const dayTimemap = {};
         let currentDay = null;
 
@@ -649,7 +652,7 @@ function UpdateConfig(config_appointment_id, config_id) {
                 dayTimemap[day].forEach(sched => {
                     const [timeFrom, timeTo] = sched.split('-');
                     const timeSlotHtml = `
-                        <div class="row edit-time-slots"> 
+                        <div class="row edit_time-slot"> 
                             <div class="col-md-5">
                                 <label>Time From:</label>
                                 <input type="time" name="edit_time_from[${day}][]" class="form-control input-sm" value="${timeFrom}">
@@ -755,20 +758,7 @@ function UpdateConfig(config_appointment_id, config_id) {
 
     $('#UpdateConfigAppointment').modal('show');
 }
-
-    function resetConfigModal(){
-        $('#update_configAppointment')[0].reset();
-        $('.select2').val(null).trigger('change');
-        $('.edit-time-slots').hide();
-        $('.edit-time-slots .edit_time-slot, .edit-time-slots .time-slot_edit').remove();
-        $('.editday-checkbox').prop('checked', false);
-        $('#EditSchedCategory').empty();
-    }
-
    
-    $('#UpdateConfigAppointment').on('hidden.bs.modal', function () {
-        resetConfigModal();
-    });
 
 </script>
 

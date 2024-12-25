@@ -494,6 +494,8 @@
            
             function categslot(){
 
+                $('.time-slots').hide().find('.time-slots').remove();
+
                 const selectedConfigId = $defaultCategorySelect.val();
                 const effectiveDateValue = $effectiveDate.val();
                 const selectedConfig = configData.find(config => config.id == selectedConfigId);

@@ -79,27 +79,60 @@ export default {
   computed: {
     emptyAppointmentByCount() {
       let count = 0;
-      let totalTimeSlots = 0;
+     // let totalTimeSlots = 0;
       const now = new Date();
 
-      this.config_appoint.forEach(appointment => {
-          let strtDate = new Date(appointment.appointed_date);
-          let endDate = new Date(appointment.date_end);
-        const configSchedules = appointment.config_schedule;
-      
-          if(configSchedules && typeof configSchedules === 'object'){
-            const {time} = configSchedules;
+    //   this.config_appoint.forEach(appointment => {
+    //       const strtDate = new Date(appointment.appointed_date);
+    //       const endDate = new Date(appointment.date_end);
+    //       const configSchedules = appointment.config_schedule;
+    //       console.log("appointment config: ", configSchedules);
 
-            const timeSlots = time.split('|').slice(1);
-            console.log("timeSlots::", timeSlots);
-            const daysDifference = Math.ceil((endDate - strtDate) / (1000 * 60 * 60 * 24)) + 1;
+    //        if (configSchedules && !isNaN(strtDate) && !isNaN(endDate)) {
+    //         const { time } = configSchedules;
 
-            totalTimeSlots += timeSlots.length * daysDifference;
-           
-          }
-      });
-      
-      console.log("Total Time Slots:", totalTimeSlots);
+    //         // Extract valid time slots
+    //         const timeSlots = time.split('|').slice(1)
+    //             .filter(slot => /^[0-2][0-9]:[0-5][0-9]-[0-2][0-9]:[0-5][0-9]$/.test(slot));
+    //         const timeSlotCount = timeSlots.length;
+
+    //         // Helper function to calculate days in a month
+    //         const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
+
+    //         let current = new Date(strtDate);
+    //         const end = new Date(endDate);
+
+    //         // Loop through each month in the range
+    //         while (current <= end) {
+    //             const daysInCurrentMonth = daysInMonth(current.getFullYear(), current.getMonth());
+
+    //             // Determine overlap days within this month
+    //             const startOfMonth = new Date(current.getFullYear(), current.getMonth(), 1);
+    //             const endOfMonth = new Date(current.getFullYear(), current.getMonth(), daysInCurrentMonth);
+
+    //             const monthStart = current > startOfMonth ? current : startOfMonth;
+    //             const monthEnd = end < endOfMonth ? end : endOfMonth;
+
+    //             const daysInRange = Math.ceil((monthEnd - monthStart) / (1000 * 60 * 60 * 24)) + 1;
+
+    //             // Count weeks for this month's portion
+    //             const weekCount = Math.ceil(daysInRange / 7);
+
+    //             totalTimeSlots += weekCount * timeSlotCount;
+
+    //             // // Move to the next month
+    //             // current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
+
+                
+    //         }
+
+    //         console.log("Appointment Time Slots Count:", timeSlotCount);
+    //     } else {
+    //         console.error("Invalid appointment data:", appointment);
+    //     }
+    // });
+
+    // console.log("Total Slots Across All Valid Dates:", totalTimeSlots);
   
       if (this.appointment && this.appointment.appointment_schedules) {
         const appointmentIdMap = new Map();

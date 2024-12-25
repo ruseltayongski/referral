@@ -145,6 +145,8 @@ class TelemedicineCtrl extends Controller
 
     public function editconfigSched(Request $req){
 
+        dd($req->all());
+
         $user = Session::get('auth');
         $config_sched = Cofig_schedule::where('id', $req->configId)->first();
         $config_sched->description = $req->Updateconfigdesc;
@@ -226,7 +228,7 @@ class TelemedicineCtrl extends Controller
     }
 
     public function updateDoctorConfig(Request $req){
-        // dd($req->all());
+         dd($req->all());
     }
 
     public function removeconfigSched(Request $req){
