@@ -109,9 +109,11 @@ class NewFormCtrl extends Controller
         ->join('latest_vital_signs', 'patients.id', '=', 'latest_vital_signs.patient_id')
         ->join('personal_and_social_history', 'patients.id', '=', 'personal_and_social_history.patient_id')
         ->join('pertinent_laboratory', 'patients.id', '=', 'pertinent_laboratory.patient_id')
+        ->join('pediatric_history', 'patients.id', '=', 'pediatric_history.patient_id')
         ->select(
             'patients.*',
             'past_medical_history.*',
+            'pediatric_history.*',
             'nutritional_status.*',
             'glasgow_coma_scale.*',
             'review_of_system.*',
@@ -1442,6 +1444,7 @@ class NewFormCtrl extends Controller
         $nutritional_status = NutritionalStatus::where('patient_id', $patient_id)->first();
         $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
         $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
+        $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
 
         $arr = [
             "form" => $form['form'],
@@ -1464,6 +1467,7 @@ class NewFormCtrl extends Controller
             "nutritional_status" => $nutritional_status,
             "latest_vital_signs" => $latest_vital_signs,
             "glasgocoma_scale" => $glasgocoma_scale,
+            "pediatric_history"=>$pediatric_history,
             "type"=>$type,
             "status" => $status
         ];
@@ -2791,7 +2795,7 @@ class NewFormCtrl extends Controller
             }
             if(!empty($data->previous_hospitalization)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, $data->previous_hospitalization), 1, 'L');}
         }
-
+       
         if ($form_type === 'normal' && $this->calculateAge($patients_name->dob)<18){
             $this->titleHeader($pdf, "PEDIATRIC HISTORY");
               if (!empty($data->prenatal_a)){
@@ -2812,7 +2816,7 @@ class NewFormCtrl extends Controller
               }
         }
        
-        
+       
         if (!empty($data->smoking) || !empty($data->smoking_sticks_per_day) || !empty($data->smoking_quit_year) || !empty($data->smoking_remarks)
         || !empty($data->alcohol_drinking) || !empty($data->alcohol_liquor_type) || !empty($data->alcohol_bottles_per_day) || !empty($data->alcohol_drinking_quit_year)
         || !empty($data->illicit_drugs) || !empty($data->illicit_drugs_taken) || !empty($data->illicit_drugs_quit_year)){
