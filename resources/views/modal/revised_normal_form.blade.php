@@ -602,12 +602,8 @@
                                 </div>
                             </div>
                         </div>
-                        
-                     
-
-
-                        {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        <div class="row" id="pedia_show" style="display:none;">
+               
+                        <div class="row" id="pedia_show_normal">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
@@ -745,6 +741,7 @@
                             </div>
                         </div>
 
+                      
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                         <div class="row" id="menarche_show" style="display:none;">
@@ -983,7 +980,7 @@
                                             </div>
                                         </div>
                                     </div><br>
-
+                                                            
                                     <b>ILLICIT DRUGS</b>
                                     <div class="container-referral">
                                         <div class="row">
@@ -2347,6 +2344,8 @@
 
 
 <script>
+
+
     // $("#revisednormalFormModal").modal("show");
 
     //    $('#pedia_show').hide();

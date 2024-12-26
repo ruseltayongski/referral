@@ -236,37 +236,166 @@
     <tr>
         <td colspan="6">Previous Hospitalization: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ $past_medical_history->previous_hospitalization }}</span></td>
     </tr>
+
+    @if ($patient_age <= "18")
+            <tr class="bg-gray">
+                <td colspan="6">Pediatric History </td>
+            </tr>
+            <tr>
+                <td colspan="6">PRENATAL</td>
+            </tr>
+            <tr>
+            <td colspan="3">Prenatal A: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->prenatal_a}}</span></td>
+            <td colspan="3">Prenatal P: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->prenatal_p}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="6">Prenatal G: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->prenatal_g}}</span></td>
+            <tr>
+                <td colspan="6">{{$pediatric_history->prenatal_radiowith_or_without}} maternal illness: 
+                    <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">@if ($pediatric_history->prenatal_radiowith_or_without === "with")
+                        {{$pediatric_history->prenatal_with_maternal_illness}}
+                        @else
+                        N/A
+                        @endif
+                    </span></td>
+            </tr>
+            <tr>
+                <td colspan="6">NATAL</td>
+            </tr>
+            <tr>
+                <td colspan="3">Born At: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_born_at}}</span></td>
+                <td colspan="3">Born Address: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_born_address}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">Born By: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_by}}</span></td>
+            <td colspan="3">Born Via: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_via}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">Indication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_indication}}</span></td>
+            <td colspan="3">Term: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_term}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">Weight: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_weight}}</span></td>
+            <td colspan="3">Natal BR: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_br}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">Good Cry: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_with_good_cry}}</span></td>
+            <td colspan="3">Other Complications: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_other_complications}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="6">POSTNATAL</td>
+            </tr>
+            <tr>
+                <td colspan="6"><i>Feeding History</i></td>
+            </tr>
+            <tr>
+            <td colspan="3">Breastfed x: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_bfeedx_month}}</span></td>
+            <td colspan="3">Formula Fed: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_ffeed_specify}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="6">Started Semi Food: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_started_semifoods}}</span></td>
+            </tr>
+            <tr>
+                <td colspan="6"><i>Immunization History</i></td>
+            </tr>
+            <tr>
+            <td colspan="6">BCG: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_bcg}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">DPT/OPV: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_dpt_opv_x}}</span></td>
+            <td colspan="3">DPT/OPV dosage: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_dpt_doses}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">Hep B: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_hepB_cbox}}</span></td>
+            <td colspan="3">Hep B dosage: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_hepB_x_doses}}</span></td>
+            </tr>
+            <td colspan="3">Measles: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_immu_measles_cbox}}</span></td>
+            <td colspan="3">MMR: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_mmr_cbox}}</span></td>
+            <tr>
+            <td colspan="6">Others: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_others}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="6">Developmental Milestones: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_development_milestones}}</span></td>
+            </tr>
+            @endif
     
     <tr class="bg-gray">
         <td colspan="6">Personal and Social History </td>
     </tr>
+    @if ($personal_and_social_history->smoking === "Yes")
     <tr>
         <td colspan="3">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> 
+        @if (!empty($personal_and_social_history->smoking_sticks_per_day))
         <td colspan="3">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_sticks_per_day}}</span></td> 
+        @else
+        <td colspan="3">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">N/A</span></td>
+        @endif
     </tr>
+    @elseif ($personal_and_social_history->smoking === "Quit")
     <tr>
-        <td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td> 
+        <td colspan="3">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> 
+        <td colspan="6">Quit Year:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td>
+    </tr>
+    @elseif ($personal_and_social_history->smoking === "No")
+    <tr>
+        <td colspan="6">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> 
+    </tr>
+    @endif
+    <tr>
         <td colspan="3">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td> 
-    </tr>
+    </tr> 
     <tr>
-        <td colspan="3">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td> 
-        <td colspan="3">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td> 
+        <td colspan="6">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td> 
     </tr>
-        <tr>
-        <td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> 
+
+    @if ($personal_and_social_history->alcohol_drinking === "Yes")
+    <tr>
+        @if (!empty($personal_and_social_history->alcohol_liquor_type))
+        <td colspan="3">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td>
+        @else
+        <td colspan="3">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">N/A</span></td>
+        @endif
+        @if (!empty($personal_and_social_history->alcohol_bottles_per_day))
         <td colspan="3">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td> 
+        @else
+        <td colspan="3">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">N/A</span></td> 
+        @endif 
     </tr>
-        <tr>
-        <td colspan="3">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs}}</span></td> 
-        <td colspan="3">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td> 
+
+    @elseif ($personal_and_social_history->alcohol_drinking === "Quit")
+    <tr>
+        @if (!empty($personal_and_social_history->alcohol_drinking_quit_year))
+        <td colspan="6">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td>
+        @else
+        <td colspan="6">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">N/A</span></td>
+        @endif
+    </tr> 
+    @endif  
+    <tr>
+        <td colspan="6">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs}}</span></td> 
     </tr>
-        <tr>
+  
+    @if ($personal_and_social_history->illicit_drugs === "Yes")
+    <tr>
+        @if (!empty($personal_and_social_history->illicit_drugs_taken))
+        <td colspan="6">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td>
+        @else
+        <td colspan="6">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">N/A</span></td>
+        @endif
+    </tr>
+    @elseif ($personal_and_social_history->illicit_drugs === "Quit")
+    <tr>
+        @if (!empty($personal_and_social_history->Illicit_drugs_quit_year))
         <td colspan="6">Quit year:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs_quit_year}}</span></td> 
+        @else
+        <td colspan="6">Quit year:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">N/A</span></td> 
+        @endif
     </tr>
+    @endif
     <tr>
         <td colspan="6">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
     </tr>
-
+    
     <tr class="bg-gray">
         <td colspan="6">Pertinent Laboratory and Other Ancillary Procedures </td>
     </tr>

@@ -1666,7 +1666,7 @@ class NewFormCtrl extends Controller
 
         $data = $this->prepareData($request, $patient_id);
         ObstetricAndGynecologicHistory::create($data['obstetric_history']);
-        PediatricHistory::create($data['pediatric_history']);
+        // PediatricHistory::create($data['pediatric_history']);
 
         $orders = $request->input('pregnancy_history_order');
         $years = $request->input('pregnancy_history_year');
@@ -1701,6 +1701,7 @@ class NewFormCtrl extends Controller
         $data = $this->prepareData($request, $patient_id);
 
         PastMedicalHistory::create($data['past_medical_history_data']);
+        PediatricHistory::create($data['pediatric_history']);
         PertinentLaboratory::create($data['pertinent_lab']);
         PersonalAndSocialHistory::create($data['personal_history']);
         ReviewOfSystems::create($data['review_of_system']);
@@ -2696,7 +2697,7 @@ class NewFormCtrl extends Controller
                 $pdf->SetLineWidth(.3);
 
                 // $pdf->addPage();
-               
+               if ($form_type === 'pregnant') {
                 if(!empty($baby_fullname) || !empty($baby_data->birth_date) || !empty($baby_data->weight) || !empty($baby_data->gestational_age) || !empty($pregnant_form->baby_reason) 
                 || !empty($pregnant_form->baby_major_findings) || !empty($pregnant_form->baby_last_feed)){
                     $this->titleHeader($pdf, "BABY");
@@ -2714,6 +2715,8 @@ class NewFormCtrl extends Controller
                     if(!empty($pregnant_form->baby_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_major_findings), 1, 'L');}
                     if(!empty($pregnant_form->baby_last_feed)){$pdf->MultiCell(0, 7, "Last (Breast) Feed (Time): " . self::green($pdf, $pregnant_form->baby_last_feed, "Last (Breast) Feed (Time)"), 1, 'L');}
                 }
+               }
+               
                 
                 $pdf->SetFillColor(200, 200, 200);
                 $pdf->SetTextColor(30);
@@ -2733,11 +2736,11 @@ class NewFormCtrl extends Controller
                     if(!empty($pregnant_form->baby_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_information_given), 1, 'L');}
                 }  
 
-        if (!empty($data->commordities) || !empty($data->commordities_hyper_year) || !empty($data->commordities_diabetes_year) || !empty($data->commordities_asthma_year) || !empty($data->commordities_cancer)
-        || !empty($data->commordities_others) || !empty($data->allergies) || !empty($data->allergy_food_cause) || !empty($data->allergy_drugs_cause) || !empty($data->heredofamilial_diseases) || !empty($data->heredo_hyper_side) 
-        || !empty($data->heredo_diab_side) || !empty($data->heredo_asthma_side) || !empty($data->heredo_cancer_side) || !empty($data->heredo_kidney_side) || !empty($data->heredo_thyroid_side) 
-        || !empty($data->heredo_others) || !empty($data->previous_hospitalization))
-        {
+            if (!empty($data->commordities) || !empty($data->commordities_hyper_year) || !empty($data->commordities_diabetes_year) || !empty($data->commordities_asthma_year) || !empty($data->commordities_cancer)
+            || !empty($data->commordities_others) || !empty($data->allergies) || !empty($data->allergy_food_cause) || !empty($data->allergy_drugs_cause) || !empty($data->heredofamilial_diseases) || !empty($data->heredo_hyper_side) 
+            || !empty($data->heredo_diab_side) || !empty($data->heredo_asthma_side) || !empty($data->heredo_cancer_side) || !empty($data->heredo_kidney_side) || !empty($data->heredo_thyroid_side) 
+            || !empty($data->heredo_others) || !empty($data->previous_hospitalization))
+            {
             $this->titleHeader($pdf, "PAST MEDICAL HISTORY");
 
             $pdf->MultiCell(0, 7, "Comorbidities:" . self::green($pdf, $this->explodeString($data->commordities), 'Comorbidities'), 1, 'L');
@@ -2787,6 +2790,26 @@ class NewFormCtrl extends Controller
                 $pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $this->explodeString($data->heredo_others), 'Others'), 1, 'L');
             }
             if(!empty($data->previous_hospitalization)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, $data->previous_hospitalization), 1, 'L');}
+        }
+
+        if ($form_type === 'normal' && $this->calculateAge($patients_name->dob)<18){
+            $this->titleHeader($pdf, "PEDIATRIC HISTORY");
+              if (!empty($data->prenatal_a)){
+                  $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
+              }
+              if (!empty($data->prenatal_g)){
+                  $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
+              }
+              if (!empty($data->prenatal_p)){
+                  $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
+              }
+              if (!empty($data->prenatal_radiowith_or_without) || !empty($data->prenatal_with_maternal_illness)){
+                  if ($data->prenatal_radiowith_or_without == "with") {
+                      $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Maternal Illness: ") . "\n" . self::staticGreen($pdf, $data->prenatal_with_maternal_illness), 1, 'L');
+                  } else if ($data->prenatal_radiowith_or_without == "without") {
+                      $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_radiowith_or_without . " illness", 'Maternal Illness'), 1, 'L');
+                  }
+              }
         }
        
         
@@ -2898,33 +2921,32 @@ class NewFormCtrl extends Controller
         }
 
 
-       
+ 
 
         if ($form_type === 'pregnant'){
 
-            if (!empty($data->prenatal_a) || !empty($data->prenatal_g) || !empty($data->prenatal_p) || !empty($data->prenatal_radiowith_or_without)
-            || !empty($data->prenatal_with_maternal_illness) || !empty( $data->natal_born_at) || !empty($data->natal_born_address) || !empty($data->natal_by)
+            if (!empty($data->prenatal_with_maternal_illness) || !empty( $data->natal_born_at) || !empty($data->natal_born_address) || !empty($data->natal_by)
             || !empty($data->natal_via) || !empty($data->natal_indication) || !empty($data->natal_term) || !empty($data->natal_with_good_cry) || !empty($data->natal_other_complications)
             || !empty($data->post_natal_bfeed) || !empty($data->post_natal_bfeedx_month) || !empty($data->post_natal_formula_feed) || !empty($data->post_natal_ffeed_specify)
             || !empty($data->post_dpt_doses) || !empty($data->post_natal_hepB_x_doses) || !empty($data->post_natal_immu_measles_cbox) || !empty( $data->post_natal_others) || !empty($data->post_natal_development_milestones)) {
                 
-                $this->titleHeader($pdf, "PEDIATRIC HISTORY");
-                if (!empty($data->prenatal_a)){
-                    $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
-                }
-                if (!empty($data->prenatal_g)){
-                    $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
-                }
-                if (!empty($data->prenatal_p)){
-                    $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
-                }
-                if (!empty($data->prenatal_radiowith_or_without) || !empty($data->prenatal_with_maternal_illness)){
-                    if ($data->prenatal_radiowith_or_without == "with") {
-                        $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Maternal Illness: ") . "\n" . self::staticGreen($pdf, $data->prenatal_with_maternal_illness), 1, 'L');
-                    } else if ($data->prenatal_radiowith_or_without == "without") {
-                        $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_radiowith_or_without . " illness", 'Maternal Illness'), 1, 'L');
-                    }
-                }
+                // $this->titleHeader($pdf, "PEDIATRIC HISTORY");
+                // if (!empty($data->prenatal_a)){
+                //     $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
+                // }
+                // if (!empty($data->prenatal_g)){
+                //     $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
+                // }
+                // if (!empty($data->prenatal_p)){
+                //     $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
+                // }
+                // if (!empty($data->prenatal_radiowith_or_without) || !empty($data->prenatal_with_maternal_illness)){
+                //     if ($data->prenatal_radiowith_or_without == "with") {
+                //         $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Maternal Illness: ") . "\n" . self::staticGreen($pdf, $data->prenatal_with_maternal_illness), 1, 'L');
+                //     } else if ($data->prenatal_radiowith_or_without == "without") {
+                //         $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_radiowith_or_without . " illness", 'Maternal Illness'), 1, 'L');
+                //     }
+                // }
                 
                 $pdf->ln(1);
                 $pdf->SetFillColor(235, 235, 235);

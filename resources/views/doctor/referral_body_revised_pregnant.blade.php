@@ -180,7 +180,155 @@ $user = Session::get('auth');
                 {{--</tr>--}}
             {{--@endif--}}
 
-            <?php 
+        </table>
+    </div>
+
+    <div class="col-sm-6">
+        <table class="table bg-warning">
+            <tr class="bg-gray">
+                <th colspan="4">BABY</th>
+            </tr>
+            <tr>
+                <td colspan="2">Name: <span class="baby_name form-details">{{ $form['baby']->baby_name }}</span></td>
+                <td>Date of Birth: <span class="baby_dob form-details">{{ $form['baby']->baby_dob }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="2">Birth Weight: <span class="weight form-details">{{ $form['baby']->weight }}</span></td>
+                <td>Gestational Age: <span class="gestational_age form-details">{{ $form['baby']->gestational_age }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    Main Reason for Referral: <span class="baby_reason form-details">{{ $form['baby']->baby_reason }}</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">Major Findings (Clinical and BP,Temp,Lab)
+                    <br />
+                    <span class="baby_major_findings form-details">{!! nl2br($form['baby']->baby_major_findings) !!}</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">Last (Breast) Feed (Time): <span class="baby_last_feed form-details">{{ $form['baby']->baby_last_feed }}</span></td>
+            </tr>
+            <tr class="bg-gray">
+                <td colspan="4">Treatments Give Time</td>
+            </tr>
+            <tr>
+                <td colspan="4">Before Referral: <span class="baby_before_treatment form-details">{{ $form['baby']->baby_before_treatment }}</span> - <span class="baby_before_given_time form-details">{{ $form['baby']->baby_before_given_time }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="4">During Transport: <span class="baby_during_transport form-details">{{ $form['baby']->baby_during_transport }}</span> - <span class="baby_transport_given_time form-details">{{ $form['baby']->baby_transport_given_time }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="4">Information Given to the Woman and Companion About the Reason for Referral
+                    <br />
+                    <span class="baby_information_given form-details">{!! $form['baby']->baby_information_given !!}</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-sm-6">
+        <table class="table bg-warning">
+            <tr class="bg-gray">
+                <td colspan="4">Past Medical History</td>
+            </tr>
+            <tr> 
+                <td colspan="4">Commorbidities: <span class="woman_commorbidities_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$commordities_arr) }}</span></td>       
+            </tr>
+            <tr>    
+                <td colspan="4">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$allergies_arr) }}</span></td>
+            </tr>
+        
+            <tr>
+                <td colspan="4">Heredofamilial: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$heredofamilial_arr) }}</span></td>
+            </tr>
+            <tr>
+                <td colspan="4">Previous Hospitalization: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ $past_medical_history->previous_hospitalization }}</span></td>
+            </tr>
+
+            <tr class="bg-gray">
+                <td colspan="4">Personal and Social History </td>
+            </tr>
+            <tr>
+                <td colspan="2">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> 
+                <td colspan="4">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_sticks_per_day}}</span></td> 
+            </tr>
+            <tr>
+                <td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td> 
+                <td colspan="4">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td> 
+            </tr>
+            <tr>
+                <td colspan="2">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td> 
+                <td colspan="4">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td> 
+            </tr>
+            <tr>
+                <td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> 
+                <td colspan="4">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td> 
+            </tr>
+            <tr>
+                <td colspan="2">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs}}</span></td> 
+                <td colspan="4">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td> 
+            </tr>
+            <tr>
+                <td colspan="4">Quit year:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs_quit_year}}</span></td> 
+            </tr>
+            <tr>
+                <td colspan="4">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
+            </tr>
+            <tr class="bg-gray">
+                <td colspan="4">Pertinent Laboratory and Other Ancillary Procedures </td>
+            </tr>
+            <tr>   
+                <td colspan="4">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
+            </tr>
+
+            
+            <tr class="bg-gray">
+                <td colspan="4">Nutritional Status</td>
+            </tr>
+            <tr>
+            <td colspan="3">Diet:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$nutritional_status->diet}}</span></td>
+            <td colspan="4">Specific Diet:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$nutritional_status->specify_diets}}</span></td>
+            </tr>
+
+            <tr class="bg-gray">
+                <td colspan="4">Latest Vital Signs</td>
+            </tr>
+            <tr>
+            <td colspan="3">Teamperature:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->temperature}}</span></td>
+            <td colspan="4">Pulse Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->pulse_rate}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">Respiratory Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->respiratory_rate}}</span></td>
+            <td colspan="4">Blood Pressure:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->blood_pressure}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="4">Oxygen Saturation:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->oxygen_saturation}}</span></td>
+            </tr>
+
+            <tr class="bg-gray">
+                <td colspan="4">Glasgow Coma Scale</td>
+            </tr>
+            <tr>
+            <td colspan="3">Pupil Size Chart:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td>
+            <td colspan="4">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="3">Verbal Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->verbal_response}}</span></td>
+            <td colspan="4">Eye Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->eye_response}}</span></td>
+            </tr>
+            <tr>
+            <td colspan="4">GSC Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-sm-6">
+        <table class="table bg-warning">
+        
+        <?php 
                 function explodeToArray($string){
                     $array = explode(',',$string);
 
@@ -214,185 +362,7 @@ $user = Session::get('auth');
                 $review_endocrine = explodeToArray($review_of_system->endocrine);
                 $review_psychiatric = explodeToArray($review_of_system->psychiatric)
             ?>
-            <tr class="bg-gray">
-                <td colspan="4">Past Medical History</td>
-            </tr>
-            <tr> 
-                <td colspan="4">Commorbidities: <span class="woman_commorbidities_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$commordities_arr) }}</span></td>       
-            </tr>
-            <tr>    
-                <td colspan="4">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$allergies_arr) }}</span></td>
-            </tr>
-        
-            <tr>
-                <td colspan="4">Heredofamilial: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$heredofamilial_arr) }}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4">Previous Hospitalization: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ $past_medical_history->previous_hospitalization }}</span></td>
-            </tr>
-            <tr class="bg-gray">
-                <td colspan="4">Pediatric History </td>
-            </tr>
-            <tr>
-                <td colspan="4">PRENATAL</td>
-            </tr>
-            <tr>
-            <td colspan="3">Prenatal A: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->prenatal_a}}</span></td>
-            <td colspan="4">Prenatal P: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->prenatal_p}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="4">Prenatal G: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->prenatal_g}}</span></td>
-            <tr>
-                <td colspan="4">{{$pediatric_history->prenatal_radiowith_or_without}} maternal illness: 
-                    <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">@if ($pediatric_history->prenatal_radiowith_or_without === "with")
-                        {{$pediatric_history->prenatal_with_maternal_illness}}
-                        @else
-                        N/A
-                        @endif
-                    </span></td>
-            </tr>
-            <tr>
-                <td colspan="4">NATAL</td>
-            </tr>
-            <tr>
-                <td colspan="3">Born At: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_born_at}}</span></td>
-                <td colspan="4">Born Address: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_born_address}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Born By: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_by}}</span></td>
-            <td colspan="4">Born Via: <span class="woman_natal form-details"></span> - <span class="woman_natal form-details">{{$pediatric_history->natal_via}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Indication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_indication}}</span></td>
-            <td colspan="4">Term: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_term}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Weight: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_weight}}</span></td>
-            <td colspan="4">Natal BR: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_br}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Good Cry: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_with_good_cry}}</span></td>
-            <td colspan="4">Other Complications: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->natal_other_complications}}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4">POSTNATAL</td>
-            </tr>
-            <tr>
-                <td colspan="4"><i>Feeding History</i></td>
-            </tr>
-            <tr>
-            <td colspan="3">Breastfed x: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_bfeedx_month}}</span></td>
-            <td colspan="4">Formula Fed: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_ffeed_specify}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="4">Started Semi Food: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_started_semifoods}}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4"><i>Immunization History</i></td>
-            </tr>
-            <tr>
-            <td colspan="4">BCG: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_bcg}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">DPT/OPV: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_dpt_opv_x}}</span></td>
-            <td colspan="4">DPT/OPV dosage: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_dpt_doses}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Hep B: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_hepB_cbox}}</span></td>
-            <td colspan="4">Hep B dosage: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_hepB_x_doses}}</span></td>
-            </tr>
-            <td colspan="3">Measles: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_immu_measles_cbox}}</span></td>
-            <td colspan="4">MMR: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_mmr_cbox}}</span></td>
-            <tr>
-            <td colspan="4">Others: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_others}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="4">Developmental Milestones: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pediatric_history->post_natal_development_milestones}}</span></td>
-            </tr>
-
-            <tr class="bg-gray">
-                <td colspan="4">Obstetric and Gynecologic History </td>
-            </tr>
-            <tr>
-            <td colspan="3">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>
-            <td colspan="4">Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>
-            <td colspan="4">Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>
-            <td colspan="4">Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>
-            </tr>
-
-            <tr>
-            <td colspan="4">Contraceptives:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$contraceptives_arr)}}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4"><i>Parity</i></td>
-            </tr>
-            <tr>
-            <td colspan="3">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td> 
-            <td colspan="4">P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="3">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td> 
-            <td colspan="4">PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="3">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td> 
-            <td colspan="4">L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="3">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
-            <td colspan="4">EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> 
-            </tr>
-            <tr>
-                <td colspan="4"><i>AOG</i></td>
-            </tr>
-            <tr>
-            <td colspan="3">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
-            <td colspan="4">EUTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="4">Prenatal History:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->prenatal_history}}</span></td> 
-            </tr>
-            <tr class="bg-gray">
-                <td colspan="4">Personal and Social History </td>
-            </tr>
-            <tr>
-            <td colspan="3">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> 
-            <td colspan="4">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_sticks_per_day}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td> 
-            <td colspan="4">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="3">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td> 
-            <td colspan="4">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> 
-            <td colspan="4">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="3">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs}}</span></td> 
-            <td colspan="4">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="4">Quit year:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs_quit_year}}</span></td> 
-            </tr>
-            <tr>
-            <td colspan="4">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
-            </tr>
-            <tr class="bg-gray">
-                <td colspan="4">Pertinent Laboratory and Other Ancillary Procedures </td>
-            </tr>
-            <tr>   
-            <td colspan="4">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
-            </tr>
+          
             <tr class="bg-gray">
                 <td colspan="4">Review of Systems </td>
             </tr>
@@ -448,50 +418,60 @@ $user = Session::get('auth');
             <td colspan="4">Psychiatric:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_psychiatric)}}</span></td>
             </tr>
 
-            <tr class="bg-gray">
-                <td colspan="4">Nutritional Status</td>
-            </tr>
-            <tr>
-            <td colspan="3">Diet:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$nutritional_status->diet}}</span></td>
-            <td colspan="4">Specific Diet:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$nutritional_status->specify_diets}}</span></td>
-            </tr>
+        <tr class="bg-gray">
+                <td colspan="4">Obstetric and Gynecologic History </td>
+        </tr>
+        <tr>
+            <td colspan="2">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>
+            <td>Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="2">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>
+            <td>Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="2">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>
+            <td>Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>
+        </tr>
 
-            <tr class="bg-gray">
-                <td colspan="4">Latest Vital Signs</td>
+        <tr>
+            <td colspan="4">Contraceptives:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$contraceptives_arr)}}</span></td>
             </tr>
-            <tr>
-            <td colspan="3">Teamperature:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->temperature}}</span></td>
-            <td colspan="4">Pulse Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->pulse_rate}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Respiratory Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->respiratory_rate}}</span></td>
-            <td colspan="4">Blood Pressure:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->blood_pressure}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="4">Oxygen Saturation:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->oxygen_saturation}}</span></td>
-            </tr>
+        <tr>
+                <td colspan="4"><i>Parity</i></td>
+        </tr>
+        <tr>
+            <td colspan="2">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td> 
+            <td>P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="2">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td> 
+            <td>PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="2">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td> 
+            <td>L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="2">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
+            <td>EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="4"><i>AOG</i></td>
+        </tr>
+        <tr>
+            <td colspan="2">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
+            <td>EUTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="4">Prenatal History:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->prenatal_history}}</span></td> 
+        </tr>
 
-            <tr class="bg-gray">
-                <td colspan="4">Glasgow Coma Scale</td>
-            </tr>
-            <tr>
-            <td colspan="3">Pupil Size Chart:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td>
-            <td colspan="4">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="3">Verbal Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->verbal_response}}</span></td>
-            <td colspan="4">Eye Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->eye_response}}</span></td>
-            </tr>
-            <tr>
-            <td colspan="4">GSC Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
-            </tr>
-
-            <tr class="bg-gray">
-                <td colspan="4">Pregnant</td>
-            </tr>
         </table>
-
-        <table class="table table-bordered">
+    </div>
+</div>
+<div class="row">
+<table class="table table-bordered">
                 <thead>
                 <tr style="font-size: 10pt;">
                     <th class="text-center" style="width:50%;">Pregnancy Order</th>
@@ -527,53 +507,9 @@ $user = Session::get('auth');
                     @endif
                 </tbody>
             </table>
-    </div>
-
-    <div class="col-sm-6">
-        <table class="table bg-warning">
-            <tr class="bg-gray">
-                <th colspan="4">BABY</th>
-            </tr>
-            <tr>
-                <td colspan="2">Name: <span class="baby_name form-details">{{ $form['baby']->baby_name }}</span></td>
-                <td>Date of Birth: <span class="baby_dob form-details">{{ $form['baby']->baby_dob }}</span></td>
-            </tr>
-            <tr>
-                <td colspan="2">Birth Weight: <span class="weight form-details">{{ $form['baby']->weight }}</span></td>
-                <td>Gestational Age: <span class="gestational_age form-details">{{ $form['baby']->gestational_age }}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4">
-                    Main Reason for Referral: <span class="baby_reason form-details">{{ $form['baby']->baby_reason }}</span>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4">Major Findings (Clinical and BP,Temp,Lab)
-                    <br />
-                    <span class="baby_major_findings form-details">{!! nl2br($form['baby']->baby_major_findings) !!}</span>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="4">Last (Breast) Feed (Time): <span class="baby_last_feed form-details">{{ $form['baby']->baby_last_feed }}</span></td>
-            </tr>
-            <tr class="bg-gray">
-                <td colspan="4">Treatments Give Time</td>
-            </tr>
-            <tr>
-                <td colspan="4">Before Referral: <span class="baby_before_treatment form-details">{{ $form['baby']->baby_before_treatment }}</span> - <span class="baby_before_given_time form-details">{{ $form['baby']->baby_before_given_time }}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4">During Transport: <span class="baby_during_transport form-details">{{ $form['baby']->baby_during_transport }}</span> - <span class="baby_transport_given_time form-details">{{ $form['baby']->baby_transport_given_time }}</span></td>
-            </tr>
-            <tr>
-                <td colspan="4">Information Given to the Woman and Companion About the Reason for Referral
-                    <br />
-                    <span class="baby_information_given form-details">{!! $form['baby']->baby_information_given !!}</span>
-                </td>
-            </tr>
-        </table>
-    </div>
 </div>
+
+
 
 <table class="table table-striped col-sm-6"></table>
 <div class="clearfix"></div>

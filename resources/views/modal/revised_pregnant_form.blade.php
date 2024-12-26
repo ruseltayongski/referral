@@ -655,7 +655,7 @@
                       
 
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        <div class="row" id="pedia_show_pregnant">
+                        <div class="row" id="pedia_show_pregnant" style="display: none">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history_pregnant" aria-expanded="false" aria-controls="collapse_pedia_history_pregnant">
@@ -806,68 +806,47 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="baby_collapsed_pregnant" style="width: 100%;">
-                                <table class="table bg-warning">
-                                    <tr>
-                                        <td colspan="2"><small class="text-success"><b>NAME: </b></small><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_fname" placeholder="First Name" /><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_mname" placeholder="Middle Name" /><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_lname" placeholder="Last Name" />
-                                        </td>
-                                        <td style="vertical-align: top !important;"><small class="text-success"><b>DATE AND HOUR OF BIRTH: </b></small>
-                                            <br />
-                                            <input type="text" class="form-control  form_datetime" style="width: 100%" name="baby_dob" placeholder="Date/Time" /><br />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><small class="text-success"><b>BIRTH WEIGHT: </b></small> <input type="text" class="form-control" style="width: 100%" name="baby_weight" placeholder="kg or lbs" /><br /></td>
-                                        <td><small class="text-success"><b>GESTATIONAL AGE: </b></small> <input type="text" class="form-control" style="width: 100%" name="baby_gestational_age" placeholder="age" /><br /></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">
-                                            <small class="text-success"><b>MAIN REASON FOR REFERRAL: </b></small>
-                                            <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
-                                            <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
-                                            <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                            <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>MAJOR FINDINGS: </b><i>(Clinica and BP,Temp,Lab)</i></small>
-                                            <br />
-                                            <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>LAST (BREAST) FEED (TIME): </b></small><input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" /><br /></td>
-                                    </tr>
-                                    <tr class="bg-gray">
-                                        <td colspan="4">Treatments Give Time</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>BEFORE REFERRAL</b></small>
-                                            <br />
-                                            <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
-                                            <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>DURING TRANSPORT</b></small>
-                                            <br />
-                                            <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
-                                            <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
-                                            <br />
-                                            <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea>
-                                        </td>
-                                    </tr>
-                            </table>
-                                </div>
-                            </div>
-                        </div> 
 
+                                <div class="container-referral" style="padding:5px">
+                                    <b>NAME:</b><br />
+                                        <input type="text" class="form-control" name="baby_fname" placeholder="First Name" />
+                                        <input type="text" class="form-control" name="baby_mname" placeholder="Middle Name" />
+                                        <input type="text" class="form-control" name="baby_lname" placeholder="Last Name" />
+                                    <b>GESTATIONAL AGE: </b>
+                                    <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" />
+                                    <b>BIRTH WEIGHT: </b>
+                                    <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" /><br />
+                                </div><br>
+
+                                <div class="container-referral" style="padding:5px">
+                                    <b>MAIN REASON FOR REFERRAL</b>
+                                    <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
+                                    <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                    <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                    <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                </div><br>
+
+                                <b>MAJOR FINDINGS</b>
+                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea><br><br>
+
+                                <b>TREATMENTS GIVE TIME</b>
+                                <div class="container-referral" style="padding: 5px;">  
+                                <b>BEFORE REFERRAL</b>
+                                <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
+                                <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" /><br>
+                                <b>DURING TRANSPORT</b>
+                                <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
+                                <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
+                                </div><br>
+
+                                <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea><br><br>
+                                                            
+                                </div> 
+                            </div>
+                        </div>
+
+                       
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                         <div class="row" id="menarche_show_pregnant">
                             <div class="col-lg-12">

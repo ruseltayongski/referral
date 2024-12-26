@@ -876,11 +876,19 @@ $counter = 0;
                 $('input[name="phic_status"][value="' + phic_status + '"]').attr('checked', true);
                 $('.phic_id').val(phic_id);
                 $('.patient_sex').val(sex);
+                if (age > 18) {
+                    $('#pedia_show_normal').css('display', 'none');
+                    console.log("hidden");
+                } else {
+                    $('#pedia_show_normal').css('display', 'block');
+                    console.log("show");
+                }
                 if (data.ageType === 'y') {
                     if (age === 1)
-                        $('.patient_age').html(age + " year old");
-                    else
-                        $('.patient_age').html(age + " years old");
+                        $('.patient_age').html(age + " year old");             
+                     else
+                        $('.patient_age').html(age + " years old"); 
+
                 } else if (data.ageType === 'm') {
                     var age_str = "";
                     if (age.month === 1)
