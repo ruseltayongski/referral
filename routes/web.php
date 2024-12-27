@@ -689,6 +689,9 @@ Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->n
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
 
 Route::get('/configSchedule',  'doctor\TelemedicineCtrl@configSched')->name('ConfigSchedule');
+Route::get('get-config/{id}', 'doctor\TelemedicineCtrl@getConfig');
+Route::get('delete-Config/{id}/{id}', 'doctor\TelemedicineCtrl@deleteSchedule');
+
 Route::post('/add/configSched', 'doctor\TelemedicineCtrl@AddconfigSched')->name('add.configSched');
 Route::post('edit/configSched', 'doctor\TelemedicineCtrl@editconfigSched')->name('edit.configSched');
 Route::post('delete/configSched', 'doctor\TelemedicineCtrl@removeconfigSched')->name('delete.configSched');

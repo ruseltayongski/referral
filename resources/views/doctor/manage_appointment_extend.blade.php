@@ -341,8 +341,8 @@
     </div>
 
 
-<!-- Update Config Appointment -->
-   <div class="modal fade" role="dialog" id="UpdateConfigAppointment" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
+    <!-- Update Config Appointment -->
+    <div class="modal fade" role="dialog" id="UpdateConfigAppointment" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-body">
@@ -362,7 +362,7 @@
                                 
                                         <label for="appointed_date">Effective Date:</label>   <!-- Config Appointment -->
                                         <input type="date" class="form-control editffective_date" name="edit_effective_date" id="editffective_date">
-
+                                        <input type="hidden" id="Appointment_schedule_id" name="Appointment_schedule_id">
                                         <label for="defaultCategory" >Choose default schedule: </label><!-- Config Appointment -->
                                         <select class="form-control select2" id="editdefaultCateg" name="edit_config_id">  <!-- Config Appointment -->
                                             <option selected value="">Select Default Category</option>
@@ -375,7 +375,7 @@
 
                                         <label for="department_id">Department Category:</label>
                                         @if($department === 'OPD')
-                                           
+                                            
                                             <input type="text" class="form-control" id="department_id" value="{{ $department }}" readonly>
                                             <input type="hidden" class="form-control" name="edit_department_id" id="department_id" value="5">
                                         @else
@@ -587,26 +587,299 @@
         </div>
     </div>
 
+
+    <!-- Delete Appointment Schedule Config -->
+    <div class="modal fade" role="dialog" id="deleteConfigAppointment" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="delete_configAppointment" action="" method="POST">
+                        {{ csrf_field() }}
+                        <fieldset>
+                            <legend><i class="fa fa-calendar-plus-o"></i> Delete Config Appointment
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="edit-config-close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </legend>
+                        </fieldset>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="label-border">
+                                
+                                        <label for="appointed_date">Effective Date:</label>   <!-- Config Appointment -->
+                                        <input type="date" class="form-control deleteffective_date" name="delete_effective_date" id="deleteffective_date">
+                                        <input type="hidden" id="Appointment_schedule_id" name="delete_schedule_id">
+                                        <label for="defaultCategory" >Choose default schedule: </label><!-- Config Appointment -->
+                                        <select class="form-control select2" id="deletedefaultCateg" name="delete_config_id">  <!-- Config Appointment -->
+                                            <option selected value="">Select Default Category</option>
+                                            @foreach($configs as $config)
+                                                @if($department_id === $config->department_id)
+                                                    <option value="{{$config->id}}">{{$config->description}}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+
+                                        <label for="department_id">Department Category:</label>
+                                        @if($department === 'OPD')
+                                            
+                                            <input type="text" class="form-control" id="delete_department_id" value="{{ $department }}" readonly>
+                                            <input type="hidden" class="form-control" name="delete_department_id" id="department_id" value="5">
+                                        @else
+                                            <div class="alert-department" data-department="{{ $department }}"></div>
+                                        @endif
+
+                                        <label for="facility_id">Facility:</label>
+                                        @foreach($facility as $Facility)
+                                                <input type="text" class="form-control" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
+                                                <input type="hidden" class="form-control" name="delete_facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
+                                        @endforeach
+                                    </div>
+                                </div>
+
+                                <div class="col-md-8">
+                                        <div class="panel panel-default">
+                                            <div class="panel-heading">
+                                                <strong>Repeat</strong>
+                                            </div>
+                                            <div class="panel-body">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="deleteday-checkbox" name="editdays[]" value="Monday"> Monday
+                                                    </label>
+                                                    <div class="delete-time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row edit_time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="delete_time_from[Monday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="delete_time_to[Monday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm editremove-time-slot">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm deleteadd-time-slot" data-day="Monday">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="deleteday-checkbox" name="editdays[]" value="Tuesday"> Tuesday
+                                                    </label>
+                                                    <div class="delete-time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row edit_time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="delete_time_from[Tuesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="delete_time_to[Tuesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm deleteremove-time-slot">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm deleteadd-time-slot" data-day="Tuesday">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="editday-checkbox" name="deletedays[]" value="Wednesday"> Wednesday
+                                                    </label>
+                                                    <div class="delete-time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row edit_time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="delete_time_from[Wednesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="delete_time_to[Wednesday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm editremove-time-slot">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm deleteadd-time-slot" data-day="Wednesday">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="deleteday-checkbox" name="editdays[]" value="Thursday"> Thursday
+                                                    </label>
+                                                    <div class="delete-time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row edit_time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="delete_time_from[Thursday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="delete_time_to[Thursday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm editremove-time-slot">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm deleteadd-time-slot" data-day="Thursday">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="deleteday-checkbox" name="editdays[]" value="Friday"> Friday
+                                                    </label>
+                                                    <div class="delte-time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row edit_time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="delete_time_from[Friday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="delete_time_to[Friday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm deleteremove-time-slot">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm deleteadd-time-slot" data-day="Friday">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="deleteday-checkbox" name="deletdays[]" value="Saturday"> Saturday
+                                                    </label>
+                                                    <div class="delete-time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row edit_time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="delete_time_from[Saturday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="delete_time_to[Saturday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm editremove-time-slot">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm deleteadd-time-slot" data-day="Saturday">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" class="deleteday-checkbox" name="deletedays[]" value="Sunday"> Sunday
+                                                    </label>
+                                                    <div class="delete-time-slots" style="margin-left: 20px; display:none;">
+                                                        <div class="row edit_time-slot">
+                                                            <div class="col-md-5">
+                                                                <label>Time From:</label>
+                                                                <input type="time" name="delete_time_from[Sunday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-5">
+                                                                <label>Time To:</label>
+                                                                <input type="time" name="delete_time_to[Sunday][]" class="form-control input-sm">
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <button type="button" class="btn btn-danger btn-sm editremove-time-slot">
+                                                                    <i class="fa fa-trash"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <button type="button" class="btn btn-primary btn-sm deleteadd-time-slot" data-day="Sunday">
+                                                            <i class="fa fa-plus"></i> Add Time Slot
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p id="EditSchedCategory"></p>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Edit_Cancel_Config"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-send"></i> Delete</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 <script>
+const deleteConfigUrl = "{{ url('delete-Config') }}";
+
+function DeleteConfig(scheduleId, configId){
+    console.log(`Requesting URL: delete-Config/${scheduleId}/${configId}`);
+    $.ajax({
+        url:`${deleteConfigUrl}/${scheduleId}`,
+        method: 'GET',
+        success: function(res) {
+           
+            console.log("res Id:", res.schedId, res.configId);
+        },
+        error: function(error){
+            console.error('Error fetching config:', {
+                status: error.status,
+                statusText: error.statusText,
+                response: error.responseText
+            });
+        }
+    })
+    
+    $('#deleteConfigAppointment').modal('show');
+}
 
 function UpdateConfig(config_appointment_id, config_id) {
+
     const configData = @json($config_sched_data);
     const appointmentConfig = @json($appointmentSconfig);
+
     let selectedConfig = configData.find(config => config.id === config_id);
     let days = selectedConfig.days.split('|');
     let timeSlots = selectedConfig.time.split('|');
     let category =  selectedConfig.category;
 
     const $defaulCategory = $("#editdefaultCateg");
+    console.log("Select Config::", selectedConfig);
     $defaulCategory.val(config_id).trigger('change');
+
+    $('#Appointment_schedule_id').val(config_appointment_id);
 
     const Appointment_Config = appointmentConfig.find(ap => ap.id === config_appointment_id);
     
     $defaulCategory.on('change', function () {
         const update_config_id = Number($(this).val());
         selectedConfig = configData.find(config => config.id === update_config_id);
-        console.log("selectedConfig inside handler:", selectedConfig);
-
+        console.log("selectedConfig inside handler:", selectedConfig.id);
+        $('#Config_schedule_id').val(selectedConfig.id);
         if (selectedConfig) {
             days = selectedConfig.days.split('|');
             timeSlots = selectedConfig.time.split('|');
@@ -630,6 +903,7 @@ function UpdateConfig(config_appointment_id, config_id) {
     function updateTimeSlots(days, timeSlots) {
 
         $('.edit-time-slots').hide().find('.edit_time-slot, .time-slot_edit').remove();
+        $(`.editday-checkbox`).prop("checked", false);
 
         const dayTimemap = {};
         let currentDay = null;
@@ -673,6 +947,7 @@ function UpdateConfig(config_appointment_id, config_id) {
         });
     }
 
+   
     // Event handlers
     $(document).on('click', '.editadd-time-slot', function () {
         let day = $(this).data('day');

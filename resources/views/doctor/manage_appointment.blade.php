@@ -235,7 +235,7 @@
                                         <button class="btn btn-primary btn-sm" onclick="UpdateConfig({{ $row->id }}, {{ $row->configId}})">
                                             <i class="fa fa-pencil"></i>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" onclick="DeleteConfig({{ $row->id }})">
+                                        <button class="btn btn-danger btn-sm" onclick="DeleteConfig({{ $row->id }},  {{ $row->configId}}))">
                                             <i class="fa fa-trash"></i>
                                         </button>
                                     </td>
@@ -527,6 +527,7 @@
                     days.forEach(day => {
                         $(`.day-checkbox[value="${day}"]`).prop("checked", true);
                         const $timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
+                        
                         $timeSlotsDiv.show();
 
                         if(dayTimeMap[day]) {
