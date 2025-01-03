@@ -81,59 +81,10 @@ export default {
       let count = 0;
      // let totalTimeSlots = 0;
       const now = new Date();
+      //for config Schedule display facility 
 
-    //   this.config_appoint.forEach(appointment => {
-    //       const strtDate = new Date(appointment.appointed_date);
-    //       const endDate = new Date(appointment.date_end);
-    //       const configSchedules = appointment.config_schedule;
-    //       console.log("appointment config: ", configSchedules);
 
-    //        if (configSchedules && !isNaN(strtDate) && !isNaN(endDate)) {
-    //         const { time } = configSchedules;
-
-    //         // Extract valid time slots
-    //         const timeSlots = time.split('|').slice(1)
-    //             .filter(slot => /^[0-2][0-9]:[0-5][0-9]-[0-2][0-9]:[0-5][0-9]$/.test(slot));
-    //         const timeSlotCount = timeSlots.length;
-
-    //         // Helper function to calculate days in a month
-    //         const daysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
-
-    //         let current = new Date(strtDate);
-    //         const end = new Date(endDate);
-
-    //         // Loop through each month in the range
-    //         while (current <= end) {
-    //             const daysInCurrentMonth = daysInMonth(current.getFullYear(), current.getMonth());
-
-    //             // Determine overlap days within this month
-    //             const startOfMonth = new Date(current.getFullYear(), current.getMonth(), 1);
-    //             const endOfMonth = new Date(current.getFullYear(), current.getMonth(), daysInCurrentMonth);
-
-    //             const monthStart = current > startOfMonth ? current : startOfMonth;
-    //             const monthEnd = end < endOfMonth ? end : endOfMonth;
-
-    //             const daysInRange = Math.ceil((monthEnd - monthStart) / (1000 * 60 * 60 * 24)) + 1;
-
-    //             // Count weeks for this month's portion
-    //             const weekCount = Math.ceil(daysInRange / 7);
-
-    //             totalTimeSlots += weekCount * timeSlotCount;
-
-    //             // // Move to the next month
-    //             // current = new Date(current.getFullYear(), current.getMonth() + 1, 1);
-
-                
-    //         }
-
-    //         console.log("Appointment Time Slots Count:", timeSlotCount);
-    //     } else {
-    //         console.error("Invalid appointment data:", appointment);
-    //     }
-    // });
-
-    // console.log("Total Slots Across All Valid Dates:", totalTimeSlots);
-  
+      // for manual Schedule
       if (this.appointment && this.appointment.appointment_schedules) {
         const appointmentIdMap = new Map();
 
@@ -171,55 +122,81 @@ export default {
           }
         });
       }
+      console.log("count slot", count)
       return count;
     },
-    // shouldDisplayFacility() {
-    //   const now = new Date();
-    //   const isAppointedExpire = this.appointment.appointment_schedules.every(
-    //     (sched) => {
-    //       const AppointedDate = new Date(`${sched.appointed_date}`);
-    //       console.log(AppointedDate);
-    //       return AppointedDate <= now;
-    //     }
-    //   );
-    //   return !isAppointedExpire;
-    //   //&& !this.emptyAppointmentByCount == 0
-    // },
-    // shouldDisplayFacility() {
-    //   const now = new Date();
-
-    //   const hasValidAppointment = this.appointment.appointment_schedules.some(
-    //     (sched) => {
-    //       const appointmentDatetime = new Date(
-    //         `${sched.appointed_date} ${sched.appointed_time}`
-    //       );
-
-    //       const midnightTonight = new Date();
-            
-    //         midnightTonight.setHours(23,59,59,999);
-            
-    //       console.log("appointmentDatetime", appointmentDatetime >= now);
-    //       console.log("midnightTonight", midnightTonight);
-    //       return appointmentDatetime >= now && appointmentDatetime < midnightTonight;
-    //     }
-    //   );
-
-    //   return hasValidAppointment;
-    // },
     shouldDisplayFacility() {
       const now = new Date();
+
       const hasValidAppointment = this.appointment.appointment_schedules.some(
         (sched) => {
+          // console.log("sched", sched);
+          //for config Schedule display facility 
+          let DisplayConfigFacility;
+          if(sched.configId){
+
+              const effectiveDate = new Date(sched.appointed_date);
+              const date_endMidnight = new Date(sched.date_end);
+              const configTime = sched.config_schedule.time.split('|');
+              const timeSlot = configTime.filter((item) => item.includes('-'));
+
+              // const configDateRange = now >= effectiveDate && now <= date_end;
+              // console.log("time", configTime, 'day::', everydaySched, "effectiveDate:", effectiveDate, "date end: ", date_end);
+              // console.log("configDateRange", configDateRange);
+              // const validDaysmonth = [];
+              // let currentDate = new Date(effectiveDate);
+              // while (currentDate <= date_end){
+              //   validDaysmonth.push(currentDate.getDate());
+              //   currentDate.setDate(currentDate.getDate() +1);// Move to the next day
+              // }
+              // // Check if today is in the valid range of days of the month
+              // const todayDate = now.getDate();
+              // const isTodayInMonthSched = validDaysmonth.includes(todayDate);
+
+              // // Check if today matches a valid day of the week
+              // const today = now.toLocaleString('en-US', { weekday: 'long'});
+              // console.log('today', today);
+              // const isTodayInSchedule = everydaySched.includes(today);
+
+              const isWithinTimeRange = timeSlot.some((timeRange) => {
+               const [start, end] = timeRange.split('-');
+                const startTime = new Date();
+                const endTime = new Date();
+                
+                const [startHours, startMinutes] = start.split(':').map(Number);
+                const [endHours, endMinutes] = end.split(':').map(Number);
+
+                startTime.setHours(startHours, startMinutes, 0, 0);
+                endTime.setHours(endHours, endMinutes, 0, 0);
+     
+                // return now <= startTime && now <= endTime
+                   const appointmentDatetime = new Date(
+                  `${sched.date_end} ${timeRange}`
+                );
+                const midnightAppointmentDay = new Date(appointmentDatetime);
+                midnightAppointmentDay.setHours(24, 0, 0, 0); 
+
+                return now < midnightAppointmentDay;
+            });
+            
+          // console.log('isWithinTimeRange:',isWithinTimeRange, 'isTodayInSchedule:', isTodayInSchedule , isTodayInMonthSched);
+          //   DisplayConfigFacility = isWithinTimeRange && (isTodayInSchedule || isTodayInMonthSched);
+            DisplayConfigFacility = isWithinTimeRange 
+          }
+       
+          // for manual Schedule
           const appointmentDatetime = new Date(
             `${sched.appointed_date} ${sched.appointed_time}`
           );
-
+     
           // Set midnight of the appointment date
           const midnightAppointmentDay = new Date(appointmentDatetime);
           midnightAppointmentDay.setHours(24, 0, 0, 0);
-          
+
           // Display facility if current time is before midnight of the appointment day
-          return now < midnightAppointmentDay;
+          const shouldDisplayManualFacility  = now < midnightAppointmentDay;
+
+          return shouldDisplayManualFacility || DisplayConfigFacility;
         }
       );
 

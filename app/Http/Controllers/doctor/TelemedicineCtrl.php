@@ -292,20 +292,20 @@ class TelemedicineCtrl extends Controller
         $user = Session::get('auth');
         $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
         
-         $facility_id = AppointmentSchedule::pluck('facility_id');
+        $facility_id = AppointmentSchedule::pluck('facility_id');
 
-        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor'])->find($facility_id);
-
-        $config = AppointmentSchedule::with(['configSchedule' => function($query) {
-            $query->select('id','category','days','time');
-        }])
-        ->select('configId','appointed_date','date_end')
-        ->get();
+        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule'])->find($facility_id);
+        
+        // $config = AppointmentSchedule::with(['configSchedule' => function($query) {
+        //     $query->select('id','category','days','time');
+        // }])
+        // ->select('configId','appointed_date','date_end')
+        // ->get();
 
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,
-            'appointment_config' => $config,
+            // 'appointment_config' => $config,
             'user' => $user
         ]);
     }

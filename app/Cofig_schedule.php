@@ -10,6 +10,6 @@ class Cofig_schedule extends Model
     protected $guarded = array();
 
     public function appointmentSchedules(){
-        return $this->hasMany(AppointmentSchedule::class, 'configId', 'id');
+        return $this->hasMany(AppointmentSchedule::class, 'configId','id');
     }
 }

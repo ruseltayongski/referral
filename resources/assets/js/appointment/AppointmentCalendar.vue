@@ -115,7 +115,42 @@ export default {
         const targetGrid = $(".fc-day-grid-event");
         const dateString = targetTd.attr("data-date");
         let timeslot = null;
+
+        
         const isfullyBooked = this.appointmentSlot.some((appointment) => {
+
+          // Config Appointment
+          appointment.appointment_schedules.forEach((sched) =>{
+            if(sched.configId){
+
+              const Date_start = new Date(sched.appointed_date); // Start date
+              const date_end = new Date(sched.date_end); // End date
+              const timeSlot = sched.config_schedule.time.split('|');
+              const daysSched = sched.config_schedule.days.split('|');
+
+              console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched, 'timeSlot', timeSlot);
+            
+                // Iterate through all days in the range
+                let currentDate = new Date(Date_start); // Initialize with start date
+                console.log("currentDate", currentDate);
+                while (currentDate <= date_end) {
+                  const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
+                  
+                  if (daysSched.includes(currentDayName)) {
+                    // Highlight specific day if it matches
+                    const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
+                    targetTd.css("background-color", "#00a65a"); // Green for available
+                    targetTd.css("border-color", "#00a65a");
+                  }
+                  
+                  // Move to the next day
+                  currentDate.setDate(currentDate.getDate() + 1);
+                }
+            }
+            
+          });
+
+          // Manual Appointment
           if (appointment.appointment_schedules.length > 0) {
             const slotOndate = appointment.appointment_schedules.filter(
               (slot) => slot.appointed_date === dateString
@@ -139,15 +174,75 @@ export default {
               )
             );
           }
+
           return false;
         });
-         const dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
-              console.log("appointment Slot",timeslot);
-        //  console.log("date for calendar", dateTimeAppointed, "date with CurrentTime", currentDateTime);
+
+      //Config Appointment 
+      // const dateRangeBackground = this.appointmentSlot.appointment_schedules.some((config) => {
+
+      //   const Date_start = new Date(config.appointed_date); // Start date
+      //   const date_end = new Date(config.date_end); // End date
+      //   const daysSched = config.config_schedule.days.split('|'); // Schedule days
+      //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched)
+      //   const currentDate = new Date(dateString); // Current date in the calendar
+      //   const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Current day name
+        
+      //   const withinDateRange = currentDate >= Date_start && currentDate <= date_end; // Date within range
+      //   console.log("withinDateRange", withinDateRange);
+      //   const isInSchedule = daysSched.includes(currentDayName); // Day is in schedule
+      //   console.log("withinDateRange", withinDateRange);
+      //   if (withinDateRange && isInSchedule) {
+      //     // Weekly (recurs every 7 days) or Monthly logic
+      //     const diffDays = Math.ceil((currentDate - Date_start) / (1000 * 60 * 60 * 24)); // Days difference
+      //     const isWeekly = diffDays % 7 === 0; // Weekly recurrence
+      //     const isMonthly = Date_start.getDate() === currentDate.getDate(); // Monthly recurrence
+
+      //     if (isWeekly || isMonthly) {
+      //       targetTd.css("background-color", "#00a65a"); // Green for available
+      //       targetTd.css("border-color", "#00a65a");
+            
+      //       return true; // Found a match
+      //     }
+
+      //   }
+
+      // });
+
+      // const dateRangeBackground = this.appointmentSlot[0].appointment_schedules.some((config) => {
+      //   const Date_start = new Date(config.appointed_date); // Start date
+      //   const date_end = new Date(config.date_end); // End date
+      //   const daysSched = config.config_schedule.days.split('|'); // Selected days e.g., ['Monday', 'Wednesday', 'Thursday']
+
+      //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched);
+
+      //   // Iterate through all days in the range
+      //   let currentDate = new Date(Date_start); // Initialize with start date
+      //   console.log("currentDate", config);
+      //   while (currentDate <= date_end) {
+      //     const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
+          
+      //     if (daysSched.includes(currentDayName)) {
+      //       // Highlight specific day if it matches
+      //       const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
+      //       targetTd.css("background-color", "#00a65a"); // Green for available
+      //       targetTd.css("border-color", "#00a65a");
+      //     }
+          
+      //     // Move to the next day
+      //     currentDate.setDate(currentDate.getDate() + 1);
+      //   }
+      // });
+
+
+
+        
+        const dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
+
         if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
           targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
           targetTd.css("border-color", "rgb(230 193 193)");
-        } else {
+        }else {
           targetTd.css("background-color", "#00a65a"); //available color green'
           targetdrag.css("border-color", "#00a65a");
         }
