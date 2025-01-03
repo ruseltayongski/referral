@@ -475,11 +475,11 @@ $user = Session::get('auth');
                 <thead>
                 <tr style="font-size: 10pt;">
                     <th class="text-center" style="width:50%;">Pregnancy Order</th>
-                    <th class="text-center" style="width:20%;">Year</th>
+                    <th class="text-center" style="width:20%;">Year of Birth</th>
                     <th class="text-center">Gestation Completed</th>
                     <th class="text-center">Pregnancy Outcome</th>
                     <th class="text-center">Place of Birth</th>
-                    <th class="text-center">Sex</th>
+                    <th class="text-center">Biological Sex</th>
                     <th class="text-center" style="width:50%;">Birth Weight</th>
                     <th class="text-center">Present Status</th>
                     <th class="text-center">Complication(s)</th>
@@ -509,7 +509,7 @@ $user = Session::get('auth');
             </table>
 </div>
 
-
+{{dd($form)}}
 
 <table class="table table-striped col-sm-6"></table>
 <div class="clearfix"></div>

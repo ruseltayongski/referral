@@ -8,7 +8,7 @@ $facilities = \App\Facility::select('id','name')
 ?>
 
 <style>
-  .file-upload {
+   .file-upload {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
@@ -152,46 +152,13 @@ $facilities = \App\Facility::select('id','name')
     }
 
 
-        /* This targets the specific table and keeps the layout consistent */
-    .unique-pregnancy {
-        display: block;                 /* Allow for horizontal scrolling */
-        overflow-x: auto;               /* Enable horizontal scroll */
-        white-space: nowrap;            /* Prevent text wrapping */
-        width: 100%;                    /* Ensure it takes full width of its container */
-    }
-
-    /* Target the header row and make it sticky */
-    #prenatal_table th {
-        position: sticky;               /* Make header sticky */
-        top: 0;                         /* Stick to the top of the table */
-        background-color: #f0ecec;      /* Match the background of the original table header */
-        z-index: 10;                    /* Make sure the header is always above the rows */
-        text-align: left;               /* Optional: ensure text aligns as expected */
-    }
-
-    /* Ensure the table looks like the original */
     #prenatal_table {
-        border-collapse: collapse;      /* Maintain border collapsing style */
-        width: 100%;                    /* Ensure the table takes up full width */
+        display: block;
+        white-space: nowrap;
     }
-
-    #prenatal_table td,
-    #prenatal_table th {
-        border: 1px solid #ddd;         /* Set a border color */
-        padding: 8px 12px;              /* Adjust padding for consistency */
-        text-align: left;               /* Align text to the left (or center depending on original style) */
-    }
-
-    /* Optional: If you have any special header background color or text styling, add it here */
-    #prenatal_tabl th {
-        background-color:rgb(240, 236, 236);      /* Example header background color */
-        font-weight: bold;              /* Make text bold like the original */
-    }
-
 
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}
-   
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
     @media only screen and (max-width: 720px) {
         .web-view {
@@ -1183,57 +1150,73 @@ $facilities = \App\Facility::select('id','name')
 
                                     <b>PRENATAL HISTORY</b><br>
                                     <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
-                                    <div class="table-responsive" style="overflow-x: auto">
-                                    <table class="pregnancy-modal-table table-bordered unique-pregnancy" id="prenatal_table">
+                                    <div class="table-responsive" style="overflow-x: auto;">
+                                        <table class="table table-bordered" id="prenatal_table">
                                             <thead>
                                                 <tr style="font-size: 10pt;">
-                                                    <th class="text-center" style="width:50%;">Pregnancy Order</th>
-                                                    <th class="text-center" style="width:20%;">Year</th>
+                                                    <th class="text-center">Pregnancy Order</th>
+                                                    <th class="text-center">Year of Birth</th>
                                                     <th class="text-center">Gestation Completed</th>
                                                     <th class="text-center">Pregnancy Outcome</th>
                                                     <th class="text-center">Place of Birth</th>
-                                                    <th class="text-center">Sex</th>
-                                                    <th class="text-center" style="width:50%;">Birth Weight</th>
+                                                    <th class="text-center">Biological Sex</th>
+                                                    <th class="text-center">Birth Weight</th>
                                                     <th class="text-center">Present Status</th>
                                                     <th class="text-center">Complication(s)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                               
-                                                <tr style="font-size: 10pt">
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
+                                                @foreach($pregnancy as $preg)
+                                                <tr style="font-size: 10pt;">
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_order[]" value="{{ $preg['pregnancy_order'] }}">
+                                                    </td>
                                                     <td>
                                                         <select class="form-control select" name="pregnancy_history_year[]">
                                                             <option value="">Choose...</option>
                                                             @foreach(range(date('Y'), 1950) as $year)
-                                                            <option value="{{ $year }}" {{ $year == $pregnancy->pregnancy_year ? 'selected' : '' }}>{{ $year }}</option>
+                                                            <option value="{{ $year }}" {{ $year == $preg['pregnancy_year'] ? 'selected' : '' }}>{{ $year }}</option>
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{$pregnancy->pregnancy_gestation_completed}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{$pregnancy->pregnancy_outcome}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
+                                                    <td>
+                                                        <input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{ $preg['pregnancy_outcome'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{ $preg['pregnancy_place_of_birth'] }}">
+                                                    </td>
                                                     <td>
                                                         <select class="select form-control" name="prenatal_history_sex[]">
                                                             <option value="">Choose...</option>
-                                                            <option value="M" {{ $pregnancy->pregnancy_sex == 'M' ? 'selected' : '' }}>Male</option>
-                                                            <option value="F" {{ $pregnancy->pregnancy_sex == 'F' ? 'selected' : '' }}>Female</option>
+                                                            <option value="M" {{ $preg['pregnancy_sex'] == 'M' ? 'selected' : '' }}>Male</option>
+                                                            <option value="F" {{ $preg['pregnancy_sex'] == 'F' ? 'selected' : '' }}>Female</option>
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
+                                                    <td>
+                                                        <input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $preg['pregnancy_present_status'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $preg['pregnancy_complication'] }}">
+                                                    </td>
                                                 </tr>
-                                              
+                                                @endforeach
                                             </tbody>
                                         </table>
                                         <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
                                             <i class="fa fa-plus"> Add Row</i>
                                         </button><br><br>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
+
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">

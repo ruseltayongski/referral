@@ -962,18 +962,17 @@
                                             <thead>
                                                 <tr style="font-size: 10pt;">
                                                     <th class="text-center" style="width:50%;">Pregnancy Order</th>
-                                                    <th class="text-center" style="width:20%;">Year</th>
+                                                    <th class="text-center" style="width:20%;">Year of Birth</th>
                                                     <th class="text-center">Gestation Completed</th>
                                                     <th class="text-center">Pregnancy Outcome</th>
                                                     <th class="text-center">Place of Birth</th>
-                                                    <th class="text-center">Sex</th>
+                                                    <th class="text-center">Biological Sex</th>
                                                     <th class="text-center" style="width:50%;">Birth Weight</th>
                                                     <th class="text-center">Present Status</th>
                                                     <th class="text-center">Complication(s)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                               
                                                 <tr style="font-size: 10pt">
                                                     <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
                                                     <td>
@@ -997,8 +996,7 @@
                                                     <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
-                                                </tr>
-                                              
+                                                </tr> 
                                             </tbody>
                                         </table>
                                         <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
@@ -2588,7 +2586,7 @@
             $('#comor_none_cbox_pregnant').prop('checked', false);
             $('#comor_hyper_cbox_pregnant, #comor_diab_cbox_pregnant, #comor_asthma_cbox_pregnant, #comor_copd_cbox_pregnant').prop('checked', true);
             $('#comor_dyslip_cbox_pregnant, #comor_thyroid_cbox_pregnant, #comor_cancer_cbox_pregnant').prop('checked', true);
-            $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer').show();
+            $('#comor_asthma_pregnant, #comor_diab_pregnant, #comor_hyper_pregnant, #comor_cancer_pregnant').show();
         } else {
             $('#comor_hyper_cbox_pregnant, #comor_diab_cbox_pregnant, #comor_asthma_cbox_pregnant, #comor_copd_cbox_pregnant').prop('checked', false);
             $('#comor_dyslip_cbox_pregnant, #comor_thyroid_cbox_pregnant, #comor_cancer_cbox_pregnant, #comor_others_cbox_pregnant').prop('checked', false);

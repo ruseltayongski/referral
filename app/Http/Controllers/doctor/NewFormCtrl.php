@@ -1004,6 +1004,7 @@ class NewFormCtrl extends Controller
 
     public function saveReferral(Request $request, $type)
     {
+        
         $user = Session::get('auth');
         if($request->telemedicine) {
             $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id',$request->appointmentId)->where('doctor_id',$request->doctorId)->first();
@@ -1052,7 +1053,7 @@ class NewFormCtrl extends Controller
             );
 
             $form = PatientForm::updateOrCreate( ['unique_id' => $unique_id],$data);
-            
+        
             $file_paths = "";
             if($_FILES["file_upload"]["name"]) {
                 ApiController::fileUpload($request);
@@ -1067,6 +1068,7 @@ class NewFormCtrl extends Controller
                     }
                 }
             }
+           
             $form->file_path = $file_paths;
             $form->save();
 
@@ -1118,7 +1120,7 @@ class NewFormCtrl extends Controller
 
             $baby2->birth_date = ($request->baby_dob) ? $request->baby_dob : '';
             $baby2->save();
-
+           
 
             $data = array(
                 'unique_id' => $unique_id,
@@ -1156,6 +1158,17 @@ class NewFormCtrl extends Controller
                 'other_diagnoses' => $request->other_diagnosis,
             );
             $form = PregnantForm::create($data);
+
+            $form->file_path = $file_paths;
+            $form->save();
+
+            foreach ($request->icd_ids as $i) {
+                $icd = new Icd();
+                $icd->code = $form->code;
+                $icd->icd_id = $i;
+                $icd->save();
+            }
+           
 
             if($request->referred_facility == 790 || $request->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
@@ -1521,7 +1534,7 @@ class NewFormCtrl extends Controller
             $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
             $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
     
-       
+            
             return view("modal.revised_normal_form_info", [
                 "form" => $form['form'],
                 "id" => $id,
@@ -1579,14 +1592,14 @@ class NewFormCtrl extends Controller
             $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
             $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
             $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
-            $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->first(); 
+            $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get(); 
             $status = Tracking::select('status')->where('id', $id)->first()->status;
 
             $reason = ReasonForReferral::select('pregnant_form.reason_referral as id', 'reason_referral.reason as reason')
                 ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
                 ->where('pregnant_form.code', $track->code)->first();
 
-               
+            // dd($pregnancy_data);
 
             return view("modal.revised_pregnant_info", [
                 "form" => self::pregnantFormData($id),
