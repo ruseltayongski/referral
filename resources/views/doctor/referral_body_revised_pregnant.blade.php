@@ -3,6 +3,20 @@ $user = Session::get('auth');
 ?>
 
 <style>
+
+    .glasgow-table {
+        border: 1px solid lightgrey;
+        width: 100%;
+    }
+
+     .glasgow-dot {
+        background-color: #494646;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+
     .mobile-view {
         display: none;
         visibility: hidden;
@@ -228,9 +242,11 @@ $user = Session::get('auth');
         </table>
     </div>
 </div>
-<hr>
+
+<hr style="border-top: 1px solid #ccc;">
 <div class="row">
     <div class="col-sm-6">
+    <div class="table-responsive">
         <table class="table bg-warning">
             <tr class="bg-gray">
                 <td colspan="4">Past Medical History</td>
@@ -290,7 +306,7 @@ $user = Session::get('auth');
                 <td colspan="4">Nutritional Status</td>
             </tr>
             <tr>
-            <td colspan="3">Diet:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$nutritional_status->diet}}</span></td>
+            <td colspan="2">Diet:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$nutritional_status->diet}}</span></td>
             <td colspan="4">Specific Diet:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$nutritional_status->specify_diets}}</span></td>
             </tr>
 
@@ -298,11 +314,11 @@ $user = Session::get('auth');
                 <td colspan="4">Latest Vital Signs</td>
             </tr>
             <tr>
-            <td colspan="3">Teamperature:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->temperature}}</span></td>
+            <td colspan="2">Teamperature:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->temperature}}</span></td>
             <td colspan="4">Pulse Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->pulse_rate}}</span></td>
             </tr>
             <tr>
-            <td colspan="3">Respiratory Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->respiratory_rate}}</span></td>
+            <td colspan="2">Respiratory Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->respiratory_rate}}</span></td>
             <td colspan="4">Blood Pressure:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->blood_pressure}}</span></td>
             </tr>
             <tr>
@@ -311,13 +327,45 @@ $user = Session::get('auth');
 
             <tr class="bg-gray">
                 <td colspan="4">Glasgow Coma Scale</td>
-            </tr>
+            </tr> 
+            <td colspan="4">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th><b>1</b></th>
+                            <th><b>2</b></th>
+                            <th><b>3</b></th>
+                            <th><b>4</b></th>
+                            <th><b>5</b></th>
+                            <th><b>6</b></th>
+                            <th><b>7</b></th>
+                            <th><b>8</b></th>
+                            <th><b>9</b></th>
+                            <th><b>10</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="glasgow-dot" style="height: 6px; width: 6px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 10px; width: 10px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 13px; width: 13px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 16px; width: 16px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 20px; width: 20px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 24px; width: 24px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 28px; width: 28px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 32px; width: 32px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 36px; width: 36px;"></span></td>
+                            <td><span class="glasgow-dot" style="height: 40px; width: 40px;"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td> 
             <tr>
-            <td colspan="3">Pupil Size Chart:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td>
+            <td colspan="2"><b>Pupil Size Chart:</b><span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td><br><br>
             <td colspan="4">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>
             </tr>
             <tr>
-            <td colspan="3">Verbal Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->verbal_response}}</span></td>
+            <td colspan="2">Verbal Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->verbal_response}}</span></td>
             <td colspan="4">Eye Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->eye_response}}</span></td>
             </tr>
             <tr>
@@ -325,10 +373,9 @@ $user = Session::get('auth');
             </tr>
         </table>
     </div>
-    <div class="col-sm-6">
-        <table class="table bg-warning">
-        
-        <?php 
+    </div>
+    
+    <?php 
                 function explodeToArray($string){
                     $array = explode(',',$string);
 
@@ -362,7 +409,10 @@ $user = Session::get('auth');
                 $review_endocrine = explodeToArray($review_of_system->endocrine);
                 $review_psychiatric = explodeToArray($review_of_system->psychiatric)
             ?>
-          
+    
+    <div class="col-sm-6">
+    <div class="table-responsive">
+        <table class="table bg-warning">
             <tr class="bg-gray">
                 <td colspan="4">Review of Systems </td>
             </tr>
@@ -469,21 +519,24 @@ $user = Session::get('auth');
 
         </table>
     </div>
+    </div>
 </div>
 <div class="row">
-<table class="table table-bordered">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
                 <thead>
-                <tr style="font-size: 10pt;">
-                    <th class="text-center" style="width:50%;">Pregnancy Order</th>
-                    <th class="text-center" style="width:20%;">Year of Birth</th>
-                    <th class="text-center">Gestation Completed</th>
-                    <th class="text-center">Pregnancy Outcome</th>
-                    <th class="text-center">Place of Birth</th>
-                    <th class="text-center">Biological Sex</th>
-                    <th class="text-center" style="width:50%;">Birth Weight</th>
-                    <th class="text-center">Present Status</th>
-                    <th class="text-center">Complication(s)</th>
-                </tr>
+                    <tr style="font-size: 10pt;">
+                        <th class="text-center" style="width:50%;">Pregnancy Order</th>
+                        <th class="text-center" style="width:20%;">Year of Birth</th>
+                        <th class="text-center">Gestation Completed</th>
+                        <th class="text-center">Pregnancy Outcome</th>
+                        <th class="text-center">Place of Birth</th>
+                        <th class="text-center">Biological Sex</th>
+                        <th class="text-center" style="width:50%;">Birth Weight</th>
+                        <th class="text-center">Present Status</th>
+                        <th class="text-center">Complication(s)</th>
+                    </tr>
                 </thead>
                 <tbody>
                     @if(isset($pregnancy) && count($pregnancy) > 0)
@@ -502,14 +555,17 @@ $user = Session::get('auth');
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="9">No data available.</td>
+                            <td colspan="9" class="text-center">No data available.</td>
                         </tr>
                     @endif
                 </tbody>
             </table>
+        </div>
+    </div>
 </div>
 
-{{dd($form)}}
+
+
 
 <table class="table table-striped col-sm-6"></table>
 <div class="clearfix"></div>

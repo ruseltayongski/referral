@@ -8,7 +8,7 @@ $facilities = \App\Facility::select('id','name')
 ?>
 
 <style>
-   .file-upload {
+   /* .file-upload {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
@@ -118,7 +118,7 @@ $facilities = \App\Facility::select('id','name')
     .remove-image:active {
         border: 0;
         transition: all .2s ease;
-    }
+    } */
 
     .container-referral {
         border: 1px solid lightgrey;
@@ -168,6 +168,118 @@ $facilities = \App\Facility::select('id','name')
         .mobile-view {
             display: block;
             visibility: visible;
+        }
+    }
+</style>
+
+<style>
+    .file-upload {
+        background-color: #ffffff;
+        width: 100%;
+        height: 35%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px dashed dimgrey;
+    }
+    .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #1FB264;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #15824B;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .file-upload-btn:hover {
+        background: #1AA059;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+    .file-upload-btn:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    .file-upload-content {
+        display: none;
+        text-align: center;
+    }
+    .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .image-upload-wrap {
+        margin-top: 20px;
+        border: 4px dashed #1FB264;
+        position: relative;
+    }
+    .image-dropping,
+    .image-upload-wrap:hover {
+        background-color: /*#6ab155*/#1FB264;
+        border: 4px dashed #ffffff;
+    }
+    .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+    }
+    .drag-text {
+        text-align: center;
+    }
+    .drag-text h3 {
+        font-weight: 100;
+        text-transform: uppercase;
+        color: #15824B;
+        padding: 60px 0;
+    }
+    .file-upload-image {
+        max-height: 75%;
+        max-width: 75%;
+        margin: auto;
+        padding: 20px;
+    }
+    .remove-image {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    .remove-image:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+    .remove-image:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    @media only screen and (max-width: 720px) {
+        .file-upload {
+            background-color: #ffffff;
+            width: 50%;
+        }
+        .file-upload-image {
+            max-height: 50%;
+            max-width: 50%;
         }
     }
 </style>
@@ -224,7 +336,7 @@ $facilities = \App\Facility::select('id','name')
                             <div class="col-md-4">
                             <small ><b>REFERRED TO: </b></small><br>
                                 <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
-                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" require>
+                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" style="width:250px" require>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
                                         <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -505,10 +617,6 @@ $facilities = \App\Facility::select('id','name')
                                     <textarea class="form-control" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form['pregnant']->other_diagnoses }}</textarea>
                                 </div>
                             </div><br>
-                                </div>
-
-                                </div>
-                            </div>
                         </div>
 
                         <?php
@@ -958,27 +1066,23 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="baby_collapsed_pregnant" style="width: 100%;">
-                                <div class="container-referral">
-                                    <table class="table container-referral">
-                                    <tr>
-                                        <td colspan="2"><small ><b>NAME: </b></small><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_fname" placeholder="First Name" value="{{$form['baby']->baby_fname}}"/><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_mname" placeholder="Middle Name" value="{{$form['baby']->baby_mname}}"/><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_lname" placeholder="Last Name" value="{{$form['baby']->baby_lname}}"/>
-                                        </td>
-                                        <td style="vertical-align: top !important;"><small ><b>DATE AND HOUR OF BIRTH: </b></small>
-                                            <br />
-                                            <input type="text" class="form-control  form_datetime" name="baby_dob" placeholder="Date/Time" value="{{$form['baby']->baby_dob}}"/><br />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><small ><b>BIRTH WEIGHT: </b></small> <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" value="{{$form['baby']->weight}}"/><br /></td>
-                                        <td><small ><b>GESTATIONAL AGE: </b></small> <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" value="{{$form['baby']->gestational_age}}"/><br /></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">
-                                            <small ><b>MAIN REASON FOR REFERRAL: </b></small>
-                                            @if($form['baby']->baby_reason === "None")
+
+                                <div class="container-referral" style="padding:5px">
+                                    <b>NAME:</b><br />
+                                    <input type="text" class="form-control" style="width: 25%" name="baby_fname" placeholder="First Name" value="{{$form['baby']->baby_fname}}"/><br>
+                                            <input type="text" class="form-control" style="width: 25%" name="baby_mname" placeholder="Middle Name" value="{{$form['baby']->baby_mname}}"/><br>
+                                            <input type="text" class="form-control" style="width: 25%" name="baby_lname" placeholder="Last Name" value="{{$form['baby']->baby_lname}}"/><br>
+                                    <br/><b>DATE AND HOUR OF BIRTH: </b>
+                                    <input type="text" class="form-control  form_datetime" name="baby_dob" placeholder="Date/Time" value="{{$form['baby']->baby_dob}}"/><br>
+                                    <b>GESTATIONAL AGE: </b>
+                                    <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" value="{{$form['baby']->weight}}"/>
+                                    <b>BIRTH WEIGHT: </b>
+                                    <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" value="{{$form['baby']->gestational_age}}"/>
+                                </div><br>
+
+                                <div class="container-referral" style="padding:5px">
+                                    <b>MAIN REASON FOR REFERRAL</b>
+                                    @if($form['baby']->baby_reason === "None")
                                             <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
                                             <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
                                             <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
@@ -999,41 +1103,26 @@ $facilities = \App\Facility::select('id','name')
                                             <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
                                             <label><input type="radio" name="baby_reason" value="To accompany the mother" checked/> To accompany the mother </label>
                                             @endif
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small ><b>MAJOR FINDINGS: </b><i>(Clinica and BP,Temp,Lab)</i></small>
-                                            <br />
-                                            <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5">{{$form['baby']->baby_major_findings}}</textarea>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small ><b>LAST (BREAST) FEED (TIME): </b></small><input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br /></td>
-                                    </tr>
-                                    <tr class="bg-gray">
-                                        <td colspan="4">Treatments Give Time</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small ><b>BEFORE REFERRAL</b></small>
-                                            <br />
-                                            <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_before_treatment}}"/>
-                                            <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_before_given_time}}"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small ><b>DURING TRANSPORT</b></small>
-                                            <br />
-                                            <input type="text" class="form-control" name="baby_during_transport" placeholder="Treatment Given" value="{{$form['baby']->baby_during_transport}}"/>
-                                            <input type="text" class="form-control form_datetime" name="baby_transport_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_transport_given_time}}"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small ><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
-                                            <br />
-                                            <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given">{{$form['baby']->baby_information_given}}</textarea>
-                                        </td>
-                                    </tr>
-                                    </table>
+                                </div><br>
+                        
+                                <b>MAJOR FINDINGS</b>
+                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5">{{$form['baby']->baby_major_findings}}</textarea><br><br>
+                                
+                                <b>TREATMENTS GIVE TIME</b>
+                                <div class="container-referral" style="padding: 5px;">  
+
+                                <b>LAST (BREAST) FEED (TIME):</b>
+                                <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br>
+                                <b>BEFORE REFERRAL</b>
+                                <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_before_treatment}}"/>
+                                <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_before_given_time}}"/><br>
+                                <b>DURING TRANSPORT</b>
+                                <input type="text" class="form-control" name="baby_during_transport" placeholder="Treatment Given" value="{{$form['baby']->baby_during_transport}}"/>
+                                <input type="text" class="form-control form_datetime" name="baby_transport_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_transport_given_time}}"/>
+                                </div><br>
+                                 
+                                <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given">{{$form['baby']->baby_information_given}}</textarea><br><br>
                                 </div>
                                 </div>
                             </div>
@@ -1389,22 +1478,57 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="file-upload">
-                                                    <div class="image-upload-wrap">
-                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
-                                                        <div class="drag-text">
-                                                            <h3>Drag and drop a file or select add Image</h3>
-                                                        </div>
-                                                    </div>
-                                                    <div class="file-upload-content">
-                                                          <img class="file-upload-image" src="#" alt="your image" />
-                                                        <div class="image-title-wrap">
-                                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                        <div class="col-md-12">
+                                            <div class="with_file_attached hide">
+                                                <small class="text-success"><b>
+                                                        @if(count($file_path) > 1) FILE ATTACHMENTS: @else FILE ATTACHMENT: @endif
+                                                    </b></small>
+                                                <input type="hidden" name="file_cleared" id="file_cleared" value="">
+                                                <button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Remove File Attachment</button><br/><br/>
+                                                @for($i = 0; $i < count($file_path); $i++)
+                                                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
+                                                    @if($i + 1 != count($file_path))
+                                                        ,&nbsp;&nbsp;
+                                                    @endif
+                                                @endfor
+                                        {{--                <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
+                                            </div>
+                                        <div class="no_file_attached hide">
+                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnant(2)">Remove Files</button><br><br>
+                                                <div class="pregnant_file_attachment_">
+                                                    <div class="col-md-3" id="pregnant_upload_1">
+                                                        <div class="file-upload">
+                                                            <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap_1">
+                                                                <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, 1, 2);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
+                                                                <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
+                                                            </div>
+                                                            <div class="file-upload-content" id="pregnant_file-upload-content_1">
+                                                                <img class="file-upload-image" id="pregnant_file-upload-image_1"/>
+                                                                <div class="image-title-wrap">
+                                                                    <b><small class="image-title" id="pregnant_image-title_1" style="display:block; word_-wrap: break-word_;">Uploaded File</small></b>
+                                                                    {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1, 2)" class="btn-sm remove-image">Remove</button>--}}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                        </div>
+                                            {{--<div class="file-upload">--}}
+                                                {{--<div class="image-upload-wrap">--}}
+                                                    {{--<input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>--}}
+                                                    {{--<div class="drag-text">--}}
+                                                        {{--<h3>Drag and drop a file or select add Image</h3>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                                {{--<div class="file-upload-content">--}}
+                                                    {{--<img class="file-upload-image" src="#" alt="your image" />--}}
+                                                    {{--<div class="image-title-wrap">--}}
+                                                        {{--<button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>--}}
+                                                    {{--</div>--}}
+                                                {{--</div>--}}
+                                            {{--</div>--}}
+                                        </div>
                                         </div><br>
                                     </div>
                                 </div>
@@ -3060,12 +3184,18 @@ $facilities = \App\Facility::select('id','name')
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
     function resetPupilSize() {
     $('#gcs_score').val(0);
+    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
     $('input[name="motor_radio"]').prop('checked', false);
     $('input[name="verbal_radio"]').prop('checked', false);
     $('input[name="eye_radio"]').prop('checked', false);
     last_motor = last_verbal = last_eye = 0;
     }
-
+    $('#gcs_score').val(0);
+    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
+    $('input[name="motor_radio"]').prop('checked', false);
+    $('input[name="verbal_radio"]').prop('checked', false);
+    $('input[name="eye_radio"]').prop('checked', false);
+    last_motor = last_verbal = last_eye = 0;
     var last_motor = last_verbal = last_eye = 0;
     $('input[name="motor_radio"]').on('change', function() {
         var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
@@ -3468,40 +3598,6 @@ $facilities = \App\Facility::select('id','name')
         } else {
             clearOtherReasonReferral();
         }
-    });
-
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
-
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
-
-                $('.image-title').html(input.files[0].name);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-
-        } else {
-            removeUpload();
-        }
-    }
-
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
-    }
-
-    $('.image-upload-wrap').bind('dragover', function() {
-        $('.image-upload-wrap').addClass('image-dropping');
-    });
-    $('.image-upload-wrap').bind('dragleave', function() {
-        $('.image-upload-wrap').removeClass('image-dropping');
     });
 </script>
 

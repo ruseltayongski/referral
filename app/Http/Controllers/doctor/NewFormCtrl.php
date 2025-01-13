@@ -1005,6 +1005,7 @@ class NewFormCtrl extends Controller
     public function saveReferral(Request $request, $type)
     {
         
+      
         $user = Session::get('auth');
         if($request->telemedicine) {
             $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id',$request->appointmentId)->where('doctor_id',$request->doctorId)->first();
@@ -1159,6 +1160,21 @@ class NewFormCtrl extends Controller
             );
             $form = PregnantForm::create($data);
 
+            $file_paths = "";
+
+            if ($_FILES["file_upload"]["name"]) {
+                ApiController::fileUpload($request);
+                for ($i = 0; $i < count($_FILES["file_upload"]["name"]); $i++) {
+                    $file = $_FILES['file_upload']['name'][$i];
+                    if (isset($file) && !empty($file)) {
+                        $username = $user->username;
+                        $file_paths .= ApiController::fileUploadUrl() . $username . "/" . $file;
+                        if ($i + 1 != count($_FILES["file_upload"]["name"])) {
+                            $file_paths .= "|";
+                        }
+                    }
+                }
+            }
             $form->file_path = $file_paths;
             $form->save();
 
@@ -1172,7 +1188,7 @@ class NewFormCtrl extends Controller
 
             if($request->referred_facility == 790 || $request->referred_facility == 23) {
                 $patient = Patients::find($patient_id);
-                $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
+              //  $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
                 $this->referred_patient_data = array(
                     "age" => (int)ParamCtrl::getAge($patient->dob),
                     "chiefComplaint" => $request->case_summary,
@@ -1192,11 +1208,11 @@ class NewFormCtrl extends Controller
             self::newFormPregnant($request);
             self::addTracking($code,$patient_id,$user,$request,$type,$form->id);
         }
-            if($request->referred_facility == 790 || $request->referred_facility == 23) {
-                return $this->referred_patient_data;
-            } else {
-                Session::put("refer_patient",true);
-            }
+        if($request->referred_facility == 790 || $request->referred_facility == 23) {
+            return $this->referred_patient_data;
+        } else {
+            Session::put("refer_patient",true);
+        }
     }
 
     public function getViewForm_pregnant($id,$referral_status){
@@ -1534,7 +1550,7 @@ class NewFormCtrl extends Controller
             $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
             $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
     
-            
+           
             return view("modal.revised_normal_form_info", [
                 "form" => $form['form'],
                 "id" => $id,
@@ -1568,7 +1584,7 @@ class NewFormCtrl extends Controller
             if($file_link != null) {
                 $explode = explode("|",$file_link);
                 foreach($explode as $link) {
-                    $path_tmp = self::securedFile($link);
+                    $path_tmp = ReferralCtrl::securedFile($link);
                     if($path_tmp != '') {
                         array_push($path, $path_tmp);
                         array_push($file_name, basename($path_tmp));
@@ -1599,8 +1615,8 @@ class NewFormCtrl extends Controller
                 ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
                 ->where('pregnant_form.code', $track->code)->first();
 
-            // dd($pregnancy_data);
-
+            
+            
             return view("modal.revised_pregnant_info", [
                 "form" => self::pregnantFormData($id),
                 "id" => $id,
@@ -2903,14 +2919,37 @@ class NewFormCtrl extends Controller
             if(!empty($data->oxygen_saturation)){$pdf->MultiCell(0, 7, "Oxgen Saturation:" . self::green($pdf, $data->oxygen_saturation, 'Oxygen Saturation'), 1, 'L');}
         }
 
-        if (!empty($data->pupil_size_chart) || !empty($data->motor_response) || !empty($data->verbal_response) || !empty($data->eye_response) || !empty($data->gsc_score)){       
+        if (!empty($data->pupil_size_chart) || !empty($data->motor_response) || !empty($data->verbal_response) || !empty($data->eye_response) || !empty($data->gsc_score)) {
             $this->titleHeader($pdf, "GLASGOW COMA SCALE");
-            if(!empty($data->pupil_size_chart)){$pdf->MultiCell(0, 7, "Pupil Size Chart:" . self::green($pdf, $data->pupil_size_chart, 'Pupil Size Chart'), 1, 'L');}
-            if(!empty($data->motor_response)){$pdf->MultiCell(0, 7, "Motor Response:" . self::green($pdf, $data->motor_response, 'Motor Response'), 1, 'L');}
-            if(!empty($data->verbal_response)){$pdf->MultiCell(0, 7, "Verbal Response:" . self::green($pdf, $data->verbal_response, 'Verbal Response'), 1, 'L');}
-            if(!empty($data->eye_response)){$pdf->MultiCell(0, 7, "Eye Response:" . self::green($pdf, $data->eye_response, 'Eye Response'), 1, 'L');}
-            if( !empty($data->gsc_score)){$pdf->MultiCell(0, 7, "GSC Score:" . self::green($pdf, $data->gsc_score, 'GSC Score'), 1, 'L');}
+
+
+        // // Define margins
+        // $marginLeft = 0;
+        // $marginTop = 7;
+        // $imageWidth = 500; // Adjust image width (in mm) to a larger size
+        // $imageHeight = 50; // Adjust image height (in mm) to a larger size
+
+        // // Add image with the new size and adjusted position
+        // $pdf->Image('resources/img/forms_icon.png', $marginLeft, $marginTop, $imageWidth, $imageHeight);
+
+        
+            if (!empty($data->pupil_size_chart)) {
+                $pdf->MultiCell(0, 7, "Pupil Size Chart:" . self::green($pdf, $data->pupil_size_chart, 'Pupil Size Chart'), 1, 'L');
+            }
+            if (!empty($data->motor_response)) {
+                $pdf->MultiCell(0, 7, "Motor Response:" . self::green($pdf, $data->motor_response, 'Motor Response'), 1, 'L');
+            }
+            if (!empty($data->verbal_response)) {
+                $pdf->MultiCell(0, 7, "Verbal Response:" . self::green($pdf, $data->verbal_response, 'Verbal Response'), 1, 'L');
+            }
+            if (!empty($data->eye_response)) {
+                $pdf->MultiCell(0, 7, "Eye Response:" . self::green($pdf, $data->eye_response, 'Eye Response'), 1, 'L');
+            }
+            if (!empty($data->gsc_score)) {
+                $pdf->MultiCell(0, 7, "GSC Score:" . self::green($pdf, $data->gsc_score, 'GSC Score'), 1, 'L');
+            }
         }
+        
 
         if (!empty($data->skin) || !empty($data->head) || !empty($data->eyes) || !empty($data->ears) || !empty($data->nose_or_sinuses) || !empty($data->mouth_or_throat)
         || !empty($data->neck) || !empty($data->breast) || !empty($data->respiratory_or_cardiac) || !empty($data->gastrointestinal) || !empty($data->urinary)

@@ -1,5 +1,19 @@
 <?php $user = Session::get('auth'); ?>
 <style>
+
+    .glasgow-table {
+        border: 1px solid lightgrey;
+        width: 100%;
+    }
+
+     .glasgow-dot {
+        background-color: #494646;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+
     .mobile-view {
         display: none;
         visibility: hidden;
@@ -484,8 +498,38 @@
     <tr class="bg-gray">
         <td colspan="6">Glasgow Coma Scale</td>
     </tr>
+        <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th><b>1</b></th>
+                        <th><b>2</b></th>
+                        <th><b>3</b></th>
+                        <th><b>4</b></th>
+                        <th><b>5</b></th>
+                        <th><b>6</b></th>
+                        <th><b>7</b></th>
+                        <th><b>8</b></th>
+                        <th><b>9</b></th>
+                        <th><b>10</b></th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        <tr>
+                        <td style="width: fit-content;"><span class="glasgow-dot" style="height: 6px; width: 6px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 10px; width: 10px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 13px; width: 13px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 16px; width: 16px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 20px; width: 20px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 24px; width: 24px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 28px; width: 28px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 32px; width: 32px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 36px; width: 36px;"></span></td>
+                        <td><span class="glasgow-dot" style="height: 40px; width: 40px;"></span></td>
+                    </tr>
+                    </tbody>
+            </table>
     <tr>
-        <td colspan="3">Pupil Size Chart:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td>
+        <td colspan="3"><b>Pupil Size Chart:</b><span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td><br><br>
         <td colspan="3">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>
     </tr>
     <tr>

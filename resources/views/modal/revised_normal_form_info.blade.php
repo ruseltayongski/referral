@@ -8,7 +8,7 @@ $facilities = \App\Facility::select('id','name')
 ?>
 
 <style>
-  .file-upload {
+  /* .file-upload {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
@@ -118,16 +118,8 @@ $facilities = \App\Facility::select('id','name')
     .file-upload .remove-image:active {
         border: 0;
         transition: all .2s ease;
-    }
+    } */
 
-    .file-upload .container-referral {
-        border: 1px solid lightgrey;
-        width: 100%;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left: 5px;
-        padding-right: 5px;
-    }
 
     .container-referral {
         border: 1px solid lightgrey;
@@ -138,47 +130,174 @@ $facilities = \App\Facility::select('id','name')
         padding-right: 5px;
     }
 
-    .file-upload .glasgow-table {
+   .glasgow-table {
         border: 1px solid lightgrey;
         width: 100%;
     }
 
-    .file-upload .glasgow-dot {
+    .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;
     }
 
-    .file-upload .referral-radio-btn {
+    .referral-radio-btn {
         height:18px;
         width:18px;
         vertical-align: middle;
     }
 
-    .file-upload .mobile-view {
+    .mobile-view {
         display: none;
         visibility: hidden;
     }
 
-    .file-upload table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
-    .file-upload #glasgow_table_1, .file-upload tr td:nth-child(1) {width: 35%;}
-    .file-upload #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
     @media only screen and (max-width: 720px) {
-        .file-upload .web-view {
+        .web-view {
             display: none;
             visibility: hidden;
         }
-        .file-upload .mobile-view {
+        .mobile-view {
             display: block;
             visibility: visible;
         }
     }
+</style>
+
+<style>
+    .file-upload {
+        background-color: #ffffff;
+        width: 100%;
+        height: 35%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px dashed dimgrey;
+    }
+    .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #1FB264;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #15824B;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .file-upload-btn:hover {
+        background: #1AA059;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+    .file-upload-btn:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    .file-upload-content {
+        display: none;
+        text-align: center;
+    }
+    .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .image-upload-wrap {
+        margin-top: 20px;
+        border: 4px dashed #1FB264;
+        position: relative;
+    }
+    .image-dropping,
+    .image-upload-wrap:hover {
+        background-color: /*#6ab155*/#1FB264;
+        border: 4px dashed #ffffff;
+    }
+    .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+    }
+    .drag-text {
+        text-align: center;
+    }
+    .drag-text h3 {
+        font-weight: 100;
+        text-transform: uppercase;
+        color: #15824B;
+        padding: 60px 0;
+    }
+    .file-upload-image {
+        max-height: 75%;
+        max-width: 75%;
+        margin: auto;
+        padding: 20px;
+    }
+    .remove-image {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    .remove-image:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+    .remove-image:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    @media only screen and (max-width: 720px) {
+        .file-upload {
+            background-color: #ffffff;
+            width: 50%;
+        }
+        .file-upload-image {
+            max-height: 50%;
+            max-width: 50%;
+        }
+    }
+
+    .remove-icon-btn{
+        position: absolute;
+        top: -2px; /* Adjust as needed */
+        right: 12px; /* Adjust as needed */
+        background: transparent;
+        border: none;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ff0000; /* Optional: Trash icon color */
+        font-size: 18px; /* Optional: Adjust icon size */
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .remove-icon-btn:hover {
+        transform: scale(1.1); /* Slightly increase size on hover */
+    }
+    .remove-icon-btn i {
+        pointer-events: none; /* To ensure the button handles the click, not the icon */
+    }
+    
 </style>
 
    
@@ -379,47 +498,49 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis" style="width: 100%">
                                 <div class="row">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
-                                    <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
-                                    <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                        <i class="fa fa-medkit"></i> Add ICD-10
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                </div>
-                            </div><br>
-
-                            <div class="row icd_selected" style="padding-top: 10px;">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
-                                    <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
-                                    <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
-                                    <div id="icd_selected" style="padding-top: 5px">
-                                        @if(isset($icd))
-                                            @foreach($icd as $i)
-                                                <span> => {{ $i->description }}</span><br>
-                                                <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
-                                            @endforeach
-                                        @endif
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                        <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
+                                        <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                            <i class="fa fa-medkit"></i> Add ICD-10
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                     </div>
-                                </div>
-                            </div><br>
+                                </div><br>
 
-                            <div class="row notes_diagnosis" style="padding-top: 10px;">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
-                                    <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
-                                    <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                    <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
-                                </div>
-                            </div><br>
+                                <div class="row icd_selected" style="padding-top: 10px;">
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                                        <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                                        <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                                        <div id="icd_selected" style="padding-top: 5px">
+                                            @if(isset($icd))
+                                                @foreach($icd as $i)
+                                                    <span> => {{ $i->description }}</span><br>
+                                                    <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div><br>
 
-                            <div class="row other_diag" style="padding-top: 10px">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
-                                    <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
-                                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
-                                    <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                <div class="row notes_diagnosis" style="padding-top: 10px;">
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                                        <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                        <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                        <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
+                                    </div>
+                                </div><br>
+
+                                <div class="row other_diag" style="padding-top: 10px">
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                                        <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                                        <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
+                                        <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                    </div>
+                                </div><br>
                                 </div>
                             </div><br>
                                 </div>
@@ -847,24 +968,46 @@ $facilities = \App\Facility::select('id','name')
                                                 <textarea id="lab_others" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"><?php echo htmlspecialchars($pertinent_laboratory->lab_procedure_other); ?></textarea>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                       
+                                        <div class="row with_file_attached hide">
                                             <div class="col-md-12">
-                                                <div class="file-upload">
-                                                    <div class="image-upload-wrap">
-                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
-                                                        <div class="drag-text">
-                                                            <h3>Drag and drop a file or select add Image</h3>
-                                                        </div>
-                                                    </div>
-                                                    <div class="file-upload-content">
-                                                          <img class="file-upload-image" src="#" alt="your image" />
-                                                        <div class="image-title-wrap">
-                                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                <small class="text-success"><b>
+                                                        @if(count($file_path) > 1) FILE ATTACHMENTS: @else FILE ATTACHMENT: @endif
+                                                    </b></small>
+                                                <input type="hidden" name="file_cleared" id="file_cleared" value="">
+                                                <button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Remove File Attachment</button><br/><br/>
+                                                @for($i = 0; $i < count($file_path); $i++)
+                                                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
+                                                    @if($i + 1 != count($file_path))
+                                                        ,&nbsp;&nbsp;
+                                                    @endif
+                                                @endfor
+                                                {{--<a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
+                                            </div>
+                                        </div><br>
+
+                                        <div class="row no_file_attached hide">
+                                            <div class="col-md-12">
+                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <button type="button" class="btn btn-md btn-danger" id="remove_files_btn_normal" onclick="removeFiles(2)">Remove Files</button><br><br>
+                                                <div class="attachment_normal">
+                                                    <div class="col-md-3" id="upload1">
+                                                        <div class="file-upload">
+                                                            <div class="text-center image-upload-wrap" id="image-upload-wrap_normal1">
+                                                                <input class="file-upload-input files" multiple id="file_upload_input_normal1" type='file' name="file_upload[]" onchange="readUrl(this, 1,2);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                                <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
+                                                            </div>
+                                                            <div class="file-upload-content" id="file-upload-content_normal1">
+                                                                <img class="file-upload-image" id="file-upload-image_normal1" src="#"/>
+                                                                <div class="image-title-wrap">
+                                                                    <b><small class="image-title" id="image-title_normal1" style="display:block; word-wrap: break-word;"></small></b>
+                                                                    {{--<button type="button" onclick="removeFile(1,2)" class="remove-image"> Remove </button>--}}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div><br>
+                                        <br>
                                     </div>
                                 </div>
                             </div>
@@ -2904,54 +3047,21 @@ $facilities = \App\Facility::select('id','name')
         }
     });
 
-    $('.reason_referral').on('change', function() {
-        var value = $(this).val();
-        if (value == '-1') {
-            $("#other_reason_referral").html(loading);
-            setTimeout(function() {
-                $("#other_reason_referral").html('<span>Other Reason for Referral:</span>\n' +
-                    '                                <br />\n' +
-                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            }, 500);
-            $("#other_reason_referral").show();
-        } else {
-            clearOtherReasonReferral();
-        }
-    });
+    // $('.reason_referral').on('change', function() {
+    //     var value = $(this).val();
+    //     if (value == '-1') {
+    //         $("#other_reason_referral").html(loading);
+    //         setTimeout(function() {
+    //             $("#other_reason_referral").html('<span>Other Reason for Referral:</span>\n' +
+    //                 '                                <br />\n' +
+    //                 '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
+    //         }, 500);
+    //         $("#other_reason_referral").show();
+    //     } else {
+    //         clearOtherReasonReferral();
+    //     }
+    // });
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
-
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
-
-                $('.image-title').html(input.files[0].name);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-
-        } else {
-            removeUpload();
-        }
-    }
-
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
-    }
-
-    $('.image-upload-wrap').bind('dragover', function() {
-        $('.image-upload-wrap').addClass('image-dropping');
-    });
-    $('.image-upload-wrap').bind('dragleave', function() {
-        $('.image-upload-wrap').removeClass('image-dropping');
-    });
 </script>
 @include('script.datetime')
 @include('script.edit_referred')

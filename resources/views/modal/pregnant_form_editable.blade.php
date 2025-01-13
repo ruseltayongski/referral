@@ -362,19 +362,19 @@
                     <div class="row">
                         <div class="col-md-12">
                             <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
-                            <button type="button" class="btn btn-md btn-danger" id="preg_remove_files" onclick="removeFilePregnant()">Remove Files</button><br><br>
+                            <button type="button" class="btn btn-md btn-danger" id="preg_remove_files" onclick="removeFilePregnant(1)">Remove Files</button><br><br>
                             <div class="pregnant_file_attachment">
                                 <div class="col-md-3" id="pregnant_upload1">
                                     <div class="file-upload">
                                         <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap1">
-                                            <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                            <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, 1, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
                                             <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
                                         </div>
                                         <div class="file-upload-content" id="pregnant_file-upload-content1">
                                             <img class="file-upload-image" id="pregnant_file-upload-image1"/>
                                             <div class="image-title-wrap">
                                                 <b><small class="image-title" id="pregnant_image-title1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
-                                                {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1)" class="btn-sm remove-image">Remove</button>--}}
+                                                {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1, 1)" class="btn-sm remove-image">Remove</button>--}}
                                             </div>
                                         </div>
                                     </div>
@@ -543,12 +543,15 @@
 
 <script>
     var pregnant_pos = 2;
+    var pregnant_pos_ = 2;
     var pregnant_count = 0 ;
-    function readURLPregnant(input, pos) {
+    var pregnant_count_ = 0 ;
+    function readURLPregnant(input, pos, version) {
         var word = '{{ asset('resources/img/document_icon.png') }}';
         var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
         var excel = '{{ asset('resources/img/sheet_icon.png') }}';
-        if (input.files) {
+        if (version === 1){
+            if (input.files) {
             var tmp_pos = pos;
             for(var i = 0; i < input.files.length; i++) {
                 var file = input.files[i];
@@ -576,15 +579,52 @@
                     reader.readAsDataURL(file);
                     pregnant_count+=1;
                 }
-                addFilePregnant();
+                addFilePregnant(1);
             }
         }
         $('#preg_remove_files').show();
+        
+        }else if (version === 2){
+            if (input.files) {
+            var tmp_pos = pos;
+            for(var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+                if(file && file !== null) {
+                    var reader = new FileReader();
+                    var type = file.type;
+                    if(type === 'application/pdf') {
+                        $('#pregnant_file-upload-image_'+pos).attr('src',pdf);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#pregnant_file-upload-image_'+pos).attr('src',word);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#pregnant_file-upload-image_'+pos).attr('src',excel);
+                        pos+=1;
+                    } else {
+                        reader.onloadend = function(e) {
+                            $('#pregnant_file-upload-image_'+pos).attr('src',e.target.result);
+                            pos+=1;
+                        };
+                    }
+                    $('#pregnant_image-upload-wrap_'+tmp_pos).hide();
+                    $('#pregnant_file-upload-content_'+tmp_pos).show();
+                    $('#pregnant_image-title_'+tmp_pos++).html(file.name);
+                    reader.readAsDataURL(file);
+                    pregnant_count_+=1;
+                }
+                addFilePregnant(2);
+            }
+        }
+        $('#preg_remove_files_').show();
+        }
+       
     }
-    function addFilePregnant() {
+    function addFilePregnant(version) {
         var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
 
-        if((pregnant_count % 4) == 0) {
+        if (version === 1){
+            if((pregnant_count % 4) == 0) {
             $('.pregnant_file_attachment').append(
                 '<div class="clearfix"></div>'
             );
@@ -593,43 +633,88 @@
             '<div class="col-md-3" id="pregnant_upload'+pregnant_pos+'">\n' +
             '   <div class="file-upload">\n' +
             '       <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap'+pregnant_pos+'">\n' +
-            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, '+pregnant_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, '+pregnant_pos+', 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
             '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
             '       </div>\n' +
             '       <div class="file-upload-content" id="pregnant_file-upload-content'+pregnant_pos+'">\n' +
             '           <img class="file-upload-image" id="pregnant_file-upload-image'+pregnant_pos+'"/>\n' +
             '           <div class="image-title-wrap">\n' +
             '               <b><small class="image-title" id="pregnant_image-title'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
-            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
+            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnant('+pregnant_pos+', 1)" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
             '</div>'
         );
         pregnant_pos+=1;
+
+        } else if (version === 2){
+            if((pregnant_count_ % 4) == 0) {
+            $('.pregnant_file_attachment_').append(
+                '<div class="clearfix"></div>'
+            );
+        }
+        $('.pregnant_file_attachment_').append(
+            '<div class="col-md-3" id="pregnant_upload_'+pregnant_pos_+'">\n' +
+            '   <div class="file-upload">\n' +
+            '       <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap_'+pregnant_pos_+'">\n' +
+            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, '+pregnant_pos_+', 2);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
+            '       </div>\n' +
+            '       <div class="file-upload-content" id="pregnant_file-upload-content_'+pregnant_pos_+'">\n' +
+            '           <img class="file-upload-image" id="pregnant_file-upload-image_'+pregnant_pos_+'"/>\n' +
+            '           <div class="image-title-wrap">\n' +
+            '               <b><small class="image-title" id="pregnant_image-title_'+pregnant_pos_+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
+            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos_+'" onclick="removeUploadPregnant('+pregnant_pos_+', 2)" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
+            '           </div>\n' +
+            '       </div>\n' +
+            '   </div>\n' +
+            '</div>'
+        );
+        pregnant_pos_+=1;
+        }
+        
     }
 
-    function removeFilePregnant() {
-        $('.pregnant_file_attachment').html("");
+    function removeFilePregnant(version) {
+        if (version === 1){
+            $('.pregnant_file_attachment').html("");
         pregnant_count = 0;
         pregnant_pos = 1;
         $('#preg_remove_files').hide();
-        addFilePregnant();
+        addFilePregnant(1);
+
+        }else if (version === 2){
+            $('.pregnant_file_attachment_').html("");
+        pregnant_count_ = 0;
+        pregnant_pos_ = 1;
+        $('#preg_remove_files_').hide();
+        addFilePregnant(2);
+        }
     }
 
-    function removeUploadPregnant(uploadCount){
-        $('#pregnant_upload' + uploadCount).remove();
-
+    function removeUploadPregnant(uploadCount, version){
+        if (version === 1){
+            $('#pregnant_upload' + uploadCount).remove();
         upload_count -= 1;
-
         if(pregnant_pos > uploadCount){
             pregnant_pos -= 1;
         }
         if(uploadCount === 0){
             $('#remove_files_btn');
         }
-
-        console.log("upload_pos:", pregnant_pos);
+        }else if (version === 2){
+            $('#pregnant_upload_' + uploadCount).remove();
+        upload_count -= 1;
+        if(pregnant_pos_ > uploadCount){
+            pregnant_pos_ -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+        }
+      
+   
 
     }
 
@@ -642,6 +727,16 @@
                 $('#pregnant_image-upload-wrap' + i).removeClass('image-dropping');
             });
         }
+
+        for (var i = 0; i < pregnant_count_; i++) {
+            $('#pregnant_image-upload-wrap_' + i).bind('dragover', function () {
+                $('#pregnant_image-upload-wrap_' + i).addClass('image-dropping');
+            });
+            $('#pregnant_image-upload-wrap_' + i).bind('dragleave', function () {
+                $('#pregnant_image-upload-wrap_' + i).removeClass('image-dropping');
+            });
+        }
         $('#preg_remove_files').hide();
+        $('#preg_remove_files_').hide();
     });
 </script>

@@ -136,7 +136,7 @@
         transition: all .2s ease;
     } */
 
-    .container-referral {
+    /* .container-referral {
         border: 1px solid lightgrey;
         width: 100%;
         padding-top: 5px;
@@ -172,7 +172,7 @@
         display: block;
         overflow-x: auto;
         white-space: nowrap;
-    }
+    } */
 
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
     #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
@@ -186,7 +186,7 @@
             display: block;
             visibility: visible;
         }
-    }
+    } 
 </style>
     <div class="modal fade" role="dialog" id="revisednormalFormModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -336,9 +336,7 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis" style="width: 100%">
-                                    <b>Diagnosis/Impression: </b>
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
-                                    <br><br>
+                                   <br>
                                         <a data-toggle="modal" data-target="#icd-modal_revised" type="button" class="btn btn-sm btn-success" onclick="searchICD10Revised()">
                                             <i class="fa fa-medkit"></i> Add ICD-10
                                         </a>
@@ -1074,17 +1072,22 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="file-upload">
-                                                    <div class="image-upload-wrap">
-                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
-                                                        <div class="drag-text">
-                                                            <h3>Drag and drop a file or select add Image</h3>
-                                                        </div>
-                                                    </div>
-                                                    <div class="file-upload-content">
-                                                        <img class="file-upload-image" src="#" alt="your image" />
-                                                        <div class="image-title-wrap">
-                                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <button type="button" class="btn btn-md btn-danger" id="normal_remove_files" onclick="removeFileNormal()">Remove Files</button><br><br>
+                                                <div class="normal_file_attachment">
+                                                    <div class="col-md-3" id="normal_upload1">
+                                                        <div class="file-upload">
+                                                            <div class="text-center image-upload-wrap" id="normal_image-upload-wrap1">
+                                                                <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLNormal(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                                <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
+                                                            </div>
+                                                            <div class="file-upload-content" id="normal_file-upload-content1">
+                                                                <img class="file-upload-image" id="normal_file-upload-image1"/>
+                                                                <div class="image-title-wrap">
+                                                                    <b><small class="image-title" id="normal_image-title1" style="display:block; word_normal-wrap: break-word_normal;">Uploaded File</small></b>
+                                                                    {{--<button type="button" id="normal_remove_upload1" onclick="removeUploadNormal(1)" class="btn-sm remove-image">Remove</button>--}}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2292,7 +2295,7 @@
                         <hr />
                         <div class="form-fotter pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                            <button type="submit" id="sbmitBtn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                            <button type="submit" id="sbmitBtnNormal" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>{{--/.form-group--}}
@@ -2324,7 +2327,7 @@
             </div>
             <div class="modal-body">
                 <div class="input-group input-group-lg">
-                    <input type="text" id="icd10_keyword_revised" class="form-control">
+                    <input type="text" id="icd10_keyword_normalrevised" class="form-control">
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-info btn-flat" onclick="searchICD10Revised()">Find</button>
                     </span>
@@ -2358,7 +2361,7 @@
     //        $('#menarche_show').show();
 
     $('#clear_icd_revised, #clear_notes_revised, #clear_other_diag_revised, #icd_selected_revised').hide();
-    $("#sbmitBtn").on('click', function(e) {
+    $("#sbmitBtnNormal").on('click', function(e) {
         if (!($("#icd").val()) && !($("#other_diag").val())) {
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
@@ -2432,7 +2435,7 @@
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
             "_token": "<?php echo csrf_token(); ?>",
-            "icd_keyword": $("#icd10_keyword_revised").val()
+            "icd_keyword": $("#icd10_keyword_normalrevised").val()
         };
         $.post(url, json, function(result) {
             setTimeout(function() {
@@ -3206,17 +3209,6 @@
     });
 
     /**************************************************************************/
-
-    // $("#sbmitBtn").on('click',function(e){
-    //     if(!($("#icd").val()) && !($("#other_diag").val())){
-    //         Lobibox.alert("error", {
-    //             msg: "Select ICD-10 diagnosis!"
-    //         });
-    //         return false;
-    //     }
-    // });
-
-
    
         $('.reason_referral').on('change', function() {
             var value = $(this).val();
@@ -3231,39 +3223,126 @@
                 $('#other_reason_referral_div').hide();
             }
         });
+    
+    
 
+    var normal_pos = 2;
+    var normal_count = 0 ;
+    
+    function readURLNormal(input, pos) {
+        // Asset paths for icons
+        var word_normal = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf_normal = '{{ asset('resources/img/pdf_icon.png') }}'; // Fixed from pdf_normal_icon
+        var excel_normal = '{{ asset('resources/img/sheet_icon.png') }}';
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
+        if (input.files) {
+            var tmp_pos = pos;
 
-            var reader = new FileReader();
+            for (var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
 
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
+                if (file && file !== null) {
+                    var reader = new FileReader();
+                    var fileType = file.type; // Capture file type for the current file
 
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
+                    // Onload logic for unsupported file types
+                    reader.onloadend = (function(file, tmp_pos) {
+                        return function (e) {
+                            $('#normal_file-upload-image' + tmp_pos).attr('src', e.target.result);
+                            $('#normal_image-upload-wrap' + tmp_pos).hide();
+                            $('#normal_file-upload-content' + tmp_pos).show();
+                            $('#normal_image-title' + tmp_pos).html(file.name);
+                        };
+                    })(file, tmp_pos);
 
-                $('.image-title').html(input.files[0].name);
-            };
+                    // Set icons based on file type
+                    if (fileType === 'application/pdf') {
+                        $('#normal_file-upload-image' + tmp_pos).attr('src', pdf_normal);
+                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#normal_file-upload-image' + tmp_pos).attr('src', word_normal);
+                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#normal_file-upload-image' + tmp_pos).attr('src', excel_normal);
+                    } else {
+                        // Read as data URL for other file types
+                        reader.readAsDataURL(file);
+                    }
 
-            reader.readAsDataURL(input.files[0]);
+                    // Update UI elements
+                    $('#normal_image-upload-wrap' + tmp_pos).hide();
+                    $('#normal_file-upload-content' + tmp_pos).show();
+                    $('#normal_image-title' + tmp_pos).html(file.name);
 
-        } else {
-            removeUpload();
+                    // Increment counters and positions
+                    tmp_pos += 1;
+                    normal_count += 1;
+
+                    // Add a new file upload row
+                    addFileNormal();
+                }
+            }
+
+            // Show the remove files button
+            $('#normal_remove_files').show();
         }
     }
 
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
+    function addFileNormal() {
+        var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
+
+        if((normal_count % 4) == 0) {
+            $('.normal_file_attachment').append(
+                '<div class="clearfix"></div>'
+            );
+        }
+        $('.normal_file_attachment').append(
+            '<div class="col-md-3" id="normal_upload'+normal_pos+'">\n' +
+            '   <div class="file-upload">\n' +
+            '       <div class="text-center image-upload-wrap" id="normal_image-upload-wrap'+normal_pos+'">\n' +
+            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLNormal(this, '+normal_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.word_normalprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf_normal"/>\n' +
+            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
+            '       </div>\n' +
+            '       <div class="file-upload-content" id="normal_file-upload-content'+normal_pos+'">\n' +
+            '           <img class="file-upload-image" id="normal_file-upload-image'+normal_pos+'"/>\n' +
+            '           <div class="image-title-wrap">\n' +
+            '               <b><small class="image-title" id="normal_image-title'+normal_pos+'" style="display:block; word_normal-wrap: break-word_normal;">Uploaded File</small></b>\n' +
+            '               <button type="button" id="normal_remove_upload'+normal_pos+'" onclick="removeUploadNormal('+normal_pos+')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
+            '           </div>\n' +
+            '       </div>\n' +
+            '   </div>\n' +
+            '</div>'
+        );
+        normal_pos+=1;
     }
 
-    $('.image-upload-wrap').bind('dragover', function() {
-        $('.image-upload-wrap').addClass('image-dropping');
+    function removeFileNormal() {
+        $('.normal_file_attachment').html("");
+        normal_count = 0;
+        normal_pos = 1;
+        $('#normal_remove_files').hide();
+        addFileNormal();
+    }
+
+    function removeUploadNormal(uploadCount){
+        $('#normal_upload' + uploadCount).remove();
+        upload_count -= 1;
+        if(normal_pos > uploadCount){
+            normal_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+    }
+
+    $(document).ready(function() {
+        for (var i = 0; i < normal_count; i++) {
+            $('#normal_image-upload-wrap' + i).bind('dragover', function () {
+                $('#normal_image-upload-wrap' + i).addClass('image-dropping');
+            });
+            $('#normal_image-upload-wrap' + i).bind('dragleave', function () {
+                $('#normal_image-upload-wrap' + i).removeClass('image-dropping');
+            });
+        }
+        $('#normal_remove_files').hide();
     });
-    $('.image-upload-wrap').bind('dragleave', function() {
-        $('.image-upload-wrap').removeClass('image-dropping');
-    });
-</script>
+
+    </script>
