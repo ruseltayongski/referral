@@ -50,28 +50,8 @@ $counter = 0;
         text-transform: uppercase;
         font-weight: 700;
     }
-    .file-upload-btn_ {
-        width: 100%;
-        margin: 0;
-        color: #fff;
-        background: #1FB264;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
-        border-bottom: 4px solid #15824B;
-        transition: all .2s ease;
-        outline: none;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
 
     .file-upload-btn:hover {
-        background: #1AA059;
-        color: #ffffff;
-        transition: all .2s ease;
-        cursor: pointer;
-    }
-    .file-upload-btn_:hover {
         background: #1AA059;
         color: #ffffff;
         transition: all .2s ease;
@@ -82,31 +62,14 @@ $counter = 0;
         border: 0;
         transition: all .2s ease;
     }
-    .file-upload-btn_:active {
-        border: 0;
-        transition: all .2s ease;
-    }
 
     .file-upload-content {
         display: none;
         text-align: center;
     }
-    .file-upload-content_ {
-        display: none;
-        text-align: center;
-    }
+ 
 
     .file-upload-input {
-        position: absolute;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        outline: none;
-        opacity: 0;
-        cursor: pointer;
-    }
-    .file-upload-input_ {
         position: absolute;
         margin: 0;
         padding: 0;
@@ -122,20 +85,10 @@ $counter = 0;
         border: 4px dashed #1FB264;
         position: relative;
     }
-    .image-upload-wrap_ {
-        margin-top: 20px;
-        border: 4px dashed #1FB264;
-        position: relative;
-    }
+  
 
     .image-dropping,
     .image-upload-wrap:hover {
-        background-color:
-            /*#6ab155*/
-            #1FB264;
-        border: 4px dashed #ffffff;
-    }
-    .image-upload-wrap_:hover {
         background-color:
             /*#6ab155*/
             #1FB264;
@@ -146,10 +99,7 @@ $counter = 0;
         padding: 0 15px 15px 15px;
         color: #222;
     }
-    .image-title-wrap_ {
-        padding: 0 15px 15px 15px;
-        color: #222;
-    }
+ 
 
     .drag-text {
         text-align: center;
@@ -168,12 +118,7 @@ $counter = 0;
         margin: auto;
         padding: 20px;
     }
-    .file-upload-image_ {
-        max-height: 75%;
-        max-width: 75%;
-        margin: auto;
-        padding: 20px;
-    }
+
 
     .remove-image {
         width: 100%;
@@ -248,12 +193,7 @@ $counter = 0;
             margin: 0 auto;
             padding: 20px;
         }
-        .file-upload_ {
-            background-color: #ffffff;
-            width: 300px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+      
 
         .web-view {
             display: none;
@@ -540,8 +480,35 @@ $counter = 0;
                                                 Walk-In
                                             </a>
                                         
+                                    @elseif ($user->facility_id == 63 && $row->sex=='Male')
+                                    <a href="#nonPregnantChooseVersionModal" 
+                                        data-patient_id="{{ $row->id }}" 
+                                        data-backdrop="static" 
+                                        data-toggle="modal" 
+                                        data-type="normal" 
+                                        style="width:100%;margin-bottom:5px;" 
+                                        onclick="handleRefer()" 
+                                        class="btn btn-primary btn-xs profile_info patient-emergency hidden">
+                                        <i class="fa fa-ambulance"></i>
+                                        Refer
+                                    </a>
+                                    <a href="#normalFormModal" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" onclick="handleTelemedicine()" style="width:100%;margin-bottom:5px;" class="btn btn-success btn-xs profile_info patient-consultation hidden">
+                                        <i class="fa fa-stethoscope"></i>
+                                        Consultation
+                                    </a><br>
+                                    <a href="#" id="walkinNormal{{ $counter }}" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" onclick="promptWalkinNormal(<?php echo $counter++ ?>)" style="width:100%;" class="btn btn-warning btn-xs profile_info patient-emergency hidden">
+                                        <i class="fa fa-stethoscope"></i>
+                                        Walk-In
+                                    </a>
                                     @else
-                                    <a href="#normalFormModal" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" style="width:100%;margin-bottom:5px;" onclick="handleRefer()" class="btn btn-primary btn-xs profile_info patient-emergency hidden">
+                                    <a href="#normalFormModal" 
+                                        data-patient_id="{{ $row->id }}" 
+                                        data-backdrop="static" 
+                                        data-toggle="modal" 
+                                        data-type="normal" 
+                                        style="width:100%;margin-bottom:5px;" 
+                                        onclick="handleRefer()" 
+                                        class="btn btn-primary btn-xs profile_info patient-emergency hidden">
                                         <i class="fa fa-ambulance"></i>
                                         Refer
                                     </a>
@@ -689,23 +656,18 @@ $counter = 0;
                 console.log("Facility ID: ", referred_facility);
         
                
-                // if (referred_facility == 63) {
-                //     if (type == 'pregnant') {
-                //         $('#pregnantModal').modal('hide');
-                //         $('#pregnantchooseVersionModal').modal('show');
-                //         selectFormTitle("BEmONC/ CEmONC ");
-                //         $('#menarche_show').show();
-                //         $('#pedia_show').show();
-                    
-                //     } else if (type == 'normal') {
-                //         $('#pregnantModal').modal('hide');
-                //         $('#nonPregnantChooseVersionModal').modal('show');
-                //         selectFormTitle("Clinical");
-                //         $('#menarche_show').hide();
-                //         $('#pedia_show').hide();
-                //         $('#baby_show').hide();
-                //     }
-                // } else {
+                if (referred_facility == 63) {
+                    if (type == 'pregnant') {
+                        $('#pregnantModal').modal('hide');
+                        $('#pregnantchooseVersionModal').modal('show');
+                        selectFormTitle("BEmONC/ CEmONC ");
+                    } else if (type == 'normal') {
+                        $('#pregnantModal').modal('hide');
+                        $('#nonPregnantChooseVersionModal').modal('show');
+                        selectFormTitle("Clinical");
+                        $('#baby_show').hide();
+                    }
+                } else {
                     if(type == "pregnant") {
                         selectFormTitle("BEmONC/ CEmONC ");
                         $('#pregnantFormModal').modal('show');
@@ -715,7 +677,7 @@ $counter = 0;
                     }
                     $('#menarche_show_normal').hide();
                     $('#pedia_show_normal').hide();
-                // }
+                }
         }
 
 
@@ -876,11 +838,27 @@ $counter = 0;
                 $('input[name="phic_status"][value="' + phic_status + '"]').attr('checked', true);
                 $('.phic_id').val(phic_id);
                 $('.patient_sex').val(sex);
+                if (age > 18) {
+                    $('#pedia_show_normal').css('display', 'none');
+                    console.log("hidden pediatric");
+                } else {
+                    $('#pedia_show_normal').css('display', 'block');
+                    console.log("show pediatric");
+                }
+                if (age > 9 && sex === 'Female'){
+                    $('#menarche_show').css('display', 'block');
+                    $('#menarche').attr('min', '9');
+                    console.log("show obstetric");
+                } else {
+                    $('#menarche_show').css('display', 'none');
+                    console.log("hidden obstetric");
+                }
                 if (data.ageType === 'y') {
                     if (age === 1)
-                        $('.patient_age').html(age + " year old");
-                    else
-                        $('.patient_age').html(age + " years old");
+                        $('.patient_age').html(age + " year old");             
+                     else
+                        $('.patient_age').html(age + " years old"); 
+
                 } else if (data.ageType === 'm') {
                     var age_str = "";
                     if (age.month === 1)

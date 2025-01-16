@@ -1,3 +1,4 @@
+
 <?php
 $user = Session::get('auth');
 $reason_for_referral = \App\ReasonForReferral::get();
@@ -5,17 +6,18 @@ $facilities = \App\Facility::select('id','name')
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
+
 ?>
 
 <style>
-  .file-upload {
+  /* .file-upload {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
         padding: 20px;
     }
 
-    .file-upload-btn {
+    .file-upload .file-upload-btn {
         width: 100%;
         margin: 0;
         color: #fff;
@@ -30,24 +32,24 @@ $facilities = \App\Facility::select('id','name')
         font-weight: 700;
     }
 
-    .file-upload-btn:hover {
+    .file-upload .file-upload-btn:hover {
         background: #1AA059;
         color: #ffffff;
         transition: all .2s ease;
         cursor: pointer;
     }
 
-    .file-upload-btn:active {
+    .file-upload .file-upload-btn:active {
         border: 0;
         transition: all .2s ease;
     }
 
-    .file-upload-content {
+    .file-upload .file-upload-content {
         display: none;
         text-align: center;
     }
 
-    .file-upload-input {
+    .file-upload .file-upload-input {
         position: absolute;
         margin: 0;
         padding: 0;
@@ -58,42 +60,42 @@ $facilities = \App\Facility::select('id','name')
         cursor: pointer;
     }
 
-    .image-upload-wrap {
+    .file-upload .image-upload-wrap {
         margin-top: 20px;
         border: 4px dashed #1FB264;
         position: relative;
     }
 
-    .image-dropping,
-    .image-upload-wrap:hover {
+    .file-upload .image-dropping,
+    .file-upload .image-upload-wrap:hover {
         background-color: #1FB264;
         border: 4px dashed #ffffff;
     }
 
-    .image-title-wrap {
+    .file-upload .image-title-wrap {
         padding: 0 15px 15px 15px;
         color: #222;
     }
 
-    .drag-text {
+    .file-upload .drag-text {
         text-align: center;
     }
 
-    .drag-text h3 {
+    .file-upload .drag-text h3 {
         font-weight: 100;
         text-transform: uppercase;
         color: #15824B;
         padding: 60px 0;
     }
 
-    .file-upload-image {
+    .file-upload .file-upload-image {
         max-height: 200px;
         max-width: 200px;
         margin: auto;
         padding: 20px;
     }
 
-    .remove-image {
+    .file-upload .remove-image {
         width: 200px;
         margin: 0;
         color: #fff;
@@ -108,17 +110,18 @@ $facilities = \App\Facility::select('id','name')
         font-weight: 700;
     }
 
-    .remove-image:hover {
+    .file-upload .remove-image:hover {
         background: #c13b2a;
         color: #ffffff;
         transition: all .2s ease;
         cursor: pointer;
     }
 
-    .remove-image:active {
+    .file-upload .remove-image:active {
         border: 0;
         transition: all .2s ease;
-    }
+    } */
+
 
     .container-referral {
         border: 1px solid lightgrey;
@@ -129,12 +132,12 @@ $facilities = \App\Facility::select('id','name')
         padding-right: 5px;
     }
 
-    .glasgow-table {
+   .glasgow-table {
         border: 1px solid lightgrey;
         width: 100%;
     }
 
-     .glasgow-dot {
+    .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;
@@ -151,13 +154,6 @@ $facilities = \App\Facility::select('id','name')
         visibility: hidden;
     }
 
-
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
     #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
@@ -171,7 +167,146 @@ $facilities = \App\Facility::select('id','name')
             visibility: visible;
         }
     }
-    </style>
+</style>
+
+<style>
+    .file-upload {
+        background-color: #ffffff;
+        width: 100%;
+        height: 35%;
+        margin: 0 auto;
+        padding: 20px;
+        border: 1px dashed dimgrey;
+    }
+    .file-upload-btn {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #1FB264;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #15824B;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    .file-upload-btn:hover {
+        background: #1AA059;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+    .file-upload-btn:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    .file-upload-content {
+        display: none;
+        text-align: center;
+    }
+    .file-upload-input {
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        outline: none;
+        opacity: 0;
+        cursor: pointer;
+    }
+    .image-upload-wrap {
+        margin-top: 20px;
+        border: 4px dashed #1FB264;
+        position: relative;
+    }
+    .image-dropping,
+    .image-upload-wrap:hover {
+        background-color: /*#6ab155*/#1FB264;
+        border: 4px dashed #ffffff;
+    }
+    .image-title-wrap {
+        padding: 0 15px 15px 15px;
+        color: #222;
+    }
+    .drag-text {
+        text-align: center;
+    }
+    .drag-text h3 {
+        font-weight: 100;
+        text-transform: uppercase;
+        color: #15824B;
+        padding: 60px 0;
+    }
+    .file-upload-image {
+        max-height: 75%;
+        max-width: 75%;
+        margin: auto;
+        padding: 20px;
+    }
+    .remove-image {
+        width: 100%;
+        margin: 0;
+        color: #fff;
+        background: #cd4535;
+        border: none;
+        padding: 10px;
+        border-radius: 4px;
+        border-bottom: 4px solid #b02818;
+        transition: all .2s ease;
+        outline: none;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+    .remove-image:hover {
+        background: #c13b2a;
+        color: #ffffff;
+        transition: all .2s ease;
+        cursor: pointer;
+    }
+    .remove-image:active {
+        border: 0;
+        transition: all .2s ease;
+    }
+    @media only screen and (max-width: 720px) {
+        .file-upload {
+            background-color: #ffffff;
+            width: 50%;
+        }
+        .file-upload-image {
+            max-height: 50%;
+            max-width: 50%;
+        }
+    }
+
+    .remove-icon-btn{
+        position: absolute;
+        top: -2px; /* Adjust as needed */
+        right: 12px; /* Adjust as needed */
+        background: transparent;
+        border: none;
+        font-weight: bold;
+        font-size: 24px;
+        color: #ff0000; /* Optional: Trash icon color */
+        font-size: 18px; /* Optional: Adjust icon size */
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .remove-icon-btn:hover {
+        transform: scale(1.1); /* Slightly increase size on hover */
+    }
+    .remove-icon-btn i {
+        pointer-events: none; /* To ensure the button handles the click, not the icon */
+    }
+    .unclickable {
+        pointer-events: none; /* Disables click actions */
+        background-color: #f0f0f0;
+        color: black;
+    }
+    
+</style>
+
    
     <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>'normal', 'status' => $status]) }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">
      
@@ -183,7 +318,7 @@ $facilities = \App\Facility::select('id','name')
                     <input type="hidden" name="form_type" value="normal">
                     <input type="hidden" name="username" value="{{ $username }}">
                     
-                    <div class="row">
+                    <div class="row" style="margin:5px">
                             <div class="col-md-4">
                                 <small >Name of Referring Facility</small><br>
                                 &nbsp;<span>{{ $form->referring_name }}</span>
@@ -199,7 +334,7 @@ $facilities = \App\Facility::select('id','name')
                     </div>
 
                     <br>
-                <div class="row">
+                <div class="row" style="margin: 5px;">
                     <div class="col-md-4">
                         <small ><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
                         <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
@@ -226,7 +361,7 @@ $facilities = \App\Facility::select('id','name')
                         </div>
                         </div>
                         <br>
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-md-4">
                                 <small >Age</small><br>
                                 <span class="patient_age">
@@ -260,7 +395,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         <br>
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-md-4">
                                 <small >Covid Number</small><br>
                                 <input type="text" name="covid_number" style="width: 100%;" value="{{ $form->covid_number }}">
@@ -343,15 +478,15 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div><br>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
-                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normInfo" aria-expanded="false" aria-controls="collapse_illness_history_normInfo">
+                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_illness_history" style="width: 100%">
+                                <div class="collapse" id="collapse_illness_history_normInfo" style="width: 100%">
                                     <b>CASE SUMMARY:</b>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required>{{$form->case_summary}}</textarea><br><br>
                                     <b>CHIEF COMPLAINTS:</b>
@@ -360,57 +495,59 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
-                                        <b>DIAGNOSIS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normInfo" aria-expanded="false" aria-controls="collapse_diagnosis_normInfo">
+                                        <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse " id="collapse_diagnosis" style="width: 100%">
+                                <div class="collapse " id="collapse_diagnosis_normInfo" style="width: 100%">
                                 <div class="row">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
-                                    <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
-                                    <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                        <i class="fa fa-medkit"></i> Add ICD-10
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                </div>
-                            </div><br>
-
-                            <div class="row icd_selected" style="padding-top: 10px;">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
-                                    <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
-                                    <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
-                                    <div id="icd_selected" style="padding-top: 5px">
-                                        @if(isset($icd))
-                                            @foreach($icd as $i)
-                                                <span> => {{ $i->description }}</span><br>
-                                                <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
-                                            @endforeach
-                                        @endif
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                        <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
+                                        <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                            <i class="fa fa-medkit"></i> Add ICD-10
+                                        </a>
+                                        <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                     </div>
-                                </div>
-                            </div><br>
+                                </div><br>
 
-                            <div class="row notes_diagnosis" style="padding-top: 10px;">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
-                                    <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
-                                    <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                    <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
-                                </div>
-                            </div><br>
+                                <div class="row icd_selected" style="padding-top: 10px;">
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                                        <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                                        <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                                        <div id="icd_selected" style="padding-top: 5px">
+                                            @if(isset($icd))
+                                                @foreach($icd as $i)
+                                                    <span> => {{ $i->description }}</span><br>
+                                                    <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div><br>
 
-                            <div class="row other_diag" style="padding-top: 10px">
-                                <div class="col-md-12">
-                                    <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
-                                    <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
-                                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
-                                    <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                <div class="row notes_diagnosis" style="padding-top: 10px;">
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                                        <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                        <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                        <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
+                                    </div>
+                                </div><br>
+
+                                <div class="row other_diag" style="padding-top: 10px">
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                                        <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                                        <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
+                                        <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                    </div>
+                                </div><br>
                                 </div>
                             </div><br>
                                 </div>
@@ -434,7 +571,7 @@ $facilities = \App\Facility::select('id','name')
 
                         ?>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
@@ -668,7 +805,226 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <?php
+
+                            $menarche = $obstetric_and_gynecologic_history->menarche;
+                            $gynecological_data = [
+                                'menarche' => (int) $menarche,
+                                'menopausal_age' => $obstetric_and_gynecologic_history->menopausal_age,
+                                'mens_irreg_xmos' => $obstetric_and_gynecologic_history->mens_irreg_xmos,
+                                'menstrual_cycle_duration' => $obstetric_and_gynecologic_history->menstrual_cycle_duration,
+                                'menstrual_cycle_padsperday' => $obstetric_and_gynecologic_history->menstrual_cycle_padsperday,
+                                'menstrual_cycle_medication' => $obstetric_and_gynecologic_history->menstrual_cycle_medication,
+                                'contraceptive_others' => $obstetric_and_gynecologic_history->contraceptive_others,
+                                'parity_g' => $obstetric_and_gynecologic_history->parity_g,
+                                'parity_p' => $obstetric_and_gynecologic_history->parity_p,
+                                'parity_ft' => $obstetric_and_gynecologic_history->parity_ft,
+                                'parity_pt' => $obstetric_and_gynecologic_history->parity_pt,
+                                'parity_a' => $obstetric_and_gynecologic_history->parity_a,
+                                'parity_l' => $obstetric_and_gynecologic_history->parity_l,
+                                'parity_lnmp' => $obstetric_and_gynecologic_history->parity_lnmp,
+                                'parity_edc' => $obstetric_and_gynecologic_history->parity_edc,
+                                'aog_lnmp' => $obstetric_and_gynecologic_history->aog_lnmp,
+                                'aog_eutz' => $obstetric_and_gynecologic_history->aog_eutz,
+                            ];
+
+                            $menarche_value = htmlspecialchars($gynecological_data['menarche']);
+                            $menopausal_age_value = htmlspecialchars($gynecological_data['menopausal_age']);
+                            $mens_irreg_xmos_value = htmlspecialchars($gynecological_data['mens_irreg_xmos']);
+                            $menstrual_cycle_duration_value = htmlspecialchars($gynecological_data['menstrual_cycle_duration']);
+                            $menstrual_cycle_padsperday_value = htmlspecialchars($gynecological_data['menstrual_cycle_padsperday']);
+                            $menstrual_cycle_medication_value = htmlspecialchars($gynecological_data['menstrual_cycle_medication']);
+                            $contraceptive_others_value = htmlspecialchars($gynecological_data['contraceptive_others']);
+                            $parity_g_value = htmlspecialchars($gynecological_data['parity_g']);
+                            $parity_p_value = htmlspecialchars($gynecological_data['parity_p']);
+                            $parity_pt_value = htmlspecialchars($gynecological_data['parity_pt']);
+                            $parity_a_value = htmlspecialchars($gynecological_data['parity_a']);
+                            $parity_l_value = htmlspecialchars($gynecological_data['parity_l']);
+                            $parity_lnmp_value = htmlspecialchars($gynecological_data['parity_lnmp']);
+                            $parity_edc_value = htmlspecialchars($gynecological_data['parity_edc']);
+                            $aog_lnmp_value = htmlspecialchars($gynecological_data['aog_lnmp']);
+                            $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
+                            ?>
+
+                        {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
+                        <div class="row" style="margin: 5px;" id="menarche_show">
+                            <div class="col-lg-12">
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
+                                        <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view">
+                                            <b>OBSTETRIC AND GYNECOLOGIC<br> HISTORY</b><br> <i> (as applicable)</i></div>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
+                                <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
+                                    <b>MENARCHE</b> @ <input type="number" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <b>MENOPAUSE:</b> &emsp;
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'Yes'); ?>>
+                                    <label for="menopausal">Yes</label>
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'No'); ?>>
+                                    <label for="non_menopausal">No</label>
+                                    <span id="menopausal_age">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9" value="<?php echo $menopausal_age_value; ?>"></span><br><br>
+
+                                    <b>MENSTRUAL CYCLE</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio" value="regular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'regular'); ?>>
+                                                <label for="mens_reg_radio">Regular</label>
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_cycle_irreg" value="irregular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'irregular'); ?>>
+                                                <label for="mens_cycle_irreg">Irregular</label>
+                                                <span id="mens_irreg">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0" value="<?php echo $mens_irreg_xmos_value; ?>"> mos</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <b>Dysmenorrhea:</b> &emsp;
+                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'Yes'); ?>>
+                                                <label for="dysmenorrhea_yes">Yes</label>
+                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_no" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'No'); ?>>
+                                                <label for="dysmenorrhea_no">No</label><br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <b>Duration:</b> <input type="number" style="width:15%;" min="0" name="mens_duration" value="<?php echo $menstrual_cycle_duration_value; ?>"> days &emsp;
+                                                <b>Pads/day:</b> <input type="number" style="width:15%;" min="0" name="mens_padsperday" value="<?php echo $menstrual_cycle_padsperday_value; ?>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <b>Medication:</b> <input type="text" style="width:70%;" name="mens_medication" value="<?php echo $menstrual_cycle_medication_value; ?>">
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <b>CONTRACEPTIVE HISTORY</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_none" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_none_cbox" value="none" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'none'); ?>> None
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_pills" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_pills_cbox" value="Pills" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Pills'); ?>> Pills
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="IUD" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'IUD'); ?>> IUD
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Rhythm" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Rhythm'); ?>> Rhythm
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Condom'); ?>> Condom
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_other_cbox" value="Other(s)" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Other'); ?>> Other(s)
+                                                <textarea class="form-control" id="contraceptive_others_text" name="contraceptive_others" style="resize: none;width: 50%;" rows="2"><?php echo htmlspecialchars($contraceptive_others_value); ?></textarea><br>
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <b>PARITY</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <b>G</b> <input type="number" min="0" style="width:8%;" name="parity_g" value="<?php echo $parity_g_value; ?>">
+                                                <b>P</b> <input type="number" min="0" style="width:8%;" name="parity_p" value="<?php echo $parity_p_value; ?>">&emsp;
+                                                <b>(FT</b> <input type="text" style="width:8%;" name="parity_ft" value="{{$data->parity_ft}}">
+                                                <b>PT</b> <input type="text" style="width:8%;" name="parity_pt" value="<?php echo $parity_pt_value; ?>">
+                                                <b>A</b> <input type="text" style="width:8%;" name="parity_a" value="<?php echo $parity_a_value; ?>">
+                                                <b>L</b> <input type="text" style="width:8%;" name="parity_l" value="<?php echo $parity_l_value; ?>"><b>)</b>
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <div class="container-referral">
+                                        <b>LNMP</b>
+                                        <input type="text" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
+                                        <b>EDC</b><i>(if pregnant)</i>
+                                        <input type="text" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
+                                    </div><br>
+
+                                    <b>AOG</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <b>by LNMP</b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <b>by EUTZ</b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <b>PRENATAL HISTORY</b><br>
+                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
+                                    <div class="table-responsive" style="overflow-x: auto;">
+                                        <table class="table table-bordered" id="prenatal_table">
+                                            <thead>
+                                                <tr style="font-size: 10pt;">
+                                                    <th class="text-center">Pregnancy Order</th>
+                                                    <th class="text-center">Year of Birth</th>
+                                                    <th class="text-center">Gestation Completed</th>
+                                                    <th class="text-center">Pregnancy Outcome</th>
+                                                    <th class="text-center">Place of Birth</th>
+                                                    <th class="text-center">Biological Sex</th>
+                                                    <th class="text-center">Birth Weight</th>
+                                                    <th class="text-center">Present Status</th>
+                                                    <th class="text-center">Complication(s)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($pregnancy as $preg)
+                                                <tr style="font-size: 10pt;">
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_order[]" value="{{ $preg['pregnancy_order'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control select" name="pregnancy_history_year[]">
+                                                            <option value="">Choose...</option>
+                                                            @foreach(range(date('Y'), 1950) as $year)
+                                                            <option value="{{ $year }}" {{ $year == $preg['pregnancy_year'] ? 'selected' : '' }}>{{ $year }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{ $preg['pregnancy_outcome'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{ $preg['pregnancy_place_of_birth'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <select class="select form-control" name="prenatal_history_sex[]">
+                                                            <option value="">Choose...</option>
+                                                            <option value="M" {{ $preg['pregnancy_sex'] == 'M' ? 'selected' : '' }}>Male</option>
+                                                            <option value="F" {{ $preg['pregnancy_sex'] == 'F' ? 'selected' : '' }}>Female</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $preg['pregnancy_present_status'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $preg['pregnancy_complication'] }}">
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
+                                            <i class="fa fa-plus"> Add Row</i>
+                                        </button><br><br>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_personal_history" aria-expanded="false" aria-controls="collapse_personal_history">
@@ -782,7 +1138,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
@@ -797,7 +1153,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures" aria-expanded="false" aria-controls="collapse_lab_procedures">
@@ -838,31 +1194,53 @@ $facilities = \App\Facility::select('id','name')
                                                 <textarea id="lab_others" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"><?php echo htmlspecialchars($pertinent_laboratory->lab_procedure_other); ?></textarea>
                                             </div>
                                         </div>
-                                        <div class="row">
+                                       
+                                        <div class="row with_file_attached hide">
                                             <div class="col-md-12">
-                                                <div class="file-upload">
-                                                    <div class="image-upload-wrap">
-                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
-                                                        <div class="drag-text">
-                                                            <h3>Drag and drop a file or select add Image</h3>
-                                                        </div>
-                                                    </div>
-                                                    <div class="file-upload-content">
-                                                          <img class="file-upload-image" src="#" alt="your image" />
-                                                        <div class="image-title-wrap">
-                                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                <small class="text-success"><b>
+                                                        @if(count($file_path) > 1) FILE ATTACHMENTS: @else FILE ATTACHMENT: @endif
+                                                    </b></small>
+                                                <input type="hidden" name="file_cleared" id="file_cleared" value="">
+                                                <button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Remove File Attachment</button><br/><br/>
+                                                @for($i = 0; $i < count($file_path); $i++)
+                                                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
+                                                    @if($i + 1 != count($file_path))
+                                                        ,&nbsp;&nbsp;
+                                                    @endif
+                                                @endfor
+                                                {{--<a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
+                                            </div>
+                                        </div><br>
+
+                                        <div class="row no_file_attached hide">
+                                            <div class="col-md-12">
+                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <button type="button" class="btn btn-md btn-danger" id="remove_files_btn_normal" onclick="removeFiles(2)">Remove Files</button><br><br>
+                                                <div class="attachment_normal">
+                                                    <div class="col-md-3" id="upload1">
+                                                        <div class="file-upload">
+                                                            <div class="text-center image-upload-wrap" id="image-upload-wrap_normal1">
+                                                                <input class="file-upload-input files" multiple id="file_upload_input_normal1" type='file' name="file_upload[]" onchange="readUrl(this, 1,2);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                                <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
+                                                            </div>
+                                                            <div class="file-upload-content" id="file-upload-content_normal1">
+                                                                <img class="file-upload-image" id="file-upload-image_normal1" src="#"/>
+                                                                <div class="image-title-wrap">
+                                                                    <b><small class="image-title" id="image-title_normal1" style="display:block; word-wrap: break-word;"></small></b>
+                                                                    {{--<button type="button" onclick="removeFile(1,2)" class="remove-image"> Remove </button>--}}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div><br>
+                                        <br>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
 
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
@@ -1636,7 +2014,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
@@ -1679,7 +2057,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
@@ -1713,7 +2091,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" style="margin:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
@@ -2027,15 +2405,15 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normInfo" aria-expanded="false" aria-controls="collapse_reason_referral_normInfo">
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
+                                <div class="collapse" id="collapse_reason_referral_normInfo" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
                                         <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%">
@@ -2050,40 +2428,16 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-
-
-                        <div class="form-fotter pull-right">
-                        @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
-                        <button type="submit" id="sbmitBtnNormalRevised" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
-                        @endif
-                        @if($referral_status == 'referring')
-                        <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'normal' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
-                        @endif
+                        <div class="form-fotter pull-right" style="margin: 10px;">
+                        <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
                         <div class="clearfix"></div> 
-                </div>{{--/.form-group--}}
-      
-    </form>     
-                        <div class="form-fotter pull-right">
-                        {{--@if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form->department_id === 5 && $user->id == $form->md_referring_id)
-                        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicd-modalicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
-                        <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
-                        @endif--}}
-                        
-                        @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
-                            <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
-                        @endif
-                        @if($referral_status == 'referred' || $referral_status == 'redirected')
-                            @if(!$form->telemedicine)
-                                <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue</button>
-                                <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>
-                                <button class="btn-sm btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>
-                            @endif
-                            <button class="btn-sm btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
-                            <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'normal' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
-                        @endif
-                        </div>
-                        <div class="clearfix"></div> 
+                        </div>{{--/.form-group--}}
+                </div> {{--/.jim-content--}}
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
                     
                     
@@ -2128,6 +2482,38 @@ $facilities = \App\Facility::select('id','name')
 
 
 <script>
+
+    // Uncollapse the REASON FOR REFERRAL section
+    const referralCollapse = document.getElementById("collapse_reason_referral_normInfo");
+    const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normInfo']");
+    if (referralCollapse && referralButton) {
+        referralCollapse.classList.add("show");
+        referralButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("Reason for Referral section or button not found.");
+    }
+
+    // Uncollapse the HISTORY OF PRESENT ILLNESS section
+    const illnessCollapse = document.getElementById("collapse_illness_history_normInfo");
+    const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normInfo']");
+    if (illnessCollapse && illnessButton) {
+        illnessCollapse.classList.add("show");
+        illnessButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("History of Present Illness section or button not found.");
+    }
+
+    // Uncollapse the DIAGNOSIS section
+    const diagnosisCollapse = document.getElementById("collapse_diagnosis_normInfo");
+    const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normInfo']");
+    if (diagnosisCollapse && diagnosisButton) {
+        diagnosisCollapse.classList.add("show");
+        diagnosisButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("Diagnosis section or button not found.");
+    }
+
+
     // $('.select_facility').select2();
     //    $('#pedia_show').hide();
     //    $('#menarche_show').hide();
@@ -2910,63 +3296,30 @@ $facilities = \App\Facility::select('id','name')
 
     /**************************************************************************/
 
-    $("#sbmitBtnNormalRevised").on('click',function(e){
-        if(!($("#icd").val()) && !($("#other_diag").val())){
-            Lobibox.alert("error", {
-                msg: "Select ICD-10 diagnosis!"
-            });
-            return false;
-        }
-    });
+    // $("#sbmitBtnNormalRevised").on('click',function(e){
+    //     if(!($("#icd").val()) && !($("#other_diag").val())){
+    //         Lobibox.alert("error", {
+    //             msg: "Select ICD-10 diagnosis!"
+    //         });
+    //         return false;
+    //     }
+    // });
 
-    $('.reason_referral').on('change', function() {
-        var value = $(this).val();
-        if (value == '-1') {
-            $("#other_reason_referral").html(loading);
-            setTimeout(function() {
-                $("#other_reason_referral").html('<span>Other Reason for Referral:</span>\n' +
-                    '                                <br />\n' +
-                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            }, 500);
-            $("#other_reason_referral").show();
-        } else {
-            clearOtherReasonReferral();
-        }
-    });
+    // $('.reason_referral').on('change', function() {
+    //     var value = $(this).val();
+    //     if (value == '-1') {
+    //         $("#other_reason_referral").html(loading);
+    //         setTimeout(function() {
+    //             $("#other_reason_referral").html('<span>Other Reason for Referral:</span>\n' +
+    //                 '                                <br />\n' +
+    //                 '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
+    //         }, 500);
+    //         $("#other_reason_referral").show();
+    //     } else {
+    //         clearOtherReasonReferral();
+    //     }
+    // });
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-
-            var reader = new FileReader();
-
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
-
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
-
-                $('.image-title').html(input.files[0].name);
-            };
-
-            reader.readAsDataURL(input.files[0]);
-
-        } else {
-            removeUpload();
-        }
-    }
-
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
-    }
-
-    $('.image-upload-wrap').bind('dragover', function() {
-        $('.image-upload-wrap').addClass('image-dropping');
-    });
-    $('.image-upload-wrap').bind('dragleave', function() {
-        $('.image-upload-wrap').removeClass('image-dropping');
-    });
 </script>
 @include('script.datetime')
 @include('script.edit_referred')
