@@ -23,12 +23,14 @@
   </div>
 </template>
 <script>
-import { appointmentScheduleDate, appointmentScheduleHours } from "./api/index";
+import { appointmentScheduleDate, appointmentScheduleHours, appointmentConfigHours } from "./api/index";
 export default {
   name: "AppointmentCalendar",
   data() {
     return {
       calendar: null,
+      selectedDate:null,
+      appointedParams:{} ,
       header: {
         left: "prev,next today",
         center: "title",
@@ -91,6 +93,7 @@ export default {
       });
     },
     dayRenderFunction(date, cell) {
+     
       var eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
@@ -101,9 +104,7 @@ export default {
       }
     },
     eventRenderFunction(event, element) {
-      console.log("event dateTime", event);
-      //console.log(event,event.start.format('YYYY-MM-DD'))
-      // let currentDate = new Date().toISOString().split("T")[0];
+     
       let currentDateTime = new Date(); // get the current date and time
       this.$nextTick(() => {
         const targetTd = $(
@@ -115,34 +116,41 @@ export default {
         const targetGrid = $(".fc-day-grid-event");
         const dateString = targetTd.attr("data-date");
         let timeslot = null;
+        let passconfigId = null;
+        let exceedAppoint; null
 
-        
         const isfullyBooked = this.appointmentSlot.some((appointment) => {
-
+          
           // Config Appointment
+            exceedAppoint = appointment;
           appointment.appointment_schedules.forEach((sched) =>{
-            if(sched.configId){
+     
+            if(sched.configId && this.facilitySelectedId === sched.facility_id){
 
               const Date_start = new Date(sched.appointed_date); // Start date
               const date_end = new Date(sched.date_end); // End date
               const timeSlot = sched.config_schedule.time.split('|');
               const daysSched = sched.config_schedule.days.split('|');
-
-              console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched, 'timeSlot', timeSlot);
             
                 // Iterate through all days in the range
                 let currentDate = new Date(Date_start); // Initialize with start date
-                console.log("currentDate", currentDate);
+               
                 while (currentDate <= date_end) {
                   const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
                   
                   if (daysSched.includes(currentDayName)) {
+
                     // Highlight specific day if it matches
                     const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
-                    targetTd.css("background-color", "#00a65a"); // Green for available
-                    targetTd.css("border-color", "#00a65a");
+
+                    // targetTd.css("border-color", "#00a65a");
+                    if(targetTd.length){
+                        targetTd.css("background-color", "#00a65a"); // Green for available
+                    }
+                       targetGrid.remove();
+                        targetTd.addClass("add-cursor-pointer");
+                        $(".fc-content").remove()
                   }
-                  
                   // Move to the next day
                   currentDate.setDate(currentDate.getDate() + 1);
                 }
@@ -155,115 +163,170 @@ export default {
             const slotOndate = appointment.appointment_schedules.filter(
               (slot) => slot.appointed_date === dateString
             );
-            // Group by appointment_id
-            const groupedByAppointmentId = slotOndate.reduce((acc, slot) => {
-              timeslot = slot.appointed_time;
-              const id = slot.appointment_id;
-              if (!acc[id]) acc[id] = [];
-              acc[id].push(
-                slot.telemed_assigned_doctor.map(
-                  (doctor) => doctor.appointment_by
+            console.log("slot on date", slotOndate);
+              // Group by appointment_id
+              const groupedByAppointmentId = slotOndate.reduce((acc, slot) => {
+                 
+                 passconfigId = slot.configId;
+                timeslot = slot.appointed_time ;
+                const id = slot.appointment_id;
+                if (!acc[id]) acc[id] = [];
+                acc[id].push(
+                  slot.telemed_assigned_doctor.map(
+                    (doctor) => doctor.appointment_by
+                  )
+                );
+                return acc;
+              }, {});
+              // Check if all appointment_by for each appointment_id are assigned
+              return Object.values(groupedByAppointmentId).some((appointments) =>
+                appointments.every((appointment_by_list) =>
+                  appointment_by_list.every((appointment_by) => appointment_by)
                 )
               );
-              return acc;
-            }, {});
-            // Check if all appointment_by for each appointment_id are assigned
-            return Object.values(groupedByAppointmentId).some((appointments) =>
-              appointments.every((appointment_by_list) =>
-                appointment_by_list.every((appointment_by) => appointment_by)
-              )
-            );
           }
-
+           
           return false;
         });
-
-      //Config Appointment 
-      // const dateRangeBackground = this.appointmentSlot.appointment_schedules.some((config) => {
-
-      //   const Date_start = new Date(config.appointed_date); // Start date
-      //   const date_end = new Date(config.date_end); // End date
-      //   const daysSched = config.config_schedule.days.split('|'); // Schedule days
-      //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched)
-      //   const currentDate = new Date(dateString); // Current date in the calendar
-      //   const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Current day name
-        
-      //   const withinDateRange = currentDate >= Date_start && currentDate <= date_end; // Date within range
-      //   console.log("withinDateRange", withinDateRange);
-      //   const isInSchedule = daysSched.includes(currentDayName); // Day is in schedule
-      //   console.log("withinDateRange", withinDateRange);
-      //   if (withinDateRange && isInSchedule) {
-      //     // Weekly (recurs every 7 days) or Monthly logic
-      //     const diffDays = Math.ceil((currentDate - Date_start) / (1000 * 60 * 60 * 24)); // Days difference
-      //     const isWeekly = diffDays % 7 === 0; // Weekly recurrence
-      //     const isMonthly = Date_start.getDate() === currentDate.getDate(); // Monthly recurrence
-
-      //     if (isWeekly || isMonthly) {
-      //       targetTd.css("background-color", "#00a65a"); // Green for available
-      //       targetTd.css("border-color", "#00a65a");
-            
-      //       return true; // Found a match
-      //     }
-
-      //   }
-
-      // });
-
-      // const dateRangeBackground = this.appointmentSlot[0].appointment_schedules.some((config) => {
-      //   const Date_start = new Date(config.appointed_date); // Start date
-      //   const date_end = new Date(config.date_end); // End date
-      //   const daysSched = config.config_schedule.days.split('|'); // Selected days e.g., ['Monday', 'Wednesday', 'Thursday']
-
-      //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched);
-
-      //   // Iterate through all days in the range
-      //   let currentDate = new Date(Date_start); // Initialize with start date
-      //   console.log("currentDate", config);
-      //   while (currentDate <= date_end) {
-      //     const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
+         
+         let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
+          console.log("exceedAppoint", exceedAppoint);
+         const hasNonEmptyConfigId = exceedAppoint.appointment_schedules.some(
+            (slot) => slot.facility_id === this.facilitySelectedId && slot.configId 
+          );
           
-      //     if (daysSched.includes(currentDayName)) {
-      //       // Highlight specific day if it matches
-      //       const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
-      //       targetTd.css("background-color", "#00a65a"); // Green for available
-      //       targetTd.css("border-color", "#00a65a");
-      //     }
+
+          if(!hasNonEmptyConfigId){
+            if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
+              targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
+              targetTd.css("border-color", "rgb(230 193 193)");
+            }else {
+              
+              targetTd.css("background-color", "#00a65a"); //available color green'
+              targetdrag.css("border-color", "#00a65a");
+            } 
+          }
           
-      //     // Move to the next day
-      //     currentDate.setDate(currentDate.getDate() + 1);
-      //   }
-      // });
+          targetGrid.remove();
+          targetTd.addClass("add-cursor-pointer");
+          $(".fc-content").remove();
 
-
-
-        
-        const dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
-
-        if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-          targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
-          targetTd.css("border-color", "rgb(230 193 193)");
-        }else {
-          targetTd.css("background-color", "#00a65a"); //available color green'
-          targetdrag.css("border-color", "#00a65a");
-        }
-        targetGrid.remove();
-        targetTd.addClass("add-cursor-pointer");
-        $(".fc-content").remove();
+       
       });
     },
     async dayClickFunction(date, allDay, jsEvent, view) {
+      // console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
-      if (eventsOnDate.length > 0) {
+
+      let AppointedDates = [];
+      let configId = null;
+      let apointmentId = null;
+      let ScheduleIds = [];
+
+      const clickedDate = moment(date._d).format("YYYY-MM-DD"); // Format clicked date
+      const clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', { weekday: 'long' });
+
+      this.appointmentSlot.forEach((appointment) => {
+        appointment.appointment_schedules.forEach((sched) => {
+          // Check if schedule matches the facility and has a valid configId
+          if (this.facilitySelectedId === sched.facility_id && sched.configId) {
+            const startDate = new Date(sched.appointed_date);
+            const endDate = new Date(sched.date_end);
+            const daysSched = sched.config_schedule.days.split('|');
+
+            // Check if clicked date is within range and matches the schedule's day
+            if (new Date(clickedDate) >= startDate && new Date(clickedDate) <= endDate && daysSched.includes(clickedDayName)) {
+              ScheduleIds.push(sched.id);
+
+              // Process the first matched schedule
+              if (sched.id === ScheduleIds[0]) {
+                configId = sched.configId;
+                apointmentId = sched.id;
+
+                // Iterate through all dates in the range to build AppointedDates
+                let currentDate = new Date(startDate);
+                while (currentDate <= endDate) {
+                  const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+                  if (daysSched.includes(currentDayName)) {
+                    AppointedDates.push(moment(currentDate).format("YYYY-MM-DD"));
+                  }
+                  currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+                }
+              }
+            }
+          }
+        });
+      });
+
+      let dateselect = date._d.toISOString().split('T')[0];
+      let PassconfigId = null;
+      let parameterDate = null;
+      if (eventsOnDate.length > 0 ) {
         const params = JSON.parse(JSON.stringify(eventsOnDate))[0];
+
+        console.log("params::", params);
         const responseBody = {
           selected_date: params.start,
           facility_id: params.facility_id,
         };
+
         const response = await this.__appointmentScheduleHours(responseBody);
         this.$emit("appointedTime", response.data);
+        // console.log("manual appoint esponse", response.data);
+
+        const configNull = Object.values(response.data)[0];
+        PassconfigId = configNull.configId;
+
+        console.log("date selected condition ",  params.start, dateselect);
+        if(params.start === dateselect){
+          parameterDate = params.start;
+          this.$emit("manual-click-date", parameterDate);
+        }
+       
+      }else{
+        
+        const appointedData = await this.__appointmentScheduleDate(
+          null,
+          date._d,
+          AppointedDates,
+          configId,
+          apointmentId,
+        );
+
+        if (appointedData) {
+
+          this.appointedParams = appointedData; // Update state if needed elsewhere
+          // console.log("appointedData config params", appointedData);
+
+          const responseBody = {
+            selected_date:  appointedData.start && !isNaN(new Date(appointedData.start)) ? new Date(appointedData.start).toISOString().split('T')[0] : '',
+            facility_id: appointedData.facility_id,
+            configId: appointedData.configId,
+            appointedId:appointedData.appointedId,
+          };
+
+          const response = await this.__appointmentConfigHours(responseBody);
+           this.$emit("config_appointedTime", response.data);
+           const configsched = Object.values(response.data)[0];
+           if(AppointedDates.includes(dateselect)){
+            console.log("matched date:")
+             PassconfigId = configsched.configId;
+            }else{
+              PassconfigId = null;
+              console.log("not matched", parameterDate);
+            }
+            console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
+        }
       }
+       
+       this.$emit("day-click-date", PassconfigId);
+       if (parameterDate) {
+          this.$emit("manual-click-date", parameterDate);
+        } else {
+          this.$emit("manual-click-date", null);
+        }
     },
     updateCalendarEvents() {
       this.calendar.fullCalendar("removeEvents");
@@ -276,20 +339,57 @@ export default {
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    async __appointmentScheduleDate(facility_id) {
-      const response = await appointmentScheduleDate(facility_id);
-      return response.data.facility_data.map((item) => {
-        return {
+    async __appointmentScheduleDate(facility_id, clickdate, appointed, configId,appointedId) {
+      const response = await appointmentScheduleDate(facility_id); 
+      
+      let formattedClickDate = "";
+      if(clickdate instanceof Date && !isNaN(clickdate)){
+         formattedClickDate = clickdate.toISOString().split('T')[0]; 
+      }else{
+        console.warn("Invalid clickdate:", clickdate);
+      }
+
+      if(!Array.isArray(appointed)){
+          console.error("Invalid appointed value:", appointed);
+          appointed = [];
+      }
+      const matchedate = appointed.includes(formattedClickDate) ? formattedClickDate: "";
+
+      if(matchedate){
+        const appointedParam =  {
           title: "Appointment",
-          start: new Date(item.appointed_date),
+          start: new Date(matchedate),
+          configId: configId,
+          appointedId: appointedId,
           backgroundColor: "#00a65a",
           borderColor: "#00a65a",
-          facility_id: item.facility_id,
+          facility_id: this.facilitySelectedId,
         };
-      });
+
+        this.appointedParams = appointedParam;
+      
+        return appointedParam;
+      }else{
+        const mapedData = response.data.facility_data.map((item) => {
+          console.log("response", response);
+          return {
+            title: "Appointment",
+            start: item.appointed_date,
+            backgroundColor: "#00a65a",
+            borderColor: "#00a65a",
+            facility_id: item.facility_id,
+          };
+        }); 
+        return mapedData;
+      }
     },
     async __appointmentScheduleHours(params) {
+      console.log("parama:", params);
       return await appointmentScheduleHours(params);
+    },
+    async __appointmentConfigHours(params){
+        console.log("parama config hrs:", params);
+      return await appointmentConfigHours(params);
     },
   },
 };

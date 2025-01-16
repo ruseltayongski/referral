@@ -627,6 +627,7 @@ $counter = 0;
 
         const telemedicineAppoinmentSlot = decodeURIComponent(new URL(window.location.href).searchParams.get('appointment'));
         var appointment = @json($telemedicine);
+        
         //let url = new URL(window.location.href);
         if (telemedicineAppoinmentSlot && telemedicineAppoinmentSlot !== null) {
             $(".Appointment").val(telemedicineAppoinmentSlot);

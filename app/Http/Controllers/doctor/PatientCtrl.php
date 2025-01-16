@@ -477,12 +477,26 @@ class PatientCtrl extends Controller
     {
         $user = Session::get('auth');
         if ($req->telemedicine) {
-            $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
-            if ($telemedAssignDoctor->appointment_by) {
-                return 'consultation_rejected';
+
+            if($req->configId){
+                $configTimeSlot = new TelemedAssignDoctor();
+
+                $configTimeSlot->appointment_id = $req->appointmentId;
+                $configTimeSlot->appointed_date = $req->config_appointedDate;
+                $configTimeSlot->start_time = $req->configTimeFrom;
+                $configTimeSlot->end_time = $req->configtimeto;
+                $configTimeSlot->save();
+            }else{
+                
+                $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
+                if ($telemedAssignDoctor->appointment_by) {
+                    return 'consultation_rejected';
+                }
+                $telemedAssignDoctor->appointment_by = $user->id;
+                $telemedAssignDoctor->save();
             }
-            $telemedAssignDoctor->appointment_by = $user->id;
-            $telemedAssignDoctor->save();
+
+           
         }
 
         $patient_id = $req->patient_id;
@@ -490,6 +504,7 @@ class PatientCtrl extends Controller
         $code = date('ymd') . '-' . $user_code . '-' . date('His') . "$user->facility_id" . "$user->id";
         $unique_id = "$patient_id-$user->facility_id-" . date('ymdHis');
         if ($type === 'normal') {
+        
             Patients::where('id', $patient_id)
                 ->update([
                     'sex' => $req->patient_sex,

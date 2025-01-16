@@ -232,7 +232,9 @@
     </div>
 </footer>
 
-
+<script>
+    window.baseUrl = "{{ url('/') }}";
+</script>
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- jQuery UI 1.11.4 -->

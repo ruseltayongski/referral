@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon; 
 use Illuminate\Support\Facades\Auth;
+use Prophecy\Exception\Doubler\ReturnByReferenceException;
 
 class TelemedicineCtrl extends Controller
 {
@@ -28,7 +29,7 @@ class TelemedicineCtrl extends Controller
     {
         $facility = Session::get('auth')->facility_id;
         
-        $config_sched = Cofig_schedule::select('id','department_id','facility_id','created_by','description','category','days','time')->get();
+        $config_sched = Cofig_schedule::select('id','department_id','facility_id','deparment_subcategory','created_by','description','category','days','time')->get();
 
         $appointmentstatus = $req->input('filterappointment', '');
 
@@ -96,7 +97,7 @@ class TelemedicineCtrl extends Controller
     public function configSched(){
         $user = Session::get('auth');
         $department = Department::all();
-        $config_sched = Cofig_schedule::select('id','department_id','facility_id','created_by','description','category','days','time')->get();
+        $config_sched = Cofig_schedule::select('id','department_id','deparment_subcategory','facility_id','created_by','description','category','days','time')->get();
         
         $facility = Facility::select('id','name')->where('id', $user->facility_id)->get();
         
@@ -110,7 +111,7 @@ class TelemedicineCtrl extends Controller
     public function getConfig($id) {
 
        $getconfig = Cofig_schedule::find($id);
-
+        
        $timesRaw = explode('|', $getconfig->time);
        $days =  explode('|', $getconfig->days);
 
@@ -137,10 +138,23 @@ class TelemedicineCtrl extends Controller
             'times' => $times, 
             'days' => $days,
             'descript' => $getconfig->description,
-            'department' => $getconfig->department_id,
+            'deparment_subcategory' => $getconfig->deparment_subcategory,
             'category' => $getconfig->category,
             'configId' => $getconfig->id
         ]);
+    }
+
+    public function getdoctorconfig($id){
+        $configData = Cofig_schedule::select('id', 'days', 'time', 'category')
+            ->with(['appointmentSchedules' => function ($query) {
+                $query->select('id', 'configId', 'opdCategory', 'appointed_date', 'date_end');
+            }])
+            ->find($id);
+
+            return response()->json([
+                'status' => 'success',
+                'timeSlotData' => $configData
+            ]);
     }
 
     public function deleteSchedule($schedId, $configId){
@@ -160,7 +174,7 @@ class TelemedicineCtrl extends Controller
        $config_sched->department_id = $req->department_id;
        $config_sched->category = $req->default_category;
        $config_sched->facility_id = $req->facility_id;
-      
+       $config_sched->deparment_subcategory = $req->department_subcategory;
        $scheduleData = [];
 
        foreach($req->days as $day){
@@ -186,14 +200,14 @@ class TelemedicineCtrl extends Controller
     }
 
     public function editconfigSched(Request $req){
-
+        // dd($req->all());
         $user = Session::get('auth');
         $config_sched = Cofig_schedule::where('id', $req->edit_configId)->first();
         $config_sched->description = $req->configdesc;
         $config_sched->department_id = $req->department_id;
         $config_sched->category = $req->default_category;
         $config_sched->facility_id = $req->facility_id;
-       
+        $config_sched->deparment_subcategory = $req->department_subcategory;
         $scheduleData = [];
 
         foreach($req->days as $day){
@@ -301,7 +315,7 @@ class TelemedicineCtrl extends Controller
         // }])
         // ->select('configId','appointed_date','date_end')
         // ->get();
-
+        
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,
@@ -358,6 +372,7 @@ class TelemedicineCtrl extends Controller
 
             $sched->department_id = $request->department_id;
             $sched->facility_id = $request->facility_id;
+            $sched->opdCategory = $request->opd_subcategory;
             $sched->status = "config";
             $sched->created_by = $user->id;
 
@@ -722,6 +737,94 @@ class TelemedicineCtrl extends Controller
             ->get();
 
         return $timeSlots;
+    }
+
+    public function getConfigtimeSlot(Request $req){
+      
+        // \Log::info('Config Time Slot Request:', $req->all());
+        $timeSlot = AppointmentSchedule::with(['configSchedule' => function($query) {
+                $query->select('id','category','days','time');
+            },
+            'department' => function ($query) {
+                    $query->select(
+                        'id',
+                        'description'
+                    );
+                },
+            ])
+            ->where('id', $req->appointedId)
+            ->where('configId', $req->configId)
+            ->where('facility_id', $req->facility_id)
+            ->first();
+
+            $department_id = $timeSlot->department->description;
+            $config_id = $timeSlot->configId;
+            $dateStart = Carbon::parse($timeSlot->appointed_date);
+            $dateEnd = Carbon::parse($timeSlot->date_end);
+
+            $daysAndTimes = explode('|', $timeSlot->configSchedule->time);
+            $timeSchedule = [];
+            $currentDay = null;
+            
+            for ($i = 0; $i < count($daysAndTimes); $i++) {
+                $item = $daysAndTimes[$i];
+                
+                // Check if this item is a day
+                if (in_array($item, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])) {
+                    $currentDay = $item;
+                    if (!isset($timeSchedule[$currentDay])) {
+                        $timeSchedule[$currentDay] = [];
+                    }
+                } 
+                // If it's not a day and we have a current day, it must be a time slot
+                elseif ($currentDay !== null && preg_match('/^\d{2}:\d{2}-\d{2}:\d{2}$/', $item)) {
+                    $timeSchedule[$currentDay][] = $item;
+                }
+            }
+
+            // Iterate through the date range and filter by selected days
+            $appointedDates = [];
+            $currentDate = $dateStart->copy();
+
+            while ($currentDate->lte($dateEnd)) {
+                $currentDayName = $currentDate->format('l'); // Get the day name (e.g., "Monday")
+
+                if (array_key_exists($currentDayName, $timeSchedule)) {
+                    $appointedDates[] = [
+                        'appointment_id' =>$timeSlot->id,
+                        'configId' => $config_id,
+                        'date' => $currentDate->format('Y-m-d'),
+                        'timeSlots' => $timeSchedule[$currentDayName], // Assign time slots for this day
+                        'department_id' => $department_id,
+                        'Opdcategory' => $timeSlot->opdCategory
+                    ];
+                }
+
+                $currentDate->addDay(); // Move to the next day
+            }
+
+           if($req->has('selected_date')){
+                $appointedDates = array_filter($appointedDates, function($appointedDate) use ($req) {
+                    return $appointedDate['date'] === $req->selected_date;
+                });
+           }
+
+        return $appointedDates;
+    }
+
+    public function getconfigAppointment(Request $req){
+
+        $selectedTime = $req->selectedTime;
+
+        $startTimes = collect($selectedTime)->map(function ($timeSlot){
+            return date('H:i:s', strtotime(substr($timeSlot, 0, 5)));
+        });
+        
+       $slotUsed = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)
+                                        ->where('appointed_date', $req->date)
+                                        ->get();
+
+        return response()->json($slotUsed);
     }
 
     public function getDoctors($facility)

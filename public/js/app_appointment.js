@@ -22046,9 +22046,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppointmentFacility_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentFacility.vue */ "./resources/assets/js/appointment/AppointmentFacility.vue");
 /* harmony import */ var _AppointmentCalendar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentCalendar.vue */ "./resources/assets/js/appointment/AppointmentCalendar.vue");
 /* harmony import */ var _AppointmentTime_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppointmentTime.vue */ "./resources/assets/js/appointment/AppointmentTime.vue");
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
+function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
 
 
+var baseUrlgetConfig = "".concat(window.baseUrl, "/doctor/getconfigappointment");
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AppointmentApp",
   components: {
@@ -22060,16 +22065,57 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       facilitySelectedId: 0,
-      appointedTimes: []
+      appointedTimes: [],
+      configTimeSlot: [],
+      appointmentclickDate: null
     };
   },
   mounted: function mounted() {},
   methods: {
+    manualClickDate: function manualClickDate(date) {
+      this.manualDate = date;
+      console.log("this.manualDate", this.manualDate);
+    },
+    handleDayClickdate: function handleDayClickdate(payload) {
+      this.appointmentclickDate = payload;
+    },
     facilitySelected: function facilitySelected(payload) {
       this.facilitySelectedId = payload;
     },
     appointedTime: function appointedTime(payload) {
       this.appointedTimes = payload;
+    },
+    config_appointedTime: function config_appointedTime(payload) {
+      console.log("config_appointedTime::", payload);
+      this.configTimeSlot = payload;
+    },
+    handleProceedAppointment: function handleProceedAppointment(payload) {
+      var _this = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              _context.next = 3;
+              return axios.post("".concat(baseUrlgetConfig), payload);
+            case 3:
+              response = _context.sent;
+              console.log("get configappointment AppointmentApp", response.data);
+              _this.appointmentAssign = response.data;
+              _this.$emit("disabled-Config", response.data);
+              _context.next = 12;
+              break;
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](0);
+              console.error("Error sending appointment data:", _context.t0);
+            case 12:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[0, 9]]);
+      }))();
     }
   }
 });
@@ -22098,6 +22144,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   data: function data() {
     return {
       calendar: null,
+      selectedDate: null,
+      appointedParams: {},
       header: {
         left: "prev,next today",
         center: "title",
@@ -22201,9 +22249,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     eventRenderFunction: function eventRenderFunction(event, element) {
       var _this2 = this;
-      console.log("event dateTime", event);
-      //console.log(event,event.start.format('YYYY-MM-DD'))
-      // let currentDate = new Date().toISOString().split("T")[0];
       var currentDateTime = new Date(); // get the current date and time
       this.$nextTick(function () {
         var targetTd = $(".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']");
@@ -22211,19 +22256,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         var targetGrid = $(".fc-day-grid-event");
         var dateString = targetTd.attr("data-date");
         var timeslot = null;
+        var passconfigId = null;
+        var exceedAppoint;
+        null;
         var isfullyBooked = _this2.appointmentSlot.some(function (appointment) {
           // Config Appointment
+          exceedAppoint = appointment;
           appointment.appointment_schedules.forEach(function (sched) {
-            if (sched.configId) {
+            if (sched.configId && _this2.facilitySelectedId === sched.facility_id) {
               var Date_start = new Date(sched.appointed_date); // Start date
               var date_end = new Date(sched.date_end); // End date
               var timeSlot = sched.config_schedule.time.split('|');
               var daysSched = sched.config_schedule.days.split('|');
-              console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched, 'timeSlot', timeSlot);
 
               // Iterate through all days in the range
               var currentDate = new Date(Date_start); // Initialize with start date
-              console.log("currentDate", currentDate);
+
               while (currentDate <= date_end) {
                 var currentDayName = currentDate.toLocaleDateString('en-US', {
                   weekday: 'long'
@@ -22232,10 +22280,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 if (daysSched.includes(currentDayName)) {
                   // Highlight specific day if it matches
                   var _targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
-                  _targetTd.css("background-color", "#00a65a"); // Green for available
-                  _targetTd.css("border-color", "#00a65a");
-                }
 
+                  // targetTd.css("border-color", "#00a65a");
+                  if (_targetTd.length) {
+                    _targetTd.css("background-color", "#00a65a"); // Green for available
+                  }
+                  targetGrid.remove();
+                  _targetTd.addClass("add-cursor-pointer");
+                  $(".fc-content").remove();
+                }
                 // Move to the next day
                 currentDate.setDate(currentDate.getDate() + 1);
               }
@@ -22247,8 +22300,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             var slotOndate = appointment.appointment_schedules.filter(function (slot) {
               return slot.appointed_date === dateString;
             });
+            console.log("slot on date", slotOndate);
             // Group by appointment_id
             var groupedByAppointmentId = slotOndate.reduce(function (acc, slot) {
+              passconfigId = slot.configId;
               timeslot = slot.appointed_time;
               var id = slot.appointment_id;
               if (!acc[id]) acc[id] = [];
@@ -22268,70 +22323,19 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
           return false;
         });
-
-        //Config Appointment 
-        // const dateRangeBackground = this.appointmentSlot.appointment_schedules.some((config) => {
-
-        //   const Date_start = new Date(config.appointed_date); // Start date
-        //   const date_end = new Date(config.date_end); // End date
-        //   const daysSched = config.config_schedule.days.split('|'); // Schedule days
-        //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched)
-        //   const currentDate = new Date(dateString); // Current date in the calendar
-        //   const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Current day name
-
-        //   const withinDateRange = currentDate >= Date_start && currentDate <= date_end; // Date within range
-        //   console.log("withinDateRange", withinDateRange);
-        //   const isInSchedule = daysSched.includes(currentDayName); // Day is in schedule
-        //   console.log("withinDateRange", withinDateRange);
-        //   if (withinDateRange && isInSchedule) {
-        //     // Weekly (recurs every 7 days) or Monthly logic
-        //     const diffDays = Math.ceil((currentDate - Date_start) / (1000 * 60 * 60 * 24)); // Days difference
-        //     const isWeekly = diffDays % 7 === 0; // Weekly recurrence
-        //     const isMonthly = Date_start.getDate() === currentDate.getDate(); // Monthly recurrence
-
-        //     if (isWeekly || isMonthly) {
-        //       targetTd.css("background-color", "#00a65a"); // Green for available
-        //       targetTd.css("border-color", "#00a65a");
-
-        //       return true; // Found a match
-        //     }
-
-        //   }
-
-        // });
-
-        // const dateRangeBackground = this.appointmentSlot[0].appointment_schedules.some((config) => {
-        //   const Date_start = new Date(config.appointed_date); // Start date
-        //   const date_end = new Date(config.date_end); // End date
-        //   const daysSched = config.config_schedule.days.split('|'); // Selected days e.g., ['Monday', 'Wednesday', 'Thursday']
-
-        //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched);
-
-        //   // Iterate through all days in the range
-        //   let currentDate = new Date(Date_start); // Initialize with start date
-        //   console.log("currentDate", config);
-        //   while (currentDate <= date_end) {
-        //     const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
-
-        //     if (daysSched.includes(currentDayName)) {
-        //       // Highlight specific day if it matches
-        //       const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
-        //       targetTd.css("background-color", "#00a65a"); // Green for available
-        //       targetTd.css("border-color", "#00a65a");
-        //     }
-
-        //     // Move to the next day
-        //     currentDate.setDate(currentDate.getDate() + 1);
-        //   }
-        // });
-
         var dateTimeAppointed = new Date("".concat(dateString, "T").concat(timeslot));
-        if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-          targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
-          targetTd.css("border-color", "rgb(230 193 193)");
-        } else {
-          targetTd.css("background-color", "#00a65a"); //available color green'
-          targetdrag.css("border-color", "#00a65a");
+        console.log("exceedAppoint", exceedAppoint);
+        var hasNonEmptyConfigId = exceedAppoint.appointment_schedules.some(function (slot) {
+          return slot.facility_id === _this2.facilitySelectedId && slot.configId;
+        });
+        if (!hasNonEmptyConfigId) {
+          if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
+            targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
+            targetTd.css("border-color", "rgb(230 193 193)");
+          } else {
+            targetTd.css("background-color", "#00a65a"); //available color green'
+            targetdrag.css("border-color", "#00a65a");
+          }
         }
         targetGrid.remove();
         targetTd.addClass("add-cursor-pointer");
@@ -22341,28 +22345,122 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     dayClickFunction: function dayClickFunction(date, allDay, jsEvent, view) {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var eventsOnDate, params, responseBody, response;
+        var eventsOnDate, AppointedDates, configId, apointmentId, ScheduleIds, clickedDate, clickedDayName, dateselect, PassconfigId, parameterDate, params, responseBody, response, configNull, appointedData, _responseBody, _response, configsched;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
+              // console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
               eventsOnDate = _this3.events.filter(function (event) {
                 return moment(event.start).isSame(date, "day");
               });
+              AppointedDates = [];
+              configId = null;
+              apointmentId = null;
+              ScheduleIds = [];
+              clickedDate = moment(date._d).format("YYYY-MM-DD"); // Format clicked date
+              clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', {
+                weekday: 'long'
+              });
+              _this3.appointmentSlot.forEach(function (appointment) {
+                appointment.appointment_schedules.forEach(function (sched) {
+                  // Check if schedule matches the facility and has a valid configId
+                  if (_this3.facilitySelectedId === sched.facility_id && sched.configId) {
+                    var startDate = new Date(sched.appointed_date);
+                    var endDate = new Date(sched.date_end);
+                    var daysSched = sched.config_schedule.days.split('|');
+
+                    // Check if clicked date is within range and matches the schedule's day
+                    if (new Date(clickedDate) >= startDate && new Date(clickedDate) <= endDate && daysSched.includes(clickedDayName)) {
+                      ScheduleIds.push(sched.id);
+
+                      // Process the first matched schedule
+                      if (sched.id === ScheduleIds[0]) {
+                        configId = sched.configId;
+                        apointmentId = sched.id;
+
+                        // Iterate through all dates in the range to build AppointedDates
+                        var currentDate = new Date(startDate);
+                        while (currentDate <= endDate) {
+                          var currentDayName = currentDate.toLocaleDateString('en-US', {
+                            weekday: 'long'
+                          });
+                          if (daysSched.includes(currentDayName)) {
+                            AppointedDates.push(moment(currentDate).format("YYYY-MM-DD"));
+                          }
+                          currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+                        }
+                      }
+                    }
+                  }
+                });
+              });
+              dateselect = date._d.toISOString().split('T')[0];
+              PassconfigId = null;
+              parameterDate = null;
               if (!(eventsOnDate.length > 0)) {
-                _context3.next = 8;
+                _context3.next = 25;
                 break;
               }
               params = JSON.parse(JSON.stringify(eventsOnDate))[0];
+              console.log("params::", params);
               responseBody = {
                 selected_date: params.start,
                 facility_id: params.facility_id
               };
-              _context3.next = 6;
+              _context3.next = 17;
               return _this3.__appointmentScheduleHours(responseBody);
-            case 6:
+            case 17:
               response = _context3.sent;
               _this3.$emit("appointedTime", response.data);
-            case 8:
+              // console.log("manual appoint esponse", response.data);
+              configNull = Object.values(response.data)[0];
+              PassconfigId = configNull.configId;
+              console.log("date selected condition ", params.start, dateselect);
+              if (params.start === dateselect) {
+                parameterDate = params.start;
+                _this3.$emit("manual-click-date", parameterDate);
+              }
+              _context3.next = 38;
+              break;
+            case 25:
+              _context3.next = 27;
+              return _this3.__appointmentScheduleDate(null, date._d, AppointedDates, configId, apointmentId);
+            case 27:
+              appointedData = _context3.sent;
+              if (!appointedData) {
+                _context3.next = 38;
+                break;
+              }
+              _this3.appointedParams = appointedData; // Update state if needed elsewhere
+              // console.log("appointedData config params", appointedData);
+              _responseBody = {
+                selected_date: appointedData.start && !isNaN(new Date(appointedData.start)) ? new Date(appointedData.start).toISOString().split('T')[0] : '',
+                facility_id: appointedData.facility_id,
+                configId: appointedData.configId,
+                appointedId: appointedData.appointedId
+              };
+              _context3.next = 33;
+              return _this3.__appointmentConfigHours(_responseBody);
+            case 33:
+              _response = _context3.sent;
+              _this3.$emit("config_appointedTime", _response.data);
+              configsched = Object.values(_response.data)[0];
+              if (AppointedDates.includes(dateselect)) {
+                console.log("matched date:");
+                PassconfigId = configsched.configId;
+              } else {
+                PassconfigId = null;
+                console.log("not matched", parameterDate);
+              }
+              console.log("AppointedDates::", AppointedDates, 'dateselect', dateselect);
+            case 38:
+              _this3.$emit("day-click-date", PassconfigId);
+              if (parameterDate) {
+                _this3.$emit("manual-click-date", parameterDate);
+              } else {
+                _this3.$emit("manual-click-date", null);
+              }
+            case 40:
             case "end":
               return _context3.stop();
           }
@@ -22381,9 +22479,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    __appointmentScheduleDate: function __appointmentScheduleDate(facility_id) {
+    __appointmentScheduleDate: function __appointmentScheduleDate(facility_id, clickdate, appointed, configId, appointedId) {
+      var _this5 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var response;
+        var response, formattedClickDate, matchedate, appointedParam, mapedData;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
@@ -22391,16 +22490,45 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               return (0,_api_index__WEBPACK_IMPORTED_MODULE_0__.appointmentScheduleDate)(facility_id);
             case 2:
               response = _context4.sent;
-              return _context4.abrupt("return", response.data.facility_data.map(function (item) {
+              formattedClickDate = "";
+              if (clickdate instanceof Date && !isNaN(clickdate)) {
+                formattedClickDate = clickdate.toISOString().split('T')[0];
+              } else {
+                console.warn("Invalid clickdate:", clickdate);
+              }
+              if (!Array.isArray(appointed)) {
+                console.error("Invalid appointed value:", appointed);
+                appointed = [];
+              }
+              matchedate = appointed.includes(formattedClickDate) ? formattedClickDate : "";
+              if (!matchedate) {
+                _context4.next = 13;
+                break;
+              }
+              appointedParam = {
+                title: "Appointment",
+                start: new Date(matchedate),
+                configId: configId,
+                appointedId: appointedId,
+                backgroundColor: "#00a65a",
+                borderColor: "#00a65a",
+                facility_id: _this5.facilitySelectedId
+              };
+              _this5.appointedParams = appointedParam;
+              return _context4.abrupt("return", appointedParam);
+            case 13:
+              mapedData = response.data.facility_data.map(function (item) {
+                console.log("response", response);
                 return {
                   title: "Appointment",
-                  start: new Date(item.appointed_date),
+                  start: item.appointed_date,
                   backgroundColor: "#00a65a",
                   borderColor: "#00a65a",
                   facility_id: item.facility_id
                 };
-              }));
-            case 4:
+              });
+              return _context4.abrupt("return", mapedData);
+            case 15:
             case "end":
               return _context4.stop();
           }
@@ -22412,15 +22540,33 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              _context5.next = 2;
+              console.log("parama:", params);
+              _context5.next = 3;
               return (0,_api_index__WEBPACK_IMPORTED_MODULE_0__.appointmentScheduleHours)(params);
-            case 2:
-              return _context5.abrupt("return", _context5.sent);
             case 3:
+              return _context5.abrupt("return", _context5.sent);
+            case 4:
             case "end":
               return _context5.stop();
           }
         }, _callee5);
+      }))();
+    },
+    __appointmentConfigHours: function __appointmentConfigHours(params) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              console.log("parama config hrs:", params);
+              _context6.next = 3;
+              return (0,_api_index__WEBPACK_IMPORTED_MODULE_0__.appointmentConfigHours)(params);
+            case 3:
+              return _context6.abrupt("return", _context6.sent);
+            case 4:
+            case "end":
+              return _context6.stop();
+          }
+        }, _callee6);
       }))();
     }
   }
@@ -22672,7 +22818,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         //remove element
         $(".fc-day").css("background-color", "");
         $(".fc-day").removeClass("add-cursor-pointer");
-        //
       }
       this.$emit("facilitySelected", id);
     }
@@ -22692,14 +22837,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var _api_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api/index */ "./resources/assets/js/appointment/api/index.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AppointmentTime",
   props: {
     appointedTimes: {
+      type: Object
+    },
+    appointmentclickDate: {
+      type: Object,
+      "default": null
+    },
+    manualDate: {
+      type: Object
+    },
+    configTimeSlot: {
+      type: Object
+    },
+    appointmentAssign: {
       type: Object
     },
     facilitySelectedId: {
@@ -22708,12 +22868,18 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
+      configAppoinmentTime: [],
       selectedAppointmentTime: null,
       selectedAppointmentDoctor: null,
       showAppointmentTime: false,
       base: $("#broadcasting_url").val(),
       followUpReferredId: 0,
-      followUpCode: null
+      followUpCode: null,
+      configSelectedTime: null,
+      configOpdcategory: null,
+      selectedDepartment: null,
+      selectedOpdCategory: null,
+      opdSubcategories: ['Family Medicine', 'Internal Medicine', 'General Surgery', 'Trauma Care', 'Burn Care', 'Opthalmology', 'ENT', 'Neurology', 'Urosurgery', 'Toxicology', 'OB-GYNE', 'Pediatric', 'Oncology', 'Nephrology', 'Dermatology', 'Surgery', 'Geriatics Medicine', 'Physical and Rehabilitation Medicine', 'Orthopedics', 'Cardiology']
     };
   },
   mounted: function mounted() {
@@ -22759,9 +22925,29 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _facilitySelectedId.apply(this, arguments);
       }
       return facilitySelectedId;
-    }()
+    }(),
+    configSelectedTime: function configSelectedTime(newValue) {
+      console.log("my value::", newValue);
+      this.emitCurrentData();
+    },
+    currentConfig: {
+      deep: true,
+      handler: function handler() {
+        this.emitCurrentData();
+      }
+    }
   },
   computed: {
+    currentConfig: function currentConfig() {
+      if (Array.isArray(this.configTimeSlot)) {
+        return this.configTimeSlot[0] || {};
+      }
+      return Object.values(this.configTimeSlot)[0] || {};
+    },
+    showConfigTimeSlot: function showConfigTimeSlot() {
+      // Check if configTimeSlot has data
+      return this.configTimeSlot && Object.keys(this.configTimeSlot).length > 0;
+    },
     areAllAppointmentFull: function areAllAppointmentFull() {
       var _this = this;
       return this.appointedTimes.every(function (appointment) {
@@ -22770,6 +22956,32 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }
   },
   methods: {
+    emitCurrentData: function emitCurrentData() {
+      // Emit the necessary data whenever a change occurs
+      this.$emit("data-changed-config", {
+        selectedTime: this.currentConfig.timeSlots,
+        date: this.currentConfig.date,
+        appointmentId: this.currentConfig.appointment_id
+      });
+      var appointment = {
+        selectedTime: this.currentConfig.timeSlots,
+        date: this.currentConfig.date,
+        appointmentId: this.currentConfig.appointment_id
+      };
+
+      // Assign the appointment object to _appointmentConfigData
+      this._appointmentConfigData(appointment);
+    },
+    handleconfigTimeSelection: function handleconfigTimeSelection(timeSlot) {
+      this.configSelectedTime = timeSlot;
+      this.selectedDepartment = null;
+    },
+    handleconfigcategory: function handleconfigcategory(opdSubcateory) {
+      this.configOpdcategory = opdSubcateory;
+    },
+    formatTimeSlot: function formatTimeSlot(timeSlot) {
+      return timeSlot.replace('-', ' to ');
+    },
     areAllDoctorsNotAvailable: function areAllDoctorsNotAvailable(doctors, date, time) {
       var currentDateTime = new Date();
       var currentDate = currentDateTime.toISOString().split("T")[0];
@@ -22793,18 +23005,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return doctor_available; // Disable if all doctors are not available
       }
       return doctor_available; // Default to doctor availability if date is not provided
-
-      // if(date){
-      //     //return date < currentDate || doctors.every(doctor => doctor.appointment_by);
-      //     return date < currentDate;
-      // }
-
-      // // document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
-      // // document.querySelector('.hours_radio').setAttribute('min', currentDat);
-      // // $('.hours_radio').setAttribute('min', currentDate);
-      return doctors.every(function (doctor) {
-        return doctor.appointment_by;
-      });
     },
     isPastDatetime: function isPastDatetime(appointedDate, appointedTime) {
       var now = new Date();
@@ -22813,15 +23013,16 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // If the appointment time is before the current time, return true (disabled)
       return appointmentDateTime < now;
     },
-    proceedAppointment: function proceedAppointment() {
-      if (!this.selectedAppointmentTime) {
+    proceedAppointment: function proceedAppointment(configtime, configDate, appointmentId, configId, opdSubcateg) {
+      console.log("selected time::", configtime, configDate, appointmentId, configId, opdSubcateg);
+      if (!configId && !this.selectedAppointmentTime || configId && !configtime) {
         Lobibox.alert("error", {
           msg: "Please Select Time"
         });
         return;
-      } else if (!this.selectedAppointmentDoctor) {
+      } else if (configId && !opdSubcateg) {
         Lobibox.alert("error", {
-          msg: "Please Select Doctor"
+          msg: "Please Select Opd Sub category"
         });
         return;
       }
@@ -22835,11 +23036,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         $("#telemedicineFollowupFormModal").modal("show");
         $("#followup_facility_id").val(this.facilitySelectedId);
       } else {
-        var appointment = {
-          facility_id: this.facilitySelectedId,
-          appointmentId: this.selectedAppointmentTime,
-          doctorId: this.selectedAppointmentDoctor
-        };
+        var appointment = null;
+        if (configId) {
+          appointment = {
+            facility_id: this.facilitySelectedId,
+            appointmentId: appointmentId,
+            config_id: configId,
+            configDate: configDate,
+            configtime: configtime
+          };
+          this.$emit("proceed-appointment", appointment);
+        } else {
+          appointment = {
+            facility_id: this.facilitySelectedId,
+            appointmentId: this.selectedAppointmentTime,
+            doctorId: this.selectedAppointmentDoctor
+          };
+        }
         console.log(appointment);
         window.location.href = "".concat(this.base, "/doctor/patient?appointmentKey=").concat(this.generateAppointmentKey(255), "&appointment=").concat(encodeURIComponent(JSON.stringify([appointment])));
       }
@@ -22859,6 +23072,31 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     handleDoctorChange: function handleDoctorChange(doctorId, appointmentId) {
       console.log(doctorId, 'appointmentId', appointmentId);
       this.selectedAppointmentDoctor = doctorId;
+    },
+    _appointmentConfigData: function _appointmentConfigData(payload) {
+      var _this2 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+        var response;
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return (0,_api_index__WEBPACK_IMPORTED_MODULE_0__.appointmentConfigData)(payload);
+            case 2:
+              response = _context3.sent;
+              _this2.configAppoinmentTime = response.data;
+            case 4:
+            case "end":
+              return _context3.stop();
+          }
+        }, _callee3);
+      }))();
+    },
+    configAppointmentNot: function configAppointmentNot() {
+      console.log("appointmentApp config data:", this.configAppoinmentTime);
+      return this.configAppoinmentTime.some(function (config) {
+        console.log("Comparing ".concat(config.start_time, "\u2013").concat(config.end_time, " with ").concat(timeSlot.start, "\u2013").concat(timeSlot.end));
+      });
     }
   }
 });
@@ -22908,7 +23146,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_appointment_time = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("appointment-time");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "page-header"
-  }, "Select Facility", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-if=\"appointment_slot\" v-for=\"appointment in appointment_slot\" :key=\"appointment.id\">\r\n                <appointment-facility\r\n                  v-for=\"config in appointment_config\"\r\n                  :key=\"`${appointment.id}-${config.id}`\"\r\n                  :config_appoint=\"config\"\r\n                  :appointment=\"appointment\"\r\n                  :user=\"user\"\r\n                  @facilitySelected=\"facilitySelected\"\r\n                ></appointment-facility>\r\n            </div> "), $props.appointment_slot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  }, "Select Facility", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [$props.appointment_slot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointment_slot, function (appointment) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_appointment_facility, {
@@ -22922,11 +23160,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_calendar, {
     facilitySelectedId: $data.facilitySelectedId,
     appointmentSlot: $props.appointment_slot,
-    onAppointedTime: $options.appointedTime
-  }, null, 8 /* PROPS */, ["facilitySelectedId", "appointmentSlot", "onAppointedTime"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_time, {
+    onAppointedTime: $options.appointedTime,
+    onConfig_appointedTime: $options.config_appointedTime,
+    onDayClickDate: $options.handleDayClickdate,
+    onManualClickDate: $options.manualClickDate
+  }, null, 8 /* PROPS */, ["facilitySelectedId", "appointmentSlot", "onAppointedTime", "onConfig_appointedTime", "onDayClickDate", "onManualClickDate"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_time, {
     facilitySelectedId: $data.facilitySelectedId,
-    appointedTimes: $data.appointedTimes
-  }, null, 8 /* PROPS */, ["facilitySelectedId", "appointedTimes"])])])])], 64 /* STABLE_FRAGMENT */);
+    appointedTimes: $data.appointedTimes,
+    configTimeSlot: $data.configTimeSlot,
+    appointmentclickDate: $data.appointmentclickDate,
+    manualDate: _ctx.manualDate,
+    appointmentAssign: _ctx.appointmentAssign,
+    onDataChangedConfig: $options.handleProceedAppointment
+  }, null, 8 /* PROPS */, ["facilitySelectedId", "appointedTimes", "configTimeSlot", "appointmentclickDate", "manualDate", "appointmentAssign", "onDataChangedConfig"])])])])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -23073,12 +23319,46 @@ var _hoisted_7 = {
   "class": "box box-solid"
 };
 var _hoisted_8 = {
+  "class": "box-header with-border"
+};
+var _hoisted_9 = {
+  "class": "box-title timeDoctor"
+};
+var _hoisted_10 = {
+  key: 0
+};
+var _hoisted_11 = {
+  "class": "box-body config-remove-all"
+};
+var _hoisted_12 = {
+  "class": "appointment-time-list1"
+};
+var _hoisted_13 = ["value", "onChange", "disabled"];
+var _hoisted_14 = {
+  "class": /*@__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+    'text-green': true
+  })
+};
+var _hoisted_15 = {
+  key: 0,
+  "class": "doctor-list1"
+};
+var _hoisted_16 = ["value"];
+var _hoisted_17 = {
+  "class": /*@__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+    'text-green': true
+  })
+};
+var _hoisted_18 = {
+  key: 1
+};
+var _hoisted_19 = {
   key: 0,
   "class": "box-body"
 };
-var _hoisted_9 = ["value", "disabled"];
-var _hoisted_10 = ["value", "onChange", "disabled"];
-var _hoisted_11 = {
+var _hoisted_20 = ["value", "disabled"];
+var _hoisted_21 = ["value", "onChange", "disabled"];
+var _hoisted_22 = {
   key: 1,
   type: "button",
   id: "consultation",
@@ -23091,9 +23371,9 @@ var _hoisted_11 = {
   disabled: ""
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "page-header"
-  }, "Time Slot", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"row\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"box-header with-border\">\r\n                  <h4 class=\"box-title\">Legends</h4>\r\n                </div> "), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, "Time Slot", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"row\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"box-header with-border\">\r\n                  <h4 class=\"box-title\">Legends</h4>\r\n                </div> "), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event bg-green"
   }, "Available Slot"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event",
@@ -23101,28 +23381,58 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "background-color": "rgb(255 214 214)",
       "color": "#ffff"
     }
-  }, " Not Available ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "box-header with-border"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
-    "class": "box-title timeDoctor"
-  }, " Please choose Time and Doctor "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, " Not Available ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_9, " Please choose Time and OPD " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.appointedTimes), 1 /* TEXT */), _cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "date-selected"
-  })], -1 /* HOISTED */)), $props.appointedTimes.length > 0 && $data.showAppointmentTime ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointedTimes, function (appointment) {
+  }, null, -1 /* HOISTED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" :disabled=\"areAllAppointmentNotAvailable()\" "), $props.appointmentclickDate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.currentConfig.timeSlots, function (timeSlot, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: index
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+      type: "radio",
+      "class": "hours_radio",
+      value: timeSlot,
+      "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+        return $data.configSelectedTime = $event;
+      }),
+      onChange: function onChange($event) {
+        return $options.handleconfigTimeSelection(timeSlot);
+      },
+      disabled: $options.configAppointmentNot()
+    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_13), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configSelectedTime]]), _cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatTimeSlot(timeSlot)), 1 /* TEXT */), $data.configSelectedTime === timeSlot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+      type: "radio",
+      "class": "hours_radio",
+      "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+        return $data.configOpdcategory = $event;
+      }),
+      value: $options.currentConfig.Opdcategory,
+      onChange: _cache[2] || (_cache[2] = function ($event) {
+        return $options.handleconfigcategory($options.currentConfig.Opdcategory);
+      })
+    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_16), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configOpdcategory]]), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.currentConfig.Opdcategory), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    id: "consultation",
+    "class": "btn btn-success bt-md btn-block",
+    onClick: _cache[3] || (_cache[3] = function ($event) {
+      return $options.proceedAppointment($data.configSelectedTime, $options.currentConfig.date, $options.currentConfig.appointment_id, $options.currentConfig.configId, $data.configOpdcategory);
+    })
+  }, _cache[11] || (_cache[11] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "fa fa-calendar"
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button\r\n                    type=\"button\"\r\n                    id=\"consultation\"\r\n                    class=\"btn bt-md btn-block\"\r\n                    style=\"background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)\"\r\n                    disabled\r\n                  >\r\n                    <i class=\"fa fa-calendar\"></i>&nbsp;&nbsp;All appointments are full\r\n                  </button> ")])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_18, [$props.appointedTimes.length > 0 && $data.showAppointmentTime && $props.manualDate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointedTimes, function (appointment) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "appointment-time-list",
       key: appointment.id
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "radio",
       "class": "hours_radio",
-      "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+      "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
         return $data.selectedAppointmentTime = $event;
       }),
       value: appointment.id,
-      onChange: _cache[1] || (_cache[1] = function () {
+      onChange: _cache[5] || (_cache[5] = function () {
         return $options.handleAppointmentTimeChange && $options.handleAppointmentTimeChange.apply($options, arguments);
       }),
       disabled: $options.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor, appointment.appointed_date, appointment.appointed_time) || $options.isPastDatetime(appointment.appointed_date, appointment.appointed_time)
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_9), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_20), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), _cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
         'text-green': !$options.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor),
         'text-red': $options.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor)
@@ -23136,7 +23446,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
         type: "radio",
         "class": "hours_radio",
-        "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
+        "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
           return $data.selectedAppointmentDoctor = $event;
         }),
         value: assignedDoctor.doctor.id,
@@ -23144,7 +23454,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.handleDoctorChange(assignedDoctor.doctor.id, appointment.id);
         },
         disabled: assignedDoctor.appointment_by
-      }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_10), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentDoctor]]), _cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
+      }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_21), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentDoctor]]), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
           'text-green': !assignedDoctor.appointment_by,
           'text-red': assignedDoctor.appointment_by
@@ -23156,14 +23466,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "button",
     id: "consultation",
     "class": "btn btn-success bt-md btn-block",
-    onClick: _cache[3] || (_cache[3] = function () {
+    onClick: _cache[7] || (_cache[7] = function () {
       return $options.proceedAppointment && $options.proceedAppointment.apply($options, arguments);
     })
-  }, _cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[14] || (_cache[14] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")]))) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_11, _cache[7] || (_cache[7] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")]))) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_22, _cache[15] || (_cache[15] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  All appointments are full ")])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")])])])]);
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  All appointments are full ")])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")])])])]);
 }
 
 /***/ }),
@@ -23177,6 +23487,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   appointmentConfigData: () => (/* binding */ appointmentConfigData),
+/* harmony export */   appointmentConfigHours: () => (/* binding */ appointmentConfigHours),
 /* harmony export */   appointmentScheduleDate: () => (/* binding */ appointmentScheduleDate),
 /* harmony export */   appointmentScheduleHours: () => (/* binding */ appointmentScheduleHours)
 /* harmony export */ });
@@ -23188,6 +23500,21 @@ function appointmentScheduleDate(facility_id) {
 }
 function appointmentScheduleHours(params) {
   return _req__WEBPACK_IMPORTED_MODULE_0__["default"].post(base + "/appointment/available-time-slots", params);
+}
+function appointmentConfigHours(params) {
+  return _req__WEBPACK_IMPORTED_MODULE_0__["default"].post(base + "/appointment/config-time-Slot", params);
+}
+function appointmentConfigData(params) {
+  console.log("result for", base + "/doctor/getconfigappointment", params);
+  return _req__WEBPACK_IMPORTED_MODULE_0__["default"].post(base + "/doctor/getconfigappointment", params);
+
+  // try {
+  //     const response =  req.post(base+"/doctor/getconfigappointment", params);
+  //     console.log("get configappointment AppointmentApp11111", response);
+
+  //   } catch (error) {
+  //     console.error("Error sending appointment data:", error);
+  //   }
 }
 
 /***/ }),
@@ -23306,7 +23633,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.appointment-time-list[data-v-3c340b3a] {\r\n  /* display: flex;  */\r\n  padding: 10px;\n}\n.appointment-time-list > .doctor-list[data-v-3c340b3a] {\r\n  display: block !important;\r\n  list-style-type: none;\r\n  margin-top: 7px;\n}\n.hours_radio[data-v-3c340b3a] {\r\n  margin-bottom: 5px;\r\n  transform: scale(1.5);\r\n  cursor: pointer;\r\n  accent-color: #00a65a;\n}\n#consultation[data-v-3c340b3a] {\r\n  margin-top: 20px;\n}\n.timeDoctor[data-v-3c340b3a] {\r\n  font-size: 16px;\n}\n.page-header[data-v-3c340b3a] {\r\n  margin: 10px 0 0 0;\r\n  font-size: 22px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.appointment-time-list[data-v-3c340b3a] {\r\n  /* display: flex;  */\r\n  padding: 10px;\n}\n.appointment-time-list > .doctor-list[data-v-3c340b3a] {\r\n  display: block !important;\r\n  list-style-type: none;\r\n  margin-top: 7px;\n}\n.appointment-time-list1[data-v-3c340b3a] {\r\n  /* display: flex;  */\r\n  padding: 10px;\n}\n.appointment-time-list1 .doctor-list1[data-v-3c340b3a] {\r\n  display: block !important;\r\n  list-style-type: none;\r\n  margin-top: 7px;\n}\n.hours_radio[data-v-3c340b3a] {\r\n  margin-bottom: 5px;\r\n  transform: scale(1.5);\r\n  cursor: pointer;\r\n  accent-color: #00a65a;\n}\n#consultation[data-v-3c340b3a] {\r\n  margin-top: 20px;\n}\n.timeDoctor[data-v-3c340b3a] {\r\n  font-size: 16px;\n}\n.page-header[data-v-3c340b3a] {\r\n  margin: 10px 0 0 0;\r\n  font-size: 22px;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

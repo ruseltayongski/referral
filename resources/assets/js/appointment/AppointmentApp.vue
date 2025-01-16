@@ -5,18 +5,6 @@
         <h3 class="page-header">Select Facility</h3>
         <div class="row">
           <div class="scroll-container">
-
-            <!-- <div v-if="appointment_slot" v-for="appointment in appointment_slot" :key="appointment.id">
-                <appointment-facility
-                  v-for="config in appointment_config"
-                  :key="`${appointment.id}-${config.id}`"
-                  :config_appoint="config"
-                  :appointment="appointment"
-                  :user="user"
-                  @facilitySelected="facilitySelected"
-                ></appointment-facility>
-            </div> -->
-
             <appointment-facility
               v-if="appointment_slot"
               v-for="appointment in appointment_slot"
@@ -40,19 +28,30 @@
           :facilitySelectedId="facilitySelectedId"
           :appointmentSlot="appointment_slot"
           @appointedTime="appointedTime"
+          @config_appointedTime="config_appointedTime"
+          @day-click-date="handleDayClickdate"
+          @manual-click-date="manualClickDate"
         ></appointment-calendar>
         <appointment-time
           :facilitySelectedId="facilitySelectedId"
           :appointedTimes="appointedTimes"
+          :configTimeSlot ="configTimeSlot"
+          :appointmentclickDate ="appointmentclickDate"
+          :manualDate ="manualDate"
+          :appointmentAssign ="appointmentAssign"
+          @data-changed-config="handleProceedAppointment"
         ></appointment-time>
       </div>
     </div>
   </div>
+  
 </template>
 <script>
 import AppointmentFacility from "./AppointmentFacility.vue";
 import AppointmentCalendar from "./AppointmentCalendar.vue";
 import AppointmentTime from "./AppointmentTime.vue";
+
+let baseUrlgetConfig = `${window.baseUrl}/doctor/getconfigappointment`;
 export default {
   name: "AppointmentApp",
   components: {
@@ -65,15 +64,40 @@ export default {
     return {
       facilitySelectedId: 0,
       appointedTimes: [],
+      configTimeSlot: [],
+      appointmentclickDate: null,
     };
   },
   mounted() {},
   methods: {
+    manualClickDate(date){
+      this.manualDate = date;
+      console.log("this.manualDate", this.manualDate);
+    },
+    handleDayClickdate(payload){
+        this.appointmentclickDate = payload;
+       
+    },
     facilitySelected(payload) {
       this.facilitySelectedId = payload;
     },
     appointedTime(payload) {
       this.appointedTimes = payload;
+    },
+    config_appointedTime(payload){
+      console.log("config_appointedTime::", payload);
+      this.configTimeSlot = payload;
+    },
+    async handleProceedAppointment(payload){
+    try {
+        const response = await axios.post(`${baseUrlgetConfig}`, payload);
+        console.log("get configappointment AppointmentApp", response.data);
+       this.appointmentAssign = response.data ;
+
+        this.$emit("disabled-Config", response.data);
+      } catch (error) {
+        console.error("Error sending appointment data:", error);
+      }
     },
   },
 };

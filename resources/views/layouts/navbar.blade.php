@@ -197,7 +197,7 @@ $multi_faci = Session::get('multiple_login');
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
                     <li><a href="{{ url('doctor/referred') }}"><i class="fa fa-ambulance"></i> Referred Patients</a></li>
                     <li><a href="{{ url('doctor/referred/track') }}"><i class="fa fa-line-chart"></i> Track Patient</a></li>
-                    <li><a href="{{ url('revised/referral') }}"><i class="fa fa-file-text"></i> E-Referral Form <small class="badge bg-red"> New</small></a></li>
+                    <!-- <li><a href="{{ url('revised/referral') }}"><i class="fa fa-file-text"></i> E-Referral Form <small class="badge bg-red"> New</small></a></li> -->
                 </ul>
             </li>
             @include('layouts.report_menu')
