@@ -1007,6 +1007,7 @@ class ReferralCtrl extends Controller
 
     public function accept(Request $req,$track_id)
     {
+        dd($req->all());
         $user = Session::get('auth');
         $track = Tracking::find($track_id);
         if($track->status=='accepted' || $track->status=='rejected' || ($track->status=='redirected' && $track->referred_to != $user->facility_id)) {

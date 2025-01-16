@@ -73,5 +73,9 @@
                 <span class="badge bg-red">{{ $issue_and_concern }}</span>
             </button>
         @endif
+        @if($row->telemedicine)
+            
+            <span class="badge2 red">Physical and Rehabilitation Medicine</span>
+        @endif
     </div>
 </div>

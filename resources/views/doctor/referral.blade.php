@@ -72,7 +72,7 @@ $user = Session::get('auth');
             margin: 0;
             color: white;
             padding: 5px 5px;
-            font-size: 7px;
+            font-size: 10px;
             font-family: Arial, Helvetica, sans-serif;
             text-align: center;
             line-height: normal;
@@ -83,7 +83,27 @@ $user = Session::get('auth');
         .badge1.red {
             background: #ff405f;
         }
+        /* department for label */
+        .badge2 {
+            position: absolute; /* Make it float within the parent */
+            right: 0; /* Align to the right */
+            color: white;
+            padding: 8.5px 10px; /* Adjust padding for better appearance */
+            font-size: 9px;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            text-transform: uppercase;
+            background: #ff405f;
+            border-radius: 3px; /* Optional rounded corners */
+            z-index: 1; /* Ensure it's on top of other elements */
+        }
 
+        .badge2.red {
+            background: #ff405f;
+        }
+        .badge2 .timeline-footer {
+            position: relative; 
+        }
         .top-right {
             position: absolute;
             top: 0;

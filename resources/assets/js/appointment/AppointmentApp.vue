@@ -38,8 +38,6 @@
           :configTimeSlot ="configTimeSlot"
           :appointmentclickDate ="appointmentclickDate"
           :manualDate ="manualDate"
-          :appointmentAssign ="appointmentAssign"
-          @data-changed-config="handleProceedAppointment"
         ></appointment-time>
       </div>
     </div>
@@ -87,17 +85,6 @@ export default {
     config_appointedTime(payload){
       console.log("config_appointedTime::", payload);
       this.configTimeSlot = payload;
-    },
-    async handleProceedAppointment(payload){
-    try {
-        const response = await axios.post(`${baseUrlgetConfig}`, payload);
-        console.log("get configappointment AppointmentApp", response.data);
-       this.appointmentAssign = response.data ;
-
-        this.$emit("disabled-Config", response.data);
-      } catch (error) {
-        console.error("Error sending appointment data:", error);
-      }
     },
   },
 };
