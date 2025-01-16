@@ -5,6 +5,7 @@ $facilities = \App\Facility::select('id','name')
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
+
 ?>
 
 <style>
@@ -272,6 +273,12 @@ $facilities = \App\Facility::select('id','name')
         border: 0;
         transition: all .2s ease;
     }
+    .unclickable {
+        pointer-events: none; /* Disables click actions */
+        background-color: #f0f0f0;
+        color: black;
+    }
+
     @media only screen and (max-width: 720px) {
         .file-upload {
             background-color: #ffffff;
@@ -511,8 +518,8 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
-                                    <b>TREATMENTS GIVE TIME</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
+                                    <b>TREATMENTS GIVE TIME</b><i> (required)</i><span class="text-red">*</span>
                                     <span class="pull-right"><i class="fa fa-plus"></i></span>    
                                 </button><br><br>
                                 </div>
@@ -527,8 +534,8 @@ $facilities = \App\Facility::select('id','name')
                                     </div><br>
                                 
                                     <div class="continer-referral">
-                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)</i> <br />
-                                    <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5">{{ $form['pregnant']->woman_major_findings }}</textarea>
+                                    <b>MAJOR FINDINGS: </b><i> (Clinical and BP,Temp,Lab)</i>
+                                    <textarea class="form-control woman_major_findings" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required>{{ $form['pregnant']->woman_major_findings }}</textarea>
                                     </div><br>
 
                                     <div class="container-referral" style="padding:5px">
@@ -547,32 +554,33 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>          
 
-                        <div class="row" style="margin: 5px;">
+                        <!-- <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
-                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_pregInfo" aria-expanded="false" aria-controls="collapse_illness_history_pregInfo">
+                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_illness_history" style="width: 100%">
+                              
+                                <div class="collapse" id="collapse_illness_history_pregInfo" style="width: 100%">
                                     <b>CASE SUMMARY:</b>
-                                    <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" >{{$form['pregnant']->case_summary}}</textarea><br><br>
+                                    <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required>{{$form['pregnant']->case_summary}}</textarea><br><br>
                                     <b>CHIEF COMPLAINTS:</b>
-                                    <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" >{{$form['pregnant']->reco_summary}}</textarea><br><br>
+                                    <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required>{{$form['pregnant']->reco_summary}}</textarea><br><br>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
-                                        <b>DIAGNOSIS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregInfo" aria-expanded="false" aria-controls="collapse_diagnosis_pregInfo">
+                                        <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse " id="collapse_diagnosis" style="width: 100%">
+                                <div class="collapse " id="collapse_diagnosis_pregInfo" style="width: 100%">
                                 <div class="row">
                                 <div class="col-md-12">
                                 <small class="text-success"><b>DIAGNOSIS: </b></small><span class="text-red">*</span>
@@ -597,15 +605,6 @@ $facilities = \App\Facility::select('id','name')
                                         @endforeach
                                     @endif  
                                 </div>
-                                </div>
-                            </div><br>
-
-                            <div class="row notes_diagnosis" style="padding-top: 10px;">
-                                <div class="col-md-12">
-                                <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
-                                    <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
-                                    <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosisPregnant()">Clear Notes Diagnosis</button>
-                                    <textarea class="form-control normal_notes_diagnosis" name="notes_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form['pregnant']->notes_diagnoses }}</textarea>
                                 </div>
                             </div><br>
 
@@ -1056,12 +1055,12 @@ $facilities = \App\Facility::select('id','name')
                         $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
                         ?>
 
-                        <div class="row" style="margin: 10px;" id="baby_show_pregnant">
+                        <div class="row" style="margin: 5px;" id="baby_show_pregnant">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
                                         <div class="web-view"><b>BABY DELIVERED</b> <i> (as applicable)</i></div>
-                                        <div class="mobile-view"><b>BABY DELIVERED</b><br> <i> (as applicable)</i></div>
+                                        <div class="mobile-view"><b>BABY DELIVERED</b><br> <i> (as applicable)</i></span></div>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -1079,7 +1078,7 @@ $facilities = \App\Facility::select('id','name')
                                     <b>BIRTH WEIGHT: </b>
                                     <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" value="{{$form['baby']->gestational_age}}"/>
                                 </div><br>
-
+                               
                                 <div class="container-referral" style="padding:5px">
                                     <b>MAIN REASON FOR REFERRAL</b>
                                     @if($form['baby']->baby_reason === "None")
@@ -1102,11 +1101,16 @@ $facilities = \App\Facility::select('id','name')
                                             <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
                                             <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
                                             <label><input type="radio" name="baby_reason" value="To accompany the mother" checked/> To accompany the mother </label>
+                                            @else
+                                            <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
+                                            <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                            <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
                                             @endif
                                 </div><br>
                         
                                 <b>MAJOR FINDINGS</b>
-                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5">{{$form['baby']->baby_major_findings}}</textarea><br><br>
+                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5" required>{{$form['baby']->baby_major_findings}}</textarea><br><br>
                                 
                                 <b>TREATMENTS GIVE TIME</b>
                                 <div class="container-referral" style="padding: 5px;">  
@@ -1122,7 +1126,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div><br>
                                  
                                 <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
-                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given">{{$form['baby']->baby_information_given}}</textarea><br><br>
+                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given" required>{{$form['baby']->baby_information_given}}</textarea><br><br>
                                 </div>
                                 </div>
                             </div>
@@ -1140,7 +1144,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
-                                    <b>MENARCHE</b> @ <input type="number" min="9" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <b>MENARCHE</b> @ <input type="number" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
                                     <b>MENOPAUSE:</b> &emsp;
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'Yes'); ?>>
                                     <label for="menopausal">Yes</label>
@@ -2705,12 +2709,12 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregInfo" aria-expanded="false" aria-controls="collapse_reason_referral_pregInfo">
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
+                                <div class="collapse" id="collapse_reason_referral_pregInfo" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
                                         <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%" required="">
@@ -2726,7 +2730,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div> 
                         <div class="form-fotter pull-right" style="margin: 10px;">
-                        <button type="submit" id="sbmitBtn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
+                        <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
                         <div class="clearfix"></div> 
                         </div>{{--/.form-group--}}
@@ -2750,34 +2754,45 @@ $facilities = \App\Facility::select('id','name')
     </div>
 </div>
 
-<!-- <div class="modal fade" id="icd-modal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span></button>
-                <h4 class="modal-title" style="font-size: 17pt;">Search ICD-10 by keyword</h4>
-            </div>
-            <div class="modal-body">
-                <div class="input-group input-group-lg">
-                    <input type="text" id="icd10_keyword" class="form-control">
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-info btn-flat" onclick="searchICD10()">Find</button>
-                    </span>
-                </div><br>
-                <div class="icd_body"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="othersDiagnosis()"> Other Diagnosis</button>
-                <button type="button" class="btn btn-success" onclick="getAllCheckBox()"><i class="fa fa-save"></i> Save selected check</button>
-            </div>
-        </div>
-    </div>
-</div> -->
-
-
 <script>
+
+     // Uncollapse the REASON FOR REFERRAL section
+     const referralCollapse = document.getElementById("collapse_reason_referral_pregInfo");
+    const referralButton = document.querySelector("[data-target='#collapse_reason_referral_pregInfo']");
+    if (referralCollapse && referralButton) {
+        referralCollapse.classList.add("show");
+        referralButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("Reason for Referral section or button not found.");
+    }
+
+    // Uncollapse the HISTORY OF PRESENT ILLNESS section
+    // const illnessCollapse = document.getElementById("collapse_illness_history_pregInfo");
+    // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_pregInfo']");
+    // if (illnessCollapse && illnessButton) {
+    //     illnessCollapse.classList.add("show");
+    //     illnessButton.setAttribute("aria-expanded", "true");
+    // } else {
+    //     console.warn("History of Present Illness section or button not found.");
+    // }
+
+    // Uncollapse the DIAGNOSIS section
+    const diagnosisCollapse = document.getElementById("collapse_diagnosis_pregInfo");
+    const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_pregInfo']");
+    if (diagnosisCollapse && diagnosisButton) {
+        diagnosisCollapse.classList.add("show");
+        diagnosisButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("Diagnosis section or button not found.");
+    }
+
+     // Uncollapse the TREATMENTS GIVE TIME section
+     const treatmentCollapse = document.getElementById("patient_treatment_give_time");
+        const treatmentButton = document.querySelector("[data-target='#patient_treatment_give_time']");
+    if (treatmentCollapse && treatmentButton) {
+        treatmentCollapse.classList.add("show");
+        treatmentButton.setAttribute("aria-expanded", "true");
+    }
 
     // $('.select_facility').select2();
     //    $('#pedia_show').hide();
@@ -3575,15 +3590,6 @@ $facilities = \App\Facility::select('id','name')
     });
 
     /**************************************************************************/
-
-    // $("#sbmitBtn").on('click',function(e){
-    //     if(!($("#icd").val()) && !($("#other_diag").val())){
-    //         Lobibox.alert("error", {
-    //             msg: "Select ICD-10 diagnosis!"
-    //         });
-    //         return false;
-    //     }
-    // });
 
     $('.reason_referral').on('change', function() {
         var value = $(this).val();

@@ -38,6 +38,13 @@
     }
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
     #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+
+    .unclickable {
+        pointer-events: none; /* Disables click actions */
+        background-color: #f0f0f0;
+        color: black;
+    }
+
      
 </style>
 
@@ -167,14 +174,15 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
-                                    <b>TREATMENTS GIVE TIME</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
+                                    <b>TREATMENTS GIVE TIME</b><i> (required)</i><span class="text-red">*</span>
                                     <span class="pull-right"><i class="fa fa-plus"></i></span>    
-                                </button><br><br>
+                                    </button><br><br>
                                 </div>
+                                
                                
                                 <div class="collapse" id="patient_treatment_give_time" style="width: 100%;">
-                                <b>MAIN REASON FOR REFERRAL: </b>
+                                    <b>MAIN REASON FOR REFERRAL: </b>
                                     <div class="container-referral">
                                         <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
                                         <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
@@ -183,7 +191,7 @@
                                     </div><br>
                                 
                                     <div class="continer-referral">
-                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)</i> <br />
+                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)<span class="text-red">*</span></i> <br />
                                     <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </div><br>
 
@@ -196,17 +204,17 @@
                                         <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
                                     </div><br>
 
-                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b><span class="text-red">*</span>
                                         <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea><br><br>
                                 </div>
                             </div>
                         </div>    
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_pregnant" aria-expanded="false" aria-controls="collapse_illness_history_pregnant">
-                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (Required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -217,13 +225,13 @@
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregnant" aria-expanded="false" aria-controls="collapse_diagnosis_pregnant">
-                                        <b>DIAGNOSIS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregnant" aria-expanded="false" aria-controls="collapse_diagnosis_pregnant">
+                                        <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -646,7 +654,7 @@
                             </div>
                         </div>
 
-                        <div class="row" id="baby_show_pregnant">
+                        <div class="row" id="baby_show_pregnant" style="padding:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
@@ -694,8 +702,7 @@
                                 </div><br>
 
                                 <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
-                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea><br><br>
-                                                            
+                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea><br><br>                                   
                                 </div> 
                             </div>
                         </div>
@@ -2231,13 +2238,13 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
+                                        <b>REASON FOR REFERRAL</b> <i>(Required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                    <i>Select reason for referral:</i><span class="text-red">*</span>
                                     <div class="container-referral">
                                         <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                             <option value="">Select reason for referral</option>
@@ -2247,7 +2254,7 @@
                                             @endforeach
                                         </select><br><br>
                                         <div id="pregnant_other_reason_referral_div" style="display:none;">
-                                            <span>Other Reason for Referral:</span> <br/>
+                                            <span>Other Reason for Referral:</span><span class="text-red">*</span><br/>
                                             <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7"></textarea>
                                         </div>
                                     </div>
@@ -2309,6 +2316,39 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Uncollapse the REASON FOR REFERRAL section
+        const referralCollapse = document.getElementById("collapse_reason_referral_pregnant");
+        const referralButton = document.querySelector("[data-target='#collapse_reason_referral_pregnant']");
+        if (referralCollapse && referralButton) {
+            referralCollapse.classList.add("show");
+            referralButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the HISTORY OF PRESENT ILLNESS section
+        // const illnessCollapse = document.getElementById("collapse_illness_history_pregnant");
+        // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_pregnant']");
+        // if (illnessCollapse && illnessButton) {
+        //     illnessCollapse.classList.add("show");
+        //     illnessButton.setAttribute("aria-expanded", "true");
+        // }
+
+        // Uncollapse the DIAGNOSIS section
+        const diagnosisCollapse = document.getElementById("collapse_diagnosis_pregnant");
+        const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_pregnant']");
+        if (diagnosisCollapse && diagnosisButton) {
+            diagnosisCollapse.classList.add("show");
+            diagnosisButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the TREATMENTS GIVE TIME section
+        const treatmentCollapse = document.getElementById("patient_treatment_give_time");
+        const treatmentButton = document.querySelector("[data-target='#patient_treatment_give_time']");
+        if (treatmentCollapse && treatmentButton) {
+            treatmentCollapse.classList.add("show");
+            treatmentButton.setAttribute("aria-expanded", "true");
+        }
+    });
     // $("#revisedpregnantFormModal").modal("show");
 
     //    $('#pedia_show').hide();
@@ -3171,123 +3211,20 @@
     });
 
    
+    $(document).ready(function() {
         $('.reason_referral').on('change', function() {
             var value = $(this).val();
             
             if (value == -1) {
-                // Show the "Other Reason for Referral" textarea if "-1" is selected
-                console.log("VALUE: ", value);
+                // Show the "Other Reason for Referral" textarea and set it as required
                 $('#pregnant_other_reason_referral_div').show();
+                $('textarea[name="other_reason_referral"]').prop('required', true);
             } else {
-                // Hide the "Other Reason for Referral" textarea if another option is selected
-                console.log("VALUE: ", value);  
+                // Hide the "Other Reason for Referral" textarea and remove the required attribute
                 $('#pregnant_other_reason_referral_div').hide();
+                $('textarea[name="other_reason_referral"]').prop('required', false);
             }
         });
-
-
-    // var pregnant_pos_ = 2;
-    // var pregnant_count_ = 0 ;
-    
-    // function readURLPregnantRevised(input, pos) {
-    //     var word_ = '{{ asset('resources/img/document_icon.png') }}';
-    //     var pdf_ = '{{ asset('resources/img/pdf__icon.png') }}';
-    //     var excel_ = '{{ asset('resources/img/sheet_icon.png') }}';
-    //     if (input.files) {
-    //         var tmp_pos = pos;
-    //         for(var i = 0; i < input.files.length; i++) {
-    //             var file = input.files[i];
-    //             if(file && file !== null) {
-    //                 var reader = new FileReader();
-    //                 var type = file.type;
-    //                 if(type === 'application/pdf_') {
-    //                     $('#pregnant_file-upload-image_'+pos).attr('src',pdf_);
-    //                     pos+=1;
-    //                 } else if(type === 'application/vnd.openxmlformats-officedocument.word_processingml.document') {
-    //                     $('#pregnant_file-upload-image_'+pos).attr('src',word_);
-    //                     pos+=1;
-    //                 } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-    //                     $('#pregnant_file-upload-image_'+pos).attr('src',excel_);
-    //                     pos+=1;
-    //                 } else {
-    //                     reader.onloadend = function(e) {
-    //                         $('#pregnant_file-upload-image_'+pos).attr('src',e.target.result);
-    //                         pos+=1;
-    //                     };
-    //                 }
-    //                 $('#pregnant_image-upload-wrap_'+tmp_pos).hide();
-    //                 $('#pregnant_file-upload-content_'+tmp_pos).show();
-    //                 $('#pregnant_image-title_'+tmp_pos++).html(file.name);
-    //                 reader.readAsDataURL(file);
-    //                 pregnant_count_+=1;
-    //             }
-    //             addFilePregnantRevised();
-    //         }
-    //     }
-    //     $('#preg_remove_files_').show();
-    // }
-    // function addFilePregnantRevised() {
-    //     var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
-
-    //     if((pregnant_count_ % 4) == 0) {
-    //         $('.pregnant_file_attachment_').append(
-    //             '<div class="clearfix"></div>'
-    //         );
-    //     }
-    //     $('.pregnant_file_attachment_').append(
-    //         '<div class="col-md-3" id="pregnant_upload_'+pregnant_pos_+'">\n' +
-    //         '   <div class="file-upload">\n' +
-    //         '       <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap_'+pregnant_pos_+'">\n' +
-    //         '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnantRevised(this, '+pregnant_pos_+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.word_processingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf_"/>\n' +
-    //         '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
-    //         '       </div>\n' +
-    //         '       <div class="file-upload-content" id="pregnant_file-upload-content_'+pregnant_pos_+'">\n' +
-    //         '           <img class="file-upload-image" id="pregnant_file-upload-image_'+pregnant_pos_+'"/>\n' +
-    //         '           <div class="image-title-wrap">\n' +
-    //         '               <b><small class="image-title" id="pregnant_image-title_'+pregnant_pos_+'" style="display:block; word_-wrap: break-word_;">Uploaded File</small></b>\n' +
-    //         '               <button type="button" id="pregnant_remove_upload'+pregnant_pos_+'" onclick="removeUploadPregnantRevised('+pregnant_pos_+')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
-    //         '           </div>\n' +
-    //         '       </div>\n' +
-    //         '   </div>\n' +
-    //         '</div>'
-    //     );
-    //     pregnant_pos_+=1;
-    // }
-
-    // function removeFilePregnantRevised() {
-    //     $('.pregnant_file_attachment_').html("");
-    //     pregnant_count_ = 0;
-    //     pregnant_pos_ = 1;
-    //     $('#preg_remove_files_').hide();
-    //     addFilePregnantRevised();
-    // }
-
-    // function removeUploadPregnantRevised(uploadCount){
-    //     $('#pregnant_upload_' + uploadCount).remove();
-
-    //     upload_count -= 1;
-
-    //     if(pregnant_pos_ > uploadCount){
-    //         pregnant_pos_ -= 1;
-    //     }
-    //     if(uploadCount === 0){
-    //         $('#remove_files_btn');
-    //     }
-
-    //     console.log("upload_pos:", pregnant_pos_);
-
-    // }
-
-    // $(document).ready(function() {
-    //     for (var i = 0; i < pregnant_count_; i++) {
-    //         $('#pregnant_image-upload-wrap_' + i).bind('dragover', function () {
-    //             $('#pregnant_image-upload-wrap_' + i).addClass('image-dropping');
-    //         });
-    //         $('#pregnant_image-upload-wrap_' + i).bind('dragleave', function () {
-    //             $('#pregnant_image-upload-wrap_' + i).removeClass('image-dropping');
-    //         });
-    //     }
-    //     $('#preg_remove_files_').hide();
-    // });
+    });
 
 </script>

@@ -1,3 +1,4 @@
+
 <?php
 $user = Session::get('auth');
 $reason_for_referral = \App\ReasonForReferral::get();
@@ -5,6 +6,7 @@ $facilities = \App\Facility::select('id','name')
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
+
 ?>
 
 <style>
@@ -297,6 +299,11 @@ $facilities = \App\Facility::select('id','name')
     .remove-icon-btn i {
         pointer-events: none; /* To ensure the button handles the click, not the icon */
     }
+    .unclickable {
+        pointer-events: none; /* Disables click actions */
+        background-color: #f0f0f0;
+        color: black;
+    }
     
 </style>
 
@@ -474,12 +481,12 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
-                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normInfo" aria-expanded="false" aria-controls="collapse_illness_history_normInfo">
+                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_illness_history" style="width: 100%">
+                                <div class="collapse" id="collapse_illness_history_normInfo" style="width: 100%">
                                     <b>CASE SUMMARY:</b>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required>{{$form->case_summary}}</textarea><br><br>
                                     <b>CHIEF COMPLAINTS:</b>
@@ -491,12 +498,12 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
-                                        <b>DIAGNOSIS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normInfo" aria-expanded="false" aria-controls="collapse_diagnosis_normInfo">
+                                        <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse " id="collapse_diagnosis" style="width: 100%">
+                                <div class="collapse " id="collapse_diagnosis_normInfo" style="width: 100%">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
@@ -794,6 +801,225 @@ $facilities = \App\Facility::select('id','name')
 
                                     <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
                                     <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
+                                </div>
+                            </div>
+                        </div>
+
+                        <?php
+
+                            $menarche = $obstetric_and_gynecologic_history->menarche;
+                            $gynecological_data = [
+                                'menarche' => (int) $menarche,
+                                'menopausal_age' => $obstetric_and_gynecologic_history->menopausal_age,
+                                'mens_irreg_xmos' => $obstetric_and_gynecologic_history->mens_irreg_xmos,
+                                'menstrual_cycle_duration' => $obstetric_and_gynecologic_history->menstrual_cycle_duration,
+                                'menstrual_cycle_padsperday' => $obstetric_and_gynecologic_history->menstrual_cycle_padsperday,
+                                'menstrual_cycle_medication' => $obstetric_and_gynecologic_history->menstrual_cycle_medication,
+                                'contraceptive_others' => $obstetric_and_gynecologic_history->contraceptive_others,
+                                'parity_g' => $obstetric_and_gynecologic_history->parity_g,
+                                'parity_p' => $obstetric_and_gynecologic_history->parity_p,
+                                'parity_ft' => $obstetric_and_gynecologic_history->parity_ft,
+                                'parity_pt' => $obstetric_and_gynecologic_history->parity_pt,
+                                'parity_a' => $obstetric_and_gynecologic_history->parity_a,
+                                'parity_l' => $obstetric_and_gynecologic_history->parity_l,
+                                'parity_lnmp' => $obstetric_and_gynecologic_history->parity_lnmp,
+                                'parity_edc' => $obstetric_and_gynecologic_history->parity_edc,
+                                'aog_lnmp' => $obstetric_and_gynecologic_history->aog_lnmp,
+                                'aog_eutz' => $obstetric_and_gynecologic_history->aog_eutz,
+                            ];
+
+                            $menarche_value = htmlspecialchars($gynecological_data['menarche']);
+                            $menopausal_age_value = htmlspecialchars($gynecological_data['menopausal_age']);
+                            $mens_irreg_xmos_value = htmlspecialchars($gynecological_data['mens_irreg_xmos']);
+                            $menstrual_cycle_duration_value = htmlspecialchars($gynecological_data['menstrual_cycle_duration']);
+                            $menstrual_cycle_padsperday_value = htmlspecialchars($gynecological_data['menstrual_cycle_padsperday']);
+                            $menstrual_cycle_medication_value = htmlspecialchars($gynecological_data['menstrual_cycle_medication']);
+                            $contraceptive_others_value = htmlspecialchars($gynecological_data['contraceptive_others']);
+                            $parity_g_value = htmlspecialchars($gynecological_data['parity_g']);
+                            $parity_p_value = htmlspecialchars($gynecological_data['parity_p']);
+                            $parity_pt_value = htmlspecialchars($gynecological_data['parity_pt']);
+                            $parity_a_value = htmlspecialchars($gynecological_data['parity_a']);
+                            $parity_l_value = htmlspecialchars($gynecological_data['parity_l']);
+                            $parity_lnmp_value = htmlspecialchars($gynecological_data['parity_lnmp']);
+                            $parity_edc_value = htmlspecialchars($gynecological_data['parity_edc']);
+                            $aog_lnmp_value = htmlspecialchars($gynecological_data['aog_lnmp']);
+                            $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
+                            ?>
+
+                        {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
+                        <div class="row" style="margin: 5px;" id="menarche_show">
+                            <div class="col-lg-12">
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
+                                        <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view">
+                                            <b>OBSTETRIC AND GYNECOLOGIC<br> HISTORY</b><br> <i> (as applicable)</i></div>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
+                                <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
+                                    <b>MENARCHE</b> @ <input type="number" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <b>MENOPAUSE:</b> &emsp;
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'Yes'); ?>>
+                                    <label for="menopausal">Yes</label>
+                                    <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'No'); ?>>
+                                    <label for="non_menopausal">No</label>
+                                    <span id="menopausal_age">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9" value="<?php echo $menopausal_age_value; ?>"></span><br><br>
+
+                                    <b>MENSTRUAL CYCLE</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio" value="regular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'regular'); ?>>
+                                                <label for="mens_reg_radio">Regular</label>
+                                                <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_cycle_irreg" value="irregular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'irregular'); ?>>
+                                                <label for="mens_cycle_irreg">Irregular</label>
+                                                <span id="mens_irreg">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0" value="<?php echo $mens_irreg_xmos_value; ?>"> mos</span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <b>Dysmenorrhea:</b> &emsp;
+                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'Yes'); ?>>
+                                                <label for="dysmenorrhea_yes">Yes</label>
+                                                <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_no" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'No'); ?>>
+                                                <label for="dysmenorrhea_no">No</label><br>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <b>Duration:</b> <input type="number" style="width:15%;" min="0" name="mens_duration" value="<?php echo $menstrual_cycle_duration_value; ?>"> days &emsp;
+                                                <b>Pads/day:</b> <input type="number" style="width:15%;" min="0" name="mens_padsperday" value="<?php echo $menstrual_cycle_padsperday_value; ?>">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <b>Medication:</b> <input type="text" style="width:70%;" name="mens_medication" value="<?php echo $menstrual_cycle_medication_value; ?>">
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <b>CONTRACEPTIVE HISTORY</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_none" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_none_cbox" value="none" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'none'); ?>> None
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_pills" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_pills_cbox" value="Pills" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Pills'); ?>> Pills
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="IUD" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'IUD'); ?>> IUD
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Rhythm" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Rhythm'); ?>> Rhythm
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Condom'); ?>> Condom
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <input class="form-check-input" id="contraceptive_others" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_other_cbox" value="Other(s)" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Other'); ?>> Other(s)
+                                                <textarea class="form-control" id="contraceptive_others_text" name="contraceptive_others" style="resize: none;width: 50%;" rows="2"><?php echo htmlspecialchars($contraceptive_others_value); ?></textarea><br>
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <b>PARITY</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <b>G</b> <input type="number" min="0" style="width:8%;" name="parity_g" value="<?php echo $parity_g_value; ?>">
+                                                <b>P</b> <input type="number" min="0" style="width:8%;" name="parity_p" value="<?php echo $parity_p_value; ?>">&emsp;
+                                                <b>(FT</b> <input type="text" style="width:8%;" name="parity_ft" value="{{$data->parity_ft}}">
+                                                <b>PT</b> <input type="text" style="width:8%;" name="parity_pt" value="<?php echo $parity_pt_value; ?>">
+                                                <b>A</b> <input type="text" style="width:8%;" name="parity_a" value="<?php echo $parity_a_value; ?>">
+                                                <b>L</b> <input type="text" style="width:8%;" name="parity_l" value="<?php echo $parity_l_value; ?>"><b>)</b>
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <div class="container-referral">
+                                        <b>LNMP</b>
+                                        <input type="text" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
+                                        <b>EDC</b><i>(if pregnant)</i>
+                                        <input type="text" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
+                                    </div><br>
+
+                                    <b>AOG</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <b>by LNMP</b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <b>by EUTZ</b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <b>PRENATAL HISTORY</b><br>
+                                    <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
+                                    <div class="table-responsive" style="overflow-x: auto;">
+                                        <table class="table table-bordered" id="prenatal_table">
+                                            <thead>
+                                                <tr style="font-size: 10pt;">
+                                                    <th class="text-center">Pregnancy Order</th>
+                                                    <th class="text-center">Year of Birth</th>
+                                                    <th class="text-center">Gestation Completed</th>
+                                                    <th class="text-center">Pregnancy Outcome</th>
+                                                    <th class="text-center">Place of Birth</th>
+                                                    <th class="text-center">Biological Sex</th>
+                                                    <th class="text-center">Birth Weight</th>
+                                                    <th class="text-center">Present Status</th>
+                                                    <th class="text-center">Complication(s)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach($pregnancy as $preg)
+                                                <tr style="font-size: 10pt;">
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_order[]" value="{{ $preg['pregnancy_order'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control select" name="pregnancy_history_year[]">
+                                                            <option value="">Choose...</option>
+                                                            @foreach(range(date('Y'), 1950) as $year)
+                                                            <option value="{{ $year }}" {{ $year == $preg['pregnancy_year'] ? 'selected' : '' }}>{{ $year }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{ $preg['pregnancy_outcome'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{ $preg['pregnancy_place_of_birth'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <select class="select form-control" name="prenatal_history_sex[]">
+                                                            <option value="">Choose...</option>
+                                                            <option value="M" {{ $preg['pregnancy_sex'] == 'M' ? 'selected' : '' }}>Male</option>
+                                                            <option value="F" {{ $preg['pregnancy_sex'] == 'F' ? 'selected' : '' }}>Female</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $preg['pregnancy_present_status'] }}">
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $preg['pregnancy_complication'] }}">
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                        <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
+                                            <i class="fa fa-plus"> Add Row</i>
+                                        </button><br><br>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -2182,12 +2408,12 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normInfo" aria-expanded="false" aria-controls="collapse_reason_referral_normInfo">
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
+                                <div class="collapse" id="collapse_reason_referral_normInfo" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
                                         <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%">
@@ -2203,7 +2429,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
                         <div class="form-fotter pull-right" style="margin: 10px;">
-                        <button type="submit" id="sbmitBtnNormalRevised" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
+                        <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                         </div>
                         <div class="clearfix"></div> 
                         </div>{{--/.form-group--}}
@@ -2256,6 +2482,38 @@ $facilities = \App\Facility::select('id','name')
 
 
 <script>
+
+    // Uncollapse the REASON FOR REFERRAL section
+    const referralCollapse = document.getElementById("collapse_reason_referral_normInfo");
+    const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normInfo']");
+    if (referralCollapse && referralButton) {
+        referralCollapse.classList.add("show");
+        referralButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("Reason for Referral section or button not found.");
+    }
+
+    // Uncollapse the HISTORY OF PRESENT ILLNESS section
+    const illnessCollapse = document.getElementById("collapse_illness_history_normInfo");
+    const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normInfo']");
+    if (illnessCollapse && illnessButton) {
+        illnessCollapse.classList.add("show");
+        illnessButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("History of Present Illness section or button not found.");
+    }
+
+    // Uncollapse the DIAGNOSIS section
+    const diagnosisCollapse = document.getElementById("collapse_diagnosis_normInfo");
+    const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normInfo']");
+    if (diagnosisCollapse && diagnosisButton) {
+        diagnosisCollapse.classList.add("show");
+        diagnosisButton.setAttribute("aria-expanded", "true");
+    } else {
+        console.warn("Diagnosis section or button not found.");
+    }
+
+
     // $('.select_facility').select2();
     //    $('#pedia_show').hide();
     //    $('#menarche_show').hide();
@@ -3038,14 +3296,14 @@ $facilities = \App\Facility::select('id','name')
 
     /**************************************************************************/
 
-    $("#sbmitBtnNormalRevised").on('click',function(e){
-        if(!($("#icd").val()) && !($("#other_diag").val())){
-            Lobibox.alert("error", {
-                msg: "Select ICD-10 diagnosis!"
-            });
-            return false;
-        }
-    });
+    // $("#sbmitBtnNormalRevised").on('click',function(e){
+    //     if(!($("#icd").val()) && !($("#other_diag").val())){
+    //         Lobibox.alert("error", {
+    //             msg: "Select ICD-10 diagnosis!"
+    //         });
+    //         return false;
+    //     }
+    // });
 
     // $('.reason_referral').on('change', function() {
     //     var value = $(this).val();

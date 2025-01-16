@@ -187,6 +187,12 @@
             visibility: visible;
         }
     } 
+
+    .unclickable {
+        pointer-events: none; /* Disables click actions */
+        background-color: #f0f0f0;
+        color: black;
+    }
 </style>
     <div class="modal fade" role="dialog" id="revisednormalFormModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -313,15 +319,15 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
-                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normal" aria-expanded="false" aria-controls="collapse_illness_history_normal">
+                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_illness_history" style="width: 100%">
-                                    <b>CASE SUMMARY:</b>
+                                <div class="collapse" id="collapse_illness_history_normal" style="width: 100%">
+                                    <b>CASE SUMMARY:</b><span class="text-red">*</span>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
-                                    <b>CHIEF COMPLAINTS:</b>
+                                    <b>CHIEF COMPLAINTS:</b><span class="text-red">*</span>
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
                                 </div>
                             </div>
@@ -330,13 +336,15 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
-                                        <b>DIAGNOSIS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normal" aria-expanded="false" aria-controls="collapse_diagnosis_normal">
+                                        <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse " id="collapse_diagnosis" style="width: 100%">
+                                <div class="collapse " id="collapse_diagnosis_normal" style="width: 100%">
                                    <br>
+                                        <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                            <br><br>
                                         <a data-toggle="modal" data-target="#icd-modal_revised" type="button" class="btn btn-sm btn-success" onclick="searchICD10Revised()">
                                             <i class="fa fa-medkit"></i> Add ICD-10
                                         </a>
@@ -742,7 +750,7 @@
                       
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
-                        <div class="row" id="menarche_show" style="display:none;">
+                        <div class="row" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
@@ -752,7 +760,7 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
-                                    <b>MENARCHE </b> @ <input type="number" min="9" style="width: 10%;" name="menarche"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <b>MENARCHE </b> @ <input type="number" style="width: 10%;" name="menarche"> years old &emsp;&emsp;&emsp;&emsp;
                                     <b>MENOPAUSE: </b>&emsp;
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes">
                                     <label for="menopausal">Yes</label>
@@ -929,6 +937,7 @@
                                                 <label for="smoke_quit">Quit</label>
                                                 <span id="smoking_quit_year"> since
                                                     <select class="form-control select" name="smoking_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -995,6 +1004,7 @@
                                                 <label for="drugs_quit_radio">Quit</label>
                                                 <span id="drugs_quit_year"> since
                                                     <select class="form-control select" name="drugs_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -2268,13 +2278,13 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normal" aria-expanded="false" aria-controls="collapse_reason_referral_normal">
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text=red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                <div class="collapse" id="collapse_reason_referral_normal" style="width: 100%;">
+                                    <i>Select reason for referral:</i><span class="text-red">*</span>
                                     <div class="container-referral">
                                         <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                             <option value="">Select reason for referral</option>
@@ -2284,7 +2294,7 @@
                                             @endforeach
                                         </select><br><br>
                                         <div id="other_reason_referral_div" style="display:none;">
-                                            <span>Other Reason for Referral:</span> <br/>
+                                            <span>Other Reason for Referral:</span><span class="text-red">*</span><br/>
                                             <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7"></textarea>
                                         </div>
                                     </div>
@@ -2348,6 +2358,31 @@
 
 <script>
 
+    document.addEventListener("DOMContentLoaded", function () {
+         // Uncollapse the REASON FOR REFERRAL section
+         const referralCollapse = document.getElementById("collapse_reason_referral_normal");
+         const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normal']");
+        if (referralCollapse && referralButton) {
+            referralCollapse.classList.add("show");
+            referralButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the HISTORY OF PRESENT ILLNESS section
+        const illnessCollapse = document.getElementById("collapse_illness_history_normal");
+        const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normal']");
+        if (illnessCollapse && illnessButton) {
+            illnessCollapse.classList.add("show");
+            illnessButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the DIAGNOSIS section
+        const diagnosisCollapse = document.getElementById("collapse_diagnosis_normal");
+        const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normal']");
+        if (diagnosisCollapse && diagnosisButton) {
+            diagnosisCollapse.classList.add("show");
+            diagnosisButton.setAttribute("aria-expanded", "true");
+        }
+    });
 
     // $("#revisednormalFormModal").modal("show");
 
@@ -3210,19 +3245,21 @@
 
     /**************************************************************************/
    
+    $(document).ready(function() {
         $('.reason_referral').on('change', function() {
             var value = $(this).val();
             
             if (value == -1) {
-                // Show the "Other Reason for Referral" textarea if "-1" is selected
-                console.log("VALUE: ", value);
+                // Show the "Other Reason for Referral" textarea and set it as required
                 $('#other_reason_referral_div').show();
+                $('textarea[name="other_reason_referral"]').prop('required', true);
             } else {
-                // Hide the "Other Reason for Referral" textarea if another option is selected
-                console.log("VALUE: ", value);  
+                // Hide the "Other Reason for Referral" textarea and remove the required attribute
                 $('#other_reason_referral_div').hide();
+                $('textarea[name="other_reason_referral"]').prop('required', false);
             }
         });
+    });
     
     
 

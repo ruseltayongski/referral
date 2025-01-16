@@ -201,6 +201,7 @@ $('body').on('click','.edit_form_btn',function(e) {
         form_id = $(this).data('id');
         type = $(this).data('type');
         status = $(this).data('referral_status');
+      
 
         var form_url = "{{ url('doctor/referral/edit_info') }}/"+form_id+"/"+type+"/"+status;
         $(".edit_referral_body").html(loading);
@@ -224,7 +225,7 @@ $('body').on('click','.edit_form_revised_btn',function(e) {
         form_id = $(this).data('id');
         type = $(this).data('type');
         status = $(this).data('referral_status');
-
+        
         var form_url = "{{ url('doctor/referral/edit_info/revised') }}/"+form_id+"/"+type+"/"+status;
         $(".edit_referral_body").html(loading);
         $.ajax({

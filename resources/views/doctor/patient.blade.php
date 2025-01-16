@@ -480,8 +480,35 @@ $counter = 0;
                                                 Walk-In
                                             </a>
                                         
+                                    @elseif ($user->facility_id == 63 && $row->sex=='Male')
+                                    <a href="#nonPregnantChooseVersionModal" 
+                                        data-patient_id="{{ $row->id }}" 
+                                        data-backdrop="static" 
+                                        data-toggle="modal" 
+                                        data-type="normal" 
+                                        style="width:100%;margin-bottom:5px;" 
+                                        onclick="handleRefer()" 
+                                        class="btn btn-primary btn-xs profile_info patient-emergency hidden">
+                                        <i class="fa fa-ambulance"></i>
+                                        Refer
+                                    </a>
+                                    <a href="#normalFormModal" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" onclick="handleTelemedicine()" style="width:100%;margin-bottom:5px;" class="btn btn-success btn-xs profile_info patient-consultation hidden">
+                                        <i class="fa fa-stethoscope"></i>
+                                        Consultation
+                                    </a><br>
+                                    <a href="#" id="walkinNormal{{ $counter }}" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" onclick="promptWalkinNormal(<?php echo $counter++ ?>)" style="width:100%;" class="btn btn-warning btn-xs profile_info patient-emergency hidden">
+                                        <i class="fa fa-stethoscope"></i>
+                                        Walk-In
+                                    </a>
                                     @else
-                                    <a href="#normalFormModal" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" style="width:100%;margin-bottom:5px;" onclick="handleRefer()" class="btn btn-primary btn-xs profile_info patient-emergency hidden">
+                                    <a href="#normalFormModal" 
+                                        data-patient_id="{{ $row->id }}" 
+                                        data-backdrop="static" 
+                                        data-toggle="modal" 
+                                        data-type="normal" 
+                                        style="width:100%;margin-bottom:5px;" 
+                                        onclick="handleRefer()" 
+                                        class="btn btn-primary btn-xs profile_info patient-emergency hidden">
                                         <i class="fa fa-ambulance"></i>
                                         Refer
                                     </a>
@@ -634,15 +661,10 @@ $counter = 0;
                         $('#pregnantModal').modal('hide');
                         $('#pregnantchooseVersionModal').modal('show');
                         selectFormTitle("BEmONC/ CEmONC ");
-                        $('#menarche_show').show();
-                        $('#pedia_show').show();
-                    
                     } else if (type == 'normal') {
                         $('#pregnantModal').modal('hide');
                         $('#nonPregnantChooseVersionModal').modal('show');
                         selectFormTitle("Clinical");
-                        $('#menarche_show').hide();
-                        $('#pedia_show').hide();
                         $('#baby_show').hide();
                     }
                 } else {
@@ -818,10 +840,18 @@ $counter = 0;
                 $('.patient_sex').val(sex);
                 if (age > 18) {
                     $('#pedia_show_normal').css('display', 'none');
-                    console.log("hidden");
+                    console.log("hidden pediatric");
                 } else {
                     $('#pedia_show_normal').css('display', 'block');
-                    console.log("show");
+                    console.log("show pediatric");
+                }
+                if (age > 9 && sex === 'Female'){
+                    $('#menarche_show').css('display', 'block');
+                    $('#menarche').attr('min', '9');
+                    console.log("show obstetric");
+                } else {
+                    $('#menarche_show').css('display', 'none');
+                    console.log("hidden obstetric");
                 }
                 if (data.ageType === 'y') {
                     if (age === 1)
