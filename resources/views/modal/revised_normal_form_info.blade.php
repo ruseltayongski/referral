@@ -153,6 +153,10 @@ $facilities = \App\Facility::select('id','name')
         display: none;
         visibility: hidden;
     }
+    #prenatal_table {
+        display: block;
+        white-space: nowrap;
+    }
 
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
     #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
@@ -384,6 +388,7 @@ $facilities = \App\Facility::select('id','name')
                                     @endif
                                 @endif
                                 </span>
+                                
                             </div>
                             <div class="col-md-4">
                                     <small ><b>SEX: </b></small><br>&nbsp;
@@ -847,6 +852,8 @@ $facilities = \App\Facility::select('id','name')
                             ?>
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
+                      
+                        @if ($patient_age >= 9 && $form->patient_sex === "Female")
                         <div class="row" style="margin: 5px;" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -1023,6 +1030,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
+                        @endif
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">

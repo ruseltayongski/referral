@@ -417,6 +417,72 @@
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
 
+    @if ($patient_age >= 9 && $form->patient_sex === "Female")
+    <tr class="bg-gray">
+                <td colspan="6">Obstetric and Gynecologic History </td>
+        </tr>
+        <tr>
+            <td colspan="6">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="6">Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="6">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="6">Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="6">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="6">Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>
+        </tr>
+        <tr>
+            <td colspan="6">Contraceptives:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$contraceptives_arr)}}</span></td>
+            </tr>
+        <tr>
+                <td colspan="6"><i>Parity</i></td>
+        </tr>
+        <tr>
+            <td colspan="6">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td> 
+        </tr>
+        <tr>
+            <td>P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="6">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td> 
+        </tr>
+        <tr>
+            <td>PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="6">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td> 
+        </tr>
+        <tr>
+            <td>L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="6">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="6">EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="6"><i>AOG</i></td>
+        </tr>
+        <tr>
+            <td colspan="6">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
+        </tr>
+        <tr>
+            <td>EUTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
+        </tr>
+        <tr>
+            <td colspan="6">Prenatal History:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->prenatal_history}}</span></td> 
+        </tr>
+    @endif
+
     <tr class="bg-gray">
         <td colspan="6">Review of Systems </td>
     </tr>
@@ -540,6 +606,50 @@
         <td colspan="6">GSC Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
     </tr>
 </table>
+<hr/>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr style="font-size: 10pt;">
+                        <th class="text-center" style="width:50%;">Pregnancy Order</th>
+                        <th class="text-center" style="width:20%;">Year of Birth</th>
+                        <th class="text-center">Gestation Completed</th>
+                        <th class="text-center">Pregnancy Outcome</th>
+                        <th class="text-center">Place of Birth</th>
+                        <th class="text-center">Biological Sex</th>
+                        <th class="text-center" style="width:50%;">Birth Weight</th>
+                        <th class="text-center">Present Status</th>
+                        <th class="text-center">Complication(s)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if(isset($pregnancy) && count($pregnancy) > 0)
+                        @foreach($pregnancy as $record)
+                            <tr>
+                                <td>{{ $record['pregnancy_order'] }}</td>
+                                <td>{{ $record['pregnancy_year'] }}</td>
+                                <td>{{ $record['pregnancy_gestation_completed'] }}</td>
+                                <td>{{ $record['pregnancy_outcome'] }}</td>
+                                <td>{{ $record['pregnancy_place_of_birth'] }}</td>
+                                <td>{{ $record['pregnancy_sex'] }}</td>
+                                <td>{{ $record['pregnancy_birth_weight'] }}</td>
+                                <td>{{ $record['pregnancy_present_status'] }}</td>
+                                <td>{{ $record['pregnancy_complication'] }}</td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="9" class="text-center">No data available.</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 <hr/>
 
 <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
