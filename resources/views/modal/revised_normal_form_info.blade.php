@@ -2925,11 +2925,19 @@ $facilities = \App\Facility::select('id','name')
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
     function resetPupilSize() {
-        $('input[name="glasgow_btn"]:checked').each(function() {
-            if ($(this).is(':checked'))
-                $(this).prop('checked', false);
-        })
+    $('#gcs_score').val(0);
+    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
+    $('input[name="motor_radio"]').prop('checked', false);
+    $('input[name="verbal_radio"]').prop('checked', false);
+    $('input[name="eye_radio"]').prop('checked', false);
+    last_motor = last_verbal = last_eye = 0;
     }
+    $('#gcs_score').val(0);
+    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
+    $('input[name="motor_radio"]').prop('checked', false);
+    $('input[name="verbal_radio"]').prop('checked', false);
+    $('input[name="eye_radio"]').prop('checked', false);
+    last_motor = last_verbal = last_eye = 0;
     var last_motor = last_verbal = last_eye = 0;
     $('input[name="motor_radio"]').on('change', function() {
         var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
@@ -2941,7 +2949,7 @@ $facilities = \App\Facility::select('id','name')
             total = (gcs - last_motor) + motor;
 
         last_motor = motor;
-        $('#gcs_score').val(total);
+        check_total(total);
     });
     $('input[name="verbal_radio"]').on('change', function() {
         var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
@@ -2953,7 +2961,7 @@ $facilities = \App\Facility::select('id','name')
             total = (gcs - last_verbal) + verbal;
 
         last_verbal = verbal;
-        $('#gcs_score').val(total);
+        check_total(total);
     });
     $('input[name="eye_radio"]').on('change', function() {
         var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
@@ -2965,8 +2973,15 @@ $facilities = \App\Facility::select('id','name')
             total = (gcs - last_eye) + eye;
 
         last_eye = eye;
-        $('#gcs_score').val(total);
+        check_total(total);
     });
+    function check_total(total) {
+        if (total >= 16) {
+            total=0;
+        }
+        $('#gcs_score').val(total); // Update the field regardless
+    }
+
 
     /* *****REVIEW OF SYSTEMS***** */
     /* SKIN */
