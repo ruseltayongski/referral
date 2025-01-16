@@ -251,11 +251,32 @@ export default {
       const response =  await appointmentConfigData(payload);
       this.configAppoinmentTime = response.data;
     },
-      configAppointmentNot(){
-      console.log("appointmentApp config data:", this.configAppoinmentTime);
+    normalizeTimeFormat(timeString) {
+      // Normalize time to HH:mm (no seconds)
+      const [hours, minutes] = timeString.split(":");
+      return `${hours}:${minutes}`;
+    },
 
+    configAppointmentNot(timeSlot) {
+      // Split timeSlot into start and end times
+      const [timeSlot_start, timeSlot_end] = timeSlot.split("-");
+
+      // Normalize timeSlot to HH:mm format
+      const normalizedTimeSlotStart = this.normalizeTimeFormat(timeSlot_start);
+      const normalizedTimeSlotEnd = this.normalizeTimeFormat(timeSlot_end);
+
+      console.log("Normalized time slot:", normalizedTimeSlotStart, normalizedTimeSlotEnd);
+
+      // Check if any config time overlaps with the current timeSlot
       return this.configAppoinmentTime.some((config) => {
-         console.log(`Comparing ${config.start_time}–${config.end_time} with ${timeSlot.start}–${timeSlot.end}`);
+        // Normalize config start and end time to HH:mm
+        const normalizedConfigStartTime = this.normalizeTimeFormat(config.start_time);
+        const normalizedConfigEndTime = this.normalizeTimeFormat(config.end_time);
+
+        console.log(`Comparing ${normalizedConfigStartTime}–${normalizedConfigEndTime} with ${normalizedTimeSlotStart}–${normalizedTimeSlotEnd}`);
+        
+        // Return true to disable the radio button if times match
+        return normalizedConfigStartTime === normalizedTimeSlotStart && normalizedConfigEndTime === normalizedTimeSlotEnd;
       });
     },
   },
@@ -286,11 +307,10 @@ export default {
                   <div class="box-header with-border">
                     <h3 class="box-title timeDoctor">
                       Please choose Time and OPD
-                      {{appointedTimes}}
                     </h3>
                     <div id="date-selected"></div>
                   </div>
-  <!-- :disabled="areAllAppointmentNotAvailable()" -->
+                <!-- :disabled="areAllAppointmentNotAvailable()" -->
               <div v-if="appointmentclickDate">
                 <div class="box-body config-remove-all">
                   <div class="appointment-time-list1">
@@ -301,10 +321,11 @@ export default {
                         :value="timeSlot"
                         v-model="configSelectedTime"
                         @change="handleconfigTimeSelection(timeSlot)"
-                        :disabled="configAppointmentNot()"
+                        :disabled="configAppointmentNot(timeSlot)"
                       />&nbsp;&nbsp;
-                      <span  :class="{
-                          'text-green': true,
+                      <span :class="{
+                          'text-green': !configAppointmentNot(timeSlot),
+                          'text-red': configAppointmentNot(timeSlot)
                         }">
                         {{ formatTimeSlot(timeSlot) }}
                       </span>
@@ -318,7 +339,8 @@ export default {
                             @change="handleconfigcategory(currentConfig.Opdcategory)"
                           />&nbsp;&nbsp;
                           <small :class="{
-                            'text-green' : true
+                            'text-green' : !configAppointmentNot(timeSlot),
+                            'text-red' : configAppointmentNot(timeSlot),
                           }">
                           {{ currentConfig.Opdcategory }}
                           </small>

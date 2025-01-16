@@ -157,13 +157,13 @@ class TelemedicineCtrl extends Controller
             ]);
     }
 
-    public function deleteSchedule($schedId, $configId){
+    // public function deleteSchedule($schedId,$configId){
 
-        return response()->json([
-            'schedId' => $schedId,
-            'configId' => $configId
-        ]);
-    }
+    //     return response()->json([
+    //         'schedId' => $schedId,
+    //         'configId' => $configId
+    //     ]);
+    // }
 
     public function AddconfigSched(Request $req){
        $user = Session::get('auth');
