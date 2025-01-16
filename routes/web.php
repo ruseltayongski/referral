@@ -715,6 +715,7 @@ Route::get('show-choose-version', 'doctor\NewFormCtrl@view_choose_versionModal')
 Route::get('get-form-type/{form_id}', 'doctor\NewFormCtrl@getFormType')->name('get-form-type');
 Route::get('doctor/revised/referral/data/normal/{id}/{referral_status}/{form_type}', 'doctor\NewFormCtrl@getViewForm_normal');
 Route::get('doctor/revised/referral/data/pregnant/{id}/{referral_status}/{form_type}', 'doctor\NewFormCtrl@getViewForm_pregnant');
+Route::get('doctor/referral/edit_info/revised/{id}/{form_type}/{referral_status}', 'doctor\NewFormCtrl@editInfo');
 
 
 Route::get('/HighOutgoing/sotto', 'admin\ReportCtrl@PinakaDakoRerferVecenteSottoOutgoing');

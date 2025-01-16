@@ -24,7 +24,7 @@
 ?>
 
 <style>
-    /* .file-upload {
+     /* .file-upload {
         background-color: #ffffff;
         width: 600px;
         margin: 0 auto;
@@ -72,9 +72,9 @@
         outline: none;
         opacity: 0;
         cursor: pointer;
-    }
+    } */
 
-    .image-upload-wrap {
+    /* .image-upload-wrap {
         margin-top: 20px;
         border: 4px dashed #1FB264;
         position: relative;
@@ -107,9 +107,9 @@
         max-width: 200px;
         margin: auto;
         padding: 20px;
-    }
+    } */
 
-    .remove-image {
+    /* .remove-image {
         width: 200px;
         margin: 0;
         color: #fff;
@@ -134,9 +134,9 @@
     .remove-image:active {
         border: 0;
         transition: all .2s ease;
-    }
+    } */
 
-    .container-referral {
+    /* .container-referral {
         border: 1px solid lightgrey;
         width: 100%;
         padding-top: 5px;
@@ -145,12 +145,12 @@
         padding-right: 5px;
     }
 
-    /*.glasgow-table {
+    .glasgow-table {
         border: 1px solid lightgrey;
         width: 100%;
-    }*/
+    }
 
-    /* .glasgow-dot {
+     .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;
@@ -172,10 +172,10 @@
         display: block;
         overflow-x: auto;
         white-space: nowrap;
-    }
+    } */
 
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;} */ 
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
     @media only screen and (max-width: 720px) {
         .web-view {
@@ -186,6 +186,12 @@
             display: block;
             visibility: visible;
         }
+    } 
+
+    .unclickable {
+        pointer-events: none; /* Disables click actions */
+        background-color: #f0f0f0;
+        color: black;
     }
 </style>
     <div class="modal fade" role="dialog" id="revisednormalFormModal">
@@ -313,15 +319,15 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history" aria-expanded="false" aria-controls="collapse_illness_history">
-                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normal" aria-expanded="false" aria-controls="collapse_illness_history_normal">
+                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_illness_history" style="width: 100%">
-                                    <b>CASE SUMMARY:</b>
+                                <div class="collapse" id="collapse_illness_history_normal" style="width: 100%">
+                                    <b>CASE SUMMARY:</b><span class="text-red">*</span>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
-                                    <b>CHIEF COMPLAINTS:</b>
+                                    <b>CHIEF COMPLAINTS:</b><span class="text-red">*</span>
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
                                 </div>
                             </div>
@@ -330,15 +336,15 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis" aria-expanded="false" aria-controls="collapse_diagnosis">
-                                        <b>DIAGNOSIS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normal" aria-expanded="false" aria-controls="collapse_diagnosis_normal">
+                                        <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse " id="collapse_diagnosis" style="width: 100%">
-                                    <b>Diagnosis/Impression: </b>
-                                    <textarea class="form-control" rows="7" name="diagnosis" style="resize: none;width: 100%;margin-top: 1%" required></textarea><br><br>
-                                    <br><br>
+                                <div class="collapse " id="collapse_diagnosis_normal" style="width: 100%">
+                                   <br>
+                                        <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                            <br><br>
                                         <a data-toggle="modal" data-target="#icd-modal_revised" type="button" class="btn btn-sm btn-success" onclick="searchICD10Revised()">
                                             <i class="fa fa-medkit"></i> Add ICD-10
                                         </a>
@@ -602,12 +608,8 @@
                                 </div>
                             </div>
                         </div>
-                        
-                     
-
-
-                        {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        <div class="row" id="pedia_show" style="display:none;">
+               
+                        <div class="row" id="pedia_show_normal">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
@@ -745,9 +747,10 @@
                             </div>
                         </div>
 
+                      
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
-                        <div class="row" id="menarche_show" style="display:none;">
+                        <div class="row" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
@@ -757,7 +760,7 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
-                                    <b>MENARCHE </b> @ <input type="number" min="9" style="width: 10%;" name="menarche"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <b>MENARCHE </b> @ <input type="number" style="width: 10%;" name="menarche"> years old &emsp;&emsp;&emsp;&emsp;
                                     <b>MENOPAUSE: </b>&emsp;
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes">
                                     <label for="menopausal">Yes</label>
@@ -934,6 +937,7 @@
                                                 <label for="smoke_quit">Quit</label>
                                                 <span id="smoking_quit_year"> since
                                                     <select class="form-control select" name="smoking_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -983,7 +987,7 @@
                                             </div>
                                         </div>
                                     </div><br>
-
+                                                            
                                     <b>ILLICIT DRUGS</b>
                                     <div class="container-referral">
                                         <div class="row">
@@ -1000,6 +1004,7 @@
                                                 <label for="drugs_quit_radio">Quit</label>
                                                 <span id="drugs_quit_year"> since
                                                     <select class="form-control select" name="drugs_year_quit">
+                                                        <option value="">Select Option</option>
                                                         <?php
                                                         foreach (range(date('Y'), 1950) as $year)
                                                             echo "<option>" . $year . "</option>";
@@ -1077,17 +1082,22 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="file-upload">
-                                                    <div class="image-upload-wrap">
-                                                        <input class="file-upload-input" type='file' name="file_upload" onchange="readURL(this);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
-                                                        <div class="drag-text">
-                                                            <h3>Drag and drop a file or select add Image</h3>
-                                                        </div>
-                                                    </div>
-                                                    <div class="file-upload-content">
-                                                        <img class="file-upload-image" src="#" alt="your image" />
-                                                        <div class="image-title-wrap">
-                                                            <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <button type="button" class="btn btn-md btn-danger" id="normal_remove_files" onclick="removeFileNormal()">Remove Files</button><br><br>
+                                                <div class="normal_file_attachment">
+                                                    <div class="col-md-3" id="normal_upload1">
+                                                        <div class="file-upload">
+                                                            <div class="text-center image-upload-wrap" id="normal_image-upload-wrap1">
+                                                                <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLNormal(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                                <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
+                                                            </div>
+                                                            <div class="file-upload-content" id="normal_file-upload-content1">
+                                                                <img class="file-upload-image" id="normal_file-upload-image1"/>
+                                                                <div class="image-title-wrap">
+                                                                    <b><small class="image-title" id="normal_image-title1" style="display:block; word_normal-wrap: break-word_normal;">Uploaded File</small></b>
+                                                                    {{--<button type="button" id="normal_remove_upload1" onclick="removeUploadNormal(1)" class="btn-sm remove-image">Remove</button>--}}
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2268,13 +2278,13 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normal" aria-expanded="false" aria-controls="collapse_reason_referral_normal">
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text=red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                <div class="collapse" id="collapse_reason_referral_normal" style="width: 100%;">
+                                    <i>Select reason for referral:</i><span class="text-red">*</span>
                                     <div class="container-referral">
                                         <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                             <option value="">Select reason for referral</option>
@@ -2284,7 +2294,7 @@
                                             @endforeach
                                         </select><br><br>
                                         <div id="other_reason_referral_div" style="display:none;">
-                                            <span>Other Reason for Referral:</span> <br/>
+                                            <span>Other Reason for Referral:</span><span class="text-red">*</span><br/>
                                             <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7"></textarea>
                                         </div>
                                     </div>
@@ -2295,7 +2305,7 @@
                         <hr />
                         <div class="form-fotter pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                            <button type="submit" id="sbmitBtn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                            <button type="submit" id="sbmitBtnNormal" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>{{--/.form-group--}}
@@ -2327,7 +2337,7 @@
             </div>
             <div class="modal-body">
                 <div class="input-group input-group-lg">
-                    <input type="text" id="icd10_keyword_revised" class="form-control">
+                    <input type="text" id="icd10_keyword_normalrevised" class="form-control">
                     <span class="input-group-btn">
                         <button type="button" class="btn btn-info btn-flat" onclick="searchICD10Revised()">Find</button>
                     </span>
@@ -2347,6 +2357,33 @@
 
 
 <script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+         // Uncollapse the REASON FOR REFERRAL section
+         const referralCollapse = document.getElementById("collapse_reason_referral_normal");
+         const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normal']");
+        if (referralCollapse && referralButton) {
+            referralCollapse.classList.add("show");
+            referralButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the HISTORY OF PRESENT ILLNESS section
+        const illnessCollapse = document.getElementById("collapse_illness_history_normal");
+        const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normal']");
+        if (illnessCollapse && illnessButton) {
+            illnessCollapse.classList.add("show");
+            illnessButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the DIAGNOSIS section
+        const diagnosisCollapse = document.getElementById("collapse_diagnosis_normal");
+        const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normal']");
+        if (diagnosisCollapse && diagnosisButton) {
+            diagnosisCollapse.classList.add("show");
+            diagnosisButton.setAttribute("aria-expanded", "true");
+        }
+    });
+
     // $("#revisednormalFormModal").modal("show");
 
     //    $('#pedia_show').hide();
@@ -2359,7 +2396,7 @@
     //        $('#menarche_show').show();
 
     $('#clear_icd_revised, #clear_notes_revised, #clear_other_diag_revised, #icd_selected_revised').hide();
-    $("#sbmitBtn").on('click', function(e) {
+    $("#sbmitBtnNormal").on('click', function(e) {
         if (!($("#icd").val()) && !($("#other_diag").val())) {
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
@@ -2433,7 +2470,7 @@
         var url = "<?php echo asset('icd/search'); ?>";
         var json = {
             "_token": "<?php echo csrf_token(); ?>",
-            "icd_keyword": $("#icd10_keyword_revised").val()
+            "icd_keyword": $("#icd10_keyword_normalrevised").val()
         };
         $.post(url, json, function(result) {
             setTimeout(function() {
@@ -3207,64 +3244,142 @@
     });
 
     /**************************************************************************/
-
-    // $("#sbmitBtn").on('click',function(e){
-    //     if(!($("#icd").val()) && !($("#other_diag").val())){
-    //         Lobibox.alert("error", {
-    //             msg: "Select ICD-10 diagnosis!"
-    //         });
-    //         return false;
-    //     }
-    // });
-
-
    
+    $(document).ready(function() {
         $('.reason_referral').on('change', function() {
             var value = $(this).val();
             
             if (value == -1) {
-                // Show the "Other Reason for Referral" textarea if "-1" is selected
-                console.log("VALUE: ", value);
+                // Show the "Other Reason for Referral" textarea and set it as required
                 $('#other_reason_referral_div').show();
+                $('textarea[name="other_reason_referral"]').prop('required', true);
             } else {
-                // Hide the "Other Reason for Referral" textarea if another option is selected
-                console.log("VALUE: ", value);  
+                // Hide the "Other Reason for Referral" textarea and remove the required attribute
                 $('#other_reason_referral_div').hide();
+                $('textarea[name="other_reason_referral"]').prop('required', false);
             }
         });
+    });
+    
+    
 
+    var normal_pos = 2;
+    var normal_count = 0 ;
+    
+    function readURLNormal(input, pos) {
+        // Asset paths for icons
+        var word_normal = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf_normal = '{{ asset('resources/img/pdf_icon.png') }}'; // Fixed from pdf_normal_icon
+        var excel_normal = '{{ asset('resources/img/sheet_icon.png') }}';
 
-    function readURL(input) {
-        if (input.files && input.files[0]) {
+        if (input.files) {
+            var tmp_pos = pos;
 
-            var reader = new FileReader();
+            for (var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
 
-            reader.onload = function(e) {
-                $('.image-upload-wrap').hide();
+                if (file && file !== null) {
+                    var reader = new FileReader();
+                    var fileType = file.type; // Capture file type for the current file
 
-                $('.file-upload-image').attr('src', e.target.result);
-                $('.file-upload-content').show();
+                    // Onload logic for unsupported file types
+                    reader.onloadend = (function(file, tmp_pos) {
+                        return function (e) {
+                            $('#normal_file-upload-image' + tmp_pos).attr('src', e.target.result);
+                            $('#normal_image-upload-wrap' + tmp_pos).hide();
+                            $('#normal_file-upload-content' + tmp_pos).show();
+                            $('#normal_image-title' + tmp_pos).html(file.name);
+                        };
+                    })(file, tmp_pos);
 
-                $('.image-title').html(input.files[0].name);
-            };
+                    // Set icons based on file type
+                    if (fileType === 'application/pdf') {
+                        $('#normal_file-upload-image' + tmp_pos).attr('src', pdf_normal);
+                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#normal_file-upload-image' + tmp_pos).attr('src', word_normal);
+                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#normal_file-upload-image' + tmp_pos).attr('src', excel_normal);
+                    } else {
+                        // Read as data URL for other file types
+                        reader.readAsDataURL(file);
+                    }
 
-            reader.readAsDataURL(input.files[0]);
+                    // Update UI elements
+                    $('#normal_image-upload-wrap' + tmp_pos).hide();
+                    $('#normal_file-upload-content' + tmp_pos).show();
+                    $('#normal_image-title' + tmp_pos).html(file.name);
 
-        } else {
-            removeUpload();
+                    // Increment counters and positions
+                    tmp_pos += 1;
+                    normal_count += 1;
+
+                    // Add a new file upload row
+                    addFileNormal();
+                }
+            }
+
+            // Show the remove files button
+            $('#normal_remove_files').show();
         }
     }
 
-    function removeUpload() {
-        $('.file-upload-input').replaceWith($('.file-upload-input').clone());
-        $('.file-upload-content').hide();
-        $('.image-upload-wrap').show();
+    function addFileNormal() {
+        var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
+
+        if((normal_count % 4) == 0) {
+            $('.normal_file_attachment').append(
+                '<div class="clearfix"></div>'
+            );
+        }
+        $('.normal_file_attachment').append(
+            '<div class="col-md-3" id="normal_upload'+normal_pos+'">\n' +
+            '   <div class="file-upload">\n' +
+            '       <div class="text-center image-upload-wrap" id="normal_image-upload-wrap'+normal_pos+'">\n' +
+            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLNormal(this, '+normal_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.word_normalprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf_normal"/>\n' +
+            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
+            '       </div>\n' +
+            '       <div class="file-upload-content" id="normal_file-upload-content'+normal_pos+'">\n' +
+            '           <img class="file-upload-image" id="normal_file-upload-image'+normal_pos+'"/>\n' +
+            '           <div class="image-title-wrap">\n' +
+            '               <b><small class="image-title" id="normal_image-title'+normal_pos+'" style="display:block; word_normal-wrap: break-word_normal;">Uploaded File</small></b>\n' +
+            '               <button type="button" id="normal_remove_upload'+normal_pos+'" onclick="removeUploadNormal('+normal_pos+')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
+            '           </div>\n' +
+            '       </div>\n' +
+            '   </div>\n' +
+            '</div>'
+        );
+        normal_pos+=1;
     }
 
-    $('.image-upload-wrap').bind('dragover', function() {
-        $('.image-upload-wrap').addClass('image-dropping');
+    function removeFileNormal() {
+        $('.normal_file_attachment').html("");
+        normal_count = 0;
+        normal_pos = 1;
+        $('#normal_remove_files').hide();
+        addFileNormal();
+    }
+
+    function removeUploadNormal(uploadCount){
+        $('#normal_upload' + uploadCount).remove();
+        upload_count -= 1;
+        if(normal_pos > uploadCount){
+            normal_pos -= 1;
+        }
+        if(uploadCount === 0){
+            $('#remove_files_btn');
+        }
+    }
+
+    $(document).ready(function() {
+        for (var i = 0; i < normal_count; i++) {
+            $('#normal_image-upload-wrap' + i).bind('dragover', function () {
+                $('#normal_image-upload-wrap' + i).addClass('image-dropping');
+            });
+            $('#normal_image-upload-wrap' + i).bind('dragleave', function () {
+                $('#normal_image-upload-wrap' + i).removeClass('image-dropping');
+            });
+        }
+        $('#normal_remove_files').hide();
     });
-    $('.image-upload-wrap').bind('dragleave', function() {
-        $('.image-upload-wrap').removeClass('image-dropping');
-    });
-</script>
+
+    </script>

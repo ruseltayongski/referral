@@ -271,12 +271,19 @@
     }
 
     var upload_pos = 2;
+    var upload_pos_ = 2;
     var upload_count = 0;
-    function readUrl(input, pos) {
+    var upload_count_ = 0;
+    function readUrl(input, pos, version) {
         var word = '{{ asset('resources/img/document_icon.png') }}';
         var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
         var excel = '{{ asset('resources/img/sheet_icon.png') }}';
-        if (input.files && input.files[0]) {
+
+        var word_ = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf_ = '{{ asset('resources/img/pdf_icon.png') }}';
+        var excel_ = '{{ asset('resources/img/sheet_icon.png') }}';
+        if (version === 1){
+            if (input.files && input.files[0]) {
             var tmp_pos = pos;
             var imgSize = {width: '150px', height: '120px'};
             for(var i = 0; i < input.files.length; i++) {
@@ -312,16 +319,61 @@
                     reader.readAsDataURL(file);
                     upload_count+=1;
 
-                    addFile();
+                    addFile(1);
                 }
             }
         }
         $('#remove_files_btn').show();
+        } else if (version === 2){
+            if (input.files && input.files[0]) {
+            var tmp_pos = pos;
+            var imgSize = {width: '150px', height: '120px'};
+            for(var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+                if(file && file !== null) {
+                    var reader = new FileReader();
+                    var type = file.type;
+                    if(type === 'application/pdf') {
+                        $('#file-upload-image_normal'+pos).attr('src',pdf_).css(imgSize);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#file-upload-image_normal'+pos).attr('src',word_).css(imgSize);
+                        pos+=1;
+                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#file-upload-image_normal'+pos).attr('src',excel_).css(imgSize);
+                        pos+=1;
+                    } else {
+                        reader.onloadend = function(e) {
+                            $('#file-upload-image_normal'+pos).attr('src', e.target.result).css(imgSize);
+                            pos+=1;
+                        };
+                    }
+                    $('#image-upload-wrap_normal'+tmp_pos).hide();
+                    $('#file-upload-content_normal'+tmp_pos).show();
+                    // $('#image-title' + tmp_pos++).html(file.name);
+                    let filename = file.name;
+                    
+                    var maxLength = 12;
+                    
+                    var truncateName = filename.length > maxLength ? filename.substring(0, maxLength) + '...' : filename;
+                    $('#image-title_normal'  + tmp_pos++).html(truncateName).attr('title', filename);
+
+                    reader.readAsDataURL(file);
+                    upload_count_+=1;
+
+                    addFile(2);
+                }
+            }
+        }
+        $('#remove_files_btn_normal').show();
+        }
+        
     }
 
-    function addFile() {
+    function addFile(version) {
         var src = '{{ asset('resources/img/add_file.png') }}';
-        if(upload_count % 4 == 0) {
+        if (version === 1){
+            if(upload_count % 4 == 0) {
             $('.attachment').append(
                 '<div class="clearfix"></div>'
             );
@@ -330,7 +382,7 @@
             '<div class="col-md-3" id="upload'+upload_pos+'">\n' +
             '   <div class="file-upload">\n' +
             '       <div class="text-center image-upload-wrap" id="image-upload-wrap'+upload_pos+'">\n' +
-            '           <input class="file-upload-input files" multiple id="file_upload_input'+upload_pos+'" type="file" name="file_upload[]" onchange="readUrl(this, '+upload_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <input class="file-upload-input files" multiple id="file_upload_input'+upload_pos+'" type="file" name="file_upload[]" onchange="readUrl(this, '+upload_pos+',1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
             '           <img src="'+src+'" style="width: 50%; height: 50%;">\n' +
             '       </div>\n' +
             '       <div class="file-upload-content" id="file-upload-content'+upload_pos+'">\n' +
@@ -338,37 +390,79 @@
             '           <div class="image-title-wrap">\n' +
             '               <b><small class="image-title" id="image-title'+upload_pos+'" style="display:block; word-wrap: break-word;"></small></b>\n' +
             /*'               <button type="button" onclick="removeFile('+upload_pos+')" class="remove-image"> Remove </button>\n' +*/
-            '                   <button type="button" onclick="removeOneFile('+upload_pos+')" class="remove-icon-btn"> <i class="fa fa-trash"></i> </button>\n' +
+            '                   <button type="button" onclick="removeOneFile('+upload_pos+',1)" class="remove-icon-btn"> <i class="fa fa-trash"></i> </button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
             '</div>'
         );
         upload_pos+=1;
+        } else if (version === 2){
+            if(upload_count_ % 4 == 0) {
+            $('.attachment_normal').append(
+                '<div class="clearfix"></div>'
+            );
+        }
+        $('.attachment_normal').append(
+            '<div class="col-md-3" id="upload'+upload_pos_+'">\n' +
+            '   <div class="file-upload">\n' +
+            '       <div class="text-center image-upload-wrap" id="image-upload-wrap_normal'+upload_pos_+'">\n' +
+            '           <input class="file-upload-input files" multiple id="file_upload_input_normal'+upload_pos_+'" type="file" name="file_upload[]" onchange="readUrl(this, '+upload_pos_+',2);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <img src="'+src+'" style="width: 50%; height: 50%;">\n' +
+            '       </div>\n' +
+            '       <div class="file-upload-content" id="file-upload-content_normal'+upload_pos_+'">\n' +
+            '           <img class="file-upload-image" id="file-upload-image_normal'+upload_pos_+'" src="#"/>\n' +
+            '           <div class="image-title-wrap">\n' +
+            '               <b><small class="image-title" id="image-title_normal'+upload_pos_+'" style="display:block; word-wrap: break-word;"></small></b>\n' +
+            /*'               <button type="button" onclick="removeFile('+upload_pos+')" class="remove-image"> Remove </button>\n' +*/
+            '                   <button type="button" onclick="removeOneFile('+upload_pos_+',2)" class="remove-icon-btn"> <i class="fa fa-trash"></i> </button>\n' +
+            '           </div>\n' +
+            '       </div>\n' +
+            '   </div>\n' +
+            '</div>'
+        );
+        upload_pos_+=1;
+        }
+       
     }
 
-    function removeOneFile(uploadCount){
-        $('#upload' + uploadCount).remove();
-
-        upload_count -= 1;
-
-        if(upload_pos > uploadCount){
-            upload_pos -= 1;
+    function removeOneFile(uploadCount, version){
+        if (version === 1){
+            $('#upload' + uploadCount).remove();
+            upload_count -= 1;
+            if(upload_pos > uploadCount){
+                upload_pos -= 1;
+            }
+            if(uploadCount === 0){
+                $('#remove_files_btn');
+            }
+        } else if (version === 2){
+            $('#upload' + uploadCount).remove();
+            upload_count_ -= 1;
+            if(upload_pos_ > uploadCount){
+                upload_pos_ -= 1;
+            }
+            if(uploadCount_ === 0){
+                $('#remove_files_btn_normal');
+            }
         }
-        if(uploadCount === 0){
-            $('#remove_files_btn');
-        }
-
-       console.log("upload_pos:", upload_pos);
 
     }
 
-    function removeFiles() {
-        $('.attachment').html("");
-        upload_count = 0;
-        upload_pos = 1;
-        $('#remove_files_btn').hide();
-        addFile();
+    function removeFiles(version) {
+        if(version === 1){
+            $('.attachment').html("");
+            upload_count = 0;
+            upload_pos = 1;
+            $('#remove_files_btn').hide();
+            addFile(1);
+        }else if(version === 2){
+            $('.attachment_normal').html("");
+            upload_count_ = 0;
+            upload_pos_ = 1;
+            $('#remove_files_btn_normal').hide();
+            addFile(2);
+        }
     }
 
     $(document).ready(function() {
@@ -381,6 +475,16 @@
             });
         }
         $('#remove_files_btn').hide();
+
+        for (var i = 0; i < upload_count_; i++) {
+            $('#image-upload-wrap_normal' + i).bind('dragover', function () {
+                $('#image-upload-wrap_normal' + i).addClass('image-dropping');
+            });
+            $('#image-upload-wrap_normal' + i).bind('dragleave', function () {
+                $('#image-upload-wrap_normal' + i).removeClass('image-dropping');
+            });
+        }
+        $('#remove_files_btn_normal').hide();
     });
 
     $(".select2").select2({ width: '100%' });

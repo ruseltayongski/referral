@@ -26,169 +26,26 @@
 ?>
 
 <style>
-    /* .file-upload_ {
-        background-color: #ffffff;
-        width: 600px;
-        margin: 0 auto;
-        padding: 20px;
-    }
-
-    .file-upload_-btn {
-        width: 100%;
-        margin: 0;
-        color: #fff;
-        background: #1FB264;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
-        border-bottom: 4px solid #15824B;
-        transition: all .2s ease;
-        outline: none;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
-
-    .file-upload_-btn:hover {
-        background: #1AA059;
-        color: #ffffff;
-        transition: all .2s ease;
-        cursor: pointer;
-    }
-
-    .file-upload_-btn:active {
-        border: 0;
-        transition: all .2s ease;
-    }
-
-    .file-upload_-content_ {
-        display: none;
-        text-align: center;
-    }
-
-    .file-upload_-input {
-        position: absolute;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        outline: none;
-        opacity: 0;
-        cursor: pointer;
-    }
-
-    .image-upload-wrap_ {
-        margin-top: 20px;
-        border: 4px dashed #1FB264;
-        position: relative;
-    }
-
-    .image-dropping,
-    .image-upload-wrap_:hover {
-        background-color: #1FB264;
-        border: 4px dashed #ffffff;
-    }
-
-    .image-title_-wrap_ {
-        padding: 0 15px 15px 15px;
-        color: #222;
-    }
-
-    .drag-text {
-        text-align: center;
-    }
-
-    .drag-text h3 {
-        font-weight: 100;
-        text-transform: uppercase;
-        color: #15824B;
-        padding: 60px 0;
-    }
-
-    .file-upload_-image_ {
-        max-height: 200px;
-        max-width: 200px;
-        margin: auto;
-        padding: 20px;
-    }
-
-    .remove-image {
-        width: 200px;
-        margin: 0;
-        color: #fff;
-        background: #cd4535;
-        border: none;
-        padding: 10px;
-        border-radius: 4px;
-        border-bottom: 4px solid #b02818;
-        transition: all .2s ease;
-        outline: none;
-        text-transform: uppercase;
-        font-weight: 700;
-    }
-
-    .remove-image:hover {
-        background: #c13b2a;
-        color: #ffffff;
-        transition: all .2s ease;
-        cursor: pointer;
-    }
-
-    .remove-image:active {
-        border: 0;
-        transition: all .2s ease;
-    }
-
-    .container-referral {
+    .glasgow-table {
         border: 1px solid lightgrey;
         width: 100%;
-        padding-top: 5px;
-        padding-bottom: 5px;
-        padding-left: 5px;
-        padding-right: 5px;
     }
 
-    /*.glasgow-table {
-        border: 1px solid lightgrey;
-        width: 100%;
-    }*/
-
-    /* .glasgow-dot {
+     .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;
     }
-
-    .referral-radio-btn {
-        height:18px;
-        width:18px;
-        vertical-align: middle;
-    }
-
-    .mobile-view {
-        display: none;
-        visibility: hidden;
-    }
-
-
-    table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-    }
-
     #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;} */ 
+    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
-    @media only screen and (max-width: 720px) {
-        .web-view {
-            display: none;
-            visibility: hidden;
-        }
-        .mobile-view {
-            display: block;
-            visibility: visible;
-        }
+    .unclickable {
+        pointer-events: none; /* Disables click actions */
+        background-color: #f0f0f0;
+        color: black;
     }
+
+     
 </style>
 
     <div class="modal fade" role="dialog" id="revisedpregnantFormModal">
@@ -317,14 +174,15 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
-                                    <b>TREATMENTS GIVE TIME</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
+                                    <b>TREATMENTS GIVE TIME</b><i> (required)</i><span class="text-red">*</span>
                                     <span class="pull-right"><i class="fa fa-plus"></i></span>    
-                                </button><br><br>
+                                    </button><br><br>
                                 </div>
+                                
                                
                                 <div class="collapse" id="patient_treatment_give_time" style="width: 100%;">
-                                <b>MAIN REASON FOR REFERRAL: </b>
+                                    <b>MAIN REASON FOR REFERRAL: </b>
                                     <div class="container-referral">
                                         <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
                                         <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
@@ -333,7 +191,7 @@
                                     </div><br>
                                 
                                     <div class="continer-referral">
-                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)</i> <br />
+                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)<span class="text-red">*</span></i> <br />
                                     <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </div><br>
 
@@ -346,17 +204,17 @@
                                         <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
                                     </div><br>
 
-                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b><span class="text-red">*</span>
                                         <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea><br><br>
                                 </div>
                             </div>
                         </div>    
 
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_pregnant" aria-expanded="false" aria-controls="collapse_illness_history_pregnant">
-                                        <b>HISTORY OF PRESENT ILLNESS</b>
+                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (Required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -367,13 +225,13 @@
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregnant" aria-expanded="false" aria-controls="collapse_diagnosis_pregnant">
-                                        <b>DIAGNOSIS</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregnant" aria-expanded="false" aria-controls="collapse_diagnosis_pregnant">
+                                        <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -655,7 +513,7 @@
                       
 
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        <div class="row" id="pedia_show_pregnant">
+                        <div class="row" id="pedia_show_pregnant" style="display: none">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history_pregnant" aria-expanded="false" aria-controls="collapse_pedia_history_pregnant">
@@ -796,7 +654,7 @@
                             </div>
                         </div>
 
-                        <div class="row" id="baby_show_pregnant">
+                        <div class="row" id="baby_show_pregnant" style="padding:5px">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
@@ -806,68 +664,50 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="baby_collapsed_pregnant" style="width: 100%;">
-                                <table class="table bg-warning">
-                                    <tr>
-                                        <td colspan="2"><small class="text-success"><b>NAME: </b></small><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_fname" placeholder="First Name" /><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_mname" placeholder="Middle Name" /><br />
-                                            <input type="text" class="form-control" style="width: 100%" name="baby_lname" placeholder="Last Name" />
-                                        </td>
-                                        <td style="vertical-align: top !important;"><small class="text-success"><b>DATE AND HOUR OF BIRTH: </b></small>
-                                            <br />
-                                            <input type="text" class="form-control  form_datetime" style="width: 100%" name="baby_dob" placeholder="Date/Time" /><br />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2"><small class="text-success"><b>BIRTH WEIGHT: </b></small> <input type="text" class="form-control" style="width: 100%" name="baby_weight" placeholder="kg or lbs" /><br /></td>
-                                        <td><small class="text-success"><b>GESTATIONAL AGE: </b></small> <input type="text" class="form-control" style="width: 100%" name="baby_gestational_age" placeholder="age" /><br /></td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4">
-                                            <small class="text-success"><b>MAIN REASON FOR REFERRAL: </b></small>
-                                            <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
-                                            <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
-                                            <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                            <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>MAJOR FINDINGS: </b><i>(Clinica and BP,Temp,Lab)</i></small>
-                                            <br />
-                                            <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>LAST (BREAST) FEED (TIME): </b></small><input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" /><br /></td>
-                                    </tr>
-                                    <tr class="bg-gray">
-                                        <td colspan="4">Treatments Give Time</td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>BEFORE REFERRAL</b></small>
-                                            <br />
-                                            <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
-                                            <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>DURING TRANSPORT</b></small>
-                                            <br />
-                                            <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
-                                            <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4"><small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
-                                            <br />
-                                            <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea>
-                                        </td>
-                                    </tr>
-                            </table>
-                                </div>
-                            </div>
-                        </div> 
 
+                                <div class="container-referral" style="padding:5px">
+                                    <b>NAME:</b><br />
+                                        <input type="text" class="form-control" name="baby_fname" placeholder="First Name" /><br>
+                                        <input type="text" class="form-control" name="baby_mname" placeholder="Middle Name" /><br>
+                                        <input type="text" class="form-control" name="baby_lname" placeholder="Last Name" /><br>
+                                    <b>DATE AND HOUR OF BIRTH: </b>
+                                        <input type="text" class="form-control  form_datetime" name="baby_dob" placeholder="Date/Time"/><br>
+                                    <b>GESTATIONAL AGE: </b>
+                                    <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" />
+                                    <b>BIRTH WEIGHT: </b>
+                                    <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" /><br />
+                                </div><br>
+
+                                <div class="container-referral" style="padding:5px">
+                                    <b>MAIN REASON FOR REFERRAL</b>
+                                    <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
+                                    <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                    <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                    <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                </div><br>
+
+                                <b>MAJOR FINDINGS</b>
+                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea><br><br>
+
+                                <b>TREATMENTS GIVE TIME</b>
+                                <div class="container-referral" style="padding: 5px;">
+                                <b>LAST (BREAST) FEED (TIME):</b>
+                                <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time"/><br>  
+                                <b>BEFORE REFERRAL</b>
+                                <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
+                                <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" /><br>
+                                <b>DURING TRANSPORT</b>
+                                <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
+                                <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
+                                </div><br>
+
+                                <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea><br><br>                                   
+                                </div> 
+                            </div>
+                        </div>
+
+                       
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                         <div class="row" id="menarche_show_pregnant">
                             <div class="col-lg-12">
@@ -983,18 +823,17 @@
                                             <thead>
                                                 <tr style="font-size: 10pt;">
                                                     <th class="text-center" style="width:50%;">Pregnancy Order</th>
-                                                    <th class="text-center" style="width:20%;">Year</th>
+                                                    <th class="text-center" style="width:20%;">Year of Birth</th>
                                                     <th class="text-center">Gestation Completed</th>
                                                     <th class="text-center">Pregnancy Outcome</th>
                                                     <th class="text-center">Place of Birth</th>
-                                                    <th class="text-center">Sex</th>
+                                                    <th class="text-center">Biological Sex</th>
                                                     <th class="text-center" style="width:50%;">Birth Weight</th>
                                                     <th class="text-center">Present Status</th>
                                                     <th class="text-center">Complication(s)</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                               
                                                 <tr style="font-size: 10pt">
                                                     <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
                                                     <td>
@@ -1018,8 +857,7 @@
                                                     <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
-                                                </tr>
-                                              
+                                                </tr> 
                                             </tbody>
                                         </table>
                                         <button class="btn-sm btn-success" id="prenatal_add_row" type="button">
@@ -1201,28 +1039,30 @@
                                             </div>
                                         </div></br>
                                         <div class="row">
-                                            <div class="col-md-12">
+                                        <div class="col-md-12">
                                                 <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
-                                                <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnantRevised()">Remove Files</button><br><br>
+                                                <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnant(2)">Remove Files</button><br><br>
                                                 <div class="pregnant_file_attachment_">
                                                     <div class="col-md-3" id="pregnant_upload_1">
-                                                        <div class="file-upload_">
-                                                            <div class="text-center image-upload-wrap_" id="pregnant_image-upload-wrap_1">
-                                                                <input class="file-upload-input_" multiple type="file" name="file_upload[]" onchange="readURLPregnantRevised(this, 1);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>
+                                                        <div class="file-upload">
+                                                            <div class="text-center image-upload-wrap" id="pregnant_image-upload-wrap_1">
+                                                                <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLPregnant(this, 1, 2);" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf" />
                                                                 <img src="{{ asset('resources/img/add_file.png') }}" style="width: 50%; height: 50%;">
                                                             </div>
-                                                            <div class="file-upload-content_" id="pregnant_file-upload-content_1">
-                                                                <img class="file-upload-image_" id="pregnant_file-upload-image_1"/>
-                                                                <div class="image-title-wrap_">
-                                                                    <b><small class="image-title_" id="pregnant_image-title_1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
-                                                                    {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnantRevised(1)" class="btn-sm remove-image_">Remove</button>--}}
+                                                            <div class="file-upload-content" id="pregnant_file-upload-content_1">
+                                                                <img class="file-upload-image" id="pregnant_file-upload-image_1"/>
+                                                                <div class="image-title-wrap">
+                                                                    <b><small class="image-title" id="pregnant_image-title_1" style="display:block; word_-wrap: break-word_;">Uploaded File</small></b>
+                                                                    {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1, 2)" class="btn-sm remove-image">Remove</button>--}}
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div></br>
+                                        </div>
+                                    </div>
+                                    <table class="table table-striped col-sm-6"></table>
                                     </div>
                                 </div>
                             </div>
@@ -2398,13 +2238,13 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
+                                        <b>REASON FOR REFERRAL</b> <i>(Required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                    <i>Select reason for referral:</i><span class="text-red">*</span>
                                     <div class="container-referral">
                                         <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
                                             <option value="">Select reason for referral</option>
@@ -2414,7 +2254,7 @@
                                             @endforeach
                                         </select><br><br>
                                         <div id="pregnant_other_reason_referral_div" style="display:none;">
-                                            <span>Other Reason for Referral:</span> <br/>
+                                            <span>Other Reason for Referral:</span><span class="text-red">*</span><br/>
                                             <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7"></textarea>
                                         </div>
                                     </div>
@@ -2476,6 +2316,39 @@
 </div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Uncollapse the REASON FOR REFERRAL section
+        const referralCollapse = document.getElementById("collapse_reason_referral_pregnant");
+        const referralButton = document.querySelector("[data-target='#collapse_reason_referral_pregnant']");
+        if (referralCollapse && referralButton) {
+            referralCollapse.classList.add("show");
+            referralButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the HISTORY OF PRESENT ILLNESS section
+        // const illnessCollapse = document.getElementById("collapse_illness_history_pregnant");
+        // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_pregnant']");
+        // if (illnessCollapse && illnessButton) {
+        //     illnessCollapse.classList.add("show");
+        //     illnessButton.setAttribute("aria-expanded", "true");
+        // }
+
+        // Uncollapse the DIAGNOSIS section
+        const diagnosisCollapse = document.getElementById("collapse_diagnosis_pregnant");
+        const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_pregnant']");
+        if (diagnosisCollapse && diagnosisButton) {
+            diagnosisCollapse.classList.add("show");
+            diagnosisButton.setAttribute("aria-expanded", "true");
+        }
+
+        // Uncollapse the TREATMENTS GIVE TIME section
+        const treatmentCollapse = document.getElementById("patient_treatment_give_time");
+        const treatmentButton = document.querySelector("[data-target='#patient_treatment_give_time']");
+        if (treatmentCollapse && treatmentButton) {
+            treatmentCollapse.classList.add("show");
+            treatmentButton.setAttribute("aria-expanded", "true");
+        }
+    });
     // $("#revisedpregnantFormModal").modal("show");
 
     //    $('#pedia_show').hide();
@@ -2607,7 +2480,7 @@
             $('#comor_none_cbox_pregnant').prop('checked', false);
             $('#comor_hyper_cbox_pregnant, #comor_diab_cbox_pregnant, #comor_asthma_cbox_pregnant, #comor_copd_cbox_pregnant').prop('checked', true);
             $('#comor_dyslip_cbox_pregnant, #comor_thyroid_cbox_pregnant, #comor_cancer_cbox_pregnant').prop('checked', true);
-            $('#comor_asthma, #comor_diab, #comor_hyper, #comor_cancer').show();
+            $('#comor_asthma_pregnant, #comor_diab_pregnant, #comor_hyper_pregnant, #comor_cancer_pregnant').show();
         } else {
             $('#comor_hyper_cbox_pregnant, #comor_diab_cbox_pregnant, #comor_asthma_cbox_pregnant, #comor_copd_cbox_pregnant').prop('checked', false);
             $('#comor_dyslip_cbox_pregnant, #comor_thyroid_cbox_pregnant, #comor_cancer_cbox_pregnant, #comor_others_cbox_pregnant').prop('checked', false);
@@ -3338,161 +3211,20 @@
     });
 
    
+    $(document).ready(function() {
         $('.reason_referral').on('change', function() {
             var value = $(this).val();
             
             if (value == -1) {
-                // Show the "Other Reason for Referral" textarea if "-1" is selected
-                console.log("VALUE: ", value);
+                // Show the "Other Reason for Referral" textarea and set it as required
                 $('#pregnant_other_reason_referral_div').show();
+                $('textarea[name="other_reason_referral"]').prop('required', true);
             } else {
-                // Hide the "Other Reason for Referral" textarea if another option is selected
-                console.log("VALUE: ", value);  
+                // Hide the "Other Reason for Referral" textarea and remove the required attribute
                 $('#pregnant_other_reason_referral_div').hide();
+                $('textarea[name="other_reason_referral"]').prop('required', false);
             }
         });
-
-
-    // function readURL(input) {
-    //     if (input.files && input.files[0]) {
-
-    //         var reader = new FileReader();
-
-    //         reader.onload = function(e) {
-    //             $('.image-upload-wrap_').hide();
-
-    //             $('.file-upload_-image_').attr('src', e.target.result);
-    //             $('.file-upload_-content_').show();
-
-    //             $('.image-title_').html(input.files[0].name);
-    //         };
-
-    //         reader.readAsDataURL(input.files[0]);
-
-    //     } else {
-    //         removeUpload();
-    //     }
-    // }
-
-    // function removeUpload() {
-    //     $('.file-upload_-input').replaceWith($('.file-upload_-input').clone());
-    //     $('.file-upload_-content_').hide();
-    //     $('.image-upload-wrap_').show();
-    // }
-
-    // $('.image-upload-wrap_').bind('dragover', function() {
-    //     $('.image-upload-wrap_').addClass('image-dropping');
-    // });
-    // $('.image-upload-wrap_').bind('dragleave', function() {
-    //     $('.image-upload-wrap_').removeClass('image-dropping');
-    // });
-
-    var pregnant_pos = 2;
-    var pregnant_count = 0 ;
-    function readURLPregnantRevised(input, pos) {
-        var word = '{{ asset('resources/img/document_icon.png') }}';
-        var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
-        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
-        if (input.files) {
-            var tmp_pos = pos;
-            for(var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
-                if(file && file !== null) {
-                    var reader = new FileReader();
-                    var type = file.type;
-                    if(type === 'application/pdf') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',pdf);
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',word);
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',excel);
-                        pos+=1;
-                    } else {
-                        reader.onloadend = function(e) {
-                            $('#pregnant_file-upload-image_'+pos).attr('src',e.target.result);
-                            pos+=1;
-                        };
-                    }
-                    $('#pregnant_image-upload-wrap_'+tmp_pos).hide();
-                    $('#pregnant_file-upload-content_'+tmp_pos).show();
-                    $('#pregnant_image-title_'+tmp_pos++).html(file.name);
-                    reader.readAsDataURL(file);
-                    pregnant_count+=1;
-                }
-                addFilePregnant();
-            }
-        }
-        $('#preg_remove_files_').show();
-    }
-
-    function addFilePregnant() {
-        var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
-
-        if((pregnant_count % 4) == 0) {
-            $('.pregnant_file_attachment_').append(
-                '<div class="clearfix"></div>'
-            );
-        }
-        $('.pregnant_file_attachment_').append(
-            '<div class="col-md-3" id="pregnant_upload_'+pregnant_pos+'">\n' +
-            '   <div class="file-upload_">\n' +
-            '       <div class="text-center image-upload-wrap_" id="pregnant_image-upload-wrap_'+pregnant_pos+'">\n' +
-            '           <input class="file-upload-input_" multiple type="file" name="file_upload[]" onchange="readURLPregnantRevised(this, '+pregnant_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
-            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
-            '       </div>\n' +
-            '       <div class="file-upload-content_" id="pregnant_file-upload-content_'+pregnant_pos+'">\n' +
-            '           <img class="file-upload-image_" id="pregnant_file-upload-image_'+pregnant_pos+'"/>\n' +
-            '           <div class="image-title-wrap_">\n' +
-            '               <b><small class="image-title_" id="pregnant_image-title_'+pregnant_pos+'" style="display:block; word-wrap: break-word;">Uploaded File</small></b>\n' +
-            '               <button type="button" id="pregnant_remove_upload'+pregnant_pos+'" onclick="removeUploadPregnantRevised('+pregnant_pos+')" class="remove-icon-btn_"><i class="fa fa-trash"></i></button>\n' +
-            '           </div>\n' +
-            '       </div>\n' +
-            '   </div>\n' +
-            '</div>'
-        );
-        pregnant_pos+=1;
-    }
-
-    
-    function removeUploadPregnantRevised(uploadCount){
-        $('#pregnant_upload_' + uploadCount).remove();
-
-        upload_count -= 1;
-
-        if(pregnant_pos > uploadCount){
-            pregnant_pos -= 1;
-        }
-        if(uploadCount === 0){
-            $('#preg_remove_files_');
-        }
-
-        console.log("upload_pos:", pregnant_pos);
-
-    }
-
-    
-
-    function removeFilePregnantRevised() {
-        $('.pregnant_file_attachment_').html("");
-        pregnant_count = 0;
-        pregnant_pos = 1;
-        $('#preg_remove_files_').hide();
-        addFilePregnant();
-    }
-
-    
-    $(document).ready(function() {
-        for (var i = 0; i < pregnant_count; i++) {
-            $('#pregnant_image-upload-wrap_' + i).bind('dragover', function () {
-                $('#pregnant_image-upload-wrap_' + i).addClass('image-dropping');
-            });
-            $('#pregnant_image-upload-wrap_' + i).bind('dragleave', function () {
-                $('#pregnant_image-upload-wrap_' + i).removeClass('image-dropping');
-            });
-        }
-        $('#preg_remove_files_').hide();
     });
 
 </script>

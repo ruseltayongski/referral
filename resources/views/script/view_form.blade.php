@@ -13,159 +13,88 @@
 
 
         
-        if(type === 'normal') {
-            form_type = '#referralForm';
-            var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
-            $(".referral_body").html(loading);
-            $.ajax({
-                url: form_url,
-                type: "GET",
-                success: function(data) {
-                    console.log("normal");
-                    setTimeout(function(){
-                        $(".referral_body").html(data);
-                    },300);
-                },
-                error: function(){
-                    $('#serverModal').modal();
-                }
-            });
-        }
-        else if(type === 'pregnant') {
-            form_type = '#referralForm';
-            $(".referral_body").html(loading);
-            console.log("pregnant");
-            $.ajax({
-                url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id+"/"+referral_status+"/"+type,
-                type: "GET",
-                success: function(request){
-                    setTimeout(function() {
-                        $(".referral_body").html(request);
-                    },300);
-                },
-                error: function(){
-                    $('#serverModal').modal();
-                }
-            });
-
-        }
-
-
+      
        
-        // $.ajax({
-        //     url: "{{ url('get-form-type/') }}/" + form_id,
-        //     type: 'GET',
-        //     success: function(response){
-        //         var form_type = response.form_type;
-        //         console.log('Form Type:', form_type);
-                
-        //         var form_selector; // New variable to hold form identifier
+        $.ajax({
+        url: "{{ url('get-form-type')}}/" + form_id,
+        type: 'GET',
+        success: function(response) {
+            let form_type = response.form_type;
+            console.log('Form Type:', form_type);
 
-        //         // if (form_type === 'version1') {
-        //         //     if (type === 'normal') {
-        //         //         var form_url = "{{ url('doctor/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
-        //         //         $(".referral_body").html(loading);
-        //         //         $.ajax({
-        //         //             url: form_url,
-        //         //             type: "GET",
-        //         //             success: function(data) {
-        //         //                 console.log("normal");
-        //         //                 setTimeout(function() {
-        //         //                     $(".referral_body").html(data);
-        //         //                 }, 300);
-        //         //             },
-        //         //             error: function() {
-        //         //                 $('#serverModal').modal();
-        //         //             }
-        //         //         });
-        //         //     } else if (type === 'pregnant') {
-        //         //         $(".referral_body").html(loading);
-        //         //         console.log("pregnant");
-        //         //         $.ajax({
-        //         //             url: "{{ url('doctor/referral/data/pregnant') }}/" + form_id + "/" + referral_status + "/" + type,
-        //         //             type: "GET",
-        //         //             success: function(request) {
-        //         //                 setTimeout(function() {
-        //         //                     $(".referral_body").html(request);
-        //         //                 }, 300);
-        //         //             },
-        //         //             error: function() {
-        //         //                 $('#serverModal').modal();
-        //         //             }
-        //         //         });
-        //         //     }
-        //         // } else if (form_type === 'version2') {
-                    
-        //         //     if (type === 'normal') {
-        //         //         var form_url_v2 = "{{ url('doctor/revised/referral/data/normal') }}/" + form_id + "/" + referral_status + "/" + type;
-        //         //         $(".referral_body").html(loading);
-        //         //         $.ajax({
-        //         //             url: form_url_v2,
-        //         //             type: "GET",
-        //         //             success: function(request){
-        //         //                 setTimeout(function() {
-        //         //                     $(".referral_body").html(request);
-        //         //                 }, 300); 
-        //         //             },
-        //         //             error: function(){
-        //         //                 $('#serverModal').modal();
-        //         //             }
-        //         //         });         
-        //         //     } else if (type === 'pregnant') {
-        //         //         var form_url_v2 = "{{ url('doctor/revised/referral/data/pregnant') }}/" + form_id + "/" + referral_status + "/" + type;
-        //         //         $(".referral_body").html(loading);
-        //         //         $.ajax({
-        //         //             url: form_url_v2,
-        //         //             type: "GET",
-        //         //             success: function(request){
-        //         //                 setTimeout(function() {
-        //         //                     $(".referral_body").html(request);
-        //         //                 }, 300); 
-        //         //             },
-        //         //             error: function(){
-        //         //                 $('#serverModal').modal();
-        //         //             }
-        //         //         });         
-                       
-        //         //     }
-        //         // }  else{
-        //             if(type === 'normal') {
-        //                 form_type = '#referralForm';
-        //                 var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
-        //                 $(".referral_body").html(loading);
-        //                 $.ajax({
-        //                     url: form_url,
-        //                     type: "GET",
-        //                     success: function(data) {
-        //                         console.log("normal");
-        //                         setTimeout(function(){
-        //                             $(".referral_body").html(data);
-        //                         },300);
-        //                     },
-        //                     error: function(){
-        //                         $('#serverModal').modal();
-        //                     }
-        //                 });
-        //             }
-        //             else if(type === 'pregnant') {
-        //                 form_type = '#referralForm';
-        //                 $(".referral_body").html(loading);
-        //                 console.log("pregnant");
-        //                 $.ajax({
-        //                     url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id+"/"+referral_status+"/"+type,
-        //                     type: "GET",
-        //                     success: function(request){
-        //                         setTimeout(function() {
-        //                             $(".referral_body").html(request);
-        //                         },300);
-        //                     },
-        //                     error: function(){
-        //                         $('#serverModal').modal();
-        //                     }
-        //                 });
-        //         }
-        //     },
-        // });
+            if (form_type === 'version2') {
+                if (type === 'normal') {
+                    var form_url_v2 = "{{ url('doctor/revised/referral/data/normal')}}/" + form_id + "/" + referral_status + "/" + type;
+                    $(".referral_body").html(loading);
+                    $.ajax({
+                        url: form_url_v2,
+                        type: "GET",
+                        success: function(request) {
+                            setTimeout(function() {
+                                $(".referral_body").html(request);
+                            }, 300);
+                        },
+                        error: function() {
+                            $('#serverModal').modal();
+                        }
+                    });
+                } else if (type === 'pregnant') {
+                    var form_url_v2 = "{{ url('doctor/revised/referral/data/pregnant')}}/" + form_id + "/" + referral_status + "/" + type;
+                    $(".referral_body").html(loading);
+                    $.ajax({
+                        url: form_url_v2,
+                        type: "GET",
+                        success: function(request) {
+                            setTimeout(function() {
+                                $(".referral_body").html(request);
+                            }, 300);
+                        },
+                        error: function() {
+                            $('#serverModal').modal();
+                        }
+                    });
+                }
+            } else if (!form_type || form_type === 'version1') { 
+                if(type === 'normal') {
+                    form_type = '#referralForm';
+                    var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
+                    $(".referral_body").html(loading);
+                    $.ajax({
+                        url: form_url,
+                        type: "GET",
+                        success: function(data) {
+                            console.log("normal");
+                            setTimeout(function(){
+                                $(".referral_body").html(data);
+                            },300);
+                        },
+                        error: function(){
+                            $('#serverModal').modal();
+                        }
+                    });
+                }
+                else if(type === 'pregnant') {
+                    form_type = '#referralForm';
+                    $(".referral_body").html(loading);
+                    console.log("pregnant");
+                    $.ajax({
+                        url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id+"/"+referral_status+"/"+type,
+                        type: "GET",
+                        success: function(request){
+                            setTimeout(function() {
+                                $(".referral_body").html(request);
+                            },300);
+                        },
+                        error: function(){
+                            $('#serverModal').modal();
+                        }
+                    });
+
+                }
+            }
+        }
+    });
+
 
 
         if(referral_status === 'referred' || referral_status === 'redirected' || referral_status === 'transferred') {
@@ -272,6 +201,7 @@ $('body').on('click','.edit_form_btn',function(e) {
         form_id = $(this).data('id');
         type = $(this).data('type');
         status = $(this).data('referral_status');
+      
 
         var form_url = "{{ url('doctor/referral/edit_info') }}/"+form_id+"/"+type+"/"+status;
         $(".edit_referral_body").html(loading);
@@ -290,6 +220,28 @@ $('body').on('click','.edit_form_btn',function(e) {
         });
     });
 
+$('body').on('click','.edit_form_revised_btn',function(e) {
+        $('#referralForm').hide();
+        form_id = $(this).data('id');
+        type = $(this).data('type');
+        status = $(this).data('referral_status');
+        
+        var form_url = "{{ url('doctor/referral/edit_info/revised') }}/"+form_id+"/"+type+"/"+status;
+        $(".edit_referral_body").html(loading);
+        $.ajax({
+            url: form_url,
+            type: "GET",
+            success: function(data) {
+                console.log("form url: " + form_url);
+                setTimeout(function(){
+                    $('.edit_referral_body').html(data);
+                },300);
+            },
+            error: function(){
+                $('#serverModal').modal();
+            }
+        });
+    });
 
     $('body').on('click','.undo_cancel_btn',function(e) {
         form_id = $(this).data('id');
