@@ -206,7 +206,7 @@
                                     <th class="text-center">Created By</th>
                                     <th class="text-center">Facility</th>
                                     <th class="text-center">Department</th>
-                                    {{-- <th class="text-center">OPD Category</th> --}}
+                                    <th class="text-center">OPD Category</th> 
                                     <th class="text-center">Available Doctor</th>
                                     <!-- <th class="text-center">Slot</th> -->
                                     <th class="text-center">Action</th>

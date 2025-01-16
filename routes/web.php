@@ -671,9 +671,11 @@ Route::post('doctor/referral/queuePatient', 'doctor\ReferralCtrl@queuePatient');
 Route::match(['GET', 'POST'], 'doctor/duplicate', 'doctor\ReferralCtrl@duplicates');
 Route::match(['GET', 'POST'], 'doctor/telemedicine', 'doctor\TelemedicineCtrl@index');
 
+Route::post('/doctor/getconfigappointment', 'doctor\TelemedicineCtrl@getconfigAppointment');
 Route::get('/get-booked-dates', 'doctor\TelemedicineCtrl@getBookedDates')->name('get-booked-dates'); // I add this to get all dates that booked by the user
 Route::get('doctor/appointment/calendar', 'doctor\TelemedicineCtrl@appointmentCalendar');
 Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment')->name('manage.appointment');
+
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
 Route::post('update-doctor-config', 'doctor\TelemedicineCtrl@updateDoctorConfig')->name('update-doctor-config');
 
@@ -687,10 +689,12 @@ Route::get('/user/get/{id}', 'doctor\TelemedicineCtrl@getUserData')->name('get-u
 Route::get('/appointment/getFacility/{id}', 'doctor\TelemedicineCtrl@getFacilityDetails')->name('get-Facility-Details');
 Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->name('get-doctors');
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
+Route::post('/appointment/config-time-Slot', 'doctor\TelemedicineCtrl@getConfigtimeSlot')->name('appointment-config-time-Slot');
 
+Route::get('get-config-data-sched/{id}', 'doctor\TelemedicineCtrl@getdoctorconfig');
 Route::get('/configSchedule',  'doctor\TelemedicineCtrl@configSched')->name('ConfigSchedule');
 Route::get('get-config/{id}', 'doctor\TelemedicineCtrl@getConfig');
-Route::get('delete-Config/{id}/{id}', 'doctor\TelemedicineCtrl@deleteSchedule');
+// Route::get('delete-Config/{id}/{id}', 'doctor\TelemedicineCtrl@deleteSchedule');
 
 Route::post('/add/configSched', 'doctor\TelemedicineCtrl@AddconfigSched')->name('add.configSched');
 Route::post('edit/configSched', 'doctor\TelemedicineCtrl@editconfigSched')->name('edit.configSched');

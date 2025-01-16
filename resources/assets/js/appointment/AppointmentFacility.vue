@@ -301,7 +301,6 @@ export default {
         //remove element
         $(".fc-day").css("background-color", "");
         $(".fc-day").removeClass("add-cursor-pointer");
-        //
       }
       this.$emit("facilitySelected", id);
     },

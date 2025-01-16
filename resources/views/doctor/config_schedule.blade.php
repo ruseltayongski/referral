@@ -94,7 +94,7 @@ use App\Facility;
                             <tr style="font-size: 12px">
                                 <td>{{$schedule->description}}</td>
                                 <td>  
-                                    {{ $department->firstWhere('id',  $schedule->department_id)->description ?? 'N/A' }}
+                                    {{$schedule->deparment_subcategory}}
                                 </td>
                                 <td>{{ $facility->name }}</td>
                                 <td>{{ $schedule->category }}</td>
@@ -109,11 +109,11 @@ use App\Facility;
                                         <i class="fa fa-pencil"></i>
                                     </button> -->
 
-                                    <button class="btn btn-primary btn-sm" onclick="UpdateConfig({{ $schedule->id }})">
+                                    <button class="btn btn-primary btn-sm" onclick="UpdateConfig({{$schedule->id}})">
                                         <i class="fa fa-pencil"></i>
                                     </button>
                                     <!-- do not delete this delete button -->
-                                    <!-- <button class="btn btn-danger btn-sm"><i class="fa fa-trash" data-toggle="modal" data-target="#deleteConfig{{$schedule->id}}"></i></button>  -->
+                                    <button class="btn btn-danger btn-sm"><i class="fa fa-trash" data-toggle="modal" data-target="#deleteConfig{{$schedule->id}}"></i></button> 
                                 </td>
                             </tr>
                             <!-- Modal Structure for each schedule -->
@@ -168,269 +168,129 @@ use App\Facility;
                                 </div>
                             </div>
 
-                                <!-- Update Config Appointment -->
-                                <!-- <div class="modal fade" role="dialog" id="editModal{{$configId}}" data-backdrop="static" data-keyboard="false" aria-labelledby="editModalLabel{{$configId}}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-body">
-                                                    <fieldset>
-                                                        <legend>
-                                                            <i class="fa fa-calendar-plus-o"></i> Update Config Appointment
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="Add-close-apppoint">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </legend>
-                                                    </fieldset>
-                                                <form id="UpdateAppointmentConfigModal" action="{{ route('edit.configSched') }}" method="POST">
+                            <!-- Delete Config Appointment -->
+                            <div class="modal fade" role="dialog" id="deleteConfig{{$configId}}" data-backdrop="static" data-keyboard="false" aria-labelledby="deleteModalLabel{{$configId}}" aria-hidden="true">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <form id="deleteAppointmentConfigModal" action="{{ route('delete.configSched') }}" method="POST">
+                                                {{ csrf_field() }}
+                                                <fieldset>
+                                                    <legend>
+                                                        <i class="fa fa-calendar-plus-o"></i> Delete Config Appointment
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="Add-close-apppoint">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </legend>
+                                                </fieldset>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="label-border">
 
-                                                    {{ csrf_field() }}
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="label-border">
+                                                                <label for="configdesc">Description:</label>
+                                                                <input type="text" class="form-control" name="deleteconfigdesc" id="Configdesc" value="{{$schedule->description}}" required disabled>
+                                                                <input type="hidden" name="configId" value="{{$configId}}">
+                                                                <label for="update_opdCategory">OPD Category:</label>
+                                                                <!-- <select class="form-control select2" id="add_department" name="delete_department_id" required disabled>
+                                                                    <option selected value="">Select Department Category</option>
+                                                                @foreach($department as $dept)
+                                                                    <option value="{{$dept->id}}" @if($dept->id === $schedule->department_id) selected @endif>{{$dept->description}}</option>
+                                                                @endforeach
+                                                                </select> -->
+                                                                <input type="text" class="form-control" value="{{$schedule->deparment_subcategory}}" disabled>
+                                                                <input type="hidden" class="form-control" name="delete_department_id" value="{{$schedule->deparment_subcategory}}">
 
-                                                                    <label for="configdesc">Description:</label>
-                                                                    <input type="text" class="form-control" name="Updateconfigdesc" id="Configdesc" value="{{$schedule->description}}" required>
-                                                                    <input type="hidden" name="configId" value="{{$configId}}">
-                                                                   
-                                                                    <label for="update_opdCategory">Department Category:</label>
-                                                                    <select class="form-control select2" id="add_department" name="update_department_id" required>
-                                                                        <option selected value="">Select Department Category</option>
-                                                                    @foreach($department as $dept)
-                                                                        <option value="{{$dept->id}}" @if($dept->id === $schedule->department_id) selected @endif>{{$dept->description}}</option>
-                                                                    @endforeach
-                                                                    </select>
-
-                                                                    <label for="defaultCategory">Default Category:</label>
-                                                                    <select class="form-control select2" id="defaultCategory" name="Update_default_category" required>
-                                                                        <option selected value="">Select Default Category</option>
-                                                                        <option value="1 Week" @if($schedule->category === '1 Week') selected @endif>1 Week</option>
-                                                                        <option value="1 Month"  @if($schedule->category === '1 Month') selected @endif>1 Month</option>
-                                                                    </select>
-                                                                
-                                                                    <label for="Facility">Facility:</label>
-                                                                    <input type="hidden" name="Updatefacility_id" value="{{$fact[0]->id}}">
-                                                                    <input type="text" class="form-control" name="Update_facility_name" id="Facility" value="{{ $fact[0]->name }}" required disabled>
-                                                                </div>
+                                                                <label for="defaultCategory">Default Category:</label>
+                                                                <select class="form-control select2" id="defaultCategory" name="delete_default_category" required disabled>
+                                                                    <option selected value="">Select Default Category</option>
+                                                                    <option value="1 Week" @if($schedule->category === '1 Week') selected @endif>1 Week</option>
+                                                                    <option value="1 Month"  @if($schedule->category === '1 Month') selected @endif>1 Month</option>
+                                                                </select>
+                                                            
+                                                                <label for="Facility">Facility:</label>
+                                                                <input type="hidden" name="deletefacility_id" value="{{$fact[0]->id}}">
+                                                                <input type="text" class="form-control" name="delete_facility_name" id="Facility" value="{{ $fact[0]->name }}" required disabled>
                                                             </div>
-                                                            @php
-                                                                $days_available = explode('|', $schedule->days);
-                                                                $timeSlots = []; 
-                                                                $timeEntries = explode('|', $schedule->time);
+                                                        </div>
+                                                        @php
+                                                            $days_available = explode('|', $schedule->days);
+                                                            $timeSlots = []; 
+                                                            $timeEntries = explode('|', $schedule->time);
 
-                                                                $check_days = ["Monday", "Tuesday", "Wednesday","Thursday","Friday", "Saturday", "Sunday"];
+                                                            $check_days = ["Monday", "Tuesday", "Wednesday","Thursday","Friday", "Saturday", "Sunday"];
 
-                                                                $currentDay = null;
-                                                                foreach($timeEntries as $entry){
-                                                                    if(preg_match('/[a-zA-Z]+/', $entry)){
-                                                                        $currentDay = $entry;
-                                                                    }else{
-                                                                        $timeSlots[$currentDay][] = $entry;
-                                                                    }
+                                                            $currentDay = null;
+                                                            foreach($timeEntries as $entry){
+                                                                if(preg_match('/[a-zA-Z]+/', $entry)){
+                                                                    $currentDay = $entry;
+                                                                }else{
+                                                                    $timeSlots[$currentDay][] = $entry;
                                                                 }
-                                                            @endphp
-                                                            <div class="col-md-6">
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <strong>Repeat</strong>
-                                                                    </div>
-                                                                    <div class="panel-body">
-                                                                        @foreach($check_days as $day)
-                                                                            @php
-                                                                                $isAvailable = in_array($day, $days_available);
-                                                                            @endphp
+                                                            }
+                                                        @endphp
+                                                        <div class="col-md-6">
+                                                            <div class="panel panel-default">
+                                                                <div class="panel-heading">
+                                                                    <strong>Repeat</strong>
+                                                                </div>
+                                                                <div class="panel-body">
+                                                                @foreach($check_days as $day)
+                                                                    @php
+                                                                        $isAvailable = in_array($day, $days_available);
+                                                                    @endphp
                                                                             <div class="checkbox">
                                                                                 <label>
-                                                                                    <input type="checkbox" class="update-day-checkbox" name="updatedays[]" value="{{ $day }}" {{ $isAvailable  ? 'checked' : '' }}>
+                                                                                    <input type="checkbox" class="delete-day-checkbox" name="deletedays[]" value="{{ $day }}" {{ $isAvailable  ? 'checked' : '' }} disabled>
                                                                                     {{ $day }}
                                                                                 </label>
                                                                                 <div class="time-slots" style="margin-left: 20px; {{ $isAvailable ? '' : 'display:none;' }}">
                                                                                     @if($isAvailable && isset($timeSlots[$day]))
-                                                                                        @foreach($timeSlots[$day] as $index => $slot)
+                                                                                        @foreach($timeSlots[$day] as $slot)
                                                                                             @php
                                                                                                 [$timeFrom, $timeTo] = explode('-', $slot);
                                                                                             @endphp
-                                                                                            <div class="row time-slot_edit">
+                                                                                            <div class="row time-slot">
                                                                                                 <div class="col-md-5">
                                                                                                     <label>Time From:</label>
-                                                                                                    <input type="time" name="update_time_from[{{ $day }}][]" class="form-control input-sm" value="{{ $timeFrom }}">
+                                                                                                    <input type="time" name="delete_time_from[{{ $day }}][]" class="form-control input-sm" value="{{ $timeFrom }}" disabled>
                                                                                                 </div>
                                                                                                 <div class="col-md-5">
                                                                                                     <label>Time To:</label>
-                                                                                                    <input type="time" name="update_time_to[][]" class="form-control input-sm" value="{{ $timeTo }}">
+                                                                                                    <input type="time" name="delete_time_to[{{ $day }}][]" class="form-control input-sm" value="{{ $timeTo }}" disabled>
                                                                                                 </div>
                                                                                                 <div class="col-md-2">
-                                                                                                    @if($index > 0)
-                                                                                                        <button type="button" class="btn btn-danger btn-sm update_remove-time-slot">
-                                                                                                            <i class="fa fa-trash"></i>
-                                                                                                        </button>
-                                                                                                    @endif
+                                                                                                    <button type="button" class="btn btn-danger btn-sm delete_remove-time-slot" disabled>
+                                                                                                        <i class="fa fa-trash"></i>
+                                                                                                    </button>
                                                                                                 </div>
                                                                                             </div>
                                                                                         @endforeach
-                                                                                    @else
-                                                                                    <div class="row time-slot_edit">
-                                                                                        <div class="col-md-5">
-                                                                                            <label>Time From:</label>
-                                                                                            <input type="time" name="update_time_from[{{ $day }}][]" class="form-control input-sm">
-                                                                                        </div>
-                                                                                        <div class="col-md-5">
-                                                                                            <label>Time To:</label>
-                                                                                            <input type="time" name="update_time_to[{{ $day }}][]" class="form-control input-sm">
-                                                                                        </div>
-                                                                                        <div class="col-md-2">
-                                                                                            <button type="button" class="btn btn-danger btn-sm update_remove-time-slot">
-                                                                                                <i class="fa fa-trash"></i>
-                                                                                            </button>
-                                                                                        </div>
-                                                                                    </div>
                                                                                     @endif
-                                                                                    <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="{{ $day }}" style="margin-top: 10px;">
+                                                                                    <button type="button" class="btn btn-primary btn-xs delete-time-slot" data-day="{{ $day }}" style="margin-top: 10px;" disabled>
                                                                                         <i class="fa fa-plus"></i> Add Time Slot
                                                                                     </button>
                                                                                 </div>
                                                                             </div>
-                                                                        @endforeach
-                                                                    </div>
+                                                                @endforeach
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Add_Cancel_appointment">
-                                                            <i class="fa fa-times"></i> Cancel
-                                                        </button>
-                                                        <button type="submit" class="btn btn-success btn-sm">
-                                                            <i class="fa fa-send"></i> Submit
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
-
-                                <!-- Delete Config Appointment -->
-                                <div class="modal fade" role="dialog" id="deleteConfig{{$configId}}" data-backdrop="static" data-keyboard="false" aria-labelledby="deleteModalLabel{{$configId}}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-body">
-                                                <form id="deleteAppointmentConfigModal" action="{{ route('delete.configSched') }}" method="POST">
-                                                    {{ csrf_field() }}
-                                                    <fieldset>
-                                                        <legend>
-                                                            <i class="fa fa-calendar-plus-o"></i> Delete Config Appointment
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="Add-close-apppoint">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </legend>
-                                                    </fieldset>
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="label-border">
-
-                                                                    <label for="configdesc">Description:</label>
-                                                                    <input type="text" class="form-control" name="deleteconfigdesc" id="Configdesc" value="{{$schedule->description}}" required disabled>
-                                                                    <input type="hidden" name="configId" value="{{$configId}}">
-                                                                    <label for="update_opdCategory">Department Category:</label>
-                                                                    <select class="form-control select2" id="add_department" name="delete_department_id" required disabled>
-                                                                        <option selected value="">Select Department Category</option>
-                                                                    @foreach($department as $dept)
-                                                                        <option value="{{$dept->id}}" @if($dept->id === $schedule->department_id) selected @endif>{{$dept->description}}</option>
-                                                                    @endforeach
-                                                                    </select>
-
-                                                                    <label for="defaultCategory">Default Category:</label>
-                                                                    <select class="form-control select2" id="defaultCategory" name="delete_default_category" required disabled>
-                                                                        <option selected value="">Select Default Category</option>
-                                                                        <option value="1 Week" @if($schedule->category === '1 Week') selected @endif>1 Week</option>
-                                                                        <option value="1 Month"  @if($schedule->category === '1 Month') selected @endif>1 Month</option>
-                                                                    </select>
-                                                                
-                                                                    <label for="Facility">Facility:</label>
-                                                                    <input type="hidden" name="deletefacility_id" value="{{$fact[0]->id}}">
-                                                                    <input type="text" class="form-control" name="delete_facility_name" id="Facility" value="{{ $fact[0]->name }}" required disabled>
-                                                                </div>
-                                                            </div>
-                                                            @php
-                                                                $days_available = explode('|', $schedule->days);
-                                                                $timeSlots = []; 
-                                                                $timeEntries = explode('|', $schedule->time);
-
-                                                                $check_days = ["Monday", "Tuesday", "Wednesday","Thursday","Friday", "Saturday", "Sunday"];
-
-                                                                $currentDay = null;
-                                                                foreach($timeEntries as $entry){
-                                                                    if(preg_match('/[a-zA-Z]+/', $entry)){
-                                                                        $currentDay = $entry;
-                                                                    }else{
-                                                                        $timeSlots[$currentDay][] = $entry;
-                                                                    }
-                                                                }
-                                                            @endphp
-                                                            <div class="col-md-6">
-                                                                <div class="panel panel-default">
-                                                                    <div class="panel-heading">
-                                                                        <strong>Repeat</strong>
-                                                                    </div>
-                                                                    <div class="panel-body">
-                                                                    @foreach($check_days as $day)
-                                                                        @php
-                                                                            $isAvailable = in_array($day, $days_available);
-                                                                        @endphp
-                                                                                <div class="checkbox">
-                                                                                    <label>
-                                                                                        <input type="checkbox" class="delete-day-checkbox" name="deletedays[]" value="{{ $day }}" {{ $isAvailable  ? 'checked' : '' }} disabled>
-                                                                                        {{ $day }}
-                                                                                    </label>
-                                                                                    <div class="time-slots" style="margin-left: 20px; {{ $isAvailable ? '' : 'display:none;' }}">
-                                                                                        @if($isAvailable && isset($timeSlots[$day]))
-                                                                                            @foreach($timeSlots[$day] as $slot)
-                                                                                                @php
-                                                                                                    [$timeFrom, $timeTo] = explode('-', $slot);
-                                                                                                @endphp
-                                                                                                <div class="row time-slot">
-                                                                                                    <div class="col-md-5">
-                                                                                                        <label>Time From:</label>
-                                                                                                        <input type="time" name="delete_time_from[{{ $day }}][]" class="form-control input-sm" value="{{ $timeFrom }}" disabled>
-                                                                                                    </div>
-                                                                                                    <div class="col-md-5">
-                                                                                                        <label>Time To:</label>
-                                                                                                        <input type="time" name="delete_time_to[{{ $day }}][]" class="form-control input-sm" value="{{ $timeTo }}" disabled>
-                                                                                                    </div>
-                                                                                                    <div class="col-md-2">
-                                                                                                        <button type="button" class="btn btn-danger btn-sm delete_remove-time-slot" disabled>
-                                                                                                            <i class="fa fa-trash"></i>
-                                                                                                        </button>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            @endforeach
-                                                                                        @endif
-                                                                                        <button type="button" class="btn btn-primary btn-xs delete-time-slot" data-day="{{ $day }}" style="margin-top: 10px;" disabled>
-                                                                                            <i class="fa fa-plus"></i> Add Time Slot
-                                                                                        </button>
-                                                                                    </div>
-                                                                                </div>
-                                                                    @endforeach
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Add_Cancel_appointment">
-                                                            <i class="fa fa-times"></i> Cancel
-                                                        </button>
-                                                        <button type="submit" class="btn btn-danger btn-sm">
-                                                            <i class="fa fa-trash"></i> Delete
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Add_Cancel_appointment">
+                                                        <i class="fa fa-times"></i> Cancel
+                                                    </button>
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fa fa-trash"></i> Delete
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                         @endforeach
                     </table>
                     <div class="text-center">
@@ -470,12 +330,32 @@ use App\Facility;
                                         <label for="configdesc">Description:</label>
                                         <input type="text" class="form-control" name="configdesc" id="Config_desc" required>
                                         <input type="hidden" id="update-config_id" name="edit_configId">
-                                        <label for="add_opdCategory">Department Category:</label>
-                                        <select class="form-control select2" id="editdepartment_config" name="department_id" required>
-                                            <option selected value="">Select Department Category</option>
-                                        @foreach($department as $dept)
-                                            <option value="{{$dept->id}}"  >{{$dept->description}}</option>
-                                        @endforeach
+
+                                        <input type="hidden" name="department_id" id="" value="5">
+
+                                        <label for="add_opdCategory">Opd Category:</label>
+                                        <select class="form-control select2" id="editdepartment_config" name="department_subcategory" required>
+                                            <option selected value="">Select Opd Category</option>
+                                            <option value="Family Medicine">Family Medicine</option>
+                                            <option value="Internal Medicine">Internal Medicine</option>
+                                            <option value="General Surgery">General Surgery</option>
+                                            <option value="Trauma Care">Trauma Care</option>
+                                            <option value="Burn Care">Burn Care</option>
+                                            <option value="Ophthalmology">Ophthalmology</option>
+                                            <option value="ENT">ENT</option>
+                                            <option value="Neurology">Neurology</option>
+                                            <option value="Urosurgery">Urosurgery</option>
+                                            <option value="Toxicology">Toxicology</option>
+                                            <option value="OB-GYNE">OB-GYNE</option>
+                                            <option value="Pediatric">Pediatric</option>      
+                                            <option value="Oncology">Oncology</option>      
+                                            <option value="Nephrology">Nephrology</option>      
+                                            <option value="Dermatology">Dermatology</option>       
+                                            <option value="Surgery">Surgery</option>   
+                                            <option value="Geriatics Medicine">Geriatics Medicine</option>          
+                                            <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
+                                            <option value="Orthopedics">Orthopedics</option>   
+                                            <option value="Cardiology">Cardiology</option>              
                                         </select>
 
                                         <label for="defaultCategory">Default Category:</label>
@@ -712,13 +592,30 @@ use App\Facility;
 
                                     <label for="configdesc">Description:</label>
                                     <input type="text" class="form-control" name="configdesc" id="Configdesc" required>
-
-                                    <label for="add_opdCategory">Department Category:</label>
-                                    <select class="form-control select2" id="add_department" name="department_id" required>
-                                        <option selected value="">Select Department Category</option>
-                                    @foreach($department as $dept)
-                                        <option value="{{$dept->id}}">{{$dept->description}}</option>
-                                    @endforeach
+                                    <input type="hidden" name="department_id" id="" value="5">                          
+                                    <label for="add_opdCategory">OPD Category:</label>
+                                    <select class="form-control select2" id="add_department" name="department_subcategory" required>
+                                        <option selected value="">Select OPD Category</option>
+                                        <option value="Family Medicine">Family Medicine</option>
+                                        <option value="Internal Medicine">Internal Medicine</option>
+                                        <option value="General Surgery">General Surgery</option>
+                                        <option value="Trauma Care">Trauma Care</option>
+                                        <option value="Burn Care">Burn Care</option>
+                                        <option value="Ophthalmology">Ophthalmology</option>
+                                        <option value="ENT">ENT</option>
+                                        <option value="Neurology">Neurology</option>
+                                        <option value="Urosurgery">Urosurgery</option>
+                                        <option value="Toxicology">Toxicology</option>
+                                        <option value="OB-GYNE">OB-GYNE</option>
+                                        <option value="Pediatric">Pediatric</option>      
+                                        <option value="Oncology">Oncology</option>      
+                                        <option value="Nephrology">Nephrology</option>      
+                                        <option value="Dermatology">Dermatology</option>       
+                                        <option value="Surgery">Surgery</option>   
+                                        <option value="Geriatics Medicine">Geriatics Medicine</option>          
+                                        <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
+                                        <option value="Orthopedics">Orthopedics</option>   
+                                        <option value="Cardiology">Cardiology</option>             
                                     </select>
 
                                     <label for="defaultCategory">Default Category:</label>
@@ -1050,14 +947,14 @@ $(document).ready(function() {
             url: `get-config/${configId}`,
             method: 'GET',
             success: function(res) {
-
+                console.log("res.deparment_subcategory::", res.deparment_subcategory);
                 const days = res.days;
                 const times = res.times;
                 const category = res.category.trim();
                 // console.log('days', days, 'times', times, 'res.category', res.category);
                 console.log(`category value: ${category}`);
                 $('#Config_desc').val(res.descript);
-                $('#editdepartment_config').val(res.department).trigger('change');
+                $('#editdepartment_config').val(res.deparment_subcategory).trigger('change');
                 $('#edit_default_Category').val(category).trigger('change');
                 $('#update-config_id').val(res.configId)
 
@@ -1131,7 +1028,7 @@ $(document).ready(function() {
         $(this).before(timeSlot);
     });
     // Remove a time slot
-    $(document).on('click', '.remove-time-slot', function () {
+    $(document).on('click', '.editremove-time-slot', function () {
         $(this).closest('.Update-time-slots').remove();
     });
     // Remove time slot

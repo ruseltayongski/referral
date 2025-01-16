@@ -1,9 +1,23 @@
 <script>
+import { appointmentScheduleDate, appointmentScheduleHours, appointmentConfigHours, appointmentConfigData } from "./api/index";
 export default {
   name: "AppointmentTime",
   props: {
     appointedTimes: {
       type: Object,
+    },
+    appointmentclickDate: {
+      type: Object,
+      default: null,
+    },
+    manualDate: {
+      type: Object,
+    },
+    configTimeSlot: {
+      type: Object
+    },
+    appointmentAssign: {
+      type: Object
     },
     facilitySelectedId: {
       type: Number,
@@ -11,12 +25,39 @@ export default {
   },
   data() {
     return {
+      configAppoinmentTime: [],
       selectedAppointmentTime: null,
       selectedAppointmentDoctor: null,
       showAppointmentTime: false,
       base: $("#broadcasting_url").val(),
       followUpReferredId: 0,
       followUpCode: null,
+      configSelectedTime: null,
+      configOpdcategory: null,
+      selectedDepartment: null,
+      selectedOpdCategory: null,
+      opdSubcategories: [
+        'Family Medicine',
+        'Internal Medicine',
+        'General Surgery',
+        'Trauma Care',
+        'Burn Care',
+        'Opthalmology',
+        'ENT',
+        'Neurology',
+        'Urosurgery',
+        'Toxicology',
+        'OB-GYNE',
+        'Pediatric',
+        'Oncology',
+        'Nephrology',
+        'Dermatology', 
+        'Surgery',
+        'Geriatics Medicine',
+        'Physical and Rehabilitation Medicine',
+        'Orthopedics',
+        'Cardiology',
+      ],
     };
   },
   mounted() {
@@ -25,6 +66,7 @@ export default {
         new URL(window.location.href).searchParams.get("appointment")
       )
     );
+    
     if (telemedicineFollowUp) {
       this.followUpReferredId = telemedicineFollowUp[0].referred_id;
       this.followUpCode = telemedicineFollowUp[0].code;
@@ -39,8 +81,28 @@ export default {
     facilitySelectedId: async function (newValue, oldValue) {
       this.showAppointmentTime = false;
     },
+    configSelectedTime(newValue) {
+      console.log("my value::", newValue);
+      this.emitCurrentData();
+    },
+    currentConfig: {
+      deep: true,
+      handler() {
+        this.emitCurrentData();  
+      },
+    },
   },
   computed: {
+    currentConfig() {
+      if(Array.isArray(this.configTimeSlot)){
+        return this.configTimeSlot[0] || {};
+      }
+      return Object.values(this.configTimeSlot)[0] || {};
+    },
+     showConfigTimeSlot() {
+      // Check if configTimeSlot has data
+      return this.configTimeSlot && Object.keys(this.configTimeSlot).length > 0;
+    },
     areAllAppointmentFull() {
       return this.appointedTimes.every((appointment) =>
         this.areAllDoctorsNotAvailable(
@@ -52,6 +114,34 @@ export default {
     },
   },
   methods: {
+     emitCurrentData() {
+      // Emit the necessary data whenever a change occurs
+      this.$emit("data-changed-config", {
+        selectedTime: this.currentConfig.timeSlots,
+        date: this.currentConfig.date,
+        appointmentId: this.currentConfig.appointment_id,
+      });
+
+       const appointment = {
+          selectedTime: this.currentConfig.timeSlots,
+          date: this.currentConfig.date,
+          appointmentId: this.currentConfig.appointment_id,
+        };
+
+        // Assign the appointment object to _appointmentConfigData
+         this._appointmentConfigData(appointment);
+
+    },
+    handleconfigTimeSelection(timeSlot){
+      this.configSelectedTime = timeSlot;
+      this.selectedDepartment = null;
+    },
+    handleconfigcategory(opdSubcateory){
+       this.configOpdcategory = opdSubcateory;
+    },
+    formatTimeSlot(timeSlot){
+      return timeSlot.replace('-', ' to ');
+    },
     areAllDoctorsNotAvailable(doctors, date, time) {
       let currentDateTime = new Date();
       let currentDate = currentDateTime.toISOString().split("T")[0];
@@ -77,16 +167,6 @@ export default {
         return doctor_available; // Disable if all doctors are not available
       }
       return doctor_available; // Default to doctor availability if date is not provided
-
-      // if(date){
-      //     //return date < currentDate || doctors.every(doctor => doctor.appointment_by);
-      //     return date < currentDate;
-      // }
-
-      // // document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
-      // // document.querySelector('.hours_radio').setAttribute('min', currentDat);
-      // // $('.hours_radio').setAttribute('min', currentDate);
-      return doctors.every((doctor) => doctor.appointment_by);
     },
     isPastDatetime(appointedDate, appointedTime){
        const now = new Date();
@@ -95,15 +175,16 @@ export default {
     // If the appointment time is before the current time, return true (disabled)
         return appointmentDateTime < now;
     },
-    proceedAppointment() {
-      if (!this.selectedAppointmentTime) {
+    proceedAppointment(configtime,configDate,appointmentId,configId,opdSubcateg) {
+      console.log("selected time::", configtime,configDate,appointmentId,configId,opdSubcateg);
+      if ((!configId && !this.selectedAppointmentTime) || (configId && !configtime)) {
         Lobibox.alert("error", {
           msg: "Please Select Time",
         });
         return;
-      } else if (!this.selectedAppointmentDoctor) {
+      } else if (configId && !opdSubcateg) {
         Lobibox.alert("error", {
-          msg: "Please Select Doctor",
+          msg: "Please Select Opd Sub category",
         });
         return;
       }
@@ -118,11 +199,26 @@ export default {
         $("#telemedicineFollowupFormModal").modal("show");
         $("#followup_facility_id").val(this.facilitySelectedId);
       } else {
-        const appointment = {
-          facility_id: this.facilitySelectedId,
-          appointmentId: this.selectedAppointmentTime,
-          doctorId: this.selectedAppointmentDoctor,
-        };
+        let appointment = null;
+
+        if(configId){
+            appointment = {
+              facility_id: this.facilitySelectedId,
+              appointmentId: appointmentId,
+              config_id: configId,
+              configDate: configDate,
+              configtime: configtime
+            };
+            this.$emit("proceed-appointment", appointment);
+        }else{
+            appointment = {
+              facility_id: this.facilitySelectedId,
+              appointmentId: this.selectedAppointmentTime,
+              doctorId: this.selectedAppointmentDoctor,
+            };
+        }
+
+        
         console.log(appointment);
         window.location.href = `${
           this.base
@@ -151,6 +247,38 @@ export default {
 
       this.selectedAppointmentDoctor = doctorId;
     },
+    async _appointmentConfigData(payload){ 
+      const response =  await appointmentConfigData(payload);
+      this.configAppoinmentTime = response.data;
+    },
+    normalizeTimeFormat(timeString) {
+      // Normalize time to HH:mm (no seconds)
+      const [hours, minutes] = timeString.split(":");
+      return `${hours}:${minutes}`;
+    },
+
+    configAppointmentNot(timeSlot) {
+      // Split timeSlot into start and end times
+      const [timeSlot_start, timeSlot_end] = timeSlot.split("-");
+
+      // Normalize timeSlot to HH:mm format
+      const normalizedTimeSlotStart = this.normalizeTimeFormat(timeSlot_start);
+      const normalizedTimeSlotEnd = this.normalizeTimeFormat(timeSlot_end);
+
+      console.log("Normalized time slot:", normalizedTimeSlotStart, normalizedTimeSlotEnd);
+
+      // Check if any config time overlaps with the current timeSlot
+      return this.configAppoinmentTime.some((config) => {
+        // Normalize config start and end time to HH:mm
+        const normalizedConfigStartTime = this.normalizeTimeFormat(config.start_time);
+        const normalizedConfigEndTime = this.normalizeTimeFormat(config.end_time);
+
+        console.log(`Comparing ${normalizedConfigStartTime}–${normalizedConfigEndTime} with ${normalizedTimeSlotStart}–${normalizedTimeSlotEnd}`);
+        
+        // Return true to disable the radio button if times match
+        return normalizedConfigStartTime === normalizedTimeSlotStart && normalizedConfigEndTime === normalizedTimeSlotEnd;
+      });
+    },
   },
 };
 </script>
@@ -178,13 +306,74 @@ export default {
                 <div class="box box-solid">
                   <div class="box-header with-border">
                     <h3 class="box-title timeDoctor">
-                      Please choose Time and Doctor
+                      Please choose Time and OPD
                     </h3>
                     <div id="date-selected"></div>
                   </div>
+                <!-- :disabled="areAllAppointmentNotAvailable()" -->
+              <div v-if="appointmentclickDate">
+                <div class="box-body config-remove-all">
+                  <div class="appointment-time-list1">
+                    <div v-for="(timeSlot, index) in currentConfig.timeSlots" :key="index">
+                      <input 
+                        type="radio"
+                        class="hours_radio"
+                        :value="timeSlot"
+                        v-model="configSelectedTime"
+                        @change="handleconfigTimeSelection(timeSlot)"
+                        :disabled="configAppointmentNot(timeSlot)"
+                      />&nbsp;&nbsp;
+                      <span :class="{
+                          'text-green': !configAppointmentNot(timeSlot),
+                          'text-red': configAppointmentNot(timeSlot)
+                        }">
+                        {{ formatTimeSlot(timeSlot) }}
+                      </span>
+                      <ul class="doctor-list1" v-if="configSelectedTime === timeSlot">
+                        <li>
+                          <input
+                            type="radio"
+                            class="hours_radio"
+                            v-model="configOpdcategory"
+                            :value="currentConfig.Opdcategory"
+                            @change="handleconfigcategory(currentConfig.Opdcategory)"
+                          />&nbsp;&nbsp;
+                          <small :class="{
+                            'text-green' : !configAppointmentNot(timeSlot),
+                            'text-red' : configAppointmentNot(timeSlot),
+                          }">
+                          {{ currentConfig.Opdcategory }}
+                          </small>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    id="consultation"
+                    class="btn btn-success bt-md btn-block"
+                    @click="proceedAppointment(configSelectedTime, currentConfig.date, currentConfig.appointment_id, currentConfig.configId, configOpdcategory)"
+                  >
+                    <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
+                  </button>
+
+                  <!-- <button
+                    type="button"
+                    id="consultation"
+                    class="btn bt-md btn-block"
+                    style="background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)"
+                    disabled
+                  >
+                    <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments are full
+                  </button> -->
+                </div>
+              </div>
+
+              <div v-else>
                   <div
                     class="box-body"
-                    v-if="appointedTimes.length > 0 && showAppointmentTime"
+                    v-if="appointedTimes.length > 0 && showAppointmentTime && manualDate"
                   >
                     <div
                       class="appointment-time-list"
@@ -267,6 +456,9 @@ export default {
                       are full
                     </button>
                   </div>
+              </div>
+
+
                 </div>
               </div>
             </div>
@@ -286,6 +478,17 @@ export default {
   list-style-type: none;
   margin-top: 7px;
 }
+
+.appointment-time-list1 {
+  /* display: flex;  */
+  padding: 10px;
+}
+.appointment-time-list1 .doctor-list1 {
+  display: block !important;
+  list-style-type: none;
+  margin-top: 7px;
+}
+
 .hours_radio {
   margin-bottom: 5px;
   transform: scale(1.5);

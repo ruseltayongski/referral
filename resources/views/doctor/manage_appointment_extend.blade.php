@@ -1,5 +1,5 @@
     <?php 
-            $appointmentSconfig =  \App\AppointmentSchedule::select('id','configId','appointed_date','date_end')->get(); 
+            $appointmentSconfig =  \App\AppointmentSchedule::select('id','configId','opdCategory','appointed_date','date_end')->get(); 
     ?>
     <!-- Add Modal -->
     <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
@@ -40,17 +40,39 @@
                                                 @endforeach
                                                 
                                             </select>
-                                        </div>
+                                        
 
-                                        <label for="department_id">Department Category:</label>
+                                        <label for="department_id">Opd Category:</label>
                                         @if($department === 'OPD')
-                                           
-                                            <input type="text" class="form-control" id="department_id" value="{{ $department }}" readonly>
                                             <input type="hidden" class="form-control" name="department_id" id="department_id" value="5">
-                                        @else
-                                            <div class="alert-department" data-department="{{ $department }}"></div>
-                                        @endif  
+                                            <select class="form-control select2" id="doctordepartment_config" name="opd_subcategory">
+                                                <option selected value="">Select Opd Category</option>
+                                                <option value="Family Medicine">Family Medicine</option>
+                                                <option value="Internal Medicine">Internal Medicine</option>
+                                                <option value="General Surgery">General Surgery</option>
+                                                <option value="Trauma Care">Trauma Care</option>
+                                                <option value="Burn Care">Burn Care</option>
+                                                <option value="Ophthalmology">Ophthalmology</option>
+                                                <option value="ENT">ENT</option>
+                                                <option value="Neurology">Neurology</option>
+                                                <option value="Urosurgery">Urosurgery</option>
+                                                <option value="Toxicology">Toxicology</option>
+                                                <option value="OB-GYNE">OB-GYNE</option>
+                                                <option value="Pediatric">Pediatric</option>      
+                                                <option value="Oncology">Oncology</option>      
+                                                <option value="Nephrology">Nephrology</option>      
+                                                <option value="Dermatology">Dermatology</option>       
+                                                <option value="Surgery">Surgery</option>   
+                                                <option value="Geriatics Medicine">Geriatics Medicine</option>          
+                                                <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
+                                                <option value="Orthopedics">Orthopedics</option>   
+                                                <option value="Cardiology">Cardiology</option>              
+                                            </select>
 
+                                            @else
+                                                <div class="alert-department" data-department="{{ $department }}"></div>
+                                            @endif  
+                                        </div>
                                         <label for="facility_id">Facility:</label>
                                         @foreach($facility as $Facility)
                                                 <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
@@ -288,13 +310,20 @@
                                                                 <option value="Trauma Care">Trauma Care</option>
                                                                 <option value="Burn Care">Burn Care</option>
                                                                 <option value="Ophthalmology">Ophthalmology</option>
-                                                                <option value="Plastic and Reconstructive">Plastic and Reconstructive</option>
                                                                 <option value="ENT">ENT</option>
-                                                                <option value="Neurosurgery">Neurosurgery</option>
+                                                                <option value="Neurology">Neurology</option>
                                                                 <option value="Urosurgery">Urosurgery</option>
                                                                 <option value="Toxicology">Toxicology</option>
                                                                 <option value="OB-GYNE">OB-GYNE</option>
-                                                                <option value="Pediatric">Pediatric</option>
+                                                                <option value="Pediatric">Pediatric</option>      
+                                                                <option value="Oncology">Oncology</option>      
+                                                                <option value="Nephrology">Nephrology</option>      
+                                                                <option value="Dermatology">Dermatology</option>       
+                                                                <option value="Surgery">Surgery</option>   
+                                                                <option value="Geriatics Medicine">Geriatics Medicine</option>          
+                                                                <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
+                                                                <option value="Orthopedics">Orthopedics</option>   
+                                                                <option value="Cardiology">Cardiology</option>        
                                                             </select>
                                                         </div>
                                                     </div>
@@ -373,11 +402,32 @@
                                             @endforeach
                                         </select>
 
-                                        <label for="department_id">Department Category:</label>
+                                        <label for="department_id">OPD Category:</label>
                                         @if($department === 'OPD')
-                                            
-                                            <input type="text" class="form-control" id="department_id" value="{{ $department }}" readonly>
                                             <input type="hidden" class="form-control" name="edit_department_id" id="department_id" value="5">
+                                            <select class="form-control select2" id="opddepartment_config" name="editopd_subcateg" required>
+                                                <option selected value="">Select Opd Category</option>
+                                                <option value="Family Medicine">Family Medicine</option>
+                                                <option value="Internal Medicine">Internal Medicine</option>
+                                                <option value="General Surgery">General Surgery</option>
+                                                <option value="Trauma Care">Trauma Care</option>
+                                                <option value="Burn Care">Burn Care</option>
+                                                <option value="Ophthalmology">Ophthalmology</option>
+                                                <option value="ENT">ENT</option>
+                                                <option value="Neurology">Neurology</option>
+                                                <option value="Urosurgery">Urosurgery</option>
+                                                <option value="Toxicology">Toxicology</option>
+                                                <option value="OB-GYNE">OB-GYNE</option>
+                                                <option value="Pediatric">Pediatric</option>      
+                                                <option value="Oncology">Oncology</option>      
+                                                <option value="Nephrology">Nephrology</option>      
+                                                <option value="Dermatology">Dermatology</option>       
+                                                <option value="Surgery">Surgery</option>   
+                                                <option value="Geriatics Medicine">Geriatics Medicine</option>          
+                                                <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
+                                                <option value="Orthopedics">Orthopedics</option>   
+                                                <option value="Cardiology">Cardiology</option>              
+                                            </select>
                                         @else
                                             <div class="alert-department" data-department="{{ $department }}"></div>
                                         @endif
@@ -835,7 +885,7 @@
     </div>
 <script>
 const deleteConfigUrl = "{{ url('delete-Config') }}";
-
+const editConfigUrl = "{{ url('get-config-data-sched') }}"
 function DeleteConfig(scheduleId, configId){
     console.log(`Requesting URL: delete-Config/${scheduleId}/${configId}`);
     $.ajax({
@@ -857,11 +907,152 @@ function DeleteConfig(scheduleId, configId){
     $('#deleteConfigAppointment').modal('show');
 }
 
+//Change this in future to optimize the query in update Config doctor
+// function UpdateConfig(config_appointment_id, config_id) {
+//     console.log(`Requesting URL: update-Config/${editConfigUrl}/${config_id}`);
+//     $.ajax({
+//         url: `${editConfigUrl}/${config_id}`, 
+//         method: 'GET',
+//         success: function (response) {
+//             if (response.status === 'success') {
+//                 const configData = response.data;
+
+//                 let days = configData.days.split('|');
+//                 let timeSlots = configData.time.split('|');
+//                 let category = configData.category;
+
+//                 const appointmentConfig = response.data.appointment_schedules[0];
+               
+//                 const $defaultCategory = $("#editdefaultCateg");
+//                 console.log("Selected Config:", category);
+//                 $defaultCategory.val(config_id).trigger('change');
+
+//                 $('#Appointment_schedule_id').val(config_appointment_id);
+
+//                 // Update UI elements based on fetched data
+//                 $("#editffective_date").val(appointmentConfig.appointed_date);
+//                 updateScheduleDisplay(appointmentConfig.appointed_date, category);
+
+//                 $('.edit-time-slots').hide().find(".edit_time-slot").remove();
+//                 updateTimeSlots(days, timeSlots);
+
+//                 // Update time slots dynamically
+//                 function updateTimeSlots(days, timeSlots) {
+//                     $('.edit-time-slots').hide().find('.edit_time-slot, .time-slot_edit').remove();
+//                     $(`.editday-checkbox`).prop("checked", false);
+
+//                     const dayTimemap = {};
+//                     let currentDay = null;
+
+//                     timeSlots.forEach(slot => {
+//                         if (isNaN(slot[0])) {
+//                             currentDay = slot;
+//                             dayTimemap[currentDay] = [];
+//                         } else if (currentDay) {
+//                             dayTimemap[currentDay].push(slot);
+//                         }
+//                     });
+
+//                     days.forEach(day => {
+//                         $(`.editday-checkbox[value="${day}"]`).prop("checked", true);
+//                         const $timeSlotsDiv = $(`.editday-checkbox[value="${day}"]`).closest('.checkbox').find('.edit-time-slots');
+//                         $timeSlotsDiv.show();
+
+//                         if (dayTimemap[day]) {
+//                             dayTimemap[day].forEach(sched => {
+//                                 const [timeFrom, timeTo] = sched.split('-');
+//                                 const timeSlotHtml = `
+//                                     <div class="row edit_time-slot"> 
+//                                         <div class="col-md-5">
+//                                             <label>Time From:</label>
+//                                             <input type="time" name="edit_time_from[${day}][]" class="form-control input-sm" value="${timeFrom}">
+//                                         </div>
+//                                         <div class="col-md-5">
+//                                             <label>Time To:</label>
+//                                             <input type="time" name="edit_time_to[${day}][]" class="form-control input-sm" value="${timeTo}">
+//                                         </div>
+//                                         <div class="col-md-2">
+//                                             <button type="button" class="btn btn-danger btn-sm editremove-time-slot" style="margin-top: 32px;">
+//                                                 <i class="fa fa-trash"></i>
+//                                             </button>
+//                                         </div>
+//                                     </div>`;
+//                                 $timeSlotsDiv.append(timeSlotHtml);
+//                             });
+//                         }
+//                     });
+//                 }
+
+//                 function updateScheduleDisplay(dateValue, WeekToMonth) {
+//                     console.log("WeekToMonth", WeekToMonth);
+//                     if(dateValue){
+//                         const startDate = new Date(dateValue);
+//                         let endDate;
+
+//                         if(WeekToMonth === "1 Week"){
+//                             endDate = new Date(startDate);
+//                             endDate.setDate(startDate.getDate() + 6);
+//                         }else if(WeekToMonth === "1 Month"){
+//                             endDate = new Date(startDate);
+//                             endDate.setMonth(startDate.getMonth() + 1);
+//                             endDate.setDate(endDate.getDate() - 1);
+//                         }
+
+//                         $("#EditSchedCategory").html(`
+//                             <div class="col-md-12 schedule-output text-center" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; margin-top: 10px;">
+//                                 <span class="schedule-range">
+//                                     <i class="fa fa-calendar"></i> <strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> <strong> - </strong> 
+//                                     <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
+//                                     <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
+//                                     <i class="fa fa-calendar"></i> <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>
+//                                         &nbsp; <span class="schedule-category" style="font-weight: bold;"> (${WeekToMonth})</span>
+//                                 </span>
+//                             </div>
+//                         `);
+//                     }
+//                 }
+
+//                 function formatedSchedule(date){
+//                     const year = date.getFullYear();
+//                     const month = (date.getMonth() + 1).toString().padStart(2, '0');
+//                     const day = date.getDate().toString().padStart(2, '0');
+//                     return `${month}-${day}-${year}`;
+//                 }
+
+//                 $(document).on('click', '.editremove-time-slot', function() {
+//                     $(this).closest('.edit-time-slots').remove();
+//                 });
+
+//                 $(document).on('change', '.editday-checkbox', function () {
+//                     let checkboxContainer = $(this).closest('.checkbox');
+//                     if ($(this).is(':checked')) {
+//                         checkboxContainer.find('.edit-time-slots').slideDown();
+//                     } else {
+//                         let timeSlots = checkboxContainer.find('.edit-time-slots');
+//                         timeSlots.slideUp();
+//                         timeSlots.find('input[type="time"]').val('');
+//                         timeSlots.find('.edit-time-slots:not(:first)').remove();
+//                     }
+//                 });
+                
+//             } else {
+//                 console.error("Error fetching config data:", response.message);
+//             }
+//         },
+//         error: function (error) {
+//             console.error("AJAX Error:", error);
+//         }
+
+//     });
+    
+//     $('#UpdateConfigAppointment').modal('show');
+// }
+
 function UpdateConfig(config_appointment_id, config_id) {
 
     const configData = @json($config_sched_data);
     const appointmentConfig = @json($appointmentSconfig);
-
+    console.log("appointmentConfig", appointmentConfig);
     let selectedConfig = configData.find(config => config.id === config_id);
     let days = selectedConfig.days.split('|');
     let timeSlots = selectedConfig.time.split('|');
@@ -874,7 +1065,8 @@ function UpdateConfig(config_appointment_id, config_id) {
     $('#Appointment_schedule_id').val(config_appointment_id);
 
     const Appointment_Config = appointmentConfig.find(ap => ap.id === config_appointment_id);
-    
+    console.log("data of appointmenr", Appointment_Config);
+    $('#opddepartment_config').val(Appointment_Config.opdCategory).trigger('change');
     $defaulCategory.on('change', function () {
         const update_config_id = Number($(this).val());
         selectedConfig = configData.find(config => config.id === update_config_id);
@@ -925,6 +1117,7 @@ function UpdateConfig(config_appointment_id, config_id) {
             if(dayTimemap[day]){
                 dayTimemap[day].forEach(sched => {
                     const [timeFrom, timeTo] = sched.split('-');
+                    console.log("config time", timeFrom);
                     const timeSlotHtml = `
                         <div class="row edit_time-slot"> 
                             <div class="col-md-5">
@@ -977,6 +1170,25 @@ function UpdateConfig(config_appointment_id, config_id) {
 
     $(document).on('click', '.update_remove-time-slot', function () {
         $(this).closest('.time-slot_edit').remove();
+    });
+
+    $(document).on('click', '.editremove-time-slot', function() {
+        // Get the current time slot row
+        const $timeSlotRow = $(this).closest('.edit_time-slot');
+
+        // Get the timeFrom and timeTo values from the inputs in the row
+        const timeFrom = $timeSlotRow.find('input[name^="edit_time_from"]').val();
+        const timeTo = $timeSlotRow.find('input[name^="edit_time_to"]').val();
+
+        // Get the day value from the closest checkbox or container
+        const $dayCheckbox = $timeSlotRow.closest('.checkbox').find('.editday-checkbox:checked');
+        const day = $dayCheckbox.val();
+
+        // Log the values
+        console.log(`Day: ${day}, Time From: ${timeFrom}, Time To: ${timeTo}`);
+
+        // Remove the time slot row
+        $timeSlotRow.remove();
     });
 
     function updateScheduleDisplay(dateValue, WeekToMonth) {

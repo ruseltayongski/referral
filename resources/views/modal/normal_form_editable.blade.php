@@ -8,6 +8,17 @@ $facility_id_telemedicine = json_decode(json_decode($appointmentParam, true), tr
 $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true), true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
 $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true), true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
 
+$telemed_config_id =  json_decode(json_decode($appointmentParam, true), true)[0]['config_id'] ?? json_decode($appointmentParam, true)[0]['config_id'];
+$telemed_appointed_date = json_decode(json_decode($appointmentParam, true), true)[0]['configDate'] ?? json_decode($appointmentParam, true)[0]['configDate'];
+$telemed_config_time = json_decode(json_decode($appointmentParam, true), true)[0]['configtime'] ?? json_decode($appointmentParam, true)[0]['configtime'];
+
+if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== false){
+    [$timeFrom, $timeTo] = explode('-', $telemed_config_time);
+}else{
+    $timeFrom = null;
+    $timeTo = null;
+}
+
 $user = Session::get('auth');
 $facilities = \App\Facility::select('id', 'name', 'address')
     ->where('id', '!=', $user->facility_id)
@@ -71,8 +82,14 @@ $department_id = $appoitment_sched[0]->department_id;
                         <input type="hidden" name="code" value="" />
                         <input type="hidden" name="source" value="{{ $source }}" />
                         <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" />
-                        <input type="hidden" name="appointmentId" value="{{ $telemedicine_appointment_id }}" />
                         <input type="hidden" name="doctorId" value="{{ $telemedicine_doctor_id }}" />
+                        <input type="hidden" name="appointmentId" value="{{ $telemedicine_appointment_id }}" />
+
+                        <input type="hidden" name="config_appointedDate" value="{{$telemed_appointed_date}}">
+                        <input type="hidden" name="configId" value="{{$telemed_config_id}}">
+                        <input type="hidden" name="configTimeFrom" value="{{$timeFrom}}">
+                        <input type="hidden" name="configtimeto" value="{{$timeTo}}">
+                        
                         <br>
                         <div class="row">
                             <div class="col-md-4">
