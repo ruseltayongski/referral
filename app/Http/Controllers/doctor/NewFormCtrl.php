@@ -1475,6 +1475,7 @@ class NewFormCtrl extends Controller
         $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
         $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
         $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
+        $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get(); 
 
         $arr = [
             "form" => $form['form'],
@@ -1493,6 +1494,7 @@ class NewFormCtrl extends Controller
             "past_medical_history" => $past_medical_history,
             "personal_and_social_history" => $personal_and_social_history,
             "obstetric_and_gynecologic_history"=>$obstetric_and_gynecologic_history,
+            "pregnancy"=>$pregnancy_data,
             "pertinent_laboratory" => $pertinent_laboratory,
             "review_of_system" => $review_of_system,
             "nutritional_status" => $nutritional_status,
@@ -1551,6 +1553,8 @@ class NewFormCtrl extends Controller
             $nutritional_status = NutritionalStatus::where('patient_id', $patient_id)->first();
             $latest_vital_signs = LatestVitalSigns::where('patient_id', $patient_id)->first();
             $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
+            $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
+            $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get();
     
            
             return view("modal.revised_normal_form_info", [
@@ -1575,7 +1579,9 @@ class NewFormCtrl extends Controller
                 "latest_vital_signs" => $latest_vital_signs,
                 "glasgocoma_scale" => $glasgocoma_scale,
                 "type"=>$type,
-                "status" => $status
+                "status" => $status,
+                "obstetric_and_gynecologic_history"=>$obstetric_and_gynecologic_history,
+                "pregnancy"=>$pregnancy_data,
             ]);
         } else if($form_type == 'pregnant') {
             $file_link = (PregnantForm::select('file_path')->where('code', $track->code)->first())->file_path;
@@ -1743,6 +1749,32 @@ class NewFormCtrl extends Controller
         NutritionalStatus::create($data['nutritional_status']);
         GlasgoComaScale::create($data['glasgocoma_scale']);
         LatestVitalSigns::create($data['vital_signs']);
+        ObstetricAndGynecologicHistory::create($data['obstetric_history']);
+
+        $orders = $request->input('pregnancy_history_order');
+        $years = $request->input('pregnancy_history_year');
+        $gestations = $request->input('pregnancy_history_gestation');
+        $outcomes = $request->input('pregnancy_history_outcome');
+        $placesOfBirth = $request->input('pregnancy_history_placeofbirth');
+        $sexes = $request->input('prenatal_history_sex');
+        $birthWeights = $request->input('pregnancy_history_birthweight');
+        $presentStatuses = $request->input('pregnancy_history_presentstatus');
+        $complications = $request->input('pregnancy_history_complications');
+
+        foreach ($orders as $key => $order) {
+            Pregnancy::create([
+                'patient_id' => $patient_id,
+                'pregnancy_order' => $order,
+                'pregnancy_year' => $years[$key],
+                'pregnancy_gestation_completed' => $gestations[$key],
+                'pregnancy_outcome' => $outcomes[$key],
+                'pregnancy_place_of_birth' => $placesOfBirth[$key],
+                'pregnancy_sex' => $sexes[$key],
+                'pregnancy_birth_weight' => $birthWeights[$key],
+                'pregnancy_present_status' => $presentStatuses[$key],
+                'pregnancy_complication' => $complications[$key],
+            ]);
+        }
 
     }
 
