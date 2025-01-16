@@ -22056,7 +22056,7 @@ __webpack_require__.r(__webpack_exports__);
     AppointmentCalendar: _AppointmentCalendar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
     AppointmentTime: _AppointmentTime_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
-  props: ["user", "appointment_slot"],
+  props: ["user", "appointment_slot", "appointment_config"],
   data: function data() {
     return {
       facilitySelectedId: 0,
@@ -22212,6 +22212,37 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         var dateString = targetTd.attr("data-date");
         var timeslot = null;
         var isfullyBooked = _this2.appointmentSlot.some(function (appointment) {
+          // Config Appointment
+          appointment.appointment_schedules.forEach(function (sched) {
+            if (sched.configId) {
+              var Date_start = new Date(sched.appointed_date); // Start date
+              var date_end = new Date(sched.date_end); // End date
+              var timeSlot = sched.config_schedule.time.split('|');
+              var daysSched = sched.config_schedule.days.split('|');
+              console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched, 'timeSlot', timeSlot);
+
+              // Iterate through all days in the range
+              var currentDate = new Date(Date_start); // Initialize with start date
+              console.log("currentDate", currentDate);
+              while (currentDate <= date_end) {
+                var currentDayName = currentDate.toLocaleDateString('en-US', {
+                  weekday: 'long'
+                }); // Get current day's name
+
+                if (daysSched.includes(currentDayName)) {
+                  // Highlight specific day if it matches
+                  var _targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
+                  _targetTd.css("background-color", "#00a65a"); // Green for available
+                  _targetTd.css("border-color", "#00a65a");
+                }
+
+                // Move to the next day
+                currentDate.setDate(currentDate.getDate() + 1);
+              }
+            }
+          });
+
+          // Manual Appointment
           if (appointment.appointment_schedules.length > 0) {
             var slotOndate = appointment.appointment_schedules.filter(function (slot) {
               return slot.appointed_date === dateString;
@@ -22237,9 +22268,64 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
           return false;
         });
+
+        //Config Appointment 
+        // const dateRangeBackground = this.appointmentSlot.appointment_schedules.some((config) => {
+
+        //   const Date_start = new Date(config.appointed_date); // Start date
+        //   const date_end = new Date(config.date_end); // End date
+        //   const daysSched = config.config_schedule.days.split('|'); // Schedule days
+        //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched)
+        //   const currentDate = new Date(dateString); // Current date in the calendar
+        //   const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Current day name
+
+        //   const withinDateRange = currentDate >= Date_start && currentDate <= date_end; // Date within range
+        //   console.log("withinDateRange", withinDateRange);
+        //   const isInSchedule = daysSched.includes(currentDayName); // Day is in schedule
+        //   console.log("withinDateRange", withinDateRange);
+        //   if (withinDateRange && isInSchedule) {
+        //     // Weekly (recurs every 7 days) or Monthly logic
+        //     const diffDays = Math.ceil((currentDate - Date_start) / (1000 * 60 * 60 * 24)); // Days difference
+        //     const isWeekly = diffDays % 7 === 0; // Weekly recurrence
+        //     const isMonthly = Date_start.getDate() === currentDate.getDate(); // Monthly recurrence
+
+        //     if (isWeekly || isMonthly) {
+        //       targetTd.css("background-color", "#00a65a"); // Green for available
+        //       targetTd.css("border-color", "#00a65a");
+
+        //       return true; // Found a match
+        //     }
+
+        //   }
+
+        // });
+
+        // const dateRangeBackground = this.appointmentSlot[0].appointment_schedules.some((config) => {
+        //   const Date_start = new Date(config.appointed_date); // Start date
+        //   const date_end = new Date(config.date_end); // End date
+        //   const daysSched = config.config_schedule.days.split('|'); // Selected days e.g., ['Monday', 'Wednesday', 'Thursday']
+
+        //   console.log("Date_start:", Date_start, "date_end:", date_end, "daysSched", daysSched);
+
+        //   // Iterate through all days in the range
+        //   let currentDate = new Date(Date_start); // Initialize with start date
+        //   console.log("currentDate", config);
+        //   while (currentDate <= date_end) {
+        //     const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
+
+        //     if (daysSched.includes(currentDayName)) {
+        //       // Highlight specific day if it matches
+        //       const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
+        //       targetTd.css("background-color", "#00a65a"); // Green for available
+        //       targetTd.css("border-color", "#00a65a");
+        //     }
+
+        //     // Move to the next day
+        //     currentDate.setDate(currentDate.getDate() + 1);
+        //   }
+        // });
+
         var dateTimeAppointed = new Date("".concat(dateString, "T").concat(timeslot));
-        console.log("appointment Slot", timeslot);
-        //  console.log("date for calendar", dateTimeAppointed, "date with CurrentTime", currentDateTime);
         if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
           targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
           targetTd.css("border-color", "rgb(230 193 193)");
@@ -22373,6 +22459,9 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
     appointment: {
       type: Object
     },
+    config_appoint: {
+      type: Object
+    },
     facilitySelectedId: {
       type: Number
     }
@@ -22380,8 +22469,11 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   computed: {
     emptyAppointmentByCount: function emptyAppointmentByCount() {
       var count = 0;
+      // let totalTimeSlots = 0;
       var now = new Date();
-      console.log("user", this.appointment);
+      //for config Schedule display facility 
+
+      // for manual Schedule
       if (this.appointment && this.appointment.appointment_schedules) {
         var appointmentIdMap = new Map();
         this.appointment.appointment_schedules.forEach(function (sched) {
@@ -22417,39 +22509,72 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
           }
         });
       }
+      console.log("count slot", count);
       return count;
     },
-    // shouldDisplayFacility() {
-    //   const now = new Date();
-    //   const isAppointedExpire = this.appointment.appointment_schedules.every(
-    //     (sched) => {
-    //       const AppointedDate = new Date(`${sched.appointed_date}`);
-    //       console.log(AppointedDate);
-    //       return AppointedDate <= now;
-    //     }
-    //   );
-    //   return !isAppointedExpire;
-    //   //&& !this.emptyAppointmentByCount == 0
-    // },
-    // shouldDisplayFacility() {
-    //   const now = new Date();
-    //   const hasValidAppointment = this.appointment.appointment_schedules.some(
-    //     (sched) => {
-    //       const appointmentDatetime = new Date(
-    //         `${sched.appointed_date} ${sched.appointed_time}`
-    //       );
-    //       const midnightTonight = new Date();
-    //         midnightTonight.setHours(23,59,59,999);
-    //       console.log("appointmentDatetime", appointmentDatetime >= now);
-    //       console.log("midnightTonight", midnightTonight);
-    //       return appointmentDatetime >= now && appointmentDatetime < midnightTonight;
-    //     }
-    //   );
-    //   return hasValidAppointment;
-    // },
     shouldDisplayFacility: function shouldDisplayFacility() {
       var now = new Date();
       var hasValidAppointment = this.appointment.appointment_schedules.some(function (sched) {
+        // console.log("sched", sched);
+        //for config Schedule display facility 
+        var DisplayConfigFacility;
+        if (sched.configId) {
+          var effectiveDate = new Date(sched.appointed_date);
+          var date_endMidnight = new Date(sched.date_end);
+          var configTime = sched.config_schedule.time.split('|');
+          var timeSlot = configTime.filter(function (item) {
+            return item.includes('-');
+          });
+
+          // const configDateRange = now >= effectiveDate && now <= date_end;
+          // console.log("time", configTime, 'day::', everydaySched, "effectiveDate:", effectiveDate, "date end: ", date_end);
+          // console.log("configDateRange", configDateRange);
+          // const validDaysmonth = [];
+          // let currentDate = new Date(effectiveDate);
+          // while (currentDate <= date_end){
+          //   validDaysmonth.push(currentDate.getDate());
+          //   currentDate.setDate(currentDate.getDate() +1);// Move to the next day
+          // }
+          // // Check if today is in the valid range of days of the month
+          // const todayDate = now.getDate();
+          // const isTodayInMonthSched = validDaysmonth.includes(todayDate);
+
+          // // Check if today matches a valid day of the week
+          // const today = now.toLocaleString('en-US', { weekday: 'long'});
+          // console.log('today', today);
+          // const isTodayInSchedule = everydaySched.includes(today);
+
+          var isWithinTimeRange = timeSlot.some(function (timeRange) {
+            var _timeRange$split = timeRange.split('-'),
+              _timeRange$split2 = _slicedToArray(_timeRange$split, 2),
+              start = _timeRange$split2[0],
+              end = _timeRange$split2[1];
+            var startTime = new Date();
+            var endTime = new Date();
+            var _start$split$map = start.split(':').map(Number),
+              _start$split$map2 = _slicedToArray(_start$split$map, 2),
+              startHours = _start$split$map2[0],
+              startMinutes = _start$split$map2[1];
+            var _end$split$map = end.split(':').map(Number),
+              _end$split$map2 = _slicedToArray(_end$split$map, 2),
+              endHours = _end$split$map2[0],
+              endMinutes = _end$split$map2[1];
+            startTime.setHours(startHours, startMinutes, 0, 0);
+            endTime.setHours(endHours, endMinutes, 0, 0);
+
+            // return now <= startTime && now <= endTime
+            var appointmentDatetime = new Date("".concat(sched.date_end, " ").concat(timeRange));
+            var midnightAppointmentDay = new Date(appointmentDatetime);
+            midnightAppointmentDay.setHours(24, 0, 0, 0);
+            return now < midnightAppointmentDay;
+          });
+
+          // console.log('isWithinTimeRange:',isWithinTimeRange, 'isTodayInSchedule:', isTodayInSchedule , isTodayInMonthSched);
+          //   DisplayConfigFacility = isWithinTimeRange && (isTodayInSchedule || isTodayInMonthSched);
+          DisplayConfigFacility = isWithinTimeRange;
+        }
+
+        // for manual Schedule
         var appointmentDatetime = new Date("".concat(sched.appointed_date, " ").concat(sched.appointed_time));
 
         // Set midnight of the appointment date
@@ -22457,7 +22582,8 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         midnightAppointmentDay.setHours(24, 0, 0, 0);
 
         // Display facility if current time is before midnight of the appointment day
-        return now < midnightAppointmentDay;
+        var shouldDisplayManualFacility = now < midnightAppointmentDay;
+        return shouldDisplayManualFacility || DisplayConfigFacility;
       });
       return hasValidAppointment;
     },
@@ -22782,16 +22908,17 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_appointment_time = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("appointment-time");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "page-header"
-  }, "Select Facility", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [$props.appointment_slot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  }, "Select Facility", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-if=\"appointment_slot\" v-for=\"appointment in appointment_slot\" :key=\"appointment.id\">\r\n                <appointment-facility\r\n                  v-for=\"config in appointment_config\"\r\n                  :key=\"`${appointment.id}-${config.id}`\"\r\n                  :config_appoint=\"config\"\r\n                  :appointment=\"appointment\"\r\n                  :user=\"user\"\r\n                  @facilitySelected=\"facilitySelected\"\r\n                ></appointment-facility>\r\n            </div> "), $props.appointment_slot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     key: 0
   }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointment_slot, function (appointment) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)(_component_appointment_facility, {
       key: appointment.id,
       facilitySelectedId: $data.facilitySelectedId,
       appointment: appointment,
+      config_appoint: $props.appointment_config,
       user: $props.user,
       onFacilitySelected: $options.facilitySelected
-    }, null, 8 /* PROPS */, ["facilitySelectedId", "appointment", "user", "onFacilitySelected"]);
+    }, null, 8 /* PROPS */, ["facilitySelectedId", "appointment", "config_appoint", "user", "onFacilitySelected"]);
   }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_appointment_calendar, {
     facilitySelectedId: $data.facilitySelectedId,
     appointmentSlot: $props.appointment_slot,

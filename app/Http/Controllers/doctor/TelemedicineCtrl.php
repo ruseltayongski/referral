@@ -104,9 +104,51 @@ class TelemedicineCtrl extends Controller
             'department' => $department,
             'fact' => $facility,
             'config' => $config_sched
-        ]
-    );
+        ]);
+    }
 
+    public function getConfig($id) {
+
+       $getconfig = Cofig_schedule::find($id);
+
+       $timesRaw = explode('|', $getconfig->time);
+       $days =  explode('|', $getconfig->days);
+
+       $times = [];
+       $currentDay = null;
+
+        foreach($timesRaw as $time){
+
+            if(preg_match('/^[A-Za-z]+$/', $time)){
+                
+                $currentDay = $time;
+                
+                if(!isset($times[$currentDay])){
+
+                    $times[$currentDay] = [];
+                } 
+            }elseif ($currentDay){
+                $times[$currentDay][] = $time;
+            }
+
+        }
+
+       return response()->json([
+            'times' => $times, 
+            'days' => $days,
+            'descript' => $getconfig->description,
+            'department' => $getconfig->department_id,
+            'category' => $getconfig->category,
+            'configId' => $getconfig->id
+        ]);
+    }
+
+    public function deleteSchedule($schedId, $configId){
+
+        return response()->json([
+            'schedId' => $schedId,
+            'configId' => $configId
+        ]);
     }
 
     public function AddconfigSched(Request $req){
@@ -146,38 +188,15 @@ class TelemedicineCtrl extends Controller
     public function editconfigSched(Request $req){
 
         $user = Session::get('auth');
-        $config_sched = Cofig_schedule::where('id', $req->configId)->first();
-        dd($req->all());
-        $config_sched->description = $req->Updateconfigdesc;
-        $config_sched->department_id = $req->update_department_id;
-        $config_sched->category = $req->Update_default_category;
-        $config_sched->facility_id = $req->Updatefacility_id;
+        $config_sched = Cofig_schedule::where('id', $req->edit_configId)->first();
+        $config_sched->description = $req->configdesc;
+        $config_sched->department_id = $req->department_id;
+        $config_sched->category = $req->default_category;
+        $config_sched->facility_id = $req->facility_id;
        
         $scheduleData = [];
 
-        // $validated = $req->validate([
-        //     'update_time_from.*.*' => 'required|date_format:H:i',
-        //     'update_time_to.*.*' => 'required|date_format:H:i|after:update_time_from.*.*',
-        // ]);
-
-        // removing null
-        // $update_time_from = array_filter(array_map(function ($times){
-        //     return array_filter($times, function ($time){
-        //         return !is_null($time);
-        //     });
-        // },  $req->update_time_from), function ($times){
-        //     return !empty($times);
-        // });
-
-        // $update_time_to = array_filter(array_map(function ($times){
-        //     return array_filter($times, function ($time){
-        //         return !is_null($time);
-        //     });
-        // }, $req->update_time_to), function ($times){
-        //     return !empty($times);
-        // });
-
-        foreach($req->updatedays as $day){
+        foreach($req->days as $day){
             $timeSlots = [];
 
             if (!empty($req->update_time_from[$day]) && !empty($req->update_time_to[$day])) {
@@ -200,30 +219,66 @@ class TelemedicineCtrl extends Controller
         }
 
 
-        $config_sched->days = implode('|', $req->updatedays);
+        $config_sched->days = implode('|', $req->days);
         $config_sched->time = implode('|', $scheduleData);
         $config_sched->created_by = $user->id;
         $config_sched->save();
 
-        // foreach($req->updatedays as $day){
-             
-        //      if(isset($req->update_time_from[$day]) && isset($req->update_time_to[$day])){
- 
-        //          $timeSlots = [];
-        //          foreach($req->update_time_from[$day] as $index => $timeFrom){
-        //              $timeTo = $req->update_time_to[$day][$index] ?? '';
-        //              $timeSlots[] = "{$timeFrom}-{$timeTo}";
-        //          }
- 
-        //          $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
-        //      }
-        // }
- 
-        // $config_sched->days = implode('|', $req->updatedays);
-        // $config_sched->time = implode('|', $scheduleData);
-        // $config_sched->created_by = $user->id;
-        // $config_sched->save();
+        return redirect::back();
         
+    }
+
+    public function updateDoctorConfig(Request $req){
+        $user = Session::get('auth');
+          //dd($req->all());
+         $appointedConfig = AppointmentSchedule::where('id', $req->Appointment_schedule_id)->first();
+         $appointedConfig->configId = $req->edit_config_id;
+
+         try {
+            $startDate = Carbon::createFromFormat('m-d-Y', $req->startDate);
+            $endDate = Carbon::createFromFormat('m-d-Y', $req->endDate);
+        
+            $appointedConfig->appointed_date = $startDate->format('Y-m-d');
+            $appointedConfig->date_end = $endDate->format('Y-m-d');
+        } catch (\Exception $e) {
+        }
+
+         $appointedConfig->created_by = $user->id;
+         $appointedConfig->facility_id = $req->edit_facility_id;
+         $appointedConfig->department_id = $req->edit_department_id;
+         $appointedConfig->status = "config";
+         $appointedConfig->save();
+
+        $ITConfigSched = Cofig_schedule::where('id', $req->edit_config_id)->first();
+
+        $scheduleSlot = [];
+
+        foreach($req->editdays as $day){
+            $timeSlot = [];
+
+            if(!empty($req->edit_time_from[$day]) && !empty($req->edit_time_to[$day])){
+
+                foreach($req->edit_time_from[$day] as $index => $timefrom){
+                    $timeto = $req->edit_time_to[$day][$index] ?? '';
+
+                    if(!empty($timefrom) && !empty($timeto)){
+                        $timeSlot[] = "{$timefrom}-{$timeto}";
+                    }
+                }
+            }
+
+            if(!empty($timeSlot)){
+                $scheduleSlot[] = "{$day}|" . implode('|', $timeSlot);               
+            }else{
+                
+            }
+        }
+
+        $ITConfigSched->days =  implode('|', $req->editdays);
+        $ITConfigSched->time = implode('|', $scheduleSlot);
+        $ITConfigSched->save();
+
+        return redirect::back();
     }
 
     public function removeconfigSched(Request $req){
@@ -237,15 +292,20 @@ class TelemedicineCtrl extends Controller
         $user = Session::get('auth');
         $appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
         
-         $facility_id = AppointmentSchedule::pluck('facility_id');
+        $facility_id = AppointmentSchedule::pluck('facility_id');
 
-        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor'])->find($facility_id);
+        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule'])->find($facility_id);
         
-        //  return $appointment_slot;
-        
+        // $config = AppointmentSchedule::with(['configSchedule' => function($query) {
+        //     $query->select('id','category','days','time');
+        // }])
+        // ->select('configId','appointed_date','date_end')
+        // ->get();
+
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,
+            // 'appointment_config' => $config,
             'user' => $user
         ]);
     }
@@ -342,6 +402,7 @@ class TelemedicineCtrl extends Controller
         }
 
     }
+
     //-------------Get all booked Dates--------------------------------------
     public function getBookedDates(){
         $user = Session::get('auth');
