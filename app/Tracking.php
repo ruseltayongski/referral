@@ -28,6 +28,8 @@ class Tracking extends Model
         'form_type',
         'walkin',
         'source',
-        'telemedicine'
+        'telemedicine',
+        'asignedDoctorId',
+        'appointmentId',
     ];
 }

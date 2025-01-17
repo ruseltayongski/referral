@@ -392,11 +392,12 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '')
+    public function addTracking($code, $patient_id, $user, $req, $type, $form_id,$asignedoctorId, $appointmentId, $status = '')
     {
         $match = array(
             'code' => $code
         );
+
         $track = array(
             'patient_id' => $patient_id,
             'date_referred' => date('Y-m-d H:i:s'),
@@ -411,7 +412,9 @@ class PatientCtrl extends Controller
             'remarks' => ($req->reason) ? $req->reason : '',
             'status' => ($status == 'walkin') ? 'accepted' : 'referred',
             'walkin' => 'no',
-            'telemedicine' => $req->telemedicine
+            'telemedicine' => $req->telemedicine,
+            'asignedDoctorId' => $asignedoctorId,
+            'appointmentId' => $appointmentId,
         );
 
         if ($status == 'walkin') {
@@ -475,17 +478,24 @@ class PatientCtrl extends Controller
 
     public function referPatient(Request $req, $type)
     {
+
         $user = Session::get('auth');
+        $asigned_doctorId = null;
+
         if ($req->telemedicine) {
 
             if($req->configId){
+                
                 $configTimeSlot = new TelemedAssignDoctor();
-
+                $facility_id = $req->facility_id;
                 $configTimeSlot->appointment_id = $req->appointmentId;
                 $configTimeSlot->appointed_date = $req->config_appointedDate;
                 $configTimeSlot->start_time = $req->configTimeFrom;
                 $configTimeSlot->end_time = $req->configtimeto;
                 $configTimeSlot->save();
+
+                $asigned_doctorId = $configTimeSlot->id;
+                // $appointmentId = $configTimeSlot->appointment_id;
             }else{
                 
                 $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
@@ -581,7 +591,7 @@ class PatientCtrl extends Controller
             } //push notification for cebu south medical center
 
             session()->forget('profileSearch.telemedicine');
-            self::addTracking($code, $patient_id, $user, $req, $type, $form->id, 'refer');
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id, $asigned_doctorId, $req->appointmentId,'refer');
         } else if ($type === 'pregnant') {
             $baby = array(
                 'fname' => ($req->baby_fname) ? $req->baby_fname : '',
@@ -686,7 +696,7 @@ class PatientCtrl extends Controller
 
             } //push notification for cebu south medical center
             session()->forget('profileSearch.telemedicine');
-            self::addTracking($code, $patient_id, $user, $req, $type, $form->id);
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id,$asigned_doctorId,$req->appointmentId);
         }
 
         if ($req->referred_facility == 790 || $req->referred_facility == 23) {

@@ -116,11 +116,11 @@ export default {
   methods: {
      emitCurrentData() {
       // Emit the necessary data whenever a change occurs
-      this.$emit("data-changed-config", {
-        selectedTime: this.currentConfig.timeSlots,
-        date: this.currentConfig.date,
-        appointmentId: this.currentConfig.appointment_id,
-      });
+      // this.$emit("data-changed-config", {
+      //   selectedTime: this.currentConfig.timeSlots,
+      //   date: this.currentConfig.date,
+      //   appointmentId: this.currentConfig.appointment_id,
+      // });
 
        const appointment = {
           selectedTime: this.currentConfig.timeSlots,
@@ -129,7 +129,7 @@ export default {
         };
 
         // Assign the appointment object to _appointmentConfigData
-         this._appointmentConfigData(appointment);
+        this._appointmentConfigData(appointment);
 
     },
     handleconfigTimeSelection(timeSlot){
@@ -218,7 +218,6 @@ export default {
             };
         }
 
-        
         console.log(appointment);
         window.location.href = `${
           this.base
@@ -250,6 +249,8 @@ export default {
     async _appointmentConfigData(payload){ 
       const response =  await appointmentConfigData(payload);
       this.configAppoinmentTime = response.data;
+
+      this.$emit("getconfig-Appointment",  response.data);
     },
     normalizeTimeFormat(timeString) {
       // Normalize time to HH:mm (no seconds)
@@ -258,27 +259,19 @@ export default {
     },
 
     configAppointmentNot(timeSlot) {
-      // Split timeSlot into start and end times
+      
       const [timeSlot_start, timeSlot_end] = timeSlot.split("-");
-
-      // Normalize timeSlot to HH:mm format
       const normalizedTimeSlotStart = this.normalizeTimeFormat(timeSlot_start);
       const normalizedTimeSlotEnd = this.normalizeTimeFormat(timeSlot_end);
 
-      console.log("Normalized time slot:", normalizedTimeSlotStart, normalizedTimeSlotEnd);
-
-      // Check if any config time overlaps with the current timeSlot
       return this.configAppoinmentTime.some((config) => {
-        // Normalize config start and end time to HH:mm
         const normalizedConfigStartTime = this.normalizeTimeFormat(config.start_time);
         const normalizedConfigEndTime = this.normalizeTimeFormat(config.end_time);
-
-        console.log(`Comparing ${normalizedConfigStartTime}–${normalizedConfigEndTime} with ${normalizedTimeSlotStart}–${normalizedTimeSlotEnd}`);
         
-        // Return true to disable the radio button if times match
         return normalizedConfigStartTime === normalizedTimeSlotStart && normalizedConfigEndTime === normalizedTimeSlotEnd;
       });
     },
+
   },
 };
 </script>

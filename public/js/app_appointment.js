@@ -22227,16 +22227,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         var passconfigId = null;
         var exceedAppoint;
         null;
-        var isfullyBooked = _this2.appointmentSlot.some(function (appointment) {
-          // Config Appointment
-          exceedAppoint = appointment;
+
+        // Config Appointment
+        var configfullybook = _this2.appointmentSlot.some(function (appointment) {
           appointment.appointment_schedules.forEach(function (sched) {
             if (sched.configId && _this2.facilitySelectedId === sched.facility_id) {
+              console.log("my sched list::", sched);
               var Date_start = new Date(sched.appointed_date); // Start date
               var date_end = new Date(sched.date_end); // End date
               var timeSlot = sched.config_schedule.time.split('|');
               var daysSched = sched.config_schedule.days.split('|');
-
+              console.log("daysSched", daysSched);
               // Iterate through all days in the range
               var currentDate = new Date(Date_start); // Initialize with start date
 
@@ -22252,6 +22253,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   // targetTd.css("border-color", "#00a65a");
                   if (_targetTd.length) {
                     _targetTd.css("background-color", "#00a65a"); // Green for available
+                  } else {
+                    _targetTd.css("background-color", "");
                   }
                   targetGrid.remove();
                   _targetTd.addClass("add-cursor-pointer");
@@ -22262,22 +22265,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               }
             }
           });
+        });
 
-          // Manual Appointment
+        // Manual Appointment
+        var isfullyBooked = _this2.appointmentSlot.some(function (appointment) {
           if (appointment.appointment_schedules.length > 0) {
             var slotOndate = appointment.appointment_schedules.filter(function (slot) {
               return slot.appointed_date === dateString;
             });
-            console.log("slot on date", slotOndate);
+
             // Group by appointment_id
             var groupedByAppointmentId = slotOndate.reduce(function (acc, slot) {
               passconfigId = slot.configId;
-              timeslot = slot.appointed_time;
-              var id = slot.appointment_id;
-              if (!acc[id]) acc[id] = [];
-              acc[id].push(slot.telemed_assigned_doctor.map(function (doctor) {
-                return doctor.appointment_by;
-              }));
+              if (!slot.configId) {
+                timeslot = slot.appointed_time;
+                var id = slot.appointment_id;
+                if (!acc[id]) acc[id] = [];
+                acc[id].push(slot.telemed_assigned_doctor.map(function (doctor) {
+                  return doctor.appointment_by;
+                }));
+              }
               return acc;
             }, {});
             // Check if all appointment_by for each appointment_id are assigned
@@ -22292,18 +22299,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           return false;
         });
         var dateTimeAppointed = new Date("".concat(dateString, "T").concat(timeslot));
-        console.log("exceedAppoint", exceedAppoint);
-        var hasNonEmptyConfigId = exceedAppoint.appointment_schedules.some(function (slot) {
-          return slot.facility_id === _this2.facilitySelectedId && slot.configId;
-        });
-        if (!hasNonEmptyConfigId) {
-          if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-            targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
-            targetTd.css("border-color", "rgb(230 193 193)");
-          } else {
-            targetTd.css("background-color", "#00a65a"); //available color green'
-            targetdrag.css("border-color", "#00a65a");
-          }
+        if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
+          targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
+          targetTd.css("border-color", "rgb(230 193 193)");
+        } else {
+          targetTd.css("background-color", "#00a65a"); //available color green'
+          targetdrag.css("border-color", "#00a65a");
         }
         targetGrid.remove();
         targetTd.addClass("add-cursor-pointer");
@@ -22732,7 +22733,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
             });
           }
         });
-        console.log("Grouped doctors by appointed_date:", groupedDoctorByDate);
         Object.entries(groupedDoctorByDate).forEach(function (_ref) {
           var _ref2 = _slicedToArray(_ref, 2),
             appointedDate = _ref2[0],
@@ -22932,11 +22932,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   methods: {
     emitCurrentData: function emitCurrentData() {
       // Emit the necessary data whenever a change occurs
-      this.$emit("data-changed-config", {
-        selectedTime: this.currentConfig.timeSlots,
-        date: this.currentConfig.date,
-        appointmentId: this.currentConfig.appointment_id
-      });
+      // this.$emit("data-changed-config", {
+      //   selectedTime: this.currentConfig.timeSlots,
+      //   date: this.currentConfig.date,
+      //   appointmentId: this.currentConfig.appointment_id,
+      // });
+
       var appointment = {
         selectedTime: this.currentConfig.timeSlots,
         date: this.currentConfig.date,
@@ -23059,7 +23060,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 2:
               response = _context3.sent;
               _this2.configAppoinmentTime = response.data;
-            case 4:
+              _this2.$emit("getconfig-Appointment", response.data);
+            case 5:
             case "end":
               return _context3.stop();
           }
@@ -23076,25 +23078,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     configAppointmentNot: function configAppointmentNot(timeSlot) {
       var _this3 = this;
-      // Split timeSlot into start and end times
       var _timeSlot$split = timeSlot.split("-"),
         _timeSlot$split2 = _slicedToArray(_timeSlot$split, 2),
         timeSlot_start = _timeSlot$split2[0],
         timeSlot_end = _timeSlot$split2[1];
-
-      // Normalize timeSlot to HH:mm format
       var normalizedTimeSlotStart = this.normalizeTimeFormat(timeSlot_start);
       var normalizedTimeSlotEnd = this.normalizeTimeFormat(timeSlot_end);
-      console.log("Normalized time slot:", normalizedTimeSlotStart, normalizedTimeSlotEnd);
-
-      // Check if any config time overlaps with the current timeSlot
       return this.configAppoinmentTime.some(function (config) {
-        // Normalize config start and end time to HH:mm
         var normalizedConfigStartTime = _this3.normalizeTimeFormat(config.start_time);
         var normalizedConfigEndTime = _this3.normalizeTimeFormat(config.end_time);
-        console.log("Comparing ".concat(normalizedConfigStartTime, "\u2013").concat(normalizedConfigEndTime, " with ").concat(normalizedTimeSlotStart, "\u2013").concat(normalizedTimeSlotEnd));
-
-        // Return true to disable the radio button if times match
         return normalizedConfigStartTime === normalizedTimeSlotStart && normalizedConfigEndTime === normalizedTimeSlotEnd;
       });
     }
@@ -23503,14 +23495,6 @@ function appointmentConfigHours(params) {
 function appointmentConfigData(params) {
   console.log("result for", base + "/doctor/getconfigappointment", params);
   return _req__WEBPACK_IMPORTED_MODULE_0__["default"].post(base + "/doctor/getconfigappointment", params);
-
-  // try {
-  //     const response =  req.post(base+"/doctor/getconfigappointment", params);
-  //     console.log("get configappointment AppointmentApp11111", response);
-
-  //   } catch (error) {
-  //     console.error("Error sending appointment data:", error);
-  //   }
 }
 
 /***/ }),

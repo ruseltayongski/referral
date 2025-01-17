@@ -457,6 +457,24 @@ export default {
                     <i class="bi bi-prescription2"></i>
                   </button>
                 </div>
+                
+                <div class="button-container">
+                  <div v-if="showRecoTooltip" class="tooltip-text" style="background-color: #007bff">
+                    ReCo
+                  </div>
+                  <button
+                    class="btn btn-info btn-lg reco-button"
+                    data-toggle="modal"
+                    data-target="#feedbackModal"
+                    type="button"
+                    @mouseover="showRecoTooltip = true"
+                    @mouseleave="showRecoTooltip = false"
+                    @click="openReco(this.referral_code)"
+                  >
+                    <i class="fa fa-comments"></i> ReCo
+                    <span class="badge bg-blue">{{ feedbackCount }}</span>
+                  </button>
+                </div>
               </div>
             </div>
           </Transition>

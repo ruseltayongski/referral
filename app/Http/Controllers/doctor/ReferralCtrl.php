@@ -39,10 +39,12 @@ use App\ReasonForReferral;
 use App\Seen;
 use App\Tracking;
 use App\User;
+use App\TelemedAssignDoctor;
 use Carbon\Carbon;
 use Carbon\Traits\Date;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Response;
@@ -209,7 +211,7 @@ class ReferralCtrl extends Controller
         $provinces = Province::get();
 
         Session::put('totalIncoming_for_Dashboard', $data->total());
-       
+
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
             'data' => $data,
@@ -1007,9 +1009,14 @@ class ReferralCtrl extends Controller
 
     public function accept(Request $req,$track_id)
     {
-       
         $user = Session::get('auth');
         $track = Tracking::find($track_id);
+
+        $telemedAssigned = TelemedAssignDoctor::find($track->asignedDoctorId);
+        
+        $telemedAssigned->appointment_by = $user->id;
+        $telemedAssigned->save();
+
         if($track->status=='accepted' || $track->status=='rejected' || ($track->status=='redirected' && $track->referred_to != $user->facility_id)) {
             Session::put('incoming_denied',true);
             return;

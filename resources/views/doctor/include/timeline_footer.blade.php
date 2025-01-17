@@ -1,3 +1,7 @@
+@php
+    $assignedDoctor = $row->asignedDoctorId; 
+@endphp
+    
 <div class="timeline-footer">
     <div class="form-inline">
         {{--@if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )--}}
@@ -13,6 +17,7 @@
                    data-id="{{ $row->id }}"
                    data-referred_from="{{ $row->referred_from }}"
                    data-patient_name="{{ $row->patient_name }}"
+                   data-asigned_doctorid="{{ $row->asignedDoctorId }}"
                    data-backdrop="static">
                     <i class="fa fa-folder"></i> View Form
                 </a>
@@ -73,9 +78,9 @@
                 <span class="badge bg-red">{{ $issue_and_concern }}</span>
             </button>
         @endif
-        @if($row->telemedicine)
-            
-            <span class="badge2 red">Physical and Rehabilitation Medicine</span>
+        @if($row->telemedicine && $row->status !== 'accepted')
+            <!-- $row-asignedDoctorId -->
+            <span class="badge2 red">{{ $subdepartment }}</span>
         @endif
     </div>
 </div>

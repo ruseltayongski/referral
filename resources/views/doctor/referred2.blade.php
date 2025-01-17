@@ -152,7 +152,7 @@ $user = Session::get('auth');
                                data-code="{{ $row->code }}"
                                data-referral_status="referring"
                                class="view_form btn btn-warning btn-xs">
-                                <i class="fa fa-folder"></i> View Form
+                                <i class="fa fa-folder"></i> View Form  
                             </a>
                             @if($seen>0)
                                 <a href="#seenModal" data-toggle="modal"
@@ -209,13 +209,13 @@ $user = Session::get('auth');
                             @endif -->
 
                             <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
-                                    data-target="#feedbackModal"
-                                    data-code="{{ $row->code }}"
-                                    onclick="viewReco($(this))"
-                            >
+                                data-target="#feedbackModal"
+                                data-code="{{ $row->code }}"
+                                onclick="viewReco($(this))">
                                 <i class="fa fa-comments"></i> ReCo
                                 <span class="badge bg-blue" id="reco_count{{ $row->code }}">{{ $feedback }}</span>
                             </button>
+                            
                             <?php $issue_and_concern = \App\Issue::where("tracking_id","=",$row->id)->count(); ?>
                             <button class="btn btn-xs btn-danger btn-issue-referred" data-toggle="modal"
                                     data-target="#IssueAndConcern"

@@ -98,6 +98,10 @@
   border-radius: 50%;
   margin-right: 8px;
 }
+.reco-button{
+  border-radius: 50%;
+  margin-right: 8px;
+}
 .lab-button {
   border-radius: 50%;
 }
@@ -266,6 +270,7 @@ tr:nth-child(even) {
 .decline-button:hover,
 .upward-button:hover,
 .prescription-button:hover,
+.reco-button:hover,
 .lab-button:hover {
   background-color: rgba(2, 133, 221, 0.911);
   box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);

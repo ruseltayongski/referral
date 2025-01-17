@@ -107,7 +107,9 @@
         code = $(this).data('code');
         form_type = $(this).data('type');
         id = $(this).data('id');
-
+        assigned_doctor_id = $(this).data('asigned_doctorid');
+        console.log("assigned_doctor_id", assigned_doctor_id);
+        
         $('#normalFormModal').find('span').html('');
         $('#pregnantFormModal').find('span').html('');
 
