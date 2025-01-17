@@ -509,52 +509,50 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis_normInfo" style="width: 100%">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
-                                        <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
-                                        <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                            <i class="fa fa-medkit"></i> Add ICD-10
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                    </div>
-                                </div><br>
-
-                                <div class="row icd_selected" style="padding-top: 10px;">
-                                    <div class="col-md-12">
-                                        <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
-                                        <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
-                                        <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
-                                        <div id="icd_selected" style="padding-top: 5px">
-                                            @if(isset($icd))
-                                                @foreach($icd as $i)
-                                                    <span> => {{ $i->description }}</span><br>
-                                                    <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
-                                                @endforeach
-                                            @endif
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                            <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
+                                            <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                                <i class="fa fa-medkit"></i> Add ICD-10
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                         </div>
-                                    </div>
-                                </div><br>
+                                    </div><br>
 
-                                <div class="row notes_diagnosis" style="padding-top: 10px;">
-                                    <div class="col-md-12">
-                                        <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
-                                        <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
-                                        <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                        <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
-                                    </div>
-                                </div><br>
+                                    <div class="row icd_selected" style="padding-top: 10px;">
+                                        <div class="col-md-12">
+                                            <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                                            <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                                            <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                                            <div id="icd_selected" style="padding-top: 5px">
+                                                @if(isset($icd))
+                                                    @foreach($icd as $i)
+                                                        <span> => {{ $i->description }}</span><br>
+                                                        <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                                                    @endforeach
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div><br>
 
-                                <div class="row other_diag" style="padding-top: 10px">
-                                    <div class="col-md-12">
-                                        <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
-                                        <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
-                                        <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
-                                        <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
-                                    </div>
-                                </div><br>
-                                </div>
-                            </div><br>
+                                    <div class="row notes_diagnosis" style="padding-top: 10px;">
+                                        <div class="col-md-12">
+                                            <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                                            <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                            <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                            <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
+                                        </div>
+                                    </div><br>
+
+                                    <div class="row other_diag" style="padding-top: 10px">
+                                        <div class="col-md-12">
+                                            <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                                            <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                                            <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
+                                            <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                        </div>
+                                    </div><br>
                                 </div>
                             </div>
                         </div>
@@ -677,138 +675,288 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
 
 
-                                    </div><br>
+                                        </div><br>
 
-                                    <b>ALLERGIES</b><i> (Specify)</i><br>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <input class="form-check-input" id="allergy_all_cbox" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Select All'); ?>>
-                                                <span> Select All</span>
+                                        <b>ALLERGIES</b><i> (Specify)</i><br>
+                                        <div class="container-referral">
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <input class="form-check-input" id="allergy_all_cbox" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Select All'); ?>>
+                                                    <span> Select All</span>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input class="form-check-input" id="allergy_none_cbox" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'None'); ?>>
+                                                    <span> None</span>
+                                                </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <input class="form-check-input" id="allergy_none_cbox" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'None'); ?>>
-                                                <span> None</span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <input type="hidden" name="allergy_food_cbox" value="No">
-                                                <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Food'); ?>>
-                                                <span> Food(s): <i>(ex. crustaceans, eggs)</i></span>
-                                                <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_food_cause); ?></textarea>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <input type="hidden" name="allergy_drug_cbox" value="No">
-                                                <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Drugs'); ?>>
-                                                <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
-                                                <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_drugs_cause); ?></textarea>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <input type="hidden" name="allergy_other_cbox" value="No">
-                                                <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Others'); ?>>
-                                                <span> Other(s):</span>
-                                                <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_others_cause); ?></textarea>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-
-                                    <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_all_cbox" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Select All'); ?>>
-                                                <span>Select All</span>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_none_cbox" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'None'); ?>>
-                                                <span>None</span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <input type="hidden" name="heredo_hyper_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Hypertension'); ?>>
-                                                <span>Hypertension:</span>
-                                                <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal" <?php echo ($past_medical_history->heredo_hyper_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($past_medical_history->heredo_hyper_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($past_medical_history->heredo_hyper_side === 'Both') ? 'selected' : ''; ?>>Both</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="hidden" name="heredo_diab_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Diabetes'); ?>>
-                                                <span>Diabetes Mellitus:</span>
-                                                <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal" <?php echo ($past_medical_history->heredo_diab_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($past_medical_history->heredo_diab_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($past_medical_history->heredo_diab_side === 'Both') ? 'selected' : ''; ?>>Both</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="hidden" name="heredo_asthma_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Asthma'); ?>>
-                                                <span>Bronchial Asthma:</span>
-                                                <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal" <?php echo ($past_medical_history->heredo_asthma_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($past_medical_history->heredo_asthma_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($past_medical_history->heredo_asthma_side === 'Both') ? 'selected' : ''; ?>>Both</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="hidden" name="heredo_cancer_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Cancer'); ?>>
-                                                <span>Cancer:</span>
-                                                <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal" <?php echo ($past_medical_history->heredo_cancer_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($past_medical_history->heredo_cancer_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($past_medical_history->heredo_cancer_side === 'Both') ? 'selected' : ''; ?>>Both</option>
-                                                </select>
+                                            <div class="row">
+                                                <div class="col-md-4">
+                                                    <input type="hidden" name="allergy_food_cbox" value="No">
+                                                    <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Food'); ?>>
+                                                    <span> Food(s): <i>(ex. crustaceans, eggs)</i></span>
+                                                    <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_food_cause); ?></textarea>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="hidden" name="allergy_drug_cbox" value="No">
+                                                    <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Drugs'); ?>>
+                                                    <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
+                                                    <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_drugs_cause); ?></textarea>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <input type="hidden" name="allergy_other_cbox" value="No">
+                                                    <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Others'); ?>>
+                                                    <span> Other(s):</span>
+                                                    <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_others_cause); ?></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <input type="hidden" name="heredo_kidney_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Kidney Disease'); ?>>
-                                                <span>Kidney:</span>
-                                                <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($past_medical_history->heredo_kidney_side === 'Both') ? 'selected' : ''; ?>>Both</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="hidden" name="heredo_thyroid_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Thyroid Disease'); ?>>
-                                                <span>Thyroid Disease:</span>
-                                                <select class="form-control-select" id="heredo_thyroid" name="heredo_thyroid_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
-                                                    <option value="Paternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
-                                                    <option value="Both" <?php echo ($past_medical_history->heredo_kidney_side === 'Both') ? 'selected' : ''; ?>>Both</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input type="hidden" name="heredo_others_cbox" value="No">
-                                                <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Others'); ?>>
-                                                <span>Other(s):</span>
-                                                <input type="text" id="heredo_others" name="heredo_others_side" value="<?php echo htmlspecialchars($past_medical_history->heredo_others); ?>">
-                                            </div>
-                                        </div>
-                                    </div><br>
 
-                                    <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
-                                    <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
+
+                                        <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
+                                        <div class="container-referral">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="heredo_all_cbox" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Select All'); ?>>
+                                                    <span>Select All</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="heredo_none_cbox" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'None'); ?>>
+                                                    <span>None</span>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <input type="hidden" name="heredo_hyper_cbox" value="No">
+                                                    <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Hypertension'); ?>>
+                                                    <span>Hypertension:</span>
+                                                    <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Maternal" <?php echo ($past_medical_history->heredo_hyper_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                        <option value="Paternal" <?php echo ($past_medical_history->heredo_hyper_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                        <option value="Both" <?php echo ($past_medical_history->heredo_hyper_side === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="hidden" name="heredo_diab_cbox" value="No">
+                                                    <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Diabetes'); ?>>
+                                                    <span>Diabetes Mellitus:</span>
+                                                    <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Maternal" <?php echo ($past_medical_history->heredo_diab_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                        <option value="Paternal" <?php echo ($past_medical_history->heredo_diab_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                        <option value="Both" <?php echo ($past_medical_history->heredo_diab_side === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="hidden" name="heredo_asthma_cbox" value="No">
+                                                    <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Asthma'); ?>>
+                                                    <span>Bronchial Asthma:</span>
+                                                    <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Maternal" <?php echo ($past_medical_history->heredo_asthma_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                        <option value="Paternal" <?php echo ($past_medical_history->heredo_asthma_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                        <option value="Both" <?php echo ($past_medical_history->heredo_asthma_side === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="hidden" name="heredo_cancer_cbox" value="No">
+                                                    <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Cancer'); ?>>
+                                                    <span>Cancer:</span>
+                                                    <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Maternal" <?php echo ($past_medical_history->heredo_cancer_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                        <option value="Paternal" <?php echo ($past_medical_history->heredo_cancer_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                        <option value="Both" <?php echo ($past_medical_history->heredo_cancer_side === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    </select>
+                                                </div>
+                                            </div><br>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <input type="hidden" name="heredo_kidney_cbox" value="No">
+                                                    <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Kidney Disease'); ?>>
+                                                    <span>Kidney:</span>
+                                                    <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Maternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                        <option value="Paternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                        <option value="Both" <?php echo ($past_medical_history->heredo_kidney_side === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="hidden" name="heredo_thyroid_cbox" value="No">
+                                                    <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Thyroid Disease'); ?>>
+                                                    <span>Thyroid Disease:</span>
+                                                    <select class="form-control-select" id="heredo_thyroid" name="heredo_thyroid_side">
+                                                        <option value="">Select Option</option>
+                                                        <option value="Maternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Maternal') ? 'selected' : ''; ?>>Maternal</option>
+                                                        <option value="Paternal" <?php echo ($past_medical_history->heredo_kidney_side === 'Paternal') ? 'selected' : ''; ?>>Paternal</option>
+                                                        <option value="Both" <?php echo ($past_medical_history->heredo_kidney_side === 'Both') ? 'selected' : ''; ?>>Both</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input type="hidden" name="heredo_others_cbox" value="No">
+                                                    <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Others'); ?>>
+                                                    <span>Other(s):</span>
+                                                    <input type="text" id="heredo_others" name="heredo_others_side" value="<?php echo htmlspecialchars($past_medical_history->heredo_others); ?>">
+                                                </div>
+                                            </div>
+                                        </div><br>
+
+                                        <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
+                                        <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
+                                </div>
                                 </div>
                             </div>
                         </div>
+
+
+                        @if($patient_age <=18)
+                        <div class="row" style="margin: 5px;" id="pedia_show">
+                            <div class="col-lg-12">
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
+                                        <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
+                                        <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
+                                <div class="collapse" id="collapse_pedia_history" style="width: 100%;">
+                                    <b>PRENATAL</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span>A <input type="number" name="prenatal_age" style="width: 8%" min="0" value="{{$data->prenatal_a}}">
+                                                    year old G <input type="number" name="prenatal_g" style="width: 8%" min="0" value="{{$data->prenatal_g}}"> P <input type="number" style="width: 8%" min="0" name="prenatal_p" value="{{$pediatric_history->prenatal_p}}"> mother
+                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowith" value="with" <?= isChecked($pediatric_history, 'prenatal_radiowith_or_without', 'with'); ?>> with
+                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowout" value="without" <?= isChecked($pediatric_history, 'prenatal_radiowith_or_without', 'without'); ?>> without
+                                                    MATERNAL ILLNESS, if Yes (specify)
+                                                    <textarea class="form-control" id="prenatal_mat_illness" name="prenatal_maternal_illness" style="resize: none;width: 50%;" rows="2">{{$pediatric_history->prenatal_with_maternal_illness}}</textarea>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div><br>
+
+                                    <b>NATAL</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span>Born at
+                                                    <select class="form-control-select" name="natal_bornat">
+                                                        <option value="">Select Option</option>
+                                                        <option value="home" <?php echo ($pediatric_history->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
+                                                        <option value="clinic" <?php echo ($pediatric_history->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
+                                                        <option value="hospital" <?php echo ($pediatric_history->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
+                                                    </select>
+                                                    <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where" value="{{ $data->natal_born_address }}">
+                                                    by
+                                                    <select class="form-control-select" name="natal_by">
+                                                        <option value="">Select Option</option>
+                                                        <option value="md" <?php echo ($pediatric_history->natal_by == 'md') ? 'selected' : ''; ?>>MD</option>
+                                                        <option value="midwife" <?php echo ($pediatric_history->natal_by == 'midwife') ? 'selected' : ''; ?>>Midwife</option>
+                                                        <option value="hilot" <?php echo ($pediatric_history->natal_by == 'hilot') ? 'selected' : ''; ?>>Hilot</option>
+                                                    </select>
+                                                    via
+                                                    <select class="form-control-select" name="natal_via">
+                                                        <option value="">Select Option</option>
+                                                        <option value="nsd" <?php echo ($pediatric_history->natal_via == 'nsd') ? 'selected' : ''; ?>>NSD</option>
+                                                        <option value="cs" <?php echo ($pediatric_history->natal_via == 'cs') ? 'selected' : ''; ?>>CS</option>
+                                                    </select>
+                                                    (indication)
+                                                    <input type="text" id="cs_indication" name="cs_indication" style="width: 20%;" value="{{ $data->natal_indication }}">
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <span>
+                                                    <select class="form-control-select" name="natal_term">
+                                                        <option value="">Select Option</option>
+                                                        <option value="preterm" <?php echo ($pediatric_history->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
+                                                        <option value="fullterm" <?php echo ($pediatric_history->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
+                                                        <option value="postterm" <?php echo ($pediatric_history->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
+                                                    </select>
+                                                    , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01" value="{{$data->natal_weight}}"> kg,
+                                                    BR <input type="text" name="natal_br" style="width: 20%" value="{{$data->natal_br}}">, with Good Cry
+                                                    <select class="form-control-select" name="natal_withGoodCry">
+                                                        <option value="">Select Option</option>
+                                                        <option value="1" <?php echo ($pediatric_history->natal_with_good_cry == 1) ? 'selected' : ''; ?>>Yes</option>
+                                                        <option value="0" <?php echo ($pediatric_history->natal_with_good_cry == 0) ? 'selected' : ''; ?>>No</option>
+                                                    </select><br>
+                                                    Other complications:
+                                                    <textarea class="form-control" name="natal_complications" style="resize: none;width: 30%;" rows="2">{{ $data->natal_other_complications }}</textarea>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div><br>
+                                    <?php
+                                    $postnatal_bfeed_xmos_value = htmlspecialchars($pediatric_history['postnatal_bfeed_xmos']);
+                                    $postnatal_ffeed_specify_value = htmlspecialchars($pediatric_history['postnatal_ffeed_specify']);
+                                    $postnatal_started_semisolidfood_at_value = htmlspecialchars($pediatric_history['postnatal_started_semisolidfood_at']);
+                                    $immu_dpt_doses_value = htmlspecialchars($pediatric_history['immu_dpt_doses']);
+                                    $immu_hepb_doses_value = htmlspecialchars($pediatric_history['immu_hepb_doses']);
+                                    $immu_others_value = htmlspecialchars($pediatric_history['immu_others']);
+                                    ?>
+                                                  
+                                    <b>POST NATAL</b>
+                                    <div class="container-referral">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <i>Feeding History</i><br>&emsp;
+                                                <span>
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bfeed', 'Yes'); ?>> Breastfed
+                                                    <span id="breastfed">
+                                                        x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
+                                                    </span>
+                                                    <input type="hidden" name="postnatal_ffeed" value="No">
+                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_formula_feed', 'Yes'); ?>> Formula Fed,
+                                                    <span id="formula_fed">
+                                                        (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify" value="<?php echo $postnatal_ffeed_specify_value; ?>">
+                                                    </span>
+                                                </span>
+                                                started semi solid foods at
+                                                <input type="number" name="postnatal_started_semisolidfood_at" style="width: 10%" min="0" value="<?php echo $postnatal_started_semisolidfood_at_value; ?>"> mos
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <i>Immunization History</i><br>&emsp;
+                                                <input type="hidden" name="immu_bcg_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bcg', 'Yes'); ?>> BCG
+                                                <input type="hidden" name="immu_dpt_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_dpt_opv_x', 'Yes'); ?>> DPT/OPV
+                                                <span id="immu_dpt">
+                                                    x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0" value="<?php echo $immu_dpt_doses_value; ?>"> doses
+                                                </span>
+                                                <input type="hidden" name="immu_hepb_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_hepB_cbox', 'Yes'); ?>> Hep B
+                                                <span id="immu_hepb">
+                                                    x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0" value="<?php echo $immu_hepb_doses_value; ?>"> doses
+                                                </span>
+                                                <input type="hidden" name="immu_measles_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_immu_measles_cbox', 'Yes'); ?>> Measles
+                                                <input type="hidden" name="immu_mmr_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_mmr_cbox', 'Yes'); ?>> MMR
+                                                <input type="hidden" name="immu_others_cbox" value="No">
+                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_others_cbox', 'Yes'); ?>> Other(s)
+                                                <span id="immu_others">
+                                                    <input type="text" name="immu_others" style="width: 20%;" value="<?php echo $immu_others_value; ?>">
+                                                </span>
+                                            </div>
+                                        </div><br>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <i>Developmental Milestones</i><br>&emsp;
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under" value="Under developed" <?= isChecked($pediatric_history, 'post_natal_development_milestones', 'Under developed'); ?>>
+                                                <label for="dev_miles_under">Under developed</label>
+                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par" value="At par with age" <?= isChecked($pediatric_history, 'post_natal_development_milestones', 'At par with age'); ?>>
+                                                <label for="dev_miles_par">At par with age</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
 
                         <?php
 
@@ -853,7 +1001,8 @@ $facilities = \App\Facility::select('id','name')
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                       
-                        @if ($patient_age >= 9 && $form->patient_sex === "Female")
+                
+                        @if ($patient_age >= 9 && $form->patient_sex === "Female" && $age_type==="y")
                         <div class="row" style="margin: 5px;" id="menarche_show">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -1030,7 +1179,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-                        @endif
+                       @endif
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
@@ -1249,7 +1398,7 @@ $facilities = \App\Facility::select('id','name')
 
 
                         <div class="row" style="margin: 5px;">
-                            <div class="col-lg-12">
+                           
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system" aria-expanded="false" aria-controls="collapse_review_system">
                                         <b>REVIEW OF SYSTEMS</b>
@@ -2020,10 +2169,11 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
                                 </div>
-                            </div>
+                        
                         </div>
+
                         <div class="row" style="margin:5px">
-                            <div class="col-lg-12">
+                           
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
                                         <b>NUTRITIONAL STATUS</b>
@@ -2062,11 +2212,11 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                          
                         </div>
 
                         <div class="row" style="margin:5px">
-                            <div class="col-lg-12">
+                           
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
                                         <b>LATEST VITAL SIGNS</b>
@@ -2096,11 +2246,10 @@ $facilities = \App\Facility::select('id','name')
                                         </div><br>
                                     </div>
                                 </div>
-                            </div>
+                           
                         </div>
 
                         <div class="row" style="margin:5px">
-                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow" aria-expanded="false" aria-controls="collapse_glasgow">
                                         <b>GLASGOW COMA SCALE</b>
@@ -2411,10 +2560,10 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
                                 </div>
-                            </div>
+                          
                         </div>
                         <div class="row" style="margin: 5px;">
-                            <div class="col-lg-12">
+                           
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normInfo" aria-expanded="false" aria-controls="collapse_reason_referral_normInfo">
                                         <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
@@ -2434,18 +2583,13 @@ $facilities = \App\Facility::select('id','name')
                                         <div id="other_reason_referral"></div>
                                     </div>
                                 </div>
-                            </div>
+                                                    
                         </div>
                         <div class="form-fotter pull-right" style="margin: 10px;">
                         <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
-                        </div>
-                        <div class="clearfix"></div> 
-                        </div>{{--/.form-group--}}
-                </div> {{--/.jim-content--}}
+                </div>
             </form>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+  
 
                     
                     
@@ -2924,64 +3068,123 @@ $facilities = \App\Facility::select('id','name')
     });
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
-    function resetPupilSize() {
-    $('#gcs_score').val(0);
-    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
-    $('input[name="motor_radio"]').prop('checked', false);
-    $('input[name="verbal_radio"]').prop('checked', false);
-    $('input[name="eye_radio"]').prop('checked', false);
-    last_motor = last_verbal = last_eye = 0;
-    }
-    $('#gcs_score').val(0);
-    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
-    $('input[name="motor_radio"]').prop('checked', false);
-    $('input[name="verbal_radio"]').prop('checked', false);
-    $('input[name="eye_radio"]').prop('checked', false);
-    last_motor = last_verbal = last_eye = 0;
-    var last_motor = last_verbal = last_eye = 0;
-    $('input[name="motor_radio"]').on('change', function() {
-        var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
-        var total = 0;
-        if (last_motor == 0)
-            total = gcs + motor;
-        else
-            total = (gcs - last_motor) + motor;
+        // Constants for score limits
+    const MAX_TOTAL_SCORE = 15;
+    const MIN_TOTAL_SCORE = 3;
 
-        last_motor = motor;
-        check_total(total);
-    });
-    $('input[name="verbal_radio"]').on('change', function() {
-        var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
-        var total = 0;
-        if (last_verbal == 0)
-            total = gcs + verbal;
-        else
-            total = (gcs - last_verbal) + verbal;
-
-        last_verbal = verbal;
-        check_total(total);
-    });
-    $('input[name="eye_radio"]').on('change', function() {
-        var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
-        var total = 0;
-        if (last_eye == 0)
-            total = gcs + eye;
-        else
-            total = (gcs - last_eye) + eye;
-
-        last_eye = eye;
-        check_total(total);
-    });
-    function check_total(total) {
-        if (total >= 16) {
-            total=0;
+    class GlasgowComaScale {
+        constructor() {
+            this.scores = {
+                motor: 0,
+                verbal: 0,
+                eye: 0
+            };
+            
+            this.originalScores = {
+                motor: 0,
+                verbal: 0,
+                eye: 0,
+                total: 0
+            };
+            
+            this.initializeScores();
+            this.attachEventListeners();
         }
-        $('#gcs_score').val(total); // Update the field regardless
+        
+        initializeScores() {
+            // Get initial values from checked radio buttons
+            this.scores.motor = parseInt($('input[name="motor_radio"]:checked').val()) || 0;
+            this.scores.verbal = parseInt($('input[name="verbal_radio"]:checked').val()) || 0;
+            this.scores.eye = parseInt($('input[name="eye_radio"]:checked').val()) || 0;
+            
+            // Store original values
+            this.originalScores.motor = this.scores.motor;
+            this.originalScores.verbal = this.scores.verbal;
+            this.originalScores.eye = this.scores.eye;
+            this.originalScores.total = parseInt($('#gcs_score').val()) || 0;
+            
+            // Set initial total if components exist but total doesn't
+            if (this.scores.motor || this.scores.verbal || this.scores.eye) {
+                const calculatedTotal = this.calculateTotal();
+                if (calculatedTotal >= MIN_TOTAL_SCORE && calculatedTotal <= MAX_TOTAL_SCORE) {
+                    $('#gcs_score').val(calculatedTotal);
+                }
+            }
+        }
+        
+        calculateTotal() {
+            return this.scores.motor + this.scores.verbal + this.scores.eye;
+        }
+        
+        updateScore(type, newValue) {
+            const oldValue = this.scores[type];
+            this.scores[type] = parseInt(newValue) || 0;
+            
+            const currentTotal = parseInt($('#gcs_score').val()) || 0;
+            const newTotal = currentTotal - oldValue + this.scores[type];
+            
+            if (newTotal >= MIN_TOTAL_SCORE && newTotal <= MAX_TOTAL_SCORE) {
+                $('#gcs_score').val(newTotal);
+            } else {
+                // Revert if total would be invalid
+                this.scores[type] = oldValue;
+                this.resetToOriginal();
+            }
+        }
+        
+        resetToOriginal() {
+            // Reset scores to original values
+            this.scores = { ...this.originalScores };
+            
+            // Reset radio buttons
+            if (this.originalScores.motor) {
+                $(`input[name="motor_radio"][value="${this.originalScores.motor}"]`).prop('checked', true);
+            } else {
+                $('input[name="motor_radio"]').prop('checked', false);
+            }
+            
+            if (this.originalScores.verbal) {
+                $(`input[name="verbal_radio"][value="${this.originalScores.verbal}"]`).prop('checked', true);
+            } else {
+                $('input[name="verbal_radio"]').prop('checked', false);
+            }
+            
+            if (this.originalScores.eye) {
+                $(`input[name="eye_radio"][value="${this.originalScores.eye}"]`).prop('checked', true);
+            } else {
+                $('input[name="eye_radio"]').prop('checked', false);
+            }
+            
+            // Reset pupil size and total score
+            $('input[name="glasgow_pupil_btn"]').prop('checked', false);
+            $('#gcs_score').val(this.originalScores.total);
+        }
+        
+        attachEventListeners() {
+            // Motor score change handler
+            $('input[name="motor_radio"]').on('change', (e) => {
+                this.updateScore('motor', e.target.value);
+            });
+            
+            // Verbal score change handler
+            $('input[name="verbal_radio"]').on('change', (e) => {
+                this.updateScore('verbal', e.target.value);
+            });
+            
+            // Eye score change handler
+            $('input[name="eye_radio"]').on('change', (e) => {
+                this.updateScore('eye', e.target.value);
+            });
+            
+            // Reset button handler
+            $('.btn-warning').on('click', () => this.resetToOriginal());
+        }
     }
 
+    // Initialize when document is ready
+    $(document).ready(() => {
+        window.glasgowScale = new GlasgowComaScale();
+    });
 
     /* *****REVIEW OF SYSTEMS***** */
     /* SKIN */

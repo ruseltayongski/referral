@@ -1555,6 +1555,7 @@ class NewFormCtrl extends Controller
             $glasgocoma_scale = GlasgoComaScale::where('patient_id', $patient_id)->first();
             $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
             $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get();
+            $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
     
            
             return view("modal.revised_normal_form_info", [
@@ -1578,6 +1579,7 @@ class NewFormCtrl extends Controller
                 "nutritional_status" => $nutritional_status,
                 "latest_vital_signs" => $latest_vital_signs,
                 "glasgocoma_scale" => $glasgocoma_scale,
+                "pediatric_history"=>$pediatric_history,
                 "type"=>$type,
                 "status" => $status,
                 "obstetric_and_gynecologic_history"=>$obstetric_and_gynecologic_history,
@@ -1718,21 +1720,38 @@ class NewFormCtrl extends Controller
         $birthWeights = $request->input('pregnancy_history_birthweight');
         $presentStatuses = $request->input('pregnancy_history_presentstatus');
         $complications = $request->input('pregnancy_history_complications');
-
+       
         foreach ($orders as $key => $order) {
-            Pregnancy::create([
-                'patient_id' => $patient_id,
-                'pregnancy_order' => $order,
-                'pregnancy_year' => $years[$key],
-                'pregnancy_gestation_completed' => $gestations[$key],
-                'pregnancy_outcome' => $outcomes[$key],
-                'pregnancy_place_of_birth' => $placesOfBirth[$key],
-                'pregnancy_sex' => $sexes[$key],
-                'pregnancy_birth_weight' => $birthWeights[$key],
-                'pregnancy_present_status' => $presentStatuses[$key],
-                'pregnancy_complication' => $complications[$key],
-            ]);
+            // Check if a record with the same details already exists
+            $existingRecord = Pregnancy::where('patient_id', $patient_id)
+                ->where('pregnancy_order', $order)
+                ->where('pregnancy_year', $years[$key])
+                ->where('pregnancy_gestation_completed', $gestations[$key])
+                ->where('pregnancy_outcome', $outcomes[$key])
+                ->where('pregnancy_place_of_birth', $placesOfBirth[$key])
+                ->where('pregnancy_sex', $sexes[$key])
+                ->where('pregnancy_birth_weight', $birthWeights[$key])
+                ->where('pregnancy_present_status', $presentStatuses[$key])
+                ->where('pregnancy_complication', $complications[$key])
+                ->first();
+        
+            // Create a new record only if it doesn't already exist
+            if (!$existingRecord) {
+                Pregnancy::create([
+                    'patient_id' => $patient_id,
+                    'pregnancy_order' => $order,
+                    'pregnancy_year' => $years[$key],
+                    'pregnancy_gestation_completed' => $gestations[$key],
+                    'pregnancy_outcome' => $outcomes[$key],
+                    'pregnancy_place_of_birth' => $placesOfBirth[$key],
+                    'pregnancy_sex' => $sexes[$key],
+                    'pregnancy_birth_weight' => $birthWeights[$key],
+                    'pregnancy_present_status' => $presentStatuses[$key],
+                    'pregnancy_complication' => $complications[$key],
+                ]);
+            }
         }
+        
     }
 
     public function newFormSave($request){
@@ -1762,19 +1781,36 @@ class NewFormCtrl extends Controller
         $complications = $request->input('pregnancy_history_complications');
 
         foreach ($orders as $key => $order) {
-            Pregnancy::create([
-                'patient_id' => $patient_id,
-                'pregnancy_order' => $order,
-                'pregnancy_year' => $years[$key],
-                'pregnancy_gestation_completed' => $gestations[$key],
-                'pregnancy_outcome' => $outcomes[$key],
-                'pregnancy_place_of_birth' => $placesOfBirth[$key],
-                'pregnancy_sex' => $sexes[$key],
-                'pregnancy_birth_weight' => $birthWeights[$key],
-                'pregnancy_present_status' => $presentStatuses[$key],
-                'pregnancy_complication' => $complications[$key],
-            ]);
+            // Check if a record with the same details already exists
+            $existingRecord = Pregnancy::where('patient_id', $patient_id)
+                ->where('pregnancy_order', $order)
+                ->where('pregnancy_year', $years[$key])
+                ->where('pregnancy_gestation_completed', $gestations[$key])
+                ->where('pregnancy_outcome', $outcomes[$key])
+                ->where('pregnancy_place_of_birth', $placesOfBirth[$key])
+                ->where('pregnancy_sex', $sexes[$key])
+                ->where('pregnancy_birth_weight', $birthWeights[$key])
+                ->where('pregnancy_present_status', $presentStatuses[$key])
+                ->where('pregnancy_complication', $complications[$key])
+                ->first();
+        
+            // Create a new record only if it doesn't already exist
+            if (!$existingRecord) {
+                Pregnancy::create([
+                    'patient_id' => $patient_id,
+                    'pregnancy_order' => $order,
+                    'pregnancy_year' => $years[$key],
+                    'pregnancy_gestation_completed' => $gestations[$key],
+                    'pregnancy_outcome' => $outcomes[$key],
+                    'pregnancy_place_of_birth' => $placesOfBirth[$key],
+                    'pregnancy_sex' => $sexes[$key],
+                    'pregnancy_birth_weight' => $birthWeights[$key],
+                    'pregnancy_present_status' => $presentStatuses[$key],
+                    'pregnancy_complication' => $complications[$key],
+                ]);
+            }
         }
+        
 
     }
 

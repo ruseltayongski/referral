@@ -635,7 +635,7 @@ $facilities = \App\Facility::select('id','name')
 
                         ?>
                         <div class="row" style="margin: 5px;">
-                            <div class="col-lg-12">
+                            
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
                                         <b>PAST MEDICAL HISTORY</b>
@@ -865,12 +865,14 @@ $facilities = \App\Facility::select('id','name')
                                     <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
                                     <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
                                 </div>
-                            </div>
+                            
                         </div>
 
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
+                       
+                        @if($form['pregnant']->woman_age <=18)
                         <div class="row" style="margin: 5px;" id="pedia_show">
-                            <div class="col-lg-12">
+                            
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
                                         <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
@@ -1012,8 +1014,9 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                           
                         </div>
+                        @endif
                         <?php
 
                         $menarche = $obstetric_and_gynecologic_history->menarche;
@@ -1056,7 +1059,7 @@ $facilities = \App\Facility::select('id','name')
                         ?>
 
                         <div class="row" style="margin: 5px;" id="baby_show_pregnant">
-                            <div class="col-lg-12">
+                        
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
                                         <div class="web-view"><b>BABY DELIVERED</b> <i> (as applicable)</i></div>
@@ -1129,7 +1132,7 @@ $facilities = \App\Facility::select('id','name')
                                 <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given" required>{{$form['baby']->baby_information_given}}</textarea><br><br>
                                 </div>
                                 </div>
-                            </div>
+                            
                         </div> 
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
@@ -3197,63 +3200,113 @@ $facilities = \App\Facility::select('id','name')
     });
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
+   // Initialize variables with existing data or defaults
+function initializeGlasgowScale() {
+    const existingScore = parseInt($('#gcs_score').val()) || 0;
+    
+    // Initialize last values based on checked radio buttons
+    let last_motor = parseInt($('input[name="motor_radio"]:checked').val()) || 0;
+    let last_verbal = parseInt($('input[name="verbal_radio"]:checked').val()) || 0;
+    let last_eye = parseInt($('input[name="eye_radio"]:checked').val()) || 0;
+    
+    // Store original values
+    const original_motor = last_motor;
+    const original_verbal = last_verbal;
+    const original_eye = last_eye;
+    const original_score = existingScore;
+    
     function resetPupilSize() {
-    $('#gcs_score').val(0);
-    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
-    $('input[name="motor_radio"]').prop('checked', false);
-    $('input[name="verbal_radio"]').prop('checked', false);
-    $('input[name="eye_radio"]').prop('checked', false);
-    last_motor = last_verbal = last_eye = 0;
+        // Reset to original values instead of zeroing everything
+        $('input[name="glasgow_pupil_btn"]').prop('checked', false);
+        
+        if (original_motor) {
+            $(`input[name="motor_radio"][value="${original_motor}"]`).prop('checked', true);
+            last_motor = original_motor;
+        } else {
+            $('input[name="motor_radio"]').prop('checked', false);
+            last_motor = 0;
+        }
+        
+        if (original_verbal) {
+            $(`input[name="verbal_radio"][value="${original_verbal}"]`).prop('checked', true);
+            last_verbal = original_verbal;
+        } else {
+            $('input[name="verbal_radio"]').prop('checked', false);
+            last_verbal = 0;
+        }
+        
+        if (original_eye) {
+            $(`input[name="eye_radio"][value="${original_eye}"]`).prop('checked', true);
+            last_eye = original_eye;
+        } else {
+            $('input[name="eye_radio"]').prop('checked', false);
+            last_eye = 0;
+        }
+        
+        $('#gcs_score').val(original_score);
     }
-    $('#gcs_score').val(0);
-    $('input[name="glasgow_pupil_btn"]').prop('checked', false);
-    $('input[name="motor_radio"]').prop('checked', false);
-    $('input[name="verbal_radio"]').prop('checked', false);
-    $('input[name="eye_radio"]').prop('checked', false);
-    last_motor = last_verbal = last_eye = 0;
-    var last_motor = last_verbal = last_eye = 0;
-    $('input[name="motor_radio"]').on('change', function() {
-        var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
-        var total = 0;
-        if (last_motor == 0)
-            total = gcs + motor;
-        else
-            total = (gcs - last_motor) + motor;
 
+    $('input[name="motor_radio"]').on('change', function() {
+        const motor = parseInt($(this).val(), 10);
+        const gcs = parseInt($('#gcs_score').val(), 10) || 0;
+        let total = 0;
+        
+        if (last_motor === 0) {
+            total = gcs + motor;
+        } else {
+            total = (gcs - last_motor) + motor;
+        }
+        
         last_motor = motor;
         check_total(total);
     });
-    $('input[name="verbal_radio"]').on('change', function() {
-        var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
-        var total = 0;
-        if (last_verbal == 0)
-            total = gcs + verbal;
-        else
-            total = (gcs - last_verbal) + verbal;
 
+    $('input[name="verbal_radio"]').on('change', function() {
+        const verbal = parseInt($(this).val(), 10);
+        const gcs = parseInt($('#gcs_score').val(), 10) || 0;
+        let total = 0;
+        
+        if (last_verbal === 0) {
+            total = gcs + verbal;
+        } else {
+            total = (gcs - last_verbal) + verbal;
+        }
+        
         last_verbal = verbal;
         check_total(total);
     });
-    $('input[name="eye_radio"]').on('change', function() {
-        var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
-        var total = 0;
-        if (last_eye == 0)
-            total = gcs + eye;
-        else
-            total = (gcs - last_eye) + eye;
 
+    $('input[name="eye_radio"]').on('change', function() {
+        const eye = parseInt($(this).val(), 10);
+        const gcs = parseInt($('#gcs_score').val(), 10) || 0;
+        let total = 0;
+        
+        if (last_eye === 0) {
+            total = gcs + eye;
+        } else {
+            total = (gcs - last_eye) + eye;
+        }
+        
         last_eye = eye;
         check_total(total);
     });
+
     function check_total(total) {
         if (total >= 16) {
-            total=0;
+            // Instead of resetting to 0, revert to previous valid state
+            $('#gcs_score').val(original_score);
+            resetPupilSize();
+        } else {
+            $('#gcs_score').val(total);
         }
-        $('#gcs_score').val(total); // Update the field regardless
     }
+
+    // Make reset function available globally
+    window.resetPupilSize = resetPupilSize;
+}
+
+// Initialize when document is ready
+$(document).ready(initializeGlasgowScale);
 
     /* *****REVIEW OF SYSTEMS***** */
     /* SKIN */
