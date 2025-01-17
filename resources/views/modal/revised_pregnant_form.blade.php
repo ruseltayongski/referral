@@ -513,6 +513,7 @@
                       
 
                         {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
+                        
                         <div class="row" id="pedia_show_pregnant" style="display: none">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -835,7 +836,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr style="font-size: 10pt">
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_order[]" value="{{$pregnancy->pregnancy_order}}"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_order[]"></td>
                                                     <td>
                                                         <select class="form-control select" name="pregnancy_history_year[]">
                                                             <option value="">Choose...</option>
@@ -844,9 +845,9 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{$pregnancy->pregnancy_gestation_completed}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{$pregnancy->pregnancy_outcome}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]" value="{{$pregnancy->pregnancy_place_of_birth}}"></td>
+                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>
                                                     <td>
                                                         <select class="select form-control" name="prenatal_history_sex[]">
                                                             <option value="">Choose...</option>
@@ -854,9 +855,9 @@
                                                             <option value="F">Female</option>
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $pregnancy->pregnancy_birth_weight}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $pregnancy->pregnancy_present_status}}"></td>
-                                                    <td><input class="form-control" type="text" name="pregnancy_history_complications[]" value="{{ $pregnancy->pregnancy_complication}}"></td>
+                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_complications[]"></td>
                                                 </tr> 
                                             </tbody>
                                         </table>
