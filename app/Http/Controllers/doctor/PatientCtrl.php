@@ -495,7 +495,6 @@ class PatientCtrl extends Controller
                 $configTimeSlot->save();
 
                 $asigned_doctorId = $configTimeSlot->id;
-                // $appointmentId = $configTimeSlot->appointment_id;
             }else{
                 
                 $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
