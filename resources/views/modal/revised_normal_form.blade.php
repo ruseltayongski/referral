@@ -810,10 +810,16 @@
                                                 <input class="form-check-input" id="contraceptive_iud_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="Yes"> IUD
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_rhythm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Yes"> Rhythm
+                                                <input class="form-check-input" id="contraceptive_rhythm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Yes"> Rhythm / Calendar
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="contraceptive_condom_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Yes"> Condom
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -839,20 +845,20 @@
                                     </div><br>
 
                                     <div class="container-referral">
-                                        <b>LNMP</b>
-                                        <input type="text" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
+                                        <b>LMP</b>
+                                        <input type="number" step="0.01" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
                                         <b>EDC</b><i>(if pregnant)</i>
-                                        <input type="text" style="width:15%;" name="parity_edc_ifpregnant">
+                                        <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant">
                                     </div><br>
 
                                     <b>AOG</b>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <b>by LNMP </b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp"> <b>wks</b>
+                                                <b>by LMP </b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp"> <b>wks</b>
                                             </div>
                                             <div class="col-md-4">
-                                                <b>by EUTZ </b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ"> <b>wks</b>
+                                                <b>by UTZ </b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ"> <b>wks</b>
                                             </div>
                                         </div>
                                     </div><br>
@@ -879,6 +885,7 @@
                                                     <td><input class="form-control" type="text" name="pregnancy_history_order[]"></td>
                                                     <td>
                                                         <select class="form-control select" name="pregnancy_history_year[]">
+                                                            <option value="">Choose...</option>
                                                             <?php
                                                             foreach (range(date('Y'), 1950) as $year) {
                                                                 echo "<option>" . $year . "</option>";
@@ -1075,6 +1082,18 @@
                                                 <input class="form-check-input" id="lab_xray_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_xray_cbox" value="Yes">
                                                 <span> X-RAY</span>
                                             </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ultrasound_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ultrasound_cbox" value="Yes">
+                                                <span> ULTRA SOUND</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ctscan_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ctscan_cbox" value="Yes">
+                                                <span> CT SCAN</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ctgmonitoring_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ctgmonitoring_cbox" value="Yes">
+                                                <span> CTG MONITORING</span>
+                                            </div>
                                             <div class="col-md-6">
                                                 <input class="form-check-input" id="lab_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_others_cbox" value="Yes"> Others:
                                                 <textarea id="lab_others" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"></textarea>
@@ -1215,11 +1234,6 @@
                                                 <input type="hidden" name="rs_eyes_glaucoma_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes">
                                                 <span> Glaucoma/Cataracts</span>
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="rs_eye_exam_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eye_exam_cbox" value="Yes">
-                                                <span> Last eye exam</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1635,6 +1649,10 @@
                                                 <input class="form-check-input" id="rs_peri_veinclot_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_veinclot_cbox" value="Yes">
                                                 <span> Clots in veins</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_peri_edema_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_edema_cbox" value="Yes">
+                                                <span> Edema</span>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -1667,11 +1685,15 @@
                                                 <input class="form-check-input" id="rs_muscle_decmotion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_decmotion_cbox" value="Yes">
                                                 <span> Decreased joint motion</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_sizeloss_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sizeloss_cbox" value="Yes">
+                                                <span> Loss of muscle size</span>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_brokenbone_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_brokenbone_cbox" value="Yes">
-                                                <span> Broken bone</span>
+                                                <input class="form-check-input" id="rs_muscle_fractured_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fractured_cbox" value="Yes">
+                                                <span> Fractured</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_sprain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" value="Yes">
@@ -1684,6 +1706,10 @@
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_gout_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_gout_cbox" value="Yes">
                                                 <span> Gout</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_spasm_cbox" value="Yes">
+                                                <span> Muscle Spasm</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1724,16 +1750,16 @@
                                                 <span> Weakness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_sizeloss_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_sizeloss_cbox" value="Yes">
-                                                <span> Loss of muscle size</span>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_spasm_cbox" value="Yes">
-                                                <span> Muscle Spasm</span>
-                                            </div>
-                                            <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_neuro_tremor_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tremor_cbox" value="Yes">
                                                 <span> Tremor</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_disorientation_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_disorientation_cbox" value="Yes">
+                                                <span> Disorientation</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_slurringspeech_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_slurringspeech_cbox" value="Yes">
+                                                <span> Slurring Speech</span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1742,8 +1768,8 @@
                                                 <span> Involuntary movement</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_incoordination_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_incoordination_cbox" value="Yes">
-                                                <span> Incoordination</span>
+                                                <input class="form-check-input" id="rs_neuro_unsteadygait_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_unsteadygait_cbox" value="Yes">
+                                                <span> Unsteady Gait</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_neuro_numbness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_numbness_cbox" value="Yes">
@@ -1816,20 +1842,12 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_thyroid_cbox" value="Yes">
-                                                <span> Thyroid trouble</span>
-                                            </div>
-                                            <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_endo_heatcold_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_heatcold_cbox" value="Yes">
                                                 <span> Heat/cold intolerance</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_endo_sweat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" value="Yes">
                                                 <span> Excessive sweating</span>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_diabetes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_diabetes_cbox" value="Yes">
-                                                <span> Diabetes</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1853,7 +1871,11 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_psych_depression_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_depression_cbox" value="Yes">
-                                                <span> Depression/suicide ideation</span>
+                                                <span> Depression</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_psych_suicideideation_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_suicideideation_cbox" value="Yes">
+                                                <span> Suicide Ideation</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_psych_memory_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_memory_cbox" value="Yes">
@@ -1948,9 +1970,18 @@
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                Blood Pressure: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_bp"> mmHg
-                                            </div>
+                                                <div class="col-md-4">
+                                                    <label for="systolic">Blood Pressure:</label>
+                                                    <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                        style="width:18%;" min="0" max="300" 
+                                                        oninput="updateBloodPressure()"> /
+                                                    <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                        style="width:18%;" min="0" max="200" 
+                                                        oninput="updateBloodPressure()">mmHg
+
+                                                    <!-- Hidden input to store the combined value -->
+                                                    <input type="hidden" name="vital_bp" id="vital_bp">
+                                                </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
                                             </div>
@@ -1959,6 +1990,17 @@
                                 </div>
                             </div>
                         </div>
+
+                        <script>
+                            function updateBloodPressure() {
+                                // Get systolic and diastolic values
+                                const systolic = document.getElementById('systolic').value;
+                                const diastolic = document.getElementById('diastolic').value;
+                                
+                                // Combine into "100/90" format
+                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                            }
+                        </script>
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -2945,20 +2987,20 @@
     $('#rs_eyes_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', true);
-            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', true);
+            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').prop('checked', true);
             $('#rs_eyes_none_cbox').prop('checked', false);
         } else {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', false);
-            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', false);
+            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').prop('checked', false);
         }
     });
     $('#rs_eyes_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', false);
-            $('#rs_eyes_all_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', false);
+            $('#rs_eyes_all_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').prop('checked', false);
         }
     });
-    $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').on('click', function() {
+    $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').on('click', function() {
         $('#rs_eyes_all_cbox, #rs_eyes_none_cbox').prop('checked', false);
     });
 
@@ -3129,36 +3171,36 @@
     /* PERIPHERAL VASCULAR */
     $('#rs_peri_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', true);
+            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').prop('checked', true);
             $('#rs_peri_none_cbox').prop('checked', false);
         } else
-            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
+            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').prop('checked', false);
     });
     $('#rs_peri_none_cbox').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_peri_all_cbox, #rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
+            $('#rs_peri_all_cbox, #rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').prop('checked', false);
     });
-    $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').on('click', function() {
+    $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').on('click', function() {
         $('#rs_peri_all_cbox, #rs_peri_none_cbox').prop('checked', false);
     });
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
             $('#rs_muscle_none_cbox').prop('checked', false);
         } else {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
     $('#rs_muscle_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_all_cbox, #rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
-    $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
+    $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
 
@@ -3166,24 +3208,24 @@
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', true);
-            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', true);
+            $('#rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').prop('checked', true);
+            $('#rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', true);
             $('#rs_neuro_none_cbox').prop('checked', false);
         } else {
-            $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
-            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
+            $('#rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').prop('checked', false);
+            $(' #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
         }
     });
     $('#rs_neuro_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_neuro_all_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
-            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
+            $('#rs_neuro_all_cbox, #rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').prop('checked', false);
+            $(' #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
         }
     });
-    $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').on('click', function() {
+    $('#rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').on('click', function() {
         $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
     });
-    $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').on('click', function() {
+    $('#rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').on('click', function() {
         $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
     });
 
@@ -3206,40 +3248,40 @@
     /* ENDOCRINE */
     $('#rs_endo_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', true);
-            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', true);
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').prop('checked', true);
+            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').prop('checked', true);
             $('#rs_endo_none_cbox').prop('checked', false);
         } else {
-            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', false);
-            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', false);
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').prop('checked', false);
+            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').prop('checked', false);
         }
     });
     $('#rs_endo_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', false);
-            $('#rs_endo_all_cbox, #rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', false);
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').prop('checked', false);
+            $('#rs_endo_all_cbox, #rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').prop('checked', false);
         }
     });
-    $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').on('click', function() {
+    $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').on('click', function() {
         $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
     });
-    $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').on('click', function() {
+    $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').on('click', function() {
         $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
     });
 
     /* PSYCHIATRIC */
     $('#rs_psych_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', true);
+            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', true);
             $('#rs_psych_none_cbox').prop('checked', false);
         } else
-            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
+            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
     });
     $('#rs_psych_none_cbox').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_psych_all_cbox, #rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
+            $('#rs_psych_all_cbox, #rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
     });
-    $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
+    $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
         $('#rs_psych_all_cbox, #rs_psych_none_cbox').prop('checked', false);
     });
 

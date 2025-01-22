@@ -509,151 +509,7 @@
                                 </div>
                             </div>
                         </div>
-                        
                       
-
-                        {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                        
-                        <div class="row" id="pedia_show_pregnant" style="display: none">
-                            <div class="col-lg-12">
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history_pregnant" aria-expanded="false" aria-controls="collapse_pedia_history_pregnant">
-                                        <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
-                                        <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
-                                <div class="collapse" id="collapse_pedia_history_pregnant" style="width: 100%;">
-                                    <b>PRENATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>A <input type="number" name="prenatal_age" style="width: 8%" min="0">
-                                                    year old G <input type="number" name="prenatal_g" style="width: 8%" min="0"> P <input type="number" style="width: 8%" min="0" name="prenatal_p"> mother
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowith_pregnant" name="prenatal_radio" value="with"> with
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowout_pregnant" name="prenatal_radio" value="without"> without
-                                                    MATERNAL ILLNESS, if Yes (specify)
-                                                    <textarea class="form-control" id="prenatal_mat_illness_pregnant" name="prenatal_maternal_illness" style="resize: none;width: 50%;" rows="2"></textarea>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <b>NATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>Born at
-                                                    <select class="form-control-select" name="natal_bornat">
-                                                        <option value="">Select Option</option>
-                                                        <option value="home">Home</option>
-                                                        <option value="clinic">Clinic</option>
-                                                        <option value="hospital">Hospital</option>
-                                                    </select>
-                                                    <input type="text" id="hospital_name_pregnant" name="natal_born_address" style="width: 30%;" placeholder="Specify where">
-                                                    by
-                                                    <select class="form-control-select" name="natal_by">
-                                                        <option value="">Select Option</option>
-                                                        <option value="md">MD</option>
-                                                        <option value="midwife">Midwife</option>
-                                                        <option value="hilot">"Hilot"</option>
-                                                    </select>
-                                                    via
-                                                    <select class="form-control-select" name="natal_via">
-                                                        <option value="">Select Option</option>
-                                                        <option value="nsd">NSD</option>
-                                                        <option value="cs">CS</option>
-                                                    </select>
-                                                    (indication)
-                                                    <input type="text" id="cs_indication_pregnant" name="cs_indication" style="width: 20%;">
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>
-                                                    <select class="form-control-select" name="natal_term">
-                                                        <option value="">Select Option</option>
-                                                        <option value="preterm">Preterm</option>
-                                                        <option value="fullterm">Full Term</option>
-                                                        <option value="postterm">Post Term</option>
-                                                    </select>
-                                                    , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01"> kg,
-                                                    BR <input type="text" name="natal_br" style="width: 20%">, with Good Cry
-                                                    <select class="form-control-select" name="natal_withGoodCry">
-                                                        <option value="">Select Option</option>
-                                                        <option value="Yes">Yes</option>
-                                                        <option value="No">No</option>
-                                                    </select><br>
-                                                    Other complications:
-                                                    <textarea class="form-control" name="natal_complications" style="resize: none;width: 30%;" rows="2"></textarea>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <b>POST NATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Feeding History</i><br>&emsp;
-                                                <span>
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed_pregnant" name="postnatal_bfeed" value="Yes"> Breastfed
-                                                    <span id="breastfed_pregnant">
-                                                        x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0"> mos.
-                                                    </span>       
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed_pregnant" type="checkbox" name="postnatal_ffeed" value="Yes"> Formula Fed,
-                                                    <span id="formula_fed_pregnant">
-                                                        (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify">
-                                                    </span>
-                                                </span>
-                                                started semi solid foods at
-                                                <input type="number" name="postnatal_started_semisolidfood_at" style="width: 10%" min="0"> mos
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Immunization History</i><br>&emsp;
-                                                <input type="hidden" name="immu_bcg_cbox_pregnant" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes"> BCG
-                                                <input type="hidden" name="immu_dpt_cbox_pregnant" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox_pregnant" name="immu_dpt_cbox" value="Yes"> DPT/OPV
-                                                <span id="immu_dpt_pregnant">
-                                                    x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0"> doses
-                                                </span>
-                                                <input type="hidden" name="immu_hepb_cbox_pregnant" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox_pregnant" name="immu_hepb_cbox" value="Yes"> Hep B
-                                                <span id="immu_hepb_pregnant">
-                                                    x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0"> doses
-                                                </span>
-                                                <input type="hidden" name="immu_measles_cbox_pregnant" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes"> Measles
-                                                <input type="hidden" name="immu_mmr_cbox_pregnant" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes"> MMR
-                                                <input type="hidden" name="immu_others_cbox_pregnant" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox_pregnant" name="immu_others_cbox" value="Yes"> Other(s)
-                                                <span id="immu_others_pregnant">
-                                                    <input type="text" name="immu_others" style="width: 20%;">
-                                                </span>
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Developmental Milestones</i><br>&emsp;
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under_pregnant" value="Under developed">
-                                                <label for="dev_miles_under">
-                                                    Under developed
-                                                </label>
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par_pregnant" value="At par with age">
-                                                <label for="dev_miles_par">
-                                                    At par with age
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <div class="row" id="baby_show_pregnant" style="padding:5px">
                             <div class="col-lg-12">
@@ -770,10 +626,16 @@
                                                 <input class="form-check-input" id="contraceptive_iud_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="Yes"> IUD
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_rhythm_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Yes"> Rhythm
+                                                <input class="form-check-input" id="contraceptive_rhythm_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Yes"> Rhythm / Calendar
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="contraceptive_condom_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Yes"> Condom
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -799,20 +661,20 @@
                                     </div><br>
 
                                     <div class="container-referral">
-                                        <b>LNMP</b>
-                                        <input type="text" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
+                                        <b>LMP</b>
+                                        <input type="number" step="0.01" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
                                         <b>EDC</b><i>(if pregnant)</i>
-                                        <input type="text" style="width:15%;" name="parity_edc_ifpregnant">
+                                        <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant">
                                     </div><br>
 
                                     <b>AOG</b>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <b>by LNMP </b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp"> <b>wks</b>
+                                                <b>by LMP </b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp"> <b>wks</b>
                                             </div>
                                             <div class="col-md-4">
-                                                <b>by EUTZ </b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ"> <b>wks</b>
+                                                <b>by UTZ </b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ"> <b>wks</b>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1034,6 +896,18 @@
                                                 <input class="form-check-input" id="lab_xray_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_xray_cbox" value="Yes">
                                                 <span> X-RAY</span>
                                             </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ultrasound_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ultrasound_cbox" value="Yes">
+                                                <span>ULTRA SOUND</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ctscan_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ctscan_cbox" value="Yes">
+                                                <span>CT SCAN</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ctgmonitoring_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ctgmonitoring_cbox" value="Yes">
+                                                <span>CTG MONITORING</span>
+                                            </div>
                                             <div class="col-md-6">
                                                 <input class="form-check-input" id="lab_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_others_cbox" value="Yes"> Others:
                                                 <textarea id="lab_others_pregnant" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"></textarea>
@@ -1176,11 +1050,6 @@
                                                 <input type="hidden" name="rs_eyes_glaucoma_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_eyes_glaucoma_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes">
                                                 <span> Glaucoma/Cataracts</span>
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="rs_eye_exam_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eye_exam_cbox" value="Yes">
-                                                <span> Last eye exam</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1596,6 +1465,10 @@
                                                 <input class="form-check-input" id="rs_peri_veinclot_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_veinclot_cbox" value="Yes">
                                                 <span> Clots in veins</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_peri_edema_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_edema_cbox" value="Yes">
+                                                <span> Edema</span>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -1628,11 +1501,15 @@
                                                 <input class="form-check-input" id="rs_muscle_decmotion_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_decmotion_cbox" value="Yes">
                                                 <span> Decreased joint motion</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_sizeloss_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sizeloss_cbox" value="Yes">
+                                                <span> Loss of muscle size</span>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_brokenbone_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_brokenbone_cbox" value="Yes">
-                                                <span> Broken bone</span>
+                                                <input class="form-check-input" id="rs_muscle_fractured_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fractured_cbox" value="Yes">
+                                                <span> Fractured</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_sprain_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" value="Yes">
@@ -1645,6 +1522,10 @@
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_gout_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_gout_cbox" value="Yes">
                                                 <span> Gout</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_spasm_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_spasm_cbox" value="Yes">
+                                                <span> Muscle Spasm</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1685,16 +1566,16 @@
                                                 <span> Weakness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_sizeloss_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_sizeloss_cbox" value="Yes">
-                                                <span> Loss of muscle size</span>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_spasm_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_spasm_cbox" value="Yes">
-                                                <span> Muscle Spasm</span>
-                                            </div>
-                                            <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_neuro_tremor_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tremor_cbox" value="Yes">
                                                 <span> Tremor</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_disorientation_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_disorientation_cbox" value="Yes">
+                                                <span> Unsteady Gait</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_slurringspeech_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_slurringspeech_cbox" value="Yes">
+                                                <span> Slurring Speech</span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1703,7 +1584,7 @@
                                                 <span> Involuntary movement</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_incoordination_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_incoordination_cbox" value="Yes">
+                                                <input class="form-check-input" id="rs_neuro_unsteadygait_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_unsteadygait_cbox" value="Yes">
                                                 <span> Incoordination</span>
                                             </div>
                                             <div class="col-md-3">
@@ -1777,20 +1658,12 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_thyroid_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_thyroid_cbox" value="Yes">
-                                                <span> Thyroid trouble</span>
-                                            </div>
-                                            <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_endo_heatcold_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_heatcold_cbox" value="Yes">
                                                 <span> Heat/cold intolerance</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_endo_sweat_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" value="Yes">
                                                 <span> Excessive sweating</span>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_diabetes_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_diabetes_cbox" value="Yes">
-                                                <span> Diabetes</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1814,7 +1687,11 @@
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_psych_depression_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_depression_cbox" value="Yes">
-                                                <span> Depression/suicide ideation</span>
+                                                <span> Depression</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_psych_suicideideation_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_suicideideation_cbox" value="Yes">
+                                                <span> Suicide Ideation</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_psych_memory_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_memory_cbox" value="Yes">
@@ -1909,9 +1786,18 @@
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                            <div class="col-md-4">
-                                                Blood Pressure: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_bp"> mmHg
-                                            </div>
+                                                <div class="col-md-4">
+                                                    <label for="systolic">Blood Pressure:</label>
+                                                    <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                        style="width:18%;" min="0" max="300" 
+                                                        oninput="updateBloodPressure()"> /
+                                                    <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                        style="width:18%;" min="0" max="200" 
+                                                        oninput="updateBloodPressure()">mmHg
+
+                                                    <!-- Hidden input to store the combined value -->
+                                                    <input type="hidden" name="vital_bp" id="vital_bp">
+                                                </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
                                             </div>
@@ -1920,6 +1806,17 @@
                                 </div>
                             </div>
                         </div>
+
+                        <script>
+                            function updateBloodPressure() {
+                                // Get systolic and diastolic values
+                                const systolic = document.getElementById('systolic').value;
+                                const diastolic = document.getElementById('diastolic').value;
+                                
+                                // Combine into "100/90" format
+                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                            }
+                        </script>
 
                         <div class="row">
                             <div class="col-lg-12">
@@ -2902,20 +2799,20 @@
     $('#rs_eyes_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox_pregnant, #rs_eyes_vision_cbox_pregnant, #rs_eyes_pain_cbox_pregnant, #rs_eyes_doublevision_cbox_pregnant').prop('checked', true);
-            $('#rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant, #rs_eye_exam_cbox_pregnant').prop('checked', true);
+            $('#rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant').prop('checked', true);
             $('#rs_eyes_none_cbox_pregnant').prop('checked', false);
         } else {
             $('#rs_eyes_glasses_cbox_pregnant, #rs_eyes_vision_cbox_pregnant, #rs_eyes_pain_cbox_pregnant, #rs_eyes_doublevision_cbox_pregnant').prop('checked', false);
-            $('#rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant, #rs_eye_exam_cbox_pregnant').prop('checked', false);
+            $('#rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant').prop('checked', false);
         }
     });
     $('#rs_eyes_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox_pregnant, #rs_eyes_vision_cbox_pregnant, #rs_eyes_pain_cbox_pregnant, #rs_eyes_doublevision_cbox_pregnant').prop('checked', false);
-            $('#rs_eyes_all_cbox_pregnant, #rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant, #rs_eye_exam_cbox_pregnant').prop('checked', false);
+            $('#rs_eyes_all_cbox_pregnant, #rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant').prop('checked', false);
         }
     });
-    $('#rs_eyes_glasses_cbox_pregnant, #rs_eyes_vision_cbox_pregnant, #rs_eyes_pain_cbox_pregnant, #rs_eyes_doublevision_cbox_pregnant, #rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant, #rs_eye_exam_cbox_pregnant').on('click', function() {
+    $('#rs_eyes_glasses_cbox_pregnant, #rs_eyes_vision_cbox_pregnant, #rs_eyes_pain_cbox_pregnant, #rs_eyes_doublevision_cbox_pregnant, #rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant').on('click', function() {
         $('#rs_eyes_all_cbox_pregnant, #rs_eyes_none_cbox_pregnant').prop('checked', false);
     });
 
@@ -3086,36 +2983,36 @@
     /* PERIPHERAL VASCULAR */
     $('#rs_peri_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant').prop('checked', true);
+            $('#rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant, #rs_peri_edema_cbox_pregnant').prop('checked', true);
             $('#rs_peri_none_cbox_pregnant').prop('checked', false);
         } else
-            $('#rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant').prop('checked', false);
+            $('#rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant, #rs_peri_edema_cbox_pregnant').prop('checked', false);
     });
     $('#rs_peri_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_peri_all_cbox_pregnant, #rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant').prop('checked', false);
+            $('#rs_peri_all_cbox_pregnant, #rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant, #rs_peri_edema_cbox_pregnant').prop('checked', false);
     });
-    $('#rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant').on('click', function() {
+    $('#rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant, #rs_peri_edema_cbox_pregnant').on('click', function() {
         $('#rs_peri_all_cbox_pregnant, #rs_peri_none_cbox_pregnant').prop('checked', false);
     });
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_brokenbone_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', true);
+            $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', true);
             $('#rs_muscle_none_cbox_pregnant').prop('checked', false);
         } else {
-            $('#rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_brokenbone_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
+            $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
         }
     });
 
     $('#rs_muscle_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_brokenbone_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
+            $('#rs_muscle_all_cbox_pregnant, #rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
         }
     });
 
-    $('#rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_brokenbone_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').on('click', function() {
+    $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').on('click', function() {
         $('#rs_muscle_all_cbox_pregnant, #rs_muscle_none_cbox_pregnant').prop('checked', false);
     });
 
@@ -3123,24 +3020,24 @@
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant, #rs_neuro_sizeloss_cbox_pregnant').prop('checked', true);
-            $('#rs_neuro_spasm_cbox_pregnant, #rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_incoordination_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').prop('checked', true);
+            $('#rs_neuro_slurringspeech_cbox_pregnant, #rs_neuro_disorientation_cbox_pregnant, #rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant').prop('checked', true);
+            $('#rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_unsteadygait_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').prop('checked', true);
             $('#rs_neuro_none_cbox_pregnant').prop('checked', false);
         } else {
-            $('#rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant, #rs_neuro_sizeloss_cbox_pregnant').prop('checked', false);
-            $('#rs_neuro_spasm_cbox_pregnant, #rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_incoordination_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').prop('checked', false);
+            $('#rs_neuro_slurringspeech_cbox_pregnant, #rs_neuro_disorientation_cbox_pregnant, #rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant').prop('checked', false);
+            $('#rs_neuro_slurringspeech_cbox_pregnant, #rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_unsteadygait_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').prop('checked', false);
         }
     });
     $('#rs_neuro_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_neuro_all_cbox_pregnant, #rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant, #rs_neuro_sizeloss_cbox_pregnant').prop('checked', false);
-            $('#rs_neuro_spasm_cbox_pregnant, #rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_incoordination_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').prop('checked', false);
+            $('#rs_neuro_all_cbox_pregnant, #rs_neuro_slurringspeech_cbox_pregnant, #rs_neuro_disorientation_cbox_pregnant, #rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant').prop('checked', false);
+            $(' #rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_unsteadygait_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').prop('checked', false);
         }
     });
-    $('#rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant, #rs_neuro_sizeloss_cbox_pregnant').on('click', function() {
+    $('#rs_neuro_slurringspeech_cbox_pregnant, #rs_neuro_disorientation_cbox_pregnant, #rs_neuro_headache_cbox_pregnant, #rs_neuro_seizure_cbox_pregnant, #rs_neuro_faint_cbox_pregnant, #rs_neuro_paralysis_cbox_pregnant, #rs_neuro_weakness_cbox_pregnant').on('click', function() {
         $('#rs_neuro_all_cbox_pregnant, #rs_neuro_none_cbox_pregnant').prop('checked', false);
     });
-    $('#rs_neuro_spasm_cbox_pregnant, #rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_incoordination_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').on('click', function() {
+    $('#rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_unsteadygait_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').on('click', function() {
         $('#rs_neuro_all_cbox_pregnant, #rs_neuro_none_cbox_pregnant').prop('checked', false);
     });
 
@@ -3163,40 +3060,40 @@
     /* ENDOCRINE */
     $('#rs_endo_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant, #rs_endo_thyroid_cbox_pregnant').prop('checked', true);
-            $('#rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant, #rs_endo_diabetes_cbox_pregnant').prop('checked', true);
+            $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant').prop('checked', true);
+            $('#rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant').prop('checked', true);
             $('#rs_endo_none_cbox_pregnant').prop('checked', false);
         } else {
-            $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant, #rs_endo_thyroid_cbox_pregnant').prop('checked', false);
-            $('#rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant, #rs_endo_diabetes_cbox_pregnant').prop('checked', false);
+            $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant').prop('checked', false);
+            $('#rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant').prop('checked', false);
         }
     });
     $('#rs_endo_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant, #rs_endo_thyroid_cbox_pregnant').prop('checked', false);
-            $('#rs_endo_all_cbox_pregnant, #rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant, #rs_endo_diabetes_cbox_pregnant').prop('checked', false);
+            $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant').prop('checked', false);
+            $('#rs_endo_all_cbox_pregnant, #rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant').prop('checked', false);
         }
     });
-    $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant, #rs_endo_thyroid_cbox_pregnant').on('click', function() {
+    $('#rs_endo_abnormal_cbox_pregnant, #rs_endo_appetite_cbox_pregnant, #rs_endo_thirst_cbox_pregnant, #rs_endo_urine_cbox_pregnant').on('click', function() {
         $('#rs_endo_all_cbox_pregnant, #rs_endo_none_cbox_pregnant').prop('checked', false);
     });
-    $('#rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant, #rs_endo_diabetes_cbox_pregnant').on('click', function() {
+    $('#rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant').on('click', function() {
         $('#rs_endo_all_cbox_pregnant, #rs_endo_none_cbox_pregnant').prop('checked', false);
     });
 
     /* PSYCHIATRIC */
     $('#rs_psych_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').prop('checked', true);
+            $('#rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_suicideideation_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').prop('checked', true);
             $('#rs_psych_none_cbox_pregnant').prop('checked', false);
         } else
-            $('#rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').prop('checked', false);
+            $('#rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_suicideideation_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').prop('checked', false);
     });
     $('#rs_psych_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_psych_all_cbox_pregnant, #rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').prop('checked', false);
+            $('#rs_psych_all_cbox_pregnant, #rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_suicideideation_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').prop('checked', false);
     });
-    $('#rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').on('click', function() {
+    $('#rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_suicideideation_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').on('click', function() {
         $('#rs_psych_all_cbox_pregnant, #rs_psych_none_cbox_pregnant').prop('checked', false);
     });
 

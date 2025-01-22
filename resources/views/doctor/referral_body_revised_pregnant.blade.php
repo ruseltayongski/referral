@@ -8,6 +8,11 @@ $user = Session::get('auth');
         border: 1px solid lightgrey;
         width: 100%;
     }
+    .glasgow-table th.highlight, 
+    .glasgow-table td.highlight {
+        border: 2px solid red;
+        background-color: rgba(255, 0, 0, 0.1); /* Light red background */
+    }
 
      .glasgow-dot {
         background-color: #494646;
@@ -242,6 +247,40 @@ $user = Session::get('auth');
         </table>
     </div>
 </div>
+<?php 
+                function explodeToArray($string){
+                    $array = explode(',',$string);
+
+                    $filteredOptions = array_filter($array, function ($value) {
+                        return $value !== "Select All";
+                    });
+
+                    return $filteredOptions;
+                }
+
+                $commordities_arr = explodeToArray($past_medical_history->commordities);
+                $allergies_arr = explodeToArray($past_medical_history->allergies);
+                $heredofamilial_arr = explodeToArray($past_medical_history->heredofamilial_diseases);
+                $contraceptives_arr = explodeToArray($obstetric_and_gynecologic_history->contraceptive_history);
+                $pertinent_arr = explodeToArray($pertinent_laboratory->pertinent_laboratory_and_procedures);
+                $review_skin = explodeToArray($review_of_system->skin);
+                $review_head = explodeToArray($review_of_system->head);
+                $review_eyes = explodeToArray($review_of_system->eyes);
+                $review_ears = explodeToArray($review_of_system->ears);
+                $review_nose = explodeToArray($review_of_system->nose_or_sinuses);
+                $review_mouth = explodeToArray($review_of_system->mouth_or_throat);
+                $review_neck = explodeToArray($review_of_system->neck);
+                $review_breast = explodeToArray($review_of_system->breast);
+                $review_respiratory = explodeToArray($review_of_system->respiratory_or_cardiac);
+                $review_gastrointestinal = explodeToArray($review_of_system->gastrointestinal);
+                $review_urinary = explodeToArray($review_of_system->urinary);
+                $review_peripheral = explodeToArray($review_of_system->peripheral_vascular);
+                $review_musculoskeletal = explodeToArray($review_of_system->musculoskeletal);
+                $review_neurologic = explodeToArray($review_of_system->neurologic);
+                $review_hematologic = explodeToArray($review_of_system->hematologic);
+                $review_endocrine = explodeToArray($review_of_system->endocrine);
+                $review_psychiatric = explodeToArray($review_of_system->psychiatric)
+            ?>
 
 <hr style="border-top: 1px solid #ccc;">
 <div class="row">
@@ -329,37 +368,31 @@ $user = Session::get('auth');
                 <td colspan="4">Glasgow Coma Scale</td>
             </tr> 
             <td colspan="4">
-                <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th><b>1</b></th>
-                            <th><b>2</b></th>
-                            <th><b>3</b></th>
-                            <th><b>4</b></th>
-                            <th><b>5</b></th>
-                            <th><b>6</b></th>
-                            <th><b>7</b></th>
-                            <th><b>8</b></th>
-                            <th><b>9</b></th>
-                            <th><b>10</b></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><span class="glasgow-dot" style="height: 6px; width: 6px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 10px; width: 10px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 13px; width: 13px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 16px; width: 16px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 20px; width: 20px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 24px; width: 24px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 28px; width: 28px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 32px; width: 32px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 36px; width: 36px;"></span></td>
-                            <td><span class="glasgow-dot" style="height: 40px; width: 40px;"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td> 
+            <table class="table table-bordered glasgow-table">
+            <thead>
+                    <tr>
+                        @for ($i = 1; $i <= 10; $i++)
+                            <th class="{{ $glasgocoma_scale->pupil_size_chart == $i ? 'highlight' : '' }}">
+                                <b>{{ $i }}</b>
+                            </th>
+                        @endfor
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @for ($i = 1; $i <= 10; $i++)
+                            <td 
+                                class="{{ $glasgocoma_scale->pupil_size_chart == $i ? 'highlight' : '' }}">
+                                <span 
+                                    class="glasgow-dot" 
+                                    style="height: {{ $i * 4 + 2 }}px; width: {{ $i * 4 + 2 }}px;">
+                                </span>
+                            </td>
+                        @endfor
+                    </tr>
+                </tbody>
+            </table>
+            </td>
             <tr>
             <td colspan="2"><b>Pupil Size Chart:</b><span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td><br><br>
             <td colspan="4">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>
@@ -369,46 +402,13 @@ $user = Session::get('auth');
             <td colspan="4">Eye Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->eye_response}}</span></td>
             </tr>
             <tr>
-            <td colspan="4">GSC Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
+            <td colspan="4">GCS Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
             </tr>
         </table>
     </div>
     </div>
     
-    <?php 
-                function explodeToArray($string){
-                    $array = explode(',',$string);
-
-                    $filteredOptions = array_filter($array, function ($value) {
-                        return $value !== "Select All";
-                    });
-
-                    return $filteredOptions;
-                }
-
-                $commordities_arr = explodeToArray($past_medical_history->commordities);
-                $allergies_arr = explodeToArray($past_medical_history->allergies);
-                $heredofamilial_arr = explodeToArray($past_medical_history->heredofamilial_diseases);
-                $contraceptives_arr = explodeToArray($obstetric_and_gynecologic_history->contraceptive_history);
-                $pertinent_arr = explodeToArray($pertinent_laboratory->pertinent_laboratory_and_procedures);
-                $review_skin = explodeToArray($review_of_system->skin);
-                $review_head = explodeToArray($review_of_system->head);
-                $review_eyes = explodeToArray($review_of_system->eyes);
-                $review_ears = explodeToArray($review_of_system->ears);
-                $review_nose = explodeToArray($review_of_system->nose_or_sinuses);
-                $review_mouth = explodeToArray($review_of_system->mouth_or_throat);
-                $review_neck = explodeToArray($review_of_system->neck);
-                $review_breast = explodeToArray($review_of_system->breast);
-                $review_respiratory = explodeToArray($review_of_system->respiratory_or_cardiac);
-                $review_gastrointestinal = explodeToArray($review_of_system->gastrointestinal);
-                $review_urinary = explodeToArray($review_of_system->urinary);
-                $review_peripheral = explodeToArray($review_of_system->peripheral_vascular);
-                $review_musculoskeletal = explodeToArray($review_of_system->musculoskeletal);
-                $review_neurologic = explodeToArray($review_of_system->neurologic);
-                $review_hematologic = explodeToArray($review_of_system->hematologic);
-                $review_endocrine = explodeToArray($review_of_system->endocrine);
-                $review_psychiatric = explodeToArray($review_of_system->psychiatric)
-            ?>
+  
     
     <div class="col-sm-6">
     <div class="table-responsive">
@@ -503,15 +503,15 @@ $user = Session::get('auth');
             <td>L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td> 
         </tr>
         <tr>
-            <td colspan="2">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
+            <td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
             <td>EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> 
         </tr>
         <tr>
             <td colspan="4"><i>AOG</i></td>
         </tr>
         <tr>
-            <td colspan="2">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
-            <td>EUTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
+            <td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
+            <td>UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
         </tr>
         <tr>
             <td colspan="4">Prenatal History:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->prenatal_history}}</span></td> 
