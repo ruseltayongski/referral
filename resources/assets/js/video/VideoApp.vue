@@ -6,6 +6,8 @@ import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue";
 import FeedbackModal from "./FeedbackModal.vue";
 
+let baseUrlfeedback = `referral/doctor/vue/feedback`;
+let doctorFeedback = `referral/doctor/feedback`
 export default {
   name: "RecoApp",
   components: {
@@ -16,9 +18,12 @@ export default {
   data() {
     return {
       //feedback
+      feedbackUrl: baseUrlfeedback,
+      doctorfeedback: doctorFeedback,
       feedbackModalVisible: false,
       currentCode: null,
-      userId: null,
+      ImageUrl:'',
+      baseUrlFeed: null,
       //end  for feedback
 
       showTooltip: false,
@@ -106,6 +111,7 @@ export default {
     //this.hideDivAfterTimeout();
     window.addEventListener("click", this.showDivAgain);
   },
+
   beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
   },
@@ -120,16 +126,27 @@ export default {
   methods: {
     //for feedback
       openFeedbackModal(code) {
+
+ console.log("Button clicked!");
+    console.log("Code being passed:", code);
+    console.log("Current feedbackModalVisible before:", this.feedbackModalVisible);
       this.currentCode = code;
       this.feedbackModalVisible = true;
-       this.userId = this.form.referring_md;
-       console.log("userId", this.userId);
+      this.baseUrlFeed = this.baseUrl;
+
+       console.log("Current feedbackModalVisible after:", this.feedbackModalVisible);
+    console.log("Current user ID:", this.user.id);
     },
     closeFeedbackModal() {
       this.feedbackModalVisible = false;
       this.currentCode = null;
     },
+     refreshMessages() {
+      // Implement refresh logic if needed
+      console.log("Refreshing messages");
+    },
 //end for feed back
+
     async startBasicCall() {
       // Create an instance of the Agora Engine
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
@@ -482,7 +499,7 @@ export default {
                  <div class="button-container">
                   <button
                     class="btn btn-info btn-lg reco-button"
-                    @click="openFeedbackModal(this.referral_code)"
+                    @click="openFeedbackModal(referral_code)"
                   >
                     <i class="fa fa-comments"></i> ReCo
                   </button>
@@ -736,9 +753,11 @@ export default {
     <FeedbackModal
       :isVisible="feedbackModalVisible"
       :code="currentCode"
-      :userId="userId"
-      fetchUrl="/doctor/feedback"
-      postUrl="/doctor/feedback"
+      :userId="user.id"
+      :fetchUrl="feedbackUrl"
+      :imageUrl="baseUrlFeed"
+      :postUrl="doctorfeedback"
+      @refresh="refreshMessages"
       @close-modal="closeFeedbackModal"
     />
 

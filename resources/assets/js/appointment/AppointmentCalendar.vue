@@ -121,24 +121,24 @@ export default {
 
 
         // Config Appointment
-        const configfullybook = this.appointmentSlot.some((appointment) => {
+        this.appointmentSlot.some((appointment) => {
          
           appointment.appointment_schedules.forEach((sched) =>{
             
             if(sched.configId && this.facilitySelectedId === sched.facility_id){
-              console.log("my sched list::", sched);
+              // console.log("my sched list::", sched);
               const Date_start = new Date(sched.appointed_date); // Start date
               const date_end = new Date(sched.date_end); // End date
               const timeSlot = sched.config_schedule.time.split('|');
               const daysSched = sched.config_schedule.days.split('|');
-                console.log("daysSched", daysSched);
+                //console.log("daysSched", daysSched, "timeSlot", timeSlot);
                 // Iterate through all days in the range
                 let currentDate = new Date(Date_start); // Initialize with start date
                
                 while (currentDate <= date_end) {
                   const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
                   
-                  if (daysSched.includes(currentDayName)) {
+                  if (daysSched.includes(currentDayName) && !passconfigId) {
 
                     // Highlight specific day if it matches
                     const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
@@ -146,12 +146,18 @@ export default {
                     // targetTd.css("border-color", "#00a65a");
                     if(targetTd.length){
                         targetTd.css("background-color", "#00a65a"); // Green for available
-                    }else{
-                      targetTd.css("background-color", "");
                     }
-                       targetGrid.remove();
-                        targetTd.addClass("add-cursor-pointer");
-                        $(".fc-content").remove()
+                      
+                  }else{
+                    const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
+                    if (targetTd.length) {
+                      targetTd.css("background-color", ""); // Remove background color
+                      targetTd.removeClass("add-cursor-pointer");
+                      
+                      $(".fc-event-container").remove();
+                      $(".fc-title").remove();
+                      $(".fc-resizer").remove();
+                    }
                   }
                   // Move to the next day
                   currentDate.setDate(currentDate.getDate() + 1);
@@ -199,17 +205,19 @@ export default {
          
         let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
 
-            if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-              targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
-              targetTd.css("border-color", "rgb(230 193 193)");
-            }else {
-              targetTd.css("background-color", "#00a65a"); //available color green'
-              targetdrag.css("border-color", "#00a65a");
-            } 
-        
-          targetGrid.remove();
-          targetTd.addClass("add-cursor-pointer");
-          $(".fc-content").remove();
+        if(!passconfigId){
+          if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
+            targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
+            targetTd.css("border-color", "rgb(230 193 193)");
+          }else {
+            targetTd.css("background-color", "#00a65a"); //available color green'
+            targetdrag.css("border-color", "#00a65a");
+          }
+          
+            targetGrid.remove();
+            targetTd.addClass("add-cursor-pointer");
+            $(".fc-content").remove();
+        }
       });
     },
     async dayClickFunction(date, allDay, jsEvent, view) {
@@ -217,7 +225,7 @@ export default {
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
-
+      //Config Appointment
       let AppointedDates = [];
       let configId = null;
       let apointmentId = null;
@@ -261,29 +269,29 @@ export default {
       let dateselect = date._d.toISOString().split('T')[0];
       let PassconfigId = null;
       let parameterDate = null;
-      if (eventsOnDate.length > 0 ) {
-        const params = JSON.parse(JSON.stringify(eventsOnDate))[0];
-
-        console.log("params::", params);
+     
+      let params = JSON.parse(JSON.stringify(eventsOnDate))[0];
+   
+      if (eventsOnDate.length > 0) {  //Manual Appointment
         const responseBody = {
           selected_date: params.start,
           facility_id: params.facility_id,
+          configId:configId
         };
 
         const response = await this.__appointmentScheduleHours(responseBody);
         this.$emit("appointedTime", response.data);
-        // console.log("manual appoint esponse", response.data);
-
-        const configNull = Object.values(response.data)[0];
-        PassconfigId = configNull.configId;
-
-        console.log("date selected condition ",  params.start, dateselect);
+        console.log("manual appoint response", response.data);
+        PassconfigId = null;
+        console.log("PassconfigId::", PassconfigId);
+        console.log("date selected condition ",  params.start, dateselect, "configId:", PassconfigId);
+        
         if(params.start === dateselect){
           parameterDate = params.start;
           this.$emit("manual-click-date", parameterDate);
         }
        
-      }else{
+      }else{  //Config Appointment
         
         const appointedData = await this.__appointmentScheduleDate(
           null,
@@ -306,19 +314,21 @@ export default {
           };
 
           const response = await this.__appointmentConfigHours(responseBody);
-           this.$emit("config_appointedTime", response.data);
-           const configsched = Object.values(response.data)[0];
-           if(AppointedDates.includes(dateselect)){
-            console.log("matched date:")
+          this.$emit("config_appointedTime", response.data);
+          const configsched = Object.values(response.data)[0];
+
+          if(AppointedDates.includes(dateselect)){
+            console.log("list of matched date:", AppointedDates);
              PassconfigId = configsched.configId;
-            }else{
-              PassconfigId = null;
-              console.log("not matched", parameterDate);
-            }
+          }
             console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
+        }else{
+            PassconfigId = null;
+            console.log("not matched", parameterDate);
         }
       }
-       
+        console.log("PassconfigId::", PassconfigId);
+        
        this.$emit("day-click-date", PassconfigId);
        if (parameterDate) {
           this.$emit("manual-click-date", parameterDate);
@@ -353,7 +363,8 @@ export default {
       }
       const matchedate = appointed.includes(formattedClickDate) ? formattedClickDate: "";
 
-      if(matchedate){
+      if(matchedate && configId){
+
         const appointedParam =  {
           title: "Appointment",
           start: new Date(matchedate),
@@ -365,19 +376,22 @@ export default {
         };
 
         this.appointedParams = appointedParam;
-      
         return appointedParam;
+
       }else{
+
         const mapedData = response.data.facility_data.map((item) => {
-          console.log("response", response);
+          console.log("response mapedData", mapedData);
           return {
             title: "Appointment",
+            configId: null,
             start: item.appointed_date,
             backgroundColor: "#00a65a",
             borderColor: "#00a65a",
             facility_id: item.facility_id,
           };
         }); 
+        
         return mapedData;
       }
     },

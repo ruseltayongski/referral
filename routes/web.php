@@ -229,6 +229,7 @@ Route::post('doctor/redirected', 'doctor\PatientCtrl@searchRedirected');
 Route::get('doctor/redirect/reco', 'doctor\PatientCtrl@redirectReco');
 Route::post('doctor/redirect/reco', 'doctor\PatientCtrl@searchRedirectReco');
 
+Route::get('doctor/vue/feedback/{code}', 'doctor\ReferralCtrl@VueFeedback');// for vue feedback
 Route::get('doctor/feedback/{code}', 'doctor\ReferralCtrl@feedback');
 Route::get('doctor/feedback/reply/{id}', 'doctor\ReferralCtrl@replyFeedback');
 Route::get('doctor/feedback/load/{code}', 'doctor\ReferralCtrl@loadFeedback');

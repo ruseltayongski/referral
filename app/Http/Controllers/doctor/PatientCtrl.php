@@ -535,7 +535,7 @@ class PatientCtrl extends Controller
                 'time_transferred' => '',
                 'patient_id' => $patient_id,
                 'case_summary' => $req->case_summary,
-                'reco_summary' => $req->reco_summary,
+                'reco_summary' => trim($req->reco_summary),
                 'diagnosis' => $req->diagnosis,
                 'referring_md' => $user->id,
                 'referred_md' => ($req->reffered_md ? $req->reffered_md : ($req->reffered_md_telemed ? $req->reffered_md_telemed : '')),

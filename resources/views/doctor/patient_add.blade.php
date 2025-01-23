@@ -98,6 +98,7 @@ $status = session::get('status');
                         <td>
                             <select class="form-control region" name="region" onchange="othersRegion($(this),'{{ $province }}');" required>
                                 <option value="Region VII">Region VII</option>
+                                <option value="Negros Island Region">Negros Island Region (NIR)</option>
                                 <option value="NCR">NCR</option>
                                 <option value="CAR">CAR</option>
                                 <option value="Region I">Region I</option>

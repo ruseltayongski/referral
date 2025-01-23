@@ -1075,7 +1075,8 @@ class ReportCtrl extends Controller
                         $join1->orWhere("activity.status","=","redirected");
                         $join1->orWhere("activity.status","=","transferred");
                     });
-                });
+                })
+                ->leftJoin("tracking", "tracking.patient_id", "=", "activity.patient_id"); // I add this code
 
         if($user->level != 'admin'){
             $icd = $icd->where(empty($request->request_type) || $request->request_type == "incoming" ? "activity.referred_to" : "activity.referred_from", $facility_id);
@@ -1086,6 +1087,16 @@ class ReportCtrl extends Controller
                ->where("facility.province",$request->province_id);
         }
 
+        $telemedicine = null;
+        if($request->has('telemedicine')) { // I add this code
+            $icd = $icd->where("tracking.telemedicine", $request->telemedicine);
+            if($request->telemedicine == 1){
+                $telemedicine = "Telemedicine";
+            }else{
+                $telemedicine = "Referral";
+            }   
+        }
+
         $icd =  $icd->whereBetween("icd.created_at",[$date_start,$date_end])
                 ->groupBy("icd.icd_id")
                 ->OrderBY(DB::raw("count(icd.icd_id)"),"desc")
@@ -1093,9 +1104,10 @@ class ReportCtrl extends Controller
                 ->get();
 
         Session::put("export_top_icd_excel_all",$icd);
-
+            
         return view("admin.report.top_icd",[
             "icd" => $icd,
+            "telemed" => $telemedicine,
             "date_start" => $date_start,
             "date_end" => $date_end,
             "province_id" => $request->province_id,

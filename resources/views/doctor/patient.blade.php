@@ -404,7 +404,7 @@ $counter = 0;
                                 <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
                             </td>
                             <td>
-                                {{ $row->region }}<br />
+                                {{ $row->region == 'Negros Island Region' ? $row->region . ' (NIR)' : $row->region }} <br />
                                 <?php
                                 if (!$province_display = \App\Province::find($row->province)->description)
                                     $province_display = $row->province_others;
