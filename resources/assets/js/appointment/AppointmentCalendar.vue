@@ -119,19 +119,19 @@ export default {
         let passconfigId = null;
         let exceedAppoint; null
 
-        const isfullyBooked = this.appointmentSlot.some((appointment) => {
-          
-          // Config Appointment
-            exceedAppoint = appointment;
-          appointment.appointment_schedules.forEach((sched) =>{
-     
-            if(sched.configId && this.facilitySelectedId === sched.facility_id){
 
+        // Config Appointment
+        const configfullybook = this.appointmentSlot.some((appointment) => {
+         
+          appointment.appointment_schedules.forEach((sched) =>{
+            
+            if(sched.configId && this.facilitySelectedId === sched.facility_id){
+              console.log("my sched list::", sched);
               const Date_start = new Date(sched.appointed_date); // Start date
               const date_end = new Date(sched.date_end); // End date
               const timeSlot = sched.config_schedule.time.split('|');
               const daysSched = sched.config_schedule.days.split('|');
-            
+                console.log("daysSched", daysSched);
                 // Iterate through all days in the range
                 let currentDate = new Date(Date_start); // Initialize with start date
                
@@ -146,6 +146,8 @@ export default {
                     // targetTd.css("border-color", "#00a65a");
                     if(targetTd.length){
                         targetTd.css("background-color", "#00a65a"); // Green for available
+                    }else{
+                      targetTd.css("background-color", "");
                     }
                        targetGrid.remove();
                         targetTd.addClass("add-cursor-pointer");
@@ -158,25 +160,32 @@ export default {
             
           });
 
-          // Manual Appointment
+        });
+        
+        // Manual Appointment
+        const isfullyBooked = this.appointmentSlot.some((appointment) => {
+          
           if (appointment.appointment_schedules.length > 0) {
             const slotOndate = appointment.appointment_schedules.filter(
               (slot) => slot.appointed_date === dateString
             );
-            console.log("slot on date", slotOndate);
+        
               // Group by appointment_id
               const groupedByAppointmentId = slotOndate.reduce((acc, slot) => {
                  
                  passconfigId = slot.configId;
-                timeslot = slot.appointed_time ;
-                const id = slot.appointment_id;
-                if (!acc[id]) acc[id] = [];
-                acc[id].push(
-                  slot.telemed_assigned_doctor.map(
-                    (doctor) => doctor.appointment_by
-                  )
-                );
-                return acc;
+                if(!slot.configId){
+                  timeslot = slot.appointed_time ;
+                  const id = slot.appointment_id;
+                  if (!acc[id]) acc[id] = [];
+                  acc[id].push(
+                    slot.telemed_assigned_doctor.map(
+                      (doctor) => doctor.appointment_by
+                    )
+                  );
+
+                }
+                return acc;               
               }, {});
               // Check if all appointment_by for each appointment_id are assigned
               return Object.values(groupedByAppointmentId).some((appointments) =>
@@ -185,33 +194,22 @@ export default {
                 )
               );
           }
-           
           return false;
         });
          
-         let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
-          console.log("exceedAppoint", exceedAppoint);
-         const hasNonEmptyConfigId = exceedAppoint.appointment_schedules.some(
-            (slot) => slot.facility_id === this.facilitySelectedId && slot.configId 
-          );
-          
+        let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
 
-          if(!hasNonEmptyConfigId){
             if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
               targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
               targetTd.css("border-color", "rgb(230 193 193)");
             }else {
-              
               targetTd.css("background-color", "#00a65a"); //available color green'
               targetdrag.css("border-color", "#00a65a");
             } 
-          }
-          
+        
           targetGrid.remove();
           targetTd.addClass("add-cursor-pointer");
           $(".fc-content").remove();
-
-       
       });
     },
     async dayClickFunction(date, allDay, jsEvent, view) {

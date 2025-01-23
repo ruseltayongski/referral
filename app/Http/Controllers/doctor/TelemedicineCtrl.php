@@ -821,9 +821,9 @@ class TelemedicineCtrl extends Controller
         });
         
        $slotUsed = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)
-                                        ->where('appointed_date', $req->date)
-                                        ->get();
-
+                        ->where('appointed_date', $req->date)
+                        ->get();
+                        
         return response()->json($slotUsed);
     }
 

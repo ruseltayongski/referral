@@ -7,6 +7,17 @@
     $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
     $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true),true)[0]['doctorId'] ?? json_decode($appointmentParam, true)[0]['doctorId'];
 
+    $telemed_config_id =  json_decode(json_decode($appointmentParam, true), true)[0]['config_id'] ?? json_decode($appointmentParam, true)[0]['config_id'];
+    $telemed_appointed_date = json_decode(json_decode($appointmentParam, true), true)[0]['configDate'] ?? json_decode($appointmentParam, true)[0]['configDate'];
+    $telemed_config_time = json_decode(json_decode($appointmentParam, true), true)[0]['configtime'] ?? json_decode($appointmentParam, true)[0]['configtime'];
+
+    if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== false){
+        [$timeFrom, $timeTo] = explode('-', $telemed_config_time);
+    }else{
+        $timeFrom = null;
+        $timeTo = null;
+    }    
+
     $user = Session::get('auth');
     $myfacility = \App\Facility::find($user->facility_id);
 
@@ -50,6 +61,12 @@
                     <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" /><br>
                     <input type="hidden" name="appointmentId" value="{{ $telemedicine_appointment_id }}" /><!-- I add this changes for passing to the controller -->
                     <input type="hidden" name="doctorId" value="{{ $telemedicine_doctor_id }}" /><!-- I add this changes for passing to the controller -->
+                    
+                    <input type="hidden" name="config_appointedDate" value="{{$telemed_appointed_date}}">
+                    <input type="hidden" name="configId" value="{{$telemed_config_id}}">
+                    <input type="hidden" name="configTimeFrom" value="{{$timeFrom}}">
+                    <input type="hidden" name="configtimeto" value="{{$timeTo}}">
+                    
                     <div class="row">
                         <div class="col-md-12">
                             <b>REFERRAL RECORD</b>

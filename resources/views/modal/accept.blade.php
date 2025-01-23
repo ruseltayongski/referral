@@ -10,6 +10,7 @@
                         <label style="padding:0px;">REMARKS:</label>
                         <textarea class="form-control accept_remarks" name="remarks" required rows="5" style="resize: none;"></textarea>
                     </div>
+                    
                     <hr />
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>

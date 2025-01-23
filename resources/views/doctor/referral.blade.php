@@ -170,7 +170,15 @@ $user = Session::get('auth');
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
 
                                 $department = '"Not specified department"';
+                                $subdepartment = '"Not specified sub department"';
+
                                 $check_dept = \App\Department::find($row->department_id);
+                                $check_subdepartment = \App\AppointmentSchedule::find($row->appointmentId);
+                                
+                                if($check_subdepartment){
+                                    $subdepartment = $check_subdepartment->opdCategory;
+                                }
+                                
                                 if($check_dept)
                                 {
                                     $department = $check_dept->description;
@@ -192,6 +200,7 @@ $user = Session::get('auth');
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
                                             <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                             <h3 class="timeline-header no-border">
+                                                <input type="hidden" id="assignedDoctor" value="{{$row->department_id}}">
                                                 <span>
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
                                                 </span>

@@ -4,15 +4,23 @@ import { Transition } from "vue";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue";
+import FeedbackModal from "./FeedbackModal.vue";
 
 export default {
   name: "RecoApp",
   components: {
     PrescriptionModal,
     LabRequestModal,
+    FeedbackModal,
   },
   data() {
     return {
+      //feedback
+      feedbackModalVisible: false,
+      currentCode: null,
+      userId: null,
+      //end  for feedback
+
       showTooltip: false,
       showPrescription: false,
       showUpward: false,
@@ -110,6 +118,18 @@ export default {
     this.startBasicCall();
   },
   methods: {
+    //for feedback
+      openFeedbackModal(code) {
+      this.currentCode = code;
+      this.feedbackModalVisible = true;
+       this.userId = this.form.referring_md;
+       console.log("userId", this.userId);
+    },
+    closeFeedbackModal() {
+      this.feedbackModalVisible = false;
+      this.currentCode = null;
+    },
+//end for feed back
     async startBasicCall() {
       // Create an instance of the Agora Engine
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
@@ -457,6 +477,18 @@ export default {
                     <i class="bi bi-prescription2"></i>
                   </button>
                 </div>
+                
+
+                 <div class="button-container">
+                  <button
+                    class="btn btn-info btn-lg reco-button"
+                    @click="openFeedbackModal(this.referral_code)"
+                  >
+                    <i class="fa fa-comments"></i> ReCo
+                  </button>
+                </div>
+
+
               </div>
             </div>
           </Transition>
@@ -700,6 +732,16 @@ export default {
       :activity_id="parseInt(activity_id)"
       :requested_by="parseInt(user.id)"
     />
+    
+    <FeedbackModal
+      :isVisible="feedbackModalVisible"
+      :code="currentCode"
+      :userId="userId"
+      fetchUrl="/doctor/feedback"
+      postUrl="/doctor/feedback"
+      @close-modal="closeFeedbackModal"
+    />
+
   </div>
 </template>
 

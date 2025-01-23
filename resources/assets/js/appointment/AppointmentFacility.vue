@@ -240,7 +240,6 @@ export default {
             });
           }
         });
-        console.log("Grouped doctors by appointed_date:", groupedDoctorByDate);
 
         Object.entries(groupedDoctorByDate).forEach(
           ([appointedDate, doctors]) => {
