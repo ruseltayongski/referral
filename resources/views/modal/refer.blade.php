@@ -585,10 +585,17 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                 <form method="POST" action="{{ asset("api/video/followup") }}" id="telemedicineFollowupForm" enctype="multipart/form-data">
                         <input type="hidden" name="code" id="telemed_follow_code" value="">
                         <input type="hidden" name="followup_id" id="telemedicine_follow_id" value="">
-                        <input type="hidden" class="telemedicine" value="">
+                        <input type="hidden" class="telemedicine" name="telemedicine" value="">
                         <input type="hidden" id="followup_facility_id" class="followup_facility_id" value="">
                         <input type="hidden" id="AppointmentId" name="Appointment_id">
                         <input type="hidden" id="DoctorId" name="Doctor_id">
+
+                        <input type="hidden" id="configId" name="configId">
+                        <input type="hidden" name="configAppointmentId" id="configAppointmentId">
+                        <input type="hidden" name="configDate" id="configDate">
+                        <input type="hidden" name="configtimefrom" id="configTimefrom">
+                        <input type="hidden" name="configtimeto" id="configTimeto">
+
                         {{ csrf_field() }}
                         <div class="form-group">
                             <label style="padding:0px;">FACILITY:</label>

@@ -655,6 +655,7 @@ class ApiController extends Controller
     }
 
     public function patientFollowUp(Request $request) {
+    
         $user = Session::get('auth');
         $patient_form = null;
         $patient_id = 0;
@@ -663,9 +664,25 @@ class ApiController extends Controller
         $tracking->status = 'followup';
         $tracking->save();
 
-        $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $request->Appointment_id)->where('doctor_id', $request->Doctor_id)->first();
-        $telemedAssignDoctor->appointment_by = $user->id;
-        $telemedAssignDoctor->save();
+        if($request->telemedicine){
+
+            if($request->configId){
+
+                $telemedAssigned = new TelemedAssignDoctor();
+    
+                $telemedAssigned->appointed_date = $request->configDate;
+                $telemedAssigned->start_time = $request->configtimefrom;
+                $telemedAssigned->end_time = $request->configtimeto;
+                $telemedAssigned->appointment_id = $request->configAppointmentId;
+                $telemedAssigned->save();
+    
+            }else{
+    
+                $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $request->Appointment_id)->where('doctor_id', $request->Doctor_id)->first();
+                $telemedAssignDoctor->appointment_by = $user->id;
+                $telemedAssignDoctor->save();
+            }
+        }
 
         if($tracking->type == 'normal') {
             $patient_form = PatientForm::where("code",$request->code)->first();
@@ -700,7 +717,7 @@ class ApiController extends Controller
             $filePaths = [];
             $fileNames2 = [];
             foreach ($uploadFiles as $file) {
-                $filepath = public_path() . '/fileupload/' . $user->username;
+                $filepath = public_path() . '/fileupload/PublicDoctor';
                 $originalName = $file->getClientOriginalName();
                 $counter = 1;
                 while (file_exists($filepath . '/' . $originalName)) {

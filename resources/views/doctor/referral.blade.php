@@ -174,8 +174,8 @@ $user = Session::get('auth');
 
                                 $check_dept = \App\Department::find($row->department_id);
                                 $check_subdepartment = \App\AppointmentSchedule::find($row->appointmentId);
-                                
-                                if($check_subdepartment){
+                             
+                                if($row->appointmentId){
                                     $subdepartment = $check_subdepartment->opdCategory;
                                 }
                                 

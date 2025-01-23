@@ -97,7 +97,9 @@ class TelemedicineCtrl extends Controller
     public function configSched(){
         $user = Session::get('auth');
         $department = Department::all();
-        $config_sched = Cofig_schedule::select('id','department_id','deparment_subcategory','facility_id','created_by','description','category','days','time')->get();
+        $config_sched = Cofig_schedule::select('id','department_id','deparment_subcategory','facility_id','created_by','description','category','days','time')
+                        ->where('facility_id', $user->facility_id)
+                        ->get();
         
         $facility = Facility::select('id','name')->where('id', $user->facility_id)->get();
         
@@ -260,7 +262,9 @@ class TelemedicineCtrl extends Controller
          $appointedConfig->created_by = $user->id;
          $appointedConfig->facility_id = $req->edit_facility_id;
          $appointedConfig->department_id = $req->edit_department_id;
+         $appointedConfig->opdCategory = $req->editopd_subcateg;
          $appointedConfig->status = "config";
+         $appointedConfig->opdCategory = $req->editopd_subcateg;
          $appointedConfig->save();
 
         $ITConfigSched = Cofig_schedule::where('id', $req->edit_config_id)->first();
@@ -327,7 +331,7 @@ class TelemedicineCtrl extends Controller
     public function createAppointment(Request $request)
     {
         $user = Session::get('auth');
-        //  dd($request->all());
+        //dd($request->all());
         if($request->config_id){
 
             $editConfig = Cofig_schedule::where('id', $request->config_id)->first();
@@ -375,8 +379,6 @@ class TelemedicineCtrl extends Controller
             $sched->opdCategory = $request->opd_subcategory;
             $sched->status = "config";
             $sched->created_by = $user->id;
-
-
 
             $sched->save();
              

@@ -145,6 +145,7 @@
         <label>Region:</label>
         <select class="form-control region" name="region" onchange="othersRegion($(this),'{{ $province }}');" required>
             <option value="Region VII" @if($data->region == 'Region VII') selected @endif>Region VII</option>
+            <option value="Negros Island Region" @if($data->region == 'Negros Island Region') selected @endif>Negros Island Region (NIR)</option> 
             <option value="NCR" @if($data->region == 'NCR') selected @endif>NCR</option>
             <option value="CAR" @if($data->region == 'CAR') selected @endif>CAR</option>
             <option value="Region I" @if($data->region == 'Region I') selected @endif>Region I</option>
