@@ -841,11 +841,9 @@ $counter = 0;
                 $('.patient_sex').val(sex);
                 if (age > 18) {
                     $('#pedia_show_normal').css('display', 'none');
-                    $('#pedia_show_pregnant').css('display', 'none');
                     console.log("hidden pediatric");
                 } else {
                     $('#pedia_show_normal').css('display', 'block');
-                    $('#pedia_show_pregnant').css('display', 'block');
                     console.log("show pediatric");
                 }
                 if (age > 9 && sex === 'Female'){

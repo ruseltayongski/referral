@@ -5,6 +5,11 @@
         border: 1px solid lightgrey;
         width: 100%;
     }
+    .glasgow-table th.highlight, 
+    .glasgow-table td.highlight {
+        border: 2px solid orange;
+        background-color: #FFFBDA; /* Light red background */
+    }
 
      .glasgow-dot {
         background-color: #494646;
@@ -413,6 +418,7 @@
     <tr class="bg-gray">
         <td colspan="6">Pertinent Laboratory and Other Ancillary Procedures </td>
     </tr>
+
     <tr>   
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
@@ -464,7 +470,7 @@
             <td>L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td> 
         </tr>
         <tr>
-            <td colspan="6">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
+            <td colspan="6">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
         </tr>
         <tr>
             <td colspan="6">EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> 
@@ -473,10 +479,10 @@
             <td colspan="6"><i>AOG</i></td>
         </tr>
         <tr>
-            <td colspan="6">LNMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
+            <td colspan="6">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
         </tr>
         <tr>
-            <td>EUTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
+            <td>UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
         </tr>
         <tr>
             <td colspan="6">Prenatal History:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->prenatal_history}}</span></td> 
@@ -564,36 +570,32 @@
     <tr class="bg-gray">
         <td colspan="6">Glasgow Coma Scale</td>
     </tr>
-        <table class="table table-bordered text-center">
-                <thead>
-                    <tr>
-                        <th><b>1</b></th>
-                        <th><b>2</b></th>
-                        <th><b>3</b></th>
-                        <th><b>4</b></th>
-                        <th><b>5</b></th>
-                        <th><b>6</b></th>
-                        <th><b>7</b></th>
-                        <th><b>8</b></th>
-                        <th><b>9</b></th>
-                        <th><b>10</b></th>
-                    </tr>
-                </thead>
-                    <tbody>
-                        <tr>
-                        <td style="width: fit-content;"><span class="glasgow-dot" style="height: 6px; width: 6px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 10px; width: 10px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 13px; width: 13px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 16px; width: 16px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 20px; width: 20px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 24px; width: 24px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 28px; width: 28px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 32px; width: 32px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 36px; width: 36px;"></span></td>
-                        <td><span class="glasgow-dot" style="height: 40px; width: 40px;"></span></td>
-                    </tr>
-                    </tbody>
-            </table>
+    <td colspan="6">
+    <table class="table table-bordered glasgow-table">
+            <thead>
+                <tr>
+                    @for ($i = 1; $i <= 10; $i++)
+                        <th class="{{ $glasgocoma_scale->pupil_size_chart == $i ? 'highlight' : '' }}">
+                            <b>{{ $i }}</b>
+                        </th>
+                    @endfor
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    @for ($i = 1; $i <= 10; $i++)
+                        <td 
+                            class="{{ $glasgocoma_scale->pupil_size_chart == $i ? 'highlight' : '' }}">
+                            <span 
+                                class="glasgow-dot" 
+                                style="height: {{ $i * 4 + 2 }}px; width: {{ $i * 4 + 2 }}px;">
+                            </span>
+                        </td>
+                    @endfor
+                </tr>
+            </tbody>
+        </table>
+    </td>
     <tr>
         <td colspan="3"><b>Pupil Size Chart:</b><span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td><br><br>
         <td colspan="3">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>
@@ -603,11 +605,12 @@
         <td colspan="3">Eye Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->eye_response}}</span></td>
     </tr>
     <tr>
-        <td colspan="6">GSC Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
+        <td colspan="6">GCS Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
     </tr>
 </table>
 <hr/>
 
+@if($form->patient_sex === "Female")
 <div class="row">
     <div class="col-sm-12">
         <div class="table-responsive">
@@ -650,6 +653,7 @@
         </div>
     </div>
 </div>
+@endif
 <hr/>
 
 <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>

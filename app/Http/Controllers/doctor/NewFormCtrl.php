@@ -58,12 +58,6 @@ class NewFormCtrl extends Controller
     {
         return view('modal.revised_normal_form');
     }
-
-    public function view_info(Request $request)
-    {
-       
-        return view('revised_form.revised_referral_info');
-    }
     
     public function view_choose_versionModal(){
         return view('modal.choose_version');
@@ -592,6 +586,9 @@ class NewFormCtrl extends Controller
             'Clots in veins' => [
                 'cbox' => 'rs_peri_veinclot_cbox',
             ],
+            'Edema' => [
+                'cbox' => 'rs_peri_edema_cbox',
+            ]
         ];
 
         $rs_musculoskeletal_fields = [
@@ -613,8 +610,11 @@ class NewFormCtrl extends Controller
             'Decreased joint motion' => [
                 'cbox' => 'rs_muscle_decmotion_cbox',
             ],
-            'Broken bone' => [
-                'cbox' => 'rs_muscle_brokenbone_cbox',
+            'Loss of muscle size' => [
+                'cbox' => 'rs_muscle_sizeloss_cbox',
+            ],
+            'Fracture' => [
+                'cbox' => 'rs_muscle_fracture_cbox',
             ],
             'Serious sprains' => [
                 'cbox' => 'rs_muscle_sprain_cbox',
@@ -624,6 +624,9 @@ class NewFormCtrl extends Controller
             ],
             'Gout' => [
                 'cbox' => 'rs_muscle_gout_cbox',
+            ],
+            'Muscle Spasm' => [
+                'cbox' => 'rs_muscle_spasm_cbox',
             ],
         ];
         $rs_neurologic_fields = [
@@ -648,20 +651,14 @@ class NewFormCtrl extends Controller
             'Weakness' => [
                 'cbox' => 'rs_neuro_weakness_cbox',
             ],
-            'Loss of muscle size' => [
-                'cbox' => 'rs_neuro_sizeloss_cbox',
-            ],
-            'Muscle Spasm' => [
-                'cbox' => 'rs_neuro_spasm_cbox',
-            ],
             'Tremor' => [
                 'cbox' => 'rs_neuro_tremor_cbox',
             ],
             'Involuntary movement' => [
                 'cbox' => 'rs_neuro_involuntary_cbox',
             ],
-            'Incoordination' => [
-                'cbox' => 'rs_neuro_incoordination_cbox',
+            'Unsteady Gait' => [
+                'cbox' => 'rs_neuro_unsteadygait_cbox',
             ],
             'Numbness' => [
                 'cbox' => 'rs_neuro_numbness_cbox',
@@ -669,6 +666,12 @@ class NewFormCtrl extends Controller
             'Feeling of pins and needles/tingles' => [
                 'cbox' => 'rs_neuro_tingles_cbox',
             ],
+            'Disorientation' => [
+                'cbox' => 'rs_neuro_disorientation_cbox',
+            ],
+            'Slurring Speech' => [
+                'cbox' => 'rs_neuro_slurringspeech_cbox'
+            ]
         ];
         $rs_hematologic_fields = [
             'Select All' => [
@@ -706,17 +709,11 @@ class NewFormCtrl extends Controller
             'Increased urine production' => [
                 'cbox' => 'rs_endo_urine_cbox',
             ],
-            'Thyroid troubles' => [
-                'cbox' => 'rs_endo_thyroid_cbox',
-            ],
             'Heat/cold intolerancee' => [
                 'cbox' => 'rs_endo_heatcold_cbox',
             ],
             'Excessive sweating' => [
                 'cbox' => 'rs_endo_sweat_cbox',
-            ],
-            'Diabetes' => [
-                'cbox' => 'rs_endo_diabetes_cbox',
             ],
         ];
         $rs_psychiatric_fields = [
@@ -729,8 +726,12 @@ class NewFormCtrl extends Controller
             'Tension/Anxiety' => [
                 'cbox' => 'rs_psych_tension_cbox',
             ],
-            'Depression/suicide ideation' => [
+            'Depression' => [
                 'cbox' => 'rs_psych_depression_cbox',
+            ],
+            'Suicide Ideation' => 
+            [
+                'cbox' => 'rs_psych_suicideideation_cbox',
             ],
             'Memory problems' => [
                 'cbox' => 'rs_psych_memory_cbox',
@@ -756,11 +757,17 @@ class NewFormCtrl extends Controller
             'IUD' => [
                 'cbox' => 'contraceptive_iud_cbox',
             ],
-            'Rhythm' => [
+            'Rhythm / Calendar' => [
                 'cbox' => 'contraceptive_rhythm_cbox',
             ],
             'Condom' => [
                 'cbox' => 'contraceptive_condom_cbox',
+            ],
+            'Withdrawal' => [
+                'cbox' => 'contraceptive_withdrawal_cbox',
+            ],  
+            'Injections' => [
+                'cbox' => 'contraceptive_injections_cbox',
             ],
             'Other' => [
                 'cbox' => 'contraceptive_other_cbox',
@@ -779,6 +786,15 @@ class NewFormCtrl extends Controller
             ],
             'X-RAY' => [
                 'cbox' => 'lab_xray_cbox',
+            ],
+            'ULTRA SOUND' => [
+                'cbox' => 'lab_ultrasound_cbox',
+            ],
+            'CT SCAN' => [
+                'cbox' => 'lab_ctscan_cbox',
+            ],
+            'CTG MONITORING' => [
+                'cbox' => 'lab_ctgmonitoring_cbox',
             ],
             'Others' => [
                 'cbox' => 'lab_others_cbox',
@@ -2277,44 +2293,56 @@ class NewFormCtrl extends Controller
             $updated .= ", ICD-10 Diagnosis";
         }
 
-        /* FILE ATTACHMENT */
-        if($req->file_cleared == "true") {
+        if ($req->file_cleared == "true") {
             $data->update([
                 'file_path' => ""
             ]);
         }
-
+        
+        // Get existing file paths
         $file_paths = $data->file_path;
         $old_file = $file_paths;
-        if($_FILES["file_upload"]["name"]) {
+        
+        // Handle file uploads
+        if (!empty($_FILES["file_upload"]["name"][0])) { // Ensure at least one file is uploaded
             ApiController::fileUpload($req);
-            for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+        
+            // Initialize an array to store new file paths
+            $new_file_paths = [];
+            
+            for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
                 $file = $_FILES['file_upload']['name'][$i];
-                if(isset($file) && !empty($file)) {
-                    $username = $user->username;
-                    $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
-                    if($i + 1 != count($_FILES["file_upload"]["name"])) {
-                        $file_paths .= "|";
-                    }
+                if (!empty($file)) {
+                    $username = $user->username ?? 'default_user'; // Ensure username is defined
+                    $new_file_paths[] = ApiController::fileUploadUrl() . $username . "/" . $file;
                 }
             }
+        
+            // Append new file paths to existing paths (if any)
+            if (!empty($file_paths)) {
+                $file_paths .= "|"; // Add a delimiter before appending new paths
+            }
+            $file_paths .= implode("|", $new_file_paths);
         }
+        
+        // Update the file_path in the database
         $data->update([
             'file_path' => $file_paths
         ]);
-
-        if($req->file_cleared == "true" || $old_file != $data->file_path) {
+        
+        // Track if there were changes to file attachments
+        if ($req->file_cleared == "true" || $old_file !== $file_paths) {
             $updated .= ", File Attachment";
         }
+        
+        // Unset unnecessary fields
         unset($data_update['file_cleared']);
-
-//        echo $data->file_path . "<br>";
-
         unset($data_update['file_upload']);
         unset($data_update['username']);
         unset($data_update['id']);
         unset($data_update['referral_status']);
         unset($data_update['form_type']);
+        
 
 
         /* REASON FOR REFERRAL */
@@ -3281,9 +3309,9 @@ class NewFormCtrl extends Controller
             if(!empty($data_->parity_pt)){$pdf->MultiCell(0, 7, "Parity PT:" . self::green($pdf, $data_->parity_pt, 'Parity PT'), 1, 'L');}
             if(!empty($data_->parity_a)){$pdf->MultiCell(0, 7, "Parity A:" . self::green($pdf, $data_->parity_a, 'Parity A'), 1, 'L');}
             if(!empty($data_->parity_l)){$pdf->MultiCell(0, 7, "Parity l:" . self::green($pdf, $data_->parity_l, 'Parity l'), 1, 'L');}
-            if(!empty($data_->parity_lnmp)){$pdf->MultiCell(0, 7, "Parity LNMP:" . self::green($pdf, $data_->parity_lnmp, 'Parity LNMP'), 1, 'L');}
+            if(!empty($data_->parity_lnmp)){$pdf->MultiCell(0, 7, "Parity LMP:" . self::green($pdf, $data_->parity_lnmp, 'Parity LMP'), 1, 'L');}
             if(!empty($data_->parity_edc)){$pdf->MultiCell(0, 7, "Parity EDC:" . self::green($pdf, $data_->parity_edc, 'Parity EDC'), 1, 'L');}
-            if(!empty($data_->aog_eutz)){$pdf->MultiCell(0, 7, "EUTZ:" . self::green($pdf, $data_->aog_eutz, 'EUTZ'), 1, 'L');}
+            if(!empty($data_->aog_eutz)){$pdf->MultiCell(0, 7, "UTZ:" . self::green($pdf, $data_->aog_eutz, 'UTZ'), 1, 'L');}
             if(!empty($data_->prenatal_history)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Prenatal History: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data_->prenatal_history)), 1, 'L');}
 
             $pdf->SetMargins(6.35, 6.35, 6.35);
