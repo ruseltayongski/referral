@@ -613,8 +613,8 @@ class NewFormCtrl extends Controller
             'Loss of muscle size' => [
                 'cbox' => 'rs_muscle_sizeloss_cbox',
             ],
-            'Fractured' => [
-                'cbox' => 'rs_muscle_fractured_cbox',
+            'Fracture' => [
+                'cbox' => 'rs_muscle_fracture_cbox',
             ],
             'Serious sprains' => [
                 'cbox' => 'rs_muscle_sprain_cbox',
@@ -2293,44 +2293,56 @@ class NewFormCtrl extends Controller
             $updated .= ", ICD-10 Diagnosis";
         }
 
-        /* FILE ATTACHMENT */
-        if($req->file_cleared == "true") {
+        if ($req->file_cleared == "true") {
             $data->update([
                 'file_path' => ""
             ]);
         }
-
+        
+        // Get existing file paths
         $file_paths = $data->file_path;
         $old_file = $file_paths;
-        if($_FILES["file_upload"]["name"]) {
+        
+        // Handle file uploads
+        if (!empty($_FILES["file_upload"]["name"][0])) { // Ensure at least one file is uploaded
             ApiController::fileUpload($req);
-            for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+        
+            // Initialize an array to store new file paths
+            $new_file_paths = [];
+            
+            for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
                 $file = $_FILES['file_upload']['name'][$i];
-                if(isset($file) && !empty($file)) {
-                    $username = $user->username;
-                    $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
-                    if($i + 1 != count($_FILES["file_upload"]["name"])) {
-                        $file_paths .= "|";
-                    }
+                if (!empty($file)) {
+                    $username = $user->username ?? 'default_user'; // Ensure username is defined
+                    $new_file_paths[] = ApiController::fileUploadUrl() . $username . "/" . $file;
                 }
             }
+        
+            // Append new file paths to existing paths (if any)
+            if (!empty($file_paths)) {
+                $file_paths .= "|"; // Add a delimiter before appending new paths
+            }
+            $file_paths .= implode("|", $new_file_paths);
         }
+        
+        // Update the file_path in the database
         $data->update([
             'file_path' => $file_paths
         ]);
-
-        if($req->file_cleared == "true" || $old_file != $data->file_path) {
+        
+        // Track if there were changes to file attachments
+        if ($req->file_cleared == "true" || $old_file !== $file_paths) {
             $updated .= ", File Attachment";
         }
+        
+        // Unset unnecessary fields
         unset($data_update['file_cleared']);
-
-//        echo $data->file_path . "<br>";
-
         unset($data_update['file_upload']);
         unset($data_update['username']);
         unset($data_update['id']);
         unset($data_update['referral_status']);
         unset($data_update['form_type']);
+        
 
 
         /* REASON FOR REFERRAL */

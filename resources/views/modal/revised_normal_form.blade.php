@@ -1692,8 +1692,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_fractured_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fractured_cbox" value="Yes">
-                                                <span> Fractured</span>
+                                                <input class="form-check-input" id="rs_muscle_fracture_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fracture_cbox" value="Yes">
+                                                <span> Fracture</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_sprain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" value="Yes">
@@ -3187,20 +3187,20 @@
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
             $('#rs_muscle_none_cbox').prop('checked', false);
         } else {
-            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
     $('#rs_muscle_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox, #rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_all_cbox, #rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
-    $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
+    $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
 

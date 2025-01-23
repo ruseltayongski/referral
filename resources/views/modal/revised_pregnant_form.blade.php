@@ -1508,8 +1508,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_fractured_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fractured_cbox" value="Yes">
-                                                <span> Fractured</span>
+                                                <input class="form-check-input" id="rs_muscle_fracture_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fracture_cbox" value="Yes">
+                                                <span> Fracture</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_sprain_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" value="Yes">
@@ -2999,20 +2999,20 @@
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', true);
+            $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fracture_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', true);
             $('#rs_muscle_none_cbox_pregnant').prop('checked', false);
         } else {
-            $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
+            $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fracture_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
         }
     });
 
     $('#rs_muscle_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox_pregnant, #rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
+            $('#rs_muscle_all_cbox_pregnant, #rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fracture_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').prop('checked', false);
         }
     });
 
-    $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fractured_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').on('click', function() {
+    $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fracture_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').on('click', function() {
         $('#rs_muscle_all_cbox_pregnant, #rs_muscle_none_cbox_pregnant').prop('checked', false);
     });
 
