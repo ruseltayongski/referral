@@ -964,7 +964,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div><br>
                         
                                 <b>MAJOR FINDINGS</b>
-                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5" required>{{$form['baby']->baby_major_findings}}</textarea><br><br>
+                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5">{{$form['baby']->baby_major_findings}}</textarea><br><br>
                                 
                                 <b>TREATMENTS GIVE TIME</b>
                                 <div class="container-referral" style="padding: 5px;">  
@@ -980,7 +980,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div><br>
                                  
                                 <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
-                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given" required>{{$form['baby']->baby_information_given}}</textarea><br><br>
+                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5" value="baby_information_given">{{$form['baby']->baby_information_given}}</textarea><br><br>
                                 </div>
                                 </div>
                             
