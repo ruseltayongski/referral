@@ -866,157 +866,8 @@ $facilities = \App\Facility::select('id','name')
                                     <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
                                 </div>
                             
-                        </div>
-
-                        {{--@if(age <= 18) --}} {{--TODO: COMPARE AGE IF <=18--}}
-                       
-                        @if($form['pregnant']->woman_age <=18)
-                        <div class="row" style="margin: 5px;" id="pedia_show">
-                            
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_pedia_history" aria-expanded="false" aria-controls="collapse_pedia_history">
-                                        <div class="web-view"><b>PEDIATRIC HISTORY</b> <i> (as applicable)</i></div>
-                                        <div class="mobile-view"><b>PEDIATRIC HISTORY</b><br> <i> (as applicable)</i></div>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
-                                <div class="collapse" id="collapse_pedia_history" style="width: 100%;">
-                                    <b>PRENATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>A <input type="number" name="prenatal_age" style="width: 8%" min="0" value="{{$data->prenatal_a}}">
-                                                    year old G <input type="number" name="prenatal_g" style="width: 8%" min="0" value="{{$data->prenatal_g}}"> P <input type="number" style="width: 8%" min="0" name="prenatal_p" value="{{$pediatric_history->prenatal_p}}"> mother
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowith" value="with" <?= isChecked($pediatric_history, 'prenatal_radiowith_or_without', 'with'); ?>> with
-                                                    <input class="referral-radio-btn" name="prenatal_radiowith_or_without" type="radio" id="prenatal_radiowout" value="without" <?= isChecked($pediatric_history, 'prenatal_radiowith_or_without', 'without'); ?>> without
-                                                    MATERNAL ILLNESS, if Yes (specify)
-                                                    <textarea class="form-control" id="prenatal_mat_illness" name="prenatal_maternal_illness" style="resize: none;width: 50%;" rows="2">{{$pediatric_history->prenatal_with_maternal_illness}}</textarea>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div><br>
-
-                                    <b>NATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>Born at
-                                                    <select class="form-control-select" name="natal_bornat">
-                                                        <option value="">Select Option</option>
-                                                        <option value="home" <?php echo ($pediatric_history->natal_born_at == 'home') ? 'selected' : ''; ?>>Home</option>
-                                                        <option value="clinic" <?php echo ($pediatric_history->natal_born_at == 'clinic') ? 'selected' : ''; ?>>Clinic</option>
-                                                        <option value="hospital" <?php echo ($pediatric_history->natal_born_at == 'hospital') ? 'selected' : ''; ?>>Hospital</option>
-                                                    </select>
-                                                    <input type="text" id="hospital_name" name="natal_born_address" style="width: 30%;" placeholder="Specify where" value="{{ $data->natal_born_address }}">
-                                                    by
-                                                    <select class="form-control-select" name="natal_by">
-                                                        <option value="">Select Option</option>
-                                                        <option value="md" <?php echo ($pediatric_history->natal_by == 'md') ? 'selected' : ''; ?>>MD</option>
-                                                        <option value="midwife" <?php echo ($pediatric_history->natal_by == 'midwife') ? 'selected' : ''; ?>>Midwife</option>
-                                                        <option value="hilot" <?php echo ($pediatric_history->natal_by == 'hilot') ? 'selected' : ''; ?>>Hilot</option>
-                                                    </select>
-                                                    via
-                                                    <select class="form-control-select" name="natal_via">
-                                                        <option value="">Select Option</option>
-                                                        <option value="nsd" <?php echo ($pediatric_history->natal_via == 'nsd') ? 'selected' : ''; ?>>NSD</option>
-                                                        <option value="cs" <?php echo ($pediatric_history->natal_via == 'cs') ? 'selected' : ''; ?>>CS</option>
-                                                    </select>
-                                                    (indication)
-                                                    <input type="text" id="cs_indication" name="cs_indication" style="width: 20%;" value="{{ $data->natal_indication }}">
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <span>
-                                                    <select class="form-control-select" name="natal_term">
-                                                        <option value="">Select Option</option>
-                                                        <option value="preterm" <?php echo ($pediatric_history->natal_term == 'preterm') ? 'selected' : ''; ?>>Preterm</option>
-                                                        <option value="fullterm" <?php echo ($pediatric_history->natal_term == 'fullterm') ? 'selected' : ''; ?>>Full Term</option>
-                                                        <option value="postterm" <?php echo ($pediatric_history->natal_term == 'postterm') ? 'selected' : ''; ?>>Post Term</option>
-                                                    </select>
-                                                    , weighing <input type="number" name="natal_weight" style="width: 8%" min="0" step="0.01" value="{{$data->natal_weight}}"> kg,
-                                                    BR <input type="text" name="natal_br" style="width: 20%" value="{{$data->natal_br}}">, with Good Cry
-                                                    <select class="form-control-select" name="natal_withGoodCry">
-                                                        <option value="">Select Option</option>
-                                                        <option value="1" <?php echo ($pediatric_history->natal_with_good_cry == 1) ? 'selected' : ''; ?>>Yes</option>
-                                                        <option value="0" <?php echo ($pediatric_history->natal_with_good_cry == 0) ? 'selected' : ''; ?>>No</option>
-                                                    </select><br>
-                                                    Other complications:
-                                                    <textarea class="form-control" name="natal_complications" style="resize: none;width: 30%;" rows="2">{{ $data->natal_other_complications }}</textarea>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div><br>
-                                    <?php
-                                    $postnatal_bfeed_xmos_value = htmlspecialchars($pediatric_history['postnatal_bfeed_xmos']);
-                                    $postnatal_ffeed_specify_value = htmlspecialchars($pediatric_history['postnatal_ffeed_specify']);
-                                    $postnatal_started_semisolidfood_at_value = htmlspecialchars($pediatric_history['postnatal_started_semisolidfood_at']);
-                                    $immu_dpt_doses_value = htmlspecialchars($pediatric_history['immu_dpt_doses']);
-                                    $immu_hepb_doses_value = htmlspecialchars($pediatric_history['immu_hepb_doses']);
-                                    $immu_others_value = htmlspecialchars($pediatric_history['immu_others']);
-                                    ?>
-                                                  
-                                    <b>POST NATAL</b>
-                                    <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Feeding History</i><br>&emsp;
-                                                <span>
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="postnatal_bfeed" name="postnatal_bfeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bfeed', 'Yes'); ?>> Breastfed
-                                                    <span id="breastfed">
-                                                        x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
-                                                    </span>
-                                                    <input type="hidden" name="postnatal_ffeed" value="No">
-                                                    <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_formula_feed', 'Yes'); ?>> Formula Fed,
-                                                    <span id="formula_fed">
-                                                        (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify" value="<?php echo $postnatal_ffeed_specify_value; ?>">
-                                                    </span>
-                                                </span>
-                                                started semi solid foods at
-                                                <input type="number" name="postnatal_started_semisolidfood_at" style="width: 10%" min="0" value="<?php echo $postnatal_started_semisolidfood_at_value; ?>"> mos
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Immunization History</i><br>&emsp;
-                                                <input type="hidden" name="immu_bcg_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bcg', 'Yes'); ?>> BCG
-                                                <input type="hidden" name="immu_dpt_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_dpt_opv_x', 'Yes'); ?>> DPT/OPV
-                                                <span id="immu_dpt">
-                                                    x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0" value="<?php echo $immu_dpt_doses_value; ?>"> doses
-                                                </span>
-                                                <input type="hidden" name="immu_hepb_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_hepB_cbox', 'Yes'); ?>> Hep B
-                                                <span id="immu_hepb">
-                                                    x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0" value="<?php echo $immu_hepb_doses_value; ?>"> doses
-                                                </span>
-                                                <input type="hidden" name="immu_measles_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_immu_measles_cbox', 'Yes'); ?>> Measles
-                                                <input type="hidden" name="immu_mmr_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_mmr_cbox', 'Yes'); ?>> MMR
-                                                <input type="hidden" name="immu_others_cbox" value="No">
-                                                <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_others_cbox', 'Yes'); ?>> Other(s)
-                                                <span id="immu_others">
-                                                    <input type="text" name="immu_others" style="width: 20%;" value="<?php echo $immu_others_value; ?>">
-                                                </span>
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <i>Developmental Milestones</i><br>&emsp;
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_under" value="Under developed" <?= isChecked($pediatric_history, 'post_natal_development_milestones', 'Under developed'); ?>>
-                                                <label for="dev_miles_under">Under developed</label>
-                                                <input type="radio" class="referral-radio-btn" name="prenatal_milestone" id="dev_miles_par" value="At par with age" <?= isChecked($pediatric_history, 'post_natal_development_milestones', 'At par with age'); ?>>
-                                                <label for="dev_miles_par">At par with age</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                           
-                        </div>
-                        @endif
+                        </div>                        
+                
                         <?php
 
                         $menarche = $obstetric_and_gynecologic_history->menarche;
@@ -1197,10 +1048,16 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="contraceptive_iud" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_iud_cbox" value="IUD" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'IUD'); ?>> IUD
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Rhythm" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Rhythm'); ?>> Rhythm
+                                                <input class="form-check-input" id="contraceptive_rhythm" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_rhythm_cbox" value="Rhythm" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Rhythm'); ?>> Rhythm / Calendar
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Condom'); ?>> Condom
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Withdrawal'); ?>> Withdrawal
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Injections'); ?>> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1226,20 +1083,20 @@ $facilities = \App\Facility::select('id','name')
                                     </div><br>
 
                                     <div class="container-referral">
-                                        <b>LNMP</b>
-                                        <input type="text" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
+                                        <b>LMP</b>
+                                        <input type="number" step="0.01" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
                                         <b>EDC</b><i>(if pregnant)</i>
-                                        <input type="text" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
+                                        <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
                                     </div><br>
 
                                     <b>AOG</b>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <b>by LNMP</b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
+                                                <b>by LMP</b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
                                             </div>
                                             <div class="col-md-4">
-                                                <b>by EUTZ</b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
+                                                <b>by UTZ</b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1479,6 +1336,18 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="lab_xray_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_xray_cbox" value="Yes" <?= isChecked($pertinent_laboratory, 'pertinent_laboratory_and_procedures', 'X-RAY'); ?>>
                                                 <span> X-RAY</span>
                                             </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ultrasound_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ultrasound_cbox" value="Yes" <?= isChecked($pertinent_laboratory, 'pertinent_laboratory_and_procedures', 'ULTRA SOUND'); ?>>
+                                                <span> ULTRA SOUND</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ctscan_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ctscan_cbox" value="Yes" <?= isChecked($pertinent_laboratory, 'pertinent_laboratory_and_procedures', 'CT SCAN'); ?>>
+                                                <span>CT SCAN</span>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <input class="form-check-input" id="lab_ctgmonitoring_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ctgmonitoring_cbox" value="Yes" <?= isChecked($pertinent_laboratory, 'pertinent_laboratory_and_procedures', 'CTG MONITORING'); ?>>
+                                                <span>CTG MONITORING</span>
+                                            </div>
                                             <div class="col-md-6">
                                                 <input class="form-check-input" id="lab_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_others_cbox" <?= isChecked($pertinent_laboratory, 'pertinent_laboratory_and_procedures', 'Others'); ?>> Others:
                                                 <textarea id="lab_others" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"><?php echo htmlspecialchars($pertinent_laboratory->lab_procedure_other); ?></textarea>
@@ -1500,7 +1369,7 @@ $facilities = \App\Facility::select('id','name')
                                                 @endfor
                                         {{--                <a href="{{ asset($file_path) }}" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
                                             </div>
-                                        <div class="no_file_attached hide">
+                                        <div class="no_file_attached">
                                                 <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
                                                 <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnant(2)">Remove Files</button><br><br>
                                                 <div class="pregnant_file_attachment_">
@@ -1650,11 +1519,6 @@ $facilities = \App\Facility::select('id','name')
                                                 <input type="hidden" name="rs_eyes_glaucoma_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Glaucoma/Cataracts'); ?>>
                                                 <span> Glaucoma/Cataracts</span>
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="rs_eye_exam_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eye_exam_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Last eye exam'); ?>>
-                                                <span> Last eye exam</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -2070,6 +1934,10 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="rs_peri_veinclot_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_veinclot_cbox" value="Yes" <?= isChecked($review_of_system, 'peripheral_vascular', 'Clots in veins'); ?>>
                                                 <span> Clots in veins</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_peri_edema_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_edema_cbox" value="Yes" <?= isChecked($review_of_system, 'peripheral_vascular', 'Edema'); ?>>
+                                                <span>Edema</span>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -2102,11 +1970,15 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="rs_muscle_decmotion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_decmotion_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Decreased joint motion'); ?>>
                                                 <span> Decreased joint motion</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_sizeloss_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sizeloss_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Loss of muscle size'); ?>>
+                                                <span> Loss of muscle size</span>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_brokenbone_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_brokenbone_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Broken bone'); ?>>
-                                                <span> Broken bone</span>
+                                                <input class="form-check-input" id="rs_muscle_fracture_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fracture_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Fractured'); ?>>
+                                                <span> Fracture</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_sprain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Serious sprains'); ?>>
@@ -2119,6 +1991,10 @@ $facilities = \App\Facility::select('id','name')
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_gout_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_gout_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Gout'); ?>>
                                                 <span> Gout</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_muscle_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_spasm_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Muscle Spasm'); ?>>
+                                                <span> Muscle Spasm</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -2159,16 +2035,16 @@ $facilities = \App\Facility::select('id','name')
                                                 <span> Weakness</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_sizeloss_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_sizeloss_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Loss of muscle size'); ?>>
-                                                <span> Loss of muscle size</span>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_spasm_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Muscle Spasm'); ?>>
-                                                <span> Muscle Spasm</span>
-                                            </div>
-                                            <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_neuro_tremor_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tremor_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Tremor'); ?>>
                                                 <span> Tremor</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_disorientation_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_disorientation_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Disorientation'); ?>>
+                                                <span> Disorientation</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neuro_slurringspeech_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_slurringspeech_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Slurring Speech'); ?>>
+                                                <span> Slurring Speech</span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -2177,8 +2053,8 @@ $facilities = \App\Facility::select('id','name')
                                                 <span> Involuntary movement</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_neuro_incoordination_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_incoordination_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Incoordination'); ?>>
-                                                <span> Incoordination</span>
+                                                <input class="form-check-input" id="rs_neuro_unsteadygait_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_unsteadygait_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Unsteady Gait'); ?>>
+                                                <span> Unsteady Gait</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_neuro_numbness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_numbness_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Numbness'); ?>>
@@ -2251,20 +2127,12 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_thyroid_cbox" value="Yes" <?= isChecked($review_of_system, 'endocrine', 'Thyroid trouble'); ?>>
-                                                <span> Thyroid trouble</span>
-                                            </div>
-                                            <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_endo_heatcold_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_heatcold_cbox" value="Yes" <?= isChecked($review_of_system, 'endocrine', 'Heat/cold intolerance'); ?>>
                                                 <span> Heat/cold intolerance</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_endo_sweat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" value="Yes" <?= isChecked($review_of_system, 'endocrine', 'Excessive sweating'); ?>>
                                                 <span> Excessive sweating</span>
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_endo_diabetes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_diabetes_cbox" value="Yes" <?= isChecked($review_of_system, 'endocrine', 'Diabetes'); ?>>
-                                                <span> Diabetes</span>
                                             </div>
                                         </div>
                                     </div><br>
@@ -2288,7 +2156,11 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_psych_depression_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_depression_cbox" value="Yes" <?= isChecked($review_of_system, 'psychiatric', 'Depression/suicide ideation'); ?>>
-                                                <span> Depression/suicide ideation</span>
+                                                <span> Depression</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_psych_suicideideation_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_suicideideation_cbox" value="Yes" <?= isChecked($review_of_system, 'psychiatric', 'Suicide Ideation'); ?>>
+                                                <span> Suicide Ideation</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_psych_memory_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_memory_cbox" value="Yes" <?= isChecked($review_of_system, 'psychiatric', 'Memory problems'); ?>>
@@ -2383,7 +2255,17 @@ $facilities = \App\Facility::select('id','name')
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                Blood Pressure: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_bp" value="<?php echo htmlspecialchars( $latest_vital_signs->blood_pressure); ?>"> mmHg
+                                            <label for="systolic">Blood Pressure:</label>
+                                                <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                    style="width:18%;" min="0" max="300" 
+                                                    oninput="updateBloodPressure()"> /
+                                                <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                    style="width:18%;" min="0" max="200" 
+                                                    oninput="updateBloodPressure()">mmHg
+
+                                                <!-- Hidden input to store the combined value -->
+                                                <input type="hidden" name="vital_bp" id="vital_bp" 
+                                                    value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
                                             </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo htmlspecialchars( $latest_vital_signs->oxygen_saturation); ?>"> %
@@ -2393,6 +2275,17 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
+
+                        <script>
+                            function updateBloodPressure() {
+                                // Get systolic and diastolic values
+                                const systolic = document.getElementById('systolic').value;
+                                const diastolic = document.getElementById('diastolic').value;
+                                
+                                // Combine into "100/90" format
+                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                            }
+                        </script>
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
@@ -3345,20 +3238,20 @@ $(document).ready(initializeGlasgowScale);
     $('#rs_eyes_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', true);
-            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', true);
+            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').prop('checked', true);
             $('#rs_eyes_none_cbox').prop('checked', false);
         } else {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', false);
-            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', false);
+            $('#rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').prop('checked', false);
         }
     });
     $('#rs_eyes_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
             $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox').prop('checked', false);
-            $('#rs_eyes_all_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').prop('checked', false);
+            $('#rs_eyes_all_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').prop('checked', false);
         }
     });
-    $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox, #rs_eye_exam_cbox').on('click', function() {
+    $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').on('click', function() {
         $('#rs_eyes_all_cbox, #rs_eyes_none_cbox').prop('checked', false);
     });
 
@@ -3529,60 +3422,60 @@ $(document).ready(initializeGlasgowScale);
     /* PERIPHERAL VASCULAR */
     $('#rs_peri_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', true);
+            $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').prop('checked', true);
             $('#rs_peri_none_cbox').prop('checked', false);
         } else
             $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
     });
     $('#rs_peri_none_cbox').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_peri_all_cbox, #rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').prop('checked', false);
+            $('#rs_peri_all_cbox, #rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').prop('checked', false);
     });
-    $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox').on('click', function() {
+    $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').on('click', function() {
         $('#rs_peri_all_cbox, #rs_peri_none_cbox').prop('checked', false);
     });
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
             $('#rs_muscle_none_cbox').prop('checked', false);
         } else {
-            $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_pain_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
     $('#rs_muscle_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_all_cbox, #rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
-    $('#rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_brokenbone_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
+    $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
 
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', true);
-            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', true);
+            $('#rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').prop('checked', true);
+            $('#rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', true);
             $('#rs_neuro_none_cbox').prop('checked', false);
         } else {
-            $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
-            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
+            $('#rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').prop('checked', false);
+            $('#rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
         }
     });
     $('#rs_neuro_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_neuro_all_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').prop('checked', false);
-            $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
+            $('#rs_neuro_all_cbox, #rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').prop('checked', false);
+            $('#rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').prop('checked', false);
         }
     });
-    $('#rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox, #rs_neuro_sizeloss_cbox').on('click', function() {
+    $('#rs_neuro_slurringspeech_cbox, #rs_neuro_disorientation_cbox, #rs_neuro_headache_cbox, #rs_neuro_seizure_cbox, #rs_neuro_faint_cbox, #rs_neuro_paralysis_cbox, #rs_neuro_weakness_cbox').on('click', function() {
         $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
     });
-    $('#rs_neuro_spasm_cbox, #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_incoordination_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').on('click', function() {
+    $('#rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').on('click', function() {
         $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
     });
 
@@ -3605,40 +3498,40 @@ $(document).ready(initializeGlasgowScale);
     /* ENDOCRINE */
     $('#rs_endo_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', true);
-            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', true);
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').prop('checked', true);
+            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').prop('checked', true);
             $('#rs_endo_none_cbox').prop('checked', false);
         } else {
-            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', false);
-            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', false);
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').prop('checked', false);
+            $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').prop('checked', false);
         }
     });
     $('#rs_endo_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').prop('checked', false);
-            $('#rs_endo_all_cbox, #rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').prop('checked', false);
+            $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').prop('checked', false);
+            $('#rs_endo_all_cbox, #rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').prop('checked', false);
         }
     });
-    $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox, #rs_endo_thyroid_cbox').on('click', function() {
+    $('#rs_endo_abnormal_cbox, #rs_endo_appetite_cbox, #rs_endo_thirst_cbox, #rs_endo_urine_cbox').on('click', function() {
         $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
     });
-    $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox, #rs_endo_diabetes_cbox').on('click', function() {
+    $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').on('click', function() {
         $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
     });
 
     /* PSYCHIATRIC */
     $('#rs_psych_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', true);
+            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', true);
             $('#rs_psych_none_cbox').prop('checked', false);
         } else
-            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
+            $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
     });
     $('#rs_psych_none_cbox').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_psych_all_cbox, #rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
+            $('#rs_psych_all_cbox, #rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').prop('checked', false);
     });
-    $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
+    $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
         $('#rs_psych_all_cbox, #rs_psych_none_cbox').prop('checked', false);
     });
 
