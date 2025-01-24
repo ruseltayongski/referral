@@ -44,18 +44,16 @@
         background-color: #f0f0f0;
         color: black;
     }
-
-     
 </style>
 
-    <div class="modal fade" role="dialog" id="revisedpregnantFormModal">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <form action="{{url('submit-referral/pregnant')}}" method="POST" class="form-submit revised_pregnant_form">
-                    <div class="jim-content">
-                        @include('include.header_form')
-
+<div class="modal fade" role="dialog" id="revisedpregnantFormModal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <form action="{{url('submit-referral/pregnant')}}" method="POST" class="form-submit revised_pregnant_form">
+                <div class="jim-content">
+                    @include('include.header_form')
                     <div class="form-group-sm form-inline">
+                        
                         {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
                         <input type="hidden" class="pt_age" />
@@ -78,6 +76,7 @@
                                 &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
                         </div>
+                       
                         <br>
                         <div class="row">
                             <div class="col-md-4">
@@ -170,11 +169,11 @@
                             </div>
                         </div><br>
 
-                        
+                                                
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
+                                    <button class="btn btn-m collapsed" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
                                     <b>TREATMENTS GIVE TIME</b><i> (required)</i><span class="text-red">*</span>
                                     <span class="pull-right"><i class="fa fa-plus"></i></span>    
                                     </button><br><br>
@@ -210,27 +209,10 @@
                             </div>
                         </div>    
 
-                        <!-- <div class="row">
-                            <div class="col-lg-12">
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_pregnant" aria-expanded="false" aria-controls="collapse_illness_history_pregnant">
-                                        <b>HISTORY OF PRESENT ILLNESS</b><i> (Required)</i><span class="text-red">*</span>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
-                                <div class="collapse" id="collapse_illness_history_pregnant" style="width: 100%">
-                                    <b>CASE SUMMARY:</b>
-                                    <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
-                                    <b>CHIEF COMPLAINTS:</b>
-                                    <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required></textarea><br><br>
-                                </div>
-                            </div>
-                        </div> -->
-
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregnant" aria-expanded="false" aria-controls="collapse_diagnosis_pregnant">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregnant" aria-expanded="false" aria-controls="collapse_diagnosis_pregnant">
                                         <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -240,10 +222,10 @@
                                         <div class="col-md-12">
                                             <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
                                             <br><br>
-                                        <a data-toggle="modal" data-target="#icd-modal-pregnant_revised" type="button" class="btn btn-sm btn-success" onclick="searchICD10PregnantRevised()">
-                                            <i class="fa fa-medkit"></i>  Add ICD-10
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosisPregnantRevised()" hidden="hidden"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                                            <a data-toggle="modal" data-target="#icd-modal-pregnant_revised" type="button" class="btn btn-sm btn-success" onclick="searchICD10PregnantRevised()">
+                                                <i class="fa fa-medkit"></i>  Add ICD-10
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-success" onclick="addNotesDiagnosisPregnantRevised()" hidden="hidden"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
                                         </div>
                                     </div>
 
@@ -256,24 +238,23 @@
 
                                     <div class="row" style="padding-top: 10px;">
                                         <div class="col-md-12">
-                                        <button type="button" id="clear_notes_pregnant_revised" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregnantRevised()" hidden="hidden"> Clear notes diagnosis</button>
-                                        <div id="add_notes_diagnosis_pregnant_revised" style="padding-top: 5px;"></div>
+                                            <button type="button" id="clear_notes_pregnant_revised" class="btn btn-sm btn-info" onclick="clearNotesDiagnosisPregnantRevised()" hidden="hidden"> Clear notes diagnosis</button>
+                                            <div id="add_notes_diagnosis_pregnant_revised" style="padding-top: 5px;"></div>
                                         </div>
                                     </div>
 
                                     <div class="row" style="padding-top: 10px">
                                         <div class="col-md-12">
-                                        <button type="button" id="clear_other_diag_pregnant_revised" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregnantRevised()" hidden="hidden"> Clear other diagnosis</button>
-                                        <div id="others_diagnosis_pregnant_revised" style="padding-top: 5px;"></div>
+                                            <button type="button" id="clear_other_diag_pregnant_revised" class="btn btn-sm btn-warning" onclick="clearOtherDiagnosisPregnantRevised()" hidden="hidden"> Clear other diagnosis</button>
+                                            <div id="others_diagnosis_pregnant_revised" style="padding-top: 5px;"></div>
                                         </div>
-                                </div>
-
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history_pregnant" aria-expanded="false" aria-controls="collapse_medical_history_pregnant">
                                         <b>PAST MEDICAL HISTORY</b>
@@ -289,14 +270,12 @@
                                                 <span>Select All</span>
                                             </div>
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_none_cbox_pregnant" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="comor_none_cbox" value="Yes">
                                                 <span> None</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_hyper_cbox_pregnant" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Hypertension
                                                 <span id="comor_hyper_pregnant"> since
                                                     <select class="form-control select" name="hyper_year" style="font-size: 10pt;">
@@ -310,7 +289,6 @@
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_diab_cbox_pregnant" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Diabetes Mellitus
                                                 <span id="comor_diab_pregnant"> since
                                                     <select class="form-control select" name="diab_year" style="font-size: 10pt;">
@@ -324,7 +302,6 @@
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_asthma_cbox_pregnant" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes"> Bronchial Asthma
                                                 <span id="comor_asthma_pregnant"> since
                                                     <select class="form-control select" name="asthma_year" style="font-size: 10pt;">
@@ -340,30 +317,25 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_copd_cbox_pregnant" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> COPD</span>
                                             </div>
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_dyslip_cbox_pregnant" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Dyslipidemia</span>
                                             </div>
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_thyroid_cbox_pregnant" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Thyroid Disease</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_cancer_cbox_pregnant" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Cancer <i>(specify)</i>:</span>
                                                 <textarea class="form-control" name="comor_cancer" id="comor_cancer_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                             </div>
                                             <div class="col-md-4">
-
                                                 <input class="form-check-input" id="comor_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
                                                 <span> Other(s): </span>
                                                 <textarea class="form-control" name="comor_others" id="comor_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
@@ -373,135 +345,116 @@
 
                                     <b>ALLERGIES</b><i> (Specify)</i><br>
                                     <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-4">
-
-                                                <input class="form-check-input" id="allergy_all_cbox_pregnant" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Select All</span>
-                                            </div>
-                                            <div class="col-md-4">
-
-                                                <input class="form-check-input" id="allergy_none_cbox_pregnant" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> None</span>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input class="form-check-input" id="allergy_all_cbox_pregnant" name="allergy_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Select All</span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-
-                                                <input class="form-check-input" id="allergy_food_cbox_pregnant" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Food(s): <i>(ex. crustaceans, eggs)</i> </span>
-                                                <textarea class="form-control" id="allergy_food_pregnant" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"></textarea>
-                                            </div>
-                                            <div class="col-md-4">
-
-                                                <input class="form-check-input" id="allergy_drug_cbox_pregnant" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
-                                                <textarea class="form-control" id="allergy_drug_pregnant" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"></textarea>
-                                            </div>
-                                            <div class="col-md-4">
-
-                                                <input class="form-check-input" id="allergy_other_cbox_pregnant" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Other(s): </span>
-                                                <textarea class="form-control" id="allergy_other_pregnant" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"></textarea>
-                                            </div>
+                                        <div class="col-md-4">
+                                            <input class="form-check-input" id="allergy_none_cbox_pregnant" name="allergy_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> None</span>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <input class="form-check-input" id="allergy_food_cbox_pregnant" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Food(s): <i>(ex. crustaceans, eggs)</i> </span>
+                                            <textarea class="form-control" id="allergy_food_pregnant" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"></textarea>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input class="form-check-input" id="allergy_drug_cbox_pregnant" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
+                                            <textarea class="form-control" id="allergy_drug_pregnant" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"></textarea>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <input class="form-check-input" id="allergy_other_cbox_pregnant" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Other(s): </span>
+                                            <textarea class="form-control" id="allergy_other_pregnant" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"></textarea>
+                                        </div>
+                                    </div>
                                     </div><br>
 
                                     <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
                                     <div class="container-referral">
-                                        <div class="row">
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_all_cbox_pregnant" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Select All</span>
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_none_cbox_pregnant" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> None</span>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_all_cbox_pregnant" name="heredo_all_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Select All</span>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_hyper_cbox_pregnant" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Hypertension: </span>
-                                                <select class="form-control-select" id="heredo_hyper_pregnant" name="heredo_hypertension_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal">Maternal</option>
-                                                    <option value="Paternal">Paternal</option>
-                                                    <option value="Both">Both</option>
-                                                </select>
-                                                <!-- <input type="text" id="heredo_hyper" name="heredo_hypertension_side"> -->
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_diab_cbox_pregnant" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Diabetes Mellitus: </span>
-                                                <select class="form-control-select" id="heredo_diab_pregnant" name="heredo_diabetes_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal">Maternal</option>
-                                                    <option value="Paternal">Paternal</option>
-                                                    <option value="Both">Both</option>
-                                                </select>
-                                                <!-- <input type="text" id="heredo_diab" name="heredo_diabetes_side"> -->
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_asthma_cbox_pregnant" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Bronchial Asthma: </span>
-                                                <select class="form-control-select" id="heredo_asthma_pregnant" name="heredo_asthma_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal">Maternal</option>
-                                                    <option value="Paternal">Paternal</option>
-                                                    <option value="Both">Both</option>
-                                                </select>
-                                                <!-- <input type="text" id="heredo_asthma" name="heredo_asthma_side"> -->
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_cancer_cbox_pregnant" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Cancer: </span>
-                                                <select class="form-control-select" id="heredo_cancer_pregnant" name="heredo_cancer_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal">Maternal</option>
-                                                    <option value="Paternal">Paternal</option>
-                                                    <option value="Both">Both</option>
-                                                </select>
-                                                <!-- <input type="text" id="heredo_cancer" name="heredo_cancer_side"> -->
-                                            </div>
-                                        </div><br>
-                                        <div class="row">
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_kidney_cbox_pregnant" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Kidney: </span>
-                                                <select class="form-control-select" id="heredo_kidney_pregnant" name="heredo_kidney_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal">Maternal</option>
-                                                    <option value="Paternal">Paternal</option>
-                                                    <option value="Both">Both</option>
-                                                </select>
-                                                <!-- <input type="text" id="heredo_kidney" name="heredo_kidney_side"> -->
-                                            </div>
-                                            <div class="col-md-3">
-
-                                                <input class="form-check-input" id="heredo_thyroid_cbox_pregnant" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Thyroid Disease: </span>
-                                                <select class="form-control-select" id="heredo_thyroid_pregnant" name="heredo_thyroid_side">
-                                                    <option value="">Select Option</option>
-                                                    <option value="Maternal">Maternal</option>
-                                                    <option value="Paternal">Paternal</option>
-                                                    <option value="Both">Both</option>
-                                                </select>
-                                                <!-- <input type="text" id="heredo_thyroid" name="heredo_thyroid_side"> -->
-                                            </div>
-                                            <div class="col-md-3">
-                                                <input class="form-check-input" id="heredo_others_cbox_pregnant" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
-                                                <span> Other(s): </span>
-                                                <input type="text" id="heredo_others_pregnant" name="heredo_others_side">
-                                            </div>
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_none_cbox_pregnant" name="heredo_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> None</span>
                                         </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_hyper_cbox_pregnant" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Hypertension: </span>
+                                            <select class="form-control-select" id="heredo_hyper_pregnant" name="heredo_hypertension_side">
+                                                <option value="">Select Option</option>
+                                                <option value="Maternal">Maternal</option>
+                                                <option value="Paternal">Paternal</option>
+                                                <option value="Both">Both</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_diab_cbox_pregnant" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Diabetes Mellitus: </span>
+                                            <select class="form-control-select" id="heredo_diab_pregnant" name="heredo_diabetes_side">
+                                                <option value="">Select Option</option>
+                                                <option value="Maternal">Maternal</option>
+                                                <option value="Paternal">Paternal</option>
+                                                <option value="Both">Both</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_asthma_cbox_pregnant" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Bronchial Asthma: </span>
+                                            <select class="form-control-select" id="heredo_asthma_pregnant" name="heredo_asthma_side">
+                                                <option value="">Select Option</option>
+                                                <option value="Maternal">Maternal</option>
+                                                <option value="Paternal">Paternal</option>
+                                                <option value="Both">Both</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_cancer_cbox_pregnant" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Cancer: </span>
+                                            <select class="form-control-select" id="heredo_cancer_pregnant" name="heredo_cancer_side">
+                                                <option value="">Select Option</option>
+                                                <option value="Maternal">Maternal</option>
+                                                <option value="Paternal">Paternal</option>
+                                                <option value="Both">Both</option>
+                                            </select>
+                                        </div>
+                                    </div><br>
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_kidney_cbox_pregnant" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Kidney: </span>
+                                            <select class="form-control-select" id="heredo_kidney_pregnant" name="heredo_kidney_side">
+                                                <option value="">Select Option</option>
+                                                <option value="Maternal">Maternal</option>
+                                                <option value="Paternal">Paternal</option>
+                                                <option value="Both">Both</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_thyroid_cbox_pregnant" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Thyroid Disease: </span>
+                                            <select class="form-control-select" id="heredo_thyroid_pregnant" name="heredo_thyroid_side">
+                                                <option value="">Select Option</option>
+                                                <option value="Maternal">Maternal</option>
+                                                <option value="Paternal">Paternal</option>
+                                                <option value="Both">Both</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input class="form-check-input" id="heredo_others_cbox_pregnant" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes">
+                                            <span> Other(s): </span>
+                                            <input type="text" id="heredo_others_pregnant" name="heredo_others_side">
+                                        </div>
+                                    </div>
                                     </div><br>
 
                                     <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
@@ -509,10 +462,9 @@
                                 </div>
                             </div>
                         </div>
-                      
 
                         <div class="row" id="baby_show_pregnant" style="padding:5px">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
                                         <div class="web-view"><b>BABY DELIVERED</b> <i> (as applicable)</i></div>
@@ -521,53 +473,50 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="baby_collapsed_pregnant" style="width: 100%;">
-
-                                <div class="container-referral" style="padding:5px">
-                                    <b>NAME:</b><br />
+                                    <div class="container-referral" style="padding:5px">
+                                        <b>NAME:</b><br />
                                         <input type="text" class="form-control" name="baby_fname" placeholder="First Name" /><br>
                                         <input type="text" class="form-control" name="baby_mname" placeholder="Middle Name" /><br>
                                         <input type="text" class="form-control" name="baby_lname" placeholder="Last Name" /><br>
-                                    <b>DATE AND HOUR OF BIRTH: </b>
+                                        <b>DATE AND HOUR OF BIRTH: </b>
                                         <input type="text" class="form-control  form_datetime" name="baby_dob" placeholder="Date/Time"/><br>
-                                    <b>GESTATIONAL AGE: </b>
-                                    <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" />
-                                    <b>BIRTH WEIGHT: </b>
-                                    <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" /><br />
-                                </div><br>
+                                        <b>GESTATIONAL AGE: </b>
+                                        <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" />
+                                        <b>BIRTH WEIGHT: </b>
+                                        <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" /><br />
+                                    </div><br>
 
-                                <div class="container-referral" style="padding:5px">
-                                    <b>MAIN REASON FOR REFERRAL</b>
-                                    <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
-                                    <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
-                                    <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                    <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
-                                </div><br>
+                                    <div class="container-referral" style="padding:5px">
+                                        <b>MAIN REASON FOR REFERRAL</b>
+                                        <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
+                                        <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
+                                        <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
+                                        <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                    </div><br>
 
-                                <b>MAJOR FINDINGS</b>
-                                <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea><br><br>
+                                    <b>MAJOR FINDINGS</b>
+                                    <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea><br><br>
 
-                                <b>TREATMENTS GIVE TIME</b>
-                                <div class="container-referral" style="padding: 5px;">
-                                <b>LAST (BREAST) FEED (TIME):</b>
-                                <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time"/><br>  
-                                <b>BEFORE REFERRAL</b>
-                                <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
-                                <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" /><br>
-                                <b>DURING TRANSPORT</b>
-                                <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
-                                <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
-                                </div><br>
+                                    <div class="container-referral" style="padding: 5px;">
+                                        <b>TREATMENTS GIVE TIME</b>
+                                        <b>LAST (BREAST) FEED (TIME):</b>
+                                        <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time"/><br>  
+                                        <b>BEFORE REFERRAL</b>
+                                        <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" /><br>
+                                        <b>DURING TRANSPORT</b>
+                                        <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
+                                    </div><br>
 
-                                <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
-                                <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea><br><br>                                   
-                                </div> 
+                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                    <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea><br><br>
+                                </div>
                             </div>
                         </div>
 
-                       
-                        {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
                         <div class="row" id="menarche_show_pregnant">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history_pregnant" aria-expanded="false" aria-controls="collapse_gyne_history_pregnant">
                                         <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
@@ -730,9 +679,10 @@
                                 </div>
                             </div>
                         </div>
-
+                        
+                    
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history_pregnancy" aria-expanded="false" aria-controls="collapse_persocial_history_pregnancy">
                                         <div class="web-view"><b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i></div>
@@ -782,7 +732,7 @@
                                                 <label for="alcohol_yes_radio">Yes</label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio_pregnant" value="Yes">
+                                                <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio_pregnant" value="No">
                                                 <label for="alcohol_no_radio">No</label>
                                             </div>
                                             <div class="col-md-3">
@@ -823,7 +773,7 @@
                                             <div class="col-md-4">
                                                 <input type="radio" name="illicit_drugs" id="drugs_quit_radio_pregnant" class="referral-radio-btn" value="Quit">
                                                 <label for="drugs_quit_radio_pregnant">Quit</label>
-                                                <span id="drugs_quit_year_pregnant">  since
+                                                <span id="drugs_quit_year_pregnant"> since
                                                     <select class="form-control select" name="drugs_year_quit">
                                                         <option value="">Select Option</option>
                                                         <?php
@@ -837,7 +787,7 @@
                                         <div class="row">
                                             <div class="col-md-8" id="drugs_text_pregnant">
                                                 Specify drugs taken:
-                                                <textarea class="form-control" rows="2" style="resize: none;width:50%;" name="illicit_drugs_token"></textarea>
+                                                <textarea class="form-control" rows="2" style="resize: none;width:50%;" name="illicit_drugs_taken"></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -846,7 +796,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication_pregnant" aria-expanded="false" aria-controls="collapse_medication_pregnant">
                                         <b>CURRENT MEDICATION(S)</b>
@@ -861,7 +811,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures_pregnant" aria-expanded="false" aria-controls="collapse_lab_procedures_pregnant">
                                         <div class="web-view">
@@ -874,27 +824,27 @@
                                         </div>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_lab_procedures_pregnant" style="width: 100%;">
-                                    <i> Attach all applicable labs in one file.</i>
+                                <div class="collapse" id="collapse_lab_procedures_pregnant" style="width: 100%; background-color: blue">
+                                    <i>Attach all applicable labs in one file.</i>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="lab_all_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_all_cbox" value="Yes">
-                                                <span> Select All</span>
+                                                <span>Select All</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="lab_ua_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ua_cbox" value="Yes">
-                                                <span> UA</span>
+                                                <span>UA</span>
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="lab_cbc_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_cbc_cbox" value="Yes">
-                                                <span> CBC</span>
+                                                <span>CBC</span>
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="lab_xray_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_xray_cbox" value="Yes">
-                                                <span> X-RAY</span>
+                                                <span>X-RAY</span>
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input" id="lab_ultrasound_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_ultrasound_cbox" value="Yes">
@@ -910,11 +860,11 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <input class="form-check-input" id="lab_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="lab_others_cbox" value="Yes"> Others:
-                                                <textarea id="lab_others_pregnant" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2" name="lab_procedure_other"></textarea>
+                                                <textarea id="lab_others_pregnant" class="form-control" name="lab_procedure_other" style="resize: none;" rows="2"></textarea>
                                             </div>
-                                        </div></br>
+                                        </div><br>
                                         <div class="row">
-                                        <div class="col-md-12">
+                                            <div class="col-md-12">
                                                 <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
                                                 <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnant(2)">Remove Files</button><br><br>
                                                 <div class="pregnant_file_attachment_">
@@ -927,8 +877,7 @@
                                                             <div class="file-upload-content" id="pregnant_file-upload-content_1">
                                                                 <img class="file-upload-image" id="pregnant_file-upload-image_1"/>
                                                                 <div class="image-title-wrap">
-                                                                    <b><small class="image-title" id="pregnant_image-title_1" style="display:block; word_-wrap: break-word_;">Uploaded File</small></b>
-                                                                    {{--<button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1, 2)" class="btn-sm remove-image">Remove</button>--}}
+                                                                    <b><small class="image-title" id="pregnant_image-title_1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -938,13 +887,12 @@
                                         </div>
                                     </div>
                                     <table class="table table-striped col-sm-6"></table>
-                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system_pregnant" aria-expanded="false" aria-controls="collapse_review_system_pregnant">
                                         <b>REVIEW OF SYSTEMS</b>
@@ -1722,7 +1670,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status_pregnant" aria-expanded="false" aria-controls="collapse_nutri_status_pregnant">
                                         <b>NUTRITIONAL STATUS</b>
@@ -1750,7 +1698,7 @@
                                                 <label for="diet_tpn"> TPN </label>
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" , id="diet_npo_pregnant" value="NPO">
+                                                <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_npo_pregnant" value="NPO">
                                                 <label for="diet_npo"> NPO </label>
                                             </div>
                                         </div><br>
@@ -1765,7 +1713,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs_pregnant" aria-expanded="false" aria-controls="collapse_vital_signs_pregnant">
                                         <b>LATEST VITAL SIGNS</b>
@@ -1786,18 +1734,18 @@
                                             </div>
                                         </div><br>
                                         <div class="row">
-                                                <div class="col-md-4">
-                                                    <label for="systolic">Blood Pressure:</label>
-                                                    <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
-                                                        style="width:18%;" min="0" max="300" 
-                                                        oninput="updateBloodPressure()"> /
-                                                    <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
-                                                        style="width:18%;" min="0" max="200" 
-                                                        oninput="updateBloodPressure()">mmHg
+                                            <div class="col-md-4">
+                                                <label for="systolic">Blood Pressure:</label>
+                                                <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                    style="width:18%;" min="0" max="300" 
+                                                    oninput="updateBloodPressure()"> /
+                                                <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                    style="width:18%;" min="0" max="200" 
+                                                    oninput="updateBloodPressure()">mmHg
 
-                                                    <!-- Hidden input to store the combined value -->
-                                                    <input type="hidden" name="vital_bp" id="vital_bp">
-                                                </div>
+                                                <!-- Hidden input to store the combined value -->
+                                                <input type="hidden" name="vital_bp" id="vital_bp">
+                                            </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
                                             </div>
@@ -1819,7 +1767,7 @@
                         </script>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow_pregnant" aria-expanded="false" aria-controls="collapse_glasgow_pregnant">
                                         <b>GLASGOW COMA SCALE</b>
@@ -2134,44 +2082,53 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-12">
+                            <div class="col-md-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
-                                        <b>REASON FOR REFERRAL</b> <i>(Required)</i><span class="text-red">*</span>
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text=red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <i>Select reason for referral:</i><span class="text-red">*</span>
-                                    <div class="container-referral">
-                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
-                                            <option value="">Select reason for referral</option>
-                                            <option value="-1">Other reason for referral</option>
-                                            @foreach($reason_for_referral as $reason_referral)
-                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
-                                            @endforeach
-                                        </select><br><br>
-                                        <div id="pregnant_other_reason_referral_div" style="display:none;">
-                                            <span>Other Reason for Referral:</span><span class="text-red">*</span><br/>
-                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7"></textarea>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span>
+                                            <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required>
+                                                <option value="">Select reason for referral</option>
+                                                <option value="-1">Other reason for referral</option>
+                                                @foreach($reason_for_referral as $reason_referral)
+                                                    <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="other_reason_referral_pregnant"></div>
+                                        </div>
+                                    </div>
+                                </div> <!-- /.collapse-content blue -->
                             </div>
                         </div>
-
-                        <hr />
+                        <hr />                                  
+                    </div>   <!-- /.form-content blue -->
+                    <table class="table table-striped col-sm-6"></table>
+                    <hr />
                         <div class="form-fotter pull-right">
-                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
-                            <button type="submit" id="sbmitBtnPregnantRevised" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
+                            <button class="btn btn-default btn-flat" data-dismiss="modal">
+                                    <i class="fa fa-times"></i> Back </button>
+                            <button type="submit" id="sbmitBtnPregnantRevised" class="btn btn-success btn-flat btn-submit">
+                                <i class="fa fa-send"></i> Submit
+                            </button>
                         </div>
                         <div class="clearfix"></div>
-                    </div>{{--/.form-group--}}
-                </div> {{--/.jim-content--}}
+                    </div>
+                <!-- </div> /.jim-content  red -->
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
 
 <div class="modal fade" role="dialog" id="patient_modal">
     <div class="modal-dialog modal-sm" role="document">
@@ -2214,39 +2171,41 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Uncollapse the REASON FOR REFERRAL section
-        const referralCollapse = document.getElementById("collapse_reason_referral_pregnant");
-        const referralButton = document.querySelector("[data-target='#collapse_reason_referral_pregnant']");
-        if (referralCollapse && referralButton) {
-            referralCollapse.classList.add("show");
-            referralButton.setAttribute("aria-expanded", "true");
-        }
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     // Uncollapse the REASON FOR REFERRAL section
+    //     const referralCollapse = document.getElementById("collapse_reason_referral_pregnant");
+    //     const referralButton = document.querySelector("[data-target='#collapse_reason_referral_pregnant']");
+    //     if (referralCollapse && referralButton) {
+    //         referralCollapse.classList.add("show");
+    //         referralButton.setAttribute("aria-expanded", "true");
+    //     }
 
-        // Uncollapse the HISTORY OF PRESENT ILLNESS section
-        // const illnessCollapse = document.getElementById("collapse_illness_history_pregnant");
-        // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_pregnant']");
-        // if (illnessCollapse && illnessButton) {
-        //     illnessCollapse.classList.add("show");
-        //     illnessButton.setAttribute("aria-expanded", "true");
-        // }
+    //     // Uncollapse the HISTORY OF PRESENT ILLNESS section
+    //     // const illnessCollapse = document.getElementById("collapse_illness_history_pregnant");
+    //     // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_pregnant']");
+    //     // if (illnessCollapse && illnessButton) {
+    //     //     illnessCollapse.classList.add("show");
+    //     //     illnessButton.setAttribute("aria-expanded", "true");
+    //     // }
 
-        // Uncollapse the DIAGNOSIS section
-        const diagnosisCollapse = document.getElementById("collapse_diagnosis_pregnant");
-        const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_pregnant']");
-        if (diagnosisCollapse && diagnosisButton) {
-            diagnosisCollapse.classList.add("show");
-            diagnosisButton.setAttribute("aria-expanded", "true");
-        }
+    //     // Uncollapse the DIAGNOSIS section
+    //     const diagnosisCollapse = document.getElementById("collapse_diagnosis_pregnant");
+    //     const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_pregnant']");
+    //     if (diagnosisCollapse && diagnosisButton) {
+    //         diagnosisCollapse.classList.add("show");
+    //         diagnosisButton.setAttribute("aria-expanded", "true");
+    //     }
 
-        // Uncollapse the TREATMENTS GIVE TIME section
-        const treatmentCollapse = document.getElementById("patient_treatment_give_time");
-        const treatmentButton = document.querySelector("[data-target='#patient_treatment_give_time']");
-        if (treatmentCollapse && treatmentButton) {
-            treatmentCollapse.classList.add("show");
-            treatmentButton.setAttribute("aria-expanded", "true");
-        }
-    });
+    //     // Uncollapse the TREATMENTS GIVE TIME section
+    //     const treatmentCollapse = document.getElementById("patient_treatment_give_time");
+    //     const treatmentButton = document.querySelector("[data-target='#patient_treatment_give_time']");
+    //     if (treatmentCollapse && treatmentButton) {
+    //         treatmentCollapse.classList.add("show");
+    //         treatmentButton.setAttribute("aria-expanded", "true");
+    //     }
+    // });
+
+
     // $("#revisedpregnantFormModal").modal("show");
 
     //    $('#pedia_show').hide();
@@ -3100,7 +3059,7 @@
     /**************************************************************************/
 
     $("#sbmitBtnPregnantRevised").on('click',function(e){
-        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
+        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val()) && !($("#reason_referral1").val())){
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
             });
@@ -3108,7 +3067,16 @@
         }
     });
 
-   
+    //John
+    document.getElementById("sbmitBtnPregnantRevised").addEventListener("click", function(event) {
+        event.preventDefault();
+        const modalElement = document.getElementById("revisedpregnantFormModal");
+        if (modalElement) {
+            modalElement.style.paddingRight = "17px";
+        }
+    });
+
+
     $(document).ready(function() {
         $('.reason_referral').on('change', function() {
             var value = $(this).val();

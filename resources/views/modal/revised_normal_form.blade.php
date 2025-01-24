@@ -187,12 +187,6 @@
             visibility: visible;
         }
     } 
-
-    .unclickable {
-        pointer-events: none; /* Disables click actions */
-        background-color: #f0f0f0;
-        color: black;
-    }
 </style>
     <div class="modal fade" role="dialog" id="revisednormalFormModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -319,7 +313,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normal" aria-expanded="false" aria-controls="collapse_illness_history_normal">
+                                    <button class="btn btn-m collapsed " type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normal" aria-expanded="false" aria-controls="collapse_illness_history_normal">
                                         <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -336,7 +330,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normal" aria-expanded="false" aria-controls="collapse_diagnosis_normal">
+                                    <button class="btn btn-m collapsed " type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normal" aria-expanded="false" aria-controls="collapse_diagnosis_normal">
                                         <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2320,7 +2314,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normal" aria-expanded="false" aria-controls="collapse_reason_referral_normal">
+                                    <button class="btn btn-m collapsed " type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normal" aria-expanded="false" aria-controls="collapse_reason_referral_normal">
                                         <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text=red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2400,31 +2394,31 @@
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function () {
-         // Uncollapse the REASON FOR REFERRAL section
-         const referralCollapse = document.getElementById("collapse_reason_referral_normal");
-         const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normal']");
-        if (referralCollapse && referralButton) {
-            referralCollapse.classList.add("show");
-            referralButton.setAttribute("aria-expanded", "true");
-        }
+    // document.addEventListener("DOMContentLoaded", function () {
+    //      // Uncollapse the REASON FOR REFERRAL section
+    //      const referralCollapse = document.getElementById("collapse_reason_referral_normal");
+    //      const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normal']");
+    //     if (referralCollapse && referralButton) {
+    //         referralCollapse.classList.add("show");
+    //         referralButton.setAttribute("aria-expanded", "true");
+    //     }
 
-        // Uncollapse the HISTORY OF PRESENT ILLNESS section
-        const illnessCollapse = document.getElementById("collapse_illness_history_normal");
-        const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normal']");
-        if (illnessCollapse && illnessButton) {
-            illnessCollapse.classList.add("show");
-            illnessButton.setAttribute("aria-expanded", "true");
-        }
+    //     // Uncollapse the HISTORY OF PRESENT ILLNESS section
+    //     const illnessCollapse = document.getElementById("collapse_illness_history_normal");
+    //     const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normal']");
+    //     if (illnessCollapse && illnessButton) {
+    //         illnessCollapse.classList.add("show");
+    //         illnessButton.setAttribute("aria-expanded", "true");
+    //     }
 
-        // Uncollapse the DIAGNOSIS section
-        const diagnosisCollapse = document.getElementById("collapse_diagnosis_normal");
-        const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normal']");
-        if (diagnosisCollapse && diagnosisButton) {
-            diagnosisCollapse.classList.add("show");
-            diagnosisButton.setAttribute("aria-expanded", "true");
-        }
-    });
+    //     // Uncollapse the DIAGNOSIS section
+    //     const diagnosisCollapse = document.getElementById("collapse_diagnosis_normal");
+    //     const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normal']");
+    //     if (diagnosisCollapse && diagnosisButton) {
+    //         diagnosisCollapse.classList.add("show");
+    //         diagnosisButton.setAttribute("aria-expanded", "true");
+    //     }
+    // });
 
     // $("#revisednormalFormModal").modal("show");
 
@@ -2444,6 +2438,14 @@
                 msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
+        }
+    });
+
+    document.getElementById("sbmitBtnNormal").addEventListener("click", function(event) {
+        event.preventDefault();
+        const modalElement = document.getElementById("revisednormalFormModal");
+        if (modalElement) {
+            modalElement.style.paddingRight = "17px";
         }
     });
 
