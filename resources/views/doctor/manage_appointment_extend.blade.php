@@ -34,7 +34,7 @@
                                             <select class="form-control select2" id="defaultCategorySelect" name="config_id">  <!-- Config Appointment -->
                                                 <option selected value="">Select Default Category</option>
                                                 @foreach($configs as $config)
-                                                    @if($department_id === $config->department_id)
+                                                    @if($department_id === $config->department_id && $config->facility_id === $user->facility_id)
                                                         <option value="{{$config->id}}">{{$config->description}}</option>
                                                     @endif
                                                 @endforeach

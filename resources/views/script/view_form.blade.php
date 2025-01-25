@@ -113,10 +113,19 @@
 
     });
 
+    $(document).ready(function () {
+
+    $('#acceptFormModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // The button that triggered the modal
+        var telemedicineValue = button.data('telemedicine'); // Get the data-telemedicine value
+        $('#telemedi_cine').val(telemedicineValue); // Set the value in the hidden input
+    });
+
     $('body').on('submit','#acceptForm',function(e) {
         e.preventDefault();
         $('.loading').show();
         var tracking_id = form_id;
+
         $(this).ajaxSubmit({
             url: "{{ url('doctor/referral/accept/') }}/" + tracking_id,
             type: 'POST',
@@ -146,6 +155,8 @@
             }
         });
     });
+
+});
 
     $('body').on('submit','#rejectForm',function(e) {
         e.preventDefault();

@@ -21,6 +21,8 @@ use App\Events\SocketReferralSeen;
 use App\Events\SocketReferralUndoCancel;
 use App\Events\SocketReferralUpdate;
 use App\Events\SocketReferralUpdateForm;
+use App\Events\FeedbackMessageSent;
+use App\Events\MessageSent;
 use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\ApiController;
@@ -1009,14 +1011,18 @@ class ReferralCtrl extends Controller
 
     public function accept(Request $req,$track_id)
     {
+
         $user = Session::get('auth');
+
         $track = Tracking::find($track_id);
 
-        $telemedAssigned = TelemedAssignDoctor::find($track->asignedDoctorId);
+        if($req->telemedicine == 1){
+            $telemedAssigned = TelemedAssignDoctor::find($track->asignedDoctorId);
         
-        $telemedAssigned->appointment_by = $user->id;
-        $telemedAssigned->save();
-
+            $telemedAssigned->appointment_by = $user->id;
+            $telemedAssigned->save();
+        }
+        
         if($track->status=='accepted' || $track->status=='rejected' || ($track->status=='redirected' && $track->referred_to != $user->facility_id)) {
             Session::put('incoming_denied',true);
             return;
@@ -1754,8 +1760,27 @@ class ReferralCtrl extends Controller
         return redirect()->back();
     }
 
-    public function feedback($code){
-        $data = Feedback::select(
+     // Blade feedback view
+     public function feedback($code) {
+        $data = $this->getfeedbackData($code); // Reuse the data logic
+        return view('doctor.feedback', [
+            'data' => $data,
+            'code' => $code
+        ]);
+    }
+
+    public function VueFeedback($code){
+
+        $data = $this->getfeedbackData($code); // Reuse the data logic
+
+        return response()->json([
+            'messages' => $data,
+            'code' => $code
+        ]);
+    }
+
+    private function getfeedbackData($code){
+        return  Feedback::select(
             'feedback.id as id',
             'feedback.sender as sender',
             'feedback.message',
@@ -1771,12 +1796,34 @@ class ReferralCtrl extends Controller
             ->where('code',$code)
             ->orderBy("id","asc")
             ->get();
-
-        return view('doctor.feedback',[
-            'data' => $data,
-            'code' => $code
-        ]);
     }
+    
+
+    //Original code
+    // public function feedback($code){
+    //     $data = Feedback::select(
+    //         'feedback.id as id',
+    //         'feedback.sender as sender',
+    //         'feedback.message',
+    //         'users.fname as fname',
+    //         'users.lname as lname',
+    //         'facility.name as facility',
+    //         'facility.abbr as abbr',
+    //         'feedback.created_at as date',
+    //         'feedback.code'
+    //     )
+    //         ->leftJoin('users','users.id','=','feedback.sender')
+    //         ->leftJoin('facility','facility.id','=','users.facility_id') //TODO: possible changes for multiple facility log-in
+    //         ->where('code',$code)
+    //         ->orderBy("id","asc")
+    //         ->get();
+
+
+    //     return view('doctor.feedback',[
+    //         'data' => $data,
+    //         'code' => $code
+    //     ]);
+    // }
 
     public function loadFeedback($code)
     {

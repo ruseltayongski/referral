@@ -46,7 +46,7 @@
     
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-lg" role="document" >
         <div class="modal-content">
             <form method="POST" class="form-submit pregnant_form">
             <div class="jim-content">
@@ -400,8 +400,8 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped col-sm-6"></table>
-                <hr />
+                    <table class="table table-striped col-sm-6"></table>
+                    <hr />
                      <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
                         <button type="submit" id="sbmtPreg" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>

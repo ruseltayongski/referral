@@ -10,13 +10,15 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                 <form action="{{ asset('admin/report/top/icd') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group">
-                        <span class="text-green" style="font-size: 17pt;">Top 10 ICD-10 Diagnosis </span>
+                        <span class="text-green" style="font-size: 17pt;">Top 10 ICD-10 Diagnosis for {{$telemed}} </span>
                         <span style="font-size: 12pt;"><i>as of </i></span>
                         <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
                         <select name="request_type" class="form-control" style="width: 200px;">
                             <option name="request_type" value="incoming" @if(empty($request_type) || $request_type == 'incoming') selected @endif>Incoming</option>
                             <option name="request_type" value="outgoing" @if($request_type == 'outgoing') selected @endif>Outgoing</option>
                         </select>
+                
+                        <input type="hidden" name="telemedicine" value="{{ request()->telemedicine  }}">
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
                         <select name="province_id" id="" class="form-control">
                             <option value="">Select Province</option>

@@ -22229,15 +22229,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         null;
 
         // Config Appointment
-        var configfullybook = _this2.appointmentSlot.some(function (appointment) {
+        _this2.appointmentSlot.some(function (appointment) {
           appointment.appointment_schedules.forEach(function (sched) {
             if (sched.configId && _this2.facilitySelectedId === sched.facility_id) {
-              console.log("my sched list::", sched);
+              // console.log("my sched list::", sched);
               var Date_start = new Date(sched.appointed_date); // Start date
               var date_end = new Date(sched.date_end); // End date
               var timeSlot = sched.config_schedule.time.split('|');
               var daysSched = sched.config_schedule.days.split('|');
-              console.log("daysSched", daysSched);
+              //console.log("daysSched", daysSched, "timeSlot", timeSlot);
               // Iterate through all days in the range
               var currentDate = new Date(Date_start); // Initialize with start date
 
@@ -22246,19 +22246,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   weekday: 'long'
                 }); // Get current day's name
 
-                if (daysSched.includes(currentDayName)) {
+                if (daysSched.includes(currentDayName) && !passconfigId) {
                   // Highlight specific day if it matches
                   var _targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
 
                   // targetTd.css("border-color", "#00a65a");
                   if (_targetTd.length) {
                     _targetTd.css("background-color", "#00a65a"); // Green for available
-                  } else {
-                    _targetTd.css("background-color", "");
                   }
-                  targetGrid.remove();
-                  _targetTd.addClass("add-cursor-pointer");
-                  $(".fc-content").remove();
+                } else {
+                  var _targetTd2 = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
+                  if (_targetTd2.length) {
+                    _targetTd2.css("background-color", ""); // Remove background color
+                    _targetTd2.removeClass("add-cursor-pointer");
+                    $(".fc-event-container").remove();
+                    $(".fc-title").remove();
+                    $(".fc-resizer").remove();
+                  }
                 }
                 // Move to the next day
                 currentDate.setDate(currentDate.getDate() + 1);
@@ -22299,29 +22303,31 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           return false;
         });
         var dateTimeAppointed = new Date("".concat(dateString, "T").concat(timeslot));
-        if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-          targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
-          targetTd.css("border-color", "rgb(230 193 193)");
-        } else {
-          targetTd.css("background-color", "#00a65a"); //available color green'
-          targetdrag.css("border-color", "#00a65a");
+        if (!passconfigId) {
+          if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
+            targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
+            targetTd.css("border-color", "rgb(230 193 193)");
+          } else {
+            targetTd.css("background-color", "#00a65a"); //available color green'
+            targetdrag.css("border-color", "#00a65a");
+          }
+          targetGrid.remove();
+          targetTd.addClass("add-cursor-pointer");
+          $(".fc-content").remove();
         }
-        targetGrid.remove();
-        targetTd.addClass("add-cursor-pointer");
-        $(".fc-content").remove();
       });
     },
     dayClickFunction: function dayClickFunction(date, allDay, jsEvent, view) {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var eventsOnDate, AppointedDates, configId, apointmentId, ScheduleIds, clickedDate, clickedDayName, dateselect, PassconfigId, parameterDate, params, responseBody, response, configNull, appointedData, _responseBody, _response, configsched;
+        var eventsOnDate, AppointedDates, configId, apointmentId, ScheduleIds, clickedDate, clickedDayName, dateselect, PassconfigId, parameterDate, params, responseBody, response, appointedData, _responseBody, _response, configsched;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               // console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
               eventsOnDate = _this3.events.filter(function (event) {
                 return moment(event.start).isSame(date, "day");
-              });
+              }); //Config Appointment
               AppointedDates = [];
               configId = null;
               apointmentId = null;
@@ -22366,30 +22372,31 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               dateselect = date._d.toISOString().split('T')[0];
               PassconfigId = null;
               parameterDate = null;
+              params = JSON.parse(JSON.stringify(eventsOnDate))[0];
               if (!(eventsOnDate.length > 0)) {
                 _context3.next = 25;
                 break;
               }
-              params = JSON.parse(JSON.stringify(eventsOnDate))[0];
-              console.log("params::", params);
+              //Manual Appointment
               responseBody = {
                 selected_date: params.start,
-                facility_id: params.facility_id
+                facility_id: params.facility_id,
+                configId: configId
               };
-              _context3.next = 17;
+              _context3.next = 16;
               return _this3.__appointmentScheduleHours(responseBody);
-            case 17:
+            case 16:
               response = _context3.sent;
               _this3.$emit("appointedTime", response.data);
-              // console.log("manual appoint esponse", response.data);
-              configNull = Object.values(response.data)[0];
-              PassconfigId = configNull.configId;
-              console.log("date selected condition ", params.start, dateselect);
+              console.log("manual appoint response", response.data);
+              PassconfigId = null;
+              console.log("PassconfigId::", PassconfigId);
+              console.log("date selected condition ", params.start, dateselect, "configId:", PassconfigId);
               if (params.start === dateselect) {
                 parameterDate = params.start;
                 _this3.$emit("manual-click-date", parameterDate);
               }
-              _context3.next = 38;
+              _context3.next = 42;
               break;
             case 25:
               _context3.next = 27;
@@ -22397,7 +22404,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 27:
               appointedData = _context3.sent;
               if (!appointedData) {
-                _context3.next = 38;
+                _context3.next = 40;
                 break;
               }
               _this3.appointedParams = appointedData; // Update state if needed elsewhere
@@ -22415,21 +22422,24 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this3.$emit("config_appointedTime", _response.data);
               configsched = Object.values(_response.data)[0];
               if (AppointedDates.includes(dateselect)) {
-                console.log("matched date:");
+                console.log("list of matched date:", AppointedDates);
                 PassconfigId = configsched.configId;
-              } else {
-                PassconfigId = null;
-                console.log("not matched", parameterDate);
               }
               console.log("AppointedDates::", AppointedDates, 'dateselect', dateselect);
-            case 38:
+              _context3.next = 42;
+              break;
+            case 40:
+              PassconfigId = null;
+              console.log("not matched", parameterDate);
+            case 42:
+              console.log("PassconfigId::", PassconfigId);
               _this3.$emit("day-click-date", PassconfigId);
               if (parameterDate) {
                 _this3.$emit("manual-click-date", parameterDate);
               } else {
                 _this3.$emit("manual-click-date", null);
               }
-            case 40:
+            case 45:
             case "end":
               return _context3.stop();
           }
@@ -22470,7 +22480,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 appointed = [];
               }
               matchedate = appointed.includes(formattedClickDate) ? formattedClickDate : "";
-              if (!matchedate) {
+              if (!(matchedate && configId)) {
                 _context4.next = 13;
                 break;
               }
@@ -22487,9 +22497,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               return _context4.abrupt("return", appointedParam);
             case 13:
               mapedData = response.data.facility_data.map(function (item) {
-                console.log("response", response);
+                console.log("response mapedData", mapedData);
                 return {
                   title: "Appointment",
+                  configId: null,
                   start: item.appointed_date,
                   backgroundColor: "#00a65a",
                   borderColor: "#00a65a",
@@ -23002,14 +23013,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return;
       }
       if (this.followUpReferredId) {
+        var _configtime$split = configtime.split('-'),
+          _configtime$split2 = _slicedToArray(_configtime$split, 2),
+          timefrom = _configtime$split2[0],
+          timeTo = _configtime$split2[1];
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
         $("#AppointmentId").val(this.selectedAppointmentTime);
         $("#DoctorId").val(this.selectedAppointmentDoctor);
+        $("#followup_facility_id").val(this.facilitySelectedId);
+        $("#configId").val(configId);
+        $("#configAppointmentId").val(appointmentId);
+        $("#configDate").val(configDate);
+        $("#configTimefrom").val(timefrom);
+        $("#configTimeto").val(timeTo);
         $("#followup_header").html("Follow Up Patient");
         $("#telemedicineFollowupFormModal").modal("show");
-        $("#followup_facility_id").val(this.facilitySelectedId);
       } else {
         var appointment = null;
         if (configId) {

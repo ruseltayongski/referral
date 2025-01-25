@@ -187,12 +187,6 @@
             visibility: visible;
         }
     } 
-
-    .unclickable {
-        pointer-events: none; /* Disables click actions */
-        background-color: #f0f0f0;
-        color: black;
-    }
 </style>
     <div class="modal fade" role="dialog" id="revisednormalFormModal">
         <div class="modal-dialog modal-lg" role="document">
@@ -319,7 +313,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normal" aria-expanded="false" aria-controls="collapse_illness_history_normal">
+                                    <button class="btn btn-m collapsed " type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normal" aria-expanded="false" aria-controls="collapse_illness_history_normal">
                                         <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -336,7 +330,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normal" aria-expanded="false" aria-controls="collapse_diagnosis_normal">
+                                    <button class="btn btn-m collapsed " type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normal" aria-expanded="false" aria-controls="collapse_diagnosis_normal">
                                         <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -1692,8 +1686,8 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input class="form-check-input" id="rs_muscle_fractured_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fractured_cbox" value="Yes">
-                                                <span> Fractured</span>
+                                                <input class="form-check-input" id="rs_muscle_fracture_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_fracture_cbox" value="Yes">
+                                                <span> Fracture</span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_sprain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_sprain_cbox" value="Yes">
@@ -2320,7 +2314,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normal" aria-expanded="false" aria-controls="collapse_reason_referral_normal">
+                                    <button class="btn btn-m collapsed " type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normal" aria-expanded="false" aria-controls="collapse_reason_referral_normal">
                                         <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text=red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2400,31 +2394,31 @@
 
 <script>
 
-    document.addEventListener("DOMContentLoaded", function () {
-         // Uncollapse the REASON FOR REFERRAL section
-         const referralCollapse = document.getElementById("collapse_reason_referral_normal");
-         const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normal']");
-        if (referralCollapse && referralButton) {
-            referralCollapse.classList.add("show");
-            referralButton.setAttribute("aria-expanded", "true");
-        }
+    // document.addEventListener("DOMContentLoaded", function () {
+    //      // Uncollapse the REASON FOR REFERRAL section
+    //      const referralCollapse = document.getElementById("collapse_reason_referral_normal");
+    //      const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normal']");
+    //     if (referralCollapse && referralButton) {
+    //         referralCollapse.classList.add("show");
+    //         referralButton.setAttribute("aria-expanded", "true");
+    //     }
 
-        // Uncollapse the HISTORY OF PRESENT ILLNESS section
-        const illnessCollapse = document.getElementById("collapse_illness_history_normal");
-        const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normal']");
-        if (illnessCollapse && illnessButton) {
-            illnessCollapse.classList.add("show");
-            illnessButton.setAttribute("aria-expanded", "true");
-        }
+    //     // Uncollapse the HISTORY OF PRESENT ILLNESS section
+    //     const illnessCollapse = document.getElementById("collapse_illness_history_normal");
+    //     const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normal']");
+    //     if (illnessCollapse && illnessButton) {
+    //         illnessCollapse.classList.add("show");
+    //         illnessButton.setAttribute("aria-expanded", "true");
+    //     }
 
-        // Uncollapse the DIAGNOSIS section
-        const diagnosisCollapse = document.getElementById("collapse_diagnosis_normal");
-        const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normal']");
-        if (diagnosisCollapse && diagnosisButton) {
-            diagnosisCollapse.classList.add("show");
-            diagnosisButton.setAttribute("aria-expanded", "true");
-        }
-    });
+    //     // Uncollapse the DIAGNOSIS section
+    //     const diagnosisCollapse = document.getElementById("collapse_diagnosis_normal");
+    //     const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normal']");
+    //     if (diagnosisCollapse && diagnosisButton) {
+    //         diagnosisCollapse.classList.add("show");
+    //         diagnosisButton.setAttribute("aria-expanded", "true");
+    //     }
+    // });
 
     // $("#revisednormalFormModal").modal("show");
 
@@ -2444,6 +2438,14 @@
                 msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
+        }
+    });
+
+    document.getElementById("sbmitBtnNormal").addEventListener("click", function(event) {
+        event.preventDefault();
+        const modalElement = document.getElementById("revisednormalFormModal");
+        if (modalElement) {
+            modalElement.style.paddingRight = "17px";
         }
     });
 
@@ -3187,20 +3189,20 @@
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', true);
             $('#rs_muscle_none_cbox').prop('checked', false);
         } else {
-            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
     $('#rs_muscle_none_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_muscle_all_cbox, #rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
+            $('#rs_muscle_all_cbox, #rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').prop('checked', false);
         }
     });
 
-    $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fractured_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
+    $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
 

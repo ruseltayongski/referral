@@ -10,9 +10,10 @@ $user = Session::get('auth');
     }
     .glasgow-table th.highlight, 
     .glasgow-table td.highlight {
-        border: 2px solid red;
-        background-color: rgba(255, 0, 0, 0.1); /* Light red background */
+        border: 2px solid orange;
+        background-color: #FFFBDA; /* Light red background */
     }
+
 
      .glasgow-dot {
         background-color: #494646;

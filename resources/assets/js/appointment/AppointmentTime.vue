@@ -188,16 +188,25 @@ export default {
         });
         return;
       }
-
+     
       if (this.followUpReferredId) {
+        const [timefrom,timeTo] = configtime.split('-');
+
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
         $("#AppointmentId").val(this.selectedAppointmentTime);
         $("#DoctorId").val(this.selectedAppointmentDoctor);
+        $("#followup_facility_id").val(this.facilitySelectedId);
+
+        $("#configId").val(configId);
+        $("#configAppointmentId").val(appointmentId);
+        $("#configDate").val(configDate);
+        $("#configTimefrom").val(timefrom);
+        $("#configTimeto").val(timeTo);
+
         $("#followup_header").html("Follow Up Patient");
         $("#telemedicineFollowupFormModal").modal("show");
-        $("#followup_facility_id").val(this.facilitySelectedId);
       } else {
         let appointment = null;
 
@@ -293,7 +302,7 @@ export default {
                     class="external-event"
                     style="background-color: rgb(255 214 214); color: #ffff"
                   >
-                    Not Available
+                    Not Available 
                   </div>
                 </div>
                 <div class="box box-solid">

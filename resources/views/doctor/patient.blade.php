@@ -404,7 +404,7 @@ $counter = 0;
                                 <small class="text-muted">{{ date('M d, Y',strtotime($row->dob)) }}</small>
                             </td>
                             <td>
-                                {{ $row->region }}<br />
+                                {{ $row->region == 'Negros Island Region' ? $row->region . ' (NIR)' : $row->region }} <br />
                                 <?php
                                 if (!$province_display = \App\Province::find($row->province)->description)
                                     $province_display = $row->province_others;
@@ -444,7 +444,7 @@ $counter = 0;
                                         <i class="fa fa-stethoscope"></i>
                                         Walk-In
                                     </a>
-                                        @elseif ($user->facility_id == 63 && $row->sex=='Female' && ($age >= 10 && $age <= 49))
+                                        @elseif ($user->facility_id == 63 && $row->sex=='Female' && $age >= 9)
                                         <a href="#pregnantModal"
                                                data-patient_id="{{ $row->id }}"
                                                data-backdrop="static"
