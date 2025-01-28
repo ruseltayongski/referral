@@ -25,7 +25,7 @@
                                     <div class="appointment-container">
                                         <div class="form-check form-check-inline d-flex">
                                             <input type="checkbox" class="form-check-input custom-checkbox" id="enable_config_appointment" name="enable_appointment" value="config appointment">
-                                            <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config</label>
+                                            <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config <small><i>(Optional)</i></small></label>
                                         </div>
                                     </div>
                                     <div class="label-border">
@@ -43,9 +43,9 @@
                                                 
                                             </select>
                                        
-                                        <label for="department_id">Opd Category:</label>
+                                            <label for="department_id">Opd Category:</label>
                                             <input type="hidden" class="form-control" name="department_id" id="department_id" value="5">
-                                            <input type="hidden" name="subopdId" value="$getSubOpd->id">
+                                            <input type="hidden" name="subopd_id" value="{{ $user->subopd_id }}">
                                             <input type="text" class="form-control"  value="{{ $getSubOpd->description }}" readonly>
                                         </div>
 
@@ -277,7 +277,11 @@
                                                                 <span>To:</span>
                                                                 <input type="time" class="form-control add-appointment-field" id="add_appointed_time_to1" name="add_appointed_time_to1">
                                                             </div>
-                                                            <label for="opdCategory">OPD Category:</label>
+                                                            <div class="col-md-6" style="margin-top: 10px;">
+                                                                <span>Slot:</span>
+                                                                <input type="number" class="form-control" name="slot">
+                                                            </div>
+                                                            {{-- <label for="opdCategory">OPD Category:</label>
                                                             <select class="form-control select2 add-appointment-field" id="add_opdCategory_1" name="add_opdCategory1" id="opdCategory">
                                                                 <option selected value="">Select OPD Category</option>
                                                                 <option value="Family Medicine">Family Medicine</option>
@@ -300,19 +304,19 @@
                                                                 <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
                                                                 <option value="Orthopedics">Orthopedics</option>   
                                                                 <option value="Cardiology">Cardiology</option>        
-                                                            </select>
+                                                            </select> --}}
                                                         </div>
                                                     </div>
-                                                    <div>
+                                                    {{-- <div>
                                                         <label>Available Doctor</label>
                                                         <select class="form-control select2 available_doctor1 add-appointment-field" id="add_available_doctor_1" name="add_available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;"></select>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                             <div id="additionalTimeContainer" style="display: none;"></div>
-                                            <div style="margin-top: 15px;">
+                                            {{-- <div style="margin-top: 15px;">
                                                 <button type="button" class="btn btn-info btn-xs" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -376,7 +380,7 @@
                                             @endforeach
                                         </select>
 
-                                        <label for="department_id">OPD Category:</label>
+                                        {{-- <label for="department_id">OPD Category:</label>
                                             
                                         <input type="hidden" class="form-control" name="edit_department_id" id="department_id" value="5">
                                         <input type="hidden" class="form-control" name="SubOpdId" value="{{ $getSubOpd->id }}">
@@ -386,7 +390,7 @@
                                         @foreach($facility as $Facility)
                                                 <input type="text" class="form-control" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
                                                 <input type="hidden" class="form-control" name="edit_facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
-                                        @endforeach
+                                        @endforeach --}}
                                     </div>
                                 </div>
 

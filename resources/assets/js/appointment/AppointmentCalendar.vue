@@ -256,7 +256,7 @@ export default {
                       // }
 
 
-                  }else{
+                  } else {
                     const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
                     if (targetTd.length) {
                       targetTd.css("background-color", ""); // Remove background color

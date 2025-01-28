@@ -291,7 +291,7 @@ export default {
     <div class="jim-content">
       <h3 class="page-header">Time Slot</h3>
       <div class="calendar-container">
-        <section class="content">
+        <section class="content" style="padding-left: 0px; padding-right: 0px;">
           <!-- <div class="row"> -->
             <div class="box box-primary">
               <div class="box-body no-padding">
