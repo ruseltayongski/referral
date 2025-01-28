@@ -121,7 +121,7 @@ export default {
         this.appointmentSlot.some((appointment) => {
          
           appointment.appointment_schedules.forEach((sched) => {
-            if(sched.configId && this.facilitySelectedId === sched.facility_id){
+            if(sched.configId && this.facilitySelectedId === sched.facility_id) {
               // console.log("my sched list::", sched.telemed_assigned_doctor);
               
               const Date_start = new Date(sched.appointed_date); // Start date
@@ -203,7 +203,6 @@ export default {
 
         // Manual Appointment
         const isfullyBooked = this.appointmentSlot.some((appointment) => {
-          
           if (appointment.appointment_schedules.length > 0) {
             const slotOndate = appointment.appointment_schedules.filter(
               (slot) => slot.appointed_date === dateString
@@ -256,7 +255,7 @@ export default {
       });
     },
     async dayClickFunction(date, allDay, jsEvent, view) {
-      // console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
+      //console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });

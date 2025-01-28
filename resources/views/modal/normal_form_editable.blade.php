@@ -294,6 +294,7 @@ $department_id = $appoitment_sched[0]->department_id;
                             </div>
                         </div><br>
 
+                        @if($telemedicine)
                         <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
@@ -310,6 +311,7 @@ $department_id = $appoitment_sched[0]->department_id;
 
                             </div>
                         </div><br>
+                        @endif
 
                         <!-- <div class="row">
                             <div class="col-md-12">

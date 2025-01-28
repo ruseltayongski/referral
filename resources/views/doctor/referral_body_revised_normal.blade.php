@@ -144,7 +144,6 @@
             </td>
         </tr>
     @endif
-    {{dd($form->other_diagnoses)}}
     @if(isset($form->diagnosis))
         <tr>
             <td colspan="6">

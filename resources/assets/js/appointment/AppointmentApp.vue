@@ -38,6 +38,7 @@
           :configTimeSlot ="configTimeSlot"
           :appointmentclickDate ="appointmentclickDate"
           :manualDate ="manualDate"
+          :user="user"
         ></appointment-time>
       </div>
     </div>
