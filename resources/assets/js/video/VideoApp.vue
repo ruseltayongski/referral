@@ -51,7 +51,7 @@ export default {
       activity_id: this.getUrlVars()["activity_id"],
       options: {
         // Pass your App ID here.
-        appId: "0fc02f6b7ce04fbcb1991d71df2dbe0d",
+        appId: "0fc02f6b7ce04fbcb1991d71df2dbe0d", 
         // Set the channel name.
         channel: this.getUrlVars()["code"],
         // Pass your temp token here.
@@ -323,6 +323,28 @@ export default {
           console.log(error);
         });
     },
+    generateLabrequest() {
+       const url = `${this.baseUrl}/api/check/labresult`;
+        const payload = {
+          activity_id: this.activity_id 
+        };
+       
+         axios
+        .post(url, payload)
+        .then((response) => {
+          if (response.data.id) {
+            const pdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
+            window.open(pdfUrl, "_blank"); // Opens the PDF in a new tab
+          } else {
+            Lobibox.alert("error", {
+              msg: "No lab request has been created by the referred doctor",
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
 
     endorseUpward() {
       let self = this;
@@ -467,7 +489,7 @@ export default {
                     data-toggle="modal"
                     data-target="#prescriptionModal"
                     type="button"
-                    v-if="referring_md == 'no'"
+                    v-if="referring_md == 'yes'"
                     @mouseover="showPrescription = true"
                     @mouseleave="showPrescription = false"
                   >
@@ -501,7 +523,7 @@ export default {
                     class="btn btn-info btn-lg reco-button"
                     @click="openFeedbackModal(referral_code)"
                   >
-                    <i class="fa fa-comments"></i> ReCo
+                    <i class="bi bi-chat-left-text"></i>
                   </button>
                 </div>
 
@@ -725,7 +747,7 @@ export default {
                     </tr>
                 </tbody>
               </table>
-              <div v-if="referring_md == 'yes'">
+              <!-- <div v-if="referring_md == 'yes'"> -->
                 <button
                   class="btn btn-success btn-md btn-block"
                   type="button"
@@ -733,7 +755,14 @@ export default {
                 >
                   <i class="bi bi-prescription"></i> Generate Prescription
                 </button>
-              </div>
+                 <button
+                  class="btn btn-primary btn-md btn-block"
+                  type="button"
+                  @click="generateLabrequest()"
+                >
+                  <i class="bi bi-prescription"></i> Generate Lab Request
+                </button>
+              <!-- </div> -->
             </div>
           </div>
         </div>

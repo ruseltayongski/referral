@@ -11,6 +11,7 @@ $telemedicine_doctor_id = json_decode(json_decode($appointmentParam, true), true
 $telemed_config_id =  json_decode(json_decode($appointmentParam, true), true)[0]['config_id'] ?? json_decode($appointmentParam, true)[0]['config_id'];
 $telemed_appointed_date = json_decode(json_decode($appointmentParam, true), true)[0]['configDate'] ?? json_decode($appointmentParam, true)[0]['configDate'];
 $telemed_config_time = json_decode(json_decode($appointmentParam, true), true)[0]['configtime'] ?? json_decode($appointmentParam, true)[0]['configtime'];
+$telemed_subOpdId = json_decode(json_decode($appointmentParam, true), true)[0]['subOpdId'] ?? json_decode($appointmentParam, true)[0]['subOpdId'];
 
 if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== false){
     [$timeFrom, $timeTo] = explode('-', $telemed_config_time);
@@ -89,11 +90,11 @@ $department_id = $appoitment_sched[0]->department_id;
                         <input type="hidden" name="configId" value="{{$telemed_config_id}}">
                         <input type="hidden" name="configTimeFrom" value="{{$timeFrom}}">
                         <input type="hidden" name="configtimeto" value="{{$timeTo}}">
-                        
+                        <input type="hidden" name="opdSubId" value="{{$telemed_subOpdId}}">
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success"><b>NAME OF REFERRING FACILITY:</b></small><br>
+                                <small class="text-success"><b>NAME OF REFERRING FACILITY: </b></small><br>
                                 &nbsp;<span>{{ $myfacility->name }}</span>
                             </div>
                             <div class="col-md-4">

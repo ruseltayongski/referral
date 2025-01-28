@@ -894,7 +894,7 @@
         var json = {
             "activity_id" : activity_id
         };
-  
+        console.log("Labresult", url);
         $.post(url,json,function(result) {
             if(result.id) {
                 const pdf_url = "{{ asset('doctor/print/labresult') }}";
