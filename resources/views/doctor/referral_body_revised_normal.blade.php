@@ -144,6 +144,7 @@
             </td>
         </tr>
     @endif
+    {{dd($form->other_diagnoses)}}
     @if(isset($form->diagnosis))
         <tr>
             <td colspan="6">
@@ -672,11 +673,12 @@
     <tr class="bg-gray">
         <td colspan="6">Latest Vital Signs</td>
     </tr>
-    @if (!)
+    @if (!empty($latest_vital_signs->temperature) || !empty($latest_vital_signs->pulse_rate))
     <tr>
         <td colspan="3">Teamperature:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->temperature}}</span></td>
         <td colspan="3">Pulse Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->pulse_rate}}</span></td>
     </tr>
+    @endif
     <tr>
         <td colspan="3">Respiratory Rate:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->respiratory_rate}}</span></td>
         <td colspan="3">Blood Pressure:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$latest_vital_signs->blood_pressure}}</span></td>
