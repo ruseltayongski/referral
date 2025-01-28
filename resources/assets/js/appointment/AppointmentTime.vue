@@ -11,7 +11,7 @@ export default {
       default: null,
     },
     manualDate: {
-      type: Object,
+      type: [Object, String],
     },
     configTimeSlot: {
       type: Object
@@ -21,6 +21,9 @@ export default {
     },
     facilitySelectedId: {
       type: Number,
+    },
+    user: {
+      type: Object,
     },
   },
   data() {
@@ -74,6 +77,12 @@ export default {
   },
   watch: {
     appointedTimes: async function (payload) {
+      if(this.facilitySelectedId == this.user.facility_id) {
+        Lobibox.alert("error", {
+            msg: "You cannot book your own facility"
+        });
+        return;
+      }
       this.showAppointmentTime = true;
       this.selectedAppointmentTime = null;
       this.selectedAppointmentDoctor = null;
@@ -104,6 +113,7 @@ export default {
       return this.configTimeSlot && Object.keys(this.configTimeSlot).length > 0;
     },
     areAllAppointmentFull() {
+      return false;
       return this.appointedTimes.every((appointment) =>
         this.areAllDoctorsNotAvailable(
           appointment.telemed_assigned_doctor,
@@ -149,9 +159,9 @@ export default {
         .toTimeString()
         .split(" ")[0]
         .substring(0, 5);
-      console.log("time", time);
+      //console.log("time", time);
       var doctor_available = doctors.every((doctor) => doctor.appointment_by);
-      console.log("doctor_available", doctor_available);
+      //console.log("doctor_available", doctor_available);
 
       if (date) {
         // Check if the date is in the past
@@ -270,7 +280,6 @@ export default {
     },
 
     configAppointmentNot(timeSlot) {
-      
       const [timeSlot_start, timeSlot_end] = timeSlot.split("-");
       const normalizedTimeSlotStart = this.normalizeTimeFormat(timeSlot_start);
       const normalizedTimeSlotEnd = this.normalizeTimeFormat(timeSlot_end);
@@ -309,161 +318,170 @@ export default {
                 </div>
                 <div class="box box-solid">
                   <div class="box-header with-border">
-                    <h3 class="box-title timeDoctor">
+                    <!-- <h3 class="box-title timeDoctor">
                       Please choose Time and OPD
                       {{currentConfig}}
-                    </h3>
+                    </h3> -->
                     <div id="date-selected"></div>
                   </div>
-                <!-- :disabled="areAllAppointmentNotAvailable()" -->
-              <div v-if="appointmentclickDate">
-                <div class="box-body config-remove-all">
-                  <div class="appointment-time-list1">
-                    <div v-for="(timeSlot, index) in currentConfig.timeSlots" :key="index">
-                      <input 
-                        type="radio"
-                        class="hours_radio"
-                        :value="timeSlot"
-                        v-model="configSelectedTime"
-                        @change="handleconfigTimeSelection(timeSlot)"
-                        :disabled="configAppointmentNot(timeSlot)"
-                      />&nbsp;&nbsp;
-                      <span :class="{
-                          'text-green': !configAppointmentNot(timeSlot),
-                          'text-red': configAppointmentNot(timeSlot)
-                        }">
-                        {{ formatTimeSlot(timeSlot) }}
-                      </span>
-                      <ul class="doctor-list1" v-if="configSelectedTime === timeSlot">
-                        <li>
-                          <input
+                  <!-- :disabled="areAllAppointmentNotAvailable()" -->
+                  <div v-if="appointmentclickDate">
+                    <div class="box-body config-remove-all">
+                      <div class="appointment-time-list1">
+                        <div v-for="(timeSlot, index) in currentConfig.timeSlots" :key="index">
+                          <input 
                             type="radio"
                             class="hours_radio"
-                            v-model="configOpdcategory"
-                            :value="currentConfig.opdSubId"
-                            @change="handleconfigcategory(currentConfig.opdSubId)"
+                            :value="timeSlot"
+                            v-model="configSelectedTime"
+                            @change="handleconfigTimeSelection(timeSlot)"
+                            :disabled="configAppointmentNot(timeSlot)"
                           />&nbsp;&nbsp;
-                          <small :class="{
-                            'text-green' : !configAppointmentNot(timeSlot),
-                            'text-red' : configAppointmentNot(timeSlot),
-                          }">
-                          {{ currentConfig.Opdcategory }}
-                          </small>
-                        </li>
-                      </ul>
+                          <span :class="{
+                              'text-green': !configAppointmentNot(timeSlot),
+                              'text-red': configAppointmentNot(timeSlot)
+                            }">
+                            {{ formatTimeSlot(timeSlot) }}
+                          </span>
+                          <ul class="doctor-list1" v-if="configSelectedTime === timeSlot">
+                            <li>
+                              <input
+                                type="radio"
+                                class="hours_radio"
+                                v-model="configOpdcategory"
+                                :value="currentConfig.opdSubId"
+                                @change="handleconfigcategory(currentConfig.opdSubId)"
+                              />&nbsp;&nbsp;
+                              <small :class="{
+                                'text-green' : !configAppointmentNot(timeSlot),
+                                'text-red' : configAppointmentNot(timeSlot),
+                              }">
+                              {{ currentConfig.Opdcategory }}
+                              </small>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        id="consultation"
+                        class="btn btn-success bt-md btn-block"
+                        @click="proceedAppointment(configSelectedTime, currentConfig.date, currentConfig.appointment_id, currentConfig.configId, currentConfig.opdSubId)"
+                      >
+                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
+                      </button>
+
+                      <!-- <button
+                        type="button"
+                        id="consultation"
+                        class="btn bt-md btn-block"
+                        style="background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)"
+                        disabled
+                      >
+                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments are full
+                      </button> -->
                     </div>
                   </div>
-
-                  <button
-                    type="button"
-                    id="consultation"
-                    class="btn btn-success bt-md btn-block"
-                    @click="proceedAppointment(configSelectedTime, currentConfig.date, currentConfig.appointment_id, currentConfig.configId, currentConfig.opdSubId)"
-                  >
-                    <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
-                  </button>
-
-                  <!-- <button
-                    type="button"
-                    id="consultation"
-                    class="btn bt-md btn-block"
-                    style="background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)"
-                    disabled
-                  >
-                    <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments are full
-                  </button> -->
-                </div>
-              </div>
-
-              <div v-else>
-                  <div
-                    class="box-body"
-                    v-if="appointedTimes.length > 0 && showAppointmentTime && manualDate"
-                  >
-                    <div
-                      class="appointment-time-list"
-                      v-for="appointment in appointedTimes"
-                      :key="appointment.id"
-                    >
-                      <input
-                        type="radio"
-                        class="hours_radio"
-                        v-model="selectedAppointmentTime"
-                        :value="appointment.id"
-                        @change="handleAppointmentTimeChange"
-                        :disabled="
-                          areAllDoctorsNotAvailable(
-                            appointment.telemed_assigned_doctor,
-                            appointment.appointed_date,
-                            appointment.appointed_time
-                          ) || isPastDatetime(appointment.appointed_date,appointment.appointed_time)
-                        "
-                      />&nbsp;&nbsp;
-                      <span
-                        :class="{
-                          'text-green': !areAllDoctorsNotAvailable(
-                            appointment.telemed_assigned_doctor
-                          ),
-                          'text-red': areAllDoctorsNotAvailable(
-                            appointment.telemed_assigned_doctor
-                          ),
-                        }"
-                        >{{ appointment.appointed_time }} to
-                        {{ appointment.appointedTime_to }}</span
+                  <div v-else>
+                      <div
+                        class="box-body"
+                        v-if="appointedTimes.length > 0 && showAppointmentTime && manualDate"
                       >
-                      <ul
-                        v-if="appointment.id == selectedAppointmentTime"
-                        class="doctor-list"
-                        v-for="assignedDoctor in appointment.telemed_assigned_doctor"
-                        :key="assignedDoctor.id"
-                      >
-                        <li>
-                          <input
+                        <div
+                          class="appointment-time-list"
+                          v-for="appointment in appointedTimes"
+                          :key="appointment.id"
+                        >
+                          <!-- <input
                             type="radio"
                             class="hours_radio"
-                            v-model="selectedAppointmentDoctor"
-                            :value="assignedDoctor.doctor.id"
-                            @change="
-                              handleDoctorChange(assignedDoctor.doctor.id, appointment.id)
+                            v-model="selectedAppointmentTime"
+                            :value="appointment.id"
+                            @change="handleAppointmentTimeChange"
+                            :disabled="
+                              areAllDoctorsNotAvailable(
+                                appointment.telemed_assigned_doctor,
+                                appointment.appointed_date,
+                                appointment.appointed_time
+                              ) || isPastDatetime(appointment.appointed_date,appointment.appointed_time)
                             "
-                            :disabled="assignedDoctor.appointment_by"
+                          />&nbsp;&nbsp; -->
+                          <input
+                            type="radio"
+                            class="hours_radio"
+                            v-model="selectedAppointmentTime"
+                            :value="appointment.id"
+                            @change="handleAppointmentTimeChange"
                           />&nbsp;&nbsp;
-                          <small
-                            :class="{
-                              'text-green': !assignedDoctor.appointment_by,
-                              'text-red': assignedDoctor.appointment_by,
-                            }"
+                          <span
+                            class="text-green"
+                            >{{ appointment.appointed_time }} to
+                            {{ appointment.appointedTime_to }}</span
                           >
-                            {{
-                              `Dr. ${assignedDoctor.doctor.fname} ${assignedDoctor.doctor.lname}`
-                            }}
-                          </small>
-                        </li>
-                      </ul>
-                    </div>
-                    <button
-                      v-if="!areAllAppointmentFull"
-                      type="button"
-                      id="consultation"
-                      class="btn btn-success bt-md btn-block"
-                      @click="proceedAppointment"
-                    >
-                      <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
-                    </button>
-                    <button
-                      v-else
-                      type="button"
-                      id="consultation"
-                      class="btn bt-md btn-block" style="background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)"
-                      disabled
-                    >
-                      <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments
-                      are full
-                    </button>
+                          <!-- <span
+                            :class="{
+                              'text-green': !areAllDoctorsNotAvailable(
+                                appointment.telemed_assigned_doctor
+                              ),
+                              'text-red': areAllDoctorsNotAvailable(
+                                appointment.telemed_assigned_doctor
+                              ),
+                            }"
+                            >{{ appointment.appointed_time }} to
+                            {{ appointment.appointedTime_to }}</span
+                          > -->
+                          <ul
+                            v-if="appointment.id == selectedAppointmentTime"
+                            class="doctor-list"
+                            v-for="assignedDoctor in appointment.telemed_assigned_doctor"
+                            :key="assignedDoctor.id"
+                          >
+                            <li>
+                              <input
+                                type="radio"
+                                class="hours_radio"
+                                v-model="selectedAppointmentDoctor"
+                                :value="assignedDoctor.doctor.id"
+                                @change="
+                                  handleDoctorChange(assignedDoctor.doctor.id, appointment.id)
+                                "
+                                :disabled="assignedDoctor.appointment_by"
+                              />&nbsp;&nbsp;
+                              <small
+                                :class="{
+                                  'text-green': !assignedDoctor.appointment_by,
+                                  'text-red': assignedDoctor.appointment_by,
+                                }"
+                              >
+                                {{
+                                  `Dr. ${assignedDoctor.doctor.fname} ${assignedDoctor.doctor.lname}`
+                                }}
+                              </small>
+                            </li>
+                          </ul>
+                        </div>
+                        <button
+                          v-if="!areAllAppointmentFull"
+                          type="button"
+                          id="consultation"
+                          class="btn btn-success bt-md btn-block"
+                          @click="proceedAppointment"
+                        >
+                          <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
+                        </button>
+                        <button
+                          v-else
+                          type="button"
+                          id="consultation"
+                          class="btn bt-md btn-block" style="background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)"
+                          disabled
+                        >
+                          <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments
+                          are full
+                        </button>
+                      </div>
                   </div>
-              </div>
-
-
                 </div>
               </div>
             </div>

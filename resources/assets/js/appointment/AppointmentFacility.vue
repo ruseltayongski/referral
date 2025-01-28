@@ -1,7 +1,11 @@
 <template>
-  <div
+  <!-- <div
     class="col-md-4 scroll-item"
     v-if="appointment.id !== user.facility_id && shouldDisplayFacility"
+  > -->
+  <div
+    class="col-md-4 scroll-item"
+    v-if="shouldDisplayFacility"
   >
     <div
       :class="{ highlighted: appointment.id == facilitySelectedId }"
@@ -122,7 +126,6 @@ export default {
           }
         });
       }
-      console.log("count slot", count)
       return count;
     },
     shouldDisplayFacility() {
@@ -287,7 +290,6 @@ export default {
         );
       }
       const totalcount = usedCount + expiredCount;
-      console.log(`Used count: ${usedCount}, Expired count: ${expiredCount}`);
       return totalcount;
     },
   },

@@ -626,7 +626,7 @@
             Echo.join('referral_seen')
                 .listen('SocketReferralSeen', (event) => {
                     $("#count_seen"+event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
-                      console.log("Seen payload Facility Id",event.payload.referring_facility_id, "Pass to Vue Facility", this.passToVueFacility);
+                      //console.log("Seen payload Facility Id",event.payload.referring_facility_id, "Pass to Vue Facility", this.passToVueFacility);
                     if(event.payload.referring_facility_id === this.passToVueFacility || event.payload.referring_facility_id === this.user.facility_id) {
                         this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track)
                     }
