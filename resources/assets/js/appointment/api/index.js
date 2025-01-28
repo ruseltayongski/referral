@@ -15,6 +15,6 @@ export function appointmentConfigHours(params) {
 }
 
 export function appointmentConfigData(params){
-     console.log("result for", base+"/doctor/getconfigappointment", params);
+    //console.log("result for", base+"/doctor/getconfigappointment", params);
     return req.post(base+"/doctor/getconfigappointment", params);
 }

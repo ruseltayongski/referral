@@ -122,7 +122,6 @@ export default {
           }
         });
       }
-      console.log("count slot", count)
       return count;
     },
     shouldDisplayFacility() {
@@ -287,7 +286,6 @@ export default {
         );
       }
       const totalcount = usedCount + expiredCount;
-      console.log(`Used count: ${usedCount}, Expired count: ${expiredCount}`);
       return totalcount;
     },
   },
