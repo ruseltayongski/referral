@@ -11,7 +11,7 @@ export default {
       default: null,
     },
     manualDate: {
-      type: Object,
+      type: [Object, String],
     },
     configTimeSlot: {
       type: Object
@@ -104,6 +104,7 @@ export default {
       return this.configTimeSlot && Object.keys(this.configTimeSlot).length > 0;
     },
     areAllAppointmentFull() {
+      return false;
       return this.appointedTimes.every((appointment) =>
         this.areAllDoctorsNotAvailable(
           appointment.telemed_assigned_doctor,
@@ -149,9 +150,9 @@ export default {
         .toTimeString()
         .split(" ")[0]
         .substring(0, 5);
-      console.log("time", time);
+      //console.log("time", time);
       var doctor_available = doctors.every((doctor) => doctor.appointment_by);
-      console.log("doctor_available", doctor_available);
+      //console.log("doctor_available", doctor_available);
 
       if (date) {
         // Check if the date is in the past
@@ -270,7 +271,6 @@ export default {
     },
 
     configAppointmentNot(timeSlot) {
-      
       const [timeSlot_start, timeSlot_end] = timeSlot.split("-");
       const normalizedTimeSlotStart = this.normalizeTimeFormat(timeSlot_start);
       const normalizedTimeSlotEnd = this.normalizeTimeFormat(timeSlot_end);
@@ -309,10 +309,10 @@ export default {
                 </div>
                 <div class="box box-solid">
                   <div class="box-header with-border">
-                    <h3 class="box-title timeDoctor">
+                    <!-- <h3 class="box-title timeDoctor">
                       Please choose Time and OPD
                       {{currentConfig}}
-                    </h3>
+                    </h3> -->
                     <div id="date-selected"></div>
                   </div>
                 <!-- :disabled="areAllAppointmentNotAvailable()" -->
@@ -385,7 +385,7 @@ export default {
                       v-for="appointment in appointedTimes"
                       :key="appointment.id"
                     >
-                      <input
+                      <!-- <input
                         type="radio"
                         class="hours_radio"
                         v-model="selectedAppointmentTime"
@@ -398,8 +398,20 @@ export default {
                             appointment.appointed_time
                           ) || isPastDatetime(appointment.appointed_date,appointment.appointed_time)
                         "
+                      />&nbsp;&nbsp; -->
+                      <input
+                        type="radio"
+                        class="hours_radio"
+                        v-model="selectedAppointmentTime"
+                        :value="appointment.id"
+                        @change="handleAppointmentTimeChange"
                       />&nbsp;&nbsp;
                       <span
+                        class="text-green"
+                        >{{ appointment.appointed_time }} to
+                        {{ appointment.appointedTime_to }}</span
+                      >
+                      <!-- <span
                         :class="{
                           'text-green': !areAllDoctorsNotAvailable(
                             appointment.telemed_assigned_doctor
@@ -410,7 +422,7 @@ export default {
                         }"
                         >{{ appointment.appointed_time }} to
                         {{ appointment.appointedTime_to }}</span
-                      >
+                      > -->
                       <ul
                         v-if="appointment.id == selectedAppointmentTime"
                         class="doctor-list"
