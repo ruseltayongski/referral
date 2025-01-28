@@ -395,7 +395,6 @@ class PatientCtrl extends Controller
 
     public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '')
     {
-
         $subOPD_Id = (int) $req->opdSubId;
         $match = array(
             'code' => $code
@@ -416,6 +415,7 @@ class PatientCtrl extends Controller
             'walkin' => 'no',
             'telemedicine' => $req->telemedicine,
             'subopd_id' => $subOPD_Id,
+            'appointmentId' => $req->appointmentId
         );
 
         if ($status == 'walkin') {
@@ -486,7 +486,6 @@ class PatientCtrl extends Controller
         if ($req->telemedicine) {
 
             if($req->configId){
-                
                 $configTimeSlot = new TelemedAssignDoctor();
                 $facility_id = $req->facility_id;
                 $configTimeSlot->appointment_id = $req->appointmentId;
@@ -496,17 +495,19 @@ class PatientCtrl extends Controller
                 $configTimeSlot->save();
 
                 $asigned_doctorId = $configTimeSlot->id;
-            }else{
-                
-                $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
-                if ($telemedAssignDoctor->appointment_by) {
+            } else {
+                $check_appointment_slot = AppointmentSchedule::find($req->appointmentId)->slot;
+                $check_tracking_slot = Tracking::where('appointmentId', $req->appointmentId)->count();
+                if($check_tracking_slot >= $check_appointment_slot) {
                     return 'consultation_rejected';
                 }
-                $telemedAssignDoctor->appointment_by = $user->id;
-                $telemedAssignDoctor->save();
+                // $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
+                // if ($telemedAssignDoctor->appointment_by) {
+                //     return 'consultation_rejected';
+                // }
+                // $telemedAssignDoctor->appointment_by = $user->id;
+                // $telemedAssignDoctor->save();
             }
-
-           
         }
 
         $patient_id = $req->patient_id;

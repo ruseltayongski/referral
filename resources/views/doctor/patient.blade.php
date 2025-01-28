@@ -984,7 +984,7 @@ $counter = 0;
                     $('#pregnantModal').modal('hide');
                     $('#normalFormModal').modal('hide');
                     Lobibox.alert("error", {
-                        msg: "This appoinment schedule is not available, please select other schedule in the calendar."
+                        msg: "This appointment schedule is not available because it is fully booked. Please select another schedule from the calendar."
                     });
                     return;
                 }

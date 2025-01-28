@@ -28,12 +28,10 @@ class TelemedicineCtrl extends Controller
 
     public function manageAppointment(Request $req)
     {
-        $facility = Session::get('auth')->facility_id;
-        
+        $user = Session::get('auth');
+        $facility = $user->facility_id;
         $config_sched = Cofig_schedule::select('id','department_id','facility_id','subopd_id','created_by','description','category','days','time')->get();
-
         $appointmentstatus = $req->input('filterappointment', '');
-
         $query = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
@@ -55,7 +53,7 @@ class TelemedicineCtrl extends Controller
                     );
                 },
                 'telemedAssignedDoctor' => function ($query) {
-                    $query->with(['doctor' => function ($query) {
+                $query->with(['doctor' => function ($query) {
                         $query->select(
                             'id',
                             'fname',
@@ -65,6 +63,7 @@ class TelemedicineCtrl extends Controller
                 },
                 'subOpd'
             ])
+            ->where('opdCategory', $user->subopd_id)
             ->where('facility_id',$facility);
 
         if ($appointmentstatus === 'config') {
@@ -405,7 +404,7 @@ class TelemedicineCtrl extends Controller
                 $appointment_schedule->opdCategory = $request->subopd_id;
                 // $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
                 // $appointment_schedule->status = "manual";
-                //$appointment_schedule->slot = $request->slot.$i;
+                $appointment_schedule->slot = $request->slot;
                 $appointment_schedule->created_by = $user->id;
                 $appointment_schedule->save();
     

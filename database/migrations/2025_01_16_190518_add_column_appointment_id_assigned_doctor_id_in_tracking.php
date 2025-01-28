@@ -16,7 +16,6 @@ class AddColumnAppointmentIdAssignedDoctorIdInTracking extends Migration
         Schema::table('tracking', function (Blueprint $table) {
             //
             $table->integer('appointmentId')->after('department_id')->nullable();
-            $table->integer('asignedDoctorId')->after('appointmentId')->nullable();
         });
     }
 
@@ -30,7 +29,6 @@ class AddColumnAppointmentIdAssignedDoctorIdInTracking extends Migration
         Schema::table('tracking', function (Blueprint $table) {
             //
             $table->dropColumn('appointmentId');
-            $table->dropColumn('asignedDoctorId');
         });
     }
 }
