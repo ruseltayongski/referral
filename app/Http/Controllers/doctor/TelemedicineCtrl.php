@@ -62,27 +62,29 @@ class TelemedicineCtrl extends Controller
                             'lname'
                         );
                     }]);
-                }
+                },
+                'subOpd'
             ])
             ->where('facility_id',$facility);
 
-            if ($appointmentstatus === 'config') {
-                $query->where('status', 'config'); 
-            } elseif ($appointmentstatus === 'manual') {
-                $query->where('status', 'manual');
-            }
+        if ($appointmentstatus === 'config') {
+            $query->where('status', 'config'); 
+        } elseif ($appointmentstatus === 'manual') {
+            $query->where('status', 'manual');
+        }
 
-            $appointment_schedule = $query->orderBy('created_at', 'desc')
-                ->where('status', $appointmentstatus)
-                ->paginate(20);
+        $appointment_schedule = $query->orderBy('created_at', 'desc')
+            //->where('status', $appointmentstatus)
+            ->paginate(20);
 
-            $user_facility = User::where('department_id',5)
-            ->where('level','doctor')
-            ->where('facility_id',$facility)
-            ->with('facility')
-            ->groupBy('facility_id')
-            ->get();
-           
+        $user_facility = User::where('department_id',5)
+        ->where('level','doctor')
+        ->where('facility_id',$facility)
+        ->with('facility')
+        ->groupBy('facility_id')
+        ->get();
+        
+        
         $data = [
             'appointment_schedule' => $appointment_schedule,
             'facility' => $user_facility,
@@ -92,6 +94,7 @@ class TelemedicineCtrl extends Controller
             'configs' => $config_sched,
             'appointment_filter' => $appointmentstatus
         ];
+
         return view('doctor.manage_appointment', $data);
     }
 
@@ -386,13 +389,12 @@ class TelemedicineCtrl extends Controller
              
             Session::put('appointment_save',true);
             return redirect()->to('manage/appointment?filterappointment=config'); 
-        }else{
-
+        } else {
             for($i=1; $i<=$request->appointment_count; $i++) {
 
-                if (empty($request['add_appointed_time'.$i]) || empty($request['add_appointed_time_to'.$i]) || empty($request->add_opdCategory.$i) || empty($request['add_available_doctor'.$i])) {
-                    continue;
-                }
+                // if (empty($request['add_appointed_time'.$i]) || empty($request['add_appointed_time_to'.$i]) || empty($request->add_opdCategory.$i) || empty($request['add_available_doctor'.$i])) {
+                //     continue;
+                // }
     
                 $appointment_schedule = new AppointmentSchedule();
                 $appointment_schedule->appointed_date = $request->appointed_date;
@@ -400,24 +402,24 @@ class TelemedicineCtrl extends Controller
                 $appointment_schedule->department_id = 5;
                 $appointment_schedule->appointed_time = $request['add_appointed_time'.$i];
                 $appointment_schedule->appointedTime_to = $request['add_appointed_time_to'.$i];
-                $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
-                $appointment_schedule->status = "manual";
+                $appointment_schedule->opdCategory = $request->subopd_id;
+                // $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
+                // $appointment_schedule->status = "manual";
                 //$appointment_schedule->slot = $request->slot.$i;
                 $appointment_schedule->created_by = $user->id;
                 $appointment_schedule->save();
     
-                for($x=0; $x<count($request['add_available_doctor'.$i]); $x++) {
-                    $tele_assign_doctor = new TelemedAssignDoctor();
-                    $tele_assign_doctor->appointment_id = $appointment_schedule->id;
-                    $tele_assign_doctor->doctor_id = $request['add_available_doctor'.$i][$x];
-                    $tele_assign_doctor->created_by = $user->id;
-                    $tele_assign_doctor->save();
-                }
+                // for($x=0; $x<count($request['add_available_doctor'.$i]); $x++) {
+                //     $tele_assign_doctor = new TelemedAssignDoctor();
+                //     $tele_assign_doctor->appointment_id = $appointment_schedule->id;
+                //     $tele_assign_doctor->doctor_id = $request['add_available_doctor'.$i][$x];
+                //     $tele_assign_doctor->created_by = $user->id;
+                //     $tele_assign_doctor->save();
+                // }
             }
     
             Session::put('appointment_save',true);
-            return redirect()->to('manage/appointment?filterappointment=manual'); 
-
+            return redirect()->to('manage/appointment'); 
         }
 
     }

@@ -29,5 +29,8 @@ class AppointmentSchedule extends Model
         return $this->belongsTo(Cofig_schedule::class, 'configId', 'id');
     }
 
+    public function subOpd(){
+        return $this->belongsTo(subOpd::class, 'opdCategory', 'id');
+    }
    
 }
