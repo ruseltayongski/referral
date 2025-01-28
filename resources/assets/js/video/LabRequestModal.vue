@@ -98,7 +98,7 @@
                         <div class="form-check laboratory-check" v-for="(laboratoryDescription, laboratoryCode) in laboratories" :key="laboratoryCode" >
                             <input class="form-check-input" type="checkbox" v-model="checkedLaboratories" :value="laboratoryCode">
                             <label class="form-check-label" for="checkbox1">
-                                {{ `${laboratoryCode} - ${laboratoryDescription}` }}
+                                {{ `${laboratoryDescription}` }}
                             </label>
                         </div>
                     </div>

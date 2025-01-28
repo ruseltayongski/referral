@@ -41,6 +41,8 @@
 
 <?php
 use App\Facility;
+$subOpd = App\SubOpd::get();
+
 ?>
 
     <div class="box box-primary">
@@ -94,7 +96,7 @@ use App\Facility;
                             <tr style="font-size: 12px">
                                 <td>{{$schedule->description}}</td>
                                 <td>  
-                                    {{$schedule->deparment_subcategory}}
+                                    {{$schedule->subopd_id}}
                                 </td>
                                 <td>{{ $facility->name }}</td>
                                 <td>{{ $schedule->category }}</td>
@@ -198,8 +200,8 @@ use App\Facility;
                                                                     <option value="{{$dept->id}}" @if($dept->id === $schedule->department_id) selected @endif>{{$dept->description}}</option>
                                                                 @endforeach
                                                                 </select> -->
-                                                                <input type="text" class="form-control" value="{{$schedule->deparment_subcategory}}" disabled>
-                                                                <input type="hidden" class="form-control" name="delete_department_id" value="{{$schedule->deparment_subcategory}}">
+                                                                <input type="text" class="form-control" value="{{$schedule->subopd_id}}" disabled>
+                                                                <input type="hidden" class="form-control" name="delete_department_id" value="{{$schedule->subopd_id}}">
 
                                                                 <label for="defaultCategory">Default Category:</label>
                                                                 <select class="form-control select2" id="defaultCategory" name="delete_default_category" required disabled>
@@ -334,28 +336,11 @@ use App\Facility;
                                         <input type="hidden" name="department_id" id="" value="5">
 
                                         <label for="add_opdCategory">Opd Category:</label>
-                                        <select class="form-control select2" id="editdepartment_config" name="department_subcategory" required>
+                                        <select class="form-control select2" id="editdepartment_config" name="subopd_id" required>
                                             <option selected value="">Select Opd Category</option>
-                                            <option value="Family Medicine">Family Medicine</option>
-                                            <option value="Internal Medicine">Internal Medicine</option>
-                                            <option value="General Surgery">General Surgery</option>
-                                            <option value="Trauma Care">Trauma Care</option>
-                                            <option value="Burn Care">Burn Care</option>
-                                            <option value="Ophthalmology">Ophthalmology</option>
-                                            <option value="ENT">ENT</option>
-                                            <option value="Neurology">Neurology</option>
-                                            <option value="Urosurgery">Urosurgery</option>
-                                            <option value="Toxicology">Toxicology</option>
-                                            <option value="OB-GYNE">OB-GYNE</option>
-                                            <option value="Pediatric">Pediatric</option>      
-                                            <option value="Oncology">Oncology</option>      
-                                            <option value="Nephrology">Nephrology</option>      
-                                            <option value="Dermatology">Dermatology</option>       
-                                            <option value="Surgery">Surgery</option>   
-                                            <option value="Geriatics Medicine">Geriatics Medicine</option>          
-                                            <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
-                                            <option value="Orthopedics">Orthopedics</option>   
-                                            <option value="Cardiology">Cardiology</option>              
+                                            @foreach($subOpd as $sub)
+                                                <option value="{{$sub->id}}">{{ $sub->description}}</option>
+                                            @endforeach              
                                         </select>
 
                                         <label for="defaultCategory">Default Category:</label>
@@ -594,30 +579,13 @@ use App\Facility;
                                     <input type="text" class="form-control" name="configdesc" id="Configdesc" required>
                                     <input type="hidden" name="department_id" id="" value="5">                          
                                     <label for="add_opdCategory">OPD Category:</label>
-                                    <select class="form-control select2" id="add_department" name="department_subcategory" required>
+                                    <select class="form-control select2" id="add_department" name="subOpd_id" required>
                                         <option selected value="">Select OPD Category</option>
-                                        <option value="Family Medicine">Family Medicine</option>
-                                        <option value="Internal Medicine">Internal Medicine</option>
-                                        <option value="General Surgery">General Surgery</option>
-                                        <option value="Trauma Care">Trauma Care</option>
-                                        <option value="Burn Care">Burn Care</option>
-                                        <option value="Ophthalmology">Ophthalmology</option>
-                                        <option value="ENT">ENT</option>
-                                        <option value="Neurology">Neurology</option>
-                                        <option value="Urosurgery">Urosurgery</option>
-                                        <option value="Toxicology">Toxicology</option>
-                                        <option value="OB-GYNE">OB-GYNE</option>
-                                        <option value="Pediatric">Pediatric</option>      
-                                        <option value="Oncology">Oncology</option>      
-                                        <option value="Nephrology">Nephrology</option>      
-                                        <option value="Dermatology">Dermatology</option>       
-                                        <option value="Surgery">Surgery</option>   
-                                        <option value="Geriatics Medicine">Geriatics Medicine</option>          
-                                        <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
-                                        <option value="Orthopedics">Orthopedics</option>   
-                                        <option value="Cardiology">Cardiology</option>             
-                                    </select>
-
+                                        @foreach($subOpd as $sub)
+                                            <option value="{{$sub->id}}">{{ $sub->description}}</option>
+                                        @endforeach 
+                                    </select>                                
+                                 
                                     <label for="defaultCategory">Default Category:</label>
                                     <select class="form-control select2" id="defaultCategory" name="default_category" required>
                                         <option selected value="">Select Default Category</option>
@@ -947,14 +915,14 @@ $(document).ready(function() {
             url: `get-config/${configId}`,
             method: 'GET',
             success: function(res) {
-                console.log("res.deparment_subcategory::", res.deparment_subcategory);
+                console.log("res.deparment_subcategory::", res.subOpdId);
                 const days = res.days;
                 const times = res.times;
                 const category = res.category.trim();
                 // console.log('days', days, 'times', times, 'res.category', res.category);
                 console.log(`category value: ${category}`);
                 $('#Config_desc').val(res.descript);
-                $('#editdepartment_config').val(res.deparment_subcategory).trigger('change');
+                $('#editdepartment_config').val(res.subOpdId).trigger('change');
                 $('#edit_default_Category').val(category).trigger('change');
                 $('#update-config_id').val(res.configId)
 

@@ -141,11 +141,18 @@
 
                         if($user->department_id > 0)
                             $dept_desc = ' / ' . \App\Department::find($user->department_id)->description;
-
+                            $opdSub = ' / ' . \App\SubOpd::find($user->subopd_id)->description;
                     ?>
-                    <span class="text-orange">
-                        Welcome, </span> <span style="color: white">{{ $t }} {{ $user->fname }} {{ $user->lname }}
-                        @if(!$multiple_login) {{ $dept_desc }} @endif
+                     <span class="text-orange">
+                        Welcome, </span> <span style="color: white">
+                        @if($user->department_id === 5)
+                            {{ $t }} {{ $user->fname }} {{ $user->lname }}
+                            @if(!$multiple_login) {{ $dept_desc }} {{$opdSub}} @endif
+                        @else
+                            {{ $t }} {{ $user->fname }} {{ $user->lname }}
+                            @if(!$multiple_login) {{ $dept_desc }} @endif
+                        @endif
+                       
                     </span>
                 </div>
             </div>

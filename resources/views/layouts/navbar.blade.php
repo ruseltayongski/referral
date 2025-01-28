@@ -89,7 +89,8 @@ $multi_faci = Session::get('multiple_login');
                     <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{{ url('admin/report/top/icd?telemedicine=1') }}" data-toggle="modal"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
+                        <!-- <li><a href="{{ url('admin/report/top/icd?telemedicine=1') }}" data-toggle="modal"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li> -->
+                        <li><a href="{{ url('count/Consultation') }}" data-toggle="modal"><i class="fa fa-odnoklassniki-square"></i>Top ICD-10 Diagnosis</a></li>
                         <li><a href="#" data-toggle="modal"><i class="fa fa-pencil"></i> Report 2</a></li>
                         <li><a href="#" data-toggle="modal"><i class="fa fa-key"></i> Report 3</a></li>
                     </ul>

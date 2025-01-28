@@ -177,6 +177,7 @@ export default {
     },
     proceedAppointment(configtime,configDate,appointmentId,configId,opdSubcateg) {
       console.log("selected time::", configtime,configDate,appointmentId,configId,opdSubcateg);
+ 
       if ((!configId && !this.selectedAppointmentTime) || (configId && !configtime)) {
         Lobibox.alert("error", {
           msg: "Please Select Time",
@@ -216,7 +217,8 @@ export default {
               appointmentId: appointmentId,
               config_id: configId,
               configDate: configDate,
-              configtime: configtime
+              configtime: configtime,
+              subOpdId: opdSubcateg,
             };
             this.$emit("proceed-appointment", appointment);
         }else{
@@ -309,6 +311,7 @@ export default {
                   <div class="box-header with-border">
                     <h3 class="box-title timeDoctor">
                       Please choose Time and OPD
+                      {{currentConfig}}
                     </h3>
                     <div id="date-selected"></div>
                   </div>
@@ -337,8 +340,8 @@ export default {
                             type="radio"
                             class="hours_radio"
                             v-model="configOpdcategory"
-                            :value="currentConfig.Opdcategory"
-                            @change="handleconfigcategory(currentConfig.Opdcategory)"
+                            :value="currentConfig.opdSubId"
+                            @change="handleconfigcategory(currentConfig.opdSubId)"
                           />&nbsp;&nbsp;
                           <small :class="{
                             'text-green' : !configAppointmentNot(timeSlot),
@@ -355,7 +358,7 @@ export default {
                     type="button"
                     id="consultation"
                     class="btn btn-success bt-md btn-block"
-                    @click="proceedAppointment(configSelectedTime, currentConfig.date, currentConfig.appointment_id, currentConfig.configId, configOpdcategory)"
+                    @click="proceedAppointment(configSelectedTime, currentConfig.date, currentConfig.appointment_id, currentConfig.configId, currentConfig.opdSubId)"
                   >
                     <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
                   </button>

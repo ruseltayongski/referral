@@ -1,5 +1,16 @@
 <?php $user = Session::get('auth'); ?>
-<script>
+<script>    
+$('#deparment_select').on('change', function () {
+    const selectedDepartment = parseInt($(this).val());
+
+    if(selectedDepartment === 5){
+        $('#subOpdSection').show();
+    }else{
+        $('#subOpdSection').hide();
+    }
+    
+});
+
 var proceed,user_id,user_info;
 $('#addUserForm').on('submit',function(e){
     proceed = 0;
@@ -89,6 +100,9 @@ $('#updateUserForm').on('submit',function(e){
                     url:  "{{ url('support/users/update') }}",
                     type: "POST",
                     success: function(data){
+
+                        console.log("data for users:", data);
+
                         setTimeout(function(){
                             window.location.reload(false);
                         },500);
@@ -106,6 +120,33 @@ $('#updateUserForm').on('submit',function(e){
     });
 });
 
+$(document).ready(function () {
+
+    const departmentSelect = $('#editdeparment_select');
+    const subOpdSection = $('#editsubOpdSection');
+    const subOpdSelect = $('#editsubOpdSelect');
+
+    function handleDepartmentselect(){
+
+        const selectedDepartment  = parseInt(departmentSelect.val());
+
+        if(selectedDepartment === 5){
+            subOpdSection.show();
+        }else{
+            subOpdSection.hide();
+            subOpdSelect.val('');
+        }
+    }
+
+    $("#updateUserModal").on('shown.bs.modal', function () {
+        handleDepartmentselect();
+    });
+
+    departmentSelect.on('change', function () {
+        handleDepartmentselect();
+    });
+});
+
 $('a[href="#addUserModal"]').on('click',function(){
     $('.btn-add').removeClass('hide');
     $('.btn-update').addClass('hide');
@@ -119,6 +160,7 @@ $('.update_info').on('click',function(){
         success: function(data)
         {
             user_info = data;
+            console.log("user_info", data);
             updateProfile();
         },
         error: function(){
@@ -139,5 +181,6 @@ function updateProfile() {
     $('.username').val(user_info.username);
     $('.status').val(user_info.status);
     $('.level').val(user_info.level);
+    $('#editsubOpdSelect').val(user_info.subopd_id);
 }
 </script>

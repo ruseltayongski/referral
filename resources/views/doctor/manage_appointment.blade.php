@@ -126,8 +126,11 @@
         $department_id = $user->department_id;
         $department = null;
 
+        $getSubOpd = \App\SubOpd::find($user->subopd_id);
+    
         $Getdepartment = \App\Department::select('id','description')->get();   
         $config_sched_data =  \App\Cofig_schedule::get(); 
+        $subOpd = \App\SubOpd::get();
 
         foreach ($Getdepartment as $row) {
             if($user->department_id === $row->id){
@@ -1684,7 +1687,6 @@ function deleteTimeInput(appointment){
     
     let currentCount = $(".appointment_count").val();
     $(".appointment_count").val(++currentCount);
-    console.log("welcome Appointment:", appointment);
     var appointments = appointment ? appointment : '';
     var doctor = appointment.telemed_assigned_doctor;
     var timeInputGroup = $('<div class="time-input-group">');

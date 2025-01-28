@@ -6,13 +6,13 @@
       v-if="isVisible"
       class="modal fade show"
       role="dialog"
-      style="display: block; background-color: rgba(0, 0, 0, 0.5)"
+      style="display: block; background-color: rgba(0, 0, 0, 0.5);"
     >
       <div class="modal-dialog modal-md" id="feedbackModal">
         <div class="modal-content">
           <div class="box box-success direct-chat direct-chat-primary">
             <div class="box-header with-border d-flex align-items-center justify-content-between">
-              <h5 class="box-title">{{ code }}</h5>
+              <h5 class="box-title" style="margin-left:10px; font-size:18px; font-weight:500;">{{ code }}</h5>
               <button
                 type="button"
                 class="btn btn-box-tool"
@@ -32,31 +32,32 @@
                   :key="index"
                   :class="{
                     'chat-message': true,
-                    'chat-sender': message.senderId === userId,
-                    'chat-receiver': message.senderId !== userId,
+                    'chat-sender': message.sender === userId,
+                    'chat-receiver': message.sender !== userId,
                   }"
                 >
+               
                   <div class="chat-avatar">
                     <img
-                      :src="message.senderId === userId
+                      :src="message.sender === userId
                         ? (message.senderImage || getImagePath('sender.png'))
                         : (message.senderImage || getImagePath('receiver.png'))"
                       alt="User Image"
                     />
                   </div>
                   <div class="chat-content">
-                    <div class="chat-meta">
+                    <div class="chat-meta" style="margin-left:10px;">
                       <span class="facility">{{ message.facility }}</span>
                       <span class="name">
                         {{ message.fname }} {{ message.lname }}
                       </span>
-                      <span class="timestamp">{{ message.date }}</span>
+                      <!-- <span class="timestamp">{{ message.date }}</span> -->
                     </div>
                     <div
                       class="chat-bubble"
                       :class="{
-                        'bubble-sender': message.senderId === userId,
-                        'bubble-receiver': message.senderId !== userId,
+                        'bubble-sender': message.sender === userId,
+                        'bubble-receiver': message.sender !== userId,
                       }"
                     >
                       {{ message.message }}
@@ -70,10 +71,11 @@
                 v-model="newMessage"
                 class="form-control"
                 placeholder="Type a message..."
+                @keyup.enter="sendMessage"
               ></textarea>
-              <button class="btn btn-success btn-lg" @click="sendMessage">
+              <!-- <button class="btn btn-success btn-sm" @click="sendMessage">
                 Send
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
