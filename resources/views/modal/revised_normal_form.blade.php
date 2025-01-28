@@ -2393,44 +2393,37 @@
 
 
 <script>
+    // // Helper function to toggle collapsible sections
+    // function toggleCollapse(sectionId, buttonSelector) {
+    //     const collapseSection = document.getElementById(sectionId);
+    //     const toggleButton = document.querySelector(buttonSelector);
 
-    // document.addEventListener("DOMContentLoaded", function () {
-    //      // Uncollapse the REASON FOR REFERRAL section
-    //      const referralCollapse = document.getElementById("collapse_reason_referral_normal");
-    //      const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normal']");
-    //     if (referralCollapse && referralButton) {
-    //         referralCollapse.classList.add("show");
-    //         referralButton.setAttribute("aria-expanded", "true");
+    //     if (collapseSection && toggleButton) {
+    //         // Initially uncollapse the section
+    //         collapseSection.classList.add("show");
+    //         toggleButton.setAttribute("aria-expanded", "true");
+
+    //         // Add click event to toggle collapse state
+    //         toggleButton.addEventListener("click", (event) => {
+    //             event.preventDefault(); // Prevent default anchor behavior (if any)
+    //             const isExpanded = collapseSection.classList.contains("show");
+
+    //             // Toggle the 'show' class
+    //             collapseSection.classList.toggle("show");
+    //             toggleButton.setAttribute("aria-expanded", String(!isExpanded));
+    //         });
+    //     } else {
+    //         console.warn(`Section or button not found for: ${sectionId}`);
     //     }
+    // }
 
-    //     // Uncollapse the HISTORY OF PRESENT ILLNESS section
-    //     const illnessCollapse = document.getElementById("collapse_illness_history_normal");
-    //     const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normal']");
-    //     if (illnessCollapse && illnessButton) {
-    //         illnessCollapse.classList.add("show");
-    //         illnessButton.setAttribute("aria-expanded", "true");
-    //     }
+    // // Uncollapse and allow toggling for required sections
+    // toggleCollapse("collapse_reason_referral_normal", "[data-target='#collapse_reason_referral_normal']");
+    // toggleCollapse("collapse_illness_history_normal", "[data-target='#collapse_illness_history_normal']");
+    // toggleCollapse("collapse_diagnosis_normal", "[data-target='#collapse_diagnosis_normal']");
 
-    //     // Uncollapse the DIAGNOSIS section
-    //     const diagnosisCollapse = document.getElementById("collapse_diagnosis_normal");
-    //     const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normal']");
-    //     if (diagnosisCollapse && diagnosisButton) {
-    //         diagnosisCollapse.classList.add("show");
-    //         diagnosisButton.setAttribute("aria-expanded", "true");
-    //     }
-    // });
 
-    // $("#revisednormalFormModal").modal("show");
-
-    //    $('#pedia_show').hide();
-    //    $('#menarche_show').hide();
-    //
-    //    var pt_age = parseInt($('.pt_age').val(), 10);
-    //    if(pt_age > 18)
-    //        $('#pedia_show').show();
-    //    if($('.patient_sex').val() === "Female")
-    //        $('#menarche_show').show();
-
+    
     $('#clear_icd_revised, #clear_notes_revised, #clear_other_diag_revised, #icd_selected_revised').hide();
     $("#sbmitBtnNormal").on('click', function(e) {
         if (!($("#icd").val()) && !($("#other_diag").val())) {
@@ -2438,14 +2431,6 @@
                 msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
-        }
-    });
-
-    document.getElementById("sbmitBtnNormal").addEventListener("click", function(event) {
-        event.preventDefault();
-        const modalElement = document.getElementById("revisednormalFormModal");
-        if (modalElement) {
-            modalElement.style.paddingRight = "17px";
         }
     });
 
@@ -2466,6 +2451,10 @@
                 '                                <br />\n' +
                 '                                <textarea class="form-control add_notes_diagnosis_revised" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         }, 500);
+    }
+    function clearOtherDiagnosisRevised() {
+        $("#others_diagnosis_revised").html("");
+        $("#clear_other_diag_revised").hide();
     }
 
     function getAllCheckBoxRevised() {
@@ -3425,5 +3414,4 @@
         }
         $('#normal_remove_files').hide();
     });
-
     </script>

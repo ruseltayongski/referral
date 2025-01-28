@@ -486,7 +486,7 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normInfo" aria-expanded="false" aria-controls="collapse_illness_history_normInfo">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_normInfo" aria-expanded="false" aria-controls="collapse_illness_history_normInfo">
                                         <b>HISTORY OF PRESENT ILLNESS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -503,7 +503,7 @@ $facilities = \App\Facility::select('id','name')
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normInfo" aria-expanded="false" aria-controls="collapse_diagnosis_normInfo">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_normInfo" aria-expanded="false" aria-controls="collapse_diagnosis_normInfo">
                                         <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2604,9 +2604,8 @@ $facilities = \App\Facility::select('id','name')
                           
                         </div>
                         <div class="row" style="margin: 5px;">
-                           
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed unclickable" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normInfo" aria-expanded="false" aria-controls="collapse_reason_referral_normInfo">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_normInfo" aria-expanded="false" aria-controls="collapse_reason_referral_normInfo">
                                         <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
@@ -2623,8 +2622,7 @@ $facilities = \App\Facility::select('id','name')
                                         </select><br><br>
                                         <div id="other_reason_referral"></div>
                                     </div>
-                                </div>
-                                                    
+                                </div>                          
                         </div>
                         <div class="form-fotter pull-right" style="margin: 10px;">
                         <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
@@ -2676,35 +2674,35 @@ $facilities = \App\Facility::select('id','name')
 
 <script>
 
-    // Uncollapse the REASON FOR REFERRAL section
-    const referralCollapse = document.getElementById("collapse_reason_referral_normInfo");
-    const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normInfo']");
-    if (referralCollapse && referralButton) {
-        referralCollapse.classList.add("show");
-        referralButton.setAttribute("aria-expanded", "true");
-    } else {
-        console.warn("Reason for Referral section or button not found.");
-    }
+    // // Uncollapse the REASON FOR REFERRAL section
+    // const referralCollapse = document.getElementById("collapse_reason_referral_normInfo");
+    // const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normInfo']");
+    // if (referralCollapse && referralButton) {
+    //     referralCollapse.classList.add("show");
+    //     referralButton.setAttribute("aria-expanded", "true");
+    // } else {
+    //     console.warn("Reason for Referral section or button not found.");
+    // }
 
-    // Uncollapse the HISTORY OF PRESENT ILLNESS section
-    const illnessCollapse = document.getElementById("collapse_illness_history_normInfo");
-    const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normInfo']");
-    if (illnessCollapse && illnessButton) {
-        illnessCollapse.classList.add("show");
-        illnessButton.setAttribute("aria-expanded", "true");
-    } else {
-        console.warn("History of Present Illness section or button not found.");
-    }
+    // // Uncollapse the HISTORY OF PRESENT ILLNESS section
+    // const illnessCollapse = document.getElementById("collapse_illness_history_normInfo");
+    // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normInfo']");
+    // if (illnessCollapse && illnessButton) {
+    //     illnessCollapse.classList.add("show");
+    //     illnessButton.setAttribute("aria-expanded", "true");
+    // } else {
+    //     console.warn("History of Present Illness section or button not found.");
+    // }
 
-    // Uncollapse the DIAGNOSIS section
-    const diagnosisCollapse = document.getElementById("collapse_diagnosis_normInfo");
-    const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normInfo']");
-    if (diagnosisCollapse && diagnosisButton) {
-        diagnosisCollapse.classList.add("show");
-        diagnosisButton.setAttribute("aria-expanded", "true");
-    } else {
-        console.warn("Diagnosis section or button not found.");
-    }
+    // // Uncollapse the DIAGNOSIS section
+    // const diagnosisCollapse = document.getElementById("collapse_diagnosis_normInfo");
+    // const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normInfo']");
+    // if (diagnosisCollapse && diagnosisButton) {
+    //     diagnosisCollapse.classList.add("show");
+    //     diagnosisButton.setAttribute("aria-expanded", "true");
+    // } else {
+    //     console.warn("Diagnosis section or button not found.");
+    // }
 
 
     // $('.select_facility').select2();

@@ -505,7 +505,7 @@
             setTimeout(function(){
                 $("#other_reason_referral_pregnant").html('<small class="text-success">OTHER REASON FOR REFERRAL:</small> <span class="text-red">*</span>\n' +
                     '                                <br />\n' +
-                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" required></textarea>')
             },500);
             $("#other_reason_referral_pregnant").show();
         }else{

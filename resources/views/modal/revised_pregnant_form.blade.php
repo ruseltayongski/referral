@@ -48,11 +48,11 @@
 
 <div class="modal fade" role="dialog" id="revisedpregnantFormModal">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
+        <div class="modal-content" style="background-color: red;">
             <form action="{{url('submit-referral/pregnant')}}" method="POST" class="form-submit revised_pregnant_form">
-                <div class="jim-content">
+                <div class="jim-content" style="background-color: blue;">
                     @include('include.header_form')
-                    <div class="form-group-sm form-inline">
+                    <div class="form-group-sm form-inline" style="background-color: green;">
                         
                         {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
@@ -2082,34 +2082,32 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
-                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text=red">*</span>
+                                        <b>REASON FOR REFERRAL</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span>
-                                            <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required>
-                                                <option value="">Select reason for referral</option>
-                                                <option value="-1">Other reason for referral</option>
-                                                @foreach($reason_for_referral as $reason_referral)
-                                                    <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
-                                                @endforeach
-                                            </select>
+                                    <i>Select reason for referral:</i>
+                                    <div class="container-referral">
+                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                            <option value="">Select reason for referral</option>
+                                            <option value="-1">Other reason for referral</option>
+                                            @foreach($reason_for_referral as $reason_referral)
+                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            @endforeach
+                                        </select><br><br>
+                                        <div id="pregnant_other_reason_referral_div" style="display:none;">
+                                            <span>Other Reason for Referral:</span> <br/>
+                                            <textarea class="form-control" name="other_reason_referral" style="width: 100%;"></textarea>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div id="other_reason_referral_pregnant"></div>
-                                        </div>
-                                    </div>
-                                </div> <!-- /.collapse-content blue -->
+                                </div>
                             </div>
                         </div>
+
                         <hr />                                  
                     </div>   <!-- /.form-content blue -->
                     <table class="table table-striped col-sm-6"></table>
@@ -2275,7 +2273,7 @@
         setTimeout(function(){
             $("#add_notes_diagnosis_pregnant_revised").html('<small class="text-success">ADD NOTES IN DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea class="form-control add_notes_diagnosis" name="notes_diagnosis" style="resize: none;width: 100%;" required></textarea>')
         },500);
     }
 
@@ -3059,7 +3057,7 @@
     /**************************************************************************/
 
     $("#sbmitBtnPregnantRevised").on('click',function(e){
-        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val()) && !($("#reason_referral1").val())){
+        if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
             });
@@ -3068,29 +3066,26 @@
     });
 
     //John
-    document.getElementById("sbmitBtnPregnantRevised").addEventListener("click", function(event) {
-        event.preventDefault();
-        const modalElement = document.getElementById("revisedpregnantFormModal");
-        if (modalElement) {
-            modalElement.style.paddingRight = "17px";
-        }
-    });
+    // document.getElementById("sbmitBtnPregnantRevised").addEventListener("click", function(event) {
+    //     event.preventDefault();
+    //     const modalElement = document.getElementById("revisedpregnantFormModal");
+    //     if (modalElement) {
+    //         modalElement.style.paddingRight = "17px";
+    //     }
+    // });
 
-
-    $(document).ready(function() {
-        $('.reason_referral').on('change', function() {
+     $('.reason_referral').on('change', function() {
             var value = $(this).val();
             
             if (value == -1) {
-                // Show the "Other Reason for Referral" textarea and set it as required
+                // Show the "Other Reason for Referral" textarea if "-1" is selected
+                console.log("VALUE: ", value);
                 $('#pregnant_other_reason_referral_div').show();
-                $('textarea[name="other_reason_referral"]').prop('required', true);
             } else {
-                // Hide the "Other Reason for Referral" textarea and remove the required attribute
+                // Hide the "Other Reason for Referral" textarea if another option is selected
+                console.log("VALUE: ", value);  
                 $('#pregnant_other_reason_referral_div').hide();
-                $('textarea[name="other_reason_referral"]').prop('required', false);
             }
         });
-    });
 
 </script>
