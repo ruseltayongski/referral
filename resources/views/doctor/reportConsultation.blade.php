@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-md-3">
                     <h4>Total Departments</h4>
-                    <p>15 Departments</p>
+                    <p>{{ $countDepartment }}</p>
                 </div>
                 <div class="col-md-3">
                     <h4>Total Patients</h4>

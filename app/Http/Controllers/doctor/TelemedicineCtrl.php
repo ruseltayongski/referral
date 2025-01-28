@@ -820,9 +820,11 @@ class TelemedicineCtrl extends Controller
 
     public function countconsultation(){
 
-       // $departments =  AppointmentSchedule::with('telemedAssignedDoctor')->get();
+        $countSubOpd = SubOpd::distinct('id')->count('id');
        
-        return view('doctor.reportConsultation');
+        return view('doctor.reportConsultation', [
+            'countDepartment' => $countSubOpd ,
+        ]);
     }
 
     public function getconfigAppointment(Request $req){

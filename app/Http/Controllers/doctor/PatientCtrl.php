@@ -33,6 +33,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use App\Http\Controllers\ApiController;
 use App\AppointmentSchedule;
 use App\TelemedAssignDoctor;
+use Illuminate\Support\Facades\Log;
 
 class PatientCtrl extends Controller
 {
@@ -392,12 +393,13 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $subopdId, $status = '')
+    public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '')
     {
+
+        $subOPD_Id = (int) $req->opdSubId;
         $match = array(
             'code' => $code
         );
-
         $track = array(
             'patient_id' => $patient_id,
             'date_referred' => date('Y-m-d H:i:s'),
@@ -413,7 +415,7 @@ class PatientCtrl extends Controller
             'status' => ($status == 'walkin') ? 'accepted' : 'referred',
             'walkin' => 'no',
             'telemedicine' => $req->telemedicine,
-            'subOpdId' => $subopdId,
+            'subopd_id' => $subOPD_Id,
         );
 
         if ($status == 'walkin') {
@@ -468,7 +470,8 @@ class PatientCtrl extends Controller
             "status" => "referred",
             "count_reco" => 0,
             "redirect_track" => $redirect_track,
-            "position" => 0 //default for first referred
+            "position" => 0, //default for first referred
+            "subOpdId" => $subOPD_Id,
         ];
 
         broadcast(new NewReferral($new_referral));
@@ -477,10 +480,9 @@ class PatientCtrl extends Controller
 
     public function referPatient(Request $req, $type)
     {
-
         $user = Session::get('auth');
         $asigned_doctorId = null;
-
+      
         if ($req->telemedicine) {
 
             if($req->configId){
@@ -589,7 +591,7 @@ class PatientCtrl extends Controller
             } //push notification for cebu south medical center
 
             session()->forget('profileSearch.telemedicine');
-            self::addTracking($code, $patient_id, $user, $req, $type, $form->id, $req->opdSubId,'refer');
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id,'refer');
         } else if ($type === 'pregnant') {
             $baby = array(
                 'fname' => ($req->baby_fname) ? $req->baby_fname : '',
@@ -694,7 +696,7 @@ class PatientCtrl extends Controller
 
             } //push notification for cebu south medical center
             session()->forget('profileSearch.telemedicine');
-            self::addTracking($code, $patient_id, $user, $req, $type, $form->id,$req->opdSubId);
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id);
         }
 
         if ($req->referred_facility == 790 || $req->referred_facility == 23) {

@@ -85,7 +85,7 @@ $department_id = $appoitment_sched[0]->department_id;
                         <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" />
                         <input type="hidden" name="doctorId" value="{{ $telemedicine_doctor_id }}" />
                         <input type="hidden" name="appointmentId" value="{{ $telemedicine_appointment_id }}" />
-
+                           
                         <input type="hidden" name="config_appointedDate" value="{{$telemed_appointed_date}}">
                         <input type="hidden" name="configId" value="{{$telemed_config_id}}">
                         <input type="hidden" name="configTimeFrom" value="{{$timeFrom}}">
