@@ -1,7 +1,11 @@
 <template>
-  <div
+  <!-- <div
     class="col-md-4 scroll-item"
     v-if="appointment.id !== user.facility_id && shouldDisplayFacility"
+  > -->
+  <div
+    class="col-md-4 scroll-item"
+    v-if="shouldDisplayFacility"
   >
     <div
       :class="{ highlighted: appointment.id == facilitySelectedId }"
