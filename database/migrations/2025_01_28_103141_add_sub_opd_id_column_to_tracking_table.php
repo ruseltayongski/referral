@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateTrackingTableColumns extends Migration
+class AddSubOpdIdColumnToTrackingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,9 @@ class UpdateTrackingTableColumns extends Migration
      */
     public function up()
     {
-        //
-
         Schema::table('tracking', function (Blueprint $table) {
-           
-            $table->dropColumn('asignedDoctorId');
-
-            $table->renameColumn('appointmentId', 'subOpdId');
+            //
+            $table->integer('subopd_id')->after('department_id')->nullable();
         });
     }
 
@@ -30,12 +26,9 @@ class UpdateTrackingTableColumns extends Migration
      */
     public function down()
     {
-        //
         Schema::table('tracking', function (Blueprint $table) {
-           
-            $table->integer('asignedDoctorId')->nullable();
-
-            $table->renameColumn('subOpdId', 'appointmentId');
+            //
+            $table->dropColumn('subopd_id');
         });
     }
 }
