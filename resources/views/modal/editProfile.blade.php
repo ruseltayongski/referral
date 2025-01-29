@@ -331,11 +331,12 @@
 
         // Initially hide or show the signature section based on checkbox state
         if (termsCheckbox.checked) {
-                signature_field.style.display = 'block';
+            signature_field.style.display = 'block';
         } else {
+            try{
                 signature_field.style.display = 'none';
+            } catch(e) {}
         }
-
 
         // Add event listener to the checkbox to show/hide signature section
         termsCheckbox.addEventListener('change', function() {

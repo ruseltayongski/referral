@@ -80,7 +80,11 @@
         @endif
        
         @if($row->telemedicine && $row->status !== 'accepted')
-            <span class="badge2 red">{{ $subdepartment }}</span>
+            @if($subdepartment->description)
+                <span class="badge2 red">{{ $subdepartment->description }}</span>
+            @else
+                <span class="badge2 red">NO OPD SUB DEPARTMENT</span>
+            @endif
         @endif
     </div>
 </div>

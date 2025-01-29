@@ -95,7 +95,8 @@ class ReferralCtrl extends Controller
             ->where('referred_to',$user->facility_id);
            
         if ($telemedOrReferral !== null) {
-            $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+            $data = $data->where('tracking.telemedicine', $telemedOrReferral)
+                        ->where('tracking.subopd_id', $user->subopd_id);
         }
 
         if($request->search)
@@ -1016,12 +1017,12 @@ class ReferralCtrl extends Controller
 
         $track = Tracking::find($track_id);
 
-        if($req->telemedicine == 1){
-            $telemedAssigned = TelemedAssignDoctor::find($track->asignedDoctorId);
+        // if($req->telemedicine == 1){
+        //     $telemedAssigned = TelemedAssignDoctor::find($track->asignedDoctorId);
         
-            $telemedAssigned->appointment_by = $user->id;
-            $telemedAssigned->save();
-        }
+        //     $telemedAssigned->appointment_by = $user->id;
+        //     $telemedAssigned->save();
+        // }
         
         if($track->status=='accepted' || $track->status=='rejected' || ($track->status=='redirected' && $track->referred_to != $user->facility_id)) {
             Session::put('incoming_denied',true);

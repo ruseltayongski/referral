@@ -1,5 +1,6 @@
 <?php
     $user = \Illuminate\Support\Facades\Session::get('auth');
+    $opdSub = \App\SubOpd::get();
 ?>
 <div class="modal fade" role="dialog" id="addUserModal">
     <div class="modal-dialog modal-sm" role="document">
@@ -39,14 +40,23 @@
                     </div>
                     <div class="form-group">
                         <label>Department:</label>
-                        <select class="form-control" name="department_id" required>
+                        <select class="form-control select2" name="department_id" id="deparment_select" required>
                             <option value="">Select Department...</option>
                             @foreach($departments as $dept)
-                            <option value="{{ $dept->id }}">{{ $dept->description }}</option>
+                                $depatment_id = $dept->id;
+                                <option value="{{ $dept->id }}">{{ $dept->description }}</option>
                             @endforeach
                         </select>
                     </div>
-
+                    <div class="form-group" id="subOpdSection" style="display: none;">
+                        <label>Sub Opd:</label>
+                        <select class="form-control select2" name="opdSub_id" required>
+                            <option value="">Select Sub Opd...</option>
+                            @forEach($opdSub as $opd)
+                                    <option value="{{ $opd->id }}">{{ $opd->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <hr />
                     <div class="form-group">
                         <label>Level:</label>
@@ -130,10 +140,20 @@
                     </div>
                     <div class="form-group">
                         <label>Department:</label>
-                        <select class="form-control department_id" name="department_id" required>
+                        <select class="form-control department_id" name="department_id" id="editdeparment_select" required>
                             <option value="">No Department</option>
                             @foreach($departments as $dept)
                                 <option value="{{ $dept->id }}">{{ $dept->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <input type="hidden" id="opd_id">
+                    <div class="form-group" id="editsubOpdSection" style="display: none;">
+                        <label>Sub Opd:</label>
+                        <select class="form-control subOpdCateg" name="editopdSub_id" id="editsubOpdSelect" required>
+                            <option value="">Select Sub Opd...</option>
+                            @forEach($opdSub as $opd)
+                                    <option value="{{ $opd->id }}">{{ $opd->description }}</option>
                             @endforeach
                         </select>
                     </div>

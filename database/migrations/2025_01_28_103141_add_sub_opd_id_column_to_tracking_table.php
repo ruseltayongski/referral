@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddDepartmentSubcategoryInConfigSchedule extends Migration
+class AddSubOpdIdColumnToTrackingTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class AddDepartmentSubcategoryInConfigSchedule extends Migration
      */
     public function up()
     {
-        Schema::table('config_schedule', function (Blueprint $table) {
+        Schema::table('tracking', function (Blueprint $table) {
             //
-            $table->string('deparment_subcategory')->after('department_id')->nullable();
+            $table->integer('subopd_id')->after('department_id')->nullable();
         });
     }
 
@@ -26,9 +26,9 @@ class AddDepartmentSubcategoryInConfigSchedule extends Migration
      */
     public function down()
     {
-        Schema::table('config_schedule', function (Blueprint $table) {
+        Schema::table('tracking', function (Blueprint $table) {
             //
-            $table->dropColumn('deparment_subcategory');
+            $table->dropColumn('subopd_id');
         });
     }
 }

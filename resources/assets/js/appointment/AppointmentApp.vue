@@ -38,6 +38,7 @@
           :configTimeSlot ="configTimeSlot"
           :appointmentclickDate ="appointmentclickDate"
           :manualDate ="manualDate"
+          :user="user"
         ></appointment-time>
       </div>
     </div>
@@ -64,13 +65,14 @@ export default {
       appointedTimes: [],
       configTimeSlot: [],
       appointmentclickDate: null,
+      manualDate: null
     };
   },
   mounted() {},
   methods: {
     manualClickDate(date){
       this.manualDate = date;
-      console.log("this.manualDate", this.manualDate);
+      //console.log("this.manualDate", this.manualDate);
     },
     handleDayClickdate(payload){
         this.appointmentclickDate = payload;
@@ -83,7 +85,7 @@ export default {
       this.appointedTimes = payload;
     },
     config_appointedTime(payload){
-      console.log("config_appointedTime::", payload);
+      //console.log("config_appointedTime::", payload);
       this.configTimeSlot = payload;
     },
   },

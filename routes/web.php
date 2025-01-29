@@ -690,6 +690,9 @@ Route::get('/get-doctors/{facilityId}', 'doctor\TelemedicineCtrl@getDoctors')->n
 Route::post('/appointment/available-time-slots', 'doctor\TelemedicineCtrl@getAvailableTimeSlots')->name('get-available-time-slots');
 Route::post('/appointment/config-time-Slot', 'doctor\TelemedicineCtrl@getConfigtimeSlot')->name('appointment-config-time-Slot');
 
+//Report Dashboard Consultation
+Route::get('/count/Consultation', 'doctor\TelemedicineCtrl@countconsultation');
+
 Route::get('get-config-data-sched/{id}', 'doctor\TelemedicineCtrl@getdoctorconfig');
 Route::get('/configSchedule',  'doctor\TelemedicineCtrl@configSched')->name('ConfigSchedule');
 Route::get('get-config/{id}', 'doctor\TelemedicineCtrl@getConfig');

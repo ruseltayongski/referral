@@ -1,5 +1,9 @@
     <?php 
             $appointmentSconfig =  \App\AppointmentSchedule::select('id','configId','opdCategory','appointed_date','date_end')->get(); 
+            $configs = \App\Cofig_schedule::select('id','department_id', 'subopd_id','facility_id','description')
+                        ->where('department_id', 5)
+                        ->where('facility_id',  $user->facility_id)
+                        ->where('subopd_id', $user->subopd_id)->get();
     ?>
     <!-- Add Modal -->
     <div class="modal fade" role="dialog" id="addAppointmentModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
@@ -21,7 +25,7 @@
                                     <div class="appointment-container">
                                         <div class="form-check form-check-inline d-flex">
                                             <input type="checkbox" class="form-check-input custom-checkbox" id="enable_config_appointment" name="enable_appointment" value="config appointment">
-                                            <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config</label>
+                                            <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config <small><i>(Optional)</i></small></label>
                                         </div>
                                     </div>
                                     <div class="label-border">
@@ -29,54 +33,26 @@
                                         <div style="display: none;" id="side_Config">
                                             <label for="appointed_date" id="effective_label">Effective Date:</label>   <!-- Config Appointment -->
                                             <input type="date" class="form-control Effective_date" name="effective_date" id="effective_date">
-
+                                            
                                             <label for="defaultCategory" >Choose default schedule: </label><!-- Config Appointment -->
                                             <select class="form-control select2" id="defaultCategorySelect" name="config_id">  <!-- Config Appointment -->
                                                 <option selected value="">Select Default Category</option>
                                                 @foreach($configs as $config)
-                                                    @if($department_id === $config->department_id && $config->facility_id === $user->facility_id)
                                                         <option value="{{$config->id}}">{{$config->description}}</option>
-                                                    @endif
                                                 @endforeach
                                                 
                                             </select>
-                                        
-
-                                        <label for="department_id">Opd Category:</label>
-                                        @if($department === 'OPD')
+                                       
+                                            <label for="department_id">Opd Category:</label>
                                             <input type="hidden" class="form-control" name="department_id" id="department_id" value="5">
-                                            <select class="form-control select2" id="doctordepartment_config" name="opd_subcategory">
-                                                <option selected value="">Select Opd Category</option>
-                                                <option value="Family Medicine">Family Medicine</option>
-                                                <option value="Internal Medicine">Internal Medicine</option>
-                                                <option value="General Surgery">General Surgery</option>
-                                                <option value="Trauma Care">Trauma Care</option>
-                                                <option value="Burn Care">Burn Care</option>
-                                                <option value="Ophthalmology">Ophthalmology</option>
-                                                <option value="ENT">ENT</option>
-                                                <option value="Neurology">Neurology</option>
-                                                <option value="Urosurgery">Urosurgery</option>
-                                                <option value="Toxicology">Toxicology</option>
-                                                <option value="OB-GYNE">OB-GYNE</option>
-                                                <option value="Pediatric">Pediatric</option>      
-                                                <option value="Oncology">Oncology</option>      
-                                                <option value="Nephrology">Nephrology</option>      
-                                                <option value="Dermatology">Dermatology</option>       
-                                                <option value="Surgery">Surgery</option>   
-                                                <option value="Geriatics Medicine">Geriatics Medicine</option>          
-                                                <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
-                                                <option value="Orthopedics">Orthopedics</option>   
-                                                <option value="Cardiology">Cardiology</option>              
-                                            </select>
-
-                                            @else
-                                                <div class="alert-department" data-department="{{ $department }}"></div>
-                                            @endif  
+                                            <input type="hidden" name="subopd_id" value="{{ $user->subopd_id }}">
+                                            <input type="text" class="form-control"  value="{{ $getSubOpd->description }}" readonly>
                                         </div>
+
                                         <label for="facility_id">Facility:</label>
                                         @foreach($facility as $Facility)
                                                 <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
-                                                <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
+                                                <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}">
                                         @endforeach
 
                                         <label for="appointed_date" id="appointment_date_label">Appointment Date:</label>
@@ -301,7 +277,11 @@
                                                                 <span>To:</span>
                                                                 <input type="time" class="form-control add-appointment-field" id="add_appointed_time_to1" name="add_appointed_time_to1">
                                                             </div>
-                                                            <label for="opdCategory">OPD Category:</label>
+                                                            <div class="col-md-6" style="margin-top: 10px;">
+                                                                <span>Slot:</span>
+                                                                <input type="number" class="form-control" name="slot">
+                                                            </div>
+                                                            {{-- <label for="opdCategory">OPD Category:</label>
                                                             <select class="form-control select2 add-appointment-field" id="add_opdCategory_1" name="add_opdCategory1" id="opdCategory">
                                                                 <option selected value="">Select OPD Category</option>
                                                                 <option value="Family Medicine">Family Medicine</option>
@@ -324,19 +304,19 @@
                                                                 <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
                                                                 <option value="Orthopedics">Orthopedics</option>   
                                                                 <option value="Cardiology">Cardiology</option>        
-                                                            </select>
+                                                            </select> --}}
                                                         </div>
                                                     </div>
-                                                    <div>
+                                                    {{-- <div>
                                                         <label>Available Doctor</label>
                                                         <select class="form-control select2 available_doctor1 add-appointment-field" id="add_available_doctor_1" name="add_available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;"></select>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                             </div>
                                             <div id="additionalTimeContainer" style="display: none;"></div>
-                                            <div style="margin-top: 15px;">
+                                            {{-- <div style="margin-top: 15px;">
                                                 <button type="button" class="btn btn-info btn-xs" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
-                                            </div>
+                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
@@ -396,47 +376,21 @@
                                         <select class="form-control select2" id="editdefaultCateg" name="edit_config_id">  <!-- Config Appointment -->
                                             <option selected value="">Select Default Category</option>
                                             @foreach($configs as $config)
-                                                @if($department_id === $config->department_id)
-                                                    <option value="{{$config->id}}">{{$config->description}}</option>
-                                                @endif
+                                                <option value="{{$config->id}}">{{$config->description}}</option>
                                             @endforeach
                                         </select>
 
-                                        <label for="department_id">OPD Category:</label>
-                                        @if($department === 'OPD')
-                                            <input type="hidden" class="form-control" name="edit_department_id" id="department_id" value="5">
-                                            <select class="form-control select2" id="opddepartment_config" name="editopd_subcateg" required>
-                                                <option selected value="">Select Opd Category</option>
-                                                <option value="Family Medicine">Family Medicine</option>
-                                                <option value="Internal Medicine">Internal Medicine</option>
-                                                <option value="General Surgery">General Surgery</option>
-                                                <option value="Trauma Care">Trauma Care</option>
-                                                <option value="Burn Care">Burn Care</option>
-                                                <option value="Ophthalmology">Ophthalmology</option>
-                                                <option value="ENT">ENT</option>
-                                                <option value="Neurology">Neurology</option>
-                                                <option value="Urosurgery">Urosurgery</option>
-                                                <option value="Toxicology">Toxicology</option>
-                                                <option value="OB-GYNE">OB-GYNE</option>
-                                                <option value="Pediatric">Pediatric</option>      
-                                                <option value="Oncology">Oncology</option>      
-                                                <option value="Nephrology">Nephrology</option>      
-                                                <option value="Dermatology">Dermatology</option>       
-                                                <option value="Surgery">Surgery</option>   
-                                                <option value="Geriatics Medicine">Geriatics Medicine</option>          
-                                                <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
-                                                <option value="Orthopedics">Orthopedics</option>   
-                                                <option value="Cardiology">Cardiology</option>              
-                                            </select>
-                                        @else
-                                            <div class="alert-department" data-department="{{ $department }}"></div>
-                                        @endif
+                                        {{-- <label for="department_id">OPD Category:</label>
+                                            
+                                        <input type="hidden" class="form-control" name="edit_department_id" id="department_id" value="5">
+                                        <input type="hidden" class="form-control" name="SubOpdId" value="{{ $getSubOpd->id }}">
+                                        <input type="text" class="form-control" value="{{ $getSubOpd->description }}" readonly>
 
                                         <label for="facility_id">Facility:</label>
                                         @foreach($facility as $Facility)
                                                 <input type="text" class="form-control" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
                                                 <input type="hidden" class="form-control" name="edit_facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
-                                        @endforeach
+                                        @endforeach --}}
                                     </div>
                                 </div>
 

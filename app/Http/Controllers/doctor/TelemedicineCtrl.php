@@ -9,6 +9,7 @@ use App\TelemedAssignDoctor;
 use App\Tracking;
 use App\User;
 use App\Cofig_schedule;
+use App\SubOpd;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -27,12 +28,10 @@ class TelemedicineCtrl extends Controller
 
     public function manageAppointment(Request $req)
     {
-        $facility = Session::get('auth')->facility_id;
-        
-        $config_sched = Cofig_schedule::select('id','department_id','facility_id','deparment_subcategory','created_by','description','category','days','time')->get();
-
+        $user = Session::get('auth');
+        $facility = $user->facility_id;
+        $config_sched = Cofig_schedule::select('id','department_id','facility_id','subopd_id','created_by','description','category','days','time')->get();
         $appointmentstatus = $req->input('filterappointment', '');
-
         $query = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
@@ -54,34 +53,37 @@ class TelemedicineCtrl extends Controller
                     );
                 },
                 'telemedAssignedDoctor' => function ($query) {
-                    $query->with(['doctor' => function ($query) {
+                $query->with(['doctor' => function ($query) {
                         $query->select(
                             'id',
                             'fname',
                             'lname'
                         );
                     }]);
-                }
+                },
+                'subOpd'
             ])
+            ->where('opdCategory', $user->subopd_id)
             ->where('facility_id',$facility);
 
-            if ($appointmentstatus === 'config') {
-                $query->where('status', 'config'); 
-            } elseif ($appointmentstatus === 'manual') {
-                $query->where('status', 'manual');
-            }
+        if ($appointmentstatus === 'config') {
+            $query->where('status', 'config'); 
+        } elseif ($appointmentstatus === 'manual') {
+            $query->where('status', 'manual');
+        }
 
-            $appointment_schedule = $query->orderBy('created_at', 'desc')
-                ->where('status', $appointmentstatus)
-                ->paginate(20);
+        $appointment_schedule = $query->orderBy('created_at', 'desc')
+            //->where('status', $appointmentstatus)
+            ->paginate(20);
 
-            $user_facility = User::where('department_id',5)
-            ->where('level','doctor')
-            ->where('facility_id',$facility)
-            ->with('facility')
-            ->groupBy('facility_id')
-            ->get();
-           
+        $user_facility = User::where('department_id',5)
+        ->where('level','doctor')
+        ->where('facility_id',$facility)
+        ->with('facility')
+        ->groupBy('facility_id')
+        ->get();
+        
+        
         $data = [
             'appointment_schedule' => $appointment_schedule,
             'facility' => $user_facility,
@@ -91,13 +93,14 @@ class TelemedicineCtrl extends Controller
             'configs' => $config_sched,
             'appointment_filter' => $appointmentstatus
         ];
+
         return view('doctor.manage_appointment', $data);
     }
 
     public function configSched(){
         $user = Session::get('auth');
         $department = Department::all();
-        $config_sched = Cofig_schedule::select('id','department_id','deparment_subcategory','facility_id','created_by','description','category','days','time')
+        $config_sched = Cofig_schedule::select('id','department_id','subopd_id','facility_id','created_by','description','category','days','time')
                         ->where('facility_id', $user->facility_id)
                         ->get();
         
@@ -140,9 +143,10 @@ class TelemedicineCtrl extends Controller
             'times' => $times, 
             'days' => $days,
             'descript' => $getconfig->description,
-            'deparment_subcategory' => $getconfig->deparment_subcategory,
+            'deparment_subcategory' => $getconfig->subopd_id,
             'category' => $getconfig->category,
-            'configId' => $getconfig->id
+            'configId' => $getconfig->id,
+            'subOpdId' => $getconfig ->subopd_id
         ]);
     }
 
@@ -176,7 +180,7 @@ class TelemedicineCtrl extends Controller
        $config_sched->department_id = $req->department_id;
        $config_sched->category = $req->default_category;
        $config_sched->facility_id = $req->facility_id;
-       $config_sched->deparment_subcategory = $req->department_subcategory;
+       $config_sched->subopd_id = $req->subOpd_id;
        $scheduleData = [];
 
        foreach($req->days as $day){
@@ -209,7 +213,7 @@ class TelemedicineCtrl extends Controller
         $config_sched->department_id = $req->department_id;
         $config_sched->category = $req->default_category;
         $config_sched->facility_id = $req->facility_id;
-        $config_sched->deparment_subcategory = $req->department_subcategory;
+        $config_sched->subopd_id = $req->subopd_id;
         $scheduleData = [];
 
         foreach($req->days as $day){
@@ -262,9 +266,9 @@ class TelemedicineCtrl extends Controller
          $appointedConfig->created_by = $user->id;
          $appointedConfig->facility_id = $req->edit_facility_id;
          $appointedConfig->department_id = $req->edit_department_id;
-         $appointedConfig->opdCategory = $req->editopd_subcateg;
+         $appointedConfig->opdCategory = $req->SubOpdId;
          $appointedConfig->status = "config";
-         $appointedConfig->opdCategory = $req->editopd_subcateg;
+        //$appointedConfig->opdCategory = $req->editopd_subcateg;
          $appointedConfig->save();
 
         $ITConfigSched = Cofig_schedule::where('id', $req->edit_config_id)->first();
@@ -331,7 +335,7 @@ class TelemedicineCtrl extends Controller
     public function createAppointment(Request $request)
     {
         $user = Session::get('auth');
-        //dd($request->all());
+        
         if($request->config_id){
 
             $editConfig = Cofig_schedule::where('id', $request->config_id)->first();
@@ -376,7 +380,7 @@ class TelemedicineCtrl extends Controller
 
             $sched->department_id = $request->department_id;
             $sched->facility_id = $request->facility_id;
-            $sched->opdCategory = $request->opd_subcategory;
+            $sched->opdCategory = $request->subopdId;
             $sched->status = "config";
             $sched->created_by = $user->id;
 
@@ -384,13 +388,12 @@ class TelemedicineCtrl extends Controller
              
             Session::put('appointment_save',true);
             return redirect()->to('manage/appointment?filterappointment=config'); 
-        }else{
-
+        } else {
             for($i=1; $i<=$request->appointment_count; $i++) {
 
-                if (empty($request['add_appointed_time'.$i]) || empty($request['add_appointed_time_to'.$i]) || empty($request->add_opdCategory.$i) || empty($request['add_available_doctor'.$i])) {
-                    continue;
-                }
+                // if (empty($request['add_appointed_time'.$i]) || empty($request['add_appointed_time_to'.$i]) || empty($request->add_opdCategory.$i) || empty($request['add_available_doctor'.$i])) {
+                //     continue;
+                // }
     
                 $appointment_schedule = new AppointmentSchedule();
                 $appointment_schedule->appointed_date = $request->appointed_date;
@@ -398,24 +401,24 @@ class TelemedicineCtrl extends Controller
                 $appointment_schedule->department_id = 5;
                 $appointment_schedule->appointed_time = $request['add_appointed_time'.$i];
                 $appointment_schedule->appointedTime_to = $request['add_appointed_time_to'.$i];
-                $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
-                $appointment_schedule->status = "manual";
-                //$appointment_schedule->slot = $request->slot.$i;
+                $appointment_schedule->opdCategory = $request->subopd_id;
+                // $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
+                // $appointment_schedule->status = "manual";
+                $appointment_schedule->slot = $request->slot;
                 $appointment_schedule->created_by = $user->id;
                 $appointment_schedule->save();
     
-                for($x=0; $x<count($request['add_available_doctor'.$i]); $x++) {
-                    $tele_assign_doctor = new TelemedAssignDoctor();
-                    $tele_assign_doctor->appointment_id = $appointment_schedule->id;
-                    $tele_assign_doctor->doctor_id = $request['add_available_doctor'.$i][$x];
-                    $tele_assign_doctor->created_by = $user->id;
-                    $tele_assign_doctor->save();
-                }
+                // for($x=0; $x<count($request['add_available_doctor'.$i]); $x++) {
+                //     $tele_assign_doctor = new TelemedAssignDoctor();
+                //     $tele_assign_doctor->appointment_id = $appointment_schedule->id;
+                //     $tele_assign_doctor->doctor_id = $request['add_available_doctor'.$i][$x];
+                //     $tele_assign_doctor->created_by = $user->id;
+                //     $tele_assign_doctor->save();
+                // }
             }
     
             Session::put('appointment_save',true);
-            return redirect()->to('manage/appointment?filterappointment=manual'); 
-
+            return redirect()->to('manage/appointment'); 
         }
 
     }
@@ -758,7 +761,8 @@ class TelemedicineCtrl extends Controller
             ->where('configId', $req->configId)
             ->where('facility_id', $req->facility_id)
             ->first();
-
+            $subopd =  SubOpd::find((int) $timeSlot->opdCategory);
+           
             $department_id = $timeSlot->department->description;
             $config_id = $timeSlot->configId;
             $dateStart = Carbon::parse($timeSlot->appointed_date);
@@ -798,7 +802,8 @@ class TelemedicineCtrl extends Controller
                         'date' => $currentDate->format('Y-m-d'),
                         'timeSlots' => $timeSchedule[$currentDayName], // Assign time slots for this day
                         'department_id' => $department_id,
-                        'Opdcategory' => $timeSlot->opdCategory
+                        'Opdcategory' => $subopd->description,
+                        'opdSubId' =>   $subopd->id,
                     ];
                 }
 
@@ -812,6 +817,15 @@ class TelemedicineCtrl extends Controller
            }
 
         return $appointedDates;
+    }
+
+    public function countconsultation(){
+
+        $countSubOpd = SubOpd::distinct('id')->count('id');
+       
+        return view('doctor.reportConsultation', [
+            'countDepartment' => $countSubOpd ,
+        ]);
     }
 
     public function getconfigAppointment(Request $req){

@@ -173,10 +173,10 @@ $user = Session::get('auth');
                                 $subdepartment = '"Not specified sub department"';
 
                                 $check_dept = \App\Department::find($row->department_id);
-                                $check_subdepartment = \App\AppointmentSchedule::find($row->appointmentId);
+                                $check_subdeOpd = \App\SubOpd::find($row->subopd_id);
                              
-                                if($row->appointmentId){
-                                    $subdepartment = $check_subdepartment->opdCategory;
+                                if($row->subopd_id){
+                                    $subdepartment = $check_subdeOpd;
                                 }
                                 
                                 if($check_dept)

@@ -126,8 +126,11 @@
         $department_id = $user->department_id;
         $department = null;
 
+        $getSubOpd = \App\SubOpd::find($user->subopd_id);
+    
         $Getdepartment = \App\Department::select('id','description')->get();   
         $config_sched_data =  \App\Cofig_schedule::get(); 
+        $subOpd = \App\SubOpd::get();
 
         foreach ($Getdepartment as $row) {
             if($user->department_id === $row->id){
@@ -135,7 +138,6 @@
                 break;
             }
         } 
-        
     @endphp
 
     <div class="box box-primary">
@@ -144,7 +146,7 @@
                 <div class="form-group" style="margin-bottom: 10px;">
 
                     <form id="filterForm" method="GET">
-                        <select name="filterappointment" id="appointment_filter" class="form-control" style="width: 200px;">
+                        {{-- <select name="filterappointment" id="appointment_filter" class="form-control" style="width: 200px;">
                             <option value="">Select Appointment</option>
                             <option value="config" {{ request('appointmentfilter') == 'config' ? 'selected' : '' }}>
                                 Config Appointment 
@@ -156,18 +158,18 @@
 
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-filter"></i> Apply Filter
-                        </button>
+                        </button> --}}
                  
 
                         <!-- <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search...">
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button> -->
-
+                        @if($user->subopd_id)
                         <button type="button" class="btn btn-primary btn-sm btn-flat" id="add-appointment" data-toggle="modal" data-target="#addAppointmentModal">
                             <i class="fa fa-calendar-plus-o"></i> Add
                         </button>
-
+                        @endif
                         <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
                             <i class="fa fa-eye"></i> View All
                         </button>
@@ -185,36 +187,36 @@
         <!-- Table List -->
         <div class="box-body appointments">
             @if(count($appointment_schedule)>0)
-                        <div class="table-responsive">
-                        @if($appointment_filter == 'config')
-                            <table class="table table-bordered table-striped table-hover table-fixed-header">
-                                <tr class="bg-success bg-navy-active">
-                                    <th class="text-center">Date Start</th>
-                                    <th class="text-center">Date End</th>
-                                    <th class="text-center">Category</th>
-                                    <th class="text-center">Schedule</th>
-                                    <th class="text-center">Facility</th>
-                                    <th class="text-center">Created By</th>
-                                    <th class="text-center">Action</th>
-                                </tr>
-                        @elseif($appointment_filter == 'manual')
-                            <table class="table table-bordered table-striped table-hover table-fixed-header">
-                                <tr class="bg-success bg-navy-active">
-                                    <th class="text-center">Date</th>
-                                    <th class="text-center">From</th>
-                                    <th class="text-center">To</th>
-                                    <th class="text-center">Created By</th>
-                                    <th class="text-center">Facility</th>
-                                    <th class="text-center">Department</th>
-                                    <th class="text-center">OPD Category</th> 
-                                    <th class="text-center">Available Doctor</th>
-                                    <!-- <th class="text-center">Slot</th> -->
-                                    <th class="text-center">Action</th>
-                                </tr>
-                        @else
-                            <p>No data Found</p>
-                        @endif
-                            
+                    <div class="table-responsive">
+                    {{-- @if($appointment_filter == 'config')
+                        <table class="table table-bordered table-striped table-hover table-fixed-header">
+                            <tr class="bg-success bg-navy-active">
+                                <th class="text-center">Date Start</th>
+                                <th class="text-center">Date End</th>
+                                <th class="text-center">Category</th>
+                                <th class="text-center">Schedule</th>
+                                <th class="text-center">Facility</th>
+                                <th class="text-center">Created By</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                    @elseif($appointment_filter == 'manual')
+                        
+                    @else
+                        <p>No data Found</p>
+                    @endif --}}
+                    <table class="table table-bordered table-striped table-hover table-fixed-header">
+                        <tr class="bg-success bg-navy-active">
+                            <th class="text-center">Date</th>
+                            <th class="text-center">From</th>
+                            <th class="text-center">To</th>
+                            <th class="text-center">Created By</th>
+                            <th class="text-center">Facility</th>
+                            <th class="text-center">Department</th>
+                            <th class="text-center">OPD Category</th> 
+                            {{-- <th class="text-center">Available Doctor</th> --}}
+                            <!-- <th class="text-center">Slot</th> -->
+                            <th class="text-center">Action</th>
+                        </tr>
                         @foreach($appointment_schedule as $row)
                             @if($appointment_filter == 'config')
                                 @php $monthweeks =  Cofig_schedule::where('id', $row->configId)->first()->category;@endphp
@@ -240,61 +242,60 @@
                                         </button>
                                     </td>
                                 </tr>
-                            <!-- Modal Structure for each schedule -->
-                            <div class="modal fade" id="scheduleModal{{$row->id}}" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel{{$row->id}}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title" id="scheduleModalLabel{{$row->id}}">
-                                                <i class="fa fa-user-md" aria-hidden="true"></i>
-                                                <strong>Doctor Schedule for {{ $monthweeks }}</strong>
-                                            </h4> 
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="list-group">
-                                                @php
-                                                    $config = Cofig_schedule::where('id', $row->configId)->first();
-                                                    // Split days and times into arrays
-                                                    $days = explode('|', $config->days);
-                                                    $times = explode('|', $config->time);
-
-                                                    // Map times to their respective days
-                                                    $dayTimes = [];
-                                                    $currentDay = null;
-
-                                                    foreach ($times as $time) {
-                                                        if (in_array($time, $days)) {
-                                                            // If the current item is a day, set it as the current day
-                                                            $currentDay = $time;
-                                                            $dayTimes[$currentDay] = [];
-                                                        } else {
-                                                            // Otherwise, add the time to the current day
-                                                            $dayTimes[$currentDay][] = $time;
-                                                        }
-                                                    }
-                                                @endphp
-                                                <p><strong>Start Date:</strong> {{\Carbon\Carbon::parse($row->appointed_date)->format('F d, Y')}}</p>
-                                                <p style="padding: 5px;"><strong>End Date:</strong> {{\Carbon\Carbon::parse($row->date_end)->format('F d, Y')}}</p> 
-                                                @foreach($dayTimes as $day => $times)
-                                                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                        <div class="day">
-                                                            <i class="fa fa-calendar" aria-hidden="true"></i> <strong>{{ $day }}</strong>
-                                                        </div>
-                                                        <div class="time text-right">
-                                                            <i class="fa fa-clock-o" aria-hidden="true"></i> {{ implode(', ', $times) }}
-                                                        </div>
-                                                    </div>
-                                                @endforeach
+                                <!-- Modal Structure for each schedule -->
+                                <div class="modal fade" id="scheduleModal{{$row->id}}" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel{{$row->id}}" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="scheduleModalLabel{{$row->id}}">
+                                                    <i class="fa fa-user-md" aria-hidden="true"></i>
+                                                    <strong>Doctor Schedule for {{ $monthweeks }}</strong>
+                                                </h4> 
                                             </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            <div class="modal-body">
+                                                <div class="list-group">
+                                                    @php
+                                                        $config = Cofig_schedule::where('id', $row->configId)->first();
+                                                        // Split days and times into arrays
+                                                        $days = explode('|', $config->days);
+                                                        $times = explode('|', $config->time);
+
+                                                        // Map times to their respective days
+                                                        $dayTimes = [];
+                                                        $currentDay = null;
+
+                                                        foreach ($times as $time) {
+                                                            if (in_array($time, $days)) {
+                                                                // If the current item is a day, set it as the current day
+                                                                $currentDay = $time;
+                                                                $dayTimes[$currentDay] = [];
+                                                            } else {
+                                                                // Otherwise, add the time to the current day
+                                                                $dayTimes[$currentDay][] = $time;
+                                                            }
+                                                        }
+                                                    @endphp
+                                                    <p><strong>Start Date:</strong> {{\Carbon\Carbon::parse($row->appointed_date)->format('F d, Y')}}</p>
+                                                    <p style="padding: 5px;"><strong>End Date:</strong> {{\Carbon\Carbon::parse($row->date_end)->format('F d, Y')}}</p> 
+                                                    @foreach($dayTimes as $day => $times)
+                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                                                            <div class="day">
+                                                                <i class="fa fa-calendar" aria-hidden="true"></i> <strong>{{ $day }}</strong>
+                                                            </div>
+                                                            <div class="time text-right">
+                                                                <i class="fa fa-clock-o" aria-hidden="true"></i> {{ implode(', ', $times) }}
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            @elseif($appointment_filter == 'manual')
+                                @endif
                             <tr style="font-size: 12px">
                                 <td> {{ $row->appointed_date }} </td>
                                 <td> {{ $row->appointed_time }} </td>
@@ -302,21 +303,20 @@
                                 <td> {{ $row->createdBy->username }} </td>
                                 <td> {{ $row->facility->name }} </td>
                                 <td> {{ $row->department->description }} </td>
-                                {{-- <td> {{ $row->opdCategory }}</td> --}}
-                                <td>
+                                <td> {{ $row->subOpd->description }}</td>
+                                {{-- <td>
                                     <ul>
                                         @foreach($row->telemedAssignedDoctor as $doctorAssigned)
                                         <li>{{ 'Dr. '.$doctorAssigned->doctor->fname.' '.$doctorAssigned->doctor->lname }}</li>
                                         @endforeach
                                     </ul>
-                                </td>
+                                </td> --}}
                                 <!-- <td> {{ count($row->telemedAssignedDoctor) }} </td> -->
                                 <td class="text-center">
                                     <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
                                     <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
                                 </td>
-                            </tr>
-                            @endif
+                            </tr>    
                         @endforeach
                     </table>
                     <div class="text-center">
@@ -1684,7 +1684,6 @@ function deleteTimeInput(appointment){
     
     let currentCount = $(".appointment_count").val();
     $(".appointment_count").val(++currentCount);
-    console.log("welcome Appointment:", appointment);
     var appointments = appointment ? appointment : '';
     var doctor = appointment.telemed_assigned_doctor;
     var timeInputGroup = $('<div class="time-input-group">');
@@ -2004,7 +2003,7 @@ function deleteTimeInput(appointment){
             if (toTimeObj <= fromTimeObj) {
 
 
-                alert('End time must be after start time');
+                // alert('End time must be after start time');
                 toInput.val('');
                 return;
             }

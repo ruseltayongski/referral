@@ -32,7 +32,7 @@ if($searchKeyword){
                         </a>
                         <button type="button" class="btn btn-sm btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                         <a href="#addUserModal" data-toggle="modal" class="btn btn-primary btn-sm ">
-                            <i class="fa fa-user-plus"></i> Add User
+                            <i class="fa fa-user-plus"></i> Add User  
                         </a>
                     </div>
                 </form>
@@ -144,7 +144,9 @@ if($searchKeyword){
 
     @include('support.modal.addUser')
 @endsection
+
 @section('js')
 @include('support.script.users')
+
 @endsection
 

@@ -117,16 +117,13 @@ export default {
         const dateString = targetTd.attr("data-date");
         let timeslot = null;
         let passconfigId = null;
-        let exceedAppoint; null
-
-
-        // Config Appointment
+        
         this.appointmentSlot.some((appointment) => {
          
-          appointment.appointment_schedules.forEach((sched) =>{
-            
-            if(sched.configId && this.facilitySelectedId === sched.facility_id){
-              // console.log("my sched list::", sched);
+          appointment.appointment_schedules.forEach((sched) => {
+            if(sched.configId && this.facilitySelectedId === sched.facility_id) {
+              // console.log("my sched list::", sched.telemed_assigned_doctor);
+              
               const Date_start = new Date(sched.appointed_date); // Start date
               const date_end = new Date(sched.date_end); // End date
               const timeSlot = sched.config_schedule.time.split('|');
@@ -134,21 +131,58 @@ export default {
                 //console.log("daysSched", daysSched, "timeSlot", timeSlot);
                 // Iterate through all days in the range
                 let currentDate = new Date(Date_start); // Initialize with start date
-               
+              //  console.log("timeSlot", timeSlot);
                 while (currentDate <= date_end) {
                   const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
                   
                   if (daysSched.includes(currentDayName) && !passconfigId) {
-
+                    
                     // Highlight specific day if it matches
                     const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
 
-                    // targetTd.css("border-color", "#00a65a");
-                    if(targetTd.length){
+
+                     if(targetTd.length){
                         targetTd.css("background-color", "#00a65a"); // Green for available
                     }
-                      
-                  }else{
+
+                    const list_Appointed_date = targetTd.data("date");
+                    
+                    let selectedDates = Array.isArray(list_Appointed_date)
+                      ? list_Appointed_date.filter((date) => date !== undefined)
+                      : [list_Appointed_date].filter((date) => date !== undefined);
+
+                    selectedDates = [...new Set(selectedDates.filter((date) => date))];
+                   // Log only non-empty arrays
+                    if (selectedDates.length > 0) {
+
+                      console.log("Filtered selectedDates:", selectedDates);
+                      selectedDates.forEach((date) => {
+                          const dbEntriesForDate = sched.telemed_assigned_doctor.filter((entry) => entry.appointed_date === date);
+                          
+                          const allSlotsSaved = timeSlot.every((slot) => {
+                              const [start, end] = slot.split("-");
+                              console.log("Checking slot:", slot, "Start:", start, "End:", end);
+                              return dbEntriesForDate.some(
+                                (entry) => entry.start_time === `${start}:00` && entry.end_time === `${end}:00`
+                              );
+                          });
+
+                          const targetTd = $(".fc-day[data-date='" + date + "']");
+                          console.log("allSlotsSaved:", allSlotsSaved);
+                          if(allSlotsSaved){
+                            targetTd.css("background-color", "rgb(255 214 214)"); // Gray for disabled
+                            // console.log(`Date ${date} is fully booked and disabled.`);
+                          }else{
+                            targetTd.css("background-color", "#00a65a") 
+                            console.log(`Date ${date} is partially available.`);
+                          }
+                      });
+
+                    } else {
+                      // console.log("No valid dates found.");
+                    }
+                    
+                  } else {
                     const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
                     if (targetTd.length) {
                       targetTd.css("background-color", ""); // Remove background color
@@ -165,12 +199,10 @@ export default {
             }
             
           });
-
         });
-        
+
         // Manual Appointment
         const isfullyBooked = this.appointmentSlot.some((appointment) => {
-          
           if (appointment.appointment_schedules.length > 0) {
             const slotOndate = appointment.appointment_schedules.filter(
               (slot) => slot.appointed_date === dateString
@@ -179,7 +211,7 @@ export default {
               // Group by appointment_id
               const groupedByAppointmentId = slotOndate.reduce((acc, slot) => {
                  
-                 passconfigId = slot.configId;
+                passconfigId = slot.configId;
                 if(!slot.configId){
                   timeslot = slot.appointed_time ;
                   const id = slot.appointment_id;
@@ -205,11 +237,12 @@ export default {
          
         let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
 
-        if(!passconfigId){
-          if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-            targetTd.css("background-color", "rgb(255 214 214)"); //disable color'
+        if(!passconfigId) {
+          // if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
+          if (dateTimeAppointed <= currentDateTime) {
+            targetTd.css("background-color", "rgb(255 214 214)"); //not available color red
             targetTd.css("border-color", "rgb(230 193 193)");
-          }else {
+          } else {
             targetTd.css("background-color", "#00a65a"); //available color green'
             targetdrag.css("border-color", "#00a65a");
           }
@@ -218,10 +251,11 @@ export default {
             targetTd.addClass("add-cursor-pointer");
             $(".fc-content").remove();
         }
+
       });
     },
     async dayClickFunction(date, allDay, jsEvent, view) {
-      // console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
+      //console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
@@ -271,28 +305,28 @@ export default {
       let parameterDate = null;
      
       let params = JSON.parse(JSON.stringify(eventsOnDate))[0];
-   
-      if (eventsOnDate.length > 0) {  //Manual Appointment
+
+      let isManualAppointment = eventsOnDate.length > 0;
+      if (isManualAppointment) {  //Manual Appointment
         const responseBody = {
           selected_date: params.start,
           facility_id: params.facility_id,
-          configId:configId
         };
 
         const response = await this.__appointmentScheduleHours(responseBody);
         this.$emit("appointedTime", response.data);
-        console.log("manual appoint response", response.data);
+        //console.log("manual appoint response", response.data);
         PassconfigId = null;
-        console.log("PassconfigId::", PassconfigId);
-        console.log("date selected condition ",  params.start, dateselect, "configId:", PassconfigId);
+        //console.log("PassconfigId::", PassconfigId);
+        //console.log("date selected condition ",  params.start, dateselect, "configId:", PassconfigId);
         
         if(params.start === dateselect){
           parameterDate = params.start;
           this.$emit("manual-click-date", parameterDate);
         }
-       
-      }else{  //Config Appointment
-        
+      }
+      
+      //Config Appointment
         const appointedData = await this.__appointmentScheduleDate(
           null,
           date._d,
@@ -306,28 +340,26 @@ export default {
           this.appointedParams = appointedData; // Update state if needed elsewhere
           // console.log("appointedData config params", appointedData);
 
-          const responseBody = {
+          const responseBody1 = {
             selected_date:  appointedData.start && !isNaN(new Date(appointedData.start)) ? new Date(appointedData.start).toISOString().split('T')[0] : '',
             facility_id: appointedData.facility_id,
             configId: appointedData.configId,
             appointedId:appointedData.appointedId,
           };
 
-          const response = await this.__appointmentConfigHours(responseBody);
-          this.$emit("config_appointedTime", response.data);
-          const configsched = Object.values(response.data)[0];
+          const response1 = await this.__appointmentConfigHours(responseBody1);
+          this.$emit("config_appointedTime", response1.data);
+          const configsched = Object.values(response1.data)[0];
 
           if(AppointedDates.includes(dateselect)){
             console.log("list of matched date:", AppointedDates);
              PassconfigId = configsched.configId;
           }
-            console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
+            //console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
         }else{
             PassconfigId = null;
             console.log("not matched", parameterDate);
         }
-      }
-        console.log("PassconfigId::", PassconfigId);
         
        this.$emit("day-click-date", PassconfigId);
        if (parameterDate) {
@@ -354,11 +386,10 @@ export default {
       if(clickdate instanceof Date && !isNaN(clickdate)){
          formattedClickDate = clickdate.toISOString().split('T')[0]; 
       }else{
-        console.warn("Invalid clickdate:", clickdate);
+        //console.warn("Invalid clickdate:", clickdate);
       }
 
       if(!Array.isArray(appointed)){
-          console.error("Invalid appointed value:", appointed);
           appointed = [];
       }
       const matchedate = appointed.includes(formattedClickDate) ? formattedClickDate: "";
@@ -378,10 +409,9 @@ export default {
         this.appointedParams = appointedParam;
         return appointedParam;
 
-      }else{
-
+      } else {
         const mapedData = response.data.facility_data.map((item) => {
-          console.log("response mapedData", mapedData);
+          //console.log("response mapedData", mapedData);
           return {
             title: "Appointment",
             configId: null,
@@ -396,11 +426,11 @@ export default {
       }
     },
     async __appointmentScheduleHours(params) {
-      console.log("parama:", params);
+      //console.log("parama:", params);
       return await appointmentScheduleHours(params);
     },
-    async __appointmentConfigHours(params){
-        console.log("parama config hrs:", params);
+    async __appointmentConfigHours(params) {
+      //console.log("parama config hrs:", params);
       return await appointmentConfigHours(params);
     },
   },
