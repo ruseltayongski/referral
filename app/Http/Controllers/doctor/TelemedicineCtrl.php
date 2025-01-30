@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon; 
 use Illuminate\Support\Facades\Auth;
 use Prophecy\Exception\Doubler\ReturnByReferenceException;
+use DateTime;
 
 class TelemedicineCtrl extends Controller
 {
@@ -31,7 +32,6 @@ class TelemedicineCtrl extends Controller
         $user = Session::get('auth');
         $facility = $user->facility_id;
         $config_sched = Cofig_schedule::select('id','department_id','facility_id','subopd_id','created_by','description','category','days','time')->get();
-        $appointmentstatus = $req->input('filterappointment', '');
         $query = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
@@ -61,22 +61,18 @@ class TelemedicineCtrl extends Controller
                         );
                     }]);
                 },
-                'subOpd'
+                'subOpd',
+                'configSchedule',
             ])
             ->where('opdCategory', $user->subopd_id)
             ->where('facility_id',$facility);
-
-        if ($appointmentstatus === 'config') {
-            $query->where('status', 'config'); 
-        } elseif ($appointmentstatus === 'manual') {
-            $query->where('status', 'manual');
-        }
+        
 
         $appointment_schedule = $query->orderBy('created_at', 'desc')
             //->where('status', $appointmentstatus)
             ->paginate(20);
-
-        $user_facility = User::where('department_id',5)
+   
+        $user_facility = User::where('department_id',$user->department_id)
         ->where('level','doctor')
         ->where('facility_id',$facility)
         ->with('facility')
@@ -316,14 +312,14 @@ class TelemedicineCtrl extends Controller
         
         $facility_id = AppointmentSchedule::pluck('facility_id');
 
-        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule'])->find($facility_id);
+        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule','appointmentSchedules.subOpd'])->find($facility_id);
         
         // $config = AppointmentSchedule::with(['configSchedule' => function($query) {
         //     $query->select('id','category','days','time');
         // }])
         // ->select('configId','appointed_date','date_end')
         // ->get();
-        
+        // dd($appointment_slot);
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,
@@ -335,56 +331,37 @@ class TelemedicineCtrl extends Controller
     public function createAppointment(Request $request)
     {
         $user = Session::get('auth');
-        
+       
         if($request->config_id){
 
-            $editConfig = Cofig_schedule::where('id', $request->config_id)->first();
+            $startDate = DateTime::createFromFormat('m-d-Y', $request->startDate);
+            $endDate = DateTime::createFromFormat('m-d-Y', $request->endDate);
+            $days = $request->days;
+            $timeFrom = $request->time_from;
+            $timeTo = $request->time_to;
+            $facilityId = $request->facility_id;
+            $departmentId = $request->department_id;
+            $createdBy = $user->id;
 
-            // $config_sched->description = $req->configdesc;
-            // $config_sched->department_id = $req->department_id;
-            // $config_sched->category = $req->default_category;
-            // $config_sched->facility_id = $req->facility_id;
-           
-            $scheduleData = [];
-     
-            foreach($request->days as $day){
-                 
-                 if(isset($request->time_from[$day]) && isset($request->time_to[$day])){
-     
-                     $timeSlots = [];
-                     foreach($request->time_from[$day] as $index => $timeFrom){
-                         $timeTo = $request->time_to[$day][$index] ?? '';
-                         $timeSlots[] = "{$timeFrom}-{$timeTo}";
-                     }
-     
-                     $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
-                 }
+            while ($startDate <= $endDate) {
+                $dayOfWeek = $startDate->format('l');
+                
+                if (in_array($dayOfWeek, $days)) {
+                    foreach ($timeFrom[$dayOfWeek] as $index => $timeStart) {
+                        $appointmentSchedule = new AppointmentSchedule();
+                        $appointmentSchedule->appointed_date = $startDate->format('Y-m-d');
+                        $appointmentSchedule->facility_id = $facilityId;
+                        $appointmentSchedule->department_id = $departmentId;
+                        $appointmentSchedule->appointed_time = $timeStart;
+                        $appointmentSchedule->appointedTime_to = $timeTo[$dayOfWeek][$index];
+                        $appointmentSchedule->opdCategory = 1; // Assuming OPD Category is fixed
+                        $appointmentSchedule->slot = $request->number_slot;
+                        $appointmentSchedule->created_by = $createdBy;
+                        $appointmentSchedule->save();
+                    }
+                }
+                $startDate->modify('+1 day');
             }
-     
-            $editConfig->days = implode('|', $request->days);
-            $editConfig->time = implode('|', $scheduleData);
-            $editConfig->save();
-
-
-            $sched = new AppointmentSchedule();
-            $sched->configId =  $request->config_id;
-
-            try {
-                $startDate = Carbon::createFromFormat('m-d-Y', $request->startDate);
-                $endDate = Carbon::createFromFormat('m-d-Y', $request->endDate);
-            
-                $sched->appointed_date = $startDate->format('Y-m-d');
-                $sched->date_end = $endDate->format('Y-m-d');
-            } catch (\Exception $e) {
-            }
-
-            $sched->department_id = $request->department_id;
-            $sched->facility_id = $request->facility_id;
-            $sched->opdCategory = $request->subopdId;
-            $sched->status = "config";
-            $sched->created_by = $user->id;
-
-            $sched->save();
              
             Session::put('appointment_save',true);
             return redirect()->to('manage/appointment?filterappointment=config'); 
@@ -723,7 +700,7 @@ class TelemedicineCtrl extends Controller
         return response()->json(['facility_data' => $facility_data]);
     }
 
-    public function getAvailableTimeSlots(Request $request)
+    public function getAvailableTimeSlots(Request $request) //appointedTimes in calendar
     {
         $timeSlots = AppointmentSchedule::
             with([
@@ -735,7 +712,8 @@ class TelemedicineCtrl extends Controller
                             'lname'
                         );
                     }]);
-                }
+                },
+                'subOpd'
             ])
             ->where('appointed_date', $request->selected_date)
             ->where('facility_id', $request->facility_id)
