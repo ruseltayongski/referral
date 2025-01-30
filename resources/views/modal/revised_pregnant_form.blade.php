@@ -581,10 +581,10 @@
                                                 <input class="form-check-input" id="contraceptive_condom_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Yes"> Condom
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
+                                                <input class="form-check-input" id="contraceptive_withdrawal_pregnant_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
+                                                <input class="form-check-input" id="contraceptive_injections_pregnant_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -656,7 +656,7 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>
+                                                    <td><input class="form-control" id="gestation_pregnant" type="text" name="pregnancy_history_gestation[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>
                                                     <td>
@@ -1736,15 +1736,15 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <label for="systolic">Blood Pressure:</label>
-                                                <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                <input type="number" id="systolic_pregnant" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
                                                     oninput="updateBloodPressure()"> /
-                                                <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                <input type="number" id="diastolic_pregnant" placeholder="Diastolic (e.g., 90)" 
                                                     style="width:18%;" min="0" max="200" 
                                                     oninput="updateBloodPressure()">mmHg
 
                                                 <!-- Hidden input to store the combined value -->
-                                                <input type="hidden" name="vital_bp" id="vital_bp">
+                                                <input type="hidden" name="vital_bp" id="vital_bp_pregnant">
                                             </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
@@ -1758,11 +1758,11 @@
                         <script>
                             function updateBloodPressure() {
                                 // Get systolic and diastolic values
-                                const systolic = document.getElementById('systolic').value;
-                                const diastolic = document.getElementById('diastolic').value;
+                                const systolic = document.getElementById('systolic_pregnant').value;
+                                const diastolic = document.getElementById('diastolic_pregnant').value;
                                 
                                 // Combine into "100/90" format
-                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                                document.getElementById('vital_bp_pregnant').value = systolic + '/' + diastolic;
                             }
                         </script>
 
@@ -2048,25 +2048,25 @@
                                                             <td>Spontaneous</td>
                                                             <td>Spontaneous</td>
                                                             <td style="text-align: center">4 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=4></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant4" name="eye_radio" value=4></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Command</td>
                                                             <td>To Voice</td>
                                                             <td style="text-align: center">3 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=3></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant3" name="eye_radio" value=3></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Pain</td>
                                                             <td>To Pain</td>
                                                             <td style="text-align: center">2 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=2></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant2" name="eye_radio" value=2></td>
                                                         </tr>
                                                         <tr>
                                                             <td>None</td>
                                                             <td>None</td>
                                                             <td style="text-align: center">1 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=1></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant1" name="eye_radio" value=1></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -2312,7 +2312,7 @@
             '<option value="">Choose...</option>\n' +
             select_year +
             '</select></td>\n' +
-            '<td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>\n' +
+            '<td><input class="form-control" id="gestation_pregnant" type="text" name="pregnancy_history_gestation[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>\n' +
             '<td width="150%">\n' +

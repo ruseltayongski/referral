@@ -1054,10 +1054,10 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Condom'); ?>> Condom
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Withdrawal'); ?>> Withdrawal
+                                                <input class="form-check-input" id="contraceptive_withdrawal_pregnant_info_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Withdrawal'); ?>> Withdrawal
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Injections'); ?>> Injections
+                                                <input class="form-check-input" id="contraceptive_injections_pregnant_info_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Injections'); ?>> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1133,7 +1133,7 @@ $facilities = \App\Facility::select('id','name')
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
+                                                        <input class="form-control" id="gestation_pregnant_info" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
                                                     </td>
                                                     <td>
                                                         <input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{ $preg['pregnancy_outcome'] }}">
@@ -2256,15 +2256,15 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row">
                                             <div class="col-md-4">
                                             <label for="systolic">Blood Pressure:</label>
-                                                <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                <input type="number" id="systolic_pregnant_info" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
                                                     oninput="updateBloodPressure()"> /
-                                                <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                <input type="number" id="diastolic_pregnant_info" placeholder="Diastolic (e.g., 90)" 
                                                     style="width:18%;" min="0" max="200" 
                                                     oninput="updateBloodPressure()">mmHg
 
                                                 <!-- Hidden input to store the combined value -->
-                                                <input type="hidden" name="vital_bp" id="vital_bp" 
+                                                <input type="hidden" name="vital_bp" id="vital_bp_pregnant_info" 
                                                     value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
                                             </div>
                                             <div class="col-md-4">
@@ -2279,11 +2279,11 @@ $facilities = \App\Facility::select('id','name')
                         <script>
                             function updateBloodPressure() {
                                 // Get systolic and diastolic values
-                                const systolic = document.getElementById('systolic').value;
-                                const diastolic = document.getElementById('diastolic').value;
+                                const systolic = document.getElementById('systolic_pregnant_info').value;
+                                const diastolic = document.getElementById('diastolic_pregnant_info').value;
                                 
                                 // Combine into "100/90" format
-                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                                document.getElementById('vital_bp_pregnant_info').value = systolic + '/' + diastolic;
                             }
                         </script>
 
@@ -2569,25 +2569,25 @@ $facilities = \App\Facility::select('id','name')
                                                             <td>Spontaneous</td>
                                                             <td>Spontaneous</td>
                                                             <td style="text-align: center">4 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=4 <?= isChecked($glasgocoma_scale, 'eye_response', '4'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_4" name="eye_radio" value=4 <?= isChecked($glasgocoma_scale, 'eye_response', '4'); ?>></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Command</td>
                                                             <td>To Voice</td>
                                                             <td style="text-align: center">3 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=3 <?= isChecked($glasgocoma_scale, 'eye_response', '3'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_3" name="eye_radio" value=3 <?= isChecked($glasgocoma_scale, 'eye_response', '3'); ?>></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Pain</td>
                                                             <td>To Pain</td>
                                                             <td style="text-align: center">2 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=2 <?= isChecked($glasgocoma_scale, 'eye_response', '2'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_2" name="eye_radio" value=2 <?= isChecked($glasgocoma_scale, 'eye_response', '2'); ?>></td>
                                                         </tr>
                                                         <tr>
                                                             <td>None</td>
                                                             <td>None</td>
                                                             <td style="text-align: center">1 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=1 <?= isChecked($glasgocoma_scale, 'eye_response', '1'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_1" name="eye_radio" value=1 <?= isChecked($glasgocoma_scale, 'eye_response', '1'); ?>></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -2730,7 +2730,7 @@ $facilities = \App\Facility::select('id','name')
             '<option value="">Choose...</option>\n' +
             select_year +
             '</select></td>\n' +
-            '<td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>\n' +
+            '<td><input class="form-control" id="gestation_pregnant_info" type="text" name="pregnancy_history_gestation[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>\n' +
             '<td width="150%">\n' +
