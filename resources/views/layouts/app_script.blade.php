@@ -5,7 +5,12 @@
         toolbar: "emoticons",
         toolbar_location: "bottom",
         menubar: false,
-        statusbar: false
+        statusbar: false,
+        setup: function (editor) {
+            editor.on('init', function () {
+                editor.getContainer().style.width = "100%";
+            });
+        }
     });
     $(".select2").select2({ width: '100%' });
 
@@ -71,7 +76,10 @@
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
         // Output the result in an element with id="demo"
-        document.getElementById("logout_time").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+        try{
+            document.getElementById("logout_time").innerHTML = hours + "h " + minutes + "m " + seconds + "s ";
+        }
+        catch(e) {}
 
         // If the count down is over, write some text
         if (distance < 0) {
@@ -99,11 +107,13 @@
     window.onscroll = function() {scrollFunction()};
 
     function scrollFunction() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-            mybutton.style.display = "block";
-        } else {
-            mybutton.style.display = "none";
-        }
+        try {
+            if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        } catch(e) {}
     }
 
     // When the user clicks on the button, scroll to the top of the document

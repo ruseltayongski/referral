@@ -175,8 +175,8 @@
                     <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover table-fixed-header">
                         <tr class="bg-success bg-navy-active">
-                            <th class="text-center">Date From</th>
-                            <th class="text-center">Date To</th>
+                            <th class="text-center">Appointment Date</th>
+                            {{-- <th class="text-center">Date To</th> --}}
                             <th class="text-center">Time From</th>
                             <th class="text-center">Time To</th>
                             <th class="text-center">Created By</th>
@@ -216,7 +216,7 @@
                          
                             <tr style="font-size: 12px">
                                 <td>{{  \Carbon\Carbon::parse($row->appointed_date)->format('F d, Y')  }}</td>
-                                <td>{{ $row->date_end ? \Carbon\Carbon::parse($row->date_end)->format('F d, Y') : 'N/A' }}</td>
+                                {{-- <td>{{ $row->date_end ? \Carbon\Carbon::parse($row->date_end)->format('F d, Y') : 'N/A' }}</td> --}}
                                 <td> {{ $row->appointed_time ?  $row->appointed_time : 'N/A'}}</td>
                                 <td> {{ $row->appointedTime_to ?  $row->appointedTime_to : 'N/A'}}</td>
                                 <td> {{ $row->createdBy->username }} </td>

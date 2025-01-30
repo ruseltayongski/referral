@@ -25,7 +25,7 @@ export default {
       ImageUrl:'',
       baseUrlFeed: null,
       //end  for feedback
-
+      showTooltipFeedback: false,
       showTooltip: false,
       showPrescription: false,
       showUpward: false,
@@ -80,6 +80,7 @@ export default {
       },
       showDiv: false,
       form_type: "normal",
+      reco_count : $("#reco_count_val").val(),
     };
   },
   mounted() {
@@ -122,31 +123,61 @@ export default {
       self.ringingPhoneFunc();
     });
     this.startBasicCall();
+    Echo.join('reco')
+      .listen('SocketReco', (event) => {
+          $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
+          axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
+              if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
+                  this.reco_count++
+                  $("#reco_count").html(this.reco_count)
+                  this.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message)
+                  try {
+                      let objDiv = document.getElementById(event.payload.code);
+                      objDiv.scrollTop = objDiv.scrollHeight;
+                      if (!objDiv.scrollTop)
+                          this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
+                  } catch(err){
+                      console.log("modal not open");
+                      this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
+                  }
+              }
+          });
+      });
   },
   methods: {
-    //for feedback
-      openFeedbackModal(code) {
-
- console.log("Button clicked!");
-    console.log("Code being passed:", code);
-    console.log("Current feedbackModalVisible before:", this.feedbackModalVisible);
-      this.currentCode = code;
-      this.feedbackModalVisible = true;
-      this.baseUrlFeed = this.baseUrl;
-
-       console.log("Current feedbackModalVisible after:", this.feedbackModalVisible);
-    console.log("Current user ID:", this.user.id);
+    notifyReco(code, feedback_count, redirect_track) {
+        let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
+            '                               data-target=\'#feedbackModal\'\n' +
+            '                               data-code="'+code+'" ' +
+            '                               >\n' +
+            '                           <i class=\'fa fa-comments\'></i> ReCo <span class=\'badge bg-blue\' id="reco_count'+code+'">'+feedback_count+'</span>\n' +
+            '                       </button><a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
+            '                                                <i class=\'fa fa-stethoscope\'></i> Track\n' +
+            '                                            </a>';
+        Lobibox.notify("success", {
+            title: code,
+            size: 'normal',
+            delay: false,
+            closeOnClick: false,
+            img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+            msg: content
+        });
     },
-    closeFeedbackModal() {
-      this.feedbackModalVisible = false;
-      this.currentCode = null;
+    appendReco(code, name_sender, facility_sender, date_now, msg) {
+        let picture_sender = $("#broadcasting_url").val()+"/resources/img/receiver.png";
+        let message = msg.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
+        $(".reco-body"+code).append('<div class=\'direct-chat-msg left\'>\n' +
+            '                    <div class=\'direct-chat-info clearfix\'>\n' +
+            '                    <span class="direct-chat-name text-info pull-left">'+facility_sender+'</span><br>'+
+            '                    <span class=\'direct-chat-name pull-left\'>'+name_sender+'</span>\n' +
+            '                    <span class=\'direct-chat-timestamp pull-right\'>'+date_now+'</span>\n' +
+            '                    </div>\n' +
+            '                    <img class=\'direct-chat-img\' title=\'\' src="'+picture_sender+'" alt=\'Message User Image\'>\n' +
+            '                    <div class=\'direct-chat-text\'>\n' +
+            '                    '+message+'\n' +
+            '                    </div>\n' +
+            '                    </div>')
     },
-     refreshMessages() {
-      // Implement refresh logic if needed
-      console.log("Refreshing messages");
-    },
-//end for feed back
-
     async startBasicCall() {
       // Create an instance of the Agora Engine
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
@@ -500,9 +531,9 @@ export default {
                   <div
                     v-if="showTooltip"
                     class="tooltip-text"
-                    style="background-color: #007bff"
+                    style="background-color: #007bff;"
                   >
-                    lab Request
+                    Lab Request
                   </div>
                   <button
                     class="btn btn-primary btn-lg prescription-button"
@@ -519,15 +550,25 @@ export default {
                 
 
                  <div class="button-container">
+                  <div
+                    v-if="showTooltipFeedback"
+                    class="tooltip-text"
+                    style="background-color: #17a2b8;"
+                  >
+                    Reco
+                  </div>
                   <button
                     class="btn btn-info btn-lg reco-button"
-                    @click="openFeedbackModal(referral_code)"
+                    data-toggle="modal"
+                    data-target="#feedbackModal"
+                    :data-code="referral_code"
+                    onclick="viewReco($(this))"
+                    @mouseover="showTooltipFeedback = true"
+                    @mouseleave="showTooltipFeedback = false"
                   >
                     <i class="bi bi-chat-left-text"></i>
                   </button>
                 </div>
-
-
               </div>
             </div>
           </Transition>

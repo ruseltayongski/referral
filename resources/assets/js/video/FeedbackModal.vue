@@ -159,11 +159,11 @@ export default {
         this.newMessage = "";
       }
     },
-      scrollToBottom() {
-      this.$nextTick(() => {
-        const chatBox = this.$refs.chatMessages;
-        chatBox.scrollTop = chatBox.scrollHeight;
-      });
+    scrollToBottom() {
+      // this.$nextTick(() => {
+      //   const chatBox = this.$refs.chatMessages;
+      //   chatBox.scrollTop = chatBox.scrollHeight;
+      // });
     },
 
   },
