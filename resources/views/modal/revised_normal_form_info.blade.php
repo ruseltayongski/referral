@@ -407,7 +407,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                             <div class="col-md-4">
                                 <small >Clinical Status</small><br>
-                                <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
+                                <select name="clinical_status" class="form-control-select" style="width: 100%;">
 
                                 @if($form->refer_clinical_status == "Asymptomatic")
                                     <option value="asymptomatic">Asymptomatic</option>
@@ -451,7 +451,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                             <div class="col-md-4">
                                 <small >Surveillance Category</small><br>
-                                <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                                <select name="sur_category" class="form-control-select" style="width: 100%;">
                                 @if ($form->refer_sur_category == "Contact (PUM)")
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
@@ -2346,11 +2346,11 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '6'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow-7">
+                                                <label for="glasgow_7">
                                                     <b>7</b><br>
                                                     <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '7'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_7" value="7" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '7'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <label for="glasgow_8">
@@ -2378,75 +2378,75 @@ $facilities = \App\Facility::select('id','name')
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>1</b>
-                                                    <label for="glasgow_1">
+                                                    <label for="glasgow_info_1">
                                                         <span class="glasgow-dot" style="height: 6px; width: 6px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_1" value="1">&emsp;&emsp;
 
                                                     <b>2</b>
-                                                    <label for="glasgow_2">
+                                                    <label for="glasgow_info_2">
                                                         <span class="glasgow-dot" style="height: 10px; width: 10px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_2" value="2">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_2" value="2">&emsp;&emsp;
 
                                                     <b>3</b>
-                                                    <label for="glasgow_3">
+                                                    <label for="glasgow_info_3">
                                                         <br><span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_3" value="3">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_3" value="3">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>4</b>
-                                                    <label for="glasgow_4">
+                                                    <label for="glasgow_info_4">
                                                         <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_4" value="4">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_4" value="4">&emsp;&emsp;
 
                                                     <b>5</b>
-                                                    <label for="glasgow_5">
+                                                    <label for="glasgow_info_5">
                                                         <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_5" value="5">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_5" value="5">&emsp;&emsp;
 
                                                     <b>6</b>
-                                                    <label for="glasgow_6">
+                                                    <label for="glasgow_info_6">
                                                         <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_6" value="6">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>7</b>
-                                                    <label for="glasgow-7">
+                                                    <label for="glasgow_info_7">
                                                         <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_7" value="7">&emsp;&emsp;
 
                                                     <b>8</b>
-                                                    <label for="glasgow_8">
+                                                    <label for="glasgow_info_8">
                                                         <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_8" value="8">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>9</b>
-                                                    <label for="glasgow_9">
+                                                    <label for="glasgow_info_9">
                                                         <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_9" value="9">&emsp;&emsp;
 
                                                     <b>10</b>
-                                                    <label for="glasgow_10">
+                                                    <label for="glasgow_info_10">
                                                         <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_10" value="10">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_info_10" value="10">
                                                 </div>
                                             </div>
                                         </div>
