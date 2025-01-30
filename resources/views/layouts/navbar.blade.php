@@ -21,7 +21,9 @@ $multi_faci = Session::get('multiple_login');
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
+                    @if($user->department_id == 5)
                     <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
+                    @endif
                     {{-- <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Appointment Calendar</a></li> --}}
                     <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
                     <li class="divider"></li>
@@ -58,23 +60,20 @@ $multi_faci = Session::get('multiple_login');
                 </ul>
             </li>
 
-            <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
             <!-- Telemed Dropdown -->
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-video-camera"></i> Telemedicine
-                    <span class="badge" style="font-size: 8pt;">
-                        <span class="count_referral_telemed">{{ $countTelemed }}</span> New
-                    </span>
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
+                    <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
                     <li>
                         <a href="{{ url('doctor/referral') }}?filterRef=1">
                             <i class="fa fa-ambulance incoming_nav"></i> Incoming &nbsp;&nbsp; 
-                            <span class="badge">
+                            {{-- <span class="badge">
                                 <span class="count_referral_telemed">{{ $countTelemed }}</span> New
-                            </span>
+                            </span> --}}
                         </a>
                     </li>
                     <li>

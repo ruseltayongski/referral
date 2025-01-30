@@ -61,6 +61,7 @@ export default {
         'Orthopedics',
         'Cardiology',
       ],
+      sub_opd_id: null
     };
   },
   mounted() {
@@ -77,6 +78,7 @@ export default {
   },
   watch: {
     appointedTimes: async function (payload) {
+      this.sub_opd_id = payload[0]['opdCategory'];
       if(this.facilitySelectedId == this.user.facility_id) {
         Lobibox.alert("error", {
             msg: "You cannot book your own facility"
@@ -185,9 +187,7 @@ export default {
     // If the appointment time is before the current time, return true (disabled)
         return appointmentDateTime < now;
     },
-    proceedAppointment(configtime,configDate,appointmentId,configId,opdSubcateg) {
-      console.log("selected time::", configtime,configDate,appointmentId,configId,opdSubcateg);
- 
+    proceedAppointment(configtime,configDate,appointmentId,configId,opdSubcateg) { 
       if ((!configId && !this.selectedAppointmentTime) || (configId && !configtime)) {
         Lobibox.alert("error", {
           msg: "Please Select Time",
@@ -201,7 +201,7 @@ export default {
       }
      
       if (this.followUpReferredId) {
-        const [timefrom,timeTo] = configtime.split('-');
+        const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');
 
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
@@ -213,7 +213,7 @@ export default {
         $("#configId").val(configId);
         $("#configAppointmentId").val(appointmentId);
         $("#configDate").val(configDate);
-        $("#configTimefrom").val(timefrom);
+        $("#configTimefrom").val(timeFrom);
         $("#configTimeto").val(timeTo);
 
         $("#followup_header").html("Follow Up Patient");
@@ -231,11 +231,12 @@ export default {
               subOpdId: opdSubcateg,
             };
             this.$emit("proceed-appointment", appointment);
-        }else{
+        } else {
             appointment = {
               facility_id: this.facilitySelectedId,
               appointmentId: this.selectedAppointmentTime,
               doctorId: this.selectedAppointmentDoctor,
+              subOpdId: parseInt(this.sub_opd_id),
             };
         }
 
@@ -431,7 +432,7 @@ export default {
                             >{{ appointment.appointed_time }} to
                             {{ appointment.appointedTime_to }}</span
                           > -->
-                          <ul
+                          <!-- <ul
                             v-if="appointment.id == selectedAppointmentTime"
                             class="doctor-list"
                             v-for="assignedDoctor in appointment.telemed_assigned_doctor"
@@ -459,7 +460,7 @@ export default {
                                 }}
                               </small>
                             </li>
-                          </ul>
+                          </ul> -->
                         </div>
                         <button
                           v-if="!areAllAppointmentFull"

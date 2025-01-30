@@ -29,7 +29,7 @@ class Tracking extends Model
         'walkin',
         'source',
         'telemedicine',
-        'asignedDoctorId',
         'appointmentId',
+        'subopd_id'
     ];
 }

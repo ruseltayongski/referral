@@ -95,7 +95,8 @@ class ReferralCtrl extends Controller
             ->where('referred_to',$user->facility_id);
            
         if ($telemedOrReferral !== null) {
-            $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+            $data = $data->where('tracking.telemedicine', $telemedOrReferral)
+                        ->where('tracking.subopd_id', $user->subopd_id);
         }
 
         if($request->search)

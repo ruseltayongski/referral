@@ -22906,7 +22906,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       configOpdcategory: null,
       selectedDepartment: null,
       selectedOpdCategory: null,
-      opdSubcategories: ['Family Medicine', 'Internal Medicine', 'General Surgery', 'Trauma Care', 'Burn Care', 'Opthalmology', 'ENT', 'Neurology', 'Urosurgery', 'Toxicology', 'OB-GYNE', 'Pediatric', 'Oncology', 'Nephrology', 'Dermatology', 'Surgery', 'Geriatics Medicine', 'Physical and Rehabilitation Medicine', 'Orthopedics', 'Cardiology']
+      opdSubcategories: ['Family Medicine', 'Internal Medicine', 'General Surgery', 'Trauma Care', 'Burn Care', 'Opthalmology', 'ENT', 'Neurology', 'Urosurgery', 'Toxicology', 'OB-GYNE', 'Pediatric', 'Oncology', 'Nephrology', 'Dermatology', 'Surgery', 'Geriatics Medicine', 'Physical and Rehabilitation Medicine', 'Orthopedics', 'Cardiology'],
+      sub_opd_id: null
     };
   },
   mounted: function mounted() {
@@ -22922,19 +22923,20 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
+              this.sub_opd_id = payload[0]['opdCategory'];
               if (!(this.facilitySelectedId == this.user.facility_id)) {
-                _context.next = 3;
+                _context.next = 4;
                 break;
               }
               Lobibox.alert("error", {
                 msg: "You cannot book your own facility"
               });
               return _context.abrupt("return");
-            case 3:
+            case 4:
               this.showAppointmentTime = true;
               this.selectedAppointmentTime = null;
               this.selectedAppointmentDoctor = null;
-            case 6:
+            case 7:
             case "end":
               return _context.stop();
           }
@@ -23053,7 +23055,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       return appointmentDateTime < now;
     },
     proceedAppointment: function proceedAppointment(configtime, configDate, appointmentId, configId, opdSubcateg) {
-      console.log("selected time::", configtime, configDate, appointmentId, configId, opdSubcateg);
       if (!configId && !this.selectedAppointmentTime || configId && !configtime) {
         Lobibox.alert("error", {
           msg: "Please Select Time"
@@ -23066,10 +23067,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return;
       }
       if (this.followUpReferredId) {
-        var _configtime$split = configtime.split('-'),
-          _configtime$split2 = _slicedToArray(_configtime$split, 2),
-          timefrom = _configtime$split2[0],
-          timeTo = _configtime$split2[1];
+        var _String$split = String(configtime || "00:00-23:59").split('-'),
+          _String$split2 = _slicedToArray(_String$split, 2),
+          timeFrom = _String$split2[0],
+          timeTo = _String$split2[1];
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
@@ -23079,7 +23080,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         $("#configId").val(configId);
         $("#configAppointmentId").val(appointmentId);
         $("#configDate").val(configDate);
-        $("#configTimefrom").val(timefrom);
+        $("#configTimefrom").val(timeFrom);
         $("#configTimeto").val(timeTo);
         $("#followup_header").html("Follow Up Patient");
         $("#telemedicineFollowupFormModal").modal("show");
@@ -23099,7 +23100,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           appointment = {
             facility_id: this.facilitySelectedId,
             appointmentId: this.selectedAppointmentTime,
-            doctorId: this.selectedAppointmentDoctor
+            doctorId: this.selectedAppointmentDoctor,
+            subOpdId: parseInt(this.sub_opd_id)
           };
         }
         console.log(appointment);
@@ -23413,8 +23415,7 @@ var _hoisted_16 = ["value"];
 var _hoisted_17 = {
   "class": "text-green"
 };
-var _hoisted_18 = ["value", "onChange", "disabled"];
-var _hoisted_19 = {
+var _hoisted_18 = {
   key: 1,
   type: "button",
   id: "consultation",
@@ -23427,9 +23428,9 @@ var _hoisted_19 = {
   disabled: ""
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "page-header"
-  }, "Time Slot", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"row\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"box-header with-border\">\r\n                  <h4 class=\"box-title\">Legends</h4>\r\n                </div> "), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, "Time Slot", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"row\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"box-header with-border\">\r\n                  <h4 class=\"box-title\">Legends</h4>\r\n                </div> "), _cache[14] || (_cache[14] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event bg-green"
   }, "Available Slot"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event",
@@ -23437,7 +23438,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "background-color": "rgb(255 214 214)",
       "color": "#ffff"
     }
-  }, " Not Available ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, " Not Available ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[13] || (_cache[13] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "box-header with-border"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h3 class=\"box-title timeDoctor\">\r\n                      Please choose Time and OPD\r\n                      {{currentConfig}}\r\n                    </h3> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "date-selected"
@@ -23455,7 +23456,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         return $options.handleconfigTimeSelection(timeSlot);
       },
       disabled: $options.configAppointmentNot(timeSlot)
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_11), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configSelectedTime]]), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_11), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configSelectedTime]]), _cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
         'text-green': !$options.configAppointmentNot(timeSlot),
         'text-red': $options.configAppointmentNot(timeSlot)
@@ -23470,7 +23471,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onChange: _cache[2] || (_cache[2] = function ($event) {
         return $options.handleconfigcategory($options.currentConfig.opdSubId);
       })
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_13), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configOpdcategory]]), _cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
+    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_13), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configOpdcategory]]), _cache[7] || (_cache[7] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
       "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
         'text-green': !$options.configAppointmentNot(timeSlot),
         'text-red': $options.configAppointmentNot(timeSlot)
@@ -23483,7 +23484,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[3] || (_cache[3] = function ($event) {
       return $options.proceedAppointment($data.configSelectedTime, $options.currentConfig.date, $options.currentConfig.appointment_id, $options.currentConfig.configId, $options.currentConfig.opdSubId);
     })
-  }, _cache[10] || (_cache[10] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[9] || (_cache[9] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
   }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button\r\n                        type=\"button\"\r\n                        id=\"consultation\"\r\n                        class=\"btn bt-md btn-block\"\r\n                        style=\"background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)\"\r\n                        disabled\r\n                      >\r\n                        <i class=\"fa fa-calendar\"></i>&nbsp;&nbsp;All appointments are full\r\n                      </button> ")])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, [$props.appointedTimes.length > 0 && $data.showAppointmentTime && $props.manualDate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointedTimes, function (appointment) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
@@ -23499,41 +23500,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       onChange: _cache[5] || (_cache[5] = function () {
         return $options.handleAppointmentTimeChange && $options.handleAppointmentTimeChange.apply($options, arguments);
       })
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_16), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointed_time) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointedTime_to), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span\r\n                            :class=\"{\r\n                              'text-green': !areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                              'text-red': areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                            }\"\r\n                            >{{ appointment.appointed_time }} to\r\n                            {{ appointment.appointedTime_to }}</span\r\n                          > "), appointment.id == $data.selectedAppointmentTime ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-      key: 0
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(appointment.telemed_assigned_doctor, function (assignedDoctor) {
-      return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", {
-        "class": "doctor-list",
-        key: assignedDoctor.id
-      }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-        type: "radio",
-        "class": "hours_radio",
-        "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
-          return $data.selectedAppointmentDoctor = $event;
-        }),
-        value: assignedDoctor.doctor.id,
-        onChange: function onChange($event) {
-          return $options.handleDoctorChange(assignedDoctor.doctor.id, appointment.id);
-        },
-        disabled: assignedDoctor.appointment_by
-      }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_18), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentDoctor]]), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
-        "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
-          'text-green': !assignedDoctor.appointment_by,
-          'text-red': assignedDoctor.appointment_by
-        })
-      }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("Dr. ".concat(assignedDoctor.doctor.fname, " ").concat(assignedDoctor.doctor.lname)), 3 /* TEXT, CLASS */)])]);
-    }), 128 /* KEYED_FRAGMENT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_16), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), _cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointed_time) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointedTime_to), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span\r\n                            :class=\"{\r\n                              'text-green': !areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                              'text-red': areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                            }\"\r\n                            >{{ appointment.appointed_time }} to\r\n                            {{ appointment.appointedTime_to }}</span\r\n                          > "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <ul\r\n                            v-if=\"appointment.id == selectedAppointmentTime\"\r\n                            class=\"doctor-list\"\r\n                            v-for=\"assignedDoctor in appointment.telemed_assigned_doctor\"\r\n                            :key=\"assignedDoctor.id\"\r\n                          >\r\n                            <li>\r\n                              <input\r\n                                type=\"radio\"\r\n                                class=\"hours_radio\"\r\n                                v-model=\"selectedAppointmentDoctor\"\r\n                                :value=\"assignedDoctor.doctor.id\"\r\n                                @change=\"\r\n                                  handleDoctorChange(assignedDoctor.doctor.id, appointment.id)\r\n                                \"\r\n                                :disabled=\"assignedDoctor.appointment_by\"\r\n                              />&nbsp;&nbsp;\r\n                              <small\r\n                                :class=\"{\r\n                                  'text-green': !assignedDoctor.appointment_by,\r\n                                  'text-red': assignedDoctor.appointment_by,\r\n                                }\"\r\n                              >\r\n                                {{\r\n                                  `Dr. ${assignedDoctor.doctor.fname} ${assignedDoctor.doctor.lname}`\r\n                                }}\r\n                              </small>\r\n                            </li>\r\n                          </ul> ")]);
   }), 128 /* KEYED_FRAGMENT */)), !$options.areAllAppointmentFull ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     type: "button",
     id: "consultation",
     "class": "btn btn-success bt-md btn-block",
-    onClick: _cache[7] || (_cache[7] = function () {
+    onClick: _cache[6] || (_cache[6] = function () {
       return $options.proceedAppointment && $options.proceedAppointment.apply($options, arguments);
     })
-  }, _cache[13] || (_cache[13] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[11] || (_cache[11] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")]))) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_19, _cache[14] || (_cache[14] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")]))) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_18, _cache[12] || (_cache[12] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
   }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  All appointments are full ")])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")])])])]);
 }

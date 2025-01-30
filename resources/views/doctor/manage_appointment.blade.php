@@ -146,7 +146,7 @@
                 <div class="form-group" style="margin-bottom: 10px;">
 
                     <form id="filterForm" method="GET">
-                        <select name="filterappointment" id="appointment_filter" class="form-control" style="width: 200px;">
+                        {{-- <select name="filterappointment" id="appointment_filter" class="form-control" style="width: 200px;">
                             <option value="">Select Appointment</option>
                             <option value="config" {{ request('appointmentfilter') == 'config' ? 'selected' : '' }}>
                                 Config Appointment 
@@ -158,7 +158,7 @@
 
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-filter"></i> Apply Filter
-                        </button>
+                        </button> --}}
                  
 
                         <!-- <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search...">
