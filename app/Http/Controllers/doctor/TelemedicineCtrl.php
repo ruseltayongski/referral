@@ -72,7 +72,7 @@ class TelemedicineCtrl extends Controller
             //->where('status', $appointmentstatus)
             ->paginate(20);
    
-        $user_facility = User::where('department_id',5)
+        $user_facility = User::where('department_id',$user->department_id)
         ->where('level','doctor')
         ->where('facility_id',$facility)
         ->with('facility')
