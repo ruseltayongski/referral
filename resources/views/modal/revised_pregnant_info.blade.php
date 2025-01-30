@@ -158,8 +158,8 @@ $facilities = \App\Facility::select('id','name')
         white-space: nowrap;
     }
 
-    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+    #glasgow_pregnant_info_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_pregnant_info_table_2 tr td:nth-child(2) {width: 35%;}  
 
     @media only screen and (max-width: 720px) {
         .web-view {
@@ -439,7 +439,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                             <div class="col-md-4">
                                 <small >Clinical Status</small><br>
-                                <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
+                                <select name="clinical_status" class="form-control-select" style="width: 100%;">
 
                                 @if($form['pregnant']->refer_clinical_status == "asymptomatic")
                                     <option value="asymptomatic">Asymptomatic</option>
@@ -483,7 +483,7 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                             <div class="col-md-4">
                                 <small >Surveillance Category</small><br>
-                                <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                                <select name="sur_category" class="form-control-select" style="width: 100%;">
                                 @if ($form['pregnant']->refer_sur_category == "contact_pum")
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
@@ -1054,10 +1054,10 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="contraceptive_condom" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Condom" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Condom'); ?>> Condom
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Withdrawal'); ?>> Withdrawal
+                                                <input class="form-check-input" id="contraceptive_withdrawal_pregnant_info_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Withdrawal'); ?>> Withdrawal
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Injections'); ?>> Injections
+                                                <input class="form-check-input" id="contraceptive_injections_pregnant_info_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'contraceptive_history', 'Injections'); ?>> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1133,7 +1133,7 @@ $facilities = \App\Facility::select('id','name')
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
+                                                        <input class="form-control" id="gestation_pregnant_info" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
                                                     </td>
                                                     <td>
                                                         <input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{ $preg['pregnancy_outcome'] }}">
@@ -2256,15 +2256,15 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row">
                                             <div class="col-md-4">
                                             <label for="systolic">Blood Pressure:</label>
-                                                <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                <input type="number" id="systolic_pregnant_info" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
                                                     oninput="updateBloodPressure()"> /
-                                                <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                <input type="number" id="diastolic_pregnant_info" placeholder="Diastolic (e.g., 90)" 
                                                     style="width:18%;" min="0" max="200" 
                                                     oninput="updateBloodPressure()">mmHg
 
                                                 <!-- Hidden input to store the combined value -->
-                                                <input type="hidden" name="vital_bp" id="vital_bp" 
+                                                <input type="hidden" name="vital_bp" id="vital_bp_pregnant_info" 
                                                     value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
                                             </div>
                                             <div class="col-md-4">
@@ -2279,11 +2279,11 @@ $facilities = \App\Facility::select('id','name')
                         <script>
                             function updateBloodPressure() {
                                 // Get systolic and diastolic values
-                                const systolic = document.getElementById('systolic').value;
-                                const diastolic = document.getElementById('diastolic').value;
+                                const systolic = document.getElementById('systolic_pregnant_info').value;
+                                const diastolic = document.getElementById('diastolic_pregnant_info').value;
                                 
                                 // Combine into "100/90" format
-                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                                document.getElementById('vital_bp_pregnant_info').value = systolic + '/' + diastolic;
                             }
                         </script>
 
@@ -2302,149 +2302,149 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row web-view">
                                             <div class="col-lg-1"></div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_1">
+                                                <label for="glasgow_pregnant1">
                                                     <b>1</b><br>
                                                     <span class="glasgow-dot" style="height: 6px; width: 6px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '1'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant1" value="1" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '1'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_2">
+                                                <label for="glasgow_pregnant2">
                                                     <b>2</b><br>
                                                     <span class="glasgow-dot" style="height: 10px; width: 10px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_2" value="2" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '2'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant2" value="2" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '2'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_3">
+                                                <label for="glasgow_pregnant3">
                                                     <b>3</b><br>
                                                     <span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_3" value="3" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '3'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant3" value="3" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '3'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_4">
+                                                <label for="glasgow_pregnant4">
                                                     <b>4</b><br>
                                                     <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_4" value="4" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '4'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant4" value="4" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '4'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_5">
+                                                <label for="glasgow_pregnant5">
                                                     <b>5</b><br>
                                                     <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_5" value="5" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '5'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant5" value="5" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '5'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_6">
+                                                <label for="glasgow_pregnant6">
                                                     <b>6</b><br>
                                                     <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '6'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant6" value="6" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '6'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow-7">
+                                                <label for="glasgow_pregtnant7">
                                                     <b>7</b><br>
                                                     <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '7'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant7" value="7" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '7'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_8">
+                                                <label for="glasgow_pregnant8">
                                                     <b>8</b><br>
                                                     <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '8'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant8" value="8" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '8'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_9">
+                                                <label for="glasgow_pregnant9">
                                                     <b>9</b><br>
                                                     <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '9'); ?>>
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant9" value="9" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '9'); ?>>
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <b>10</b><br>
-                                                <label for="glasgow_10">
+                                                <label for="glasgow_pregnant10">
                                                     <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_10" value="10" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '10'); ?>>
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant10" value="10" <?= isChecked($glasgocoma_scale, 'pupil_size_chart', '10'); ?>>
                                             </div>
                                         </div>
                                         <div class="mobile-view">
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>1</b>
-                                                    <label for="glasgow_1">
+                                                    <label for="glasgow_pregnant_1">
                                                         <span class="glasgow-dot" style="height: 6px; width: 6px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_1" value="1">&emsp;&emsp;
 
                                                     <b>2</b>
-                                                    <label for="glasgow_2">
+                                                    <label for="glasgow_pregnant_2">
                                                         <span class="glasgow-dot" style="height: 10px; width: 10px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_2" value="2">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_2" value="2">&emsp;&emsp;
 
                                                     <b>3</b>
-                                                    <label for="glasgow_3">
+                                                    <label for="glasgow_pregnant_3">
                                                         <br><span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_3" value="3">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_3" value="3">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>4</b>
-                                                    <label for="glasgow_4">
+                                                    <label for="glasgow_pregnant_4">
                                                         <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_4" value="4">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_4" value="4">&emsp;&emsp;
 
                                                     <b>5</b>
-                                                    <label for="glasgow_5">
+                                                    <label for="glasgow_pregnant_5">
                                                         <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_5" value="5">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_5" value="5">&emsp;&emsp;
 
                                                     <b>6</b>
-                                                    <label for="glasgow_6">
+                                                    <label for="glasgow_pregnant_6">
                                                         <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_6" value="6">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>7</b>
-                                                    <label for="glasgow-7">
+                                                    <label for="glasgow_pregnant_7">
                                                         <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_7" value="7">&emsp;&emsp;
 
                                                     <b>8</b>
-                                                    <label for="glasgow_8">
+                                                    <label for="glasgow_pregnant_8">
                                                         <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_8" value="8">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>9</b>
-                                                    <label for="glasgow_9">
+                                                    <label for="glasgow_pregnant_9">
                                                         <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_9" value="9">&emsp;&emsp;
 
                                                     <b>10</b>
-                                                    <label for="glasgow_10">
+                                                    <label for="glasgow_pregnant_10">
                                                         <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_10" value="10">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_10" value="10">
                                                 </div>
                                             </div>
                                         </div>
@@ -2456,8 +2456,8 @@ $facilities = \App\Facility::select('id','name')
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                         <tr style="font-size: 11px;">
-                                                            <th id="glasgow_table_1" style="text-align: center">ADULT AND CHILD</th>
-                                                            <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th id="glasgow_pregnant_info_table_1" style="text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_pregnant_info_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
                                                             <th style="text-align: center">POINTS</th>
                                                             <th style="text-align: center">OPTIONS</th>
                                                         </tr>
@@ -2509,8 +2509,8 @@ $facilities = \App\Facility::select('id','name')
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                         <tr style="font-size: 11px;">
-                                                            <th id="glasgow_table_1" style="width:35%; text-align: center">ADULT AND CHILD</th>
-                                                            <th id="glasgow_table_2" style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th id="glasgow_pregnant_info_table_1" style="width:35%; text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_pregnant_info_table_2" style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
                                                             <th style="text-align: center">POINTS</th>
                                                             <th style="text-align: center">OPTIONS</th>
                                                         </tr>
@@ -2558,8 +2558,8 @@ $facilities = \App\Facility::select('id','name')
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                         <tr style="font-size: 11px;">
-                                                            <th id="glasgow_table_1" style="width:40%; text-align: center">ADULT AND CHILD</th>
-                                                            <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th id="glasgow_pregnant_info_table_1" style="width:40%; text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_pregnant_info_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
                                                             <th style="text-align: center">POINTS</th>
                                                             <th style="text-align: center">OPTIONS</th>
                                                         </tr>
@@ -2569,25 +2569,25 @@ $facilities = \App\Facility::select('id','name')
                                                             <td>Spontaneous</td>
                                                             <td>Spontaneous</td>
                                                             <td style="text-align: center">4 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=4 <?= isChecked($glasgocoma_scale, 'eye_response', '4'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_4" name="eye_radio" value=4 <?= isChecked($glasgocoma_scale, 'eye_response', '4'); ?>></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Command</td>
                                                             <td>To Voice</td>
                                                             <td style="text-align: center">3 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=3 <?= isChecked($glasgocoma_scale, 'eye_response', '3'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_3" name="eye_radio" value=3 <?= isChecked($glasgocoma_scale, 'eye_response', '3'); ?>></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Pain</td>
                                                             <td>To Pain</td>
                                                             <td style="text-align: center">2 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=2 <?= isChecked($glasgocoma_scale, 'eye_response', '2'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_2" name="eye_radio" value=2 <?= isChecked($glasgocoma_scale, 'eye_response', '2'); ?>></td>
                                                         </tr>
                                                         <tr>
                                                             <td>None</td>
                                                             <td>None</td>
                                                             <td style="text-align: center">1 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=1 <?= isChecked($glasgocoma_scale, 'eye_response', '1'); ?>></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal_info_1" name="eye_radio" value=1 <?= isChecked($glasgocoma_scale, 'eye_response', '1'); ?>></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -2595,7 +2595,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="col-md-6">
                                             <br><br><b>GCS Score: </b>
-                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="<?php echo htmlspecialchars($glasgocoma_scale->gsc_score); ?>" readonly>
+                                            <input class="number" name="gcs_score" id="gcs_score_pregnant_info" style="text-align: center" min="0" value="<?php echo htmlspecialchars($glasgocoma_scale->gsc_score); ?>" readonly>
                                         </div>
                                     </div><br>
                                 </div>
@@ -2730,7 +2730,7 @@ $facilities = \App\Facility::select('id','name')
             '<option value="">Choose...</option>\n' +
             select_year +
             '</select></td>\n' +
-            '<td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>\n' +
+            '<td><input class="form-control" id="gestation_pregnant_info" type="text" name="pregnancy_history_gestation[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>\n' +
             '<td width="150%">\n' +
@@ -3095,7 +3095,7 @@ $facilities = \App\Facility::select('id','name')
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
    // Initialize variables with existing data or defaults
 function initializeGlasgowScale() {
-    const existingScore = parseInt($('#gcs_score').val()) || 0;
+    const existingScore = parseInt($('#gcs_score_pregnant_info').val()) || 0;
     
     // Initialize last values based on checked radio buttons
     let last_motor = parseInt($('input[name="motor_radio"]:checked').val()) || 0;
@@ -3136,12 +3136,12 @@ function initializeGlasgowScale() {
             last_eye = 0;
         }
         
-        $('#gcs_score').val(original_score);
+        $('#gcs_score_pregnant_info').val(original_score);
     }
 
     $('input[name="motor_radio"]').on('change', function() {
         const motor = parseInt($(this).val(), 10);
-        const gcs = parseInt($('#gcs_score').val(), 10) || 0;
+        const gcs = parseInt($('#gcs_score_pregnant_info').val(), 10) || 0;
         let total = 0;
         
         if (last_motor === 0) {
@@ -3156,7 +3156,7 @@ function initializeGlasgowScale() {
 
     $('input[name="verbal_radio"]').on('change', function() {
         const verbal = parseInt($(this).val(), 10);
-        const gcs = parseInt($('#gcs_score').val(), 10) || 0;
+        const gcs = parseInt($('#gcs_score_pregnant_info').val(), 10) || 0;
         let total = 0;
         
         if (last_verbal === 0) {
@@ -3171,7 +3171,7 @@ function initializeGlasgowScale() {
 
     $('input[name="eye_radio"]').on('change', function() {
         const eye = parseInt($(this).val(), 10);
-        const gcs = parseInt($('#gcs_score').val(), 10) || 0;
+        const gcs = parseInt($('#gcs_score_pregnant_info').val(), 10) || 0;
         let total = 0;
         
         if (last_eye === 0) {
@@ -3187,10 +3187,10 @@ function initializeGlasgowScale() {
     function check_total(total) {
         if (total >= 16) {
             // Instead of resetting to 0, revert to previous valid state
-            $('#gcs_score').val(original_score);
+            $('#gcs_score_pregnant_info').val(original_score);
             resetPupilSize();
         } else {
-            $('#gcs_score').val(total);
+            $('#gcs_score_pregnant_info').val(total);
         }
     }
 

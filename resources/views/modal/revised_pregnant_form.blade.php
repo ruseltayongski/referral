@@ -148,7 +148,7 @@
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Clinical Status</small><br>
-                                <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
+                                <select name="clinical_status" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
@@ -159,7 +159,7 @@
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Surveillance Category</small><br>
-                                <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                                <select name="sur_category" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
@@ -581,10 +581,10 @@
                                                 <input class="form-check-input" id="contraceptive_condom_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Yes"> Condom
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
+                                                <input class="form-check-input" id="contraceptive_withdrawal_pregnant_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
+                                                <input class="form-check-input" id="contraceptive_injections_pregnant_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -656,7 +656,7 @@
                                                             @endforeach
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>
+                                                    <td><input class="form-control" id="gestation_pregnant" type="text" name="pregnancy_history_gestation[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>
                                                     <td>
@@ -1736,15 +1736,15 @@
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <label for="systolic">Blood Pressure:</label>
-                                                <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                <input type="number" id="systolic_pregnant" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
                                                     oninput="updateBloodPressure()"> /
-                                                <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                <input type="number" id="diastolic_pregnant" placeholder="Diastolic (e.g., 90)" 
                                                     style="width:18%;" min="0" max="200" 
                                                     oninput="updateBloodPressure()">mmHg
 
                                                 <!-- Hidden input to store the combined value -->
-                                                <input type="hidden" name="vital_bp" id="vital_bp">
+                                                <input type="hidden" name="vital_bp" id="vital_bp_pregnant">
                                             </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
@@ -1758,11 +1758,11 @@
                         <script>
                             function updateBloodPressure() {
                                 // Get systolic and diastolic values
-                                const systolic = document.getElementById('systolic').value;
-                                const diastolic = document.getElementById('diastolic').value;
+                                const systolic = document.getElementById('systolic_pregnant').value;
+                                const diastolic = document.getElementById('diastolic_pregnant').value;
                                 
                                 // Combine into "100/90" format
-                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                                document.getElementById('vital_bp_pregnant').value = systolic + '/' + diastolic;
                             }
                         </script>
 
@@ -1781,149 +1781,149 @@
                                         <div class="row web-view">
                                             <div class="col-lg-1"></div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_pregnant_1">
+                                                <label for="glasgow_pregnant_revised1">
                                                     <b>1</b><br>
                                                     <span class="glasgow-dot" style="height: 6px; width: 6px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_1" value="1">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised1" value="1">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_pregnant_2">
+                                                <label for="glasgow_pregnant_revised2">
                                                     <b>2</b><br>
                                                     <span class="glasgow-dot" style="height: 10px; width: 10px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_2" value="2">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised2" value="2">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_pregnant_3">
+                                                <label for="glasgow_pregnant_revised3">
                                                     <b>3</b><br>
                                                     <span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_3" value="3">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised3" value="3">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_pregnant_4">
+                                                <label for="glasgow_pregnant_revised4">
                                                     <b>4</b><br>
                                                     <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_4" value="4">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised4" value="4">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_pregnant_5">
+                                                <label for="glasgow_pregnant_revised5">
                                                     <b>5</b><br>
                                                     <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_5" value="5">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised5" value="5">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_pregnant_6">
+                                                <label for="glasgow_pregnant_revised6">
                                                     <b>6</b><br>
                                                     <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_6" value="6">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised6" value="6">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow-7">
+                                                <label for="glasgow_pregnant_revised7">
                                                     <b>7</b><br>
                                                     <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised7" value="7">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_8">
+                                                <label for="glasgow_pregnant_revised8">
                                                     <b>8</b><br>
                                                     <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised8" value="8">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_9">
+                                                <label for="glasgow_pregnant_revised9">
                                                     <b>9</b><br>
                                                     <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised9" value="9">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <b>10</b><br>
-                                                <label for="glasgow_pregnant_10">
+                                                <label for="glasgow_pregnant_revised10">
                                                     <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_10" value="10">
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised10" value="10">
                                             </div>
                                         </div>
                                         <div class="mobile-view">
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>1</b>
-                                                    <label for="glasgow_pregnant_1">
+                                                    <label for="glasgow_pregnant_revised_1">
                                                         <span class="glasgow-dot" style="height: 6px; width: 6px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_1" value="1">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_1" value="1">&emsp;&emsp;
 
                                                     <b>2</b>
-                                                    <label for="glasgow_pregnant_2">
+                                                    <label for="glasgow_pregnant_revised_2">
                                                         <span class="glasgow-dot" style="height: 10px; width: 10px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_2" value="2">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_2" value="2">&emsp;&emsp;
 
                                                     <b>3</b>
-                                                    <label for="glasgow_pregnant_3">
+                                                    <label for="glasgow_pregnant_revised_3">
                                                         <br><span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_3" value="3">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_3" value="3">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>4</b>
-                                                    <label for="glasgow_pregnant_4">
+                                                    <label for="glasgow_pregnant_revised_4">
                                                         <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_4" value="4">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_4" value="4">&emsp;&emsp;
 
                                                     <b>5</b>
-                                                    <label for="glasgow_pregnant_5">
+                                                    <label for="glasgow_pregnant_revised_5">
                                                         <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_5" value="5">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_5" value="5">&emsp;&emsp;
 
                                                     <b>6</b>
-                                                    <label for="glasgow_pregnant_6">
+                                                    <label for="glasgow_pregnant_revised_6">
                                                         <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_6" value="6">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_6" value="6">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>7</b>
-                                                    <label for="glasgow-7">
+                                                    <label for="glasgow_pregnant_revised_7">
                                                         <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_7" value="7">&emsp;&emsp;
 
                                                     <b>8</b>
-                                                    <label for="glasgow_8">
+                                                    <label for="glasgow_pregnant_revised_8">
                                                         <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_8" value="8">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>9</b>
-                                                    <label for="glasgow_9">
+                                                    <label for="glasgow_pregnant_revised_9">
                                                         <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_9" value="9">&emsp;&emsp;
 
                                                     <b>10</b>
-                                                    <label for="glasgow_pregnant_10">
+                                                    <label for="glasgow_pregnant_revised_10">
                                                         <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_10" value="10">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_pregnant_revised_10" value="10">
                                                 </div>
                                             </div>
                                         </div>
@@ -2048,25 +2048,25 @@
                                                             <td>Spontaneous</td>
                                                             <td>Spontaneous</td>
                                                             <td style="text-align: center">4 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=4></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant4" name="eye_radio" value=4></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Command</td>
                                                             <td>To Voice</td>
                                                             <td style="text-align: center">3 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=3></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant3" name="eye_radio" value=3></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Pain</td>
                                                             <td>To Pain</td>
                                                             <td style="text-align: center">2 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=2></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant2" name="eye_radio" value=2></td>
                                                         </tr>
                                                         <tr>
                                                             <td>None</td>
                                                             <td>None</td>
                                                             <td style="text-align: center">1 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant" name="eye_radio" value=1></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_pregnant1" name="eye_radio" value=1></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -2312,7 +2312,7 @@
             '<option value="">Choose...</option>\n' +
             select_year +
             '</select></td>\n' +
-            '<td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>\n' +
+            '<td><input class="form-control" id="gestation_pregnant" type="text" name="pregnancy_history_gestation[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>\n' +
             '<td width="150%">\n' +

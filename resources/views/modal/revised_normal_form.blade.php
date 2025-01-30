@@ -174,8 +174,8 @@
         white-space: nowrap;
     } */
 
-    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
-    #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
+    #glasgow_normaltable_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_normaltable_2 tr td:nth-child(2) {width: 35%;}  
 
     @media only screen and (max-width: 720px) {
         .web-view {
@@ -289,7 +289,7 @@
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Clinical Status</small><br>
-                                <select name="clinical_status" id="" class="form-control-select" style="width: 100%;">
+                                <select name="clinical_status" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="asymptomatic">Asymptomatic</option>
                                     <option value="mild">Mild</option>
@@ -300,7 +300,7 @@
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success">Surveillance Category</small><br>
-                                <select name="sur_category" id="" class="form-control-select" style="width: 100%;">
+                                <select name="sur_category" class="form-control-select" style="width: 100%;">
                                     <option value="">Select option</option>
                                     <option value="contact_pum">Contact (PUM)</option>
                                     <option value="suspect">Suspect</option>
@@ -810,10 +810,10 @@
                                                 <input class="form-check-input" id="contraceptive_condom_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_condom_cbox" value="Yes"> Condom
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_withdrawal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
+                                                <input class="form-check-input" id="contraceptive_withdrawal_normal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_withdrawal_cbox" value="Yes"> Withdrawal
                                             </div>
                                             <div class="col-md-2">
-                                                <input class="form-check-input" id="contraceptive_injections_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
+                                                <input class="form-check-input" id="contraceptive_injections_normal_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="contraceptive_injections_cbox" value="Yes"> Injections
                                             </div>
                                         </div>
                                         <div class="row">
@@ -887,7 +887,7 @@
                                                             ?>
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>
+                                                    <td><input class="form-control" id="gestation_normal" type="text" name="pregnancy_history_gestation[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>
                                                     <td>
@@ -1966,15 +1966,15 @@
                                         <div class="row">
                                                 <div class="col-md-4">
                                                     <label for="systolic">Blood Pressure:</label>
-                                                    <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                    <input type="number" id="systolic_normal" placeholder="Systolic (e.g., 100)" 
                                                         style="width:18%;" min="0" max="300" 
                                                         oninput="updateBloodPressure()"> /
-                                                    <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
+                                                    <input type="number" id="diastolic_normal" placeholder="Diastolic (e.g., 90)" 
                                                         style="width:18%;" min="0" max="200" 
                                                         oninput="updateBloodPressure()">mmHg
 
                                                     <!-- Hidden input to store the combined value -->
-                                                    <input type="hidden" name="vital_bp" id="vital_bp">
+                                                    <input type="hidden" name="vital_bp" id="vital_bp_normal">
                                                 </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
@@ -1988,11 +1988,11 @@
                         <script>
                             function updateBloodPressure() {
                                 // Get systolic and diastolic values
-                                const systolic = document.getElementById('systolic').value;
-                                const diastolic = document.getElementById('diastolic').value;
+                                const systolic = document.getElementById('systolic_normal').value;
+                                const diastolic = document.getElementById('diastolic_normal').value;
                                 
                                 // Combine into "100/90" format
-                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                                document.getElementById('vital_bp_normal').value = systolic + '/' + diastolic;
                             }
                         </script>
 
@@ -2011,149 +2011,149 @@
                                         <div class="row web-view">
                                             <div class="col-lg-1"></div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_1">
+                                                <label for="glasgow_normal1">
                                                     <b>1</b><br>
                                                     <span class="glasgow-dot" style="height: 6px; width: 6px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal1" value="1">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_2">
+                                                <label for="glasgow_normal2">
                                                     <b>2</b><br>
                                                     <span class="glasgow-dot" style="height: 10px; width: 10px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_2" value="2">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal2" value="2">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_3">
+                                                <label for="glasgow_normal3">
                                                     <b>3</b><br>
                                                     <span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_3" value="3">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal3" value="3">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_4">
+                                                <label for="glasgow_normal4">
                                                     <b>4</b><br>
                                                     <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_4" value="4">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal4" value="4">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_5">
+                                                <label for="glasgow_normal5">
                                                     <b>5</b><br>
                                                     <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_5" value="5">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal5" value="5">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_6">
+                                                <label for="glasgow_normal6">
                                                     <b>6</b><br>
                                                     <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal6" value="6">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow-7">
+                                                <label for="glasgow_normal7">
                                                     <b>7</b><br>
                                                     <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal7" value="7">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_8">
+                                                <label for="glasgow_normal8">
                                                     <b>8</b><br>
                                                     <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal8" value="8">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
-                                                <label for="glasgow_9">
+                                                <label for="glasgow_normal9">
                                                     <b>9</b><br>
                                                     <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9">
+                                                <input class="form-control-input referral-radio-btn text-center" name="glasgow_pupil_btn" type="radio" id="glasgow_normal9" value="9">
                                             </div>
                                             <div class="col-lg-1" style="text-align: center">
                                                 <b>10</b><br>
-                                                <label for="glasgow_10">
+                                                <label for="glasgow_normal10">
                                                     <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                 </label>
-                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_10" value="10">
+                                                <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal10" value="10">
                                             </div>
                                         </div>
                                         <div class="mobile-view">
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>1</b>
-                                                    <label for="glasgow_1">
+                                                    <label for="glasgow_normal_1">
                                                         <span class="glasgow-dot" style="height: 6px; width: 6px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_1" value="1">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_1" value="1">&emsp;&emsp;
 
                                                     <b>2</b>
-                                                    <label for="glasgow_2">
+                                                    <label for="glasgow_normal_2">
                                                         <span class="glasgow-dot" style="height: 10px; width: 10px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_2" value="2">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_2" value="2">&emsp;&emsp;
 
                                                     <b>3</b>
-                                                    <label for="glasgow_3">
+                                                    <label for="glasgow_normal_3">
                                                         <br><span class="glasgow-dot" style="height: 13px; width: 13px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_3" value="3">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_3" value="3">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1">
                                                     <b>4</b>
-                                                    <label for="glasgow_4">
+                                                    <label for="glasgow_normal_4">
                                                         <span class="glasgow-dot" style="height: 16px; width: 16px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_4" value="4">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_4" value="4">&emsp;&emsp;
 
                                                     <b>5</b>
-                                                    <label for="glasgow_5">
+                                                    <label for="glasgow_normal_5">
                                                         <span class="glasgow-dot" style="height: 20px; width: 20px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_5" value="5">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_5" value="5">&emsp;&emsp;
 
                                                     <b>6</b>
-                                                    <label for="glasgow_6">
+                                                    <label for="glasgow_normal_6">
                                                         <span class="glasgow-dot" style="height: 24px; width: 24px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_6" value="6">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_6" value="6">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>7</b>
-                                                    <label for="glasgow-7">
+                                                    <label for="glasgow_normal_7">
                                                         <span class="glasgow-dot" style="height: 28px; width: 28px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow-7" value="7">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_7" value="7">&emsp;&emsp;
 
                                                     <b>8</b>
-                                                    <label for="glasgow_8">
+                                                    <label for="glasgow_normal_8">
                                                         <span class="glasgow-dot" style="height: 32px; width: 32px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_8" value="8">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_8" value="8">
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-1"></div>
                                                 <div class="col-md-1">
                                                     <b>9</b>
-                                                    <label for="glasgow_9">
+                                                    <label for="glasgow_normal_9">
                                                         <span class="glasgow-dot" style="height: 36px; width: 36px;"></span><br>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_9" value="9">&emsp;&emsp;
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_9" value="9">&emsp;&emsp;
 
                                                     <b>10</b>
-                                                    <label for="glasgow_10">
+                                                    <label for="glasgow_normal_10">
                                                         <span class="glasgow-dot" style="height: 40px; width: 40px;"></span>
                                                     </label>
-                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_10" value="10">
+                                                    <input class="form-control-input referral-radio-btn" name="glasgow_pupil_btn" type="radio" id="glasgow_normal_10" value="10">
                                                 </div>
                                             </div>
                                         </div>
@@ -2165,8 +2165,8 @@
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                         <tr style="font-size: 11px;">
-                                                            <th id="glasgow_table_1" style="text-align: center">ADULT AND CHILD</th>
-                                                            <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th id="glasgow_normaltable_1" style="text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_normaltable_2" style="text-align: center">INFANT (2 MONTHS)</th>
                                                             <th style="text-align: center">POINTS</th>
                                                             <th style="text-align: center">OPTIONS</th>
                                                         </tr>
@@ -2218,8 +2218,8 @@
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                         <tr style="font-size: 11px;">
-                                                            <th id="glasgow_table_1" style="width:35%; text-align: center">ADULT AND CHILD</th>
-                                                            <th id="glasgow_table_2" style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th id="glasgow_normaltable_1" style="width:35%; text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_normaltable_2" style="width:40%; text-align: center">INFANT (2 MONTHS)</th>
                                                             <th style="text-align: center">POINTS</th>
                                                             <th style="text-align: center">OPTIONS</th>
                                                         </tr>
@@ -2267,8 +2267,8 @@
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
                                                         <tr style="font-size: 11px;">
-                                                            <th id="glasgow_table_1" style="width:40%; text-align: center">ADULT AND CHILD</th>
-                                                            <th id="glasgow_table_2" style="text-align: center">INFANT (2 MONTHS)</th>
+                                                            <th id="glasgow_normaltable_1" style="width:40%; text-align: center">ADULT AND CHILD</th>
+                                                            <th id="glasgow_normaltable_2" style="text-align: center">INFANT (2 MONTHS)</th>
                                                             <th style="text-align: center">POINTS</th>
                                                             <th style="text-align: center">OPTIONS</th>
                                                         </tr>
@@ -2278,25 +2278,25 @@
                                                             <td>Spontaneous</td>
                                                             <td>Spontaneous</td>
                                                             <td style="text-align: center">4 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=4></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal4" name="eye_radio" value=4></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Command</td>
                                                             <td>To Voice</td>
                                                             <td style="text-align: center">3 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=3></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal3" name="eye_radio" value=3></td>
                                                         </tr>
                                                         <tr>
                                                             <td>To Pain</td>
                                                             <td>To Pain</td>
                                                             <td style="text-align: center">2 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=2></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal2" name="eye_radio" value=2></td>
                                                         </tr>
                                                         <tr>
                                                             <td>None</td>
                                                             <td>None</td>
                                                             <td style="text-align: center">1 </td>
-                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio" name="eye_radio" value=1></td>
+                                                            <td style="text-align: center"><input class="referral-radio-btn" type="radio" id="eye_radio_normal1" name="eye_radio" value=1></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -2304,7 +2304,7 @@
                                         </div>
                                         <div class="col-md-6">
                                             <br><br><b>GCS Score: </b>
-                                            <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="0" readonly>
+                                            <input class="number" name="gcs_score" id="gcs_score_normal" style="text-align: center" min="0" value="0" readonly>
                                         </div>
                                     </div><br>
                                 </div>
@@ -2534,7 +2534,7 @@
             '<td><select class="form-control select" name="pregnancy_history_year[]">\n' +
             select_year +
             '</select></td>\n' +
-            '<td><input class="form-control" id="gestation" type="text" name="pregnancy_history_gestation[]"></td>\n' +
+            '<td><input class="form-control" id="gestation_normal" type="text" name="pregnancy_history_gestation[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_outcome[]"></td>\n' +
             '<td><input class="form-control" type="text" name="pregnancy_history_placeofbirth[]"></td>\n' +
             '<td width="150%">\n' +
@@ -2906,7 +2906,7 @@
     var last_motor = last_verbal = last_eye = 0;
     $('input[name="motor_radio"]').on('change', function() {
         var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
+        var gcs = parseInt($('#gcs_score_normal').val(), 10);
         var total = 0;
         if (last_motor == 0)
             total = gcs + motor;
@@ -2914,11 +2914,11 @@
             total = (gcs - last_motor) + motor;
 
         last_motor = motor;
-        $('#gcs_score').val(total);
+        $('#gcs_score_normal').val(total);
     });
     $('input[name="verbal_radio"]').on('change', function() {
         var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
+        var gcs = parseInt($('#gcs_score_normal').val(), 10);
         var total = 0;
         if (last_verbal == 0)
             total = gcs + verbal;
@@ -2926,11 +2926,11 @@
             total = (gcs - last_verbal) + verbal;
 
         last_verbal = verbal;
-        $('#gcs_score').val(total);
+        $('#gcs_score_normal').val(total);
     });
     $('input[name="eye_radio"]').on('change', function() {
         var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score').val(), 10);
+        var gcs = parseInt($('#gcs_score_normal').val(), 10);
         var total = 0;
         if (last_eye == 0)
             total = gcs + eye;
@@ -2938,7 +2938,7 @@
             total = (gcs - last_eye) + eye;
 
         last_eye = eye;
-        $('#gcs_score').val(total);
+        $('#gcs_score_normal').val(total);
     });
 
     /* *****REVIEW OF SYSTEMS***** */
