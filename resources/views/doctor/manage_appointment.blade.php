@@ -179,7 +179,6 @@
                             <th class="text-center">Date To</th>
                             <th class="text-center">Time From</th>
                             <th class="text-center">Time To</th>
-                            <th class="text-center">Doctor Schedule</th>
                             <th class="text-center">Created By</th>
                             <th class="text-center">Facility</th>
                             <th class="text-center">Department</th>
@@ -220,13 +219,6 @@
                                 <td>{{ $row->date_end ? \Carbon\Carbon::parse($row->date_end)->format('F d, Y') : 'N/A' }}</td>
                                 <td> {{ $row->appointed_time ?  $row->appointed_time : 'N/A'}}</td>
                                 <td> {{ $row->appointedTime_to ?  $row->appointedTime_to : 'N/A'}}</td>
-                                <td>
-                                    @if($row->configId)
-                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#scheduleModal{{$row->id}}">
-                                                <i class="fa fa-eye"></i>
-                                        </button>
-                                    @endif
-                                </td>
                                 <td> {{ $row->createdBy->username }} </td>
                                 <td> {{ $row->facility->name }} </td>
                                 <td> {{ $row->department->description }} </td>
@@ -242,6 +234,11 @@
                                 <td class="text-center">
                                     <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
                                     <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
+                                    @if($row->configId)
+                                        <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#scheduleModal{{$row->id}}">
+                                                <i class="fa fa-eye"></i>
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>    
                             <!-- Modal Structure for each schedule -->

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon; 
 use Illuminate\Support\Facades\Auth;
 use Prophecy\Exception\Doubler\ReturnByReferenceException;
+use DateTime;
 
 class TelemedicineCtrl extends Controller
 {
@@ -333,52 +334,34 @@ class TelemedicineCtrl extends Controller
         
         if($request->config_id){
 
-            $editConfig = Cofig_schedule::where('id', $request->config_id)->first();
+            $startDate = DateTime::createFromFormat('m-d-Y', $request->startDate);
+            $endDate = DateTime::createFromFormat('m-d-Y', $request->endDate);
+            $days = $request->days;
+            $timeFrom = $request->time_from;
+            $timeTo = $request->time_to;
+            $facilityId = $request->facility_id;
+            $departmentId = $request->department_id;
+            $createdBy = $user->id;
 
-            // $config_sched->description = $req->configdesc;
-            // $config_sched->department_id = $req->department_id;
-            // $config_sched->category = $req->default_category;
-            // $config_sched->facility_id = $req->facility_id;
-           
-            $scheduleData = [];
-     
-            foreach($request->days as $day){
-                 
-                 if(isset($request->time_from[$day]) && isset($request->time_to[$day])){
-     
-                     $timeSlots = [];
-                     foreach($request->time_from[$day] as $index => $timeFrom){
-                         $timeTo = $request->time_to[$day][$index] ?? '';
-                         $timeSlots[] = "{$timeFrom}-{$timeTo}";
-                     }
-     
-                     $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
-                 }
+            while ($startDate <= $endDate) {
+                $dayOfWeek = $startDate->format('l');
+                
+                if (in_array($dayOfWeek, $days)) {
+                    foreach ($timeFrom[$dayOfWeek] as $index => $timeStart) {
+                        $appointmentSchedule = new AppointmentSchedule();
+                        $appointmentSchedule->appointed_date = $startDate->format('Y-m-d');
+                        $appointmentSchedule->facility_id = $facilityId;
+                        $appointmentSchedule->department_id = $departmentId;
+                        $appointmentSchedule->appointed_time = $timeStart;
+                        $appointmentSchedule->appointedTime_to = $timeTo[$dayOfWeek][$index];
+                        $appointmentSchedule->opdCategory = 1; // Assuming OPD Category is fixed
+                        $appointmentSchedule->slot = $request->slot;
+                        $appointmentSchedule->created_by = $createdBy;
+                        $appointmentSchedule->save();
+                    }
+                }
+                $startDate->modify('+1 day');
             }
-     
-            $editConfig->days = implode('|', $request->days);
-            $editConfig->time = implode('|', $scheduleData);
-            $editConfig->save();
-
-
-            $sched = new AppointmentSchedule();
-            $sched->configId =  $request->config_id;
-
-            try {
-                $startDate = Carbon::createFromFormat('m-d-Y', $request->startDate);
-                $endDate = Carbon::createFromFormat('m-d-Y', $request->endDate);
-            
-                $sched->appointed_date = $startDate->format('Y-m-d');
-                $sched->date_end = $endDate->format('Y-m-d');
-            } catch (\Exception $e) {
-            }
-
-            $sched->department_id = $request->department_id;
-            $sched->facility_id = $request->facility_id;
-            $sched->opdCategory = $request->subopd_id;
-            $sched->created_by = $user->id;
-
-            $sched->save();
              
             Session::put('appointment_save',true);
             return redirect()->to('manage/appointment?filterappointment=config'); 
