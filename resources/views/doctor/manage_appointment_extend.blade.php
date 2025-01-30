@@ -258,7 +258,7 @@
                                                 </div>
                                                 <div class="col-md-6" style="padding: 0;">
                                                     <label for="slot" style="padding:0;">Slot :</label>
-                                                    <input type="number" name="slot" class="form-control" required>
+                                                    <input type="number" name="number_slot" class="form-control" required>
                                                 </div>
                                             </div>
                                         </div>

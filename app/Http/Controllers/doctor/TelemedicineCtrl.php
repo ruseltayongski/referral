@@ -331,7 +331,7 @@ class TelemedicineCtrl extends Controller
     public function createAppointment(Request $request)
     {
         $user = Session::get('auth');
-        
+       
         if($request->config_id){
 
             $startDate = DateTime::createFromFormat('m-d-Y', $request->startDate);
@@ -381,7 +381,7 @@ class TelemedicineCtrl extends Controller
                 $appointment_schedule->opdCategory = $request->subopd_id;
                 // $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
                 // $appointment_schedule->status = "manual";
-                $appointment_schedule->slot = $request->slot;
+                $appointment_schedule->slot = $request->number_slot;
                 $appointment_schedule->created_by = $user->id;
                 $appointment_schedule->save();
     
