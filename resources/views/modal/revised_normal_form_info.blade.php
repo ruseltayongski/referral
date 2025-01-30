@@ -2259,8 +2259,8 @@ $facilities = \App\Facility::select('id','name')
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <label for="systolic">Blood Pressure:</label>
-                                                    <input type="number" id="systolic" placeholder="Systolic (e.g., 100)" 
+                                                <label for="systolic_normal_info">Blood Pressure:</label>
+                                                    <input type="number" id="systolic_normal_info" placeholder="Systolic (e.g., 100)" 
                                                         style="width:18%;" min="0" max="300" 
                                                         oninput="updateBloodPressure()"> /
                                                     <input type="number" id="diastolic" placeholder="Diastolic (e.g., 90)" 
@@ -2282,11 +2282,11 @@ $facilities = \App\Facility::select('id','name')
                         <script>
                             function updateBloodPressure() {
                                 // Get systolic and diastolic values
-                                const systolic = document.getElementById('systolic').value;
+                                const systolic_normal_info = document.getElementById('systolic_normal_info').value;
                                 const diastolic = document.getElementById('diastolic').value;
                                 
                                 // Combine into "100/90" format
-                                document.getElementById('vital_bp').value = systolic + '/' + diastolic;
+                                document.getElementById('vital_bp').value = systolic_normal_info + '/' + diastolic;
                             }
                         </script>
 
