@@ -127,7 +127,7 @@
         $department = null;
 
         $getSubOpd = \App\SubOpd::find($user->subopd_id);
-    
+       
         $Getdepartment = \App\Department::select('id','description')->get();   
         $config_sched_data =  \App\Cofig_schedule::get(); 
         $subOpd = \App\SubOpd::get();
@@ -139,7 +139,7 @@
             }
         } 
     @endphp
-
+      
     <div class="box box-primary">
         <div class="box-header with-border">
             <div class="pull-right form-inline">
