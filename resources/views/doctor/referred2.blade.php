@@ -208,7 +208,8 @@ $user = Session::get('auth');
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
                             @endif -->
 
-                            <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
+                            <button class="btn btn-xs btn-info btn-feedback" 
+                                data-toggle="modal"
                                 data-target="#feedbackModal"
                                 data-code="{{ $row->code }}"
                                 onclick="viewReco($(this))">

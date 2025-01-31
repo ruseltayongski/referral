@@ -42,7 +42,7 @@
                                                 @endforeach
                                                 
                                             </select>
-                                       
+                                               
                                             <label for="department_id">Opd Category:</label>
                                             <input type="hidden" class="form-control" name="department_id" id="department_id" value="5">
                                             <input type="hidden" name="subopd_id" value="{{ $user->subopd_id }}">
@@ -255,6 +255,10 @@
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                         </button>
                                                     </div>
+                                                </div>
+                                                <div class="col-md-6" style="padding: 0;">
+                                                    <label for="slot" style="padding:0;">Slot :</label>
+                                                    <input type="number" name="number_slot" class="form-control" required>
                                                 </div>
                                             </div>
                                         </div>

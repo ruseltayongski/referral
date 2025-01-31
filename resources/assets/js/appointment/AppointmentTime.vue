@@ -31,6 +31,7 @@ export default {
       configAppoinmentTime: [],
       selectedAppointmentTime: null,
       selectedAppointmentDoctor: null,
+      selectedCategory: null,
       showAppointmentTime: false,
       base: $("#broadcasting_url").val(),
       followUpReferredId: 0,
@@ -88,6 +89,7 @@ export default {
       this.showAppointmentTime = true;
       this.selectedAppointmentTime = null;
       this.selectedAppointmentDoctor = null;
+      this.selectedCategory = null;
     },
     facilitySelectedId: async function (newValue, oldValue) {
       this.showAppointmentTime = false;
@@ -323,6 +325,7 @@ export default {
                       Please choose Time and OPD
                       {{currentConfig}}
                     </h3> -->
+                   
                     <div id="date-selected"></div>
                   </div>
                   <!-- :disabled="areAllAppointmentNotAvailable()" -->
@@ -420,6 +423,25 @@ export default {
                             >{{ appointment.appointed_time }} to
                             {{ appointment.appointedTime_to }}</span
                           >
+
+                           <ul class="doctor-list" v-if="selectedAppointmentTime === appointment.id">
+                            <li>
+                              <input
+                                type="radio"
+                                class="hours_radio"
+                                v-model="selectedCategory"
+                                :value="appointment.sub_opd.id"
+                              />&nbsp;&nbsp;
+                              <small
+                                class="text-green"
+                              >
+                                {{
+                                  appointment.sub_opd.description
+                                }}
+                              </small>
+                            </li>
+                          </ul>
+
                           <!-- <span
                             :class="{
                               'text-green': !areAllDoctorsNotAvailable(

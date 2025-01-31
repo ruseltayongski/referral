@@ -21,7 +21,8 @@ class Facility extends Model
     //------------------------------I add this -------//
     public function appointmentSchedules()
     {
-        return $this->hasMany(AppointmentSchedule::class, 'facility_id');
+        return $this->hasMany(AppointmentSchedule::class, 'facility_id')
+        ->with(['subOpd', 'telemedAssignedDoctor', 'configSchedule']);
     }
 
     public function activities()
