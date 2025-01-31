@@ -30,7 +30,7 @@ class AppointmentSchedule extends Model
     }
 
     public function subOpd(){
-        return $this->belongsTo(subOpd::class, 'opdCategory', 'id');
+        return $this->belongsTo(SubOpd::class, 'opdCategory', 'id');
     }
    
 }
