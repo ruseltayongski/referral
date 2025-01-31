@@ -20,7 +20,7 @@
     $(document).ready(function() {
         $('.modal-select2').select2({
             width: '100%',
-            dropdownParent: $('#normalFormModal')
+            //dropdownParent: $('#normalFormModal')
         });
     });
 
