@@ -21,18 +21,28 @@ if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== fals
 }
 
 $user = Session::get('auth');
+
 $facilities = \App\Facility::select('id', 'name', 'address')
     ->where('id', '!=', $user->facility_id)
     ->where('status', 1)
     ->where('referral_used', 'yes');
-if ($facility_id_telemedicine) {
-    $facilities = $facilities->where('id', $facility_id_telemedicine);
+
+// if ($facility_id_telemedicine) {
+//     $facilities = $facilities->where('id', $facility_id_telemedicine);
+// }
+
+
+if($facility_id_telemedicine){
+    $telemed_facility= \App\Facility::select('id', 'name', 'address')
+        ->where('id', $facility_id_telemedicine)
+        ->where('referral_used', 'yes')->first();
+}else{
+    $facilities = $facilities
+        ->orderBy('name', 'asc')
+        ->get();
 }
 
-$facilities = $facilities
-    ->orderBy('name', 'asc')
-    ->get();
-
+   
 $myfacility = \App\Facility::find($user->facility_id);
 $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
 $inventory = \App\Inventory::where("facility_id", $myfacility->id)->get();
@@ -69,7 +79,7 @@ $department_id = $appoitment_sched[0]->department_id;
     }
 </style>
 
-<div class="modal fade" role="dialog" id="normalFormModal">
+<div class="modal fade" role="dialog" id="normalFormModal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form">
@@ -126,12 +136,14 @@ $department_id = $appoitment_sched[0]->department_id;
                             <div class="col-md-4">
                                 <small class="text-success"><b>REFERRED TO:</b></small> &nbsp;<span class="text-red">*</span><br>
                                 @if($appointmentParam)
-                                <input type="hidden" name="referred_facility" value="{{$facilities->find($facility_id_telemedicine)->id}}">
+                               {{-- <input type="hidden" name="referred_facility" value="{{$facilities->find($facility_id_telemedicine)->id}}"> --}}
+                               <input type="hidden" name="referred_facility" value="{{$telemed_facility->id}}"> 
                                 <select class="select2 select_facility form-control" disabled>
-                                    <option>{{$facilities->find($facility_id_telemedicine)->name}}</option>
+                                    {{--<option>{{$facilities->find($facility_id_telemedicine)->name}}</option>--}}
+                                    <option value="">{{ $telemed_facility->name }}</option>
                                 </select>
                                 @else
-                                <select name="referred_facility" class="select2 select_facility form-control" required>
+                                <select name="referred_facility" class="modal-select2 select_facility form-control" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -166,7 +178,8 @@ $department_id = $appoitment_sched[0]->department_id;
                                 <small class="text-success"><b>ADDRESS:</b></small><br>
 
                                 @if($appointmentParam)
-                                &nbsp;<span class="text-yellow facility_address">{{$facilities->find($facility_id_telemedicine)->address}}</span>
+                                {{--&nbsp;<span class="text-yellow facility_address">{{$facilities->find($facility_id_telemedicine)->address}}</span> --}}
+                                &nbsp;<span class="text-yellow facility_address">{{$telemed_facility->address}}</span>
                                 @else
                                 &nbsp;<span class="text-yellow facility_address"></span>
                                 @endif
@@ -349,7 +362,7 @@ $department_id = $appoitment_sched[0]->department_id;
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         <button type="submit" id="sbmitBtn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                     </div>
                     <div class="clearfix"></div>

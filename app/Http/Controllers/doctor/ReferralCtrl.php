@@ -73,7 +73,7 @@ class ReferralCtrl extends Controller
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
         $user = Session::get('auth');
         
-        $telemedOrReferral = $request->query('filterRef', null);
+        $telemedOrReferral = $request->filterRef;
        
         $data = Tracking::select(
             'tracking.*',
@@ -94,9 +94,12 @@ class ReferralCtrl extends Controller
             ->leftJoin('users as action','action.id','=','tracking.action_md')
             ->where('referred_to',$user->facility_id);
            
-        if ($telemedOrReferral !== null) {
+        if ($telemedOrReferral) {
             $data = $data->where('tracking.telemedicine', $telemedOrReferral)
                         ->where('tracking.subopd_id', $user->subopd_id);
+        }
+        else {
+            $data = $data->where('tracking.telemedicine', '!=', 1);
         }
 
         if($request->search)

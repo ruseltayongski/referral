@@ -7,7 +7,7 @@
     ?>
     <div class="panel-body" style="max-height:200px">
         <div class="list-group">
-            <a href="{{ asset('doctor/referral') }}" class="list-group-item clearfix">
+            {{-- <a href="{{ asset('doctor/referral') }}" class="list-group-item clearfix">
                 Incoming
                 <span class="pull-right">
                         <div class="badge">
@@ -15,7 +15,7 @@
                         </div>
 
                     </span>
-            </a>
+            </a> --}}
             <a href="{{ asset('doctor/referred') }}" class="list-group-item clearfix">
                 Referred
                 <span class="pull-right">
