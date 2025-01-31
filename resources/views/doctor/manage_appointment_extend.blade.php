@@ -45,7 +45,7 @@
                                                
                                             <label for="department_id">Opd Category:</label>
                                             <input type="hidden" class="form-control" name="department_id" id="department_id" value="5">
-                                            <input type="hidden" name="subopd_id" value="{{ $getSubOpd->id }}">
+                                            <input type="hidden" name="subopd_id" value="{{ $user->subopd_id }}">
                                             <input type="text" class="form-control"  value="{{ $getSubOpd->description }}" readonly>
                                         </div>
 

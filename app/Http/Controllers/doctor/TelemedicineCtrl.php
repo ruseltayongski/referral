@@ -354,7 +354,7 @@ class TelemedicineCtrl extends Controller
                         $appointmentSchedule->department_id = $departmentId;
                         $appointmentSchedule->appointed_time = $timeStart;
                         $appointmentSchedule->appointedTime_to = $timeTo[$dayOfWeek][$index];
-                        $appointmentSchedule->opdCategory = 1; // Assuming OPD Category is fixed
+                        $appointmentSchedule->opdCategory = $request->subopd_id; // Assuming OPD Category is fixed
                         $appointmentSchedule->slot = $request->number_slot;
                         $appointmentSchedule->created_by = $createdBy;
                         $appointmentSchedule->save();
