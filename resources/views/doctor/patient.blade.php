@@ -747,9 +747,9 @@ $counter = 0;
         });
     }
 
-    $(".select2").select2({
-        width: '100%'
-    });
+    // $(".select2").select2({
+    //     width: '100%',
+    // });
 
     var referring_facility = "{{ $user->facility_id }}";
     var referred_facility = '';
@@ -841,10 +841,8 @@ $counter = 0;
                 $('.patient_sex').val(sex);
                 if (age > 18) {
                     $('#pedia_show_normal').css('display', 'none');
-                    console.log("hidden pediatric");
                 } else {
                     $('#pedia_show_normal').css('display', 'block');
-                    console.log("show pediatric");
                 }
                 if (age > 9 && sex === 'Female'){
                     $('#menarche_show').css('display', 'block');

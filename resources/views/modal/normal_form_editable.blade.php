@@ -79,7 +79,7 @@ $department_id = $appoitment_sched[0]->department_id;
     }
 </style>
 
-<div class="modal fade" role="dialog" id="normalFormModal">
+<div class="modal fade" role="dialog" id="normalFormModal" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <form action="{{ url('doctor/patient') }}" method="POST" class="form-submit normal_form">
@@ -143,7 +143,7 @@ $department_id = $appoitment_sched[0]->department_id;
                                     <option value="">{{ $telemed_facility->name }}</option>
                                 </select>
                                 @else
-                                <select name="referred_facility" class="select2 select_facility form-control" required>
+                                <select name="referred_facility" class="modal-select2 select_facility form-control" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -362,7 +362,7 @@ $department_id = $appoitment_sched[0]->department_id;
                     </div>
                     <hr />
                     <div class="form-fotter pull-right">
-                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         <button type="submit" id="sbmitBtn" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                     </div>
                     <div class="clearfix"></div>

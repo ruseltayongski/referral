@@ -207,7 +207,13 @@ $user = Session::get('auth');
                                                 <small class="status">
                                                     [ {{ $row->sex }}, {{ $row->patient_age }} ]
                                                 </small>
-                                                was <span class="text-blue">{{ $row->status }}</span> to
+                                                was <span class="text-blue">
+                                                    @if($row->telemedicine)
+                                                    consulted
+                                                    @else
+                                                    {{ $row->status }}
+                                                    @endif
+                                                </span> to
                                                 <span class="text-danger">{{ $department }}</span>
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
                                                 <span class="facility">{{ $row->facility_name }}</span>

@@ -12,7 +12,17 @@
             });
         }
     });
-    $(".select2").select2({ width: '100%' });
+
+    $(".select2").select2({ 
+        width: '100%',
+    });
+
+    $(document).ready(function() {
+        $('.modal-select2').select2({
+            width: '100%',
+            dropdownParent: $('#normalFormModal')
+        });
+    });
 
     var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";
     var loading = '<center><img src="'+path_gif+'" alt=""></center>';
