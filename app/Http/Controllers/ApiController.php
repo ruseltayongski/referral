@@ -655,8 +655,8 @@ class ApiController extends Controller
     }
 
     public function patientFollowUp(Request $request) {
-    
         $user = Session::get('auth');
+        // dd($request->all());
         $patient_form = null;
         $patient_id = 0;
         
@@ -677,9 +677,10 @@ class ApiController extends Controller
                 $telemedAssigned->save();
     
             }else{
-    
-                $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $request->Appointment_id)->where('doctor_id', $request->Doctor_id)->first();
-                $telemedAssignDoctor->appointment_by = $user->id;
+                
+                $telemedAssignDoctor = new TelemedAssignDoctor();
+                $telemedAssignDoctor->appointment_id = $request->Appointment_id;
+                $telemedAssignDoctor->doctor_id = $user->id;
                 $telemedAssignDoctor->save();
             }
         }
@@ -776,7 +777,7 @@ class ApiController extends Controller
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
         //end broadcast
 
-        return Redirect::route('doctor_referred');
+        return Redirect::route('doctor_referred', ['filterRef' => 1]);
     }
 
 

@@ -22,12 +22,14 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <div class="appointment-container">
-                                        <div class="form-check form-check-inline d-flex">
-                                            <input type="checkbox" class="form-check-input custom-checkbox" id="enable_config_appointment" name="enable_appointment" value="config appointment">
-                                            <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config <small><i>(Optional)</i></small></label>
+                                    @if($user->level != 'support')
+                                        <div class="appointment-container">
+                                            <div class="form-check form-check-inline d-flex">
+                                                <input type="checkbox" class="form-check-input custom-checkbox" id="enable_config_appointment" name="enable_appointment" value="config appointment">
+                                                <label class="form-check-label custom-label-config" for="enable_appointment">Appointment Config <small><i>(Optional)</i></small></label>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endif
                                     <div class="label-border">
                                 
                                         <div style="display: none;" id="side_Config">
@@ -38,7 +40,7 @@
                                             <select class="form-control select2" id="defaultCategorySelect" name="config_id">  <!-- Config Appointment -->
                                                 <option selected value="">Select Default Category</option>
                                                 @foreach($configs as $config)
-                                                        <option value="{{$config->id}}">{{$config->description}}</option>
+                                                    <option value="{{$config->id}}">{{$config->description}}</option>
                                                 @endforeach
                                                 
                                             </select>
@@ -48,12 +50,22 @@
                                             <input type="hidden" name="subopd_id" value="{{ $user->subopd_id }}">
                                             <input type="text" class="form-control"  value="{{ $getSubOpd->description }}" readonly>
                                         </div>
-
+                                        
                                         <label for="facility_id">Facility:</label>
                                         @foreach($facility as $Facility)
-                                                <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
-                                                <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}">
+                                            <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
+                                            <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}">
                                         @endforeach
+
+                                        @if($user->level === 'support')
+                                            <label for="add_opdCategory">OPD Category:</label>
+                                            <select class="form-control select2" id="add_department" name="addsubOpd_id">
+                                                <option selected value="">Select OPD Category</option>
+                                                @foreach($subOpd as $sub)
+                                                    <option value="{{$sub->id}}">{{ $sub->description }}</option>
+                                                @endforeach 
+                                            </select>  
+                                        @endif
 
                                         <label for="appointed_date" id="appointment_date_label">Appointment Date:</label>
 
@@ -271,56 +283,33 @@
                                             <div id="opdCategoryContainer">
                                                 <div>
                                                     <div class="row">
-                                                        <div class="col-md-12">
-                                                            <label for="appointed_time">Appointment Time:</label><br>
-                                                            <div class="col-md-6">
-                                                                <span>From:</span>
-                                                                <input type="time" class="form-control add-appointment-field" id="add_appointed_time_1"  name="add_appointed_time1">
+                                                            <div class="col-md-12">
+                                                                <label for="appointed_time">Appointment Time:</label><br>
+                                                                <div class="col-md-6">
+                                                                    <span>From:</span>
+                                                                    <input type="time" class="form-control add-appointment-field" id="add_appointed_time_1"  name="add_appointed_time1">
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <span>To:</span>
+                                                                    <input type="time" class="form-control add-appointment-field" id="add_appointed_time_to1" name="add_appointed_time_to1">
+                                                                </div>
+                                                                <div class="col-md-6" style="margin-top: 10px;">
+                                                                    <span>Slot:</span>
+                                                                    <input type="number" class="form-control" name="slot">
+                                                                </div>
+                                                                <br>
+                                                                <!-- <div class="col-md-12" id="additionalTimeContainer" style="display: none;"></div>
+                                                                <div style="margin-top: 15px;">
+                                                                    <button type="button" class="btn btn-info btn-xs" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
+                                                                </div> -->
+                                                                <div class="col-md-12" id="additionalTimeContainer" style="display: none;"></div> 
+                                                                <div class="col-md-12" style="margin-top: 10px;">
+                                                                    <button type="button" class="btn btn-info btn-xs" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
+                                                                </div>
                                                             </div>
-                                                            <div class="col-md-6">
-                                                                <span>To:</span>
-                                                                <input type="time" class="form-control add-appointment-field" id="add_appointed_time_to1" name="add_appointed_time_to1">
-                                                            </div>
-                                                            <div class="col-md-6" style="margin-top: 10px;">
-                                                                <span>Slot:</span>
-                                                                <input type="number" class="form-control" name="slot">
-                                                            </div>
-                                                            {{-- <label for="opdCategory">OPD Category:</label>
-                                                            <select class="form-control select2 add-appointment-field" id="add_opdCategory_1" name="add_opdCategory1" id="opdCategory">
-                                                                <option selected value="">Select OPD Category</option>
-                                                                <option value="Family Medicine">Family Medicine</option>
-                                                                <option value="Internal Medicine">Internal Medicine</option>
-                                                                <option value="General Surgery">General Surgery</option>
-                                                                <option value="Trauma Care">Trauma Care</option>
-                                                                <option value="Burn Care">Burn Care</option>
-                                                                <option value="Ophthalmology">Ophthalmology</option>
-                                                                <option value="ENT">ENT</option>
-                                                                <option value="Neurology">Neurology</option>
-                                                                <option value="Urosurgery">Urosurgery</option>
-                                                                <option value="Toxicology">Toxicology</option>
-                                                                <option value="OB-GYNE">OB-GYNE</option>
-                                                                <option value="Pediatric">Pediatric</option>      
-                                                                <option value="Oncology">Oncology</option>      
-                                                                <option value="Nephrology">Nephrology</option>      
-                                                                <option value="Dermatology">Dermatology</option>       
-                                                                <option value="Surgery">Surgery</option>   
-                                                                <option value="Geriatics Medicine">Geriatics Medicine</option>          
-                                                                <option value="Physical and Rehabilitation Medicine">Physical and Rehabilitation Medicine</option>       
-                                                                <option value="Orthopedics">Orthopedics</option>   
-                                                                <option value="Cardiology">Cardiology</option>        
-                                                            </select> --}}
-                                                        </div>
                                                     </div>
-                                                    {{-- <div>
-                                                        <label>Available Doctor</label>
-                                                        <select class="form-control select2 available_doctor1 add-appointment-field" id="add_available_doctor_1" name="add_available_doctor1[]" multiple="multiple" data-placeholder="Select Doctor" style="width: 100%;"></select>
-                                                    </div> --}}
                                                 </div>
                                             </div>
-                                            <div id="additionalTimeContainer" style="display: none;"></div>
-                                            {{-- <div style="margin-top: 15px;">
-                                                <button type="button" class="btn btn-info btn-xs" id="add_slots" onclick="addTimeInput()">Add Appointment</button>
-                                            </div> --}}
                                         </div>
                                     </div>
                                 </div>
