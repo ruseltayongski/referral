@@ -481,7 +481,7 @@ $counter = 0;
                                             </a>
                                         
                                     @elseif ($user->facility_id == 63 && $row->sex=='Male')
-                                        <a href="#nonPregnantChooseVersionModal" 
+                                        <a href="#normalFormModal" 
                                             data-patient_id="{{ $row->id }}" 
                                             data-backdrop="static" 
                                             data-toggle="modal" 

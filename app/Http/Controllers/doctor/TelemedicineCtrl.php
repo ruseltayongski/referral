@@ -63,9 +63,16 @@ class TelemedicineCtrl extends Controller
                 },
                 'subOpd',
                 'configSchedule',
-            ])
-            ->where('opdCategory', $user->subopd_id)
-            ->where('facility_id',$facility);
+            ]);
+            // ->where('opdCategory', $user->subopd_id)
+
+
+            if ($user->level === 'doctor') {
+                $query->where('opdCategory', $user->subopd_id);
+            }
+
+            // Apply facility filter for all users
+            $query->where('facility_id', $facility);
         
 
         $appointment_schedule = $query->orderBy('created_at', 'desc')
@@ -73,12 +80,11 @@ class TelemedicineCtrl extends Controller
             ->paginate(20);
    
         $user_facility = User::where('department_id',$user->department_id)
-        ->where('level','doctor')
+        //  ->where('level','doctor')
         ->where('facility_id',$facility)
         ->with('facility')
         ->groupBy('facility_id')
         ->get();
-        
         
         $data = [
             'appointment_schedule' => $appointment_schedule,
@@ -378,7 +384,11 @@ class TelemedicineCtrl extends Controller
                 $appointment_schedule->department_id = 5;
                 $appointment_schedule->appointed_time = $request['add_appointed_time'.$i];
                 $appointment_schedule->appointedTime_to = $request['add_appointed_time_to'.$i];
-                $appointment_schedule->opdCategory = $request->subopd_id;
+                if($user->level == "support"){
+                    $appointment_schedule->opdCategory = $request->addsubOpd_id;
+                }else{
+                    $appointment_schedule->opdCategory = $request->subopd_id;
+                }
                 // $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
                 // $appointment_schedule->status = "manual";
                 $appointment_schedule->slot = $request->slot;

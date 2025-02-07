@@ -25,7 +25,9 @@ $multi_faci = Session::get('multiple_login');
                     <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
                     @endif
                     {{-- <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Appointment Calendar</a></li> --}}
-                    <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
+                    <!-- @if($user->level == 'support')
+                        <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
+                    @endif -->
                     <li class="divider"></li>
                     <li><a href="{{ url('doctor/accepted') }}"><i class="fa fa-user-plus"></i> Accepted Patients</a></li>
                     <li><a href="{{ url('doctor/discharge') }}"><i class="fa fa-users"></i> Discharged Patients</a></li>
@@ -104,8 +106,17 @@ $multi_faci = Session::get('multiple_login');
         @elseif($user->level=='support')
             <li><a href="{{ url('support/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
             @include('layouts.report_menu')
+            <!-- <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li> -->
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-table"></i> Manage Appointment<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
+                    <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manual Appointment</a></li>
+                </ul>
+            </li>
             <li><a href="{{ url('support/users') }}"><i class="fa fa-user-md"></i> Manage Users</a></li>
             <li><a href="{{ url('support/hospital') }}"><i class="fa fa-hospital-o"></i> Hospital Info</a></li>
+                   
         <!--
                 <li><a href="{{ url('inventory').'/'.$user->facility_id }}"><i class="fa fa-calculator"></i> Inventory <span class="badge bg-red"> New</span></a></li>
                 <li class="dropdown">

@@ -237,7 +237,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
-                                <select name="referred_facility" class="select2 select_facility" required>
+                                <select name="referred_facility" class="modal4-select2 select_facility" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>

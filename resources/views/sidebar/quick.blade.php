@@ -5,7 +5,7 @@
     <?php
     $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
     ?>
-    <div class="panel-body" style="max-height:200px">
+    <div class="panel-body" style="max-height:200px"> 
         <div class="list-group">
             {{-- <a href="{{ asset('doctor/referral') }}" class="list-group-item clearfix">
                 Incoming
