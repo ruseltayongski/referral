@@ -204,7 +204,8 @@ export default {
      
       if (this.followUpReferredId) {
         const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');
-
+        console.log("appointedTimes::::", this.followUpReferredId);
+        
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
