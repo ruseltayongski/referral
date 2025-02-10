@@ -355,17 +355,7 @@
 </form>
 
 <script>
-    // $(".select2").select2({ width: '100%' });
-    $(document).ready(function() {
-        $(".select_muncity").select2({
-            // dropdownParent: $("#facility_modal")
-        });
-
-        $(".select_tricity").select2({
-            width: '100%',
-            // dropdownParent: $("#facility_modal")
-        })
-    });
+     $(".select2").select2({ width: '100%' });
 
     $('.select_province').on('change',function(){
         $('.loading').show();
