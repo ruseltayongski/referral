@@ -61,6 +61,15 @@
         </select>
     </div>
     <div class="form-group">
+        <label>Tri City</label>
+        <select class="select_tricity select2" name="tricity_id">
+            <option value="">Select tricity</option>
+            @foreach(\App\Muncity::where("province_id",2)->get() as $row)
+                <option value="{{ $row->id }}" <?php if($row->id==$data->tricity_id) echo 'selected'; ?>>{{ $row->description }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div class="form-group">
         <label>Address:</label>
         <input type="text" class="form-control" value="@if(isset($data->address)){{ $data->address }}@endif" name="address" required>
     </div>
@@ -314,15 +323,7 @@
             <option value="yes" <?php if($data->vaccine_used == 'yes')echo 'selected'; ?>>Yes</option>
         </select>
     </div>
-    <div class="form-group">
-        <label>Tri City</label>
-        <select class="select2" name="tricity_id">
-            <option value="">Select tricity</option>
-            @foreach(\App\Muncity::where("province_id",2)->get() as $row)
-                <option value="{{ $row->id }}" <?php if($row->id==$data->tricity_id) echo 'selected'; ?>>{{ $row->description }}</option>
-            @endforeach
-        </select>
-    </div>
+  
     <div class="form-group">
         <label>Referral Used</label>
         <select class="form-control" name="referral_used" required>
@@ -354,7 +355,17 @@
 </form>
 
 <script>
-    $(".select2").select2({ width: '100%' });
+    // $(".select2").select2({ width: '100%' });
+    $(document).ready(function() {
+        $(".select_muncity").select2({
+            dropdownParent: $("#facility_modal") // Ensure this matches your modal's ID
+        });
+
+        $(".select_tricity").select2({
+            width: '100%',
+            dropdownParent: $("#facility_modal")
+        })
+    });
 
     $('.select_province').on('change',function(){
         $('.loading').show();
