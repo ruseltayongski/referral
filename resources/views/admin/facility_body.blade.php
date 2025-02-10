@@ -358,12 +358,12 @@
     // $(".select2").select2({ width: '100%' });
     $(document).ready(function() {
         $(".select_muncity").select2({
-            dropdownParent: $("#facility_modal") // Ensure this matches your modal's ID
+            // dropdownParent: $("#facility_modal")
         });
 
         $(".select_tricity").select2({
             width: '100%',
-            dropdownParent: $("#facility_modal")
+            // dropdownParent: $("#facility_modal")
         })
     });
 
