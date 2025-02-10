@@ -23,18 +23,7 @@
             // dropdownParent: $('#normalFormModal'),
             // dropdownParent2: $('#pregnantFormModal'),
         });
-        $('.modal2-select2').select2({
-            width: '100%',
-            dropdownParent: $('#pregnantFormModal'),
-        });
-        $('.modal3-select2').select2({
-            width: '100%',
-            dropdownParent: $('#revisedpregnantFormModal'),
-        });
-        $('.modal4-select2').select2({
-            width: '100%',
-            dropdownParent: $('#revisednormalFormModal'),
-        });
+        
     });
     $.fn.modal.Constructor.prototype.enforceFocus = function() {};
     
