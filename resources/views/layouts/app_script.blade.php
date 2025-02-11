@@ -20,23 +20,13 @@
     $(document).ready(function() {
         $('.modal-select2').select2({
             width: '100%',
-            dropdownParent: $('#normalFormModal'),
+            // dropdownParent: $('#normalFormModal'),
             // dropdownParent2: $('#pregnantFormModal'),
         });
-        $('.modal2-select2').select2({
-            width: '100%',
-            dropdownParent: $('#pregnantFormModal'),
-        });
-        $('.modal3-select2').select2({
-            width: '100%',
-            dropdownParent: $('#revisedpregnantFormModal'),
-        });
-        $('.modal4-select2').select2({
-            width: '100%',
-            dropdownParent: $('#revisednormalFormModal'),
-        });
+        
     });
-
+    $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+    
     var path_gif = "<?php echo asset('resources/img/loading.gif'); ?>";
     var loading = '<center><img src="'+path_gif+'" alt=""></center>';
 

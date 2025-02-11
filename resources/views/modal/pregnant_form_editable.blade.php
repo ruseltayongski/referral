@@ -130,7 +130,7 @@
                                 <option>{{$facilities->find($facility_id_telemed)->name }}</option>                               
                             </select>
                             @else
-                            <select name="referred_facility" class="form-control-select modal2-select2 select_facility" style="width: 100%" required>
+                            <select name="referred_facility" class="form-control-select modal-select2 select_facility" style="width: 100%" required>
                                 <option value="">Select Facility...</option>
                                 @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
