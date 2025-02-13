@@ -22,6 +22,7 @@
       <div class="widget-user-image">
         <img :src="doh_logo" class="img-circle" alt="User Avatar" />
       </div>
+      
       <div class="box-footer">
         <div class="row">
           <div class="col-sm-6">

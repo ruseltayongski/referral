@@ -832,7 +832,7 @@ class TelemedicineCtrl extends Controller
 
         $totalConsultationMinutes = Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
-            // ->where('subopd_id', '!=', '')
+            ->where('subopd_id', '!=', '')
             ->sum('consultation_duration');
 
         $hours = floor($totalConsultationMinutes / 60);
@@ -897,11 +897,11 @@ class TelemedicineCtrl extends Controller
             $new_duration = (int) $req->call_duration;
 
                     // Debugging output (check values in logs)
-            Log::info("Existing Duration: " . $existing_duration);
-            Log::info("New Call Duration: " . $new_duration);
+            // Log::info("Existing Duration: " . $existing_duration);
+            // Log::info("New Call Duration: " . $new_duration);
 
             $tracking->consultation_duration = $existing_duration + $new_duration;
-            Log::info("Updated Duration: " . $tracking->consultation_duration);
+            // Log::info("Updated Duration: " . $tracking->consultation_duration);
             $tracking->save();
         }
        

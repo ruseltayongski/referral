@@ -73,7 +73,7 @@
         .with-badge::before {
             content: '';
             position: absolute;
-            top: 0;
+            top: 2;
             right: 0;
             width: 50px;
             height: 50px;
