@@ -812,10 +812,15 @@ class TelemedicineCtrl extends Controller
     public function countconsultation(){
         $user = Session::get('auth');
 
-        $countSubOpd = SubOpd::distinct('id')->count('id');
+        $countSubOpd = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+            ->where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->distinct('subopd.description')
+            ->count('subopd.description');
         
         $totalPatient = Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
+            ->where('subopd_id', '!=', '')
             ->distinct('id')
             ->count('id');
 
@@ -827,6 +832,7 @@ class TelemedicineCtrl extends Controller
 
         $totalConsultationMinutes = Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
+            ->where('subopd_id', '!=', '')
             ->sum('consultation_duration');
 
         $hours = floor($totalConsultationMinutes / 60);
@@ -841,39 +847,36 @@ class TelemedicineCtrl extends Controller
         } else {
             $formattedDuration = "{$minutes} minute" . ($minutes > 1 ? 's' : '');
         }
-            // $totalConsultation = Activity::where('status', 'examined')
-            //     ->whereHas('tracking', function ($query) use ($user) {
-            //         $query->where('telemedicine', 1)
-            //             ->where('referred_from', $user->facility_id);
-            //     })
-            //     ->distinct('patient_id')
-            //     ->count();
 
-            // $totalConsultation = Tracking::selectRaw('COUNT(DISTINCT tracking.patient_id) as totalConsultation')
-            //     ->where('tracking.telemedicine', 1)
-            //     ->where('tracking.referred_from', $user->facility_id)
-            //     ->join('activity', function ($join) {
-            //         $join->on('tracking.patient_id', '=', 'activity.patient_id')
-            //             ->where('activity.status', 'called');
-            //     })
-            //     ->value('totalConsultation');
+        // $totalConsultation = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
+        //     ->where('activity.status', 'examined')
+        //     ->where('tracking.telemedicine', 1)
+        //     ->where('tracking.referred_from', $user->facility_id)
+        //     ->distinct('activity.patient_id')
+        //     ->count('activity.patient_id');
 
-        $totalConsultation = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
-            ->where('activity.status', 'examined')
-            ->where('tracking.telemedicine', 1)
-            ->where('tracking.referred_from', $user->facility_id)
-            ->distinct('activity.patient_id')
-            ->count('activity.patient_id');
+        $totalConsultation =  Tracking::where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->where('subopd_id', '!=', '')
+            ->distinct('id')
+            ->count('id');
         
-        $totalConsulPerDepartment = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
-            ->join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
-            ->where('activity.status', 'examined')
-            ->where('tracking.telemedicine', 1)
-            ->where('tracking.referred_from', $user->facility_id)
-            ->select('subopd.description', DB::raw('COUNT(DISTINCT activity.patient_id) as total_consultations'))
+        // $totalConsulPerDepartment = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
+        //     ->join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+        //     ->where('activity.status', 'examined')
+        //     ->where('tracking.telemedicine', 1)
+        //     ->where('tracking.referred_from', $user->facility_id)
+        //     ->select('subopd.description', DB::raw('COUNT(DISTINCT activity.patient_id) as total_consultations'))
+        //     ->groupBy('subopd.id', 'subopd.description')
+        //     ->get();
+
+        $totalConsulPerDepartment = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+            ->where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->selectRaw('subopd.description, COUNT(tracking.id) as total_consultations')
             ->groupBy('subopd.id', 'subopd.description')
             ->get();
-
+ 
         return view('doctor.reportConsultation', [
             'countDepartment' => $countSubOpd ,
             'numberPatient' => $totalPatient,
