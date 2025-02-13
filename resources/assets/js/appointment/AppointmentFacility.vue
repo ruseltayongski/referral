@@ -3,59 +3,47 @@
     class="col-md-4 scroll-item"
     v-if="appointment.id !== user.facility_id && shouldDisplayFacility"
   > -->
-  <div
-    class="col-md-4 scroll-item"
-    v-if="shouldDisplayFacility"
-  >
-    <div
-      :class="{ highlighted: appointment.id == facilitySelectedId }"
-      class="box box-widget widget-user with-badge"
-    >
-      <div class="widget-user-header">
-        <h3 class="widget-user-username">
-          {{ appointment.name }}
-        </h3>
-        <h5 class="widget-user-desc">
-          {{ appointment.address }}
-        </h5>
-      </div>
-      <div class="widget-user-image">
-        <img :src="doh_logo" class="img-circle" alt="User Avatar" />
-      </div>
-      <div class="box-footer">
-        <div class="row">
-          <div class="col-sm-4 border-right">
-            <div class="description-block">
-              <h5 class="description-header">
-                {{ balanceSlotThisMonth }}
-              </h5>
-              <span class="description-text">Total Appointments</span>
-            </div>
+<div class="col-12 col-sm-6 col-md-4 scroll-item" v-if="shouldDisplayFacility">
+  <div :class="{ highlighted: appointment.id == facilitySelectedId }" class="box box-widget widget-user with-badge shadow-lg rounded">
+    <!-- Facility Header -->
+    <div class="widget-user-header text-center p-3 bg-success text-white rounded-top">
+      <h4 class="widget-user-username fw-bold">{{ appointment.name }}</h4>
+      <h6 class="widget-user-desc">{{ appointment.address }}</h6>
+    </div>
+    
+    <!-- Facility Logo -->
+    <div class="widget-user-image text-center mt-3">
+      <img :src="doh_logo" class="img-circle img-fluid border border-secondary p-1" alt="User Avatar" style="width: 100px; height: 100px;" />
+    </div>
+
+    <!-- Facility Details -->
+    <div class="box-footer mt-3">
+      <div class="row">
+        <div class="col-6 text-center border-end">
+          <div class="description-block">
+            <h5 class="description-header text-success fw-bold">{{ balanceSlotThisMonth }}</h5>
+            <span class="description-text text-muted">TOTAL APPOINTMENTS</span>
           </div>
-          <div class="col-sm-4 border-right">
-            <div class="description-block">
-              <h5 class="description-header">
-                {{ AvailableSlot }}
-              </h5>
-              <span class="description-text">Available Slot</span>
-            </div>
-          </div>
-          <div class="col-sm-4">
-            <div class="description-block">
-              <button
-                class="btn btn-block btn-success btn-select"
-                id="selected_data"
-                name="selected_data"
-                @click="facilitySelected(appointment.id)"
-              >
-                Select
-              </button>
-            </div>
+        </div>
+        <div class="col-6 text-center">
+          <div class="description-block">
+            <h5 class="description-header text-primary fw-bold">{{ AvailableSlot }}</h5>
+            <span class="description-text text-muted">AVAILABLE SLOT</span>
           </div>
         </div>
       </div>
+
+      <!-- Select Button -->
+      <div class="text-center mt-4 mb-3">
+        <button class="btn btn-success w-75 rounded-pill shadow-sm" id="selected_data" name="selected_data" @click="facilitySelected(appointment.id)">
+          Select
+        </button>
+      </div>
     </div>
   </div>
+</div>
+
+
 </template>
 <script>
 export default {

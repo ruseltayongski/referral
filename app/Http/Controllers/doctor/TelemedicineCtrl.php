@@ -832,14 +832,14 @@ class TelemedicineCtrl extends Controller
 
         $totalConsultationMinutes = Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
-            ->where('subopd_id', '!=', '')
+            // ->where('subopd_id', '!=', '')
             ->sum('consultation_duration');
 
         $hours = floor($totalConsultationMinutes / 60);
         $minutes = $totalConsultationMinutes % 60;
         
         if($hours > 0){
-            $formattedDuration = "{$hours} hr" . ($hours > 1 ? 's' : '');
+            $formattedDuration = "{$hours}: 00 hr" . ($hours > 1 ? 's' : '');
 
             if ($minutes > 0) {
                 $formattedDuration .= " and {$minutes} minute" . ($minutes > 1 ? 's' : '');
