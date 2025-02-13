@@ -16,19 +16,19 @@
             <div class="row">
                 <div class="col-md-3">
                     <h4>Total Consultations</h4>
-                    <p><strong>{{$totalConsult}} consultations</strong></p>
+                    <p class="">{{$totalConsult}} consultations</p>
                 </div>
                 <div class="col-md-3">
                     <h4>Total Departments</h4>
-                    <p><strong>{{ $countDepartment }}</strong></p>
+                    <p>{{ $countDepartment }}</p>
                 </div>
                 <div class="col-md-3">
                     <h4>Total Patients</h4>
-                    <p><strong>{{ $numberPatient }} patients</strong></p>
+                    <p>{{ $numberPatient }} patients</p>
                 </div>
                 <div class="col-md-3">
                     <h4>Average Consultation Duration</h4>
-                    <p><strong>{{$totalConsultationMinutes}}</strong></p>
+                    <p>{{$totalConsultationMinutes}}</p>
                 </div>
             </div>
         </div>
