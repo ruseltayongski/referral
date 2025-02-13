@@ -32,4 +32,8 @@ class Tracking extends Model
         'appointmentId',
         'subopd_id'
     ];
+
+    public function activities(){
+        return $this->hasMany(Activity::class, 'patient_id', 'patient_id');
+    }
 }

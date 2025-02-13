@@ -488,10 +488,16 @@
                 let newWindow = window.open(url, windowName, windowFeatures);
                 if (newWindow && newWindow.outerWidth) {
                     // If the window was successfully opened, attempt to maximize it
+                    console.log("the open open of wendow");
                     newWindow.moveTo(0, 0);
                     newWindow.resizeTo(screen.availWidth, screen.availHeight);
                 }
+                
+                localStorage.setItem('callStartTime', Date.now());
+
                 this.telemedicineExamined();
+                console.log("windowFeatures", windowFeatures);
+                  console.log("Video call started at:", new Date());
             },
             examinedCompleted(patient_code, activity_id) {
                 $("#examined_progress"+patient_code+activity_id).addClass("completed");
@@ -692,7 +698,7 @@
                         } 
                         else if(event.payload.referred_from === this.user.facility_id) {
                             if(event.payload.telemedicine_status === 'examined') {
-                                console.log("examinedcompleted");
+                                console.log("examinedcompleted: new");
                                 this.examinedCompleted(event.payload.code, event.payload.activity_id);
                             } else if(event.payload.telemedicine_status === 'prescription') {
                                 console.log("prescribedCompleted");

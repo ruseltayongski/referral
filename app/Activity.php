@@ -20,4 +20,8 @@ class Activity extends Model
     public function labRequest() {
         return $this->hasMany(labRequest::class, 'activity_id', 'id');
     }
+
+  public function tracking() {
+    return $this->belongsTo(Tracking::class, 'patient_id', 'patient_id');
+  }
 }
