@@ -72,7 +72,7 @@
 .with-badge::after {
     content: 'Government';
     position: absolute;
-    top: 9%;
+    top: 7%;
     right: 5%;
     transform: translate(50%, -50%) rotate(45deg);
     color: white;
@@ -86,6 +86,7 @@
 }
 .widget-user-image img {
     transition: transform .3s ease-in-out;
+    width: 80px !important;
 }
 .scroll-item:hover .widget-user-image img {
     /*transform: scale(.9);*/

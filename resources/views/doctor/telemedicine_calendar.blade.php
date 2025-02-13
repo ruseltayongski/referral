@@ -84,7 +84,7 @@
         .with-badge::after {
             content: 'Government';
             position: absolute;
-            top: 9%;
+            top: 7%;
             right: 5%;
             transform: translate(50%, -50%) rotate(45deg);
             color: white;
