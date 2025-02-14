@@ -17,6 +17,10 @@ export default {
   },
   data() {
     return {
+      //start video in minutes
+      callMinutes: 0,
+      callTimer: null,
+      isLeavingChannel: false,
       //feedback
       feedbackUrl: baseUrlfeedback,
       doctorfeedback: doctorFeedback,
@@ -84,6 +88,9 @@ export default {
     };
   },
   mounted() {
+    //for minutes timer
+    this.startCallTimer();
+    window.addEventListener('beforeunload', this.stopCallTimer);
     axios
       .get(
         `${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`
@@ -145,6 +152,22 @@ export default {
       });
   },
   methods: {
+    startCallTimer() {
+      let startTime = localStorage.getItem('callStartTime');
+    
+        if (startTime) {
+          this.callMinutes = Math.floor((Date.now() - startTime) / 60000);
+        } else {
+          // Store the start time if not already set
+          localStorage.setItem('callStartTime', Date.now());
+        }
+
+      this.callTimer = setInterval(() => {
+        this.callMinutes++;
+          console.log("Current call duration:", this.callMinutes);
+      }, 60000);
+console.log("referring call duration:", this.referring_md);
+    },
     notifyReco(code, feedback_count, redirect_track) {
         let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
             '                               data-target=\'#feedbackModal\'\n' +
@@ -282,10 +305,61 @@ export default {
       channelParameters.localVideoTrack.play(localPlayerContainer);
       console.log("publish success!");
     },
-    leaveChannel() {
-      if (confirm("Are you sure you want to leave this channel?")) {
-        window.top.close();
+    async sendCallDuration() {
+      if (this.isLeavingChannel) return; // Prevent duplicate sends
+      this.isLeavingChannel = true;
+
+      if (this.callMinutes > 0) {
+        try {
+          // Calculate final duration before sending
+          const finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
+          
+          const response = await axios.post(`${this.baseUrl}/save-call-duration`, {
+            call_duration: finalDuration,
+            tracking_id: this.tracking_id,
+            referral_code: this.referral_code
+          });
+          
+          console.log("Call duration saved:", response.data);
+          localStorage.removeItem('callStartTime'); // Clean up
+          return true;
+        } catch (error) {
+          console.error("Error saving call duration:", error);
+          return false;
+        }
       }
+      return false;
+    },
+
+    async leaveChannel() {
+      if (confirm("Are you sure you want to leave this channel?")) {
+        // Wait for duration to be sent before closing
+        if(this.referring_md == 'yes'){
+          clearInterval(this.callTimer); // Stop the timer
+          await this.sendCallDuration();
+
+          // Give more time for the request to complete
+          setTimeout(() => {
+            window.top.close();
+          }, 2000);
+        }
+          window.top.close();
+
+      }
+    },
+    stopCallTimer() {
+      if(this.referring_md == 'yes'){
+        if (this.callTimer) {
+            clearInterval(this.callTimer);
+        }
+
+        this.sendCallDuration();
+        localStorage.removeItem('callStartTime');
+      }
+    },
+    beforeDestroy() {
+      clearInterval(this.callTimer);
+      // Remove sendCallDuration from here since it's handled in leaveChannel
     },
     videoStreamingOnAndOff() {
       this.videoStreaming = this.videoStreaming ? false : true;

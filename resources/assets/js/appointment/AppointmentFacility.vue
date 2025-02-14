@@ -22,9 +22,10 @@
       <div class="widget-user-image">
         <img :src="doh_logo" class="img-circle" alt="User Avatar" />
       </div>
+      
       <div class="box-footer">
         <div class="row">
-          <div class="col-sm-4 border-right">
+          <div class="col-sm-6">
             <div class="description-block">
               <h5 class="description-header">
                 {{ balanceSlotThisMonth }}
@@ -32,7 +33,7 @@
               <span class="description-text">Total Appointments</span>
             </div>
           </div>
-          <div class="col-sm-4 border-right">
+          <div class="col-sm-6">
             <div class="description-block">
               <h5 class="description-header">
                 {{ AvailableSlot }}
@@ -40,7 +41,7 @@
               <span class="description-text">Available Slot</span>
             </div>
           </div>
-          <div class="col-sm-4">
+          <div class="col-sm-4 text-right">
             <div class="description-block">
               <button
                 class="btn btn-block btn-success btn-select"

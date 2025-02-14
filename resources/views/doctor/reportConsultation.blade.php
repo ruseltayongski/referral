@@ -16,7 +16,7 @@
             <div class="row">
                 <div class="col-md-3">
                     <h4>Total Consultations</h4>
-                    <p>1,250 consultations</p>
+                    <p class="">{{$totalConsult}} consultations</p>
                 </div>
                 <div class="col-md-3">
                     <h4>Total Departments</h4>
@@ -24,11 +24,11 @@
                 </div>
                 <div class="col-md-3">
                     <h4>Total Patients</h4>
-                    <p>1,100 patients</p>
+                    <p>{{ $numberPatient }} patients</p>
                 </div>
                 <div class="col-md-3">
                     <h4>Average Consultation Duration</h4>
-                    <p>25 minutes</p>
+                    <p>{{$totalConsultationMinutes}}</p>
                 </div>
             </div>
         </div>
@@ -43,7 +43,6 @@
             <canvas id="doctorChart" width="400" height="200"></canvas>
         </div>
     </div>
-
     <!-- Patient Demographics -->
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -93,11 +92,16 @@
 
 <script>
         // Example data for charts
+        let consultPerDepartment = @json($totalperDepartment);
+        
+        let PerDepartment = consultPerDepartment.map(item => item.description);
+        let PerConsultation = consultPerDepartment.map(item => item.total_consultations);
+
         var doctorData = {
-            labels: ['General Surgery', 'Trauma Care', 'Urosurgery', 'OB-GYNE', 'Physical and Rehabilitation Medicine'],
+            labels: PerDepartment,
             datasets: [{
                 label: 'Consultations per Doctor',
-                data: [250, 300, 200, 150, 350],
+                data: PerConsultation,
                 backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FF9333'],
                 borderColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FF9333'],
                 borderWidth: 1
