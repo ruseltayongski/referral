@@ -693,8 +693,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if(isset($pregnancy) && count($pregnancy) > 0)
-                        @foreach($pregnancy as $record)
+                @php
+                    // Filter out records that don't have any meaningful data
+                    $filteredPregnancy = collect($pregnancy)->filter(function ($record) {
+                        return $record['pregnancy_order'] !== null ||
+                            $record['pregnancy_year'] !== null ||
+                            $record['pregnancy_gestation_completed'] !== null ||
+                            $record['pregnancy_outcome'] !== null ||
+                            $record['pregnancy_place_of_birth'] !== null ||
+                            $record['pregnancy_sex'] !== null ||
+                            $record['pregnancy_birth_weight'] !== null ||
+                            $record['pregnancy_present_status'] !== null ||
+                            $record['pregnancy_complication'] !== null;
+                    });
+                @endphp
+                    @if($filteredPregnancy->isNotEmpty())
+                        @foreach($filteredPregnancy as $record)
                             <tr>
                                 <td>{{ $record['pregnancy_order'] }}</td>
                                 <td>{{ $record['pregnancy_year'] }}</td>

@@ -510,31 +510,49 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis_normInfo" style="width: 100%">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
-                                        <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
-                                        <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                            <i class="fa fa-medkit"></i> Add ICD-10
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                    </div>
-                                </div><br>
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                    <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
+                                    <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                        <i class="fa fa-medkit"></i> Add ICD-10
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                                </div>
+                            </div><br>
 
-                                <div class="row icd_selected" style="padding-top: 10px;">
-                                    <div class="col-md-12">
-                                        <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
-                                        <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
-                                        <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
-                                        <div id="icd_selected" style="padding-top: 5px">
-                                            @if(isset($icd))
-                                                @foreach($icd as $i)
-                                                    <span> => {{ $i->description }}</span><br>
-                                                    <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
-                                                @endforeach
-                                            @endif
-                                        </div>
+                            <div class="row icd_selected" style="padding-top: 10px;">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                                    <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                                    <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                                    <div id="icd_selected" style="padding-top: 5px">
+                                        @if(isset($icd))
+                                            @foreach($icd as $i)
+                                                <span> => {{ $i->description }}</span><br>
+                                                <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                                            @endforeach
+                                        @endif
                                     </div>
-                                </div><br>
+                                </div>
+                            </div><br>
+
+                            <div class="row notes_diagnosis" style="padding-top: 10px;">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                                    <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                    <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                    <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
+                                </div>
+                            </div><br>
+
+                            <div class="row other_diag" style="padding-top: 10px">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                                    <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
+                                    <textarea class="form-control" id="other_diagnosis" name="other_diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                </div>
+                            </div><br>
                                 </div>
                             </div>
                         </div>
@@ -674,7 +692,7 @@ $facilities = \App\Facility::select('id','name')
                                                     <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
                                                     <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_drugs_cause); ?></textarea>
                                                 </div>
-                                                <div class="col-mhd-4">
+                                                <div class="col-md-4">
                                                     <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Others'); ?>>
                                                     <span> Other(s):</span>
                                                     <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_others_cause); ?></textarea>
@@ -2188,6 +2206,13 @@ $facilities = \App\Facility::select('id','name')
                           
                         </div>
 
+                        <?php
+
+                        $blood_pressure = isset($latest_vital_signs->blood_pressure) ? explode('/', $latest_vital_signs->blood_pressure) : ['', ''];
+                        $systolic = $blood_pressure[0]; 
+                        $diastolic = $blood_pressure[1]; 
+                        ?>
+
                         <div class="row" style="margin:5px">
                            
                                 <div class="container-referral2">
@@ -2212,16 +2237,19 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row">
                                             <div class="col-md-4">
                                                <small class="text-success"><b>Blood Pressure:</b></small></label>
-                                                    <input type="number" id="systolic_normal_info" placeholder="Systolic (e.g., 100)" 
-                                                        style="width:18%;" min="0" max="300" 
-                                                        oninput="updateBloodPressure()"> /
-                                                    <input type="number" id="diastolic_normal_info" placeholder="Diastolic (e.g., 90)" 
-                                                        style="width:18%;" min="0" max="200" 
-                                                        oninput="updateBloodPressure()">mmHg
+                                               <input type="number" id="systolic_normal_info" placeholder="Systolic (e.g., 100)" 
+                                                    style="width:18%;" min="0" max="300" 
+                                                    value="<?php echo htmlspecialchars($systolic); ?>" 
+                                                    oninput="updateBloodPressure()"> /
 
-                                                    <!-- Hidden input to store the combined value -->
-                                                    <input type="hidden" name="vital_bp" id="vital_bp_normal_info" 
-                                                        value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
+                                                <input type="number" id="diastolic_normal_info" placeholder="Diastolic (e.g., 90)" 
+                                                    style="width:18%;" min="0" max="200" 
+                                                    value="<?php echo htmlspecialchars($diastolic); ?>" 
+                                                    oninput="updateBloodPressure()">mmHg
+
+                                                <!-- Hidden input to store the combined value -->
+                                                <input type="hidden" name="vital_bp" id="vital_bp_normal_info" 
+                                                    value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
                                                 </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo htmlspecialchars( $latest_vital_signs->oxygen_saturation); ?>"> %
@@ -2565,7 +2593,7 @@ $facilities = \App\Facility::select('id','name')
                                 <div class="collapse" id="collapse_reason_referral_normInfo" style="width: 100%;">
                                     <small class="text-success"><b>Select reason for referral:</b></small>
                                     <div class="container-referral">
-                                        <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%">
+                                        <select name="reason_referral" class="form-control-select select2 reason_referral" required>
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2576,7 +2604,7 @@ $facilities = \App\Facility::select('id','name')
                                     </div>
                                 </div>                          
                         </div>
-                        <div class="form-fotter pull-right" style="margin: 10px;">
+                        <div class="form-footer pull-right" style="margin: 10px;">
                         <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                 </div>
             </form>

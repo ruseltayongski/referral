@@ -293,7 +293,6 @@ $facilities = \App\Facility::select('id','name')
 
 
 <form action="{{ url('update-referral', ['patient_id' => $patient_id, 'id' => $id, 'type'=>'pregnant', 'status' => $status]) }}" method="POST" class="edit_normal_form" enctype="multipart/form-data">  
-   
                 @include('include.header_form')<br>
                 <div class="form-group-sm form-inline">
                         {{ csrf_field() }}
@@ -311,26 +310,26 @@ $facilities = \App\Facility::select('id','name')
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                                <small >Name of Referring Facility</small><br>
+                                <small class="text-success">Name of Referring Facility</small><br>
                                 &nbsp;<span>{{ $form['pregnant']->referring_facility }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small >Address</small><br>
+                                <small class="text-success">Address</small><br>
                                 &nbsp;<span>{{ $form['pregnant']->facility_brgy }}, {{ $form['pregnant']->facility_muncity }}, {{ $form['pregnant']->facility_province }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small >Name of referring MD/HCW</small><br>
+                                <small class="text-success">Name of referring MD/HCW</small><br>
                                 &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                                <small >Date/Time Referred (ReCo)</small><br>
+                                <small class="text-success">Date/Time Referred (ReCo)</small><br>
                                 <span>{{ $form['pregnant']->referred_date }}</span>
                             </div>
                             <div class="col-md-4">
-                                <small >Name of Patient</small><br>
+                                <small class="text-success">Name of Patient</small><br>
                                 <span class="patient_name">{{ $form['pregnant']->woman_name }}</span>
                             </div>
                             <div class="col-md-4">
@@ -341,7 +340,7 @@ $facilities = \App\Facility::select('id','name')
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                            <small class="text-success">REFERRED TO: </small><br>
+                            <small class="text-success">REFERRED TO:</small><span class="text-red"><b>*</b></span><br>
                                 <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
                                 <select name="referred_to" class="select2 edit_facility_pregnant form-control" style="width:250px" require>
                                     <option value="">Select Facility...</option>
@@ -352,21 +351,21 @@ $facilities = \App\Facility::select('id','name')
                                 {{--<span class="referred_name">{{ $form['pregnant']->referred_facility }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">DEPARTMENT: </small><br>&emsp;
+                                <small class="text-success">DEPARTMENT: </small><span class="text-red"><b>*</b></span><br>&emsp;
                                 <select name="department_id" class="form-control-select edit_department_pregnant" required>
                                     <option value="">Select Department...</option>
                                 </select>
                                 {{--<span class="department_name">{{ $form['pregnant']->department }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small >Address</small><br>
+                                <small class="text-success">Address</small><br>
                                 <span class="text-yellow facility_address">{{ $referred_to_address }}</span>
                             </div>
                         </div>
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                                <small >Age</small><br>
+                                <small class="text-success">Age</small><br>
                                 <span class="patient_age">
                                     @if($form['pregnant']->woman_age == 1)
                                         {{ $form['pregnant']->woman_age }} year old
@@ -376,7 +375,7 @@ $facilities = \App\Facility::select('id','name')
                                 </span>
                             </div>
                             <div class="col-md-4">
-                                <small >Sex</small> <span class="text-red">*</span><br>
+                                <small class="text-success">Sex</small> <span class="text-red">*</span><br>
                                 <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
                                     @if( $form['pregnant']->sex == "Male")
                                     <option>Male</option>
@@ -388,7 +387,7 @@ $facilities = \App\Facility::select('id','name')
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small >Civil Status</small> <span class="text-red">*</span><br>
+                                <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
                                 <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
                                 @if ( $civil_status == "Single")
                                     <option>Single</option>
@@ -434,7 +433,7 @@ $facilities = \App\Facility::select('id','name')
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                                <small >Covid Number</small><br>
+                                <small class="text-success">Covid Number</small><br>
                                 <input type="text" name="covid_number" style="width: 100%;" value="{{ $form['pregnant']->covid_number }}">
                             </div>
                             <div class="col-md-4">
@@ -482,7 +481,7 @@ $facilities = \App\Facility::select('id','name')
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small >Surveillance Category</small><br>
+                                <small class="text-success">Surveillance Category</small><br>
                                 <select name="sur_category" class="form-control-select" style="width: 100%;">
                                 @if ($form['pregnant']->refer_sur_category == "contact_pum")
                                     <option value="contact_pum">Contact (PUM)</option>
@@ -579,41 +578,52 @@ $facilities = \App\Facility::select('id','name')
                                         <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
-                                </div>
-                                <div class="collapse " id="collapse_diagnosis_pregInfo" style="width: 100%">
-                                <div class="row">
-                                <div class="col-md-12">
-                                <small class="text-success"><b>DIAGNOSIS: </b></small><span class="text-red">*</span>
-                                <small class="text-success"><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:70%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></small><br><br>
-                                <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                    <i class="fa fa-medkit"></i> Add ICD-10
-                                </a>
-                                <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                </div>
-                            </div><br>
+                                    </div>
+                                    <div class="collapse " id="collapse_diagnosis_pregInfo" style="width: 100%">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <small class="text-success"><b>DIAGNOSIS: </b></small><span class="text-red">*</span>
+                                                <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:70%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
+                                                <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                                    <i class="fa fa-medkit"></i> Add ICD-10
+                                                </a>
+                                                <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button></span>
+                                            </div>
+                                        </div><br>
 
-                            <div class="row icd_selected" style="padding-top: 10px;">
-                                <div class="col-md-12">
-                                <small class="text-success">ICD-10 Code and Description: </small>&emsp;
-                                <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
-                                <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
-                                <div id="icd_selected" style="padding-top: 5px">
-                                @if(isset($icd))
-                                        @foreach($icd as $i)
-                                            <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
-                                            <small> => {{ $i->description }}</small><br>
-                                        @endforeach
-                                    @endif  
-                                </div>
-                                </div>
-                            </div><br>
+                                        <div class="row icd_selected" style="padding-top: 10px;">
+                                            <div class="col-md-12">
+                                                <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                                                    <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                                                    <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                                                    <div id="icd_selected" style="padding-top: 5px">
+                                                        @if(isset($icd))
+                                                            @foreach($icd as $i)
+                                                                <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                                                                <small> => {{ $i->description }}</small><br>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                            </div>
+                                        </div><br>
 
-                            <div class="row other_diag" style="padding-top: 10px">
-                                <div class="col-md-12">
-                                <small class="text-success">Other Diagnosis: </small>&emsp;
-                                    <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
-                                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosisPregnant()">Clear other diagnosis</button>
-                                    <textarea class="form-control" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form['pregnant']->other_diagnoses }}</textarea>
+                                        <div class="row notes_diag">
+                                            <div colspan="col-md-12">
+                                                <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                                                <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                                <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosisPregnant()">Clear Notes Diagnosis</button>
+                                                <textarea class="form-control notes_diagnosis" name="notes_diagnosis" style="resize: none; width: 100%" rows="5">{{ $form['pregnant']->notes_diagnoses }}</textarea>
+                                            </div>
+                                        </div>
+                                 
+                                        <div class="row other_diag" style="padding-top: 10px">
+                                            <div class="col-md-12">
+                                                <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                                                <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                                                <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosisPregnant()">Clear other diagnosis</button>
+                                                <textarea class="form-control other_diagnosis" name="other_diagnosis" style="resize: none;width: 100%" rows="5">{{ $form['pregnant']->other_diagnoses }}</textarea>
+                                            </div>
+                                        </div><br>
                                 </div>
                             </div><br>
                         </div>
@@ -635,7 +645,7 @@ $facilities = \App\Facility::select('id','name')
 
                         ?>
                         <div class="row" style="margin: 5px;">
-                            
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history" aria-expanded="false" aria-controls="collapse_medical_history">
                                         <b>PAST MEDICAL HISTORY</b>
@@ -865,7 +875,7 @@ $facilities = \App\Facility::select('id','name')
                                     <small class="text-success"><b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b></small><br>
                                     <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
                                 </div>
-                            
+                            </div>
                         </div>                        
                 
                         <?php
@@ -910,7 +920,7 @@ $facilities = \App\Facility::select('id','name')
                         ?>
 
                         <div class="row" style="margin: 5px;" id="baby_show_pregnant">
-                        
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
                                         <div class="web-view"><b>BABY DELIVERED</b> <i> (as applicable)</i></div>
@@ -984,19 +994,20 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                                 </div>
                             
+                            </div>
                         </div> 
 
-                        {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
-                        <div class="row" style="margin: 5px;" id="menarche_show">
-                            <div class="col-lg-12">
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
-                                        <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
-                                        <div class="mobile-view">
-                                            <b>OBSTETRIC AND GYNECOLOGIC<br> HISTORY</b><br> <i> (as applicable)</i></div>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
+                            {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
+                            <div class="row" style="margin: 5px;" id="menarche_show">
+                                <div class="col-lg-12">
+                                    <div class="container-referral2">
+                                        <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history" aria-expanded="false" aria-controls="collapse_gyne_history">
+                                            <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
+                                            <div class="mobile-view">
+                                                <b>OBSTETRIC AND GYNECOLOGIC<br> HISTORY</b><br> <i> (as applicable)</i></div>
+                                            <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                        </button><br><br>
+                                    </div>
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
                                     <small class="text-success"><b>MENARCHE</b></small> @ <input type="number" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
                                     <small class="text-success"><b>MENOPAUSE:</b></small> &emsp;
@@ -2219,7 +2230,11 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-
+                            <?php
+                                $blood_pressure = isset($latest_vital_signs->blood_pressure) ? explode('/', $latest_vital_signs->blood_pressure) : ['', ''];
+                                $systolic = $blood_pressure[0]; 
+                                $diastolic = $blood_pressure[1]; 
+                            ?>
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -2245,21 +2260,24 @@ $facilities = \App\Facility::select('id','name')
                                             <div class="col-md-4">
                                             <small class="text-success"> Blood Pressure:</small>
                                                 <input type="number" id="systolic_pregnant_info" placeholder="Systolic (e.g., 100)" 
-                                                    style="width:18%;" min="0" max="300" 
-                                                    oninput="updateBloodPressure()"> /
-                                                <input type="number" id="diastolic_pregnant_info" placeholder="Diastolic (e.g., 90)" 
-                                                    style="width:18%;" min="0" max="200" 
-                                                    oninput="updateBloodPressure()">mmHg
+                                                        style="width:18%;" min="0" max="300" 
+                                                        value="<?php echo htmlspecialchars($systolic); ?>" 
+                                                        oninput="updateBloodPressure()"> /
 
-                                                <!-- Hidden input to store the combined value -->
-                                                <input type="hidden" name="vital_bp" id="vital_bp_pregnant_info" 
-                                                    value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
+                                                    <input type="number" id="diastolic_pregnant_info" placeholder="Diastolic (e.g., 90)" 
+                                                        style="width:18%;" min="0" max="200" 
+                                                        value="<?php echo htmlspecialchars($diastolic); ?>" 
+                                                        oninput="updateBloodPressure()">mmHg
+
+                                                    <!-- Hidden input to store the combined value -->
+                                                    <input type="hidden" name="vital_bp" id="vital_bp_pregnant_info" 
+                                                        value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
                                             </div>
                                             <div class="col-md-4">
                                               <small class="text-success">  O2 Saturation </small><input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo htmlspecialchars( $latest_vital_signs->oxygen_saturation); ?>"> %
                                             </div>
                                         </div><br>
-                                    </div>
+                                    </div><br>
                                 </div>
                             </div>
                         </div>
@@ -2601,7 +2619,7 @@ $facilities = \App\Facility::select('id','name')
                                 <div class="collapse" id="collapse_reason_referral_pregInfo" style="width: 100%;">
                                 <small class="text-success"> <i>Select reason for referral:</i> </small>
                                     <div class="container-referral">
-                                        <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                        <select name="reason_referral" class="form-control-select select2 reason_referral" required="">
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2613,10 +2631,11 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div> 
-                        <div class="form-fotter pull-right" style="margin: 10px;">
-                        <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
-                        </div>
-                        <div class="clearfix"></div> 
+
+                        <div class="form-footer pull-right" style="margin: 10px;">
+                            <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
+                            </div>
+                            <div class="clearfix"></div> 
                         </div>{{--/.form-group--}}
                 </div> {{--/.jim-content--}}
             </form>

@@ -61,7 +61,7 @@ class NewFormCtrl extends Controller
 
 
     // Get data from Database
-    public function fetchDataFromDB($patient_id)
+    public function fetchDataFromDB($patient_id,$tracking_id)
     {
         $data = DB::table('patients')
             ->join('past_medical_history', 'patients.id', '=', 'past_medical_history.patient_id')
@@ -73,6 +73,7 @@ class NewFormCtrl extends Controller
             ->join('latest_vital_signs', 'patients.id', '=', 'latest_vital_signs.patient_id')
             ->join('personal_and_social_history', 'patients.id', '=', 'personal_and_social_history.patient_id')
             ->join('pertinent_laboratory', 'patients.id', '=', 'pertinent_laboratory.patient_id')
+            ->join('pregnant_form', 'patients.id', '=', 'pregnant_form.patient_woman_id')
             ->select(
                 'patients.*',
                 'past_medical_history.*',
@@ -84,6 +85,7 @@ class NewFormCtrl extends Controller
                 'latest_vital_signs.*',
                 'personal_and_social_history.*',
                 'pertinent_laboratory.*',
+                'pregnant_form.*'
             )
             ->where('patients.id', $patient_id)
             ->first();
@@ -93,13 +95,25 @@ class NewFormCtrl extends Controller
                     ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
                     ->where('icd.code', $data->code)
                     ->get();
+                $tracking_date = Tracking::select('date_referred',
+                DB::raw("DATE_FORMAT(date_transferred, '%M %d, %Y %h:%i %p') as date_transferred"),
+                'date_accepted',
+                DB::raw("DATE_FORMAT(date_arrived, '%M %d, %Y %h:%i %p') as date_arrived"),
+                'date_seen')->where('tracking.code',$data->code)->first();
+
                 $reason = ReasonForReferral::select("reason_referral.reason","reason_referral.id")
-                    ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
-                    ->where('patient_form.code', $data->code)->first();
+                    ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+                    ->where('pregnant_form.code', $data->code)->first();
+                $pregnant_data = self::pregnantFormData($tracking_id);
                 // Attach the ICD data to $data
+                // dd($baby_data['baby']);
+                $data->baby_data = $pregnant_data['baby'];
+                $data->tracking_date = $tracking_date;
+                $data->pregnant_form = $pregnant_data['pregnant'];
                 $data->icd = $icd;
                 $data->reason = $reason;
             }
+            
         return $data;
     }
 
@@ -174,7 +188,7 @@ class NewFormCtrl extends Controller
     public function redirect_referral_info($patient_id)
     {
 
-        $data = $this->fetchDataFromDB($patient_id);
+        $data = $this->fetchDataFromDB($patient_id,null);
         $pregnancy_data = $this->fetchPregnant($patient_id);
 
         // // Debugging
@@ -1088,7 +1102,7 @@ class NewFormCtrl extends Controller
                 'referred_md' => ($request->reffered_md) ? $request->reffered_md: 0,
                 'reason_referral' => $request->reason_referral1,
                 'other_reason_referral' => $request->other_reason_referral,
-                'other_diagnoses' => $request->other_diagnoses,
+                'other_diagnoses' => $request->other_diagnosis,
             );
 
             $form = PatientForm::updateOrCreate( ['unique_id' => $unique_id],$data);
@@ -2007,7 +2021,7 @@ class NewFormCtrl extends Controller
         $dob = date('Y-m-d h:i:s', strtotime($req->baby_dob));
         $data = '';
 
-      
+       
 
         $request_arr = [
             "id" => $id,
@@ -2034,7 +2048,7 @@ class NewFormCtrl extends Controller
             "notes_diag_cleared" => $req->notes_diag_cleared ?? '',
             "notes_diagnoses" => $req->notes_diagnoses,
             "other_diag_cleared" => $req->other_diag_cleared ?? '',
-            "other_diagnoses" => $req->other_dignoses ?? '',
+            "other_diagnoses" => $req->other_diagnosis ?? '',
             "reason_referral" => $req->reason_referral,
             "baby_fname" => $req->baby_fname,
             "baby_mname" => $req->baby_mname,
@@ -2053,6 +2067,7 @@ class NewFormCtrl extends Controller
             "file_cleared" => null,
         ];
 
+       
         // dd($req,$req->icd_ids,$request_arr);
 
         $request_arr2 = [
@@ -2073,7 +2088,7 @@ class NewFormCtrl extends Controller
             "notes_diag_cleared" => $req->notes_dig_cleared ?? '',
             "diagnosis" => $req->diagnosis,
             "other_diag_cleared" => $req->other_diag_cleared ?? '',
-            "other_diagnoses" => $req->other_dignoses ?? '',
+            "other_diagnoses" => $req->other_diagnosis ?? '',
             "reason_referral" => $req->reason_referral,
             "other_reason_referral" => $req->reason_referral,
             "file_cleared" => null,
@@ -2224,7 +2239,7 @@ class NewFormCtrl extends Controller
 
 
         /* DIAGNOSIS THAT IS NOT AN ICD CODE */
-        if(($data->other_diagnoses !== $req->other_diagnoses) || $req->other_diag_cleared)
+        if(($data->other_diagnoses !== $req->other_diagnosis) || $req->other_diag_cleared)
             $updated .= ", Diagnosis";
 
         if($req->other_diag_cleared == "true") {
@@ -2497,15 +2512,24 @@ class NewFormCtrl extends Controller
     {
         $data = [];
         
-        $tracking_code = Tracking::select('code')->where('id', $track_id)->first();
+        $tracking_data = Tracking::select('code',
+        DB::raw("DATE_FORMAT(date_transferred, '%M %d, %Y %h:%i %p') as date_transferred"))->where('id', $track_id)->first();
         $patients_data = self::fetchPatientsData($patient_id);
-        $patients_form = DB::table('patient_form')->where('code',$tracking_code->code)->first();
-        $pregnant_form = DB::table('pregnant_form')->where('code', $tracking_code->code)->first();
+        $patients_form = PatientForm::select('referred_to',
+        'department_id',
+        'referring_facility',
+        DB::raw("DATE_FORMAT(time_referred, '%M %d, %Y %h:%i %p') as time_referred"),
+        'covid_number',
+        'refer_clinical_status',
+        'refer_sur_category',
+        'dis_clinical_status',
+        'dis_sur_category')->where('code',$tracking_data->code)->first();
+        $pregnant_form = PregnantForm::select('referred_to','department_id','referred_by')->where('code', $tracking_data->code)->first();
         $referred_to = Facility::select('name','address')->where('id',$pregnant_form->referred_to)->first();
         $referred_to_normal = Facility::select('name','address')->where('id',$patients_form->referred_to)->first();
         $department = Department::select('description')->where('id',$pregnant_form->department_id)->first();
         $department_normal = Department::select('description')->where('id',$patients_form->department_id)->first();
-        $referring_facility = Facility::select('name','contact')->where('id',$pregnant_form->referring_facility)->first();
+        // $referring_facility = Facility::select('name','contact')->where('id',$pregnant_form->referring_facility)->first();
         $referring_facility_normal = Facility::select('name','contact','address')->where('id',$patients_form->referring_facility)->first();
         $referring_md = User::select('fname','mname','lname')->where('id',$pregnant_form->referred_by)->first();
         $patients_name = Patients::select('fname','mname','lname','dob', 'brgy', 'province', 'muncity','region','sex','civil_status','phic_id')->where('id',$patient_id)->first();
@@ -2515,14 +2539,14 @@ class NewFormCtrl extends Controller
         $province = Province::select('description')->where('id', $patients_name->province)->first();
         $muncity = Muncity::select('description')->where('id', $patients_name->muncity)->first();
         $patient_address = $patients_name->region.', '.$province->description.', '.$muncity->description.', '.$barangay->description;
-        $baby_data = Baby::select('baby_id','birth_date','weight','gestational_age')->where('mother_id', $patient_id)->first();
-        $baby_name = self::fetchPatientsData($baby_data->baby_id);
-        $baby_fullname = $baby_name->fname.', '.$baby_name->mname.', '.$baby_name->lname;
+        // $baby_data = Baby::select('baby_id','birth_date','weight','gestational_age')->where('mother_id', $patient_id)->first();
+        // $baby_name = self::fetchPatientsData($baby_data->baby_id);
+        // $baby_fullname = $baby_name->fname.', '.$baby_name->mname.', '.$baby_name->lname;
 
-        
+        // dd($woman_name);
 
         if ($form_type === 'pregnant'){
-            $data = $this->fetchDataFromDB($patient_id);
+            $data = $this->fetchDataFromDB($patient_id,$track_id);
          }else if ($form_type === 'normal'){
             $data = $this->fetchDataNormal($patient_id,$track_id);
          }
@@ -2559,7 +2583,7 @@ class NewFormCtrl extends Controller
         $x, 
         $patient_address, 
         $woman_name, 
-        $tracking_code, 
+        $tracking_data, 
         $referring_facility_normal, 
         $referred_to_normal, $department_normal, 
         $patients_form, 
@@ -2571,15 +2595,12 @@ class NewFormCtrl extends Controller
          self::printPregnant(
             $x,
             $data,
-            $baby_data,
             $pdf,
-            $pregnant_form,
-            $referring_facility,
+            $data->referring_facility,
             $referred_to,
             $department,
-            $tracking_code,
+            $tracking_data,
             $form_type,
-            $baby_fullname,
             $patients_name,
             $comor_dataArray,
             $allergies_dataArray,
@@ -2742,15 +2763,12 @@ class NewFormCtrl extends Controller
     public function printPregnant(
         $x,
         $data,
-        $baby_data,
         $pdf,
-        $pregnant_form,
         $referring_facility,
         $referred_to,
         $department,
-        $tracking_code,
+        $tracking_data,
         $form_type,
-        $baby_fullname,
         $patients_name,
         $comor_dataArray,
         $allergies_dataArray,
@@ -2762,7 +2780,7 @@ class NewFormCtrl extends Controller
         $pdf->SetFont('Arial', 'B', 12);
         $pdf->Cell(0, 0, "BEmONC/ CEmONC REFERRAL FORM", 0, "", "C");
         $pdf->ln(10);
-        if(!empty($tracking_code->code)){$pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf, $tracking_code->code, "Patient Code :"), 0, 'L');}
+        if(!empty($tracking_data->code)){$pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf, $tracking_data->code, "Patient Code :"), 0, 'L');}
         $pdf->Ln(5);
         $pdf->SetFont('Arial', '', 10);
         $pdf->MultiCell(0, 7, self::black($pdf, "REFERRAL RECORD"), 0, 'L');
@@ -2770,35 +2788,44 @@ class NewFormCtrl extends Controller
 
         $pdf->MultiCell($x / 4, 7, self::black($pdf, "Who is Referring"), 0, 'L');
         $y = $pdf->getY();
-       
-        if(!empty($pregnant_form->record_no)){$pdf->MultiCell($x / 4, 7, self::black($pdf, "Record Number: ") . self::orange($pdf, $pregnant_form->record_no, "Record Number:"), 0);}
-     
-        if(!empty($pregnant_form->referred_date)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred Date: ") . self::orange($pdf, $pregnant_form->referred_date, "Referred Date:"), 0);}
+        $pdf->SetXY(60, $y - 7);
 
-        if(!empty($pregnant_form->md_referring)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, $pregnant_form->md_referring, "Name of referring MD/HCW:"), 0, 'L');}
-     
-        if(!empty($pregnant_form->arrival_date)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Arrival Date: ") . self::orange($pdf, $pregnant_form->arrival_date, "Arrival Date:"), 0);}
+        if(!empty($data->pregnant_form->record_no)){
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "Record Number: ") . self::orange($pdf, $data->pregnant_form->record_no, "Record Number:"), 0);
+        }else {
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "") . self::orange($pdf, null, ""), 0);
+        }
+        $y = $pdf->getY();
+        $pdf->SetXY(125, $y - 7);
+        if(!empty($data->pregnant_form->referred_date)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred Date: ") . self::orange($pdf, $data->pregnant_form->referred_date, "Referred Date:"), 0);}
 
+        if(!empty($data->pregnant_form->md_referring)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, utf8_decode($data->pregnant_form->md_referring), "Name of referring MD/HCW:"), 0, 'L');}
+        $y = $pdf->getY();
+        $pdf->SetXY(125, $y - 7);
+        if(!empty($data->tracking_date->date_transferred)){
+            if ($data->tracking_date->date_transferred !== '0000-00-00 00:00:00'){
+              $pdf->MultiCell($x / 2, 7, self::black($pdf, "Arrival Date: ") . self::orange($pdf, $data->tracking_date->date_transferred, "Arrival Date:"), 0);
+            }  
+        }
+    
         if(!empty($referring_md_name)){$pdf->MultiCell(0, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $referring_md_name, "Contact # of referring MD/HCW:"), 0, 'L');}
         //-------------------------------------------------------------------------------------------------------
-        
-        
-        
+            
         if(!empty($referring_facility->name)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility: ") . self::orange($pdf, $referring_facility->name, "Facility:"), 0, 'L');}
         if(!empty($referring_facility->contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $referring_facility->contact, "Facility Contact #:"), 0, 'L');}
-        if(!empty($pregnant_form->health_worker)){$pdf->MultiCell(0, 7, self::black($pdf, "Accompanied by the Health Worker: ") . self::orange($pdf, $pregnant_form->health_worker, "Accompanied by the Health Worker:"), 0, 'L');}
+        if(!empty($data->pregnant_form->health_worker)){$pdf->MultiCell(0, 7, self::black($pdf, "Accompanied by the Health Worker: ") . self::orange($pdf, utf8_decode($data->pregnant_form->health_worker), "Accompanied by the Health Worker:"), 0, 'L');}
 
         if(!empty($referred_to->name)){$pdf->MultiCell ($x / 2, 7, self::black($pdf, "Referred To: ") . self::orange($pdf, $referred_to->name, "Referred To:"), 0, 'L');}
         $y = $pdf->getY();
         $pdf->SetXY($x / 2 + 40, $y - 7);
         if(!empty($department->description)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, $department->description, "Department:"), 0);}
-
-        if(!empty($referred_to->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referred_to->address, "Address:"), 0, 'L');}
-        if(!empty($pregnant_form->covid_number)){$pdf->MultiCell(0, 7, self::black($pdf, "Covid Number: ") . self::orange($pdf, $pregnant_form->covid_number, "Covid Number: "), 0, 'L');}
-        if(!empty($pregnant_form->refer_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Clinical Status: ") . self::orange($pdf, $pregnant_form->refer_clinical_status, "Clinical Status: "), 0, 'L');}
-        if(!empty($pregnant_form->refer_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Surveillance Category: ") . self::orange($pdf, $pregnant_form->refer_sur_category, "Surveillance Category: "), 0, 'L');}
-        if(!empty($pregnant_form->dis_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Clinical Status: ") . self::orange($pdf, $pregnant_form->dis_clinical_status, "Discharge Clinical Status: "), 0, 'L');}
-        if(!empty($pregnant_form->dis_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Surveillance Category: ") . self::orange($pdf, $pregnant_form->dis_sur_category, "Discharge Surveillance Category: "), 0, 'L');}
+        // dd($data);
+        if(!empty($referred_to->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, utf8_decode($referred_to->address), "Address:"), 0, 'L');}
+        if(!empty($data->pregnant_form->covid_number)){$pdf->MultiCell(0, 7, self::black($pdf, "Covid Number: ") . self::orange($pdf, $data->pregnant_form->covid_number, "Covid Number: "), 0, 'L');}
+        if(!empty($data->pregnant_form->refer_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Clinical Status: ") . self::orange($pdf, $data->pregnant_form->refer_clinical_status, "Clinical Status: "), 0, 'L');}
+        if(!empty($data->pregnant_form->refer_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Surveillance Category: ") . self::orange($pdf, $data->pregnant_form->refer_sur_category, "Surveillance Category: "), 0, 'L');}
+        if(!empty($data->pregnant_form->dis_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Clinical Status: ") . self::orange($pdf, $data->pregnant_form->dis_clinical_status, "Discharge Clinical Status: "), 0, 'L');}
+        if(!empty($data->pregnant_form->dis_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Surveillance Category: ") . self::orange($pdf, $data->pregnant_form->dis_sur_category, "Discharge Surveillance Category: "), 0, 'L');}
         $pdf->Ln(3);
 
         $pdf->SetFillColor(200, 200, 200);
@@ -2806,7 +2833,7 @@ class NewFormCtrl extends Controller
         $pdf->SetDrawColor(200);
         $pdf->SetLineWidth(.3);
 
-        if(!empty($woman_name) || !empty($patients_name->dob) || !empty($patient_address) || !empty($pregnant_form->woman_reason) || !empty($pregnant_form->woman_major_findings)){
+        if(!empty($woman_name) || !empty($patients_name->dob) || !empty($patient_address) || !empty($data->pregnant_form->woman_reason) || !empty($data->pregnant_form->woman_major_findings)){
             $this->titleHeader($pdf, "WOMAN");
 
             $pdf->SetFillColor(255, 250, 205);
@@ -2814,47 +2841,63 @@ class NewFormCtrl extends Controller
             $pdf->SetDrawColor(230);
             $pdf->SetLineWidth(.3);
             
-
-            if(!empty($woman_name)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, $woman_name, 'name'), 1, 'L');}
+            if(!empty($woman_name)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, utf8_decode($woman_name), 'name'), 1, 'L');}
             if(!empty($patients_name->dob)){$pdf->MultiCell(0, 7, "Age: " . self::green($pdf, $this->calculateAge($patients_name->dob), 'Age'), 1, 'L');}
-            if(!empty($patient_address)){$pdf->MultiCell(0, 7, "Address: " . self::green($pdf, $patient_address, 'Address'), 1, 'L');}
-            if(!empty($pregnant_form->woman_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $pregnant_form->woman_reason), 1, 'L');}
-            if(!empty($pregnant_form->woman_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, $pregnant_form->woman_major_findings), 1, 'L');}
+            if(!empty($patient_address)){$pdf->MultiCell(0, 7, "Address: " . self::green($pdf, utf8_decode($patient_address), 'Address'), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $data->pregnant_form->woman_reason), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->pregnant_form->woman_major_findings)), 1, 'L');}
         }
         
-       
-
         $pdf->SetFillColor(200, 200, 200);
         $pdf->SetTextColor(30);
         $pdf->SetDrawColor(200);
         $pdf->SetLineWidth(.3);
         
-
-        if(!empty($pregnant_form->woman_before_treatment) || !empty($pregnant_form->woman_before_given_time) || !empty($pregnant_form->woman_information_given)){
+      
+        if(!empty($data->pregnant_form->woman_before_treatment) || !empty($data->pregnant_form->woman_before_given_time) || !empty($data->pregnant_form->woman_information_given)){
             $this->titleHeader($pdf, "Treatments Give Time");
 
             $pdf->SetFillColor(255, 250, 205);
             $pdf->SetTextColor(40);
             $pdf->SetDrawColor(230);
             $pdf->SetLineWidth(.3);
-    
-            if(!empty($pregnant_form->woman_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $pregnant_form->woman_before_treatment . '-' . $pregnant_form->woman_before_given_time, 'Before Referral'), 1, 'L');}
-            if(!empty($pregnant_form->woman_before_given_time)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $pregnant_form->woman_before_given_time . '-' . $pregnant_form->woman_before_given_time, 'During Transport'), 1, 'L');}
-            if(!empty($pregnant_form->woman_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, $pregnant_form->woman_information_given), 1, 'L');}
-    
+        
+            if(!empty($data->pregnant_form->woman_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $data->pregnant_form->woman_before_treatment . '-' . $data->pregnant_form->woman_before_given_time, 'Before Referral'), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_before_given_time)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->pregnant_form->woman_before_given_time . '-' . $data->pregnant_form->woman_before_given_time, 'During Transport'), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->pregnant_form->woman_information_given)), 1, 'L');}
+        }
+        if (isset($data->icd)) {
+            $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 1, 'L');
+            foreach ($data->icd as $icd) {
+                $pdf->MultiCell(0, 5, self::staticGreen($pdf, $icd->code . " - " . $icd->description), 0, 'L');
+            }
+        }
+        if (isset($data->notes_diagnoses)) {
+            $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 1, 'L');
+            $pdf->MultiCell(0, 5, self::staticGreen($pdf, $data->notes_diagnoses), 1, 'L');
+        }
+        if (isset($data->other_diagnoses)) {
+            $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_diagnoses)), 1, 'L');
+        }
+        // if (isset($data->reason)) {
+        //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, $data->reason['reason']), 1, 'L');
+        // }
+        if (isset($data->other_reason_referral)) {
+            $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_reason_referral)), 1, 'L');
         }
         
-            $pdf->Ln(8);
+            $pdf->Ln(3);
 
             $pdf->SetFillColor(200, 200, 200);
             $pdf->SetTextColor(30);
             $pdf->SetDrawColor(200);
             $pdf->SetLineWidth(.3);
 
+            // dd($data->baby_data);
             // $pdf->addPage();
            if ($form_type === 'pregnant') {
-            if(!empty($baby_fullname) || !empty($baby_data->birth_date) || !empty($baby_data->weight) || !empty($baby_data->gestational_age) || !empty($pregnant_form->baby_reason) 
-            || !empty($pregnant_form->baby_major_findings) || !empty($pregnant_form->baby_last_feed)){
+            if(!empty($data->baby_data->baby_name) || !empty($data->baby_data->baby_dob) || !empty($data->baby_data->weight) || !empty($data->baby_data->gestational_age) || !empty($data->baby_data->baby_reason) 
+            || !empty($data->baby_data->baby_major_findings) || !empty($data->baby_data->baby_last_feed)){
                 $this->titleHeader($pdf, "BABY");
 
                 $pdf->SetFillColor(255, 250, 205);
@@ -2862,13 +2905,13 @@ class NewFormCtrl extends Controller
                 $pdf->SetDrawColor(230);
                 $pdf->SetLineWidth(.3);
     
-                if(!empty($baby_fullname)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, $baby_fullname, 'name'), 1, 'L');}
-                if(!empty($baby_data->birth_date)){$pdf->MultiCell(0, 7, "Date of Birth: " . self::green($pdf, $baby_data->birth_date, "Date of Birth"), 1, 'L');}
-                if(!empty($baby_data->weight)){$pdf->MultiCell(0, 7, "Body Weight: " . self::green($pdf, $baby_data->weight, 'body weight'), 1, 'L');}
-                if(!empty($baby_data->gestational_age)){$pdf->MultiCell(0, 7, "Gestational Age: " . self::green($pdf, $baby_data->gestational_age, 'Gestational Age'), 1, 'L');}
-                if(!empty($pregnant_form->baby_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_reason), 1, 'L');}
-                if(!empty($pregnant_form->baby_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_major_findings), 1, 'L');}
-                if(!empty($pregnant_form->baby_last_feed)){$pdf->MultiCell(0, 7, "Last (Breast) Feed (Time): " . self::green($pdf, $pregnant_form->baby_last_feed, "Last (Breast) Feed (Time)"), 1, 'L');}
+                if(!empty($data->baby_data->baby_name)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, utf8_decode($data->baby_data->baby_name), 'name'), 1, 'L');}
+                if(!empty($data->baby_data->baby_dob)){$pdf->MultiCell(0, 7, "Date of Birth: " . self::green($pdf, $data->baby_data->baby_dob, "Date of Birth"), 1, 'L');}
+                if(!empty($data->baby_data->weight)){$pdf->MultiCell(0, 7, "Body Weight: " . self::green($pdf, $data->baby_data->weight, 'body weight'), 1, 'L');}
+                if(!empty($data->baby_data->gestational_age)){$pdf->MultiCell(0, 7, "Gestational Age: " . self::green($pdf, $data->baby_data->gestational_age, 'Gestational Age'), 1, 'L');}
+                if(!empty($data->baby_data->baby_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $data->baby_data->baby_reason), 1, 'L');}
+                if(!empty($data->baby_data->baby_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->baby_data->baby_major_findings)), 1, 'L');}
+                if(!empty($data->baby_data->baby_last_feed)){$pdf->MultiCell(0, 7, "Last (Breast) Feed (Time): " . self::green($pdf, $data->baby_data->baby_last_feed, "Last (Breast) Feed (Time)"), 1, 'L');}
             }
            }
            
@@ -2878,7 +2921,7 @@ class NewFormCtrl extends Controller
             $pdf->SetDrawColor(200);
             $pdf->SetLineWidth(.3);
 
-            if(!empty($pregnant_form->baby_before_treatment) || !empty($pregnant_form->baby_during_transport) || !empty($pregnant_form->baby_information_given) || !empty($pregnant_form->baby_before_given_time)){
+            if(!empty($data->baby_data->baby_before_treatment) || !empty($data->baby_data->baby_during_transport) || !empty($data->baby_data->baby_information_given) || !empty($data->baby_data->baby_before_given_time)){
                 $pdf->MultiCell(0, 7, "Treatments Give Time", 1, 'L', true);
 
                 $pdf->SetFillColor(255, 250, 205);
@@ -2886,9 +2929,9 @@ class NewFormCtrl extends Controller
                 $pdf->SetDrawColor(230);
                 $pdf->SetLineWidth(.3);
     
-                if(!empty($pregnant_form->baby_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $pregnant_form->baby_before_treatment . '-' . $pregnant_form->baby_before_given_time, 'Before Referral'), 1, 'L');}
-                if(!empty($pregnant_form->baby_during_transport)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $pregnant_form->baby_during_transport . '-' . $pregnant_form->baby_transport_given_time, 'During Transport'), 1, 'L');}
-                if(!empty($pregnant_form->baby_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, $pregnant_form->baby_information_given), 1, 'L');}
+                if(!empty($data->baby_data->baby_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $data->baby_data->baby_before_treatment . '-' . $data->baby_data->baby_before_given_time, 'Before Referral'), 1, 'L');}
+                if(!empty($data->baby_data->baby_during_transport)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->baby_data->baby_during_transport . '-' . $data->baby_data->baby_transport_given_time, 'During Transport'), 1, 'L');}
+                if(!empty($data->baby_data->baby_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->baby_data->baby_information_given)), 1, 'L');}
             }  
 
         if (!empty($data->commordities) || !empty($data->commordities_hyper_year) || !empty($data->commordities_diabetes_year) || !empty($data->commordities_asthma_year) || !empty($data->commordities_cancer)
@@ -2942,10 +2985,10 @@ class NewFormCtrl extends Controller
                 $pdf->MultiCell(0, 7, "Thyroid Disease:" . self::green($pdf, $this->explodeString($data->heredo_thyroid_side), 'Thyroid Disease'), 1, 'L');
             }
             if (!empty($heredo_dataArray['Others'])) {
-                $pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $this->explodeString($data->heredo_others), 'Others'), 1, 'L');
+                $pdf->MultiCell(0, 7, "Others:" . self::green($pdf, utf8_decode($this->explodeString($data->heredo_others)), 'Others'), 1, 'L');
             }
             if(!empty($data->previous_hospitalization)){
-                $pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, $data->previous_hospitalization), 1, 'L');
+                $pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, utf8_decode($data->previous_hospitalization)), 1, 'L');
             }
         }
     }
@@ -2954,7 +2997,7 @@ class NewFormCtrl extends Controller
     $x, 
     $patient_address, 
     $woman_name, 
-    $tracking_code, 
+    $tracking_data, 
     $referring_facility_normal, 
     $referred_to_normal, 
     $department_normal, 
@@ -2968,28 +3011,34 @@ class NewFormCtrl extends Controller
             $pdf->Cell(0, 12, "Clinical Referral Form", 0, "", "C");
             $pdf->Ln(20);
             $pdf->SetFont('Arial', '', 10);
-           if(!empty($tracking_code->code)){$pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf,  $tracking_code->code, "Patient Code :"), 0, 'L');}
+           if(!empty($tracking_data->code)){$pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf,  $tracking_data->code, "Patient Code :"), 0, 'L');}
             $pdf->Ln(5);
-           if(!empty($referring_facility_normal->name)){$pdf->MultiCell(0, 7, self::black($pdf, "Name of Referring Facility: ") . self::orange($pdf, $referring_facility_normal->name, "Name of Referring Facility:"), 0, 'L');}
+           if(!empty($referring_facility_normal->name)){$pdf->MultiCell(0, 7, self::black($pdf, "Name of Referring Facility: ") . self::orange($pdf, utf8_decode($referring_facility_normal->name), "Name of Referring Facility:"), 0, 'L');}
            if(!empty($referring_facility_normal->contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $referring_facility_normal->contact, "Facility Contact #:"), 0, 'L');}
-           if(!empty($referring_facility_normal->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referring_facility_normal->address, "Address:"), 0, 'L');}
+           if(!empty($referring_facility_normal->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, utf8_decode($referring_facility_normal->address), "Address:"), 0, 'L');}
     
-    
-           if(!empty($referred_to_normal->name)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred to: ") . self::orange($pdf, $referred_to_normal->name, "Referred to:"), 0, 'L');}
+           if(!empty($referred_to_normal->name)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred to: ") . self::orange($pdf, utf8_decode($referred_to_normal->name), "Referred to:"), 0, 'L');}
             $y = $pdf->getY();
             $pdf->SetXY($x / 2 + 10, $y - 7);
-           if(!empty($department_normal->description)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, $department_normal->description, "Department:"), 0);}
+           if(!empty($department_normal->description)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, utf8_decode($department_normal->description), "Department:"), 0);}
     
             if(!empty($referred_to_normal->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referred_to_normal->address, "Address:"), 0, 'L');}
     
-            if(!empty($patients_form->time_referred)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Referred (ReCo): ") . self::orange($pdf, $patients_form->time_referred, "Date/Time Referred (ReCo):"), 0, 'L');}
+            if(!empty($patients_form->time_referred)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Referred (ReCo): ") . self::orange($pdf, utf8_decode($patients_form->time_referred), "Date/Time Referred (ReCo):"), 0, 'L');}
             $y = $pdf->getY();
             $pdf->SetXY($x / 2 + 10, $y - 7);
-
-            if(!empty($patients_form->time_transferred)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, $patients_form->time_transferred, "Date/Time Transferred:"), 0);}
+            
+            if(!empty($tracking_data->date_transferred)){
+                if ($tracking_data->date_transferred !== '0000-00-00 00:00:00'){
+                 $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, $tracking_data->date_transferred, "Date/Time Transferred:"), 0);
+                }else {
+                 $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, null, "Date/Time Transferred:"), 0);
+                }
+               
+            }
             
             // $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::orange($pdf, $woman_name, "Name of Patient:"), 0, 'L');
-            if(!empty($woman_name)){$pdf->MultiCell(0, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::staticGreen($pdf, $woman_name), 0, 'L');}
+            if(!empty($woman_name)){$pdf->MultiCell(0, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::staticGreen($pdf, utf8_decode($woman_name)), 0, 'L');}
             $y = $pdf->getY();
             $pdf->SetXY($x / 2 + 10, $y - 7);
     
@@ -3002,8 +3051,8 @@ class NewFormCtrl extends Controller
             $pdf->SetXY(($x / 2) + ($x / 2) - 30, $y - 7);
             if(!empty($patients_name->civil_status)){$pdf->MultiCell($x / 4, 7, self::black($pdf, "Status: ") . self::orange($pdf, $patients_name->civil_status, "Status:"), 0);}
     
-            if(!empty($patient_address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $patient_address, "address:"), 0, 'L');}
-    
+            if(!empty($patient_address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, utf8_decode($patient_address), "address:"), 0, 'L');}
+
             if(!empty( $patients_name->phic_status)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "PhilHealth Status: ") . self::orange($pdf, $patients_name->phic_status, "PhilHealth status:"), 0, 'L');}
             $y = $pdf->getY();
             $pdf->SetXY($x / 2 + 10, $y - 7);
@@ -3019,14 +3068,14 @@ class NewFormCtrl extends Controller
             $pdf->MultiCell(0, 7, self::black($pdf, "Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), 0, 'L');
             $pdf->SetTextColor(102, 56, 0);
             $pdf->SetFont('Arial', 'I', 10);
-            $pdf->MultiCell(0, 5, $data->case_summary, 0, 'L');
+            $pdf->MultiCell(0, 5, utf8_decode($data->case_summary), 0, 'L');
             $pdf->Ln();
     
     
             $pdf->MultiCell(0, 7, self::black($pdf, "Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), 0, 'L');
             $pdf->SetTextColor(102, 56, 0);
             $pdf->SetFont('Arial', 'I', 10);
-            $pdf->MultiCell(0, 5, $data->reco_summary, 0, 'L');
+            $pdf->MultiCell(0, 5, utf8_decode($data->reco_summary), 0, 'L');
             $pdf->Ln();
     
             if (isset($data->icd[0])) {
@@ -3051,7 +3100,7 @@ class NewFormCtrl extends Controller
                 $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: "), 0, 'L');
                 $pdf->SetTextColor(102, 56, 0);
                 $pdf->SetFont('Arial', 'I', 10);
-                if(!empty($data->other_diagnoses)){$pdf->MultiCell(0, 5, $data->other_diagnoses, 0, 'L');}
+                if(!empty($data->other_diagnoses)){$pdf->MultiCell(0, 5, utf8_decode($data->other_diagnoses), 0, 'L');}
                 $pdf->Ln();
             }
     
@@ -3064,10 +3113,10 @@ class NewFormCtrl extends Controller
             }
     
             if (isset($data->other_reason_referral)) {
-                $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: "), 0, 'L');
+                $pdf->MultiCell(0, 7, self::black($pdf, "Other reason for referral: "), 0, 'L');
                 $pdf->SetTextColor(102, 56, 0);
                 $pdf->SetFont('Arial', 'I', 10);
-                if(!empty($data->other_reason_referral)){$pdf->MultiCell(0, 5, $data->other_reason_referral, 0, 'L');}
+                if(!empty($data->other_reason_referral)){$pdf->MultiCell(0, 5, utf8_decode($data->other_reason_referral), 0, 'L');}
                 $pdf->Ln();
             }
             $data_md_referring = []; 
@@ -3080,7 +3129,7 @@ class NewFormCtrl extends Controller
                 $data_md_referred_contact[] = $data2->referred_contact;
             }
            
-            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, $data_md_referring[0], "Name of referring MD/HCW:"), 0, 'L');
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, utf8_decode($data_md_referring[0]), "Name of referring MD/HCW:"), 0, 'L');
             $pdf->MultiCell($x / 2, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $data_md_contact[0], "Contact # of referring MD/HCW:"), 0, 'L');
             $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referred MD/HCW- Mobile Contact # (ReCo): ") . self::orange($pdf, $data_md_referred_contact[0], "Name of referred MD/HCW- Mobile Contact # (ReCo):"), 0, 'L');
             if ($form_type === 'normal' && $this->calculateAge($patients_name->dob)<=18){
