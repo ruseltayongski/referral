@@ -340,7 +340,7 @@ $facilities = \App\Facility::select('id','name')
                     <br>
                 <div class="row" style="margin: 5px;">
                     <div class="col-md-4">
-                        <small ><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
+                        <small ><small class="text-success">REFERRED TO: </small></small> &nbsp;<span class="text-red">*</span><br>
                         <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
                         <select name="referred_to" class="select2 edit_facility_normal form-control" style="width: 250px;" required>
                             <option value="">Select Facility...</option>
@@ -354,13 +354,13 @@ $facilities = \App\Facility::select('id','name')
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <small ><b>DEPARTMENT: </b></small> <span class="text-red">*</span><br>
+                        <small ><small class="text-success">DEPARTMENT: </small></small> <span class="text-red">*</span><br>
                         <select name="department_id" class="form-control edit_department_normal" style="width: 250px;" required>
                             <option value="">Select Option</option>
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <small ><b>ADDRESS:</b></small><br>
+                        <small ><small class="text-success">ADDRESS:</small></small><br>
                         &nbsp;<span class="text-yellow edit_fac_address_normal"></span>
                         </div>
                         </div>
@@ -391,11 +391,11 @@ $facilities = \App\Facility::select('id','name')
                                 
                             </div>
                             <div class="col-md-4">
-                                    <small ><b>SEX: </b></small><br>&nbsp;
+                                    <small ><small class="text-success">SEX: </small></small><br>&nbsp;
                                     <span class="patient_sex"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <small ><b>STATUS: </b></small><br> &nbsp;
+                                    <small ><small class="text-success">STATUS: </small></small><br> &nbsp;
                                     <span class="civil_status"></span>
                                 </div>
                             </div>
@@ -492,9 +492,9 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_illness_history_normInfo" style="width: 100%">
-                                    <b>CASE SUMMARY:</b>
+                                    <small class="text-success"><b>CASE SUMMARY:</b></small>
                                     <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required>{{$form->case_summary}}</textarea><br><br>
-                                    <b>CHIEF COMPLAINTS:</b>
+                                    <small class="text-success"><b>CHIEF COMPLAINTS:</b></small>
                                     <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required>{{$form->reco_summary}}</textarea><br><br>
                                 </div>
                             </div>
@@ -509,50 +509,50 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse " id="collapse_diagnosis_normInfo" style="width: 100%">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
-                                            <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
-                                            <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
-                                                <i class="fa fa-medkit"></i> Add ICD-10
-                                            </a>
-                                            <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
-                                        </div>
-                                    </div><br>
+                                <div class="row">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
+                                    <small><b><input id="diag_prompt" style="text-align: center; color: red; border-color: transparent; width:30%;" value="SELECT ICD-10 / OTHER DIAGNOSIS" readonly></b></small><br><br>
+                                    <a data-toggle="modal" data-target="#icd-modal" type="button" class="btn btn-sm btn-success" onclick="searchICD10()">
+                                        <i class="fa fa-medkit"></i> Add ICD-10
+                                    </a>
+                                    <button type="button" class="btn btn-sm btn-success add_notes_btn" onclick="addNotesDiagnosis()"><i class="fa fa-plus"></i> Add notes in diagnosis</button>
+                                </div>
+                            </div><br>
 
-                                    <div class="row icd_selected" style="padding-top: 10px;">
-                                        <div class="col-md-12">
-                                            <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
-                                            <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
-                                            <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
-                                            <div id="icd_selected" style="padding-top: 5px">
-                                                @if(isset($icd))
-                                                    @foreach($icd as $i)
-                                                        <span> => {{ $i->description }}</span><br>
-                                                        <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
-                                                    @endforeach
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div><br>
+                            <div class="row icd_selected" style="padding-top: 10px;">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>ICD-10 Code and Description: </b></small>&emsp;
+                                    <button type="button" class="btn btn-xs btn-danger" onclick="clearIcdNormal()">Clear ICD 10</button><br>
+                                    <input type="hidden" id="icd_cleared" name="icd_cleared" value="">
+                                    <div id="icd_selected" style="padding-top: 5px">
+                                        @if(isset($icd))
+                                            @foreach($icd as $i)
+                                                <span> => {{ $i->description }}</span><br>
+                                                <input type="hidden" id="icd_ids" name="icd_ids[]" value="{{ $i->id }}">
+                                            @endforeach
+                                        @endif
+                                    </div>
+                                </div>
+                            </div><br>
 
-                                    <div class="row notes_diagnosis" style="padding-top: 10px;">
-                                        <div class="col-md-12">
-                                            <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
-                                            <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
-                                            <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
-                                            <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
-                                        </div>
-                                    </div><br>
+                            <div class="row notes_diagnosis" style="padding-top: 10px;">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>Notes in Diagnosis: </b></small>&emsp;
+                                    <input type="hidden" name="notes_diag_cleared" id="notes_diag_cleared" value="">
+                                    <button type="button" class="btn btn-xs btn-info" onclick="clearNotesDiagnosis()"> Clear notes diagnosis</button>
+                                    <textarea class="form-control normal_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->diagnosis }}</textarea>
+                                </div>
+                            </div><br>
 
-                                    <div class="row other_diag" style="padding-top: 10px">
-                                        <div class="col-md-12">
-                                            <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
-                                            <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
-                                            <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
-                                            <textarea class="form-control" id="other_diagnosis" name="other_diagnoses" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
-                                        </div>
-                                    </div><br>
+                            <div class="row other_diag" style="padding-top: 10px">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>Other Diagnosis: </b></small>&emsp;
+                                    <input type="hidden" name="other_diag_cleared" class="other_diag_cleared" value="">
+                                    <button type="button" class="btn btn-xs btn-warning" onclick="clearOtherDiagnosis(true)"> Clear other diagnosis</button>
+                                    <textarea class="form-control" id="other_diagnosis" name="other_diagnosis" style="resize: none;width: 100%;" rows="5">{{ $form->other_diagnoses }}</textarea>
+                                </div>
+                            </div><br>
                                 </div>
                             </div>
                         </div>
@@ -584,7 +584,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
 
                                 <div class="collapse" id="collapse_medical_history" style="width: 100%;">
-                                    <b>COMORBIDITIES</b>
+                                    <small class="text-success"><b>COMORBIDITIES</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -598,7 +598,6 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_hyper_cbox" value="No">
                                                 <input class="form-check-input" id="comor_hyper_cbox" name="comor_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'Hypertension'); ?>>
                                                 Hypertension
                                                 <span id="comor_hyper"> since
@@ -611,8 +610,7 @@ $facilities = \App\Facility::select('id','name')
                                                     </select>
                                                 </span>
                                             </div>
-                                            <div class="col-md-4">
-                                                <input type="hidden" name="comor_diab_cbox" value="No">
+                                            <div class="col-md-4">                                             
                                                 <input class="form-check-input" id="comor_diab_cbox" name="comor_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'Diabetes'); ?>>
                                                 Diabetes Mellitus
                                                 <span id="comor_diab"> since
@@ -626,7 +624,6 @@ $facilities = \App\Facility::select('id','name')
                                                 </span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_asthma_cbox" value="No">
                                                 <input class="form-check-input" id="comor_asthma_cbox" name="comor_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'Asthma'); ?>>
                                                 Bronchial Asthma
                                                 <span id="comor_asthma"> since
@@ -642,17 +639,14 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_copd_cbox" value="No">
                                                 <input class="form-check-input" id="comor_copd_cbox" name="comor_copd_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'COPD'); ?>>
                                                 <span> COPD</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_dyslip_cbox" value="No">
                                                 <input class="form-check-input" id="comor_dyslip_cbox" name="comor_dyslip_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'Dyslipidemia'); ?>>
                                                 <span> Dyslipidemia</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_thyroid_cbox" value="No">
                                                 <input class="form-check-input" id="comor_thyroid_cbox" name="comor_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'Thyroid Disease'); ?>>
                                                 <span> Thyroid Disease</span>
                                             </div>
@@ -660,14 +654,12 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row">
 
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_cancer_cbox" value="No">
                                                 <input class="form-check-input" id="comor_cancer_cbox" name="comor_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'Cancer'); ?>>
                                                 <span>Cancer <i>(specify)</i>:</span>
                                                 <textarea class="form-control" name="comor_cancer" id="comor_cancer" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->commordities_cancer); ?></textarea>
                                             </div>
 
                                             <div class="col-md-4">
-                                                <input type="hidden" name="comor_others_cbox" value="No">
                                                 <input class="form-check-input" id="comor_others_cbox" name="comor_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'Others'); ?>>
                                                 <span>Other(s):</span>
                                                 <textarea class="form-control" name="comor_others" id="comor_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->commordities_others); ?></textarea>
@@ -677,7 +669,7 @@ $facilities = \App\Facility::select('id','name')
 
                                         </div><br>
 
-                                        <b>ALLERGIES</b><i> (Specify)</i><br>
+                                        <small class="text-success"><b>ALLERGIES</b></small><i> (Specify)</i><br>
                                         <div class="container-referral">
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -691,19 +683,16 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                    <input type="hidden" name="allergy_food_cbox" value="No">
                                                     <input class="form-check-input" id="allergy_food_cbox" name="allergy_food_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Food'); ?>>
                                                     <span> Food(s): <i>(ex. crustaceans, eggs)</i></span>
                                                     <textarea class="form-control" id="allergy_food" name="allergy_food_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_food_cause); ?></textarea>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="hidden" name="allergy_drug_cbox" value="No">
                                                     <input class="form-check-input" id="allergy_drug_cbox" name="allergy_drug_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Drugs'); ?>>
                                                     <span> Drug(s): <i>(ex. Ibuprofen, NSAIDS)</i></span>
                                                     <textarea class="form-control" id="allergy_drug" name="allergy_drug_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_drugs_cause); ?></textarea>
                                                 </div>
                                                 <div class="col-md-4">
-                                                    <input type="hidden" name="allergy_other_cbox" value="No">
                                                     <input class="form-check-input" id="allergy_other_cbox" name="allergy_other_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'allergies', 'Others'); ?>>
                                                     <span> Other(s):</span>
                                                     <textarea class="form-control" id="allergy_other" name="allergy_other_cause" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($past_medical_history->allergy_others_cause); ?></textarea>
@@ -712,7 +701,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div><br>
 
 
-                                        <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
+                                        <small class="text-success"><b>HEREDOFAMILIAL DISEASES</b></small> <i>(Specify which side of the family: maternal, paternal, both)</i>
                                         <div class="container-referral">
                                             <div class="row">
                                                 <div class="col-md-3">
@@ -726,7 +715,6 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <input type="hidden" name="heredo_hyper_cbox" value="No">
                                                     <input class="form-check-input" id="heredo_hyper_cbox" name="heredo_hyper_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Hypertension'); ?>>
                                                     <span>Hypertension:</span>
                                                     <select class="form-control-select" id="heredo_hyper" name="heredo_hypertension_side">
@@ -737,7 +725,6 @@ $facilities = \App\Facility::select('id','name')
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="hidden" name="heredo_diab_cbox" value="No">
                                                     <input class="form-check-input" id="heredo_diab_cbox" name="heredo_diab_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Diabetes'); ?>>
                                                     <span>Diabetes Mellitus:</span>
                                                     <select class="form-control-select" id="heredo_diab" name="heredo_diabetes_side">
@@ -748,7 +735,6 @@ $facilities = \App\Facility::select('id','name')
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="hidden" name="heredo_asthma_cbox" value="No">
                                                     <input class="form-check-input" id="heredo_asthma_cbox" name="heredo_asthma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Asthma'); ?>>
                                                     <span>Bronchial Asthma:</span>
                                                     <select class="form-control-select" id="heredo_asthma" name="heredo_asthma_side">
@@ -759,7 +745,6 @@ $facilities = \App\Facility::select('id','name')
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="hidden" name="heredo_cancer_cbox" value="No">
                                                     <input class="form-check-input" id="heredo_cancer_cbox" name="heredo_cancer_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Cancer'); ?>>
                                                     <span>Cancer:</span>
                                                     <select class="form-control-select" id="heredo_cancer" name="heredo_cancer_side">
@@ -772,7 +757,6 @@ $facilities = \App\Facility::select('id','name')
                                             </div><br>
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <input type="hidden" name="heredo_kidney_cbox" value="No">
                                                     <input class="form-check-input" id="heredo_kidney_cbox" name="heredo_kidney_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Kidney Disease'); ?>>
                                                     <span>Kidney:</span>
                                                     <select class="form-control-select" id="heredo_kidney" name="heredo_kidney_side">
@@ -783,7 +767,6 @@ $facilities = \App\Facility::select('id','name')
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="hidden" name="heredo_thyroid_cbox" value="No">
                                                     <input class="form-check-input" id="heredo_thyroid_cbox" name="heredo_thyroid_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Thyroid Disease'); ?>>
                                                     <span>Thyroid Disease:</span>
                                                     <select class="form-control-select" id="heredo_thyroid" name="heredo_thyroid_side">
@@ -794,7 +777,6 @@ $facilities = \App\Facility::select('id','name')
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <input type="hidden" name="heredo_others_cbox" value="No">
                                                     <input class="form-check-input" id="heredo_others_cbox" name="heredo_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'heredofamilial_diseases', 'Others'); ?>>
                                                     <span>Other(s):</span>
                                                     <input type="text" id="heredo_others" name="heredo_others_side" value="<?php echo htmlspecialchars($past_medical_history->heredo_others); ?>">
@@ -802,12 +784,12 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                         </div><br>
 
-                                        <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
+                                        <small class="text-success"><b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b></small><br>
                                         <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3">{{ $past_medical_history->previous_hospitalization }}</textarea><br><br>
                                 </div>
                                 </div>
                             </div>
-                        </div>
+                      
 
 
                         @if($patient_age <=18)
@@ -821,7 +803,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_pedia_history" style="width: 100%;">
-                                    <b>PRENATAL</b>
+                                    <small class="text-success"><b>PRENATAL</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -836,7 +818,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>NATAL</b>
+                                    <small class="text-success"><b>NATAL</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -897,7 +879,7 @@ $facilities = \App\Facility::select('id','name')
                                     $immu_others_value = htmlspecialchars($pediatric_history['immu_others']);
                                     ?>
                                                   
-                                    <b>POST NATAL</b>
+                                    <small class="text-success"><b>POST NATAL</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-12">
@@ -907,7 +889,7 @@ $facilities = \App\Facility::select('id','name')
                                                     <span id="breastfed">
                                                         x <input type="number" name="postnatal_bfeed_xmos" style="width: 7%;" min="0" value="<?php echo $postnatal_bfeed_xmos_value; ?>"> mos.
                                                     </span>
-                                                    <input type="hidden" name="postnatal_ffeed" value="No">
+                                               
                                                     <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" id="postnatal_ffeed" type="checkbox" name="postnatal_ffeed" value="Yes" <?= isChecked($pediatric_history, 'post_natal_formula_feed', 'Yes'); ?>> Formula Fed,
                                                     <span id="formula_fed">
                                                         (specify) <input type="text" style="width: 15%" name="postnatal_ffeed_specify" value="<?php echo $postnatal_ffeed_specify_value; ?>">
@@ -920,23 +902,23 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <i>Immunization History</i><br>&emsp;
-                                                <input type="hidden" name="immu_bcg_cbox" value="No">
+                                        
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_bcg_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_bcg', 'Yes'); ?>> BCG
-                                                <input type="hidden" name="immu_dpt_cbox" value="No">
+                                             
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_dpt_cbox" name="immu_dpt_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_dpt_opv_x', 'Yes'); ?>> DPT/OPV
                                                 <span id="immu_dpt">
                                                     x <input type="number" name="immu_dpt_doses" style="width: 7%;" min="0" value="<?php echo $immu_dpt_doses_value; ?>"> doses
                                                 </span>
-                                                <input type="hidden" name="immu_hepb_cbox" value="No">
+                                           
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_hepb_cbox" name="immu_hepb_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_hepB_cbox', 'Yes'); ?>> Hep B
                                                 <span id="immu_hepb">
                                                     x <input type="number" name="immu_hepb_doses" style="width: 7%;" min="0" value="<?php echo $immu_hepb_doses_value; ?>"> doses
                                                 </span>
-                                                <input type="hidden" name="immu_measles_cbox" value="No">
+                                     
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_measles_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_immu_measles_cbox', 'Yes'); ?>> Measles
-                                                <input type="hidden" name="immu_mmr_cbox" value="No">
+                                             
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="immu_mmr_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_mmr_cbox', 'Yes'); ?>> MMR
-                                                <input type="hidden" name="immu_others_cbox" value="No">
+                                            
                                                 <input class="form-check-input" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" id="immu_others_cbox" name="immu_others_cbox" value="Yes" <?= isChecked($pediatric_history, 'post_natal_others_cbox', 'Yes'); ?>> Other(s)
                                                 <span id="immu_others">
                                                     <input type="text" name="immu_others" style="width: 20%;" value="<?php echo $immu_others_value; ?>">
@@ -1014,26 +996,26 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_gyne_history" style="width: 100%;">
-                                    <b>MENARCHE</b> @ <input type="number" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
-                                    <b>MENOPAUSE:</b> &emsp;
+                                    <small class="text-success"><b>MENARCHE</b></small> @ <input type="number" style="width: 10%;" name="menarche" value="<?php echo $menarche_value; ?>"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <small class="text-success"><b>MENOPAUSE:</b></small> &emsp;
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'Yes'); ?>>
                                     <label for="menopausal">Yes</label>
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menopause', 'No'); ?>>
                                     <label for="non_menopausal">No</label>
                                     <span id="menopausal_age">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9" value="<?php echo $menopausal_age_value; ?>"></span><br><br>
 
-                                    <b>MENSTRUAL CYCLE</b>
+                                    <small class="text-success"><b>MENSTRUAL CYCLE</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio" value="regular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'regular'); ?>>
-                                                <label for="mens_reg_radio">Regular</label>
+                                                    Regular
                                                 <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_cycle_irreg" value="irregular" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle', 'irregular'); ?>>
-                                                <label for="mens_cycle_irreg">Irregular</label>
+                                                    Irregular
                                                 <span id="mens_irreg">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0" value="<?php echo $mens_irreg_xmos_value; ?>"> mos</span>
                                             </div>
                                             <div class="col-md-6">
-                                                <b>Dysmenorrhea:</b> &emsp;
+                                                <small class="text-success">Dysmenorrhea:</small> &emsp;
                                                 <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes" value="Yes" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'Yes'); ?>>
                                                 <label for="dysmenorrhea_yes">Yes</label>
                                                 <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_no" value="No" <?= isChecked($obstetric_and_gynecologic_history, 'menstrual_cycle_dysmenorrhea', 'No'); ?>>
@@ -1042,16 +1024,16 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <b>Duration:</b> <input type="number" style="width:15%;" min="0" name="mens_duration" value="<?php echo $menstrual_cycle_duration_value; ?>"> days &emsp;
-                                                <b>Pads/day:</b> <input type="number" style="width:15%;" min="0" name="mens_padsperday" value="<?php echo $menstrual_cycle_padsperday_value; ?>">
+                                                <small class="text-success">Duration:</small> <input type="number" style="width:15%;" min="0" name="mens_duration" value="<?php echo $menstrual_cycle_duration_value; ?>"> days &emsp;
+                                                <small class="text-success">Pads/day:</small> <input type="number" style="width:15%;" min="0" name="mens_padsperday" value="<?php echo $menstrual_cycle_padsperday_value; ?>">
                                             </div>
                                             <div class="col-md-6">
-                                                <b>Medication:</b> <input type="text" style="width:70%;" name="mens_medication" value="<?php echo $menstrual_cycle_medication_value; ?>">
+                                                <small class="text-success">Medication:</small> <input type="text" style="width:70%;" name="mens_medication" value="<?php echo $menstrual_cycle_medication_value; ?>">
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>CONTRACEPTIVE HISTORY</b>
+                                    <small class="text-success"><b>CONTRACEPTIVE HISTORY</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
@@ -1084,40 +1066,40 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>PARITY</b>
+                                    <small class="text-success"><b>PARITY</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-9">
-                                                <b>G</b> <input type="number" min="0" style="width:8%;" name="parity_g" value="<?php echo $parity_g_value; ?>">
-                                                <b>P</b> <input type="number" min="0" style="width:8%;" name="parity_p" value="<?php echo $parity_p_value; ?>">&emsp;
-                                                <b>(FT</b> <input type="text" style="width:8%;" name="parity_ft" value="{{$data->parity_ft}}">
-                                                <b>PT</b> <input type="text" style="width:8%;" name="parity_pt" value="<?php echo $parity_pt_value; ?>">
-                                                <b>A</b> <input type="text" style="width:8%;" name="parity_a" value="<?php echo $parity_a_value; ?>">
-                                                <b>L</b> <input type="text" style="width:8%;" name="parity_l" value="<?php echo $parity_l_value; ?>"><b>)</b>
+                                                <small class="text-success">G</small> <input type="number" min="0" style="width:8%;" name="parity_g" value="<?php echo $parity_g_value; ?>">
+                                                <small class="text-success">P</small> <input type="number" min="0" style="width:8%;" name="parity_p" value="<?php echo $parity_p_value; ?>">&emsp;
+                                                <small class="text-success">(FT</small> <input type="text" style="width:8%;" name="parity_ft" value="{{$data->parity_ft}}">
+                                                <small class="text-success">PT</small> <input type="text" style="width:8%;" name="parity_pt" value="<?php echo $parity_pt_value; ?>">
+                                                <small class="text-success">A</small> <input type="text" style="width:8%;" name="parity_a" value="<?php echo $parity_a_value; ?>">
+                                                <small class="text-success">L</small> <input type="text" style="width:8%;" name="parity_l" value="<?php echo $parity_l_value; ?>"><small class="text-success">)</small>
                                             </div>
                                         </div>
                                     </div><br>
 
                                     <div class="container-referral">
-                                        <b>LMP</b>
+                                        <small class="text-success">LMP</small>
                                         <input type="number" step="0.01" min="0" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
-                                        <b>EDC</b><i>(if pregnant)</i>
+                                        <small class="text-success">EDC</small><i>(if pregnant)</i>
                                         <input type="number" step="0.01" min="0" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
                                     </div><br>
 
-                                    <b>AOG</b>
+                                    <small class="text-success"><b>AOG</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <b>by LMP</b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp" value="<?php echo $aog_lnmp_value; ?>"> <b>wks</b>
+                                                <small class="text-success">by LMP</small> <input type="number" min="0" style="width:25%;" name="aog_bylnmp" value="<?php echo $aog_lnmp_value; ?>"> <small class="text-success">wks</small>
                                             </div>
                                             <div class="col-md-4">
-                                                <b>by UTZ</b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ" value="<?php echo $aog_eutz_value; ?>"> <b>wks</b>
+                                                <small class="text-success">by UTZ</small> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ" value="<?php echo $aog_eutz_value; ?>"> <small class="text-success">wks</small>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>PRENATAL HISTORY</b><br>
+                                    <small class="text-success"><b>PRENATAL HISTORY</b></small><br>
                                     <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
                                     <div class="table-responsive" style="overflow-x: auto;">
                                         <table class="table table-bordered" id="prenatal_table">
@@ -1197,7 +1179,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_personal_history" style="width: 100%;">
-                                    <b>SMOKING</b>
+                                    <small class="text-success"><b>SMOKING</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1230,7 +1212,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>ALCOHOL DRINKING</b>
+                                    <small class="text-success"><b>ALCOHOL DRINKING</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
@@ -1265,7 +1247,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>ILLICIT DRUGS</b>
+                                    <small class="text-success"><b>ILLICIT DRUGS</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
@@ -1292,7 +1274,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-8" id="drugs_text">
-                                                Specify drugs taken:
+                                               <small class="text-success"> Specify drugs taken:</small>
                                                 <textarea class="form-control" rows="2" style="resize: none;width:50%;" name="illicit_drugs_token"><?php echo htmlspecialchars($personal_and_social_history->illicit_drugs_taken); ?></textarea>
                                             </div>
                                         </div>
@@ -1310,7 +1292,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_medication" style="width: 100%;">
-                                    <i>Specify number of doses given and time of last dose given.</i>
+                                   <small class="text-success"> <i>Specify number of doses given and time of last dose given.</i></small>
                                     <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5"><?php echo htmlspecialchars($personal_and_social_history->current_medications); ?></textarea><br><br>
                                 </div>
                             </div>
@@ -1331,7 +1313,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_lab_procedures" style="width: 100%;">
-                                    <i> Attach all applicable labs in one file.</i>
+                                    <small class="text-success"><i> Attach all applicable labs in one file.</i></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
@@ -1372,11 +1354,11 @@ $facilities = \App\Facility::select('id','name')
                                        
                                         <div class="row with_file_attached">
                                             <div class="col-md-12">
-                                                <small class="text-success"><b>
+                                                <small class="text-success">
                                                         @if(count($file_path) > 1) FILE ATTACHMENTS: @else FILE ATTACHMENT: @endif
-                                                    </b></small>
+                                                    </small>
                                                 <input type="hidden" name="file_cleared" id="file_cleared" value="">
-                                                <button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Remove File Attachment</button><br/><br/>
+                                                <button type="button" class="btn btn-xs btn-warning" onclick="clearFileUpload()"> Remove All Files</button><br/><br/>
                                                 @for($i = 0; $i < count($file_path); $i++)
                                                     <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
                                                     @if($i + 1 != count($file_path))
@@ -1389,7 +1371,7 @@ $facilities = \App\Facility::select('id','name')
 
                                         <div class="row no_file_attached">
                                             <div class="col-md-12">
-                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <small class="text-success">FILE ATTACHMENTS:</small></small> &emsp;
                                                 <button type="button" class="btn btn-md btn-danger" id="remove_files_btn_normal" onclick="removeFiles(2)">Remove Files</button><br><br>
                                                 <div class="attachment_normal">
                                                     <div class="col-md-3" id="upload1">
@@ -1401,7 +1383,7 @@ $facilities = \App\Facility::select('id','name')
                                                             <div class="file-upload-content" id="file-upload-content_normal1">
                                                                 <img class="file-upload-image" id="file-upload-image_normal1" src="#"/>
                                                                 <div class="image-title-wrap">
-                                                                    <b><small class="image-title" id="image-title_normal1" style="display:block; word-wrap: break-word;"></small></b>
+                                                                    <small class="text-success"><small class="image-title" id="image-title_normal1" style="display:block; word-wrap: break-word;"></small></small>
                                                                     {{--<button type="button" onclick="removeFile(1,2)" class="remove-image"> Remove </button>--}}
                                                                 </div>
                                                             </div>
@@ -1424,7 +1406,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_review_system" style="width: 100%;">
-                                    <b>SKIN</b>
+                                    <small class="text-success"><b>SKIN</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1438,24 +1420,21 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_skin_rashes_cbox" value="No">
                                                 <input class="form-check-input" id="rs_skin_rashes_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_rashes_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Rashes'); ?>>
                                                 <span> Rashes</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_skin_itching_cbox" value="No">
                                                 <input class="form-check-input" id="rs_skin_itching_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_itching_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Itching'); ?>>
                                                 <span> Itching</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_skin_hairchange_cbox" value="No">
                                                 <input class="form-check-input" id="rs_skin_hairchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_hairchange_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Rashes'); ?>>
                                                 <span> Change in hair or nails</span>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>HEAD</b>
+                                    <small class="text-success"><b>HEAD</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1467,7 +1446,6 @@ $facilities = \App\Facility::select('id','name')
                                                 <span> None</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_head_headache_cbox" value="No">
                                                 <input class="form-check-input" id="rs_head_headache_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_headache_cbox" value="Yes" <?= isChecked($review_of_system, 'head', 'Headaches'); ?>>
                                                 <span> Headaches</span>
                                             </div>
@@ -1478,7 +1456,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>EYES</b>
+                                    <small class="text-success"><b>EYES</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1492,41 +1470,35 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_glasses_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_glasses_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glasses_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Glasses or Contacts'); ?>>
                                                 <span> Glasses or Contacts</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_vision_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_vision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_vision_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Change in vision'); ?>>
                                                 <span> Change in vision</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_pain_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_pain_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Eye pain'); ?>>
                                                 <span> Eye pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_doublevision_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_doublevision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_doublevision_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Double Vision'); ?>>
                                                 <span> Double Vision</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_flashing_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_flashing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_flashing_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Flashing lights'); ?>>
                                                 <span> Flashing lights</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_glaucoma_cbox" value="No">
                                                 <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Glaucoma/Cataracts'); ?>>
                                                 <span> Glaucoma/Cataracts</span>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>EARS</b>
+                                    <small class="text-success"><b>EARS</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1540,12 +1512,10 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-
                                                 <input class="form-check-input" id="rs_ears_changehearing_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_changehearing_cbox" value="Yes" <?= isChecked($review_of_system, 'ears', 'Change in hearing'); ?>>
                                                 <span> Change in hearing</span>
                                             </div>
                                             <div class="col-md-2">
-
                                                 <input class="form-check-input" id="rs_ears_pain_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_pain_cbox" value="Yes" <?= isChecked($review_of_system, 'ears', 'Ear pain'); ?>>
                                                 <span> Ear pain</span>
                                             </div>
@@ -1564,7 +1534,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>NOSE/SINUSES</b>
+                                    <small class="text-success"><b>NOSE/SINUSES</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1592,7 +1562,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>MOUTH/THROAT</b>
+                                    <small class="text-success"><b>MOUTH/THROAT</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1624,7 +1594,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>NECK</b>
+                                    <small class="text-success"><b>NECK</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1656,7 +1626,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>BREAST</b>
+                                    <small class="text-success"><b>BREAST</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1688,7 +1658,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>RESPIRATORY/CARDIAC</b>
+                                    <small class="text-success"><b>RESPIRATORY/CARDIAC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1774,7 +1744,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>GASTROINTESTINAL</b>
+                                    <small class="text-success"><b>GASTROINTESTINAL</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1856,7 +1826,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>URINARY</b>
+                                    <small class="text-success"><b>URINARY</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1912,7 +1882,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>PERIPHERAL VASCULAR</b>
+                                    <small class="text-success"><b>PERIPHERAL VASCULAR</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1944,7 +1914,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>MUSCULOSKELETAL</b>
+                                    <small class="text-success"><b>MUSCULOSKELETAL</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -2002,7 +1972,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>NEUROLOGIC</b>
+                                    <small class="text-success"><b>NEUROLOGIC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -2070,7 +2040,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>HEMATOLOGIC</b>
+                                    <small class="text-success"><b>HEMATOLOGIC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -2098,7 +2068,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>ENDOCRINE</b>
+                                    <small class="text-success"><b>ENDOCRINE</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -2140,7 +2110,7 @@ $facilities = \App\Facility::select('id','name')
                                         </div>
                                     </div><br>
 
-                                    <b>PSYCHIATRIC</b>
+                                    <small class="text-success"><b>PSYCHIATRIC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -2197,44 +2167,51 @@ $facilities = \App\Facility::select('id','name')
                            
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status" aria-expanded="false" aria-controls="collapse_nutri_status">
-                                        <b>NUTRITIONAL STATUS</b>
+                                       <b>NUTRITIONAL STATUS</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_nutri_status" style="width: 100%;">
-                                    <b>Diet</b>
+                                    <small class="text-success"><b>Diet</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_none" value="None" <?= isChecked($nutritional_status, 'diet', 'None'); ?>>
-                                                <label for="diet_none"> None </label>
+                                                None 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_oral" value="Oral" <?= isChecked($nutritional_status, 'diet', 'Oral'); ?>>
-                                                <label for="diet_oral"> Oral </label>
+                                                 Oral 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tube" value="Tube" <?= isChecked($nutritional_status, 'diet', 'Tube'); ?>>
-                                                <label for="diet_tube"> Tube </label>
+                                                  Tube 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tpn" value="TPN" <?= isChecked($nutritional_status, 'diet', 'TPN'); ?>>
-                                                <label for="diet_tpn"> TPN </label>
+                                                 TPN 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_npo" value="NPO" <?= isChecked($nutritional_status, 'diet', 'NPO'); ?>>
-                                                <label for="diet_npo"> NPO </label>
+                                                 NPO 
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                Specify Diets: <textarea class="form-control" name="diet" style="resize: none;width: 100%;" rows="3"><?php echo htmlspecialchars($nutritional_status->specify_diets); ?></textarea><br><br>
+                                               <small class="text-success"> Specify Diets: </small><textarea class="form-control" name="diet" style="resize: none;width: 100%;" rows="3"><?php echo htmlspecialchars($nutritional_status->specify_diets); ?></textarea><br><br>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                           
                         </div>
+
+                        <?php
+
+                        $blood_pressure = isset($latest_vital_signs->blood_pressure) ? explode('/', $latest_vital_signs->blood_pressure) : ['', ''];
+                        $systolic = $blood_pressure[0]; 
+                        $diastolic = $blood_pressure[1]; 
+                        ?>
 
                         <div class="row" style="margin:5px">
                            
@@ -2248,28 +2225,31 @@ $facilities = \App\Facility::select('id','name')
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                Temperature: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp" value="<?php echo htmlspecialchars( $latest_vital_signs->temperature); ?>"> &#176;C
+                                              <small class="text-success"><b>Temperature:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp" value="<?php echo htmlspecialchars( $latest_vital_signs->temperature); ?>"> &#176;C
                                             </div>
                                             <div class="col-md-4">
-                                                Pulse Rate/Heart Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse" value="<?php echo htmlspecialchars( $latest_vital_signs->pulse_rate); ?>"> bpm
+                                              <small class="text-success"><b>Pulse Rate/Heart Rate:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse" value="<?php echo htmlspecialchars( $latest_vital_signs->pulse_rate); ?>"> bpm
                                             </div>
                                             <div class="col-md-4">
-                                                Respiratory Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate" value="<?php echo htmlspecialchars( $latest_vital_signs->respiratory_rate); ?>"> cpm
+                                               <small class="text-success"><b> Respiratory Rate: </b></small><input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate" value="<?php echo htmlspecialchars( $latest_vital_signs->respiratory_rate); ?>"> cpm
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <label for="systolic_normal_info">Blood Pressure:</label>
-                                                    <input type="number" id="systolic_normal_info" placeholder="Systolic (e.g., 100)" 
-                                                        style="width:18%;" min="0" max="300" 
-                                                        oninput="updateBloodPressure()"> /
-                                                    <input type="number" id="diastolic_normal_info" placeholder="Diastolic (e.g., 90)" 
-                                                        style="width:18%;" min="0" max="200" 
-                                                        oninput="updateBloodPressure()">mmHg
+                                               <small class="text-success"><b>Blood Pressure:</b></small></label>
+                                               <input type="number" id="systolic_normal_info" placeholder="Systolic (e.g., 100)" 
+                                                    style="width:18%;" min="0" max="300" 
+                                                    value="<?php echo htmlspecialchars($systolic); ?>" 
+                                                    oninput="updateBloodPressure()"> /
 
-                                                    <!-- Hidden input to store the combined value -->
-                                                    <input type="hidden" name="vital_bp" id="vital_bp_normal_info" 
-                                                        value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
+                                                <input type="number" id="diastolic_normal_info" placeholder="Diastolic (e.g., 90)" 
+                                                    style="width:18%;" min="0" max="200" 
+                                                    value="<?php echo htmlspecialchars($diastolic); ?>" 
+                                                    oninput="updateBloodPressure()">mmHg
+
+                                                <!-- Hidden input to store the combined value -->
+                                                <input type="hidden" name="vital_bp" id="vital_bp_normal_info" 
+                                                    value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
                                                 </div>
                                             <div class="col-md-4">
                                                 O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo htmlspecialchars( $latest_vital_signs->oxygen_saturation); ?>"> %
@@ -2298,7 +2278,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_glasgow" style="width: 100%;">
-                                    <b>Pupil Size Chart</b> &emsp;
+                                    <small class="text-success"><b>Pupil Size Chart</b></small> &emsp;
                                     <input type="button" class="btn-m btn-warning btn-rounded" onclick="resetPupilSize()" value="Reset">
                                     <div class="container-referral">
                                         <div class="row web-view">
@@ -2453,7 +2433,7 @@ $facilities = \App\Facility::select('id','name')
                                     </div><br>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <b>Motor Response</b>
+                                            <small class="text-success"><b>Motor Response</b></small>
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
@@ -2506,7 +2486,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <b>Verbal Response</b>
+                                            <small class="text-success"><b>Verbal Response</b></small>
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
@@ -2555,7 +2535,7 @@ $facilities = \App\Facility::select('id','name')
                                     </div><br>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <b>Eye Response</b>
+                                            <small class="text-success"><b>Eye Response</b></small>
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
@@ -2596,7 +2576,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <br><br><b>GCS Score: </b>
+                                            <br><br><small class="text-success"><b>GCS Score: </b></small>
                                             <input class="number" name="gcs_score" id="gcs_score" style="text-align: center" min="0" value="<?php echo htmlspecialchars($glasgocoma_scale->gsc_score); ?>" readonly>
                                         </div>
                                     </div><br>
@@ -2611,9 +2591,9 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_normInfo" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                    <small class="text-success"><b>Select reason for referral:</b></small>
                                     <div class="container-referral">
-                                        <select name="reason_referral" class="form-control-select select2 reason_referral" style="width: 100%">
+                                        <select name="reason_referral" class="form-control-select select2 reason_referral" required>
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2624,26 +2604,23 @@ $facilities = \App\Facility::select('id','name')
                                     </div>
                                 </div>                          
                         </div>
-                        <div class="form-fotter pull-right" style="margin: 10px;">
+                        <div class="form-footer pull-right" style="margin: 10px;">
                         <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                 </div>
             </form>
-  
+                     
 
-                    
-                    
-
-<div class="modal fade" role="dialog" id="patient_modal">
-    <div class="modal-dialog modal-sm" role="document">
-        <div class="modal-content">
-            <div class="modal-body patient_body">
-                <center>
-                    <img src="{{ asset('resources/img/loading.gif') }}" alt="">
-                </center>
+    <div class="modal fade" role="dialog" id="patient_modal">
+        <div class="modal-dialog modal-sm" role="document">
+            <div class="modal-content">
+                <div class="modal-body patient_body">
+                    <center>
+                        <img src="{{ asset('resources/img/loading.gif') }}" alt="">
+                    </center>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 <!-- <div class="modal fade" id="icd-modal">
     <div class="modal-dialog modal-lg">
