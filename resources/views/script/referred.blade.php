@@ -888,6 +888,81 @@
             });
         }
     }
+    //for referral discharge
+    function ReferralDischargeResult(track_code, discharged, cancelled, rejected,transferred){
+        console.log("track_code", track_code);
+        $("#DischargeModal").remove();
+        const url = "{{ asset('get-discharge-files') }}";
+
+        if(discharged && !cancelled && !rejected && !transferred){
+
+            $.ajax({
+                url: `${url}/${track_code}`, // Endpoint URL
+                type: "GET",
+                dataType: "json",
+                success: function(files) {
+                    console.log("Files received:", files);
+
+                    if(!files || !Array.isArray(files) || files.length === 0){
+                        alert("No files available");
+                        return;
+                    }
+
+                    let filesListHtml = files.map(fileUrl => {
+                        let filename = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+                        return `<a href="${fileUrl}" target="_blank" class="list-group-item">
+                                    <i class="fa fa-file"></i> ${filename}
+                                </a>`
+
+                    }).join("");
+                    var modalHtml =
+                        `<div class="modal fade" id="DischargeModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content modal-vertical-list">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title" id="folderModalLabel">Discharged Document Result</h4>
+                                    {{-- <div class="row">
+                                            <div class="col-xs-12">
+                                                <label><input type="checkbox" id="checkVisible" value='' onclick="checkVisibleFiles(this.checked, '','','','','','')" />&nbsp; Select all files</label>
+                                                <button type="button" id="removeFiles" class="btn btn-success btn-xs">Remove files</button>
+                                                <a href="javascript:void(0);" class="btn btn-primary btn-xs">
+                                                    Add More Files
+                                                </a>
+                                            </div>
+                                        </div> --}}
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container-fluid">
+                                            <div class="row">
+                                            <div class="list-group">${filesListHtml}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+                    // Append modal to body
+                    $("body").append(modalHtml);
+
+                    // Show modal
+                    $("#DischargeModal").modal("show");
+                    $('.popoverReferral').popover('hide')
+
+                },
+                    error: function(error) {
+                    console.error("Error fetching files:", error);
+                    alert("Failed to load files. Please try again.");
+                }
+            });
+
+        }else{
+            alert("No files result available");
+            return;
+        }
+        
+    }
 
     function telemedicineLabResult(activity_id,lab_code) {
         const url = "{{ asset('api/check/labresult') }}";

@@ -54,12 +54,30 @@
 
 
     $('#dischargeForm').on('submit',function(e){
-        $("#discharged_button").attr('disabled',true);
-        $(this).ajaxSubmit({
+        
+            $("#discharged_button").attr('disabled',true);
+            console.log("fileInfoArray", fileInfoArray);
+
+            let formData = new FormData(this); // Capture form data
+
+            console.log("fileInfoArray:", fileInfoArray);
+
+            // Append actual files to FormData
+            fileInfoArray.forEach((fileInfo, index) => {
+                formData.append('file_upload[]', fileInfo.file); // Send the actual file
+            });
+            
+            $.ajax({
             url: "{{ url('doctor/referral/discharge/') }}/" + track_id,
             type: 'POST',
-            success: function(date){
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function (response) {
                 window.location.reload(true);
+            },
+            error: function (xhr) {
+                console.log(xhr.responseText);
             }
         });
     });

@@ -81,6 +81,21 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
+    <script>
+
+        // Initialize popover
+        $(function () {
+            $('.popoverReferral').popover({
+                html: true
+            });
+        });
+
+        function closePopover() {
+            $('.popoverReferral').popover('hide')
+        }
+
+    </script>
+
     <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
@@ -148,7 +163,9 @@
             <div class="step-name">Admitted</div>
         </div>
         <div class="stepper-item @if($referred_discharged_track && !$referred_transferred_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
+            <a onclick="ReferralDischargeResult(`{{$referred_track->code}}`,`{{$referred_discharged_track}}`, `{{$referred_transferred_track}}`, `{{$referred_rejected_track}}`)">
+                <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
+            </a>
             <div class="step-name">Discharged</div>
         </div>
     </div>
@@ -219,6 +236,13 @@
         ->where("status", "transferred")
         ->exists();
     Session::put('redirected_transferred_track', $redirected_transferred_track);
+
+    $redirected_transferred_track1 = \App\Activity::where("code", $redirect_track->code) // i add this for discharge condition
+        ->where("referred_from",$redirect_track->referred_to)
+        ->where("created_at", ">=", $redirect_track->created_at)
+        ->where("status", "transferred")
+        ->exists();
+
     $redirected_discharged_track = \App\Activity::where("code", $redirect_track->code)
         ->where("referred_from", $redirect_track->referred_to)
         ->where("created_at", ">=", $redirect_track->created_at)
@@ -301,8 +325,10 @@
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track ) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
-            <div class="step-counter"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
+        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+            <a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
+            <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
+            </a>
             <div class="step-name">Discharged</div>
         </div>
     </div>
@@ -602,3 +628,12 @@
     </div>
     @endif
 </div>
+
+<style>
+
+.step-counter-fileresult:hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+</style>

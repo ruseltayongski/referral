@@ -856,32 +856,6 @@ function getIconSrc(fileType) {
     }
 }
 
-    // function removeOneFile(uploadCount){
-
-    //     $('#filePreviewModal').modal('hide');
-
-    //     $('#upload' + uploadCount).remove();
-
-    //     fileInfoArray.splice(uploadCount, 1);
-
-    //     upload_count = fileInfoArray.length;
-
-    //     $('.col-md-3').each(function(newIndex) {
-    //         $(this).attr('id', `upload${newIndex}`);
-    //         $(this).find('.remove-icon-btn').attr('onclick', `removeOneFile(${newIndex})`);
-    //     });
-        
-    //     showPreviewFile();
-
-    //     if (fileInfoArray.length === 0) {
-    //         upload_count = 0;
-    //         upload_pos = 1;
-    //         $('#remove_files_btn').hide();
-    //         addFile();
-    //     }
-
-    // }
-
     $(document).ready(function() {
         for (var i = 0; i < upload_count; i++) {
             $('#image-upload-wrap' + i).bind('dragover', function () {
