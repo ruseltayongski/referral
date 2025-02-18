@@ -2612,54 +2612,60 @@ class NewFormCtrl extends Controller
            
         }
        
-       
-       
-       
-        if (!empty($data->smoking) || !empty($data->smoking_sticks_per_day) || !empty($data->smoking_quit_year) || !empty($data->smoking_remarks)
-        || !empty($data->alcohol_drinking) || !empty($data->alcohol_liquor_type) || !empty($data->alcohol_bottles_per_day) || !empty($data->alcohol_drinking_quit_year)
-        || !empty($data->illicit_drugs) || !empty($data->illicit_drugs_taken) || !empty($data->illicit_drugs_quit_year)){
-            
-            $this->titleHeader($pdf, "PERSONAL AND SOCIAL HISTORY");
-            if (!empty($data->smoking)){
-                if ($data->smoking == "Yes") {
-                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
-                   if(!empty($data->smoking_sticks_per_day)){$pdf->MultiCell(0, 7, "Sticks per Day:" . self::green($pdf, $data->smoking_sticks_per_day, 'Sticks per Day'), 1, 'L');}
-                } else if ($data->smoking == "No") {
-                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
-                } else if ($data->smoking == "Quit") {
-                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
-                   if (!empty($data->smoking_quit_year)){$pdf->MultiCell(0, 7, "Smoking Quit Year:" . self::green($pdf, $data->smoking_quit_year, 'Smoking Quit Year'), 1, 'L');}
-                }
-            }
-            if (!empty($data->smoking_remarks)){
-                $pdf->MultiCell(0, 7, "Smoking Remarks:" . self::green($pdf, $data->smoking_remarks, 'Smoking Remarks'), 1, 'L');
-            }
-            if (!empty($data->alcohol_drinking)){
-                if ($data->alcohol_drinking == "Yes") {
-                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
-                    if(!empty($data->alcohol_liquor_type)){$pdf->MultiCell(0, 7, "Liquor Type:" . self::green($pdf, $data->alcohol_liquor_type, 'Liquor Type'), 1, 'L');}
-                    if(!empty($data->alcohol_bottles_per_day)){$pdf->MultiCell(0, 7, "Bottles per day:" . self::green($pdf, $data->alcohol_bottles_per_day, 'Bottles per day'), 1, 'L');}
-                } else if ($data->alcohol_drinking == "No") {
-                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
-                } else if ($data->alcohol_drinking == "Quit") {
-                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
-                    if(!empty($data->alcohol_drinking_quit_year)){$pdf->MultiCell(0, 7, "Drinking quit year:" . self::green($pdf, $data->alcohol_drinking_quit_year, 'Drinking quit year'), 1, 'L');}
-                }
-            }
-          
-            if(!empty($data->illicit_drugs)){
-                if ($data->illicit_drugs == "Yes") {
-                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
-                   if(!empty($data->illicit_drugs_taken)){$pdf->MultiCell(0, 7, "Drugs taken:" . self::green($pdf, $data->illicit_drugs_taken, 'Drugs taken'), 1, 'L');}
-                } else if ($data->illicit_drugs == "No") {
-                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
-                } else if ($data->illicit_drugs == "Quit") {
-                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
-                    if(!empty($data->illicit_drugs_quit_year)){$pdf->MultiCell(0, 7, "Drugs quit year:" . self::green($pdf, $data->illicit_drugs_quit_year, 'Drugs quit year'), 1, 'L');}
-                }
-            }  
-        }
+      // PERSONAL HISTORY NULL CHECKER TERNARY CONDITION
+      $smoking_null_checker = (!empty($data->smoking));
+      $smoking_sticks_perday_null_checker = (!empty($data->smoking_sticks_per_day));
+      $smoking_quit_year_null_checker = (!empty($data->smoking_quit_year));
+      $smoking_remarks_null_checker = (!empty($data->smoking_remarks));
+      // PERSONAL HISTORY SHOW TITLE VALIDATOR
+      $PERSONAL_HISTORY_SHOW = ($smoking_null_checker 
+      || $smoking_sticks_perday_null_checker || $smoking_quit_year_null_checker || $smoking_remarks_null_checker); 
 
+      // if ( !empty($data->smoking_remarks) || !empty($data->alcohol_drinking) || !empty($data->alcohol_liquor_type) || !empty($data->alcohol_bottles_per_day) || !empty($data->alcohol_drinking_quit_year)
+      // || !empty($data->illicit_drugs) || !empty($data->illicit_drugs_taken) || !empty($data->illicit_drugs_quit_year))
+      // {
+          
+      $PERSONAL_HISTORY_SHOW ? $this->titleHeader($pdf, "PERSONAL AND SOCIAL HISTORY") : null;
+          if (!empty($data->smoking)){
+              if ($data->smoking == "Yes") {
+              $smoking_null_checker ? $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L') : null;
+              $smoking_sticks_perday_null_checker ? $pdf->MultiCell(0, 7, "Sticks per Day:" . self::green($pdf, $data->smoking_sticks_per_day, 'Sticks per Day'), 1, 'L') : null;
+              } else if ($data->smoking == "No") {
+                  $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
+              } else if ($data->smoking == "Quit") {
+              $smoking_quit_year_null_checker ? $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L') : null;
+                 if ($smoking_quit_year_null_checker){
+              $smoking_quit_year_null_checker ? $pdf->MultiCell(0, 7, "Smoking Quit Year:" . self::green($pdf, $data->smoking_quit_year, 'Smoking Quit Year'), 1, 'L') : null;
+              }
+          }
+          $smoking_remarks_null_checker ? $pdf->MultiCell(0, 7, "Smoking Remarks:" . self::green($pdf, $data->smoking_remarks, 'Smoking Remarks'), 1, 'L') : null;
+
+          if (!empty($data->alcohol_drinking)){
+              if ($data->alcohol_drinking == "Yes") {
+                  $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
+                  if(!empty($data->alcohol_liquor_type)){$pdf->MultiCell(0, 7, "Liquor Type:" . self::green($pdf, $data->alcohol_liquor_type, 'Liquor Type'), 1, 'L');}
+                  if(!empty($data->alcohol_bottles_per_day)){$pdf->MultiCell(0, 7, "Bottles per day:" . self::green($pdf, $data->alcohol_bottles_per_day, 'Bottles per day'), 1, 'L');}
+              } else if ($data->alcohol_drinking == "No") {
+                  $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
+              } else if ($data->alcohol_drinking == "Quit") {
+                  $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
+                  if(!empty($data->alcohol_drinking_quit_year)){$pdf->MultiCell(0, 7, "Drinking quit year:" . self::green($pdf, $data->alcohol_drinking_quit_year, 'Drinking quit year'), 1, 'L');}
+              }
+          }
+        
+          if(!empty($data->illicit_drugs)){
+              if ($data->illicit_drugs == "Yes") {
+                  $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
+                 if(!empty($data->illicit_drugs_taken)){$pdf->MultiCell(0, 7, "Drugs taken:" . self::green($pdf, $data->illicit_drugs_taken, 'Drugs taken'), 1, 'L');}
+              } else if ($data->illicit_drugs == "No") {
+                  $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
+              } else if ($data->illicit_drugs == "Quit") {
+                  $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
+                  if(!empty($data->illicit_drugs_quit_year)){$pdf->MultiCell(0, 7, "Drugs quit year:" . self::green($pdf, $data->illicit_drugs_quit_year, 'Drugs quit year'), 1, 'L');}
+              }
+          }  
+      // }
+      
         if (!empty($data->current_medications)){
             $this->titleHeader($pdf, "CURRENT MEDICATION");
             $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Current Medications: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->current_medications)), 1, 'L');
