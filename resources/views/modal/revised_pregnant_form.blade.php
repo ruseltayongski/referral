@@ -2149,6 +2149,26 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        // Open the collapse when the form loads
+        $("#patient_treatment_give_time").collapse('show');
+        $("#collapse_diagnosis_pregnant").collapse('show');
+        $("#collapse_reason_referral_pregnant").collapse('show');
+
+        // Ensure button toggle works properly
+        $(".btn[data-target='#patient_treatment_give_time']").on("click", function () {
+            $("#patient_treatment_give_time").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_diagnosis_pregnant']").on("click", function () {
+            $("#collapse_diagnosis_pregnant").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_reason_referral_pregnant']").on("click", function () {
+            $("#collapse_reason_referral_pregnant").collapse("toggle");
+        });
+    });
+</script>
+
+<script>
 
     $("#clear_icd_pregnant_revised").hide();
     $("#clear_notes_pregnant_revised").hide();
@@ -2326,7 +2346,7 @@
     });
 
     /* *****ALLERGY***** */
-    $('#allergy_food, #allergy_drug, #allergy_other').hide();
+    $('#allergy_food_pregnant, #allergy_drug, #allergy_other').hide();
     $('#allergy_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#allergy_none_cbox_pregnant').prop('checked', false);

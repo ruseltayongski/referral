@@ -208,57 +208,100 @@
         <td colspan="6">Name of referred MD/HCW- Mobile Contact # (ReCo): <span class="referred_md form-details">{{ $form->md_referred }}</span></td>
     </tr>
     <?php 
-        function explodeToArray($string){
-            $array = explode(',',$string);
+        // function explodeToArray($string){
+        //     $array = explode(',',$string);
 
-            $filteredOptions = array_filter($array, function ($value) {
-                return $value !== "Select All";
-            });
+        //     $filteredOptions = array_filter($array, function ($value) {
+        //         return $value !== "Select All";
+        //     });
 
-                return $filteredOptions;
-        }
-        $commordities_arr = explodeToArray($past_medical_history->commordities);
-        $allergies_arr = explodeToArray($past_medical_history->allergies);
-        $heredofamilial_arr = explodeToArray($past_medical_history->heredofamilial_diseases);
+        //         return $filteredOptions;
+        // }
         $pertinent_arr = explodeToArray($pertinent_laboratory->pertinent_laboratory_and_procedures);
-        $review_skin = explodeToArray($review_of_system->skin);
-        $review_head = explodeToArray($review_of_system->head);
-        $review_eyes = explodeToArray($review_of_system->eyes);
-        $review_ears = explodeToArray($review_of_system->ears);
-        $review_nose = explodeToArray($review_of_system->nose_or_sinuses);
-        $review_mouth = explodeToArray($review_of_system->mouth_or_throat);
-        $review_neck = explodeToArray($review_of_system->neck);
-        $review_breast = explodeToArray($review_of_system->breast);
-        $review_respiratory = explodeToArray($review_of_system->respiratory_or_cardiac);
-        $review_gastrointestinal = explodeToArray($review_of_system->gastrointestinal);
-        $review_urinary = explodeToArray($review_of_system->urinary);
-        $review_peripheral = explodeToArray($review_of_system->peripheral_vascular);
-        $review_musculoskeletal = explodeToArray($review_of_system->musculoskeletal);
-        $review_neurologic = explodeToArray($review_of_system->neurologic);
-        $review_hematologic = explodeToArray($review_of_system->hematologic);
-        $review_endocrine = explodeToArray($review_of_system->endocrine);
-        $review_psychiatric = explodeToArray($review_of_system->psychiatric)
+      
     ?>
+
+
     
-    @if (!empty(implode(",",$commordities_arr)) || !empty(implode(",",$allergies_arr))
-    || !empty(implode(",",$heredofamilial_arr)) || !empty($past_medical_history->previous_hospitalization))
+    <?php 
+    function explodeToArray($string){
+        $array = explode(',', $string);
+        return array_filter($array, function ($value) {
+            return $value !== "Select All";
+        });
+    }
+
+    // PAST MEDICAL HISTORY
+    $commordities_arr = explodeToArray($past_medical_history->commordities);
+    $allergies_arr = explodeToArray($past_medical_history->allergies);
+    $heredofamilial_arr = explodeToArray($past_medical_history->heredofamilial_diseases);
+    // REVIEW OF SYSTEMS
+    $review_skin = explodeToArray($review_of_system->skin);
+    $review_head = explodeToArray($review_of_system->head);
+    $review_eyes = explodeToArray($review_of_system->eyes);
+    $review_ears = explodeToArray($review_of_system->ears);
+    $review_nose = explodeToArray($review_of_system->nose_or_sinuses);
+    $review_mouth = explodeToArray($review_of_system->mouth_or_throat);
+    $review_neck = explodeToArray($review_of_system->neck);
+    $review_breast = explodeToArray($review_of_system->breast);
+    $review_respiratory = explodeToArray($review_of_system->respiratory_or_cardiac);
+    $review_gastrointestinal = explodeToArray($review_of_system->gastrointestinal);
+    $review_urinary = explodeToArray($review_of_system->urinary);
+    $review_peripheral = explodeToArray($review_of_system->peripheral_vascular);
+    $review_musculoskeletal = explodeToArray($review_of_system->musculoskeletal);
+    $review_neurologic = explodeToArray($review_of_system->neurologic);
+    $review_hematologic = explodeToArray($review_of_system->hematologic);
+    $review_endocrine = explodeToArray($review_of_system->endocrine);
+    $review_psychiatric = explodeToArray($review_of_system->psychiatric);
+
+    // PAST MEDICAL HISTORY - NULL CHECKER VALIDATOR
+    $commorbidities_null_checker = (!empty($past_medical_history->commordities));
+    $allergies_null_checker = (!empty($past_medical_history->allergies));
+    $heredofamilial_null_checker = (!empty($past_medical_history->heredofamilial_diseases));
+    $validation_checker_past_medical_history = ($commorbidities_null_checker || $allergies_null_checker || $heredofamilial_null_checker);
+    // REVIEW OF SYSTEMS - NULL CHECKER VALIDATOR
+    $review_skin_null_checker = (!empty($review_of_system->skin));
+    $review_head_null_checker = (!empty($review_of_system->head));
+    $review_eyes_null_checker = (!empty($review_of_system->eyes));
+    $review_ears_null_checker = (!empty($review_of_system->ears));
+    $review_nose_null_checker = (!empty($review_of_system->nose_or_sinuses));
+    $review_mouth_null_checker = (!empty($review_of_system->mouth_or_throat));
+    $review_neck_null_checker = (!empty($review_of_system->neck));
+    $review_breast_null_checker = (!empty($review_of_system->breast));
+    $review_respiratory_null_checker = (!empty($review_of_system->respiratory_or_cardiac));
+    $review_gastrointestinal_null_checker = (!empty($review_of_system->gastrointestinal));
+    $review_urinary_null_checker = (!empty($review_of_system->urinary));
+    $review_peripheral_null_checker = (!empty($review_of_system->peripheral_vascular));
+    $review_musculoskeletal_null_checker = (!empty($review_of_system->musculoskeletal));
+    $review_neurologic_null_checker = (!empty($review_of_system->neurologic));
+    $review_hematologic_null_checker = (!empty($review_of_system->hematologic));
+    $review_endocrine_null_checker = (!empty($review_of_system->endocrine));
+    $review_psychiatric_null_checker = (!empty($review_of_system->psychiatric));
+    $validation_checker_review_of_systems = ($review_skin_null_checker || $review_head_null_checker || $review_eyes_null_checker || $review_ears_null_checker
+    || $review_nose_null_checker || $review_mouth_null_checker || $review_neck_null_checker || $review_breast_null_checker || $review_respiratory_null_checker
+    || $review_gastrointestinal_null_checker || $review_urinary_null_checker || $review_peripheral_null_checker || $review_musculoskeletal_null_checker
+    || $review_neurologic_null_checker || $review_hematologic_null_checker || $review_endocrine_null_checker || $review_psychiatric_null_checker);
+
+    ?>
+
+    @if ($validation_checker_past_medical_history)
     <tr class="bg-gray">
         <td colspan="6">Past Medical History</td>
     </tr>
     @endif
-    @if (!empty(implode(",",$commordities_arr)))
+    @if ($commorbidities_null_checker)
     <tr> 
-        <td colspan="6">Commorbidities: <span class="woman_commorbidities_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$commordities_arr) }}</span></td>       
+        <td colspan="6">Commorbidities: <span class="woman_commorbidities_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $commordities_arr) }}</span></td>       
     </tr>
     @endif
-    @if (!empty(implode(",",$allergies_arr)))
+    @if ($allergies_null_checker)
     <tr>    
-        <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$allergies_arr) }}</span></td>
+        <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $allergies_arr) }}</span></td>
     </tr>
     @endif
-    @if (!empty(implode(",",$heredofamilial_arr)))
+    @if ($heredofamilial_null_checker)
     <tr>
-        <td colspan="6">Heredofamilial: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$heredofamilial_arr) }}</span></td>
+        <td colspan="6">Heredofamilial: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $heredofamilial_arr) }}</span></td>
     </tr>
     @endif
     @if (!empty($past_medical_history->previous_hospitalization))
@@ -266,6 +309,7 @@
         <td colspan="6">Previous Hospitalization: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ $past_medical_history->previous_hospitalization }}</span></td>
     </tr>
     @endif
+
 
 
     @php
@@ -467,7 +511,7 @@
     @endif
     @endif
 
-
+    
 
     @if (!empty($personal_and_social_history->current_medications))
     <tr>
@@ -525,44 +569,96 @@
         @endif
     @endif
 
-    
-    @php
-    $review_sections = [
-        'Skin' => $review_skin,
-        'Head' => $review_head,
-        'Eyes' => $review_eyes,
-        'Ears' => $review_ears,
-        'Nose/Sinuses' => $review_nose,
-        'Mouth/Throat' => $review_mouth,
-        'Neck' => $review_neck,
-        'Breast' => $review_breast,
-        'Respiratory/Cardiac' => $review_respiratory,
-        'Gastrointestinal' => $review_gastrointestinal,
-        'Urinary' => $review_urinary,
-        'Peripheral Vascular' => $review_peripheral,
-        'Musculoskeletal' => $review_musculoskeletal,
-        'Neurologic' => $review_neurologic,
-        'Hematologic' => $review_hematologic,
-        'Endocrine' => $review_endocrine,
-        'Psychiatric' => $review_psychiatric,
-    ];
-
-    $filtered_sections = array_filter($review_sections, fn($section) => !empty(array_filter($section)));
-    @endphp
-
-    @if (!empty($filtered_sections))
-        <tr class="bg-gray">
-            <td colspan="6">Review of Systems</td>
-        </tr>
-
-        @foreach ($filtered_sections as $section_name => $values)
-            <tr>
-                <td colspan="6">{{ $section_name }}:<span class="woman_prenatal form-details"></span> - 
-                    <span class="woman_prenatal form-details">{{ implode(', ', $values) }}</span>
-                </td>
+            @if ($validation_checker_review_of_systems)
+            <tr class="bg-gray">
+                <td colspan="6">Review of Systems </td>
             </tr>
-        @endforeach
-    @endif
+            @endif
+            @if ($review_skin_null_checker)
+            <tr>
+            <td colspan="6">Skin:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_skin)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_head_null_checker)
+            <tr>
+            <td colspan="6">Head:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_head)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_eyes_null_checker)
+            <tr>
+            <td colspan="6">Eyes:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_eyes)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_ears_null_checker)
+            <tr>
+            <td colspan="6">Ears:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_ears)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_nose_null_checker)
+            <tr>
+            <td colspan="6">Nose/Sinuses:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_nose)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_mouth_null_checker)
+            <tr>
+            <td colspan="6">Mouth/Throat:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_mouth)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_neck_null_checker)
+            <tr>
+            <td colspan="6">Neck:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neck)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_breast_null_checker)
+            <tr>
+            <td colspan="6">Breast:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_breast)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_respiratory_null_checker)
+            <tr>
+            <td colspan="6">Respiratory/Cardiac:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_respiratory)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_gastrointestinal_null_checker)
+            <tr>
+            <td colspan="6">Gastrointestinal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_gastrointestinal)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_urinary_null_checker)
+            <tr>
+            <td colspan="6">Urinary:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_urinary)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty(implode(',',$review_peripheral)))
+            <tr>
+            <td colspan="6">Peripheral Vascular:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_peripheral)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_musculoskeletal_null_checker)
+            <tr>
+            <td colspan="6">Musculoskeletal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_musculoskeletal)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_neurologic_null_checker )
+            <tr>
+            <td colspan="6">Neurologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neurologic)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_hematologic_null_checker)
+            <tr>
+            <td colspan="6">Hematologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_hematologic)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_endocrine_null_checker)
+            <tr>
+            <td colspan="6">Endocrine:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_endocrine)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_psychiatric_null_checker)
+            <tr>
+            <td colspan="6">Psychiatric:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_psychiatric)}}</span></td>
+            </tr>
+            @endif
 
     @php
     $nutritionalFields = array_filter([

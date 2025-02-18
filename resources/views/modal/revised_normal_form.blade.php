@@ -382,7 +382,6 @@
                                                     <span>Select All</span>
                                                 </div>
                                                 <div class="col-md-4">
-
                                                     <input class="form-check-input" id="comor_none_cbox" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="comor_none_cbox" value="Yes">
                                                     <span> None</span>
                                                 </div>
@@ -2305,7 +2304,7 @@
                                 <div class="col-lg-12">
                                     <div class="container-referral2">
                                         <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                            <b>REASON FOR REFERRAL</b>
+                                            <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                             <span class="pull-right"><i class="fa fa-plus"></i></span>
                                         </button><br><br>
                                     </div>
@@ -2377,7 +2376,25 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<script>
+    $(document).ready(function () {
+        // Open the collapse when the form loads
+        $("#collapse_illness_history_normal").collapse('show');
+        $("#collapse_diagnosis_normal").collapse('show');
+        $("#collapse_reason_referral").collapse('show');
 
+        // Ensure button toggle works properly
+        $(".btn[data-target='#collapse_illness_history_normal']").on("click", function () {
+            $("#collapse_illness_history_normal").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_diagnosis_normal']").on("click", function () {
+            $("#collapse_diagnosis_normal").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_reason_referral']").on("click", function () {
+            $("#collapse_reason_referral").collapse("toggle");
+        });
+    });
+</script>
 
 <script>
     // $('#referred_to_select').select2({

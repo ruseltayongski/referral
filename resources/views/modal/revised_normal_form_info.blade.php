@@ -592,7 +592,7 @@ $facilities = \App\Facility::select('id','name')
                                                 <span>Select All</span>
                                             </div>
                                             <div class="col-md-4">
-                                                <input class="form-check-input" id="comor_none_cbox" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="None" <?= isChecked($past_medical_history, 'commordities', 'None'); ?>>
+                                                <input class="form-check-input" id="comor_none_cbox" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" value="Yes" <?= isChecked($past_medical_history, 'commordities', 'None'); ?>>
                                                 <span> None</span>
                                             </div>
                                         </div>
@@ -2591,7 +2591,7 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_normInfo" style="width: 100%;">
-                                    <small class="text-success"><b>Select reason for referral:</b></small>
+                                    <small class="text-success"><i>Select reason for referral:</i></small><span class="text-red">*</span>
                                     <div class="container-referral">
                                         <select name="reason_referral" class="form-control-select select2 reason_referral" required>
                                             <option value="">Select reason for referral</option>
@@ -2650,47 +2650,26 @@ $facilities = \App\Facility::select('id','name')
 
 
 <script>
+    $(document).ready(function () {
+        // Open the collapse when the form loads
+        $("#collapse_illness_history_normInfo").collapse('show');
+        $("#collapse_diagnosis_normInfo").collapse('show');
+        $("#collapse_reason_referral_normInfo").collapse('show');
 
-    // // Uncollapse the REASON FOR REFERRAL section
-    // const referralCollapse = document.getElementById("collapse_reason_referral_normInfo");
-    // const referralButton = document.querySelector("[data-target='#collapse_reason_referral_normInfo']");
-    // if (referralCollapse && referralButton) {
-    //     referralCollapse.classList.add("show");
-    //     referralButton.setAttribute("aria-expanded", "true");
-    // } else {
-    //     console.warn("Reason for Referral section or button not found.");
-    // }
+        // Ensure button toggle works properly
+        $(".btn[data-target='#collapse_illness_history_normInfo']").on("click", function () {
+            $("#collapse_illness_history_normInfo").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_diagnosis_normInfo']").on("click", function () {
+            $("#collapse_diagnosis_normInfo").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_reason_referral_normInfo']").on("click", function () {
+            $("#collapse_reason_referral_normInfo").collapse("toggle");
+        });
+    });
+</script>
 
-    // // Uncollapse the HISTORY OF PRESENT ILLNESS section
-    // const illnessCollapse = document.getElementById("collapse_illness_history_normInfo");
-    // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_normInfo']");
-    // if (illnessCollapse && illnessButton) {
-    //     illnessCollapse.classList.add("show");
-    //     illnessButton.setAttribute("aria-expanded", "true");
-    // } else {
-    //     console.warn("History of Present Illness section or button not found.");
-    // }
-
-    // // Uncollapse the DIAGNOSIS section
-    // const diagnosisCollapse = document.getElementById("collapse_diagnosis_normInfo");
-    // const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_normInfo']");
-    // if (diagnosisCollapse && diagnosisButton) {
-    //     diagnosisCollapse.classList.add("show");
-    //     diagnosisButton.setAttribute("aria-expanded", "true");
-    // } else {
-    //     console.warn("Diagnosis section or button not found.");
-    // }
-
-
-    // $('.select_facility').select2();
-    //    $('#pedia_show').hide();
-    //    $('#menarche_show').hide();
-    //
-    //    var pt_age = parseInt($('.pt_age').val(), 10);
-    //    if(pt_age > 18)
-    //        $('#pedia_show').show();
-    //    if($('.patient_sex').val() === "Female")
-    //        $('#menarche_show').show();
+<script>
 
     $(".collapse").on('show.bs.collapse', function() {
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");
