@@ -1164,7 +1164,7 @@ class ReferralCtrl extends Controller
 
         Tracking::where("id",$track_id)
             ->update([
-                'date_arrived' => $date,
+                'date_arrived' => date('Y-m-d H:i:s'),
                 'status' => 'arrived'
             ]);
 
