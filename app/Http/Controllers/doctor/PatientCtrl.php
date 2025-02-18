@@ -482,7 +482,9 @@ class PatientCtrl extends Controller
     {
         $user = Session::get('auth');
         $asigned_doctorId = null;
-      
+
+        // Log::info("Files Received1212: ", $_FILES["file_upload"]["name"]);
+        // return;
         if ($req->telemedicine) {
 
             if($req->configId){

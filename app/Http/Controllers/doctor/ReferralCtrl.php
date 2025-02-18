@@ -53,6 +53,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Matrix\Exception;
+use Illuminate\Support\Facades\Log;
 
 class ReferralCtrl extends Controller
 {
@@ -1308,6 +1309,21 @@ class ReferralCtrl extends Controller
                 'dis_sur_category' => $req->sur_category
             ]);
         }
+        
+        $file_paths = "";
+        if ($_FILES["file_upload"]["name"]) {
+            ApiController::fileUpload($req);
+            for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+                $file = $_FILES['file_upload']['name'][$i];
+                if (isset($file) && !empty($file)) {
+                    $username = $user->username;
+                    $file_paths .= ApiController::fileUploadUrl() . $username . "/" . $file;
+                    if ($i + 1 != count($_FILES["file_upload"]["name"])) {
+                        $file_paths .= "|";
+                    }
+                }
+            }
+        }
 
         $data = array(
             'code' => $track->code,
@@ -1317,6 +1333,7 @@ class ReferralCtrl extends Controller
             'referred_to' => 0,
             'action_md' => $user->id,
             'remarks' => $req->remarks,
+            'lab_result' => $file_paths,
             'status' => 'discharged'
         );
         Activity::create($data);
@@ -1351,6 +1368,32 @@ class ReferralCtrl extends Controller
         ];
 
         broadcast(new SocketReferralDischarged($new_discharged));
+    }
+
+    public function getDischargeFiles($track_code){
+
+        // (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
+
+        $file_link = (Activity::select('lab_result')->where("code", $track_code)
+                ->where("status", "discharged")
+                ->first())->lab_result;
+
+        $path = [];
+        $file_name = [];
+
+        if($file_link != null && $file_link != "") {
+            $explode = explode("|",$file_link);
+            foreach($explode as $link) {
+                $path_tmp = self::securedFile($link);
+                if($path_tmp != '') {
+                    array_push($path, $path_tmp);
+                    array_push($file_name, basename($path_tmp));
+                }
+            }
+        }
+
+        return response()->json($path);
+
     }
 
     public function transfer(Request $req) {
