@@ -44,15 +44,16 @@
         background-color: #f0f0f0;
         color: black;
     }
+
 </style>
 
-<div class="modal fade" role="dialog" id="revisedpregnantFormModal">
+<div class="modal fade" role="dialog" id="revisedpregnantFormModal" style="padding-right: 17px !important;">
     <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content" style="background-color: red;">
+        <div class="modal-content">
             <form action="{{url('submit-referral/pregnant')}}" method="POST" class="form-submit revised_pregnant_form">
-                <div class="jim-content" style="background-color: blue;">
+                <div class="jim-content">
                     @include('include.header_form')
-                    <div class="form-group-sm form-inline" style="background-color: green;">
+                    <div class="form-group-sm form-inline">
                         
                         {{ csrf_field() }}
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
@@ -95,8 +96,8 @@
                         <br>
                         <div class="row">
                             <div class="col-md-4">
-                                <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
-                                <select name="referred_facility" class="modal3-select2 select_facility" required>
+                                <small class="text-success">Referred to</small> <span class="text-red"><b>*</b></span><br>
+                                <select name="referred_facility" id="referred_to" class="form-control-select modal-select2 select_facility" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
                                     <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -104,8 +105,8 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Department</small> <span class="text-red">*</span><br>
-                                <select name="referred_department" class="form-control-select select_department select_department_pregnant" style="width: 100%;" required>
+                                <small class="text-success">Department</small> <span class="text-red"><b>*</b></span><br>
+                                <select name="referred_department" id="referred_dept" class="form-control-select select_department select_department_pregnant" style="width: 100%;" required>
                                     <option value="">Select Option</option>
                                 </select>
                             </div>
@@ -121,7 +122,7 @@
                                 <span class="patient_age"></span>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Sex</small> <span class="text-red">*</span><br>
+                                <small class="text-success">Sex</small> <span class="text-red"><b>*</b></span><br>
                                 <select name="patient_sex" class="patient_sex form-control" style="width: 100%;" required>
                                     <option value="">Select...</option>
                                     <option>Male</option>
@@ -129,7 +130,7 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
+                                <small class="text-success">Civil Status</small>  <span class="text-red"><b>*</b></span><br>
                                 <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
                                     <option value="">Select...</option>
                                     <option>Single</option>
@@ -171,53 +172,53 @@
 
                                                 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width:100%;" data-toggle="collapse" data-target="#patient_treatment_give_time" aria-expanded="false" aria-controls="patient_treatment_give_time">
-                                    <b>TREATMENTS GIVE TIME</b><i> (required)</i><span class="text-red">*</span>
+                                    <b>TREATMENTS GIVE TIME</b><i> (required)</i> <span class="text-red"><b>*</b></span>
                                     <span class="pull-right"><i class="fa fa-plus"></i></span>    
                                     </button><br><br>
                                 </div>
                                 
                                
                                 <div class="collapse" id="patient_treatment_give_time" style="width: 100%;">
-                                    <b>MAIN REASON FOR REFERRAL: </b>
+                                    <small class="text-success"><b>MAIN REASON FOR REFERRAL:</b></small>
                                     <div class="container-referral">
-                                        <label><input type="radio" name="woman_reason" value="None" checked /> None </label>
-                                        <label><input type="radio" name="woman_reason" value="Emergency" /> Emergency </label>
-                                        <label><input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                        <label><input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby </label>
+                                        <input type="radio" name="woman_reason" value="None" checked /> None 
+                                        <input type="radio" name="woman_reason" value="Emergency" /> Emergency 
+                                        <input type="radio" name="woman_reason" value="Non-Emergency" /> Non-Emergency 
+                                        <input type="radio" name="woman_reason" value="To accompany the baby" /> To accompany the baby 
                                     </div><br>
                                 
                                     <div class="continer-referral">
-                                    <b>MAJOR FINDINGS:</b> <i> (Clinical and BP,Temp,Lab)<span class="text-red">*</span></i> <br />
-                                    <textarea class="form-control" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
+                                    <small class="text-success"><b>MAJOR FINDINGS:</b></small> <i> (Clinical and BP,Temp,Lab <span class="text-red"><b>*</b></span></i> <br />
+                                    <textarea class="form-control" id="woman_major_findings" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </div><br>
 
                                     <div class="container-referral" style="padding:5px">
-                                    <b>BEFORE REFERRAL</b>
+                                    <small class="text-success"><b>BEFORE REFERRAL</b></small>
                                         <input type="text" class="form-control" name="woman_before_treatment" placeholder="Treatment Given" />
                                         <input type="text" class="form-control form_datetime" name="woman_before_given_time" placeholder="Date/Time Given" /><br>
-                                    <b>DURING TRANSPORT </b>
+                                    <small class="text-success"><b>DURING TRANSPORT </b></small>
                                         <input type="text" class="form-control" name="woman_during_treatment" placeholder="Treatment Given" />
                                         <input type="text" class="form-control form_datetime" name="woman_during_given_time" placeholder="Date/Time Given" />
                                     </div><br>
 
-                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b><span class="text-red">*</span>
-                                        <textarea class="form-control woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea><br><br>
+                                    <small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small><span class="text-red"><b>*</b></span>
+                                        <textarea class="form-control woman_information_given" id="woman_information_given" name="woman_information_given" style="resize: none;width: 100%" rows="5" required></textarea><br><br>
                                 </div>
                             </div>
                         </div>    
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_diagnosis_pregnant" aria-expanded="false" aria-controls="collapse_diagnosis_pregnant">
                                         <b>DIAGNOSIS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse " id="collapse_diagnosis_pregnant" style="width: 100%">
+                                <div class="collapse" id="collapse_diagnosis_pregnant" style="width: 100%">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <small class="text-success"><b>DIAGNOSIS</b></small> <span class="text-red">*</span>
@@ -254,7 +255,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medical_history_pregnant" aria-expanded="false" aria-controls="collapse_medical_history_pregnant">
                                         <b>PAST MEDICAL HISTORY</b>
@@ -262,7 +263,7 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_medical_history_pregnant" style="width: 100%;">
-                                    <b>COMORBIDITIES</b>
+                                    <small class="text-success"><b>COMORBIDITIES</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
@@ -343,7 +344,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>ALLERGIES</b><i> (Specify)</i><br>
+                                    <small class="text-success"><b>ALLERGIES</b></small><i> (Specify)</i><br>
                                     <div class="container-referral">
                                     <div class="row">
                                         <div class="col-md-4">
@@ -374,7 +375,7 @@
                                     </div>
                                     </div><br>
 
-                                    <b>HEREDOFAMILIAL DISEASES</b> <i>(Specify which side of the family: maternal, paternal, both)</i>
+                                    <small class="text-success"><b>HEREDOFAMILIAL DISEASES</b></small> <i>(Specify which side of the family: maternal, paternal, both)</i>
                                     <div class="container-referral">
                                     <div class="row">
                                         <div class="col-md-3">
@@ -457,14 +458,14 @@
                                     </div>
                                     </div><br>
 
-                                    <b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b><br>
+                                    <small class="text-success"><b>PREVIOUS HOSPITALIZATION(S) and OPERATION(S)</b></small><br>
                                     <textarea class="form-control" name="previous_hospitalization" style="resize: none;width: 100%;" rows="3"></textarea><br><br>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row" id="baby_show_pregnant" style="padding:5px">
-                            <div class="col-md-12">
+                        <div class="row" id="baby_show_pregnant">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#baby_collapsed_pregnant" aria-expanded="false" aria-controls="baby_collapsed_pregnant">
                                         <div class="web-view"><b>BABY DELIVERED</b> <i> (as applicable)</i></div>
@@ -473,50 +474,50 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="baby_collapsed_pregnant" style="width: 100%;">
-                                    <div class="container-referral" style="padding:5px">
-                                        <b>NAME:</b><br />
+                                    <div class="container-referral">
+                                        <small class="text-success"><b>NAME:</b></small><br />
                                         <input type="text" class="form-control" name="baby_fname" placeholder="First Name" /><br>
                                         <input type="text" class="form-control" name="baby_mname" placeholder="Middle Name" /><br>
                                         <input type="text" class="form-control" name="baby_lname" placeholder="Last Name" /><br>
-                                        <b>DATE AND HOUR OF BIRTH: </b>
+                                        <small class="text-success"><b>DATE AND HOUR OF BIRTH: </b></small>
                                         <input type="text" class="form-control  form_datetime" name="baby_dob" placeholder="Date/Time"/><br>
-                                        <b>GESTATIONAL AGE: </b>
+                                        <small class="text-success"><b>GESTATIONAL AGE: </b></small>
                                         <input type="text" class="form-control" name="baby_gestational_age" placeholder="age" />
-                                        <b>BIRTH WEIGHT: </b>
+                                        <small class="text-success"><b>BIRTH WEIGHT: </b></small>
                                         <input type="text" class="form-control" name="baby_weight" placeholder="kg or lbs" /><br />
                                     </div><br>
 
-                                    <div class="container-referral" style="padding:5px">
-                                        <b>MAIN REASON FOR REFERRAL</b>
-                                        <label><input type="radio" name="baby_reason" value="None" checked /> None </label>
-                                        <label><input type="radio" name="baby_reason" value="Emergency" /> Emergency </label>
-                                        <label><input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency </label>
-                                        <label><input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother </label>
+                                    <div class="container-referral">
+                                        <small class="text-success"><b>MAIN REASON FOR REFERRAL</b></small>
+                                        <input type="radio" name="baby_reason" value="None" checked /> None 
+                                        <input type="radio" name="baby_reason" value="Emergency" /> Emergency 
+                                        <input type="radio" name="baby_reason" value="Non-Emergency" /> Non-Emergency 
+                                        <input type="radio" name="baby_reason" value="To accompany the mother" /> To accompany the mother
                                     </div><br>
 
-                                    <b>MAJOR FINDINGS</b>
+                                    <small class="text-success"><b>MAJOR FINDINGS</b></small>
                                     <textarea class="form-control" name="baby_major_findings" style="resize: none;width: 100%" rows="5"></textarea><br><br>
 
                                     <div class="container-referral" style="padding: 5px;">
-                                        <b>TREATMENTS GIVE TIME</b>
-                                        <b>LAST (BREAST) FEED (TIME):</b>
+                                        <small class="text-success"><b>TREATMENTS GIVE TIME</b></small>
+                                        <small class="text-success"><b>LAST (BREAST) FEED (TIME):</b></small>
                                         <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time"/><br>  
-                                        <b>BEFORE REFERRAL</b>
+                                        <small class="text-success"><b>BEFORE REFERRAL</b></small>
                                         <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
                                         <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" /><br>
-                                        <b>DURING TRANSPORT</b>
+                                        <small class="text-success"><b>DURING TRANSPORT</b></small>
                                         <input type="text" class="form-control" name="baby_during_treatment" placeholder="Treatment Given" />
                                         <input type="text" class="form-control form_datetime" name="baby_during_given_time" placeholder="Date/Time Given" />
                                     </div><br>
 
-                                    <b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b>
+                                    <small class="text-success"><b>INFORMATION GIVEN TO THE WOMAN AND COMPANION ABOUT THE REASON FOR REFERRAL</b></small>
                                     <textarea class="form-control" name="baby_information_given" style="resize: none;width: 100%" rows="5"></textarea><br><br>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row" id="menarche_show_pregnant">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_gyne_history_pregnant" aria-expanded="false" aria-controls="collapse_gyne_history_pregnant">
                                         <div class="web-view"><b>OBSTETRIC AND GYNECOLOGIC HISTORY</b> <i> (as applicable)</i></div>
@@ -525,44 +526,44 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_gyne_history_pregnant" style="width: 100%;">
-                                    <b>MENARCHE </b> @ <input type="number" min="9" style="width: 10%;" name="menarche"> years old &emsp;&emsp;&emsp;&emsp;
-                                    <b>MENOPAUSE: </b>&emsp;
+                                    <small class="text-success"><b>MENARCHE </b></small> @ <input type="number" min="9" style="width: 10%;" name="menarche"> years old &emsp;&emsp;&emsp;&emsp;
+                                    <small class="text-success"><b>MENOPAUSE: </b></small>&emsp;
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="menopausal_pregnant" value="Yes">
-                                    <label for="menopausal">Yes</label>
+                                    Yes
                                     <input type="radio" class="referral-radio-btn" name="menopausal" id="non_menopausal_pregnant" value="No">
-                                    <label for="non_menopausal">No</label>
+                                    No
                                     <span id="menopausal_age_pregnant">(age) <input type="number" name="menopausal_age" style="width: 10%;" min="9"></span><br><br>
 
-                                    <b>MENSTRUAL CYCLE</b>
+                                    <small class="text-success"><b>MENSTRUAL CYCLE</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_reg_radio_pregnant" value="regular">
-                                                <label for="mens_reg_radio">Regular</label>
+                                                Regular
                                                 <input type="radio" class="referral-radio-btn" name="mens_cycle" id="mens_irreg_radio_pregnant" value="irregular">
-                                                <label for="mens_irreg_radio">Irregular</label>
+                                                Irregular
                                                 <span id="mens_irreg_pregnant">x <input type="number" name="mens_irreg_xmos" style="width: 15%;" min="0"> mos</span>
                                             </div>
                                             <div class="col-md-6">
-                                                <b>Dysmenorrhea:</b> &emsp;
+                                                <small class="text-success">Dysmenorrhea:</small> &emsp;
                                                 <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_yes_pregnant" value="Yes">
-                                                <label for="dysme_yes">Yes</label>
+                                                Yes
                                                 <input type="radio" class="referral-radio-btn" name="dysme" id="dysme_no_pregnant" value="No">
-                                                <label for="dysme_no">No</label><br>
+                                                No<br>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <b>Duration:</b> <input type="number" style="width:15%;" min="0" name="mens_duration"> days &emsp;
-                                                <b>Pads/day:</b> <input type="number" style="width:15%;" min="0" name="mens_padsperday">
+                                                <small class="text-success">Duration:</small> <input type="number" style="width:15%;" min="0" name="mens_duration"> <small class="text-success">days</small> &emsp;
+                                                <small class="text-success">Pads/day:</small> <input type="number" style="width:15%;" min="0" name="mens_padsperday">
                                             </div>
                                             <div class="col-md-6">
-                                                <b>Medication: </b> <input type="text" style="width:70%;" name="mens_medication">
+                                                <small class="text-success">Medication: </small> <input type="text" style="width:70%;" name="mens_medication">
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>CONTRACEPTIVE HISTORY</b>
+                                    <small class="text-success"><b>CONTRACEPTIVE HISTORY</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
@@ -595,40 +596,40 @@
                                         </div>
                                     </div><br>
 
-                                    <b>PARITY</b>
+                                    <small class="text-success"><b>PARITY</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-9">
-                                                <b>G</b> <input type="number" min="0" style="width:8%;" name="parity_g">
-                                                <b>P</b> <input type="number" min="0" style="width:8%;" name="parity_p">&emsp;
-                                                <b>(FT </b> <input type="text" style="width:8%;" name="parity_ft">
-                                                <b> PT </b> <input type="text" style="width:8%;" name="parity_pt">
-                                                <b> A </b> <input type="text" style="width:8%;" name="parity_a">
-                                                <b> L </b> <input type="text" style="width:8%;" name="parity_l"><b>)</b>
+                                                <small class="text-success">G</small> <input type="number" min="0" style="width:8%;" name="parity_g">
+                                                <small class="text-success">P</small> <input type="number" min="0" style="width:8%;" name="parity_p">&emsp;
+                                                <small class="text-success">(FT </small> <input type="text" style="width:8%;" name="parity_ft">
+                                                <small class="text-success"> PT </small> <input type="text" style="width:8%;" name="parity_pt">
+                                                <small class="text-success"> A </small> <input type="text" style="width:8%;" name="parity_a">
+                                                <small class="text-success"> L </small> <input type="text" style="width:8%;" name="parity_l"><small class="text-success">)</small>
                                             </div>
                                         </div>
                                     </div><br>
 
                                     <div class="container-referral">
-                                        <b>LMP</b>
+                                        <small class="text-success">LMP</small>
                                         <input type="number" step="0.01" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
-                                        <b>EDC</b><i>(if pregnant)</i>
+                                        <small class="text-success">EDC</small><i>(if pregnant)</i>
                                         <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant">
                                     </div><br>
 
-                                    <b>AOG</b>
+                                    <small class="text-success"><b>AOG</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <b>by LMP </b> <input type="number" min="0" style="width:25%;" name="aog_bylnmp"> <b>wks</b>
+                                                <small class="text-success">by LMP </small> <input type="number" min="0" style="width:25%;" name="aog_bylnmp"> <small class="text-success">wks</small>
                                             </div>
                                             <div class="col-md-4">
-                                                <b>by UTZ </b> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ"> <b>wks</b>
+                                                <small class="text-success">by UTZ </small> <input type="number" min="0" style="width:25%;" name="aog_byEUTZ"> <small class="text-success">wks</small>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>PRENATAL HISTORY</b><br>
+                                    <small class="text-success"><b>PRENATAL HISTORY</b></small><br>
                                     <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
                                     <div class="table-responsive" style="overflow-x: auto">
                                         <table class="table table-bordered" id="prenatal_table">
@@ -682,7 +683,7 @@
                         
                     
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_persocial_history_pregnancy" aria-expanded="false" aria-controls="collapse_persocial_history_pregnancy">
                                         <div class="web-view"><b>PERSONAL and SOCIAL HISTORY</b> <i> (as applicable)</i></div>
@@ -691,21 +692,21 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_persocial_history_pregnancy" style="width: 100%;">
-                                    <b>SMOKING</b>
+                                    <small class="text-success"><b>SMOKING</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_yes_pregnant" value="Yes">
-                                                <label for="smoke_yes">Yes</label><br>
+                                                Yes<br>
                                                 <span id="smoking_sticks_pregnant">Sticks per day: <input type="number" min="0" style="width:30%;" name="smoking_sticks_per_day"></span>
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_no_pregnant" value="No">
-                                                <label for="smoke_no">No</label>
+                                                No
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="smoking_radio" id="smoke_quit_pregnant" value="Yes">
-                                                <label for="smoke_quit">Quit</label>
+                                                Quit
                                                 <span id="smoking_quit_year_pregnant"> since
                                                     <select class="form-control select" name="smoking_year_quit">
                                                         <option value="">Select Option</option>
@@ -719,25 +720,25 @@
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-8">
-                                                <span>Other Remarks: <textarea class="form-control" style="resize: none;width:50%;" rows="2" name="smoking_other_remarks"></textarea></span>
+                                                <span><small class="text-success">Other Remarks:</small> <textarea class="form-control" style="resize: none;width:50%;" rows="2" name="smoking_other_remarks"></textarea></span>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>ALCOHOL DRINKING</b>
+                                    <small class="text-success"><b>ALCOHOL DRINKING</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_yes_radio_pregnant" value="Yes">
-                                                <label for="alcohol_yes_radio">Yes</label>
+                                                Yes
                                             </div>
                                             <div class="col-md-2">
                                                 <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_no_radio_pregnant" value="No">
-                                                <label for="alcohol_no_radio">No</label>
+                                                No
                                             </div>
                                             <div class="col-md-3">
                                                 <input type="radio" class="referral-radio-btn" name="alcohol_radio" id="alcohol_quit_radio_pregnant" value="Yes">
-                                                <label for="alcohol_quit_radio_pregnant">Quit</label>
+                                                Quit
                                                 <span id="alcohol_quit_year_pregnant"> since
                                                     <select class="form-control select" name="alcohol_year_quit">
                                                         <option value="">Select Option</option>
@@ -759,20 +760,20 @@
                                         </div>
                                     </div><br>
 
-                                    <b>ILLICIT DRUGS</b>
+                                    <small class="text-success"><b>ILLICIT DRUGS</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <input type="radio" name="illicit_drugs" id="drugs_yes_radio_pregnant" class="referral-radio-btn" value="Yes">
-                                                <label for="drugs_yes_radio_pregnant">Yes</label>
+                                                Yes
                                             </div>
                                             <div class="col-md-2">
                                                 <input type="radio" name="illicit_drugs" id="drugs_no_radio_pregnant" class="referral-radio-btn" value="No">
-                                                <label for="drugs_no_radio">No</label>
+                                                No
                                             </div>
                                             <div class="col-md-4">
                                                 <input type="radio" name="illicit_drugs" id="drugs_quit_radio_pregnant" class="referral-radio-btn" value="Quit">
-                                                <label for="drugs_quit_radio_pregnant">Quit</label>
+                                                Quit
                                                 <span id="drugs_quit_year_pregnant"> since
                                                     <select class="form-control select" name="drugs_year_quit">
                                                         <option value="">Select Option</option>
@@ -786,7 +787,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-8" id="drugs_text_pregnant">
-                                                Specify drugs taken:
+                                                <small class="text-success"><b>Specify drugs taken:</b></small>
                                                 <textarea class="form-control" rows="2" style="resize: none;width:50%;" name="illicit_drugs_taken"></textarea>
                                             </div>
                                         </div>
@@ -796,7 +797,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication_pregnant" aria-expanded="false" aria-controls="collapse_medication_pregnant">
                                         <b>CURRENT MEDICATION(S)</b>
@@ -804,14 +805,14 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_medication_pregnant" style="width: 100%;">
-                                    <i>Specify number of doses given and time of last dose given.</i>
+                                    <small class="text-success"><i>Specify number of doses given and time of last dose given.</i></small>
                                     <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5"></textarea><br><br>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_lab_procedures_pregnant" aria-expanded="false" aria-controls="collapse_lab_procedures_pregnant">
                                         <div class="web-view">
@@ -824,8 +825,8 @@
                                         </div>
                                     </button><br><br>
                                 </div>
-                                <div class="collapse" id="collapse_lab_procedures_pregnant" style="width: 100%; background-color: blue">
-                                    <i>Attach all applicable labs in one file.</i>
+                                <div class="collapse" id="collapse_lab_procedures_pregnant">
+                                    <small class="text-success"><i>Attach all applicable labs in one file.</i></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
@@ -865,7 +866,7 @@
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <small class="text-success"><b>FILE ATTACHMENTS:</b></small> &emsp;
+                                                <small class="text-success">FILE ATTACHMENTS:</small> &emsp;
                                                 <button type="button" class="btn btn-md btn-danger" id="preg_remove_files_" onclick="removeFilePregnant(2)">Remove Files</button><br><br>
                                                 <div class="pregnant_file_attachment_">
                                                     <div class="col-md-3" id="pregnant_upload_1">
@@ -877,7 +878,7 @@
                                                             <div class="file-upload-content" id="pregnant_file-upload-content_1">
                                                                 <img class="file-upload-image" id="pregnant_file-upload-image_1"/>
                                                                 <div class="image-title-wrap">
-                                                                    <b><small class="image-title" id="pregnant_image-title_1" style="display:block; word-wrap: break-word;">Uploaded File</small></b>
+                                                                    <small class="image-title" id="pregnant_image-title_1" style="display:block; word-wrap: break-word;">Uploaded File</small></small>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -892,7 +893,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_review_system_pregnant" aria-expanded="false" aria-controls="collapse_review_system_pregnant">
                                         <b>REVIEW OF SYSTEMS</b>
@@ -900,7 +901,7 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_review_system_pregnant" style="width: 100%;">
-                                    <b>SKIN</b>
+                                    <small class="text-success"><b>SKIN</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -914,24 +915,21 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_skin_rashes_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_skin_rashes_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_rashes_cbox" value="Yes">
                                                 <span> Rashes</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_skin_itching_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_skin_itching_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_itching_cbox" value="Yes">
                                                 <span> Itching</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_skin_hairchange_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_skin_hairchange_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_hairchange_cbox" value="Yes">
                                                 <span> Change in hair or nails</span>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>HEAD</b>
+                                    <small class="text-success"><b>HEAD</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -943,7 +941,6 @@
                                                 <span> None</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_head_headache_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_head_headache_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_headache_cbox" value="Yes">
                                                 <span> Headaches</span>
                                             </div>
@@ -954,7 +951,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>EYES</b>
+                                    <small class="text-success"><b>EYES</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -968,41 +965,35 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_glasses_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_eyes_glasses_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glasses_cbox" value="Yes">
                                                 <span> Glasses or Contacts</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_vision_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_eyes_vision_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_vision_cbox" value="Yes">
                                                 <span> Change in vision</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_pain_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_eyes_pain_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_pain_cbox" value="Yes">
                                                 <span> Eye pain</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_doublevision_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_eyes_doublevision_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_doublevision_cbox" value="Yes">
                                                 <span> Double Vision</span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_flashing_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_eyes_flashing_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_flashing_cbox" value="Yes">
                                                 <span> Flashing lights</span>
                                             </div>
                                             <div class="col-md-3">
-                                                <input type="hidden" name="rs_eyes_glaucoma_cbox_pregnant" value="No">
                                                 <input class="form-check-input" id="rs_eyes_glaucoma_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes">
                                                 <span> Glaucoma/Cataracts</span>
                                             </div>
                                         </div>
                                     </div><br>
 
-                                    <b>EARS</b>
+                                    <small class="text-success"><b>EARS</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1016,12 +1007,10 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-3">
-
                                                 <input class="form-check-input" id="rs_ears_changehearing_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_changehearing_cbox" value="Yes">
                                                 <span> Change in hearing</span>
                                             </div>
                                             <div class="col-md-2">
-
                                                 <input class="form-check-input" id="rs_ears_pain_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_pain_cbox" value="Yes">
                                                 <span> Ear pain</span>
                                             </div>
@@ -1040,7 +1029,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>NOSE/SINUSES</b>
+                                    <small class="text-success"><b>NOSE/SINUSES</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1068,7 +1057,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>MOUTH/THROAT</b>
+                                    <small class="text-success"><b>MOUTH/THROAT</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1100,7 +1089,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>NECK</b>
+                                    <small class="text-success"><b>NECK</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1132,7 +1121,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>BREAST</b>
+                                    <small class="text-success"><b>BREAST</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1164,7 +1153,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>RESPIRATORY/CARDIAC</b>
+                                    <small class="text-success"><b>RESPIRATORY/CARDIAC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1250,7 +1239,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>GASTROINTESTINAL</b>
+                                    <small class="text-success"><b>GASTROINTESTINAL</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1332,7 +1321,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>URINARY</b>
+                                    <small class="text-success"><b>URINARY</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1388,7 +1377,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>PERIPHERAL VASCULAR</b>
+                                    <small class="text-success"><b>PERIPHERAL VASCULAR</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1420,7 +1409,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>MUSCULOSKELETAL</b>
+                                    <small class="text-success"><b>MUSCULOSKELETAL</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1478,7 +1467,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>NEUROLOGIC</b>
+                                    <small class="text-success"><b>NEUROLOGIC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1546,7 +1535,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>HEMATOLOGIC</b>
+                                    <small class="text-success"><b>HEMATOLOGIC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1574,7 +1563,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>ENDOCRINE</b>
+                                    <small class="text-success"><b>ENDOCRINE</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1616,7 +1605,7 @@
                                         </div>
                                     </div><br>
 
-                                    <b>PSYCHIATRIC</b>
+                                    <small class="text-success"><b>PSYCHIATRIC</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-3">
@@ -1670,7 +1659,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_nutri_status_pregnant" aria-expanded="false" aria-controls="collapse_nutri_status_pregnant">
                                         <b>NUTRITIONAL STATUS</b>
@@ -1678,42 +1667,42 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_nutri_status_pregnant" style="width: 100%;">
-                                    <b>Diet</b>
+                                    <small class="text-success"><b>Diet</b></small>
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_none_pregnant" value="None">
-                                                <label for="diet_none"> None </label>
+                                                 None 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_oral_pregnant" value="Oral">
-                                                <label for="diet_oral"> Oral </label>
+                                                 Oral 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tube_pregnant" value="Tube">
-                                                <label for="diet_tube"> Tube </label>
+                                                 Tube 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_tpn_pregnant" value="TPN">
-                                                <label for="diet_tpn"> TPN </label>
+                                                 TPN 
                                             </div>
                                             <div class="col-md-2">
                                                 <input class="form-check-input referral-radio-btn" name="diet_radio" type="radio" id="diet_npo_pregnant" value="NPO">
-                                                <label for="diet_npo"> NPO </label>
+                                                 NPO 
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-12">
-                                                Specify Diets: <textarea class="form-control" name="diet" style="resize: none;width: 100%;" rows="3"></textarea><br><br>
+                                                <small class="text-success"><b>Specify Diets:</b></small> <textarea class="form-control" name="diet" style="resize: none;width: 100%;" rows="3"></textarea><br><br>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div><br>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs_pregnant" aria-expanded="false" aria-controls="collapse_vital_signs_pregnant">
                                         <b>LATEST VITAL SIGNS</b>
@@ -1724,18 +1713,18 @@
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                                Temperature: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp"> &#176;C
+                                               <small class="text-success"><b> Temperature: </b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp"> &#176;C
                                             </div>
                                             <div class="col-md-4">
-                                                Pulse Rate/Heart Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse"> bpm
+                                               <small class="text-success"><b> Pulse Rate/Heart Rate:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse"> bpm
                                             </div>
                                             <div class="col-md-4">
-                                                Respiratory Rate: <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate"> cpm
+                                               <small class="text-success"><b> Respiratory Rate:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate"> cpm
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <label for="systolic">Blood Pressure:</label>
+                                                <label for="systolic"><small class="text-success"><b>Blood Pressure:</b></small></label>
                                                 <input type="number" id="systolic_pregnant" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
                                                     oninput="updateBloodPressure()"> /
@@ -1747,10 +1736,10 @@
                                                 <input type="hidden" name="vital_bp" id="vital_bp_pregnant">
                                             </div>
                                             <div class="col-md-4">
-                                                O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
+                                               <small class="text-success"><b> O2 Saturation </b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
                                             </div>
                                         </div><br>
-                                    </div>
+                                    </div><br>
                                 </div>
                             </div>
                         </div>
@@ -1758,16 +1747,16 @@
                         <script>
                             function updateBloodPressure() {
                                 // Get systolic and diastolic values
-                                const systolic = document.getElementById('systolic_pregnant').value;
-                                const diastolic = document.getElementById('diastolic_pregnant').value;
+                                const systolic_pregnant = document.getElementById('systolic_pregnant').value;
+                                const diastolic_pregnant = document.getElementById('diastolic_pregnant').value;
                                 
                                 // Combine into "100/90" format
-                                document.getElementById('vital_bp_pregnant').value = systolic + '/' + diastolic;
+                                document.getElementById('vital_bp_pregnant').value = systolic_pregnant + '/' + diastolic_pregnant;
                             }
                         </script>
 
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_glasgow_pregnant" aria-expanded="false" aria-controls="collapse_glasgow_pregnant">
                                         <b>GLASGOW COMA SCALE</b>
@@ -1775,7 +1764,7 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_glasgow_pregnant" style="width: 100%;">
-                                    <b>Pupil Size Chart</b> &emsp;
+                                    <small class="text-success"> <b>Pupil Size Chart</b></small> &emsp;
                                     <input type="button" class="btn-m btn-warning btn-rounded" onclick="resetPupilSize()" value="Reset">
                                     <div class="container-referral">
                                         <div class="row web-view">
@@ -1930,7 +1919,7 @@
                                     </div><br>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <b>Motor Response</b>
+                                            <small class="text-success"><b>Motor Response</b></small>
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
@@ -1983,7 +1972,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <b>Verbal Response</b>
+                                            <small class="text-success"><b>Verbal Response</b></small>
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
@@ -2032,7 +2021,7 @@
                                     </div><br>
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <b>Eye Response</b>
+                                            <small class="text-success"><b>Eye Response</b></small>
                                             <div class="container-referral table table-responsive" style="overflow-x:auto">
                                                 <table class="table-md table-bordered table-hover">
                                                     <thead>
@@ -2073,7 +2062,7 @@
                                             </div>
                                         </div>
                                         <div class="col-md-6">
-                                            <br><br><b>GCS Score: </b>
+                                            <br><br><small class="text-success"><b>GCS Score: </b></small>
                                             <input class="number" name="gcs_score" id="gcs_score_pregnant" style="text-align: center" min="0" value="0" readonly>
                                         </div>
                                     </div><br>
@@ -2084,44 +2073,35 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
-                                        <b>REASON FOR REFERRAL</b>
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral">
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red"><b>*</b></span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                    <small class="text-success"><i>Select reason for referral:</i></small><span class="text-red"><b>*</b></span>
                                     <div class="container-referral">
-                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required="">
+                                        <select name="reason_referral" id="reason_referral" class="form-control-select select2 reason_referral" required="">
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
-                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                             @endforeach
                                         </select><br><br>
-                                        <div id="pregnant_other_reason_referral_div" style="display:none;">
-                                            <span>Other Reason for Referral:</span> <br/>
-                                            <textarea class="form-control" name="other_reason_referral" style="width: 100%;"></textarea>
-                                        </div>
-                                    </div>
+                                        <div id="other_reason_referral_pregnant"></div>
+                                    </div><br></br>
                                 </div>
                             </div>
                         </div>
-
-                        <hr />                                  
-                    </div>   <!-- /.form-content blue -->
-                    <table class="table table-striped col-sm-6"></table>
-                    <hr />
-                        <div class="form-fotter pull-right">
-                            <button class="btn btn-default btn-flat" data-dismiss="modal">
-                                    <i class="fa fa-times"></i> Back </button>
-                            <button type="submit" id="sbmitBtnPregnantRevised" class="btn btn-success btn-flat btn-submit">
-                                <i class="fa fa-send"></i> Submit
-                            </button>
+                        <hr>
+                        <div class="form-footer pull-right">
+                            <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
+                            <button type="submit" id="sbmitBtnPregnantRevised" class="btn btn-success btn-flat btn-submit"><i class="fa fa-send"></i> Submit</button>
                         </div>
                         <div class="clearfix"></div>
-                    </div>
-                <!-- </div> /.jim-content  red -->
+
+                    </div>{{--/.form-group--}}
+                </div> {{--/.jim-content--}}
             </form>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -2169,51 +2149,27 @@
 </div>
 
 <script>
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     // Uncollapse the REASON FOR REFERRAL section
-    //     const referralCollapse = document.getElementById("collapse_reason_referral_pregnant");
-    //     const referralButton = document.querySelector("[data-target='#collapse_reason_referral_pregnant']");
-    //     if (referralCollapse && referralButton) {
-    //         referralCollapse.classList.add("show");
-    //         referralButton.setAttribute("aria-expanded", "true");
-    //     }
+    $(document).ready(function () {
+        // Open the collapse when the form loads
+        $("#patient_treatment_give_time").collapse('show');
+        $("#collapse_diagnosis_pregnant").collapse('show');
+        $("#collapse_reason_referral_pregnant").collapse('show');
 
-    //     // Uncollapse the HISTORY OF PRESENT ILLNESS section
-    //     // const illnessCollapse = document.getElementById("collapse_illness_history_pregnant");
-    //     // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_pregnant']");
-    //     // if (illnessCollapse && illnessButton) {
-    //     //     illnessCollapse.classList.add("show");
-    //     //     illnessButton.setAttribute("aria-expanded", "true");
-    //     // }
+        // Ensure button toggle works properly
+        $(".btn[data-target='#patient_treatment_give_time']").on("click", function () {
+            $("#patient_treatment_give_time").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_diagnosis_pregnant']").on("click", function () {
+            $("#collapse_diagnosis_pregnant").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_reason_referral_pregnant']").on("click", function () {
+            $("#collapse_reason_referral_pregnant").collapse("toggle");
+        });
+    });
+</script>
 
-    //     // Uncollapse the DIAGNOSIS section
-    //     const diagnosisCollapse = document.getElementById("collapse_diagnosis_pregnant");
-    //     const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_pregnant']");
-    //     if (diagnosisCollapse && diagnosisButton) {
-    //         diagnosisCollapse.classList.add("show");
-    //         diagnosisButton.setAttribute("aria-expanded", "true");
-    //     }
+<script>
 
-    //     // Uncollapse the TREATMENTS GIVE TIME section
-    //     const treatmentCollapse = document.getElementById("patient_treatment_give_time");
-    //     const treatmentButton = document.querySelector("[data-target='#patient_treatment_give_time']");
-    //     if (treatmentCollapse && treatmentButton) {
-    //         treatmentCollapse.classList.add("show");
-    //         treatmentButton.setAttribute("aria-expanded", "true");
-    //     }
-    // });
-
-
-    // $("#revisedpregnantFormModal").modal("show");
-
-    //    $('#pedia_show').hide();
-    //    $('#menarche_show').hide();
-    //
-    //    var pt_age = parseInt($('.pt_age').val(), 10);
-    //    if(pt_age > 18)
-    //        $('#pedia_show').show();
-    //    if($('.patient_sex').val() === "Female")
-    //        $('#menarche_show').show();
     $("#clear_icd_pregnant_revised").hide();
     $("#clear_notes_pregnant_revised").hide();
     $("#clear_other_diag_pregnant_revised").hide();
@@ -2282,9 +2238,9 @@
         $("#others_diagnosis_pregnant_revised").html(loading);
         $("#clear_other_diag_pregnant_revised").show();
         setTimeout(function(){
-            $("#others_diagnosis_pregnant_revised").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span>\n' +
+            $("#others_diagnosis_pregnant_revised").html('<small class="text-success">OTHER DIAGNOSIS:</small> <span class="text-red">*</span><br>\n' +
                 '                                <br />\n' +
-                '                                <textarea class="form-control reason_referral" id="other_diag_preg" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
+                '                                <textarea class="form-control reason_referral" id="other_diag_preg" name="other_diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea><br></br>')
         },500);
     }
 
@@ -2390,7 +2346,7 @@
     });
 
     /* *****ALLERGY***** */
-    $('#allergy_food, #allergy_drug, #allergy_other').hide();
+    $('#allergy_food_pregnant, #allergy_drug, #allergy_other').hide();
     $('#allergy_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#allergy_none_cbox_pregnant').prop('checked', false);
@@ -3056,36 +3012,31 @@
 
     /**************************************************************************/
 
-    $("#sbmitBtnPregnantRevised").on('click',function(e){
+    $("#sbmitBtnPregnantRevised").on('click',function(e){   
+
+        // lobibox for icd10 
         if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
             Lobibox.alert("error", {
                 msg: "Select ICD-10 / Other diagnosis!"
             });
             return false;
         }
+    
     });
 
-    //John
-    // document.getElementById("sbmitBtnPregnantRevised").addEventListener("click", function(event) {
-    //     event.preventDefault();
-    //     const modalElement = document.getElementById("revisedpregnantFormModal");
-    //     if (modalElement) {
-    //         modalElement.style.paddingRight = "17px";
-    //     }
-    // });
-
-     $('.reason_referral').on('change', function() {
-            var value = $(this).val();
-            
-            if (value == -1) {
-                // Show the "Other Reason for Referral" textarea if "-1" is selected
-                console.log("VALUE: ", value);
-                $('#pregnant_other_reason_referral_div').show();
-            } else {
-                // Hide the "Other Reason for Referral" textarea if another option is selected
-                console.log("VALUE: ", value);  
-                $('#pregnant_other_reason_referral_div').hide();
-            }
-        });
+    $('.reason_referral').on('change', function() {
+        var value = $(this).val();
+        if (value == '-1') {
+            $("#other_reason_referral_pregnant").html(loading);
+            setTimeout(function() {
+                $("#other_reason_referral_pregnant").html('<span>Other Reason for Referral:</span>\n' +
+                    '                                <br />\n' +
+                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
+            }, 500);
+            $("#other_reason_referral_pregnant").show();
+        } else {
+            clearOtherReasonReferral();
+        }
+    });
 
 </script>

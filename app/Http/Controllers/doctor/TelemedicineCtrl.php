@@ -5,11 +5,13 @@ namespace App\Http\Controllers\doctor;
 use App\AppointmentSchedule;
 use App\Department;
 use App\Facility;
+use App\Activity;
 use App\TelemedAssignDoctor;
 use App\Tracking;
 use App\User;
 use App\Cofig_schedule;
 use App\SubOpd;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
@@ -808,12 +810,102 @@ class TelemedicineCtrl extends Controller
     }
 
     public function countconsultation(){
+        $user = Session::get('auth');
 
-        $countSubOpd = SubOpd::distinct('id')->count('id');
-       
+        $countSubOpd = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+            ->where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->distinct('subopd.description')
+            ->count('subopd.description');
+        
+        $totalPatient = Tracking::where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->where('subopd_id', '!=', '')
+            ->distinct('id')
+            ->count('id');
+
+        // $totalConsultationMinutes = Tracking::where('telemedicine', 1)
+        //     ->where('referred_from', $user->facility_id)
+        //     ->whereNotNull('consultation_duration')
+        //     ->distinct('id')
+        //     ->sum('consultation_duration');
+
+        $totalConsultationMinutes = Tracking::where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->where('subopd_id', '!=', '')
+            ->sum('consultation_duration');
+
+        $hours = floor($totalConsultationMinutes / 60);
+        $minutes = $totalConsultationMinutes % 60;
+        
+        if($hours > 0){
+            $formattedDuration = "{$hours}: 00 hr" . ($hours > 1 ? 's' : '');
+
+            if ($minutes > 0) {
+                $formattedDuration .= " and {$minutes} minute" . ($minutes > 1 ? 's' : '');
+            }
+        } else {
+            $formattedDuration = "{$minutes} minute" . ($minutes > 1 ? 's' : '');
+        }
+
+        // $totalConsultation = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
+        //     ->where('activity.status', 'examined')
+        //     ->where('tracking.telemedicine', 1)
+        //     ->where('tracking.referred_from', $user->facility_id)
+        //     ->distinct('activity.patient_id')
+        //     ->count('activity.patient_id');
+
+        $totalConsultation =  Tracking::where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->where('subopd_id', '!=', '')
+            ->distinct('id')
+            ->count('id');
+        
+        // $totalConsulPerDepartment = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
+        //     ->join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+        //     ->where('activity.status', 'examined')
+        //     ->where('tracking.telemedicine', 1)
+        //     ->where('tracking.referred_from', $user->facility_id)
+        //     ->select('subopd.description', DB::raw('COUNT(DISTINCT activity.patient_id) as total_consultations'))
+        //     ->groupBy('subopd.id', 'subopd.description')
+        //     ->get();
+
+        $totalConsulPerDepartment = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+            ->where('telemedicine', 1)
+            ->where('referred_from', $user->facility_id)
+            ->selectRaw('subopd.description, COUNT(tracking.id) as total_consultations')
+            ->groupBy('subopd.id', 'subopd.description')
+            ->get();
+ 
         return view('doctor.reportConsultation', [
             'countDepartment' => $countSubOpd ,
+            'numberPatient' => $totalPatient,
+            'totalConsult' => $totalConsultation,
+            'totalperDepartment' => $totalConsulPerDepartment,
+            'totalConsultationMinutes' => $formattedDuration,
         ]);
+    }
+
+    public function saveCallDuration(Request $req){
+
+        // Log::info("New Call Duration: ", $req->all());
+
+        $tracking = Tracking::find($req->tracking_id);
+        if($tracking){
+            
+            $existing_duration = (int) $tracking->consultation_duration;
+            $new_duration = (int) $req->call_duration;
+
+                    // Debugging output (check values in logs)
+            // Log::info("Existing Duration: " . $existing_duration);
+            // Log::info("New Call Duration: " . $new_duration);
+
+            $tracking->consultation_duration = $existing_duration + $new_duration;
+            // Log::info("Updated Duration: " . $tracking->consultation_duration);
+            $tracking->save();
+        }
+       
+       
     }
 
     public function getconfigAppointment(Request $req){
