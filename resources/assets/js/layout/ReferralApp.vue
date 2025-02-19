@@ -710,7 +710,7 @@
                         }
                     } else {
                         console.log("discharge file upload::", event.payload.lab_result);
-                          console.log("my event discharged:", event);
+                        console.log("my event discharged:", event);
                         if(event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
