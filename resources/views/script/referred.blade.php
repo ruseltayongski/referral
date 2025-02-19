@@ -893,7 +893,7 @@
         console.log("track_code", track_code);
         $("#DischargeModal").remove();
         const url = "{{ asset('get-discharge-files') }}";
-
+    
         if(discharged && !cancelled && !rejected && !transferred){
 
             $.ajax({
@@ -903,45 +903,95 @@
                 success: function(files) {
                     console.log("Files received:", files);
 
-                    if(!files || !Array.isArray(files) || files.length === 0){
-                        alert("No files available");
+                    if (!files || !Array.isArray(files) || files.length === 0) {
+                        Lobibox.alert("error", {
+                            msg: "No files result available!"
+                        });
                         return;
                     }
 
+                    // Remove any existing modal before creating a new one
+                    $("#DischargeModal").remove();
+
                     let filesListHtml = files.map(fileUrl => {
                         let filename = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
-                        return `<a href="${fileUrl}" target="_blank" class="list-group-item">
-                                    <i class="fa fa-file"></i> ${filename}
-                                </a>`
+                        let fileExtension = filename.split('.').pop().toLowerCase();
+                        let iconSrc = "";
 
+                        // Determine icon based on file type
+                        if (fileExtension === 'pdf') {
+                            iconSrc = '{{ asset("resources/img/pdf_icon.png") }}';
+                        } else if (['doc', 'docx'].includes(fileExtension)) {
+                            iconSrc = '{{ asset("resources/img/document_icon.png") }}';
+                        } else if (['xls', 'xlsx'].includes(fileExtension)) {
+                            iconSrc = '{{ asset("resources/img/sheet_icon.png") }}';
+                        } else if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExtension)) {
+                            iconSrc = '{{ asset("resources/img/fileImage.png") }}';
+                        } else {
+                            iconSrc = '{{ asset("resources/img/default_file_icon.png") }}';
+                        }
+
+                        return `
+                            <div class="col-6 col-sm-4 col-md-3 text-center file-item">
+                                <div class="file-box">
+                                    <a href="${fileUrl}" target="_blank" class="file-preview">
+                                        <img src="${iconSrc}" class="img-thumbnail file-img" alt="${filename}">
+                                    </a>
+                                    <div class="file-name">${filename}</div>
+                                </div>
+                            </div>
+                        `;
                     }).join("");
-                    var modalHtml =
-                        `<div class="modal fade" id="DischargeModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel">
+
+                    // Modal HTML
+                    var modalHtml = `
+                        <div class="modal fade" id="DischargeModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content modal-vertical-list">
-                                    <div class="modal-header">
+                                    <div class="modal-header px-2 py-2">
                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                         <h4 class="modal-title" id="folderModalLabel">Discharged Document Result</h4>
-                                    {{-- <div class="row">
-                                            <div class="col-xs-12">
-                                                <label><input type="checkbox" id="checkVisible" value='' onclick="checkVisibleFiles(this.checked, '','','','','','')" />&nbsp; Select all files</label>
-                                                <button type="button" id="removeFiles" class="btn btn-success btn-xs">Remove files</button>
-                                                <a href="javascript:void(0);" class="btn btn-primary btn-xs">
-                                                    Add More Files
-                                                </a>
-                                            </div>
-                                        </div> --}}
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body py-2">
                                         <div class="container-fluid">
-                                            <div class="row">
-                                            <div class="list-group">${filesListHtml}</div>
-                                            </div>
+                                            <div class="row">${filesListHtml}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>`;
+                        </div>
+                        <style>
+                            .file-box {
+                                padding: 10px;
+                                border-radius: 8px;
+                                background: #f8f9fa;
+                                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                                margin-bottom: 15px;
+                                transition: all 0.3s ease-in-out;
+                            }
+                            .file-box:hover {
+                                transform: translateY(-3px);
+                                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                            }
+                            .file-img {
+                                width: 100px;
+                                height: 100px;
+                                object-fit: cover;
+                                border-radius: 5px;
+                            }
+                            .file-name {
+                                margin-top: 8px;
+                                font-size: 12px;
+                                font-weight: 600;
+                                color: #333;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                max-width: 100px;
+                                text-align: center;
+                            }
+                        </style>
+                    `;
 
                     // Append modal to body
                     $("body").append(modalHtml);
@@ -958,7 +1008,11 @@
             });
 
         }else{
-            alert("No files result available");
+
+            Lobibox.alert("error",
+            {
+                msg: "No files result available!"
+            });
             return;
         }
         

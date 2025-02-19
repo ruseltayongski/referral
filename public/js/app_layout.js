@@ -22527,7 +22527,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     });
     Echo.join('referral_discharged').listen('SocketReferralDischarged', function (event) {
-      console.log(event);
+      console.log("event discharge:", event);
       // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
       if (event.payload.status === 'telemedicine') {
         if ((event.payload.referred_to === _this3.user.facility_id || event.payload.referring_md === _this3.user.id) && event.payload.trigger_by !== _this3.user.id) {
@@ -22550,7 +22550,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
         }
       } else {
-        console.log("evenPayload", event.payload.referred_from, 'user facility', _this3.user.facility_id, 'passToVueFacility', _this3.passToVueFacility);
+        console.log("discharge file upload::", event.payload.lab_result);
+        console.log("my event discharged:", event);
         if (event.payload.referred_from === _this3.user.facility_id || event.payload.referred_from === _this3.passToVueFacility) {
           _this3.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track);
         }
