@@ -100,7 +100,7 @@ $user = Session::get('auth');
                                                 onclick="DischargeFileResult('{{$row->code}}')"
                                                 class="img-thumbnail discharged-file" 
                                                 data-code="{{$row->code}}"
-                                                style="width:40px; height:40px; object-fit:cover;">
+                                                style="width:40px; height:40px; object-fit:cover; display:none">
                                         </td>
                                     </tr>
                                 @endforeach

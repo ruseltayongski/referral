@@ -1288,6 +1288,8 @@ class ReferralCtrl extends Controller
 
     public function discharge(Request $req, $track_id)
     {
+        // Log::info("Raw Files Data render:", $_FILES["file_upload"]["name"]);
+        // return;
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s',strtotime($req->date_time));
         $track = Tracking::find($track_id);

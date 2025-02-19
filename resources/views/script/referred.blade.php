@@ -996,8 +996,14 @@
                     // Append modal to body
                     $("body").append(modalHtml);
 
-                    // Show modal
+                    $('.loading').show();
+                    
                     $("#DischargeModal").modal("show");
+
+                    $('#DischargeModal').on('shown.bs.modal', function () {
+                        $('.loading').hide();
+                    });
+
                     $('.popoverReferral').popover('hide')
 
                 },
