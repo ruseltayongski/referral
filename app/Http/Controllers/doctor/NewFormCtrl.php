@@ -2610,11 +2610,8 @@ class NewFormCtrl extends Controller
             $referring_md_name
          );   
            
-        }
-       
-       
-       
-       
+        } 
+       // PERSONAL AND SOCIAL HISTORY
         if (!empty($data->smoking) || !empty($data->smoking_sticks_per_day) || !empty($data->smoking_quit_year) || !empty($data->smoking_remarks)
         || !empty($data->alcohol_drinking) || !empty($data->alcohol_liquor_type) || !empty($data->alcohol_bottles_per_day) || !empty($data->alcohol_drinking_quit_year)
         || !empty($data->illicit_drugs) || !empty($data->illicit_drugs_taken) || !empty($data->illicit_drugs_quit_year)){
