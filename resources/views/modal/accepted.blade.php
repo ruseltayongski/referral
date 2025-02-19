@@ -253,17 +253,17 @@ function processFile(file, pos) {
         // Create new file preview - now appears after the upload button
         var previewDiv = $(
             '<div class="col-md-3 col-sm-4 col-xs-6 dischargedfile" id="upload' + pos + '">' +
-            '   <div class="file-upload">' +
+            '   <div class="file-upload" style="position: relative;">' +
+            '        <button type="button" onclick="removeOneFile(' + pos + ')" ' +
+            '            class="btn btn-xs btn-danger" style="position: absolute; top: 0; right: 0;">' +
+            '            <i class="fa fa-trash"></i>' +
+            '        </button>' +
             '       <div class="file-upload-content" id="file-upload-content' + pos + '" style="display: block;">' +
             '           <img class="file-upload-image" id="file-upload-image' + pos + '" src="' + iconSrc + '" ' +
             '               style="max-height: 120px; width: auto; margin: 0 auto; display: block; object-fit: contain;"/>' +
             '           <div class="image-title-wrap" style="margin-top: 10px; position: relative;">' +
             '               <b><small class="image-title" id="image-title' + pos + '" ' +
             '                   style="display: block; word-wrap: break-word; padding-right: 20px;"></small></b>' +
-            '               <button type="button" onclick="removeOneFile(' + pos + ')" ' +
-            '                   class="btn btn-xs btn-danger" style="position: absolute; top: 0; right: 0;">' +
-            '                   <i class="fa fa-trash"></i>' +
-            '               </button>' +
             '           </div>' +
             '       </div>' +
             '   </div>' +
