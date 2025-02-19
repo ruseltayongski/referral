@@ -161,6 +161,7 @@
             </td>
         </tr>
     @endif
+
     @if(isset($file_path))
         <tr>
             <td colspan="6">

@@ -2079,7 +2079,7 @@
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <small class="text-success"><i>Select reason for referral:</i></small><span class="text-red"><b>*</b></span>
+                                    <!-- <small class="text-success"><i>Select reason for referral:</i></small><span class="text-red"><b>*</b></span>
                                     <div class="container-referral">
                                         <select name="reason_referral" id="reason_referral" class="form-control-select select2 reason_referral" required="">
                                             <option value="">Select reason for referral</option>
@@ -2089,7 +2089,7 @@
                                             @endforeach
                                         </select><br><br>
                                         <div id="other_reason_referral_pregnant"></div>
-                                    </div><br></br>
+                                    </div><br></br> -->
                                 </div>
                             </div>
                         </div>

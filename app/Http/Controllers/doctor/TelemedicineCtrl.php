@@ -824,12 +824,6 @@ class TelemedicineCtrl extends Controller
             ->distinct('id')
             ->count('id');
 
-        // $totalConsultationMinutes = Tracking::where('telemedicine', 1)
-        //     ->where('referred_from', $user->facility_id)
-        //     ->whereNotNull('consultation_duration')
-        //     ->distinct('id')
-        //     ->sum('consultation_duration');
-
         $totalConsultationMinutes = Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
             ->where('subopd_id', '!=', '')
@@ -848,28 +842,12 @@ class TelemedicineCtrl extends Controller
             $formattedDuration = "{$minutes} minute" . ($minutes > 1 ? 's' : '');
         }
 
-        // $totalConsultation = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
-        //     ->where('activity.status', 'examined')
-        //     ->where('tracking.telemedicine', 1)
-        //     ->where('tracking.referred_from', $user->facility_id)
-        //     ->distinct('activity.patient_id')
-        //     ->count('activity.patient_id');
-
         $totalConsultation =  Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
             ->where('subopd_id', '!=', '')
             ->distinct('id')
             ->count('id');
         
-        // $totalConsulPerDepartment = Activity::join('tracking', 'activity.patient_id', '=', 'tracking.patient_id')
-        //     ->join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
-        //     ->where('activity.status', 'examined')
-        //     ->where('tracking.telemedicine', 1)
-        //     ->where('tracking.referred_from', $user->facility_id)
-        //     ->select('subopd.description', DB::raw('COUNT(DISTINCT activity.patient_id) as total_consultations'))
-        //     ->groupBy('subopd.id', 'subopd.description')
-        //     ->get();
-
         $totalConsulPerDepartment = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
             ->where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
@@ -887,7 +865,7 @@ class TelemedicineCtrl extends Controller
     }
 
     public function saveCallDuration(Request $req){
-
+        
         // Log::info("New Call Duration: ", $req->all());
 
         $tracking = Tracking::find($req->tracking_id);
