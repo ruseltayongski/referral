@@ -54,6 +54,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 use Matrix\Exception;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
+
 
 class ReferralCtrl extends Controller
 {
@@ -1286,6 +1288,8 @@ class ReferralCtrl extends Controller
 
     public function discharge(Request $req, $track_id)
     {
+        // Log::info("Raw Files Data render:", $_FILES["file_upload"]["name"]);
+        // return;
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s',strtotime($req->date_time));
         $track = Tracking::find($track_id);
@@ -1363,6 +1367,7 @@ class ReferralCtrl extends Controller
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
             "remarks" => $req->remarks,
+            'lab_result' => $file_paths,
             "redirect_track" => $redirect_track,
             "status" => "discharged"
         ];
@@ -1371,8 +1376,6 @@ class ReferralCtrl extends Controller
     }
 
     public function getDischargeFiles($track_code){
-
-        // (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
 
         $file_link = (Activity::select('lab_result')->where("code", $track_code)
                 ->where("status", "discharged")

@@ -12,6 +12,12 @@ $user = Session::get('auth');
         .facility {
             color: #ff8456;
         }
+    .discharged-file:hover {
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    }
+
+</style>
     </style>
     <div class="col-md-12">
         <div class="jim-content">
@@ -44,6 +50,7 @@ $user = Session::get('auth');
                                     <th>Referring Facility</th>
                                     <th>Patient Name/Code</th>
                                     <th>Date Discharged</th>
+                                    <th>File Upload</th>
                                     {{--<th>Status</th>--}}
                                     {{--<th>Record</th>--}}
                                 </tr>
@@ -88,6 +95,13 @@ $user = Session::get('auth');
                                                 <i class="fa fa-stethoscope"></i> Track
                                             </a>
                                         </td>--}}
+                                        <td>
+                                            <img src="{{ asset('resources/img/DischargedFolder.png') }}" 
+                                                onclick="DischargeFileResult('{{$row->code}}')"
+                                                class="img-thumbnail discharged-file" 
+                                                data-code="{{$row->code}}"
+                                                style="width:40px; height:40px; object-fit:cover; display:none">
+                                        </td>
                                     </tr>
                                 @endforeach
                                 </tbody>
@@ -145,6 +159,173 @@ $user = Session::get('auth');
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
             console.log("{{ $start }}");
         });
+
+        //hiding folder image  empty files
+        function checkDischargeFiles(code) {
+            const url = "{{ asset('get-discharge-files') }}";
+            
+            return $.ajax({
+                url: `${url}/${code}`,
+                type: "GET",
+                dataType: "json",
+                success: function(files) {
+                    const folderIcon = document.querySelector(`.discharged-file[data-code="${code}"]`);
+                    
+                    if (!files || !Array.isArray(files) || files.length === 0) {
+                        if (folderIcon) {
+                            folderIcon.style.display = "none";
+                        }
+                        return;
+                    }
+
+                    // Show folder icon only if files exist
+                    if (folderIcon) {
+                        folderIcon.style.display = "inline-block";
+                    }
+                },
+                error: function(error) {
+                    console.error(`Error checking files for code ${code}:`, error);
+                    // Hide folder icon on error
+                    const folderIcon = document.querySelector(`.discharged-file[data-code="${code}"]`);
+                    if (folderIcon) {
+                        folderIcon.style.display = "none";
+                    }
+                }
+            });
+        }
+
+        //hiding folder image  empty files
+        function initializeFolderIcons() {
+            //get folder icon
+            const folderIcons = document.querySelectorAll('.discharged-file');
+            //check nato ang isa isa ka files
+            folderIcons.forEach(icon => {
+                const code = icon.getAttribute('data-code');
+                if (code) {
+                    checkDischargeFiles(code);
+                }
+            });
+        }
+
+        function DischargeFileResult(code) {
+            const url = "{{ asset('get-discharge-files') }}";
+
+            $.ajax({
+                url: `${url}/${code}`, // Endpoint URL
+                type: "GET",
+                dataType: "json",
+                success: function(files) {
+                    console.log("Files received:", files);
+
+                    const folderIcon = document.querySelector(`.discharged-file[data-code="${code}"]`);
+
+                    if (!files || !Array.isArray(files) || files.length === 0) {
+                         
+                        return;
+                    }
+
+                    // Remove any existing modal before creating a new one
+                    $("#DischargeModal").remove();
+
+                    let filesListHtml = files.map(fileUrl => {
+                        let filename = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+                        let fileExtension = filename.split('.').pop().toLowerCase();
+                        let iconSrc = "";
+
+                        // Determine icon based on file type
+                        if (fileExtension === 'pdf') {
+                            iconSrc = '{{ asset("resources/img/pdf_icon.png") }}';
+                        } else if (['doc', 'docx'].includes(fileExtension)) {
+                            iconSrc = '{{ asset("resources/img/document_icon.png") }}';
+                        } else if (['xls', 'xlsx'].includes(fileExtension)) {
+                            iconSrc = '{{ asset("resources/img/sheet_icon.png") }}';
+                        } else if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExtension)) {
+                            iconSrc = '{{ asset("resources/img/fileImage.png") }}';
+                        } else {
+                            iconSrc = '{{ asset("resources/img/default_file_icon.png") }}';
+                        }
+
+                        return `
+                            <div class="col-6 col-sm-4 col-md-3 text-center file-item">
+                                <div class="file-box">
+                                    <a href="${fileUrl}" target="_blank" class="file-preview">
+                                        <img src="${iconSrc}" class="img-thumbnail file-img" alt="${filename}">
+                                    </a>
+                                    <div class="file-name">${filename}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join("");
+
+                    // Modal HTML
+                    var modalHtml = `
+                        <div class="modal fade" id="DischargeModal" tabindex="-1" role="dialog" aria-labelledby="folderModalLabel">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content modal-vertical-list">
+                                    <div class="modal-header px-2 py-2">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title" id="folderModalLabel">Discharged Document Result</h4>
+                                    </div>
+                                    <div class="modal-body py-2">
+                                        <div class="container-fluid">
+                                            <div class="row">${filesListHtml}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <style>
+                            .file-box {
+                                padding: 10px;
+                                border-radius: 8px;
+                                background: #f8f9fa;
+                                box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+                                margin-bottom: 15px;
+                                transition: all 0.3s ease-in-out;
+                            }
+                            .file-box:hover {
+                                transform: translateY(-3px);
+                                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                            }
+                            .file-img {
+                                width: 100px;
+                                height: 100px;
+                                object-fit: cover;
+                                border-radius: 5px;
+                            }
+                            .file-name {
+                                margin-top: 8px;
+                                font-size: 12px;
+                                font-weight: 600;
+                                color: #333;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                max-width: 100px;
+                                text-align: center;
+                            }
+                        </style>
+                    `;
+
+                    // Append modal to body
+                    $("body").append(modalHtml);
+
+                    // Show modal
+                    $("#DischargeModal").modal("show");
+                    $('.popoverReferral').popover('hide');
+
+                },
+                error: function(error) {
+                    console.error("Error fetching files:", error);
+                    alert("Failed to load files. Please try again.");
+                }
+            });
+        }
+        //hiding folder image  empty files
+        $(document).ready(function() {
+            initializeFolderIcons();
+        });
+
     </script>
 @endsection
 

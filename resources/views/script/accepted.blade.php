@@ -54,19 +54,24 @@
 
 
     $('#dischargeForm').on('submit',function(e){
-        
-            $("#discharged_button").attr('disabled',true);
-            console.log("fileInfoArray", fileInfoArray);
+
+            e.preventDefault();
+            
+            const reindexedFiles = fileInfoArray.map((fileInfo, index) => ({
+                ...fileInfo,
+                pos: index + 1
+            }));
 
             let formData = new FormData(this); // Capture form data
-
-            console.log("fileInfoArray:", fileInfoArray);
-
-            // Append actual files to FormData
-            fileInfoArray.forEach((fileInfo, index) => {
-                formData.append('file_upload[]', fileInfo.file); // Send the actual file
-            });
             
+            formData.delete('file_upload[]');
+           
+            reindexedFiles.forEach((fileInfo, index) => {
+                formData.append('file_upload[]', fileInfo.file); // Send the actual file
+                console.log("fileInfo.file", fileInfo.file);
+            });
+            // console.log("Submitting files:", reindexedFiles.map(f => f.name));
+
             $.ajax({
             url: "{{ url('doctor/referral/discharge/') }}/" + track_id,
             type: 'POST',
