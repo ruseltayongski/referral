@@ -53,6 +53,22 @@ $user = Session::get('auth');
                 font-size: 8px;
             }
         }
+        .panel-heading {
+            position: relative; /* Ensure proper positioning */
+            overflow: visible;
+        }
+        .referral-stamp {
+            position: absolute;
+            top: -20px; /* Adjusted position */
+            right: -20px; /* Adjusted position */
+            width: 60px; /* Compact size */
+            height: 60px; /* Compact size */
+            /* transform: rotate(+0deg); Angled like a stamp */
+        }
+        .stamp-img {
+            width: 100px;
+            height: 65px;
+        }
     </style>
     <div class="row">
         <div class="col-md-3">
@@ -118,6 +134,7 @@ $user = Session::get('auth');
                     $caller_md = \App\Activity::where('code',$row->code)->where("status","=","calling")->count();
                     $redirected = \App\Activity::where('code',$row->code)->where("status","=","redirected")->count();
                     ?>
+                     
                     <div style="border:2px solid #7e7e7e;" class="panel panel-{{ $type }}">
                         <div class="panel-heading">
                             <span class="txtTitle"><i class="fa fa-wheelchair"></i> {{ ucwords(strtolower($row->patient_name)) }} <small class="txtSub">[ {{ $row->sex }}, {{ $row->age }} ] from {{ $patient_address }}. </small></span>
@@ -139,7 +156,16 @@ $user = Session::get('auth');
                             </span>
                             <br />
                             Patient Code: <span class="txtCode">{{ $row->code }}</span>
+                            <div class="referral-stamp">
+                                <!-- {{ $row->form_type }} -->
+                                  @if ($row->form_type === "version2")
+                                <img class="stamp-img" src="{{ asset('resources/img/new_form_stamp.png') }}" alt="PNG Image">
+                                  @endif
+                            </div>
+
                         </div>
+                      
+                        
                         @if($row->telemedicine)
                             @include('doctor.include.telemedicine_panel_body')
                         @else

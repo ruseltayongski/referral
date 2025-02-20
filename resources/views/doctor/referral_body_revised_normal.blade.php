@@ -180,20 +180,7 @@
             </td>
         </tr>
     @endif
-    @if(isset($file_path))
-        <tr>
-            <td colspan="6">
-                @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif
-                @for($i = 0; $i < count($file_path); $i++)
-                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
-                    @if($i + 1 != count($file_path))
-                        ,&nbsp
-                    @endif
-                @endfor
-                {{--<a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
-            </td>
-        </tr>
-    @endif
+   
     <tr>
         <td colspan="6">
             Name of referring MD/HCW: <span class="referring_md form-details">{{ $form->md_referring }}</span>
@@ -253,6 +240,7 @@
     $review_hematologic = explodeToArray($review_of_system->hematologic);
     $review_endocrine = explodeToArray($review_of_system->endocrine);
     $review_psychiatric = explodeToArray($review_of_system->psychiatric);
+    // dd($past_medical_history);
 
     // PAST MEDICAL HISTORY - NULL CHECKER VALIDATOR
     $commorbidities_null_checker = (!empty($past_medical_history->commordities));
@@ -285,25 +273,97 @@
     ?>
 
     @if ($validation_checker_past_medical_history)
-    <tr class="bg-gray">
-        <td colspan="6">Past Medical History</td>
-    </tr>
+        <tr class="bg-gray">
+            <td colspan="6">Past Medical History</td>
+        </tr>
     @endif
-    @if ($commorbidities_null_checker)
-    <tr> 
-        <td colspan="6">Commorbidities: <span class="woman_commorbidities_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $commordities_arr) }}</span></td>       
-    </tr>
+    
+    @if($commorbidities_null_checker)
+        @php $commorbidities_data = []; @endphp
+
+        @foreach ($commordities_arr as $commorbidities)
+            @if($commorbidities === 'Hypertension')
+                @php $commorbidities_data[] = "Hypertension-" . $past_medical_history->commordities_hyper_year; @endphp
+            @endif
+            @if($commorbidities === 'Diabetes')
+                @php $commorbidities_data[] = "Diabetes-" . $past_medical_history->commordities_diabetes_year; @endphp
+            @endif
+            @if($commorbidities === 'Asthma')
+                @php $commorbidities_data[] = "Asthma-" . $past_medical_history->commordities_asthma_year; @endphp
+            @endif
+            @if($commorbidities === 'COPD')
+                @php $commorbidities_data[] = "COPD"; @endphp
+            @endif
+            @if($commorbidities === 'Dyslipidemia')
+                @php $commorbidities_data[] = "Dyslipidemia"; @endphp
+            @endif
+            @if($commorbidities === 'Others')
+                @php $commorbidities_data[] = "Others-" . $past_medical_history->commordities_others; @endphp
+            @endif
+            @if($commorbidities === 'Cancer')
+                @php $commorbidities_data[] = "Cancer-" . $past_medical_history->commordities_cancer; @endphp
+            @endif
+           
+        @endforeach
+
+        {{-- Display the formatted data --}}
+        <tr>
+            <td colspan="6">Comorbidities: 
+                <span class="woman_commorbidities_treatment form-details"></span> - 
+                <span class="woman_before_given_time form-details">{{ implode(", ", $commorbidities_data) }}</span>
+            </td>
+        </tr>
     @endif
+
     @if ($allergies_null_checker)
+        @php $allergies_data = []; @endphp
+    
+        @foreach ($allergies_arr as $allergies)
+          @if($allergies === 'Food')  @php $allergies_data[] = "Food-" . $past_medical_history->allergy_food_cause; @endphp@endif
+          @if($allergies === 'Drugs')  @php $allergies_data[] = "Drugs-" . $past_medical_history->allergy_drugs_cause; @endphp@endif
+          @if($allergies === 'Others')  @php $allergies_data[] = "Others-" . $past_medical_history->allergy_others_cause; @endphp@endif
+        @endforeach
+        
     <tr>    
-        <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $allergies_arr) }}</span></td>
+        <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $allergies_data) }}</span></td>
     </tr>
     @endif
-    @if ($heredofamilial_null_checker)
-    <tr>
-        <td colspan="6">Heredofamilial: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $heredofamilial_arr) }}</span></td>
-    </tr>
+
+   @if($heredofamilial_null_checker)
+        @php $heredofamilial_data = []; @endphp
+
+        @foreach ($heredofamilial_arr as $heredofamilial)
+            @if($heredofamilial === 'Hypertension')
+                @php $heredofamilial_data[] = "Hypertension-" . $past_medical_history->heredo_hyper_side; @endphp
+            @endif
+            @if($heredofamilial === 'Diabetes')
+                @php $heredofamilial_data[] = "Diabetes-" . $past_medical_history->heredo_diab_side; @endphp
+            @endif
+            @if($heredofamilial === 'Asthma')
+                @php $heredofamilial_data[] = "Asthma-" . $past_medical_history->heredo_asthma_side; @endphp
+            @endif
+            @if($heredofamilial === 'Cancer')
+                @php $heredofamilial_data[] = "Cancer-" . $past_medical_history->heredo_cancer_side; @endphp
+            @endif
+            @if($heredofamilial === 'Kidney Disease')
+                @php $heredofamilial_data[] = "Kidney Disease-" . $past_medical_history->heredo_kidney_side; @endphp
+            @endif
+            @if($heredofamilial === 'Thyroid Disease')
+                @php $heredofamilial_data[] = "Thyroid Disease-" . $past_medical_history->heredo_thyroid_side; @endphp
+            @endif
+            @if($heredofamilial === 'Others')
+                @php $heredofamilial_data[] = "Others-" . $past_medical_history->heredo_others; @endphp
+            @endif
+        @endforeach
+
+        {{-- Display the formatted data --}}
+        <tr>
+            <td colspan="6">Heredofamilial: 
+                <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(", ", $heredofamilial_data) }}</span>
+            </td>
+        </tr>
     @endif
+
     @if (!empty($past_medical_history->previous_hospitalization))
     <tr>
         <td colspan="6">Previous Hospitalization: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ $past_medical_history->previous_hospitalization }}</span></td>
@@ -528,6 +588,20 @@
     <tr>   
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
+    @if(isset($file_path))
+        <tr>
+            <td colspan="6">
+                @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif
+                @for($i = 0; $i < count($file_path); $i++)
+                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
+                    @if($i + 1 != count($file_path))
+                        ,&nbsp
+                    @endif
+                @endfor
+                {{--<a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
+            </td>
+        </tr>
+    @endif
     @endif
     @if ($patient_age >= 9 && $form->patient_sex === "Female")
     @php
@@ -854,43 +928,3 @@
 </div>
 <div class="clearfix"></div>
 
-<script>
-    function getParameterByName(name) {
-        url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-    if(getParameterByName('referredCode')) {
-        $("#telemedicine").addClass('hide');
-        $(".edit_form_revised_btn").addClass('hide');
-    }
-
-    function openTelemedicine(tracking_id, code, action_md, referring_md) {
-        console.log("mao");
-        var url = "<?php echo asset('api/video/call'); ?>";
-        var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "tracking_id" : tracking_id,
-            "code" : code,
-            "action_md" : action_md,
-            "referring_md" : referring_md,
-            "trigger_by" : "{{ $user->id }}",
-            "form_type" : "normal"
-        };
-        $.post(url,json,function(){
-
-        });
-        var windowName = 'NewWindow'; // Name of the new window
-        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=normal&referring_md=yes", windowName, windowFeatures);
-        if (newWindow && newWindow.outerWidth) {
-            // If the window was successfully opened, attempt to maximize it
-            newWindow.moveTo(0, 0);
-            newWindow.resizeTo(screen.availWidth, screen.availHeight);
-        }
-    }
-</script>

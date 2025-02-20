@@ -2539,6 +2539,12 @@ class ReferralCtrl extends Controller
          * */
         $user = Session::get('auth');
         $track = Tracking::find($req->tracking_id);
+
+        if($track->status=='accepted' || $track->status=='queued' || ($track->status=='redirected' && $track->referred_to != $user->facility_id)) {
+            Session::put('incoming_denied',true);
+            return;
+        } // trap if already accepted or rejected
+
         $act = Activity::where('code',$track->code)
             ->orderBy('id','desc')
             ->first();
