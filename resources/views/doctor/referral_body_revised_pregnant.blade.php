@@ -178,28 +178,6 @@ $user = Session::get('auth');
                 </tr>
             @endif
 
-            @if(isset($file_path))
-                <tr>
-                    <td colspan="6">
-                        @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif <br>
-                        @for($i = 0; $i < count($file_path); $i++)
-                            <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
-                            @if($i + 1 != count($file_path))
-                                ,&nbsp;
-                            @endif
-                        @endfor
-                    </td>
-                </tr>
-            @endif
-            {{--@if(isset($file_path))--}}
-                {{--<tr>--}}
-                    {{--<td colspan="4">--}}
-                        {{--File Attachment:--}}
-                        {{--<a href="{{ asset($file_path) }}" target="_blank" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
-                    {{--</td>--}}
-                {{--</tr>--}}
-            {{--@endif--}}
-
         </table>
     </div>
 
@@ -318,9 +296,43 @@ $user = Session::get('auth');
                 $alcohol_liquor_type_null_checker =(!empty($personal_and_social_history->alcohol_liquor_type));
                 $alcohol_dringking_quit_year_null_checker =(!empty($personal_and_social_history->alcohol_drinking_quit_year));
                 $alcohol_bottles_per_day_null_checker=(!empty($personal_and_social_history->alcohol_bottles_per_day));
-                $illicit_drugs_null_checker=(!empty($personal_and_social_history->Illicit_drugs));
+                $illicit_drugs_null_checker=(!empty($personal_and_social_history->illicit_drugs));
                 $illicit_drugs_taken_null_checker =(!empty($personal_and_social_history->illicit_drugs_taken));
                 $illicit_drugs_quit_year_null_checker =(!empty($personal_and_social_history->Illicit_drugs_quit_year));
+                $personal_history_validation_checker = ($smoking_null_checker || $smoking_quit_year_null_checker || $smoking_sticks_per_day_null_checker
+                || $smoking_remarks_null_checker || $alcohol_dringking_null_checker || $alcohol_liquor_type_null_checker || $alcohol_dringking_quit_year_null_checker
+                || $alcohol_bottles_per_day_null_checker || $illicit_drugs_null_checker || $illicit_drugs_taken_null_checker || $illicit_drugs_quit_year_null_checker);
+                // GLASGOCOMA SCALE
+                $glasgo_pupil_size_null_checker = (!empty($glasgocoma_scale->pupil_size_chart));
+                $glasgo_motor_response_null_checker =(!empty($glasgocoma_scale->motor_response));
+                $glasgo_verbal_response_null_checker = (!empty($glasgocoma_scale->verbal_response));
+                $glasgo_eye_response_null_checker = (!empty($glasgocoma_scale->eye_response));
+                $glasgo_gsc_score_null_checker = (!empty($glasgocoma_scale->gsc_score));
+                $glasgocoma_scale_validation_checker = $glasgo_pupil_size_null_checker || $glasgo_motor_response_null_checker || $glasgo_verbal_response_null_checker || $glasgo_eye_response_null_checker || $glasgo_gsc_score_null_checker;
+                // OBSTETRIC AND GYNECOLOGIC HISTORY
+                $obstetric_and_gynecologic_menarche_null_checker=(!empty($obstetric_and_gynecologic_history->menarche));
+                $obstetric_and_gynecologic_menopausal_null_checker = (!empty($obstetric_and_gynecologic_history->menopausal_age));
+                $obstetric_and_gynecologic_menstrual_cycle=(!empty($obstetric_and_gynecologic_history->menstrual_cycle));
+                $obstetric_and_gynecologic_menstrual_duration=(!empty($obstetric_and_gynecologic_history->menstrual_cycle_duration));
+                $obstetric_and_gynecologic_menstrual_padsperday=(!empty($obstetric_and_gynecologic_history->menstrual_cycle_padsperday));
+                $obstetric_and_gynecologic_menstrual_medication=(!empty($obstetric_and_gynecologic_history->menstrual_cycle_medication));
+                $obstetric_and_gynecologic_constraceptives=(!empty(implode(",",$contraceptives_arr)));
+                $obstetric_and_gynecologic_parity_g=(!empty($obstetric_and_gynecologic_history->parity_g));
+                $obstetric_and_gynecologic_parity_p = (!empty($obstetric_and_gynecologic_history->parity_p));
+                $obstetric_and_gynecologic_parity_ft=(!empty($obstetric_and_gynecologic_history->parity_ft));
+                $obstetric_and_gynecologic_parity_pt=(!empty($obstetric_and_gynecologic_history->parity_pt));
+                $obstetric_and_gynecologic_parity_a=(!empty($obstetric_and_gynecologic_history->parity_a));
+                $obstetric_and_gynecologic_parity_l=(!empty($obstetric_and_gynecologic_history->parity_l));
+                $obstetric_and_gynecologic_parity_lnmp=(!empty($obstetric_and_gynecologic_history->parity_lnmp));
+                $obstetric_and_gynecologic_parity_edc=(!empty($obstetric_and_gynecologic_history->parity_edc));
+                $obstetric_and_gynecologic_aog_lnmp=(!empty($obstetric_and_gynecologic_history->aog_lnmp));
+                $obstetric_and_gynecologic_aog_eutz=(!empty($obstetric_and_gynecologic_history->aog_eutz));
+                $obstetric_and_gynecologic_prenatal_history=(!empty($obstetric_and_gynecologic_history->prenatal_history));
+                $obstetric_and_gynecologic_validation_checker=($obstetric_and_gynecologic_menarche_null_checker || $obstetric_and_gynecologic_menopausal_null_checker || $obstetric_and_gynecologic_menstrual_cycle
+                || $obstetric_and_gynecologic_menstrual_duration || $obstetric_and_gynecologic_menstrual_padsperday || $obstetric_and_gynecologic_menstrual_medication || $obstetric_and_gynecologic_constraceptives
+                || $obstetric_and_gynecologic_parity_g || $obstetric_and_gynecologic_parity_p || $obstetric_and_gynecologic_parity_ft || $obstetric_and_gynecologic_parity_pt || $obstetric_and_gynecologic_parity_a
+                || $obstetric_and_gynecologic_parity_l || $obstetric_and_gynecologic_parity_lnmp || $obstetric_and_gynecologic_parity_edc || $obstetric_and_gynecologic_aog_lnmp || $obstetric_and_gynecologic_aog_eutz
+                || $obstetric_and_gynecologic_prenatal_history);
             ?>
 
 <hr style="border-top: 1px solid #ccc;">
@@ -421,10 +433,7 @@ $user = Session::get('auth');
             </tr>
             @endif
             
-            @if (!empty($personal_and_social_history->smoking) || !empty($personal_and_social_history->smoking_quit_year) ||
-            !empty($personal_and_social_history->alcohol_drinking) || !empty($personal_and_social_history->alcohol_drinking_quit_year) ||
-            !empty($personal_and_social_history->Illicit_drugs) || !empty($personal_and_social_history->Illicit_drugs_quit_year) ||
-            !empty($personal_and_social_history->current_medications))
+            @if ($personal_history_validation_checker)
             <tr class="bg-gray">
                 <td colspan="4">Personal and Social History </td>
             </tr>
@@ -448,9 +457,9 @@ $user = Session::get('auth');
             @if($alcohol_dringking_quit_year_null_checker)<td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> @endif
             @if($alcohol_bottles_per_day_null_checker)<td colspan="4">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td> @endif
             </tr>
-              
+  
             <tr>
-            @if($illicit_drugs_null_checker)<td colspan="2">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs}}</span></td>@endif
+            @if($illicit_drugs_null_checker)<td colspan="2">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs}}</span></td>@endif
             @if($illicit_drugs_taken_null_checker)<td colspan="4">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td> @endif
             </tr>
             <tr>
@@ -458,12 +467,15 @@ $user = Session::get('auth');
             </tr>
      
             @if (!empty($personal_and_social_history->current_medications))
+            <tr class="bg-gray">
+                <td colspan="4">Current Medications </td>
+            </tr>
             <tr>
                 <td colspan="4">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
             </tr>
             @endif
             
-            @if (!empty(implode(implode(",",$pertinent_arr))))
+            @if (!empty(implode(implode(",",$pertinent_arr))) || !empty(implode(",",$file_path)))
             <tr class="bg-gray">
                 <td colspan="4">Pertinent Laboratory and Other Ancillary Procedures </td>
             </tr>
@@ -473,6 +485,30 @@ $user = Session::get('auth');
                 <td colspan="4">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
             </tr>
             @endif
+
+            @if (!empty(implode(",",$file_path)))
+            @if(isset($file_path))
+               <tr>
+                    <td colspan="6">
+                        @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif <br>
+                        @for($i = 0; $i < count($file_path); $i++)
+                            <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
+                            @if($i + 1 != count($file_path))
+                                ,&nbsp;
+                            @endif
+                        @endfor
+                    </td>
+                </tr>
+            @endif
+            @endif
+            {{--@if(isset($file_path))--}}
+                {{--<tr>--}}
+                    {{--<td colspan="4">--}}
+                        {{--File Attachment:--}}
+                        {{--<a href="{{ asset($file_path) }}" target="_blank" class="reason" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
+                    {{--</td>--}}
+                {{--</tr>--}}
+            {{--@endif--}}
             
             @if (!empty($nutritional_status->diet) || !empty($nutritional_status->specify_diets))
             <tr class="bg-gray">
@@ -511,11 +547,12 @@ $user = Session::get('auth');
             </tr>
             @endif
 
-          
+            @if ($glasgocoma_scale_validation_checker)
             <tr class="bg-gray">
                 <td colspan="4">Glasgow Coma Scale</td>
-            </tr> 
-            @if (!empty($glasgocoma_scale->pupil_size_chart))
+            </tr>
+            @endif 
+            @if ($glasgo_pupil_size_null_checker)
             <td colspan="4">
             <table class="table table-bordered glasgow-table">
             <thead>
@@ -543,23 +580,21 @@ $user = Session::get('auth');
             </table>
             </td>
             @endif
-            @if (!empty($glasgocoma_scale->pupil_size_chart) || !empty($glasgocoma_scale->motor_response))
+           
             <tr>
-            <td colspan="2"><b>Pupil Size Chart:</b><span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td><br><br>
-            <td colspan="4">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>
+            @if ($glasgo_pupil_size_null_checker)<td colspan="2"><b>Pupil Size Chart:</b><span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->pupil_size_chart}}</span></td><br><br>@endif
+            @if ($glasgo_motor_response_null_checker)<td colspan="4">Motor Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->motor_response}}</span></td>@endif
             </tr>
-            @endif
-            @if (!empty($glasgocoma_scale->verbal_response) || !empty($glasgocoma_scale->eye_response))
+           
             <tr>
-            <td colspan="2">Verbal Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->verbal_response}}</span></td>
-            <td colspan="4">Eye Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->eye_response}}</span></td>
+            @if ($glasgo_verbal_response_null_checker)<td colspan="2">Verbal Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->verbal_response}}</span></td>@endif
+            @if ($glasgo_eye_response_null_checker)<td colspan="4">Eye Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->eye_response}}</span></td>@endif
             </tr>
-            @endif
-            @if (!empty($glasgocoma_scale->gsc_score))
+            
             <tr>
-            <td colspan="4">GCS Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
+            @if ($glasgo_gsc_score_null_checker)<td colspan="4">GCS Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>@endif
             </tr>
-            @endif
+       
         </table>
     </div>
     </div>
@@ -569,127 +604,122 @@ $user = Session::get('auth');
     <div class="col-sm-6">
     <div class="table-responsive">
         <table class="table bg-warning">
-            @if (!empty(implode(',',$review_skin)) || !empty(implode(',',$review_head)) || !empty(implode(',',$review_eyes)) ||
-            !empty(implode(',',$review_ears)) || !empty(implode(',',$review_nose)) || !empty(implode(',',$review_mouth)) ||
-            !empty(implode(',',$review_neck)) || !empty(implode(',',$review_breast)) || !empty(implode(',',$review_respiratory)) ||
-            !empty(implode(',',$review_gastrointestinal)) || !empty(implode(',',$review_urinary)) || !empty(implode(',',$review_peripheral)) ||
-            !empty(implode(',',$review_musculoskeletal)) || !empty(implode(',',$review_neurologic)) || !empty(implode(',',$review_hematologic)) ||
-            !empty(implode(',',$review_endocrine)) || !empty(implode(',',$review_psychiatric)))
+            @if ($validation_checker_review_of_systems)
             <tr class="bg-gray">
                 <td colspan="4">Review of Systems </td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_skin)))
+            @if ($review_skin_null_checker)
             <tr>
             <td colspan="4">Skin:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_skin)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_head)))
+            @if ($review_head_null_checker)
             <tr>
             <td colspan="4">Head:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_head)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_eyes)))
+            @if ($review_eyes_null_checker)
             <tr>
             <td colspan="4">Eyes:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_eyes)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_ears)))
+            @if ($review_ears_null_checker)
             <tr>
             <td colspan="4">Ears:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_ears)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_nose)))
+            @if ($review_nose_null_checker)
             <tr>
             <td colspan="4">Nose/Sinuses:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_nose)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_mouth)))
+            @if ($review_mouth_null_checker)
             <tr>
             <td colspan="4">Mouth/Throat:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_mouth)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_neck)))
+            @if ($review_neck_null_checker)
             <tr>
             <td colspan="4">Neck:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neck)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_breast)))
+            @if ($review_breast_null_checker)
             <tr>
             <td colspan="4">Breast:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_breast)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_respiratory)))
+            @if ($review_respiratory_null_checker)
             <tr>
             <td colspan="4">Respiratory/Cardiac:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_respiratory)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_gastrointestinal)))
+            @if ($review_gastrointestinal_null_checker)
             <tr>
             <td colspan="4">Gastrointestinal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_gastrointestinal)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_urinary)))
+            @if ($review_urinary_null_checker)
             <tr>
             <td colspan="4">Urinary:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_urinary)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_peripheral)))
+            @if ($review_peripheral_null_checker)
             <tr>
             <td colspan="4">Peripheral Vascular:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_peripheral)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_musculoskeletal)))
+            @if ($review_musculoskeletal_null_checker)
             <tr>
             <td colspan="4">Musculoskeletal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_musculoskeletal)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_neurologic)))
+            @if ($review_neurologic_null_checker)
             <tr>
             <td colspan="4">Neurologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neurologic)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_hematologic)))
+            @if ($review_hematologic_null_checker)
             <tr>
             <td colspan="4">Hematologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_hematologic)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_endocrine)))
+            @if ($review_endocrine_null_checker)
             <tr>
             <td colspan="4">Endocrine:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_endocrine)}}</span></td>
             </tr>
             @endif
-            @if (!empty(implode(',',$review_psychiatric)))
+            @if ($review_psychiatric_null_checker)
             <tr>
             <td colspan="4">Psychiatric:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_psychiatric)}}</span></td>
             </tr>
             @endif
-
+        
+        @if($obstetric_and_gynecologic_validation_checker)
         <tr class="bg-gray">
                 <td colspan="4">Obstetric and Gynecologic History </td>
         </tr>
-        @if (!empty($obstetric_and_gynecologic_history->menarche) || !empty($obstetric_and_gynecologic_history->menopausal_age))
-        <tr>
-            <td colspan="2">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>
-            <td>Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>
-        </tr>
         @endif
-        @if (!empty($obstetric_and_gynecologic_history->menstrual_cycle) || !empty($obstetric_and_gynecologic_history->menstrual_cycle_duration))
+
         <tr>
-            <td colspan="2">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>
-            <td>Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>
+        @if($obstetric_and_gynecologic_menarche_null_checker)<td colspan="2">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menopausal_null_checker)<td>Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>@endif
         </tr>
-        @endif
-        @if (!empty($obstetric_and_gynecologic_history->menstrual_cycle_padsperday) || !empty($obstetric_and_gynecologic_history->menstrual_cycle_medication))
+        
         <tr>
-            <td colspan="2">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>
-            <td>Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>
+        @if($obstetric_and_gynecologic_menstrual_cycle)<td colspan="2">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_duration)<td>Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>@endif
         </tr>
-        @endif
-        @if (!empty(implode(",",$contraceptives_arr)))
+        
+        <tr>
+        @if($obstetric_and_gynecologic_menstrual_padsperday)<td colspan="2">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_medication)<td>Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>@endif
+        </tr>
+
+        @if ($obstetric_and_gynecologic_constraceptives)
         <tr>
             <td colspan="4">Contraceptives:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$contraceptives_arr)}}</span></td>
-            </tr>
+        </tr>
         @endif
         @if (!empty($obstetric_and_gynecologic_history->parity_g) || !empty($obstetric_and_gynecologic_history->parity_p) || 
         !empty($obstetric_and_gynecologic_history->parity_ft) || !empty($obstetric_and_gynecologic_history->parity_pt) ||
@@ -700,44 +730,41 @@ $user = Session::get('auth');
                 <td colspan="4"><i>Parity</i></td>
         </tr>
         @endif
-        @if (!empty($obstetric_and_gynecologic_history->parity_g) || !empty($obstetric_and_gynecologic_history->parity_p))
+
         <tr>
-            <td colspan="2">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td> 
-            <td>P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td> 
+        @if($obstetric_and_gynecologic_parity_g)<td colspan="2">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_p)<td>P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td>@endif
         </tr>
-        @endif
-        @if (!empty($obstetric_and_gynecologic_history->parity_ft) || !empty($obstetric_and_gynecologic_history->parity_pt))
+        
         <tr>
-            <td colspan="2">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td> 
-            <td>PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td> 
+        @if($obstetric_and_gynecologic_parity_ft)<td colspan="2">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_pt)<td>PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td>@endif
         </tr>
-        @endif
-        @if (!empty($obstetric_and_gynecologic_history->parity_a) || !empty($obstetric_and_gynecologic_history->parity_l))
+
         <tr>
-            <td colspan="2">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td> 
-            <td>L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td> 
+        @if($obstetric_and_gynecologic_parity_a)<td colspan="2">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_l)<td>L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td>@endif
         </tr>
-        @endif
-        @if (!empty($obstetric_and_gynecologic_history->parity_lnmp) || !empty($obstetric_and_gynecologic_history->parity_edc))
+        
         <tr>
-            <td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td> 
-            <td>EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> 
+        @if($obstetric_and_gynecologic_parity_lnmp)<td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_edc)<td>EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> @endif
         </tr>
-        @endif
-        @if (!empty($obstetric_and_gynecologic_history->aog_lnmp) || !empty($obstetric_and_gynecologic_history->aog_eutz))
+
+        @if($obstetric_and_gynecologic_aog_lnmp || $obstetric_and_gynecologic_aog_eutz)
         <tr>
             <td colspan="4"><i>AOG</i></td>
         </tr>
-        <tr>
-            <td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td> 
-            <td>UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td> 
-        </tr>
         @endif
-        @if (!empty($obstetric_and_gynecologic_history->prenatal_history))
         <tr>
-            <td colspan="4">Prenatal History:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->prenatal_history}}</span></td> 
+        @if($obstetric_and_gynecologic_aog_lnmp)<td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td>@endif
+        @if($obstetric_and_gynecologic_aog_eutz)<td>UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td>@endif
         </tr>
-        @endif
+       
+        <tr>
+        @if($obstetric_and_gynecologic_prenatal_history)<td colspan="4">Prenatal History:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->prenatal_history}}</span></td>@endif 
+        </tr>
+  
         </table>
     </div>
     </div>
