@@ -2591,15 +2591,14 @@ $facilities = \App\Facility::select('id','name')
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_normInfo" style="width: 100%;">
-                                    <small class="text-success"><i>Select reason for referral:</i></small><span class="text-red">*</span>
-                                    <div class="container-referral">
-                                        <select name="reason_referral" class="form-control-select select2 reason_referral" required>
-                                            <option value="">Select reason for referral</option>
-                                            <option value="-1">Other reason for referral</option>
-                                            @foreach($reason_for_referral as $reason_referral)
+                                <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span><br>
+                                    <select name="reason_referral" class="form-control-select select2 reason_referral" required="">
+                                        <option value="">Select reason for referral</option>
+                                        <option value="-1">Other reason for referral</option>
+                                        @foreach($reason_for_referral as $reason_referral)
                                             <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
-                                            @endforeach
-                                        </select><br><br>
+                                        @endforeach
+                                    </select><br><br>
                                         <div id="other_reason_referral"></div>
                                     </div>
                                 </div>                          

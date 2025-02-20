@@ -280,7 +280,47 @@ $user = Session::get('auth');
                 $review_neurologic = explodeToArray($review_of_system->neurologic);
                 $review_hematologic = explodeToArray($review_of_system->hematologic);
                 $review_endocrine = explodeToArray($review_of_system->endocrine);
-                $review_psychiatric = explodeToArray($review_of_system->psychiatric)
+                $review_psychiatric = explodeToArray($review_of_system->psychiatric);
+
+                 // PAST MEDICAL HISTORY - NULL CHECKER VALIDATOR
+                $commorbidities_null_checker = (!empty($past_medical_history->commordities));
+                $allergies_null_checker = (!empty($past_medical_history->allergies));
+                $heredofamilial_null_checker = (!empty($past_medical_history->heredofamilial_diseases));
+                $validation_checker_past_medical_history = ($commorbidities_null_checker || $allergies_null_checker || $heredofamilial_null_checker);
+                // REVIEW OF SYSTEMS - NULL CHECKER VALIDATOR
+                $review_skin_null_checker = (!empty($review_of_system->skin));
+                $review_head_null_checker = (!empty($review_of_system->head));
+                $review_eyes_null_checker = (!empty($review_of_system->eyes));
+                $review_ears_null_checker = (!empty($review_of_system->ears));
+                $review_nose_null_checker = (!empty($review_of_system->nose_or_sinuses));
+                $review_mouth_null_checker = (!empty($review_of_system->mouth_or_throat));
+                $review_neck_null_checker = (!empty($review_of_system->neck));
+                $review_breast_null_checker = (!empty($review_of_system->breast));
+                $review_respiratory_null_checker = (!empty($review_of_system->respiratory_or_cardiac));
+                $review_gastrointestinal_null_checker = (!empty($review_of_system->gastrointestinal));
+                $review_urinary_null_checker = (!empty($review_of_system->urinary));
+                $review_peripheral_null_checker = (!empty($review_of_system->peripheral_vascular));
+                $review_musculoskeletal_null_checker = (!empty($review_of_system->musculoskeletal));
+                $review_neurologic_null_checker = (!empty($review_of_system->neurologic));
+                $review_hematologic_null_checker = (!empty($review_of_system->hematologic));
+                $review_endocrine_null_checker = (!empty($review_of_system->endocrine));
+                $review_psychiatric_null_checker = (!empty($review_of_system->psychiatric));
+                $validation_checker_review_of_systems = ($review_skin_null_checker || $review_head_null_checker || $review_eyes_null_checker || $review_ears_null_checker
+                || $review_nose_null_checker || $review_mouth_null_checker || $review_neck_null_checker || $review_breast_null_checker || $review_respiratory_null_checker
+                || $review_gastrointestinal_null_checker || $review_urinary_null_checker || $review_peripheral_null_checker || $review_musculoskeletal_null_checker
+                || $review_neurologic_null_checker || $review_hematologic_null_checker || $review_endocrine_null_checker || $review_psychiatric_null_checker);
+                // PERSONAL AND SOCIAL HISTORY
+                $smoking_null_checker = (!empty($personal_and_social_history->smoking));
+                $smoking_quit_year_null_checker =(!empty($personal_and_social_history->smoking_quit_year));
+                $smoking_sticks_per_day_null_checker=(!empty($personal_and_social_history->smoking_sticks_per_day));
+                $smoking_remarks_null_checker = (!empty($personal_and_social_history->smoking_remarks));
+                $alcohol_dringking_null_checker =(!empty($personal_and_social_history->alcohol_drinking));
+                $alcohol_liquor_type_null_checker =(!empty($personal_and_social_history->alcohol_liquor_type));
+                $alcohol_dringking_quit_year_null_checker =(!empty($personal_and_social_history->alcohol_drinking_quit_year));
+                $alcohol_bottles_per_day_null_checker=(!empty($personal_and_social_history->alcohol_bottles_per_day));
+                $illicit_drugs_null_checker=(!empty($personal_and_social_history->Illicit_drugs));
+                $illicit_drugs_taken_null_checker =(!empty($personal_and_social_history->illicit_drugs_taken));
+                $illicit_drugs_quit_year_null_checker =(!empty($personal_and_social_history->Illicit_drugs_quit_year));
             ?>
 
 <hr style="border-top: 1px solid #ccc;">
@@ -289,28 +329,91 @@ $user = Session::get('auth');
     <div class="table-responsive">
         <table class="table bg-warning">
            
-            @if (!empty(implode(",",$commordities_arr)) || 
-            !empty(implode(",",$allergies_arr)) || 
-            !empty(implode(",",$heredofamilial_arr)) ||
-            !empty($past_medical_history->previous_hospitalization))
+            @if ($validation_checker_past_medical_history)
             <tr class="bg-gray">
                 <td colspan="4">Past Medical History</td>
             </tr>
             @endif
-            @if (!empty(implode(",",$commordities_arr)))
-            <tr> 
-                <td colspan="4">Commorbidities: <span class="woman_commorbidities_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$commordities_arr) }}</span></td>       
-            </tr>
-            @endif
-            @if (!empty(implode(",",$allergies_arr)))
-            <tr>    
-                <td colspan="4">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$allergies_arr) }}</span></td>
-            </tr>
-            @endif
-            @if (!empty(implode(",",$heredofamilial_arr)))
+            @if ($commorbidities_null_checker)
+            @php $commorbidities_data = []; @endphp
+
+            @foreach ($commordities_arr as $commorbidities)
+                @if($commorbidities === 'Hypertension')
+                    @php $commorbidities_data[] = "Hypertension-" . $past_medical_history->commordities_hyper_year; @endphp
+                @endif
+                @if($commorbidities === 'Diabetes')
+                    @php $commorbidities_data[] = "Diabetes-" . $past_medical_history->commordities_diabetes_year; @endphp
+                @endif
+                @if($commorbidities === 'Asthma')
+                    @php $commorbidities_data[] = "Asthma-" . $past_medical_history->commordities_asthma_year; @endphp
+                @endif
+                @if($commorbidities === 'COPD')
+                    @php $commorbidities_data[] = "COPD"; @endphp
+                @endif
+                @if($commorbidities === 'Dyslipidemia')
+                    @php $commorbidities_data[] = "Dyslipidemia"; @endphp
+                @endif
+                @if($commorbidities === 'Others')
+                    @php $commorbidities_data[] = "Others-" . $past_medical_history->commordities_others; @endphp
+                @endif
+                @if($commorbidities === 'Cancer')
+                    @php $commorbidities_data[] = "Cancer-" . $past_medical_history->commordities_cancer; @endphp
+                @endif
+            
+            @endforeach
+
+            {{-- Display the formatted data --}}
             <tr>
-                <td colspan="4">Heredofamilial: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$heredofamilial_arr) }}</span></td>
+                <td colspan="4">Comorbidities: 
+                    <span class="woman_commorbidities_treatment form-details"></span> - 
+                    <span class="woman_before_given_time form-details">{{ implode(", ", $commorbidities_data) }}</span>
+                </td>
             </tr>
+            @endif
+            @if ($allergies_null_checker)
+            @php $allergies_data = []; @endphp
+                    @foreach ($allergies_arr as $allergies)
+                    @if($allergies === 'Food')  @php $allergies_data[] = "Food-" . $past_medical_history->allergy_food_cause; @endphp@endif
+                    @if($allergies === 'Drugs')  @php $allergies_data[] = "Drugs-" . $past_medical_history->allergy_drugs_cause; @endphp@endif
+                    @if($allergies === 'Others')  @php $allergies_data[] = "Others-" . $past_medical_history->allergy_others_cause; @endphp@endif
+                    @endforeach        
+                <tr>    
+                    <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $allergies_data) }}</span></td>
+                </tr>
+            @endif
+            @if ($heredofamilial_null_checker)
+            @php $heredofamilial_data = []; @endphp
+
+                @foreach ($heredofamilial_arr as $heredofamilial)
+                    @if($heredofamilial === 'Hypertension')
+                        @php $heredofamilial_data[] = "Hypertension-" . $past_medical_history->heredo_hyper_side; @endphp
+                    @endif
+                    @if($heredofamilial === 'Diabetes')
+                        @php $heredofamilial_data[] = "Diabetes-" . $past_medical_history->heredo_diab_side; @endphp
+                    @endif
+                    @if($heredofamilial === 'Asthma')
+                        @php $heredofamilial_data[] = "Asthma-" . $past_medical_history->heredo_asthma_side; @endphp
+                    @endif
+                    @if($heredofamilial === 'Cancer')
+                        @php $heredofamilial_data[] = "Cancer-" . $past_medical_history->heredo_cancer_side; @endphp
+                    @endif
+                    @if($heredofamilial === 'Kidney Disease')
+                        @php $heredofamilial_data[] = "Kidney Disease-" . $past_medical_history->heredo_kidney_side; @endphp
+                    @endif
+                    @if($heredofamilial === 'Thyroid Disease')
+                        @php $heredofamilial_data[] = "Thyroid Disease-" . $past_medical_history->heredo_thyroid_side; @endphp
+                    @endif
+                    @if($heredofamilial === 'Others')
+                        @php $heredofamilial_data[] = "Others-" . $past_medical_history->heredo_others; @endphp
+                    @endif
+                @endforeach
+
+                {{-- Display the formatted data --}}
+                <tr>
+                    <td colspan="4">Heredofamilial: 
+                        <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(", ", $heredofamilial_data) }}</span>
+                    </td>
+                </tr>
             @endif
             @if (!empty($past_medical_history->previous_hospitalization))
             <tr>
@@ -326,36 +429,34 @@ $user = Session::get('auth');
                 <td colspan="4">Personal and Social History </td>
             </tr>
             @endif
-            @if (!empty($personal_and_social_history->smoking) || !empty($personal_and_social_history->smoking_quit_year))
+
             <tr>
-                <td colspan="2">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> 
-                <td colspan="4">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_sticks_per_day}}</span></td> 
+            @if($smoking_null_checker) <td colspan="2">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> @endif
+            @if($smoking_sticks_per_day_null_checker)<td colspan="4">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_sticks_per_day}}</span></td> @endif
             </tr>
             
             <tr>
-                <td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td> 
-                <td colspan="4">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td> 
+            @if($smoking_quit_year_null_checker)<td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td> @endif
+            @if($smoking_remarks_null_checker)<td colspan="4">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td> @endif
             </tr>
-            @endif
-            @if (!empty($personal_and_social_history->alcohol_drinking) || !empty($personal_and_social_history->alcohol_drinking_quit_year))
+            
             <tr>
-                <td colspan="2">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td> 
-                <td colspan="4">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td> 
-            </tr>
-            <tr>
-                <td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> 
-                <td colspan="4">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td> 
-            </tr>
-            @endif
-            @if (!empty($personal_and_social_history->Illicit_drugs) || !empty($personal_and_social_history->Illicit_drugs_quit_year))
-            <tr>
-                <td colspan="2">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs}}</span></td> 
-                <td colspan="4">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td> 
+            @if($alcohol_dringking_null_checker)<td colspan="2">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td>@endif
+            @if($alcohol_liquor_type_null_checker)<td colspan="4">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td>@endif
             </tr>
             <tr>
-                <td colspan="4">Quit year:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs_quit_year}}</span></td> 
+            @if($alcohol_dringking_quit_year_null_checker)<td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> @endif
+            @if($alcohol_bottles_per_day_null_checker)<td colspan="4">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td> @endif
             </tr>
-            @endif
+              
+            <tr>
+            @if($illicit_drugs_null_checker)<td colspan="2">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs}}</span></td>@endif
+            @if($illicit_drugs_taken_null_checker)<td colspan="4">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td> @endif
+            </tr>
+            <tr>
+            @if($illicit_drugs_quit_year_null_checker)<td colspan="4">Quit year:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->Illicit_drugs_quit_year}}</span></td> @endif
+            </tr>
+     
             @if (!empty($personal_and_social_history->current_medications))
             <tr>
                 <td colspan="4">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
@@ -729,42 +830,3 @@ $user = Session::get('auth');
 <div class="clearfix"></div>
 
 
-<script>
-    function getParameterByName(name) {
-        url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-    if(getParameterByName('referredCode')) {
-        $("#telemedicine").addClass('hide');
-        $(".edit_form_revised_btn").addClass('hide');
-    }
-
-    function openTelemedicine(tracking_id, code, action_md, referring_md) {
-        var url = "<?php echo asset('api/video/call'); ?>";
-        var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "tracking_id" : tracking_id,
-            "code" : code,
-            "action_md" : action_md,
-            "referring_md" : referring_md,
-            "trigger_by" : "{{ $user->id }}",
-            "form_type" : "pregnant"
-        };
-        $.post(url,json,function(){
-
-        });
-        var windowName = 'NewWindow'; // Name of the new window
-        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=pregnant&referring_md=yes", windowName, windowFeatures);
-        if (newWindow && newWindow.outerWidth) {
-            // If the window was successfully opened, attempt to maximize it
-            newWindow.moveTo(0, 0);
-            newWindow.resizeTo(screen.availWidth, screen.availHeight);
-        }
-    }
-</script>

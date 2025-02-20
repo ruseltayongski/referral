@@ -2073,26 +2073,30 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red"><b>*</b></span>
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
+                                        <b>REASON FOR REFERRAL</b>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <small class="text-success"><i>Select reason for referral:</i></small><span class="text-red"><b>*</b></span>
+                                    <i>Select reason for referral:</i>
                                     <div class="container-referral">
-                                        <select name="reason_referral" id="reason_referral" class="form-control-select select2 reason_referral" required="">
+                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" required>
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
-                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                             @endforeach
                                         </select><br><br>
-                                        <div id="other_reason_referral_pregnant"></div>
-                                    </div><br></br>
+                                        <div id="pregnant_other_reason_referral_div" style="display:none;">
+                                            <span>Other Reason for Referral:</span> <br/>
+                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
                         <hr>
                         <div class="form-footer pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>
@@ -3025,18 +3029,17 @@
     });
 
     $('.reason_referral').on('change', function() {
-        var value = $(this).val();
-        if (value == '-1') {
-            $("#other_reason_referral_pregnant").html(loading);
-            setTimeout(function() {
-                $("#other_reason_referral_pregnant").html('<span>Other Reason for Referral:</span>\n' +
-                    '                                <br />\n' +
-                    '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            }, 500);
-            $("#other_reason_referral_pregnant").show();
-        } else {
-            clearOtherReasonReferral();
-        }
-    });
+            var value = $(this).val();
+            
+            if (value == -1) {
+                // Show the "Other Reason for Referral" textarea if "-1" is selected
+                console.log("VALUE: ", value);
+                $('#pregnant_other_reason_referral_div').show();
+            } else {
+                // Hide the "Other Reason for Referral" textarea if another option is selected
+                console.log("VALUE: ", value);  
+                $('#pregnant_other_reason_referral_div').hide();
+            }
+        });
 
 </script>
