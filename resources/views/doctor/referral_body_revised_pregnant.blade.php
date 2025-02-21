@@ -153,7 +153,7 @@ $user = Session::get('auth');
             @if(isset($form['pregnant']->other_diagnoses))
                 <tr>
                     <td colspan="4">
-                        Other Diagnoses:
+                        Other Diagnosis:
                         <br />
                         <span class="reason form-details">{{ $form['pregnant']->other_diagnoses }}</span>
                     </td>
@@ -703,12 +703,12 @@ $user = Session::get('auth');
 
         <tr>
         @if($obstetric_and_gynecologic_menarche_null_checker)<td colspan="2">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>@endif
-        @if($obstetric_and_gynecologic_menopausal_null_checker)<td>Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menopausal_null_checker)<td colspan="4">Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>@endif
         </tr>
         
         <tr>
         @if($obstetric_and_gynecologic_menstrual_cycle)<td colspan="2">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>@endif
-        @if($obstetric_and_gynecologic_menstrual_duration)<td>Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_duration)<td colspan="4">Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>@endif
         </tr>
         
         <tr>
@@ -769,6 +769,7 @@ $user = Session::get('auth');
     </div>
     </div>
 </div>
+@if($obstetric_and_gynecologic_validation_checker)
 <div class="row">
     <div class="col-sm-12">
         <div class="table-responsive">
@@ -825,6 +826,7 @@ $user = Session::get('auth');
         </div>
     </div>
 </div>
+@endif
 
 
 

@@ -152,7 +152,6 @@ $facilities = \App\Facility::select('id','name')
         visibility: hidden;
     }
 
-
     #prenatal_table {
         display: block;
         white-space: nowrap;
@@ -1096,6 +1095,7 @@ $facilities = \App\Facility::select('id','name')
 
                                     <small class="text-success"><b>PRENATAL HISTORY</b></small><br>
                                     <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
+                                    
                                     <div class="table-responsive" style="overflow-x: auto;">
                                         <table class="table table-bordered" id="prenatal_table">
                                             <thead>
@@ -1126,7 +1126,7 @@ $facilities = \App\Facility::select('id','name')
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" id="gestation_pregnant_info" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
+                                                        <input class="form-control" id="gestation_normal_info" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
                                                     </td>
                                                     <td>
                                                         <input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{ $preg['pregnancy_outcome'] }}">

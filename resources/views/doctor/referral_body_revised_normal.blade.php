@@ -156,7 +156,7 @@
     @if(isset($form->other_diagnoses))
         <tr>
             <td colspan="6">
-                Other Diagnoses:
+                Other Diagnosis:
                 <br />
                 <span class="reason form-details">{{ $form->other_diagnoses }}</span>
             </td>
@@ -514,8 +514,7 @@
         $psh->smoking ?? null, 
         $psh->alcohol_drinking ?? null,
         $psh->illicit_drugs ?? null, 
-        $psh->illicit_drugs_taken ?? null, 
-        $psh->current_medications ?? null
+        $psh->illicit_drugs_taken ?? null
     ]);
     @endphp
 
@@ -571,9 +570,10 @@
     @endif
     @endif
 
-    
-
     @if (!empty($personal_and_social_history->current_medications))
+    <tr class="bg-gray">
+        <td colspan="6">Current Medications </td>
+    </tr>
     <tr>
         <td colspan="6">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
     </tr>
@@ -844,7 +844,7 @@
 </table>
 <hr/>
 
-@if($form->patient_sex === "Female")
+@if($form->patient_sex === "Female" && !empty($filteredHistory))
 <div class="row">
     <div class="col-sm-12">
         <div class="table-responsive">

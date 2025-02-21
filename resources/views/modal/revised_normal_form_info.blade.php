@@ -6,7 +6,8 @@ $facilities = \App\Facility::select('id','name')
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
-
+$myfacility = \App\Facility::find($user->facility_id);
+$facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacility->id);
 ?>
 
 <style>
@@ -121,7 +122,6 @@ $facilities = \App\Facility::select('id','name')
         border: 0;
         transition: all .2s ease;
     } */
-
 
     .container-referral {
         border: 1px solid lightgrey;
@@ -322,22 +322,37 @@ $facilities = \App\Facility::select('id','name')
                     <input type="hidden" name="form_type" value="normal">
                     <input type="hidden" name="username" value="{{ $username }}">
                     
-                    <div class="row" style="margin:5px">
-                            <div class="col-md-4">
-                                <small >Name of Referring Facility</small><br>
-                                &nbsp;<span>{{ $form->referring_name }}</span>
+                            <div class="row" style="margin: 5px;">
+                                <div class="col-md-4">
+                                    <small class="text-success">Name of Referring Facility</small><br>
+                                    &nbsp;<span>{{ $myfacility->name }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-success">Address</small><br>
+                                    &nbsp;<span>{{ $facility_address['address'] }}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-success">Name of referring MD/HCW</small><br>
+                                    &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <small >Address</small><br>
-                                &nbsp;<span> {{ $form->referring_address }}</span>
+                            <br>
+                            <div class="row" style="margin: 5px;">
+                                <div class="col-md-4">
+                                    <small class="text-success">Date/Time Referred (ReCo)</small><br>
+                                    <span>{{ date('l F d, Y h:i A') }}</span>
+                                </div>
+                         
+                                <div class="col-md-4">
+                                    <small class="text-success">Name of Patient</small><br>
+                                    <span class="patient_name">{{$form->patient_name}}</span>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="text-success">Address</small><br>
+                                    <span class="patient_address">{{$form->patient_address}}</span>
+                                </div>
                             </div>
-                            <div class="col-md-4">
-                                <small >Name of referring MD/HCW</small><br>
-                                &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
-                            </div>
-                    </div>
-
-                    <br>
+                        <br>
                 <div class="row" style="margin: 5px;">
                     <div class="col-md-4">
                         <small ><small class="text-success">REFERRED TO: </small></small> &nbsp;<span class="text-red">*</span><br>
