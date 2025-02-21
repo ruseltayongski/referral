@@ -159,7 +159,7 @@ $user = Session::get('auth');
                             <div class="referral-stamp">
                                 <!-- {{ $row->form_type }} -->
                                   @if ($row->form_type === "version2")
-                                <img class="stamp-img" src="{{ asset('resources/img/new_form_stamp.png') }}" alt="PNG Image">
+                                <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
                                   @endif
                             </div>
 
