@@ -242,6 +242,7 @@ $user = Session::get('auth');
                 $heredofamilial_arr = explodeToArray($past_medical_history->heredofamilial_diseases);
                 $contraceptives_arr = explodeToArray($obstetric_and_gynecologic_history->contraceptive_history);
                 $pertinent_arr = explodeToArray($pertinent_laboratory->pertinent_laboratory_and_procedures);
+                $pertinent_others = $pertinent_laboratory->lab_procedure_other;
                 $review_skin = explodeToArray($review_of_system->skin);
                 $review_head = explodeToArray($review_of_system->head);
                 $review_eyes = explodeToArray($review_of_system->eyes);
@@ -480,10 +481,12 @@ $user = Session::get('auth');
                 <td colspan="4">Pertinent Laboratory and Other Ancillary Procedures </td>
             </tr>
             @endif
+           
             @if (!empty(implode(",",$pertinent_arr)))
             <tr>   
-                <td colspan="4">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
+                <td colspan="4">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td>
             </tr>
+            @if(!empty($pertinent_others))<tr><td colspan="4">Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pertinent_others}}</span></td></tr>@endif
             @endif
 
             @if (!empty(implode(",",$file_path)))
