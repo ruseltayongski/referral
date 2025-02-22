@@ -382,7 +382,6 @@
                                                     <span>Select All</span>
                                                 </div>
                                                 <div class="col-md-4">
-
                                                     <input class="form-check-input" id="comor_none_cbox" name="comor_none_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="comor_none_cbox" value="Yes">
                                                     <span> None</span>
                                                 </div>
@@ -2301,11 +2300,11 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-lg-12">
                                     <div class="container-referral2">
                                         <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                            <b>REASON FOR REFERRAL</b>
+                                            <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                             <span class="pull-right"><i class="fa fa-plus"></i></span>
                                         </button><br><br>
                                     </div>
@@ -2323,7 +2322,34 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div> -->
+
+                            <div class="row">
+                            <div class="col-lg-12">
+                                <div class="container-referral2">
+                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
+                                        <b>REASON FOR REFERRAL</b>
+                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                    </button><br><br>
+                                </div>
+                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
+                                    <i>Select reason for referral:</i>
+                                    <div class="container-referral">
+                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" required>
+                                            <option value="">Select reason for referral</option>
+                                            <option value="-1">Other reason for referral</option>
+                                            @foreach($reason_for_referral as $reason_referral)
+                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            @endforeach
+                                        </select><br><br>
+                                        <div id="other_reason_referral_div" style="display:none;">
+                                            <span>Other Reason for Referral:</span> <br/>
+                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
 
                             <hr />
                             <div class="form-footer pull-right">
@@ -2377,7 +2403,25 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
+<script>
+    $(document).ready(function () {
+        // Open the collapse when the form loads
+        $("#collapse_illness_history_normal").collapse('show');
+        $("#collapse_diagnosis_normal").collapse('show');
+        $("#collapse_reason_referral").collapse('show');
 
+        // Ensure button toggle works properly
+        $(".btn[data-target='#collapse_illness_history_normal']").on("click", function () {
+            $("#collapse_illness_history_normal").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_diagnosis_normal']").on("click", function () {
+            $("#collapse_diagnosis_normal").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_reason_referral']").on("click", function () {
+            $("#collapse_reason_referral").collapse("toggle");
+        });
+    });
+</script>
 
 <script>
     // $('#referred_to_select').select2({
@@ -3273,19 +3317,18 @@
     /**************************************************************************/
    
     $('.reason_referral').on('change', function() {
-        var value = $(this).val();
-        if (value == '-1') {
-            $("#other_reason_referral_normal").html(loading);
-            setTimeout(function() {
-                $("#other_reason_referral_normal").html('<span>Other Reason for Referral:</span>\n' +
-                    '                                <br />\n' +
-                    '                                <textarea class="form-control" name="other_reason_referral_normal" style="resize: none;width: 100%;" rows="7" required></textarea>')
-            }, 500);
-            $("#other_reason_referral_normal").show();
-        } else {
-            clearOtherReasonReferral();
-        }
-    });
+            var value = $(this).val();
+            
+            if (value == -1) {
+                // Show the "Other Reason for Referral" textarea if "-1" is selected
+                console.log("VALUE: ", value);
+                $('#other_reason_referral_div').show();
+            } else {
+                // Hide the "Other Reason for Referral" textarea if another option is selected
+                console.log("VALUE: ", value);  
+                $('#other_reason_referral_div').hide();
+            }
+        });
     
     
 

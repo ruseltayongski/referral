@@ -124,6 +124,7 @@ class NewFormCtrl extends Controller
         ->join('nutritional_status', 'patients.id', '=', 'nutritional_status.patient_id')
         ->join('glasgow_coma_scale', 'patients.id', '=', 'glasgow_coma_scale.patient_id')
         ->join('review_of_system', 'patients.id', '=', 'review_of_system.patient_id')
+        ->join('obstetric_and_gynecologic_history', 'patients.id', '=', 'obstetric_and_gynecologic_history.patient_id')
         ->join('latest_vital_signs', 'patients.id', '=', 'latest_vital_signs.patient_id')
         ->join('personal_and_social_history', 'patients.id', '=', 'personal_and_social_history.patient_id')
         ->join('pertinent_laboratory', 'patients.id', '=', 'pertinent_laboratory.patient_id')
@@ -136,6 +137,7 @@ class NewFormCtrl extends Controller
             'nutritional_status.*',
             'glasgow_coma_scale.*',
             'review_of_system.*',
+            'obstetric_and_gynecologic_history.*',
             'latest_vital_signs.*',
             'personal_and_social_history.*',
             'pertinent_laboratory.*',
@@ -2539,18 +2541,10 @@ class NewFormCtrl extends Controller
         $province = Province::select('description')->where('id', $patients_name->province)->first();
         $muncity = Muncity::select('description')->where('id', $patients_name->muncity)->first();
         $patient_address = $patients_name->region.', '.$province->description.', '.$muncity->description.', '.$barangay->description;
+        
         // $baby_data = Baby::select('baby_id','birth_date','weight','gestational_age')->where('mother_id', $patient_id)->first();
         // $baby_name = self::fetchPatientsData($baby_data->baby_id);
         // $baby_fullname = $baby_name->fname.', '.$baby_name->mname.', '.$baby_name->lname;
-
-        // dd($woman_name);
-
-        if ($form_type === 'pregnant'){
-            $data = $this->fetchDataFromDB($patient_id,$track_id);
-         }else if ($form_type === 'normal'){
-            $data = $this->fetchDataNormal($patient_id,$track_id);
-         }
-
 
 
         $comor_string = $data->commordities;
@@ -2575,10 +2569,9 @@ class NewFormCtrl extends Controller
         $pdf->setTopMargin(10);
         $pdf->setTitle($woman_name .': '.$form_type.' '.$patient_id.'-'.$track_id);
         $pdf->addPage();
-
-  
-        
+   
         if ($form_type === 'normal'){ 
+        $data = $this->fetchDataNormal($patient_id,$track_id);
         self::printNormal($pdf,
         $x, 
         $patient_address, 
@@ -2588,10 +2581,10 @@ class NewFormCtrl extends Controller
         $referred_to_normal, $department_normal, 
         $patients_form, 
         $patients_name, 
-        $data, 
-        $form_type);
+        $data);
 
-        }else if ($form_type === 'pregnant'){ 
+        }else if ($form_type === 'pregnant'){
+        $data = $this->fetchDataFromDB($patient_id,$track_id); 
          self::printPregnant(
             $x,
             $data,
@@ -2602,338 +2595,51 @@ class NewFormCtrl extends Controller
             $tracking_data,
             $form_type,
             $patients_name,
-            $comor_dataArray,
-            $allergies_dataArray,
-            $heredo_dataArray,
             $patient_address,
             $woman_name,
             $referring_md_name
          );   
-           
-        }
-       
-       
-       
-       
-        if (!empty($data->smoking) || !empty($data->smoking_sticks_per_day) || !empty($data->smoking_quit_year) || !empty($data->smoking_remarks)
-        || !empty($data->alcohol_drinking) || !empty($data->alcohol_liquor_type) || !empty($data->alcohol_bottles_per_day) || !empty($data->alcohol_drinking_quit_year)
-        || !empty($data->illicit_drugs) || !empty($data->illicit_drugs_taken) || !empty($data->illicit_drugs_quit_year)){
-            
-            $this->titleHeader($pdf, "PERSONAL AND SOCIAL HISTORY");
-            if (!empty($data->smoking)){
-                if ($data->smoking == "Yes") {
-                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
-                   if(!empty($data->smoking_sticks_per_day)){$pdf->MultiCell(0, 7, "Sticks per Day:" . self::green($pdf, $data->smoking_sticks_per_day, 'Sticks per Day'), 1, 'L');}
-                } else if ($data->smoking == "No") {
-                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
-                } else if ($data->smoking == "Quit") {
-                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
-                   if (!empty($data->smoking_quit_year)){$pdf->MultiCell(0, 7, "Smoking Quit Year:" . self::green($pdf, $data->smoking_quit_year, 'Smoking Quit Year'), 1, 'L');}
-                }
-            }
-            if (!empty($data->smoking_remarks)){
-                $pdf->MultiCell(0, 7, "Smoking Remarks:" . self::green($pdf, $data->smoking_remarks, 'Smoking Remarks'), 1, 'L');
-            }
-            if (!empty($data->alcohol_drinking)){
-                if ($data->alcohol_drinking == "Yes") {
-                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
-                    if(!empty($data->alcohol_liquor_type)){$pdf->MultiCell(0, 7, "Liquor Type:" . self::green($pdf, $data->alcohol_liquor_type, 'Liquor Type'), 1, 'L');}
-                    if(!empty($data->alcohol_bottles_per_day)){$pdf->MultiCell(0, 7, "Bottles per day:" . self::green($pdf, $data->alcohol_bottles_per_day, 'Bottles per day'), 1, 'L');}
-                } else if ($data->alcohol_drinking == "No") {
-                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
-                } else if ($data->alcohol_drinking == "Quit") {
-                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
-                    if(!empty($data->alcohol_drinking_quit_year)){$pdf->MultiCell(0, 7, "Drinking quit year:" . self::green($pdf, $data->alcohol_drinking_quit_year, 'Drinking quit year'), 1, 'L');}
-                }
-            }
-          
-            if(!empty($data->illicit_drugs)){
-                if ($data->illicit_drugs == "Yes") {
-                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
-                   if(!empty($data->illicit_drugs_taken)){$pdf->MultiCell(0, 7, "Drugs taken:" . self::green($pdf, $data->illicit_drugs_taken, 'Drugs taken'), 1, 'L');}
-                } else if ($data->illicit_drugs == "No") {
-                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
-                } else if ($data->illicit_drugs == "Quit") {
-                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
-                    if(!empty($data->illicit_drugs_quit_year)){$pdf->MultiCell(0, 7, "Drugs quit year:" . self::green($pdf, $data->illicit_drugs_quit_year, 'Drugs quit year'), 1, 'L');}
-                }
-            }  
-        }
-
-        if (!empty($data->current_medications)){
-            $this->titleHeader($pdf, "CURRENT MEDICATION");
-            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Current Medications: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->current_medications)), 1, 'L');
-        }
-
-        if (!empty($data->pertinent_laboratory_and_procedures)){
-            $this->titleHeader($pdf, "PERTINENT LABORATORY AND OTHER ANCILLARY PROCEDURES");
-            $pdf->MultiCell(0, 7, "Pertinent Laboratory:" . self::green($pdf, $data->pertinent_laboratory_and_procedures, 'Pertinent Laboratory'), 1, 'L');
-            if(!empty($data->lab_procedure_other)){$pdf->MultiCell(0, 7, "Other Procedures:" . self::green($pdf, $data->lab_procedure_other, 'Other Procedures'), 1, 'L');}
         }
         
-        
-        if (!empty($data->diet)){
-            $this->titleHeader($pdf, "NUTRITIONAL STATUS");
-            $pdf->MultiCell(0, 7, "Diet:" . self::green($pdf, $data->diet, 'Diet'), 1, 'L');
-            if(!empty($data->specify_diets)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Specific Diet: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->specify_diets)), 1, 'L');}
-        }
-        
-        
-        if (!empty($data->pulse_rate)|| !empty($data->temperature) || !empty($data->blood_pressure) || !empty($data->oxygen_saturation) || !empty($data->respiratory_rate)){
-            $this->titleHeader($pdf, "LATEST VITAL SIGNS");
-            if(!empty($data->temperature)){$pdf->MultiCell(0, 7, "Temperature:" . self::green($pdf, $data->temperature, 'Temperature'), 1, 'L');}
-            if(!empty($data->pulse_rate)){$pdf->MultiCell(0, 7, "Pulse Rate:" . self::green($pdf, $data->pulse_rate, 'Pulse Rate'), 1, 'L');}
-            if(!empty($data->respiratory_rate)){$pdf->MultiCell(0, 7, "Respiratory Rate:" . self::green($pdf, $data->respiratory_rate, 'Respiratory Rate'), 1, 'L');}
-            if(!empty($data->blood_pressure)){$pdf->MultiCell(0, 7, "Blood Pressure:" . self::green($pdf, $data->blood_pressure, 'Blood Pressure'), 1, 'L');}
-            if(!empty($data->oxygen_saturation)){$pdf->MultiCell(0, 7, "Oxgen Saturation:" . self::green($pdf, $data->oxygen_saturation, 'Oxygen Saturation'), 1, 'L');}
-        }
-
-        if (!empty($data->pupil_size_chart) || !empty($data->motor_response) || !empty($data->verbal_response) || !empty($data->eye_response) || !empty($data->gsc_score)) {
-            $this->titleHeader($pdf, "GLASGOW COMA SCALE");
-        
-            if (!empty($data->pupil_size_chart)) {
-                $pdf->MultiCell(0, 7, "Pupil Size Chart:" . self::green($pdf, $data->pupil_size_chart, 'Pupil Size Chart'), 1, 'L');
-            }
-            if (!empty($data->motor_response)) {
-                $pdf->MultiCell(0, 7, "Motor Response:" . self::green($pdf, $data->motor_response, 'Motor Response'), 1, 'L');
-            }
-            if (!empty($data->verbal_response)) {
-                $pdf->MultiCell(0, 7, "Verbal Response:" . self::green($pdf, $data->verbal_response, 'Verbal Response'), 1, 'L');
-            }
-            if (!empty($data->eye_response)) {
-                $pdf->MultiCell(0, 7, "Eye Response:" . self::green($pdf, $data->eye_response, 'Eye Response'), 1, 'L');
-            }
-            if (!empty($data->gsc_score)) {
-                $pdf->MultiCell(0, 7, "GSC Score:" . self::green($pdf, $data->gsc_score, 'GSC Score'), 1, 'L');
-            }
-        }
-        
-
-        if (!empty($data->skin) || !empty($data->head) || !empty($data->eyes) || !empty($data->ears) || !empty($data->nose_or_sinuses) || !empty($data->mouth_or_throat)
-        || !empty($data->neck) || !empty($data->breast) || !empty($data->respiratory_or_cardiac) || !empty($data->gastrointestinal) || !empty($data->urinary)
-        || !empty($data->peripheral_vascular) || !empty($data->musculoskeletal) || !empty($data->neurologic) || !empty($data->hematologic)
-        || !empty($data->endocrine) || !empty($data->psychiatric)){
-            $this->titleHeader($pdf, "REVIEW OF SYSTEMS");
-           if(!empty($data->skin)){$pdf->MultiCell(0, 7, "Skin:" . self::green($pdf, $this->explodeString($data->skin), 'Skin'), 1, 'L');}
-           if(!empty($data->head) ){$pdf->MultiCell(0, 7, "Head:" . self::green($pdf, $this->explodeString($data->head), 'Head'), 1, 'L');}
-           if(!empty($data->eyes)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Eyes: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->eyes)), 1, 'L');}
-           if(!empty($data->ears)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Ears: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->ears)), 1, 'L');}
-           if(!empty($data->nose_or_sinuses)){$pdf->MultiCell(0, 7, "Nose/Sinuses:" . self::green($pdf, $this->explodeString($data->nose_or_sinuses), 'Nose/Sinuses'), 1, 'L');}
-           if(!empty($data->mouth_or_throat)){$pdf->MultiCell(0, 7, "Mouth/Throat:" . self::green($pdf, $this->explodeString($data->mouth_or_throat), 'Mouth/Throat'), 1, 'L');}
-           if(!empty($data->neck)){$pdf->MultiCell(0, 7, "Neck:" . self::green($pdf, $this->explodeString($data->neck), 'Neck'), 1, 'L');}
-           if(!empty($data->breast)){$pdf->MultiCell(0, 7, "Breast:" . self::green($pdf, $data->breast, 'Breast'), 1, 'L');}
-           if(!empty($data->respiratory_or_cardiac)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Respiratory/Cardiac: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->respiratory_or_cardiac)), 1, 'L');}
-           if(!empty($data->gastrointestinal)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Gastrointestinal: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->gastrointestinal)), 1, 'L');}
-           if(!empty($data->urinary)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Urinary: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->urinary)), 1, 'L');}
-           if(!empty($data->peripheral_vascular)){$pdf->MultiCell(0, 7, "Peripheral Vascular:" . self::green($pdf, $this->explodeString($data->peripheral_vascular), 'Peripheral Vascular'), 1, 'L');}
-           if(!empty($data->musculoskeletal)){$pdf->MultiCell(0, 7, "Musculoskeletal:" . self::green($pdf, $this->explodeString($data->musculoskeletal), 'Musculoskeletal'), 1, 'L');}
-           if(!empty($data->neurologic)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Neurologic: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->neurologic)), 1, 'L');}
-           if(!empty($data->hematologic)){$pdf->MultiCell(0, 7, "Hematologic:" . self::green($pdf, $this->explodeString($data->hematologic), 'Hematologic'), 1, 'L');}
-           if(!empty($data->endocrine)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Endocrine: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->endocrine)), 1, 'L');}
-           if(!empty($data->psychiatric)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Psychiatric: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->psychiatric)), 1, 'L');}
-            // $pdf->addPage();
-        }
-
-
- 
-
-        if ($form_type === 'pregnant'){
-            
-            $pdf->ln(3);
-            $pdf->SetFont('Arial', '', 12);
-            $header = array(
-                'Preg. Order', 'Year', 'Gestation Completed',
-                'Preg. Outcome', 'Birthplace', 'Sex',
-                'BW', 'Present Status', 'Complications'
-            );
-
-            $data_pregnancy = $this->fetchPregnant($patient_id);   
-            $dataArray = [];
-            foreach ($data_pregnancy as $row) {
-                $dataArray[] = (array) $row;
-            }
-
-            $this->obstetricPage($pdf, $header, $dataArray, $data);
-        }
+    
+       self::printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type);
         $pdf->Output();
         exit();
        
     }
 
-    public function printPregnant(
-        $x,
-        $data,
-        $pdf,
-        $referring_facility,
-        $referred_to,
-        $department,
-        $tracking_data,
-        $form_type,
-        $patients_name,
-        $comor_dataArray,
-        $allergies_dataArray,
-        $heredo_dataArray,
-        $patient_address,
-        $woman_name,
-        $referring_md_name
-    ){
-        $pdf->SetFont('Arial', 'B', 12);
-        $pdf->Cell(0, 0, "BEmONC/ CEmONC REFERRAL FORM", 0, "", "C");
-        $pdf->ln(10);
-        if(!empty($tracking_data->code)){$pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf, $tracking_data->code, "Patient Code :"), 0, 'L');}
-        $pdf->Ln(5);
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->MultiCell(0, 7, self::black($pdf, "REFERRAL RECORD"), 0, 'L');
-        $pdf->SetFont('Arial', '', 10);
-
-        $pdf->MultiCell($x / 4, 7, self::black($pdf, "Who is Referring"), 0, 'L');
-        $y = $pdf->getY();
-        $pdf->SetXY(60, $y - 7);
-
-        if(!empty($data->pregnant_form->record_no)){
-            $pdf->MultiCell($x / 4, 7, self::black($pdf, "Record Number: ") . self::orange($pdf, $data->pregnant_form->record_no, "Record Number:"), 0);
-        }else {
-            $pdf->MultiCell($x / 4, 7, self::black($pdf, "") . self::orange($pdf, null, ""), 0);
-        }
-        $y = $pdf->getY();
-        $pdf->SetXY(125, $y - 7);
-        if(!empty($data->pregnant_form->referred_date)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred Date: ") . self::orange($pdf, $data->pregnant_form->referred_date, "Referred Date:"), 0);}
-
-        if(!empty($data->pregnant_form->md_referring)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, utf8_decode($data->pregnant_form->md_referring), "Name of referring MD/HCW:"), 0, 'L');}
-        $y = $pdf->getY();
-        $pdf->SetXY(125, $y - 7);
-        if(!empty($data->tracking_date->date_transferred)){
-            if ($data->tracking_date->date_transferred !== '0000-00-00 00:00:00'){
-              $pdf->MultiCell($x / 2, 7, self::black($pdf, "Arrival Date: ") . self::orange($pdf, $data->tracking_date->date_transferred, "Arrival Date:"), 0);
-            }  
-        }
-    
-        if(!empty($referring_md_name)){$pdf->MultiCell(0, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $referring_md_name, "Contact # of referring MD/HCW:"), 0, 'L');}
-        //-------------------------------------------------------------------------------------------------------
-            
-        if(!empty($referring_facility->name)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility: ") . self::orange($pdf, $referring_facility->name, "Facility:"), 0, 'L');}
-        if(!empty($referring_facility->contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $referring_facility->contact, "Facility Contact #:"), 0, 'L');}
-        if(!empty($data->pregnant_form->health_worker)){$pdf->MultiCell(0, 7, self::black($pdf, "Accompanied by the Health Worker: ") . self::orange($pdf, utf8_decode($data->pregnant_form->health_worker), "Accompanied by the Health Worker:"), 0, 'L');}
-
-        if(!empty($referred_to->name)){$pdf->MultiCell ($x / 2, 7, self::black($pdf, "Referred To: ") . self::orange($pdf, $referred_to->name, "Referred To:"), 0, 'L');}
-        $y = $pdf->getY();
-        $pdf->SetXY($x / 2 + 40, $y - 7);
-        if(!empty($department->description)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, $department->description, "Department:"), 0);}
-        // dd($data);
-        if(!empty($referred_to->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, utf8_decode($referred_to->address), "Address:"), 0, 'L');}
-        if(!empty($data->pregnant_form->covid_number)){$pdf->MultiCell(0, 7, self::black($pdf, "Covid Number: ") . self::orange($pdf, $data->pregnant_form->covid_number, "Covid Number: "), 0, 'L');}
-        if(!empty($data->pregnant_form->refer_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Clinical Status: ") . self::orange($pdf, $data->pregnant_form->refer_clinical_status, "Clinical Status: "), 0, 'L');}
-        if(!empty($data->pregnant_form->refer_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Surveillance Category: ") . self::orange($pdf, $data->pregnant_form->refer_sur_category, "Surveillance Category: "), 0, 'L');}
-        if(!empty($data->pregnant_form->dis_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Clinical Status: ") . self::orange($pdf, $data->pregnant_form->dis_clinical_status, "Discharge Clinical Status: "), 0, 'L');}
-        if(!empty($data->pregnant_form->dis_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Surveillance Category: ") . self::orange($pdf, $data->pregnant_form->dis_sur_category, "Discharge Surveillance Category: "), 0, 'L');}
-        $pdf->Ln(3);
-
-        $pdf->SetFillColor(200, 200, 200);
-        $pdf->SetTextColor(30);
-        $pdf->SetDrawColor(200);
-        $pdf->SetLineWidth(.3);
-
-        if(!empty($woman_name) || !empty($patients_name->dob) || !empty($patient_address) || !empty($data->pregnant_form->woman_reason) || !empty($data->pregnant_form->woman_major_findings)){
-            $this->titleHeader($pdf, "WOMAN");
-
-            $pdf->SetFillColor(255, 250, 205);
-            $pdf->SetTextColor(40);
-            $pdf->SetDrawColor(230);
-            $pdf->SetLineWidth(.3);
-            
-            if(!empty($woman_name)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, utf8_decode($woman_name), 'name'), 1, 'L');}
-            if(!empty($patients_name->dob)){$pdf->MultiCell(0, 7, "Age: " . self::green($pdf, $this->calculateAge($patients_name->dob), 'Age'), 1, 'L');}
-            if(!empty($patient_address)){$pdf->MultiCell(0, 7, "Address: " . self::green($pdf, utf8_decode($patient_address), 'Address'), 1, 'L');}
-            if(!empty($data->pregnant_form->woman_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $data->pregnant_form->woman_reason), 1, 'L');}
-            if(!empty($data->pregnant_form->woman_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->pregnant_form->woman_major_findings)), 1, 'L');}
-        }
-        
-        $pdf->SetFillColor(200, 200, 200);
-        $pdf->SetTextColor(30);
-        $pdf->SetDrawColor(200);
-        $pdf->SetLineWidth(.3);
-        
-      
-        if(!empty($data->pregnant_form->woman_before_treatment) || !empty($data->pregnant_form->woman_before_given_time) || !empty($data->pregnant_form->woman_information_given)){
-            $this->titleHeader($pdf, "Treatments Give Time");
-
-            $pdf->SetFillColor(255, 250, 205);
-            $pdf->SetTextColor(40);
-            $pdf->SetDrawColor(230);
-            $pdf->SetLineWidth(.3);
-        
-            if(!empty($data->pregnant_form->woman_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $data->pregnant_form->woman_before_treatment . '-' . $data->pregnant_form->woman_before_given_time, 'Before Referral'), 1, 'L');}
-            if(!empty($data->pregnant_form->woman_before_given_time)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->pregnant_form->woman_before_given_time . '-' . $data->pregnant_form->woman_before_given_time, 'During Transport'), 1, 'L');}
-            if(!empty($data->pregnant_form->woman_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->pregnant_form->woman_information_given)), 1, 'L');}
-        }
-        if (isset($data->icd)) {
-            $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 1, 'L');
-            foreach ($data->icd as $icd) {
-                $pdf->MultiCell(0, 5, self::staticGreen($pdf, $icd->code . " - " . $icd->description), 0, 'L');
+    public function printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type){
+        // DIAGNOSIS
+          if (!empty($data->other_diagnoses) || !empty($data->other_reason_referral)) {
+            $this->titleHeader($pdf, "DIAGNOSIS");
+            if (isset($data->icd[0])) {
+                $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 0, 'L');
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                foreach ($data->icd as $icd) {
+                   if(!empty($icd->code)&&!empty($icd->description)){
+                    $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: ") . "\n" . self::staticGreen($pdf, utf8_decode($icd->description)), 1, 'L');}
+                }
+                $pdf->Ln();
             }
-        }
-        if (isset($data->notes_diagnoses)) {
-            $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 1, 'L');
-            $pdf->MultiCell(0, 5, self::staticGreen($pdf, $data->notes_diagnoses), 1, 'L');
-        }
-        if (isset($data->other_diagnoses)) {
-            $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_diagnoses)), 1, 'L');
-        }
-        // if (isset($data->reason)) {
-        //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, $data->reason['reason']), 1, 'L');
-        // }
-        if (isset($data->other_reason_referral)) {
-            $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_reason_referral)), 1, 'L');
-        }
-        
-            $pdf->Ln(3);
-
-            $pdf->SetFillColor(200, 200, 200);
-            $pdf->SetTextColor(30);
-            $pdf->SetDrawColor(200);
-            $pdf->SetLineWidth(.3);
-
-            // dd($data->baby_data);
-            // $pdf->addPage();
-           if ($form_type === 'pregnant') {
-            if(!empty($data->baby_data->baby_name) || !empty($data->baby_data->baby_dob) || !empty($data->baby_data->weight) || !empty($data->baby_data->gestational_age) || !empty($data->baby_data->baby_reason) 
-            || !empty($data->baby_data->baby_major_findings) || !empty($data->baby_data->baby_last_feed)){
-                $this->titleHeader($pdf, "BABY");
-
-                $pdf->SetFillColor(255, 250, 205);
-                $pdf->SetTextColor(40);
-                $pdf->SetDrawColor(230);
-                $pdf->SetLineWidth(.3);
-    
-                if(!empty($data->baby_data->baby_name)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, utf8_decode($data->baby_data->baby_name), 'name'), 1, 'L');}
-                if(!empty($data->baby_data->baby_dob)){$pdf->MultiCell(0, 7, "Date of Birth: " . self::green($pdf, $data->baby_data->baby_dob, "Date of Birth"), 1, 'L');}
-                if(!empty($data->baby_data->weight)){$pdf->MultiCell(0, 7, "Body Weight: " . self::green($pdf, $data->baby_data->weight, 'body weight'), 1, 'L');}
-                if(!empty($data->baby_data->gestational_age)){$pdf->MultiCell(0, 7, "Gestational Age: " . self::green($pdf, $data->baby_data->gestational_age, 'Gestational Age'), 1, 'L');}
-                if(!empty($data->baby_data->baby_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $data->baby_data->baby_reason), 1, 'L');}
-                if(!empty($data->baby_data->baby_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->baby_data->baby_major_findings)), 1, 'L');}
-                if(!empty($data->baby_data->baby_last_feed)){$pdf->MultiCell(0, 7, "Last (Breast) Feed (Time): " . self::green($pdf, $data->baby_data->baby_last_feed, "Last (Breast) Feed (Time)"), 1, 'L');}
+            if (isset($data->diagnosis)) {
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                if(!empty($data->diagnosis)){
+                    $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->diagnosis)), 1, 'L');}
+                $pdf->Ln();
             }
-           }
-           
-            
-            $pdf->SetFillColor(200, 200, 200);
-            $pdf->SetTextColor(30);
-            $pdf->SetDrawColor(200);
-            $pdf->SetLineWidth(.3);
-
-            if(!empty($data->baby_data->baby_before_treatment) || !empty($data->baby_data->baby_during_transport) || !empty($data->baby_data->baby_information_given) || !empty($data->baby_data->baby_before_given_time)){
-                $pdf->MultiCell(0, 7, "Treatments Give Time", 1, 'L', true);
-
-                $pdf->SetFillColor(255, 250, 205);
-                $pdf->SetTextColor(40);
-                $pdf->SetDrawColor(230);
-                $pdf->SetLineWidth(.3);
     
-                if(!empty($data->baby_data->baby_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $data->baby_data->baby_before_treatment . '-' . $data->baby_data->baby_before_given_time, 'Before Referral'), 1, 'L');}
-                if(!empty($data->baby_data->baby_during_transport)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->baby_data->baby_during_transport . '-' . $data->baby_data->baby_transport_given_time, 'During Transport'), 1, 'L');}
-                if(!empty($data->baby_data->baby_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->baby_data->baby_information_given)), 1, 'L');}
-            }  
+            if (isset($data->other_diagnoses)) {
+                $pdf->SetTextColor(102, 56, 0);
+                $pdf->SetFont('Arial', 'I', 10);
+                if(!empty($data->other_diagnoses)){
+                    $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_diagnoses)), 1, 'L');}
+                $pdf->Ln();
+            }
+        } 
 
+        // PAST MEDICAL HISTORY
         if (!empty($data->commordities) || !empty($data->commordities_hyper_year) || !empty($data->commordities_diabetes_year) || !empty($data->commordities_asthma_year) || !empty($data->commordities_cancer)
         || !empty($data->commordities_others) || !empty($data->allergies) || !empty($data->allergy_food_cause) || !empty($data->allergy_drugs_cause) || !empty($data->heredofamilial_diseases) || !empty($data->heredo_hyper_side) 
         || !empty($data->heredo_diab_side) || !empty($data->heredo_asthma_side) || !empty($data->heredo_cancer_side) || !empty($data->heredo_kidney_side) || !empty($data->heredo_thyroid_side) 
@@ -2991,6 +2697,452 @@ class NewFormCtrl extends Controller
                 $pdf->MultiCell(0, 7, self::staticBlack($pdf, "PREVIOUS HOSPITALIZATION(S) and OPERATION(S): ") . "\n" . self::staticGreen($pdf, utf8_decode($data->previous_hospitalization)), 1, 'L');
             }
         }
+
+        // PEDIATRIC HISTORY
+        if ($form_type === 'normal' && $this->calculateAge($patients_name->dob)<=18){
+            $this->titleHeader($pdf, "PEDIATRIC HISTORY");
+              if (!empty($data->prenatal_a)){
+                  $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
+              }
+              if (!empty($data->prenatal_g)){
+                  $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
+              }
+              if (!empty($data->prenatal_p)){
+                  $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
+              }
+              if (!empty($data->prenatal_radiowith_or_without) || !empty($data->prenatal_with_maternal_illness)){
+                  if ($data->prenatal_radiowith_or_without == "with") {
+                      $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Maternal Illness: ") . "\n" . self::staticGreen($pdf, $data->prenatal_with_maternal_illness), 1, 'L');
+                  } else if ($data->prenatal_radiowith_or_without == "without") {
+                      $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_radiowith_or_without . " illness", 'Maternal Illness'), 1, 'L');
+                  }
+              }
+
+              $pdf->ln(1);
+              $pdf->SetFillColor(235, 235, 235);
+
+              if (!empty($data->natal_born_at)){
+                  $pdf->MultiCell(0, 7, "Born At:" . self::green($pdf, $data->natal_born_at, 'Born At'), 1, 'L');
+              }
+              if (!empty($data->natal_born_address)){
+                  $pdf->MultiCell(0, 7, "Born Address:" . self::green($pdf, $data->natal_born_address, 'Born Address'), 1, 'L');
+              }
+              if (!empty($data->natal_by)){
+                  $pdf->MultiCell(0, 7, "By:" . self::green($pdf, $data->natal_by, 'By'), 1, 'L');
+              }
+              if (!empty($data->natal_via)){
+                  $pdf->MultiCell(0, 7, "Via:" . self::green($pdf, $data->natal_via, 'Via'), 1, 'L');
+              }
+              if (!empty($data->natal_indication)){
+                  $pdf->MultiCell(0, 7, "Indication:" . self::green($pdf, $data->natal_indication, 'Indication'), 1, 'L');
+              }
+              if (!empty($data->natal_term)) {
+                  $pdf->MultiCell(0, 7, "Term:" . self::green($pdf, $data->natal_term, 'Term'), 1, 'L');
+              }
+              if (!empty($data->natal_with_good_cry)){
+                  $pdf->MultiCell(0, 7, "With Good Cry:" . self::green($pdf, $data->natal_with_good_cry, 'With Good Cry'), 1, 'L');
+              }
+              if (!empty($data->natal_other_complications)){
+                  $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Other Complications: ") . "\n" . self::staticGreen($pdf, $data->natal_other_complications), 1, 'L');
+              }
+
+              $pdf->ln(1);
+              $pdf->SetFillColor(235, 235, 235);
+              $pdf->SetTextColor(40);
+              $pdf->ln(1);
+              
+      
+              
+              if (!empty($data->post_natal_bfeedx_month)){
+                  $pdf->MultiCell(0, 7, "Feeding History", 1, 'L', true);
+                  if ($data->post_natal_bfeed == "Yes") {
+                      if (!empty($data->post_natal_bfeed)){ $pdf->MultiCell(0, 7, "Breast Feed:" . self::green($pdf, $data->post_natal_bfeed, 'Breast Feed'), 1, 'L'); }
+                      if (!empty($data->post_natal_bfeedx_month)){ $pdf->MultiCell(0, 7, "Breast Feed in mos:" . self::green($pdf, $data->post_natal_bfeedx_month, 'Breast Feed in mos'), 1, 'L');}  
+                  } else if ($data->post_natal_bfeed == "No") {
+                      if (!empty($data->post_natal_bfeed)){$pdf->MultiCell(0, 7, "Breast Feed:" . self::green($pdf, $data->post_natal_bfeed, 'Breast Feed'), 1, 'L');}
+                  }
+              }
+              if (!empty($data->post_natal_formula_feed)){
+                  if ($data->post_natal_formula_feed == "Yes") {
+                      $pdf->MultiCell(0, 7, "Formula Feed:" . self::green($pdf, $data->post_natal_formula_feed, 'Formula Feed'), 1, 'L');
+                      if (!empty($data->post_natal_ffeed_specify)){
+                       $pdf->MultiCell(0, 7, "Specific Formula Feed:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Specific Formula Feed'), 1, 'L');
+                       $pdf->MultiCell(0, 7, "Started Semi Food in mos:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Started Semi Food in mos'), 1, 'L');
+                      }
+                     
+                  } else if ($data->post_formula_feed == "No") {
+                      $pdf->MultiCell(0, 7, "Formula Feed:" . self::green($pdf, $data->post_natal_formula_feed, 'Formula Feed'), 1, 'L');
+                  }
+                  
+              }
+              
+              $pdf->ln(1);
+             
+              if (!empty($data->post_natal_bcg)){
+                  $pdf->MultiCell(0, 7, "Immunization History", 1, 'L', true);
+                  if ($data->post_natal_bcg == "Yes") {
+                      $pdf->MultiCell(0, 7, "BCG:" . self::green($pdf, "Immunized", 'BCG'), 1, 'L');
+                  }
+              }
+              if (!empty($data->post_natal_dpt_opv_x)){
+                  if ($data->post_natal_dpt_opv_x == "Yes") {
+                      $pdf->MultiCell(0, 7, "DPT/OPV:" . self::green($pdf, "Immunized", 'DPT/OPV'), 1, 'L');
+                     if(!empty($data->post_dpt_doses)){$pdf->MultiCell(0, 7, "DPT/OPV doses:" . self::green($pdf, $data->post_dpt_doses, 'DPT/OPV doses'), 1, 'L');}
+                  }
+              }
+              
+              if (!empty($data->post_natal_hepB_cbox)){
+                  if ($data->post_natal_hepB_cbox == "Yes") {
+                      $pdf->MultiCell(0, 7, "Hep B:" . self::green($pdf, "Immunized", 'Hep B'), 1, 'L');
+                      if (!empty($data->post_natal_hepB_x_doses)) {$pdf->MultiCell(0, 7, "Hep B doses:" . self::green($pdf, $data->post_natal_hepB_x_doses, 'Hep B doses'), 1, 'L');}
+                  }
+              }
+              if (!empty($data->post_natal_immu_measles_cbox)){
+                  if ($data->post_natal_immu_measles_cbox == "Yes") {
+                      $pdf->MultiCell(0, 7, "Measles:" . self::green($pdf, "Immunized", 'Measles'), 1, 'L');
+                  }
+              }
+              if (!empty($data->post_natal_mmr_cbox)){
+                  if ($data->post_natal_mmr_cbox == "Yes") {
+                      $pdf->MultiCell(0, 7, "MMR:" . self::green($pdf, "Immunized", 'MMR'), 1, 'L');
+                  }
+              }
+              if (!empty($data->post_natal_others_cbox)){
+                  if ($data->post_natal_others_cbox == "Yes") {
+                      if (!empty($data->post_natal_others)){$pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $data->post_natal_others, 'Others'), 1, 'L');}
+                  }
+              }
+              if (!empty($data->post_natal_development_milestones)){
+                  $pdf->MultiCell(0, 7, "Developmental Milestones:" . self::green($pdf, $data->post_natal_development_milestones, 'Developmental Milestones'), 1, 'L');
+              }      
+        }
+
+        // PERSONAL AND SOCIAL HISTORY
+        if (!empty($data->smoking) || !empty($data->smoking_sticks_per_day) || !empty($data->smoking_quit_year) || !empty($data->smoking_remarks)
+        || !empty($data->alcohol_drinking) || !empty($data->alcohol_liquor_type) || !empty($data->alcohol_bottles_per_day) || !empty($data->alcohol_drinking_quit_year)
+        || !empty($data->illicit_drugs) || !empty($data->illicit_drugs_taken) || !empty($data->illicit_drugs_quit_year)){
+            
+            $this->titleHeader($pdf, "PERSONAL AND SOCIAL HISTORY");
+            if (!empty($data->smoking)){
+                if ($data->smoking == "Yes") {
+                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
+                   if(!empty($data->smoking_sticks_per_day)){$pdf->MultiCell(0, 7, "Sticks per Day:" . self::green($pdf, $data->smoking_sticks_per_day, 'Sticks per Day'), 1, 'L');}
+                } else if ($data->smoking == "No") {
+                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
+                } else if ($data->smoking == "Quit") {
+                    $pdf->MultiCell(0, 7, "Smoking:" . self::green($pdf, $data->smoking, 'Smoking'), 1, 'L');
+                   if (!empty($data->smoking_quit_year)){$pdf->MultiCell(0, 7, "Smoking Quit Year:" . self::green($pdf, $data->smoking_quit_year, 'Smoking Quit Year'), 1, 'L');}
+                }
+            }
+            if (!empty($data->smoking_remarks)){
+                $pdf->MultiCell(0, 7, "Smoking Remarks:" . self::green($pdf, $data->smoking_remarks, 'Smoking Remarks'), 1, 'L');
+            }
+            if (!empty($data->alcohol_drinking)){
+                if ($data->alcohol_drinking == "Yes") {
+                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
+                    if(!empty($data->alcohol_liquor_type)){$pdf->MultiCell(0, 7, "Liquor Type:" . self::green($pdf, $data->alcohol_liquor_type, 'Liquor Type'), 1, 'L');}
+                    if(!empty($data->alcohol_bottles_per_day)){$pdf->MultiCell(0, 7, "Bottles per day:" . self::green($pdf, $data->alcohol_bottles_per_day, 'Bottles per day'), 1, 'L');}
+                } else if ($data->alcohol_drinking == "No") {
+                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
+                } else if ($data->alcohol_drinking == "Quit") {
+                    $pdf->MultiCell(0, 7, "Drinking:" . self::green($pdf, $data->alcohol_drinking, 'Drinking'), 1, 'L');
+                    if(!empty($data->alcohol_drinking_quit_year)){$pdf->MultiCell(0, 7, "Drinking quit year:" . self::green($pdf, $data->alcohol_drinking_quit_year, 'Drinking quit year'), 1, 'L');}
+                }
+            }
+          
+            if(!empty($data->illicit_drugs)){
+                if ($data->illicit_drugs == "Yes") {
+                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
+                   if(!empty($data->illicit_drugs_taken)){$pdf->MultiCell(0, 7, "Drugs taken:" . self::green($pdf, $data->illicit_drugs_taken, 'Drugs taken'), 1, 'L');}
+                } else if ($data->illicit_drugs == "No") {
+                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
+                } else if ($data->illicit_drugs == "Quit") {
+                    $pdf->MultiCell(0, 7, "Drugs:" . self::green($pdf, $data->illicit_drugs, 'Drugs'), 1, 'L');
+                    if(!empty($data->illicit_drugs_quit_year)){$pdf->MultiCell(0, 7, "Drugs quit year:" . self::green($pdf, $data->illicit_drugs_quit_year, 'Drugs quit year'), 1, 'L');}
+                }
+            }  
+        }
+
+        // CURRENT MEDICATION
+        if (!empty($data->current_medications)){
+            $this->titleHeader($pdf, "CURRENT MEDICATION");
+            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Current Medications: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->current_medications)), 1, 'L');
+        }
+
+        // PERTINENT LABORATORY AND OTHER ANCILLARY PROCEDURES
+        if (!empty($data->pertinent_laboratory_and_procedures)){
+            $this->titleHeader($pdf, "PERTINENT LABORATORY AND OTHER ANCILLARY PROCEDURES");
+            $pdf->MultiCell(0, 7, "Pertinent Laboratory:" . self::green($pdf, $data->pertinent_laboratory_and_procedures, 'Pertinent Laboratory'), 1, 'L');
+            if(!empty($data->lab_procedure_other)){$pdf->MultiCell(0, 7, "Other Procedures:" . self::green($pdf, $data->lab_procedure_other, 'Other Procedures'), 1, 'L');}
+        }
+
+        // REVIEW OF SYSTEM
+        if (!empty($data->skin) || !empty($data->head) || !empty($data->eyes) || !empty($data->ears) || !empty($data->nose_or_sinuses) || !empty($data->mouth_or_throat)
+        || !empty($data->neck) || !empty($data->breast) || !empty($data->respiratory_or_cardiac) || !empty($data->gastrointestinal) || !empty($data->urinary)
+        || !empty($data->peripheral_vascular) || !empty($data->musculoskeletal) || !empty($data->neurologic) || !empty($data->hematologic)
+        || !empty($data->endocrine) || !empty($data->psychiatric)){
+            $this->titleHeader($pdf, "REVIEW OF SYSTEMS");
+           if(!empty($data->skin)){$pdf->MultiCell(0, 7, "Skin:" . self::green($pdf, $this->explodeString($data->skin), 'Skin'), 1, 'L');}
+           if(!empty($data->head) ){$pdf->MultiCell(0, 7, "Head:" . self::green($pdf, $this->explodeString($data->head), 'Head'), 1, 'L');}
+           if(!empty($data->eyes)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Eyes: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->eyes)), 1, 'L');}
+           if(!empty($data->ears)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Ears: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->ears)), 1, 'L');}
+           if(!empty($data->nose_or_sinuses)){$pdf->MultiCell(0, 7, "Nose/Sinuses:" . self::green($pdf, $this->explodeString($data->nose_or_sinuses), 'Nose/Sinuses'), 1, 'L');}
+           if(!empty($data->mouth_or_throat)){$pdf->MultiCell(0, 7, "Mouth/Throat:" . self::green($pdf, $this->explodeString($data->mouth_or_throat), 'Mouth/Throat'), 1, 'L');}
+           if(!empty($data->neck)){$pdf->MultiCell(0, 7, "Neck:" . self::green($pdf, $this->explodeString($data->neck), 'Neck'), 1, 'L');}
+           if(!empty($data->breast)){$pdf->MultiCell(0, 7, "Breast:" . self::green($pdf, $data->breast, 'Breast'), 1, 'L');}
+           if(!empty($data->respiratory_or_cardiac)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Respiratory/Cardiac: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->respiratory_or_cardiac)), 1, 'L');}
+           if(!empty($data->gastrointestinal)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Gastrointestinal: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->gastrointestinal)), 1, 'L');}
+           if(!empty($data->urinary)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Urinary: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->urinary)), 1, 'L');}
+           if(!empty($data->peripheral_vascular)){$pdf->MultiCell(0, 7, "Peripheral Vascular:" . self::green($pdf, $this->explodeString($data->peripheral_vascular), 'Peripheral Vascular'), 1, 'L');}
+           if(!empty($data->musculoskeletal)){$pdf->MultiCell(0, 7, "Musculoskeletal:" . self::green($pdf, $this->explodeString($data->musculoskeletal), 'Musculoskeletal'), 1, 'L');}
+           if(!empty($data->neurologic)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Neurologic: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->neurologic)), 1, 'L');}
+           if(!empty($data->hematologic)){$pdf->MultiCell(0, 7, "Hematologic:" . self::green($pdf, $this->explodeString($data->hematologic), 'Hematologic'), 1, 'L');}
+           if(!empty($data->endocrine)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Endocrine: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->endocrine)), 1, 'L');}
+           if(!empty($data->psychiatric)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Psychiatric: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->psychiatric)), 1, 'L');}
+            // $pdf->addPage();
+        }
+
+        // NUTRITIONAL STATUS
+        if (!empty($data->diet)){
+            $this->titleHeader($pdf, "NUTRITIONAL STATUS");
+            $pdf->MultiCell(0, 7, "Diet:" . self::green($pdf, $data->diet, 'Diet'), 1, 'L');
+            if(!empty($data->specify_diets)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Specific Diet: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data->specify_diets)), 1, 'L');}
+        }
+        
+        // LATEST VITAL SIGNS
+        if (!empty($data->pulse_rate)|| !empty($data->temperature) || !empty($data->blood_pressure) || !empty($data->oxygen_saturation) || !empty($data->respiratory_rate)){
+            $this->titleHeader($pdf, "LATEST VITAL SIGNS");
+            if(!empty($data->temperature)){$pdf->MultiCell(0, 7, "Temperature:" . self::green($pdf, $data->temperature, 'Temperature'), 1, 'L');}
+            if(!empty($data->pulse_rate)){$pdf->MultiCell(0, 7, "Pulse Rate:" . self::green($pdf, $data->pulse_rate, 'Pulse Rate'), 1, 'L');}
+            if(!empty($data->respiratory_rate)){$pdf->MultiCell(0, 7, "Respiratory Rate:" . self::green($pdf, $data->respiratory_rate, 'Respiratory Rate'), 1, 'L');}
+            if(!empty($data->blood_pressure)){$pdf->MultiCell(0, 7, "Blood Pressure:" . self::green($pdf, $data->blood_pressure, 'Blood Pressure'), 1, 'L');}
+            if(!empty($data->oxygen_saturation)){$pdf->MultiCell(0, 7, "Oxgen Saturation:" . self::green($pdf, $data->oxygen_saturation, 'Oxygen Saturation'), 1, 'L');}
+        }
+
+        // GLASGOW COMA SCALE
+        if (!empty($data->pupil_size_chart) || !empty($data->motor_response) || !empty($data->verbal_response) || !empty($data->eye_response) || !empty($data->gsc_score)) {
+            $this->titleHeader($pdf, "GLASGOW COMA SCALE");
+        
+            if (!empty($data->pupil_size_chart)) {
+                $pdf->MultiCell(0, 7, "Pupil Size Chart:" . self::green($pdf, $data->pupil_size_chart, 'Pupil Size Chart'), 1, 'L');
+            }
+            if (!empty($data->motor_response)) {
+                $pdf->MultiCell(0, 7, "Motor Response:" . self::green($pdf, $data->motor_response, 'Motor Response'), 1, 'L');
+            }
+            if (!empty($data->verbal_response)) {
+                $pdf->MultiCell(0, 7, "Verbal Response:" . self::green($pdf, $data->verbal_response, 'Verbal Response'), 1, 'L');
+            }
+            if (!empty($data->eye_response)) {
+                $pdf->MultiCell(0, 7, "Eye Response:" . self::green($pdf, $data->eye_response, 'Eye Response'), 1, 'L');
+            }
+            if (!empty($data->gsc_score)) {
+                $pdf->MultiCell(0, 7, "GSC Score:" . self::green($pdf, $data->gsc_score, 'GSC Score'), 1, 'L');
+            }
+        }
+        // REASON FOR REFERRAL
+        if (!empty($data->reason['reason']) || !empty($data->other_reason_referral)) {
+            $this->titleHeader($pdf, "REASON FOR REFERRAL");
+            if(!empty($data->reason['reason'])){$pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->reason['reason'])), 1, 'L');}
+            else if(!empty($data->other_reason_referral)){$pdf->MultiCell(0, 7, self::black($pdf, "Other reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_reason_referral)), 1, 'L');}
+        } 
+
+        // OBSTETRIC AND GYNECOLOGIC     
+            $pdf->ln(3);
+            $pdf->SetFont('Arial', '', 12);
+            $header = array(
+                'Preg. Order', 'Year', 'Gestation Completed',
+                'Preg. Outcome', 'Birthplace', 'Sex',
+                'BW', 'Present Status', 'Complications'
+            );
+
+            $data_pregnancy = $this->fetchPregnant($patient_id);   
+            
+            $dataArray = [];
+            foreach ($data_pregnancy as $row) {
+                $dataArray[] = (array) $row;
+            }
+           
+            $this->obstetricPage($pdf, $header, $dataArray, $data, $form_type);
+
+    }
+
+    public function printPregnant(
+        $x,
+        $data,
+        $pdf,
+        $referring_facility,
+        $referred_to,
+        $department,
+        $tracking_data,
+        $form_type,
+        $patients_name,
+        $patient_address,
+        $woman_name,
+        $referring_md_name
+    ){
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Cell(0, 0, "BEmONC/ CEmONC REFERRAL FORM", 0, "", "C");
+        $pdf->ln(10);
+        if(!empty($tracking_data->code)){$pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf, $tracking_data->code, "Patient Code :"), 0, 'L');}
+        $pdf->Ln(5);
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->MultiCell(0, 7, self::black($pdf, "REFERRAL RECORD"), 0, 'L');
+        $pdf->SetFont('Arial', '', 10);
+
+        $pdf->MultiCell($x / 4, 7, self::black($pdf, "Who is Referring"), 0, 'L');
+        $y = $pdf->getY();
+        $pdf->SetXY(60, $y - 7);
+
+        if(!empty($data->pregnant_form->record_no)){
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "Record Number: ") . self::orange($pdf, $data->pregnant_form->record_no, "Record Number:"), 0);
+        }else {
+            $pdf->MultiCell($x / 4, 7, self::black($pdf, "") . self::orange($pdf, null, ""), 0);
+        }
+        $y = $pdf->getY();
+        $pdf->SetXY(125, $y - 7);
+        if(!empty($data->pregnant_form->referred_date)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred Date: ") . self::orange($pdf, $data->pregnant_form->referred_date, "Referred Date:"), 0);}
+
+        if(!empty($data->pregnant_form->md_referring)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, utf8_decode($data->pregnant_form->md_referring), "Name of referring MD/HCW:"), 0, 'L');}
+        $y = $pdf->getY();
+        $pdf->SetXY(125, $y - 7);
+        if(!empty($data->tracking_date->date_transferred)){
+            if ($data->tracking_date->date_transferred !== '0000-00-00 00:00:00'){
+              $pdf->MultiCell($x / 2, 7, self::black($pdf, "Arrival Date: ") . self::orange($pdf, $data->tracking_date->date_transferred, "Arrival Date:"), 0);
+            }  
+        }
+
+
+        // dd($data->pregnant_form);
+        if(!empty($data->pregnant_form->referring_contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $data->pregnant_form->referring_contact, "Contact # of referring MD/HCW:"), 0, 'L');}
+        //-------------------------------------------------------------------------------------------------------
+            
+        if(!empty($data->pregnant_form->referring_facility)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility: ") . self::orange($pdf, $data->pregnant_form->referring_facility, "Facility:"), 0, 'L');}
+        if(!empty($data->pregnant_form->referring_contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $data->pregnant_form->referring_contact, "Facility Contact #:"), 0, 'L');}
+        if(!empty($data->pregnant_form->health_worker)){$pdf->MultiCell(0, 7, self::black($pdf, "Accompanied by the Health Worker: ") . self::orange($pdf, utf8_decode($data->pregnant_form->health_worker), "Accompanied by the Health Worker:"), 0, 'L');}
+
+        if(!empty($data->pregnant_form->referred_facility)){$pdf->MultiCell ($x / 2, 7, self::black($pdf, "Referred To: ") . self::orange($pdf, $data->pregnant_form->referred_facility, "Referred To:"), 0, 'L');}
+        if(!empty($data->pregnant_form->referred_contact)){$pdf->MultiCell ($x / 2, 7, self::black($pdf, "Referred Contact #: ") . self::orange($pdf, $data->pregnant_form->referred_contact, "Referred Contact #:"), 0, 'L');}
+        $y = $pdf->getY();
+        $pdf->SetXY($x / 2 + 40, $y - 7);
+        if(!empty($department->description)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, $department->description, "Department:"), 0);}
+     
+        if(!empty($referred_to->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, utf8_decode($referred_to->address), "Address:"), 0, 'L');}
+        if(!empty($data->pregnant_form->covid_number)){$pdf->MultiCell(0, 7, self::black($pdf, "Covid Number: ") . self::orange($pdf, $data->pregnant_form->covid_number, "Covid Number: "), 0, 'L');}
+        if(!empty($data->pregnant_form->refer_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Clinical Status: ") . self::orange($pdf, $data->pregnant_form->refer_clinical_status, "Clinical Status: "), 0, 'L');}
+        if(!empty($data->pregnant_form->refer_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Surveillance Category: ") . self::orange($pdf, $data->pregnant_form->refer_sur_category, "Surveillance Category: "), 0, 'L');}
+        if(!empty($data->pregnant_form->dis_clinical_status)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Clinical Status: ") . self::orange($pdf, $data->pregnant_form->dis_clinical_status, "Discharge Clinical Status: "), 0, 'L');}
+        if(!empty($data->pregnant_form->dis_sur_category)){$pdf->MultiCell(0, 7, self::black($pdf, "Discharge Surveillance Category: ") . self::orange($pdf, $data->pregnant_form->dis_sur_category, "Discharge Surveillance Category: "), 0, 'L');}
+        $pdf->Ln(3);
+
+        
+
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->SetTextColor(30);
+        $pdf->SetDrawColor(200);
+        $pdf->SetLineWidth(.3);
+
+        if(!empty($woman_name) || !empty($patients_name->dob) || !empty($patient_address) || !empty($data->pregnant_form->woman_reason) || !empty($data->pregnant_form->woman_major_findings)){
+            $this->titleHeader($pdf, "WOMAN");
+
+            $pdf->SetFillColor(255, 250, 205);
+            $pdf->SetTextColor(40);
+            $pdf->SetDrawColor(230);
+            $pdf->SetLineWidth(.3);
+            
+            if(!empty($woman_name)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, utf8_decode($woman_name), 'name'), 1, 'L');}
+            if(!empty($patients_name->dob)){$pdf->MultiCell(0, 7, "Age: " . self::green($pdf, $this->calculateAge($patients_name->dob), 'Age'), 1, 'L');}
+            if(!empty($patient_address)){$pdf->MultiCell(0, 7, "Address: " . self::green($pdf, utf8_decode($patient_address), 'Address'), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $data->pregnant_form->woman_reason), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->pregnant_form->woman_major_findings)), 1, 'L');}
+        }
+        
+        $pdf->SetFillColor(200, 200, 200);
+        $pdf->SetTextColor(30);
+        $pdf->SetDrawColor(200);
+        $pdf->SetLineWidth(.3);
+        
+      
+        if(!empty($data->pregnant_form->woman_before_treatment) || !empty($data->pregnant_form->woman_before_given_time) || !empty($data->pregnant_form->woman_information_given)){
+            $this->titleHeader($pdf, "Treatments Give Time");
+
+            $pdf->SetFillColor(255, 250, 205);
+            $pdf->SetTextColor(40);
+            $pdf->SetDrawColor(230);
+            $pdf->SetLineWidth(.3);
+            // dd($data);
+            if(!empty($data->pregnant_form->woman_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $data->pregnant_form->woman_before_treatment . '-' . $data->pregnant_form->woman_before_given_time, 'Before Referral'), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_before_given_time)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->pregnant_form->woman_during_transport . '-' . $data->pregnant_form->woman_before_given_time, 'During Transport'), 1, 'L');}
+            if(!empty($data->pregnant_form->woman_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->pregnant_form->woman_information_given)), 1, 'L');}
+        }
+        // if (isset($data->icd)) {
+        //     $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 1, 'L');
+        //     foreach ($data->icd as $icd) {
+        //         $pdf->MultiCell(0, 5, self::staticGreen($pdf, $icd->code . " - " . $icd->description), 0, 'L');
+        //     }
+        // }
+        // if (isset($data->notes_diagnoses)) {
+        //     $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 1, 'L');
+        //     $pdf->MultiCell(0, 5, self::staticGreen($pdf, $data->notes_diagnoses), 1, 'L');
+        // }
+        // if (isset($data->other_diagnoses)) {
+        //     $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_diagnoses)), 1, 'L');
+        // }
+        // if (isset($data->reason)) {
+        //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, $data->reason['reason']), 1, 'L');
+        // }
+        // if (isset($data->other_reason_referral)) {
+        //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_reason_referral)), 1, 'L');
+        // }
+        
+            $pdf->Ln(3);
+
+            $pdf->SetFillColor(200, 200, 200);
+            $pdf->SetTextColor(30);
+            $pdf->SetDrawColor(200);
+            $pdf->SetLineWidth(.3);
+
+            // dd($data->baby_data);
+            // $pdf->addPage();
+           if ($form_type === 'pregnant') {
+            if(!empty($data->baby_data->baby_name) || !empty($data->baby_data->baby_dob) || !empty($data->baby_data->weight) || !empty($data->baby_data->gestational_age) || !empty($data->baby_data->baby_reason) 
+            || !empty($data->baby_data->baby_major_findings) || !empty($data->baby_data->baby_last_feed)){
+                $this->titleHeader($pdf, "BABY");
+
+                $pdf->SetFillColor(255, 250, 205);
+                $pdf->SetTextColor(40);
+                $pdf->SetDrawColor(230);
+                $pdf->SetLineWidth(.3);
+    
+                if(!empty($data->baby_data->baby_name)){$pdf->MultiCell(0, 7, "Name: " . self::green($pdf, utf8_decode($data->baby_data->baby_name), 'name'), 1, 'L');}
+                if(!empty($data->baby_data->baby_dob)){$pdf->MultiCell(0, 7, "Date of Birth: " . self::green($pdf, $data->baby_data->baby_dob, "Date of Birth"), 1, 'L');}
+                if(!empty($data->baby_data->weight)){$pdf->MultiCell(0, 7, "Body Weight: " . self::green($pdf, $data->baby_data->weight, 'body weight'), 1, 'L');}
+                if(!empty($data->baby_data->gestational_age)){$pdf->MultiCell(0, 7, "Gestational Age: " . self::green($pdf, $data->baby_data->gestational_age, 'Gestational Age'), 1, 'L');}
+                if(!empty($data->baby_data->baby_reason)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Main Reason for Referral: ") . "\n" . self::staticGreen($pdf, $data->baby_data->baby_reason), 1, 'L');}
+                if(!empty($data->baby_data->baby_major_findings)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Major Findings (Clinica and BP,Temp,Lab) : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->baby_data->baby_major_findings)), 1, 'L');}
+                if(!empty($data->baby_data->baby_last_feed)){$pdf->MultiCell(0, 7, "Last (Breast) Feed (Time): " . self::green($pdf, $data->baby_data->baby_last_feed, "Last (Breast) Feed (Time)"), 1, 'L');}
+            }
+           }
+           
+            
+            $pdf->SetFillColor(200, 200, 200);
+            $pdf->SetTextColor(30);
+            $pdf->SetDrawColor(200);
+            $pdf->SetLineWidth(.3);
+
+            if(!empty($data->baby_data->baby_before_treatment) || !empty($data->baby_data->baby_during_transport) || !empty($data->baby_data->baby_information_given) || !empty($data->baby_data->baby_before_given_time)){
+                $pdf->MultiCell(0, 7, "Treatments Give Time", 1, 'L', true);
+
+                $pdf->SetFillColor(255, 250, 205);
+                $pdf->SetTextColor(40);
+                $pdf->SetDrawColor(230);
+                $pdf->SetLineWidth(.3);
+    
+                if(!empty($data->baby_data->baby_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $data->baby_data->baby_before_treatment . '-' . $data->baby_data->baby_before_given_time, 'Before Referral'), 1, 'L');}
+                if(!empty($data->baby_data->baby_during_transport)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->baby_data->baby_during_transport . '-' . $data->baby_data->baby_transport_given_time, 'During Transport'), 1, 'L');}
+                if(!empty($data->baby_data->baby_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->baby_data->baby_information_given)), 1, 'L');}
+
+                
+            }  
     }
 
     public function printNormal($pdf, 
@@ -3003,8 +3155,7 @@ class NewFormCtrl extends Controller
     $department_normal, 
     $patients_form, 
     $patients_name, 
-    $data, 
-    $form_type){
+    $data){
             $pdf->SetFont('Arial', 'B', 12);
             $pdf->Cell(0, 0, "CENTRAL VISAYAS HEALTH REFERRAL SYSTEM", 0, "", "C");
             $pdf->ln();
@@ -3029,14 +3180,11 @@ class NewFormCtrl extends Controller
             $pdf->SetXY($x / 2 + 10, $y - 7);
             
             if(!empty($tracking_data->date_transferred)){
-                if ($tracking_data->date_transferred !== '0000-00-00 00:00:00'){
-                 $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, $tracking_data->date_transferred, "Date/Time Transferred:"), 0);
-                }else {
-                 $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, null, "Date/Time Transferred:"), 0);
-                }
-               
+                if ($tracking_data->date_transferred !== '0000-00-00 00:00:00'){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, $tracking_data->date_transferred, "Date/Time Transferred:"), 0);} 
+            }else{
+                $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, null, "Date/Time Transferred:"), 0);
             }
-            
+    
             // $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::orange($pdf, $woman_name, "Name of Patient:"), 0, 'L');
             if(!empty($woman_name)){$pdf->MultiCell(0, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::staticGreen($pdf, utf8_decode($woman_name)), 0, 'L');}
             $y = $pdf->getY();
@@ -3078,47 +3226,47 @@ class NewFormCtrl extends Controller
             $pdf->MultiCell(0, 5, utf8_decode($data->reco_summary), 0, 'L');
             $pdf->Ln();
     
-            if (isset($data->icd[0])) {
-                $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 0, 'L');
-                $pdf->SetTextColor(102, 56, 0);
-                $pdf->SetFont('Arial', 'I', 10);
-                foreach ($data->icd as $icd) {
-                   if(!empty($icd->code)&&!empty($icd->description)){$pdf->MultiCell(0, 5, $icd->code . " - " . $icd->description, 0, 'L');}
-                }
-                $pdf->Ln();
-            }
+            // if (isset($data->icd[0])) {
+            //     $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 0, 'L');
+            //     $pdf->SetTextColor(102, 56, 0);
+            //     $pdf->SetFont('Arial', 'I', 10);
+            //     foreach ($data->icd as $icd) {
+            //        if(!empty($icd->code)&&!empty($icd->description)){$pdf->MultiCell(0, 5, $icd->code . " - " . $icd->description, 0, 'L');}
+            //     }
+            //     $pdf->Ln();
+            // }
     
-            if (isset($data->diagnosis)) {
-                $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 0, 'L');
-                $pdf->SetTextColor(102, 56, 0);
-                $pdf->SetFont('Arial', 'I', 10);
-                if(!empty($data->diagnosis)){$pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');}
-                $pdf->Ln();
-            }
+            // if (isset($data->diagnosis)) {
+            //     $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 0, 'L');
+            //     $pdf->SetTextColor(102, 56, 0);
+            //     $pdf->SetFont('Arial', 'I', 10);
+            //     if(!empty($data->diagnosis)){$pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');}
+            //     $pdf->Ln();
+            // }
     
-            if (isset($data->other_diagnoses)) {
-                $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: "), 0, 'L');
-                $pdf->SetTextColor(102, 56, 0);
-                $pdf->SetFont('Arial', 'I', 10);
-                if(!empty($data->other_diagnoses)){$pdf->MultiCell(0, 5, utf8_decode($data->other_diagnoses), 0, 'L');}
-                $pdf->Ln();
-            }
+            // if (isset($data->other_diagnoses)) {
+            //     $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: "), 0, 'L');
+            //     $pdf->SetTextColor(102, 56, 0);
+            //     $pdf->SetFont('Arial', 'I', 10);
+            //     if(!empty($data->other_diagnoses)){$pdf->MultiCell(0, 5, utf8_decode($data->other_diagnoses), 0, 'L');}
+            //     $pdf->Ln();
+            // }
     
-            if (isset($data->reason)) {
-                $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: "), 0, 'L');
-                $pdf->SetTextColor(102, 56, 0);
-                $pdf->SetFont('Arial', 'I', 10);
-                if(!empty($data->reason['reason'])){$pdf->MultiCell(0, 5, $data->reason['reason'], 0, 'L');}
-                $pdf->Ln();
-            }
+            // if (isset($data->reason)) {
+            //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: "), 0, 'L');
+            //     $pdf->SetTextColor(102, 56, 0);
+            //     $pdf->SetFont('Arial', 'I', 10);
+            //     if(!empty($data->reason['reason'])){$pdf->MultiCell(0, 5, $data->reason['reason'], 0, 'L');}
+            //     $pdf->Ln();
+            // }
     
-            if (isset($data->other_reason_referral)) {
-                $pdf->MultiCell(0, 7, self::black($pdf, "Other reason for referral: "), 0, 'L');
-                $pdf->SetTextColor(102, 56, 0);
-                $pdf->SetFont('Arial', 'I', 10);
-                if(!empty($data->other_reason_referral)){$pdf->MultiCell(0, 5, utf8_decode($data->other_reason_referral), 0, 'L');}
-                $pdf->Ln();
-            }
+            // if (isset($data->other_reason_referral)) {
+            //     $pdf->MultiCell(0, 7, self::black($pdf, "Other reason for referral: "), 0, 'L');
+            //     $pdf->SetTextColor(102, 56, 0);
+            //     $pdf->SetFont('Arial', 'I', 10);
+            //     if(!empty($data->other_reason_referral)){$pdf->MultiCell(0, 5, utf8_decode($data->other_reason_referral), 0, 'L');}
+            //     $pdf->Ln();
+            // }
             $data_md_referring = []; 
             $data_md_contact = [];
             $data_md_referred_contact=[];
@@ -3132,123 +3280,8 @@ class NewFormCtrl extends Controller
             $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, utf8_decode($data_md_referring[0]), "Name of referring MD/HCW:"), 0, 'L');
             $pdf->MultiCell($x / 2, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $data_md_contact[0], "Contact # of referring MD/HCW:"), 0, 'L');
             $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referred MD/HCW- Mobile Contact # (ReCo): ") . self::orange($pdf, $data_md_referred_contact[0], "Name of referred MD/HCW- Mobile Contact # (ReCo):"), 0, 'L');
-            if ($form_type === 'normal' && $this->calculateAge($patients_name->dob)<=18){
-                $this->titleHeader($pdf, "PEDIATRIC HISTORY");
-                  if (!empty($data->prenatal_a)){
-                      $pdf->MultiCell(0, 7, "Prenatal A:" . self::green($pdf, $data->prenatal_a, 'Prenatal A'), 1, 'L');
-                  }
-                  if (!empty($data->prenatal_g)){
-                      $pdf->MultiCell(0, 7, "Prenatal G:" . self::green($pdf, $data->prenatal_g, 'Prenatal G'), 1, 'L');
-                  }
-                  if (!empty($data->prenatal_p)){
-                      $pdf->MultiCell(0, 7, "Prenatal P:" . self::green($pdf, $data->prenatal_p, 'Prenatal P'), 1, 'L');
-                  }
-                  if (!empty($data->prenatal_radiowith_or_without) || !empty($data->prenatal_with_maternal_illness)){
-                      if ($data->prenatal_radiowith_or_without == "with") {
-                          $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Maternal Illness: ") . "\n" . self::staticGreen($pdf, $data->prenatal_with_maternal_illness), 1, 'L');
-                      } else if ($data->prenatal_radiowith_or_without == "without") {
-                          $pdf->MultiCell(0, 7, "Maternal Illness:" . self::green($pdf, $data->prenatal_radiowith_or_without . " illness", 'Maternal Illness'), 1, 'L');
-                      }
-                  }
-    
-                  $pdf->ln(1);
-                  $pdf->SetFillColor(235, 235, 235);
-    
-                  if (!empty($data->natal_born_at)){
-                      $pdf->MultiCell(0, 7, "Born At:" . self::green($pdf, $data->natal_born_at, 'Born At'), 1, 'L');
-                  }
-                  if (!empty($data->natal_born_address)){
-                      $pdf->MultiCell(0, 7, "Born Address:" . self::green($pdf, $data->natal_born_address, 'Born Address'), 1, 'L');
-                  }
-                  if (!empty($data->natal_by)){
-                      $pdf->MultiCell(0, 7, "By:" . self::green($pdf, $data->natal_by, 'By'), 1, 'L');
-                  }
-                  if (!empty($data->natal_via)){
-                      $pdf->MultiCell(0, 7, "Via:" . self::green($pdf, $data->natal_via, 'Via'), 1, 'L');
-                  }
-                  if (!empty($data->natal_indication)){
-                      $pdf->MultiCell(0, 7, "Indication:" . self::green($pdf, $data->natal_indication, 'Indication'), 1, 'L');
-                  }
-                  if (!empty($data->natal_term)) {
-                      $pdf->MultiCell(0, 7, "Term:" . self::green($pdf, $data->natal_term, 'Term'), 1, 'L');
-                  }
-                  if (!empty($data->natal_with_good_cry)){
-                      $pdf->MultiCell(0, 7, "With Good Cry:" . self::green($pdf, $data->natal_with_good_cry, 'With Good Cry'), 1, 'L');
-                  }
-                  if (!empty($data->natal_other_complications)){
-                      $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Other Complications: ") . "\n" . self::staticGreen($pdf, $data->natal_other_complications), 1, 'L');
-                  }
-    
-                  $pdf->ln(1);
-                  $pdf->SetFillColor(235, 235, 235);
-                  $pdf->SetTextColor(40);
-                  $pdf->ln(1);
-                  
-          
-                  
-                  if (!empty($data->post_natal_bfeedx_month)){
-                      $pdf->MultiCell(0, 7, "Feeding History", 1, 'L', true);
-                      if ($data->post_natal_bfeed == "Yes") {
-                          if (!empty($data->post_natal_bfeed)){ $pdf->MultiCell(0, 7, "Breast Feed:" . self::green($pdf, $data->post_natal_bfeed, 'Breast Feed'), 1, 'L'); }
-                          if (!empty($data->post_natal_bfeedx_month)){ $pdf->MultiCell(0, 7, "Breast Feed in mos:" . self::green($pdf, $data->post_natal_bfeedx_month, 'Breast Feed in mos'), 1, 'L');}  
-                      } else if ($data->post_natal_bfeed == "No") {
-                          if (!empty($data->post_natal_bfeed)){$pdf->MultiCell(0, 7, "Breast Feed:" . self::green($pdf, $data->post_natal_bfeed, 'Breast Feed'), 1, 'L');}
-                      }
-                  }
-                  if (!empty($data->post_natal_formula_feed)){
-                      if ($data->post_natal_formula_feed == "Yes") {
-                          $pdf->MultiCell(0, 7, "Formula Feed:" . self::green($pdf, $data->post_natal_formula_feed, 'Formula Feed'), 1, 'L');
-                          if (!empty($data->post_natal_ffeed_specify)){
-                           $pdf->MultiCell(0, 7, "Specific Formula Feed:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Specific Formula Feed'), 1, 'L');
-                           $pdf->MultiCell(0, 7, "Started Semi Food in mos:" . self::green($pdf, $data->post_natal_ffeed_specify, 'Started Semi Food in mos'), 1, 'L');
-                          }
-                         
-                      } else if ($data->post_formula_feed == "No") {
-                          $pdf->MultiCell(0, 7, "Formula Feed:" . self::green($pdf, $data->post_natal_formula_feed, 'Formula Feed'), 1, 'L');
-                      }
-                      
-                  }
-                  
-                  $pdf->ln(1);
-                 
-                  if (!empty($data->post_natal_bcg)){
-                      $pdf->MultiCell(0, 7, "Immunization History", 1, 'L', true);
-                      if ($data->post_natal_bcg == "Yes") {
-                          $pdf->MultiCell(0, 7, "BCG:" . self::green($pdf, "Immunized", 'BCG'), 1, 'L');
-                      }
-                  }
-                  if (!empty($data->post_natal_dpt_opv_x)){
-                      if ($data->post_natal_dpt_opv_x == "Yes") {
-                          $pdf->MultiCell(0, 7, "DPT/OPV:" . self::green($pdf, "Immunized", 'DPT/OPV'), 1, 'L');
-                         if(!empty($data->post_dpt_doses)){$pdf->MultiCell(0, 7, "DPT/OPV doses:" . self::green($pdf, $data->post_dpt_doses, 'DPT/OPV doses'), 1, 'L');}
-                      }
-                  }
-                  
-                  if (!empty($data->post_natal_hepB_cbox)){
-                      if ($data->post_natal_hepB_cbox == "Yes") {
-                          $pdf->MultiCell(0, 7, "Hep B:" . self::green($pdf, "Immunized", 'Hep B'), 1, 'L');
-                          if (!empty($data->post_natal_hepB_x_doses)) {$pdf->MultiCell(0, 7, "Hep B doses:" . self::green($pdf, $data->post_natal_hepB_x_doses, 'Hep B doses'), 1, 'L');}
-                      }
-                  }
-                  if (!empty($data->post_natal_immu_measles_cbox)){
-                      if ($data->post_natal_immu_measles_cbox == "Yes") {
-                          $pdf->MultiCell(0, 7, "Measles:" . self::green($pdf, "Immunized", 'Measles'), 1, 'L');
-                      }
-                  }
-                  if (!empty($data->post_natal_mmr_cbox)){
-                      if ($data->post_natal_mmr_cbox == "Yes") {
-                          $pdf->MultiCell(0, 7, "MMR:" . self::green($pdf, "Immunized", 'MMR'), 1, 'L');
-                      }
-                  }
-                  if (!empty($data->post_natal_others_cbox)){
-                      if ($data->post_natal_others_cbox == "Yes") {
-                          if (!empty($data->post_natal_others)){$pdf->MultiCell(0, 7, "Others:" . self::green($pdf, $data->post_natal_others, 'Others'), 1, 'L');}
-                      }
-                  }
-                  if (!empty($data->post_natal_development_milestones)){
-                      $pdf->MultiCell(0, 7, "Developmental Milestones:" . self::green($pdf, $data->post_natal_development_milestones, 'Developmental Milestones'), 1, 'L');
-                  }      
-            }
+            
+            
     }
     
     public function titleHeader($pdf, $title)
@@ -3332,13 +3365,9 @@ class NewFormCtrl extends Controller
         return $pdf->Text($x, $y, $val);
     }
 
-    private function obstetricPage($pdf, $header, $data, $data_)
+    private function obstetricPage($pdf, $header, $data, $data_, $form_type)
     {
-
-
         $pdf->SetMargins(6.35, 6.35, 6.35);
-  
-
         $contraceptive_other = $data->contraceptive_history;
         $other_explodedData = explode(',', $contraceptive_other);
         $others = ['Other'];
@@ -3379,6 +3408,9 @@ class NewFormCtrl extends Controller
             if(!empty($data_->prenatal_history)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Prenatal History: ") . "\n" . self::staticGreen($pdf, $this->explodeString($data_->prenatal_history)), 1, 'L');}
 
             $pdf->SetMargins(6.35, 6.35, 6.35);
+            $pdf->ln(5);
+            // dd($data_);
+            
             $pdf->AddPage('L');
 
             $pdf->ln(5);
@@ -3388,10 +3420,8 @@ class NewFormCtrl extends Controller
             $pdf->SetDrawColor(200, 200, 200);
             $pdf->SetLineWidth(.3);
             $pdf->SetFont('Arial', 'B', 10);
-        
-
+            
             $colWidth = array(20, 16, 38, 34, 36, 10, 16, 34, 80);
-
 
             foreach ($header as $i => $colHeader) {
                 $pdf->Cell($colWidth[$i], 7, $colHeader, 1, 0, 'C', true);
