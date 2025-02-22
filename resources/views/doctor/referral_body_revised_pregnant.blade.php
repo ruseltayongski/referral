@@ -713,7 +713,7 @@ $user = Session::get('auth');
         
         <tr>
         @if($obstetric_and_gynecologic_menstrual_padsperday)<td colspan="2">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>@endif
-        @if($obstetric_and_gynecologic_menstrual_medication)<td>Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_medication)<td colspan="4">Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>@endif
         </tr>
 
         @if ($obstetric_and_gynecologic_constraceptives)
@@ -733,22 +733,22 @@ $user = Session::get('auth');
 
         <tr>
         @if($obstetric_and_gynecologic_parity_g)<td colspan="2">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td>@endif
-        @if($obstetric_and_gynecologic_parity_p)<td>P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_p)<td colspan="4">P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td>@endif
         </tr>
         
         <tr>
         @if($obstetric_and_gynecologic_parity_ft)<td colspan="2">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td>@endif
-        @if($obstetric_and_gynecologic_parity_pt)<td>PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_pt)<td colspan="4">PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td>@endif
         </tr>
 
         <tr>
         @if($obstetric_and_gynecologic_parity_a)<td colspan="2">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td>@endif
-        @if($obstetric_and_gynecologic_parity_l)<td>L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_l)<td colspan="4">L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td>@endif
         </tr>
         
         <tr>
         @if($obstetric_and_gynecologic_parity_lnmp)<td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_lnmp}}</span></td>@endif
-        @if($obstetric_and_gynecologic_parity_edc)<td>EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> @endif
+        @if($obstetric_and_gynecologic_parity_edc)<td colspan="4">EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_edc}}</span></td> @endif
         </tr>
 
         @if($obstetric_and_gynecologic_aog_lnmp || $obstetric_and_gynecologic_aog_eutz)
@@ -758,7 +758,7 @@ $user = Session::get('auth');
         @endif
         <tr>
         @if($obstetric_and_gynecologic_aog_lnmp)<td colspan="2">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td>@endif
-        @if($obstetric_and_gynecologic_aog_eutz)<td>UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td>@endif
+        @if($obstetric_and_gynecologic_aog_eutz)<td colspan="4">UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td>@endif
         </tr>
        
         <tr>
