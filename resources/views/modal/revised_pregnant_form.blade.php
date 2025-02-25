@@ -2081,7 +2081,7 @@
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
-                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" required>
+                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2090,7 +2090,7 @@
                                         </select><br><br>
                                         <div id="pregnant_other_reason_referral_div" style="display:none;">
                                             <span>Other Reason for Referral:</span> <br/>
-                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>
+                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" require></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -3021,7 +3021,12 @@
         // lobibox for icd10 
         if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
             Lobibox.alert("error", {
-                msg: "Select ICD-10 / Other diagnosis!"
+                msg: "Select ICD-10 / Other diagnosis!",
+                callback: function(){
+                    $('#icd-modal-pregnant_revised').animate({
+                        scrollTop: $("#collapse_diagnosis_pregnant").offset().top - $('#icd-modal-pregnant_revised').offset().top + $('#icd-modal-pregnant_revised').scrollTop()
+                    }, 500);
+                }
             });
             return false;
         }
