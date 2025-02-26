@@ -105,7 +105,6 @@ class PrintNewFormCtrl extends Controller
          );   
         }
         
-    
        self::printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type);
         $pdf->Output();
         exit();
@@ -628,8 +627,7 @@ class PrintNewFormCtrl extends Controller
                 if(!empty($data->baby_data->baby_before_treatment)){$pdf->MultiCell(0, 7, "Before Referral: " . self::green($pdf, $data->baby_data->baby_before_treatment . '-' . $data->baby_data->baby_before_given_time, 'Before Referral'), 1, 'L');}
                 if(!empty($data->baby_data->baby_during_transport)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->baby_data->baby_during_transport . '-' . $data->baby_data->baby_transport_given_time, 'During Transport'), 1, 'L');}
                 if(!empty($data->baby_data->baby_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->baby_data->baby_information_given)), 1, 'L');}
-
-                
+                                
             }  
     }
 

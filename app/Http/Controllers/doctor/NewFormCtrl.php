@@ -106,7 +106,6 @@ class NewFormCtrl extends Controller
                     ->where('pregnant_form.code', $data->code)->first();
                 $pregnant_data = self::pregnantFormData($tracking_id);
                 // Attach the ICD data to $data
-                // dd($baby_data['baby']);
                 $data->baby_data = $pregnant_data['baby'];
                 $data->tracking_date = $tracking_date;
                 $data->pregnant_form = $pregnant_data['pregnant'];
@@ -145,7 +144,7 @@ class NewFormCtrl extends Controller
         )
         ->where('patients.id', $patient_id)
         ->first();
-        
+
     if ($data) {
         $icd = Icd::select('icd10.code', 'icd10.description')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
@@ -164,7 +163,6 @@ class NewFormCtrl extends Controller
         return $data;
     }
     
-
 
     public function fetchPatientsData($id){
         $data = DB::table('patients')
@@ -1993,9 +1991,6 @@ class NewFormCtrl extends Controller
         self::editForm($request,$status,$type,$patient_id);
         return redirect()->back();
         }
-       
-        
-        // return redirect("/revised/referral/info/{$patient_id}");
     }
 
     public static function editForm($req,$status,$type,$patient_id)
@@ -2067,9 +2062,6 @@ class NewFormCtrl extends Controller
             "file_cleared" => null,
         ];
 
-       
-        // dd($req,$req->icd_ids,$request_arr);
-
         $request_arr2 = [
             "id" => $id,
             "referral_status" => $status,
@@ -2095,9 +2087,6 @@ class NewFormCtrl extends Controller
             "referred_md" => $req->referred_md,
         ];
 
-        // dd($request_arr,$request_arr2,$req);
-        
-    //    dd($request_arr2);
         /* FACILITY AND DEPARTMENT */
         if($old_facility != $req->referred_facility)
             $updated .= "Referred facility, Department";
@@ -2342,8 +2331,7 @@ class NewFormCtrl extends Controller
         }
 
         if($old_facility != $req->referred_to) {
-//            Seen::where('tracking_id',$tracking->id)->delete();
-
+        // Seen::where('tracking_id',$tracking->id)->delete();
             $data2 = array(
                 'code' => $track,
                 'patient_id' => $tracking->patient_id,

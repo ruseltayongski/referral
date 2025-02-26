@@ -126,53 +126,7 @@ $user = Session::get('auth');
                     <span class="woman_information_given form-details">{!! nl2br($form['pregnant']->woman_information_given) !!}</span>
                 </td>
             </tr>
-            @if(isset($icd[0]))
-                <tr>
-                    <td colspan="4">
-                        ICD-10 Code and Description:
-                        <br />
-                        @foreach($icd as $i)
-                            <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
-                        @endforeach
-                    </td>
-                </tr>
-            @endif
-            @if(isset($form['pregnant']->notes_diagnoses))
-                <tr>
-                    <td colspan="4">
-                        Diagnosis/Impression:
-                        <br />
-                        <span class="diagnosis form-details">{!! nl2br($form['pregnant']->notes_diagnoses) !!}</span>
-                    </td>
-                </tr>
-            @endif
-            @if(isset($form['pregnant']->other_diagnoses))
-                <tr>
-                    <td colspan="4">
-                        Other Diagnosis:
-                        <br />
-                        <span class="reason form-details">{{ $form['pregnant']->other_diagnoses }}</span>
-                    </td>
-                </tr>
-            @endif
-            @if(isset($reason))
-                <tr>
-                    <td colspan="4">
-                        Reason for referral:
-                        <br />
-                        <span class="reason form-details">{{ $reason->reason }}</span>
-                    </td>
-                </tr>
-            @endif
-            @if(isset($form['pregnant']->other_reason_referral))
-                <tr>
-                    <td colspan="4">
-                        Reason for referral:
-                        <br />
-                        <span class="reason form-details">{{ $form['pregnant']->other_reason_referral }}</span>
-                    </td>
-                </tr>
-            @endif
+          
 
         </table>
     </div>
@@ -337,6 +291,42 @@ $user = Session::get('auth');
     <div class="col-sm-6">
     <div class="table-responsive">
         <table class="table bg-warning">
+
+            @if(isset($icd[0]))
+            <tr class="bg-gray">
+                <td colspan="6">Diagnosis</td>
+            </tr>
+                <tr>
+                    <td colspan="4">
+                        ICD-10 Code and Description:
+                        <br />
+                        @foreach($icd as $i)
+                            <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
+                        @endforeach
+                    </td>
+                </tr>
+            @endif
+            @if(isset($form['pregnant']->other_diagnoses))
+            <tr class="bg-gray">
+                <td colspan="6">Diagnosis</td>
+            </tr>
+                <tr>
+                    <td colspan="4">
+                        Other Diagnosis:
+                        <br />
+                        <span class="reason form-details">{{ $form['pregnant']->other_diagnoses }}</span>
+                    </td>
+                </tr>
+            @endif
+            @if(isset($form['pregnant']->notes_diagnoses))
+                <tr>
+                    <td colspan="4">
+                        Diagnosis/Impression:
+                        <br />
+                        <span class="diagnosis form-details">{!! nl2br($form['pregnant']->notes_diagnoses) !!}</span>
+                    </td>
+                </tr>
+            @endif
            
             @if ($validation_checker_past_medical_history)
             <tr class="bg-gray">
@@ -694,6 +684,31 @@ $user = Session::get('auth');
             </tr>
             @endif
         
+            @if(isset($reason))
+            <tr class="bg-gray">
+                <td colspan="6">Reason for Referral</td>
+            </tr>
+                <tr>
+                    <td colspan="4">
+                        Reason for referral:
+                        <br />
+                        <span class="reason form-details">{{ $reason->reason }}</span>
+                    </td>
+                </tr>
+            @endif
+            @if(isset($form['pregnant']->other_reason_referral))
+            <tr class="bg-gray">
+                <td colspan="6">Reason for Referral</td>
+            </tr>
+                <tr>
+                    <td colspan="4">
+                        Reason for referral:
+                        <br />
+                        <span class="reason form-details">{{ $form['pregnant']->other_reason_referral }}</span>
+                    </td>
+                </tr>
+            @endif
+        
         @if($obstetric_and_gynecologic_validation_checker)
         <tr class="bg-gray">
                 <td colspan="4">Obstetric and Gynecologic History </td>
@@ -701,7 +716,7 @@ $user = Session::get('auth');
         @endif
 
         <tr>
-        @if($obstetric_and_gynecologic_menarche_null_checker)<td colspan="2">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menarche_null_checker)<td colspan="4">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>@endif
         @if($obstetric_and_gynecologic_menopausal_null_checker)<td colspan="4">Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>@endif
         </tr>
         
