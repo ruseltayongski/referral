@@ -50,6 +50,6 @@ class DropObstetricAndGynecologicTable extends Migration
      */
     public function down()
     {
-       
+       //
     }
 }

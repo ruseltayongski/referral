@@ -33,6 +33,6 @@ class DropLatestVitalSignsTable extends Migration
      */
     public function down()
     {
-       
+       //
     }
 }

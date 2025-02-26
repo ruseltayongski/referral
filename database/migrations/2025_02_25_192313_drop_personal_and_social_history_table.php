@@ -40,6 +40,6 @@ class DropPersonalAndSocialHistoryTable extends Migration
      */
     public function down()
     {
-       
+       //
     }
 }

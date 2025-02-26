@@ -108,12 +108,8 @@ $user = Session::get('auth');
             </tr>
             <tr>
                 <td colspan="4">Major Findings (Clinica and BP,Temp,Lab)
-                    <br />
                     <span class="woman_major_findings form-details">{!! nl2br($form['pregnant']->woman_major_findings) !!}</span>
                 </td>
-            </tr>
-            <tr>
-                <td></td>
             </tr>
             <tr class="bg-gray">
                 <td colspan="4">Treatments Give Time</td>
@@ -441,26 +437,26 @@ $user = Session::get('auth');
             @endif
 
             <tr>
-            @if($smoking_null_checker) <td colspan="2">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> @endif
+            @if($smoking_null_checker) <td colspan="4">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td> @endif
             @if($smoking_sticks_per_day_null_checker)<td colspan="4">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_sticks_per_day}}</span></td> @endif
             </tr>
             
             <tr>
-            @if($smoking_quit_year_null_checker)<td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td> @endif
+            @if($smoking_quit_year_null_checker)<td colspan="4">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td> @endif
             @if($smoking_remarks_null_checker)<td colspan="4">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td> @endif
             </tr>
             
             <tr>
-            @if($alcohol_dringking_null_checker)<td colspan="2">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td>@endif
+            @if($alcohol_dringking_null_checker)<td colspan="4">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td>@endif
             @if($alcohol_liquor_type_null_checker)<td colspan="4">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td>@endif
             </tr>
             <tr>
-            @if($alcohol_dringking_quit_year_null_checker)<td colspan="2">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> @endif
+            @if($alcohol_dringking_quit_year_null_checker)<td colspan="4">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td> @endif
             @if($alcohol_bottles_per_day_null_checker)<td colspan="4">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td> @endif
             </tr>
   
             <tr>
-            @if($illicit_drugs_null_checker)<td colspan="2">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs}}</span></td>@endif
+            @if($illicit_drugs_null_checker)<td colspan="4">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs}}</span></td>@endif
             @if($illicit_drugs_taken_null_checker)<td colspan="4">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td> @endif
             </tr>
             <tr>
@@ -839,10 +835,6 @@ $user = Session::get('auth');
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form['pregnant']->code}}"><i class="fa fa-times"></i> Close</button>
 <div class="pull-right">
-    @if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form['pregnant']->department_id === 5 && $user->id == $form['pregnant']->md_referring_id)
-        <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form['pregnant']->tracking_id }}','{{ $form['pregnant']->code }}','{{ $form['pregnant']->action_md }}','{{ $form['pregnant']->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
-        <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
-    @endif
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form['pregnant']->md_referring_id)
         <button class="btn btn-primary btn-flat button_option edit_form_revised_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif

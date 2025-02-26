@@ -58,6 +58,6 @@ class DropPediatricHistoryTable extends Migration
      */
     public function down()
     {
-       
+       //
     }
 }

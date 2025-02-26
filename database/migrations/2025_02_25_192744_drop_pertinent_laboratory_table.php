@@ -30,6 +30,6 @@ class DropPertinentLaboratoryTable extends Migration
      */
     public function down()
     {
-       
+       //
     }
 }

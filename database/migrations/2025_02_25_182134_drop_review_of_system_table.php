@@ -45,6 +45,6 @@ class DropReviewOfSystemTable extends Migration
      */
     public function down()
     {
-        
+        //
     }
 }

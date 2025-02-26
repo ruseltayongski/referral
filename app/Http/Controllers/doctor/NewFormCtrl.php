@@ -3009,11 +3009,13 @@ class NewFormCtrl extends Controller
             if ($data->tracking_date->date_transferred !== '0000-00-00 00:00:00'){
               $pdf->MultiCell($x / 2, 7, self::black($pdf, "Arrival Date: ") . self::orange($pdf, $data->tracking_date->date_transferred, "Arrival Date:"), 0);
             }  
+        }else {
+            $pdf->MultiCell($x / 2, 7, self::black($pdf, "") . self::orange($pdf, null, ""), 0);
         }
 
 
         // dd($data->pregnant_form);
-        if(!empty($data->pregnant_form->referring_contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $data->pregnant_form->referring_contact, "Contact # of referring MD/HCW:"), 0, 'L');}
+        if(!empty($data->pregnant_form->referring_contact)){$pdf->MultiCell(0, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . "\n" . self::orange($pdf, $data->pregnant_form->referring_contact, "Contact # of referring MD/HCW:"), 0, 'L');}
         //-------------------------------------------------------------------------------------------------------
             
         if(!empty($data->pregnant_form->referring_facility)){$pdf->MultiCell(0, 7, self::black($pdf, "Facility: ") . self::orange($pdf, $data->pregnant_form->referring_facility, "Facility:"), 0, 'L');}
@@ -3074,25 +3076,7 @@ class NewFormCtrl extends Controller
             if(!empty($data->pregnant_form->woman_before_given_time)){$pdf->MultiCell(0, 7, "During Transport: " . self::green($pdf, $data->pregnant_form->woman_during_transport . '-' . $data->pregnant_form->woman_before_given_time, 'During Transport'), 1, 'L');}
             if(!empty($data->pregnant_form->woman_information_given)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Information Given to the Woman and Companion About the Reason for Referral : ") . "\n" . self::staticGreen($pdf, utf8_decode($data->pregnant_form->woman_information_given)), 1, 'L');}
         }
-        // if (isset($data->icd)) {
-        //     $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 1, 'L');
-        //     foreach ($data->icd as $icd) {
-        //         $pdf->MultiCell(0, 5, self::staticGreen($pdf, $icd->code . " - " . $icd->description), 0, 'L');
-        //     }
-        // }
-        // if (isset($data->notes_diagnoses)) {
-        //     $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 1, 'L');
-        //     $pdf->MultiCell(0, 5, self::staticGreen($pdf, $data->notes_diagnoses), 1, 'L');
-        // }
-        // if (isset($data->other_diagnoses)) {
-        //     $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_diagnoses)), 1, 'L');
-        // }
-        // if (isset($data->reason)) {
-        //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, $data->reason['reason']), 1, 'L');
-        // }
-        // if (isset($data->other_reason_referral)) {
-        //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_reason_referral)), 1, 'L');
-        // }
+       
         
             $pdf->Ln(3);
 
@@ -3225,48 +3209,7 @@ class NewFormCtrl extends Controller
             $pdf->SetFont('Arial', 'I', 10);
             $pdf->MultiCell(0, 5, utf8_decode($data->reco_summary), 0, 'L');
             $pdf->Ln();
-    
-            // if (isset($data->icd[0])) {
-            //     $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 0, 'L');
-            //     $pdf->SetTextColor(102, 56, 0);
-            //     $pdf->SetFont('Arial', 'I', 10);
-            //     foreach ($data->icd as $icd) {
-            //        if(!empty($icd->code)&&!empty($icd->description)){$pdf->MultiCell(0, 5, $icd->code . " - " . $icd->description, 0, 'L');}
-            //     }
-            //     $pdf->Ln();
-            // }
-    
-            // if (isset($data->diagnosis)) {
-            //     $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: "), 0, 'L');
-            //     $pdf->SetTextColor(102, 56, 0);
-            //     $pdf->SetFont('Arial', 'I', 10);
-            //     if(!empty($data->diagnosis)){$pdf->MultiCell(0, 5, $data->diagnosis, 0, 'L');}
-            //     $pdf->Ln();
-            // }
-    
-            // if (isset($data->other_diagnoses)) {
-            //     $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: "), 0, 'L');
-            //     $pdf->SetTextColor(102, 56, 0);
-            //     $pdf->SetFont('Arial', 'I', 10);
-            //     if(!empty($data->other_diagnoses)){$pdf->MultiCell(0, 5, utf8_decode($data->other_diagnoses), 0, 'L');}
-            //     $pdf->Ln();
-            // }
-    
-            // if (isset($data->reason)) {
-            //     $pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: "), 0, 'L');
-            //     $pdf->SetTextColor(102, 56, 0);
-            //     $pdf->SetFont('Arial', 'I', 10);
-            //     if(!empty($data->reason['reason'])){$pdf->MultiCell(0, 5, $data->reason['reason'], 0, 'L');}
-            //     $pdf->Ln();
-            // }
-    
-            // if (isset($data->other_reason_referral)) {
-            //     $pdf->MultiCell(0, 7, self::black($pdf, "Other reason for referral: "), 0, 'L');
-            //     $pdf->SetTextColor(102, 56, 0);
-            //     $pdf->SetFont('Arial', 'I', 10);
-            //     if(!empty($data->other_reason_referral)){$pdf->MultiCell(0, 5, utf8_decode($data->other_reason_referral), 0, 'L');}
-            //     $pdf->Ln();
-            // }
+ 
             $data_md_referring = []; 
             $data_md_contact = [];
             $data_md_referred_contact=[];

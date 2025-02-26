@@ -33,6 +33,6 @@ class DropGlasgowComaScaleTable extends Migration
      */
     public function down()
     {
-       
+       //
     }
 }

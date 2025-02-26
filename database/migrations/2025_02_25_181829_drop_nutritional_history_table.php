@@ -30,6 +30,6 @@ class DropNutritionalHistoryTable extends Migration
      */
     public function down()
     {
-       
+       //
     }
 }
