@@ -520,12 +520,11 @@
     @endif
 
     @if (!empty($psh->smoking))
-    <tr>
-        <td colspan="3">Smoking: - <span class="woman_prenatal form-details">{{$psh->smoking}}</span></td>
+    <tr><td colspan="3">Smoking: - <span class="woman_prenatal form-details">{{$psh->smoking}}</span></td>
         @if ($psh->smoking === "Yes")
             <td colspan="3">Sticks per Day: - <span class="woman_prenatal form-details">{{$psh->smoking_sticks_per_day ?? 'N/A'}}</span></td>
         @elseif ($psh->smoking === "Quit")
-            <td colspan="6">Quit Year: - <span class="woman_prenatal form-details">{{$psh->smoking_quit_year ?? 'N/A'}}</span></td>
+            <td colspan="3">Quit Year: - <span class="woman_prenatal form-details">{{$psh->smoking_quit_year ?? 'N/A'}}</span></td>
         @elseif ($psh->smoking === "No")
     </tr>
     <tr>
@@ -583,6 +582,7 @@
     <tr>   
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
+ 
     @if(isset($file_path))
         <tr>
             <td colspan="6">
@@ -614,9 +614,9 @@
             'PT' => $obstetric_and_gynecologic_history->parity_pt ?? '',
             'A' => $obstetric_and_gynecologic_history->parity_a ?? '',
             'L' => $obstetric_and_gynecologic_history->parity_l ?? '',
-            'LMP' => $obstetric_and_gynecologic_history->parity_lnmp ?? '',
-            'EDC' => $obstetric_and_gynecologic_history->parity_edc ?? '',
-            'AOG by LMP' => $obstetric_and_gynecologic_history->aog_lnmp ?? '',
+            'LMP' => $obstetetric_parity_date->parity_lnmp ?? '',
+            'EDC' => $obstetetric_parity_date->parity_edc ?? '',
+            'AOG by LMP' => $formatted_LMP ?? '',
             'AOG by UTZ' => $obstetric_and_gynecologic_history->aog_eutz ?? '',
             'Prenatal History' => $obstetric_and_gynecologic_history->prenatal_history ?? '',
         ];
@@ -637,6 +637,7 @@
             @endforeach
         @endif
     @endif
+
 
             @if ($validation_checker_review_of_systems)
             <tr class="bg-gray">

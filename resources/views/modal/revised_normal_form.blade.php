@@ -240,7 +240,9 @@
                                     <select name="referred_facility" class="modal-select2 select_facility form-control" required>
                                         <option value="">Select Facility...</option>
                                         @foreach($facilities as $row)
+                                       {{-- @if ($row->id == 24) --}}
                                         <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                       {{-- @endif --}}
                                         @endforeach
                                     </select>
                                 </div>
@@ -839,9 +841,9 @@
 
                                         <div class="container-referral">
                                             <small class="text-success">LMP</small>
-                                            <input type="number" step="0.01" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
+                                            <input type="text" class="form-control form_datetime" name="parity_lnmp" placeholder="Date/Time">
                                             <small class="text-success">EDC</small><i>(if pregnant)</i>
-                                            <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant">
+                                            <input type="text" class="form-control form_datetime" name="parity_edc_ifpregnant" placeholder="Date/Time">
                                         </div><br>
 
                                         <small class="text-success"><b>AOG</b></small>
@@ -896,7 +898,7 @@
                                                                 <option value="F">Female</option>
                                                             </select>
                                                         </td>
-                                                        <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]"></td>
+                                                        <td><input class="form-control" type="text" name="pregnancy_history_birthweight[]"></td>
                                                         <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]"></td>
                                                         <td><input class="form-control" type="text" maxlength="38" name="pregnancy_history_complications[]"></td>
                                                     </tr>

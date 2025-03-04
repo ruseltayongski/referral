@@ -154,6 +154,7 @@ class NewFormCtrl extends Controller
             ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
             ->where('patient_form.code', $data->code)->first();
         $form = ReferralCtrl::normalFormData($tracking_id);
+       
         // Attach the ICD data to $data
         $data->icd = $icd;
         $data->reason = $reason;
@@ -1305,6 +1306,9 @@ class NewFormCtrl extends Controller
         $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
         $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get(); 
         $status = Tracking::select('status')->where('id', $id)->first()->status;
+        $obstetetric_parity_date = ObstetricAndGynecologicHistory::select( DB::raw("DATE_FORMAT(parity_lnmp, '%M %d, %Y %h:%i %p') as parity_lnmp"),
+        DB::raw("DATE_FORMAT(parity_edc, '%M %d, %Y %h:%i %p') as parity_edc"),
+        )->where('patient_id', $patient_id)->first();
 
 
         $arr = [
@@ -1331,6 +1335,7 @@ class NewFormCtrl extends Controller
             "latest_vital_signs" => $latest_vital_signs,
             "glasgocoma_scale" => $glasgocoma_scale,
             "pediatric_history"=>$pediatric_history,
+            "obstetetric_parity_date"=>$obstetetric_parity_date,
             "obstetric_and_gynecologic_history"=>$obstetric_and_gynecologic_history,
             "pregnancy"=>$pregnancy_data,
             "status"=>$status
@@ -1508,6 +1513,9 @@ class NewFormCtrl extends Controller
         $obstetric_and_gynecologic_history = ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->first();
         $pediatric_history = PediatricHistory::where('patient_id', $patient_id)->first();
         $pregnancy_data = Pregnancy::where('patient_id', $patient_id)->get(); 
+        $obstetetric_parity_date = ObstetricAndGynecologicHistory::select( DB::raw("DATE_FORMAT(parity_lnmp, '%M %d, %Y %h:%i %p') as parity_lnmp"),
+        DB::raw("DATE_FORMAT(parity_edc, '%M %d, %Y %h:%i %p') as parity_edc"),
+        )->where('patient_id', $patient_id)->first();
 
         $arr = [
             "form" => $form['form'],
@@ -1533,6 +1541,7 @@ class NewFormCtrl extends Controller
             "latest_vital_signs" => $latest_vital_signs,
             "glasgocoma_scale" => $glasgocoma_scale,
             "pediatric_history"=>$pediatric_history,
+            "obstetetric_parity_date"=>$obstetetric_parity_date,
             "type"=>$type,
             "status" => $status
         ];

@@ -339,18 +339,18 @@ $facilities = \App\Facility::select('id','name')
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                            <small class="text-success">REFERRED TO:</small><span class="text-red"><b>*</b></span><br>
+                            <small class="text-success"><b>REFERRED TO: </b></small><br>
                                 <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
-                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" style="width:250px" require>
-                                    <option value="">Select Facility...</option>
-                                    @foreach($facilities as $row)
-                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" require>
+                                    <option value="{{ $row->name }}">Select Facility...</option>
+                                    @foreach($facilities as $row)            
+                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>      
                                     @endforeach
                                 </select>
                                 {{--<span class="referred_name">{{ $form['pregnant']->referred_facility }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">DEPARTMENT: </small><span class="text-red"><b>*</b></span><br>&emsp;
+                            <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
                                 <select name="department_id" class="form-control-select edit_department_pregnant" required>
                                     <option value="">Select Department...</option>
                                 </select>
@@ -386,47 +386,8 @@ $facilities = \App\Facility::select('id','name')
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
-                                <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
-                                @if ( $civil_status == "Single")
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    @elseif($civil_status == "Married")
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    @elseif($civil_status == "Divorced")
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    @elseif($civil_status == "Separated")
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    @elseif($civil_status == "Widowed")
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    @else
-                                    <option value="">Select...</option>    
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    @endif
-                                </select>
+                                <small ><small class="text-success">STATUS: </small></small><br> &nbsp;
+                                <span class="civil_status">{{$civil_status}}</span>
                             </div>
                         </div>
                         <br>
@@ -961,7 +922,7 @@ $facilities = \App\Facility::select('id','name')
                                 <div class="container-referral" style="padding: 5px;">  
 
                                 <small class="text-success"><b>LAST (BREAST) FEED (TIME):</b></small>
-                                <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br>
+                                <input type="text" class="form-control form_datetime" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br>
                                 <small class="text-success"><b>BEFORE REFERRAL</b></small>
                                 <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_before_treatment}}"/>
                                 <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_before_given_time}}"/><br>
@@ -1076,9 +1037,9 @@ $facilities = \App\Facility::select('id','name')
 
                                     <div class="container-referral">
                                         <small class="text-success">LMP</small>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
+                                        <input type="text" class="form-control form_datetime" style="width:25%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>" placeholder="Date/Time">
                                         <small class="text-success">EDC</small><i>(if pregnant)</i>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
+                                        <input type="text" class="form-control form_datetime" style="width:25%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>" placeholder="Date/Time">
                                     </div><br>
 
                                     <small class="text-success"><b>AOG</b></small>
@@ -1142,7 +1103,7 @@ $facilities = \App\Facility::select('id','name')
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
+                                                        <input class="form-control" type="text" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
                                                     </td>
                                                     <td>
                                                         <input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $preg['pregnancy_present_status'] }}">

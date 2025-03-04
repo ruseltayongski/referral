@@ -660,7 +660,7 @@ class PrintNewFormCtrl extends Controller
            if(!empty($department_normal->description)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, utf8_decode($department_normal->description), "Department:"), 0);}
     
             if(!empty($referred_to_normal->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referred_to_normal->address, "Address:"), 0, 'L');}
-    
+        
             if(!empty($patients_form->time_referred)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Referred (ReCo): ") . self::orange($pdf, utf8_decode($patients_form->time_referred), "Date/Time Referred (ReCo):"), 0, 'L');}
             $y = $pdf->getY();
             $pdf->SetXY($x / 2 + 10, $y - 7);
@@ -847,8 +847,12 @@ class PrintNewFormCtrl extends Controller
             if(!empty($data_->parity_pt)){$pdf->MultiCell(0, 7, "Parity PT:" . self::green($pdf, $data_->parity_pt, 'Parity PT'), 1, 'L');}
             if(!empty($data_->parity_a)){$pdf->MultiCell(0, 7, "Parity A:" . self::green($pdf, $data_->parity_a, 'Parity A'), 1, 'L');}
             if(!empty($data_->parity_l)){$pdf->MultiCell(0, 7, "Parity l:" . self::green($pdf, $data_->parity_l, 'Parity l'), 1, 'L');}
-            if(!empty($data_->parity_lnmp)){$pdf->MultiCell(0, 7, "Parity LMP:" . self::green($pdf, $data_->parity_lnmp, 'Parity LMP'), 1, 'L');}
-            if(!empty($data_->parity_edc)){$pdf->MultiCell(0, 7, "Parity EDC:" . self::green($pdf, $data_->parity_edc, 'Parity EDC'), 1, 'L');}
+            $decoded_LMP = utf8_decode($data_->parity_lnmp);
+            $decoded_EDC = utf8_decode($data_->parity_edc);
+            $formatted_LMP = date('F d, Y h:i A', strtotime($decoded_LMP));
+            $formatted_EDC = date('F d, Y h:i A', strtotime($decoded_EDC));
+            if(!empty($data_->parity_lnmp)){$pdf->MultiCell(0, 7, "Parity LMP:" . self::green($pdf, $formatted_LMP, 'Parity LMP'), 1, 'L');}
+            if(!empty($data_->parity_edc)){$pdf->MultiCell(0, 7, "Parity EDC:" . self::green($pdf, $formatted_EDC, 'Parity EDC'), 1, 'L');}
             if(!empty($data_->aog_eutz)){$pdf->MultiCell(0, 7, "UTZ:" . self::green($pdf, $data_->aog_eutz, 'UTZ'), 1, 'L');}
             if(!empty($data_->prenatal_history)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Prenatal History: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data_->prenatal_history)), 1, 'L');}
 

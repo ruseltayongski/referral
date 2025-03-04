@@ -97,10 +97,12 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Referred to</small> <span class="text-red"><b>*</b></span><br>
-                                <select name="referred_facility" id="referred_to" class="form-control-select modal-select2 select_facility" required>
+                                <select name="referred_facility" class="form-control-select modal-select2 select_facility" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                        @if ($row->id == 24) 
+                                            <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endif 
                                     @endforeach
                                 </select>
                             </div>
@@ -501,7 +503,7 @@
                                     <div class="container-referral" style="padding: 5px;">
                                         <small class="text-success"><b>TREATMENTS GIVE TIME</b></small>
                                         <small class="text-success"><b>LAST (BREAST) FEED (TIME):</b></small>
-                                        <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time"/><br>  
+                                        <input type="text" class="form-control form_datetime" name="baby_last_feed" placeholder="Date/Time"/><br>  
                                         <small class="text-success"><b>BEFORE REFERRAL</b></small>
                                         <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
                                         <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" /><br>
@@ -612,9 +614,9 @@
 
                                     <div class="container-referral">
                                         <small class="text-success">LMP</small>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
+                                        <input type="text" class="form-control form_datetime" name="parity_lnmp" placeholder="Date/Time">
                                         <small class="text-success">EDC</small><i>(if pregnant)</i>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant">
+                                        <input type="text" class="form-control form_datetime" name="parity_edc_ifpregnant" placeholder="Date/Time">
                                     </div><br>
 
                                     <small class="text-success"><b>AOG</b></small>
@@ -667,7 +669,7 @@
                                                             <option value="F">Female</option>
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_birthweight[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_complications[]"></td>
                                                 </tr> 
