@@ -2251,15 +2251,21 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
+                                            <?php
+                                                // Ensure blood pressure value exists and is formatted correctly (e.g., "120/80")
+                                                $bp = isset($latest_vital_signs->blood_pressure) ? explode("/", $latest_vital_signs->blood_pressure) : [null, null];
+                                                $systolic = htmlspecialchars($bp[0] ?? '');
+                                                $diastolic = htmlspecialchars($bp[1] ?? '');
+                                            ?>
                                                <small class="text-success"><b>Blood Pressure:</b></small></label>
                                                <input type="number" id="systolic_normal_info" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
-                                                    value="<?php echo htmlspecialchars($systolic); ?>" 
+                                                    value="<?= $systolic; ?>" 
                                                     oninput="updateBloodPressure()"> /
 
                                                 <input type="number" id="diastolic_normal_info" placeholder="Diastolic (e.g., 90)" 
                                                     style="width:18%;" min="0" max="200" 
-                                                    value="<?php echo htmlspecialchars($diastolic); ?>" 
+                                                    value="<?= $diastolic; ?>" 
                                                     oninput="updateBloodPressure()">mmHg
 
                                                 <!-- Hidden input to store the combined value -->

@@ -1959,10 +1959,10 @@
                                                         <small class="text-success"><b>Blood Pressure:</b></small>
                                                         <input type="number" id="systolic_normal" placeholder="Systolic (e.g., 100)" 
                                                             style="width:18%;" min="0" max="300" 
-                                                            oninput="updateBloodPressure()"> /
+                                                            oninput="updateBloodPressureNormal()"> /
                                                         <input type="number" id="diastolic_normal" placeholder="Diastolic (e.g., 90)" 
                                                             style="width:18%;" min="0" max="200" 
-                                                            oninput="updateBloodPressure()">mmHg
+                                                            oninput="updateBloodPressureNormal()">mmHg
 
                                                         <!-- Hidden input to store the combined value -->
                                                         <input type="hidden" name="vital_bp" id="vital_bp_normal">
@@ -1977,7 +1977,7 @@
                             </div>
 
                             <script>
-                                function updateBloodPressure() {
+                                function updateBloodPressureNormal() {
                                     // Get systolic and diastolic values
                                     const systolic = document.getElementById('systolic_normal').value;
                                     const diastolic = document.getElementById('diastolic_normal').value;
