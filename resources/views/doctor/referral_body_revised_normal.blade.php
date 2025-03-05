@@ -745,7 +745,7 @@
     ]);
     @endphp
 
-    @if (!empty($nutritionalFields) || !empty($vitalSignsFields))
+    @if (!empty($nutritionalFields))
     <tr class="bg-gray">
         <td colspan="6">Nutritional Status</td>
     </tr>

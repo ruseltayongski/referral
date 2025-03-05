@@ -2202,14 +2202,20 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row">
                                             <div class="col-md-4">
                                             <small class="text-success"> Blood Pressure:</small>
+                                            <?php
+                                                // Ensure blood pressure value exists and is formatted correctly (e.g., "120/80")
+                                                $bp = isset($latest_vital_signs->blood_pressure) ? explode("/", $latest_vital_signs->blood_pressure) : [null, null];
+                                                $systolic = htmlspecialchars($bp[0] ?? '');
+                                                $diastolic = htmlspecialchars($bp[1] ?? '');
+                                            ?>
                                                 <input type="number" id="systolic_pregnant_info" placeholder="Systolic (e.g., 100)" 
                                                         style="width:18%;" min="0" max="300" 
-                                                        value="<?php echo htmlspecialchars($systolic); ?>" 
+                                                        value="<?= $systolic; ?>" 
                                                         oninput="updateBloodPressure()"> /
 
                                                     <input type="number" id="diastolic_pregnant_info" placeholder="Diastolic (e.g., 90)" 
                                                         style="width:18%;" min="0" max="200" 
-                                                        value="<?php echo htmlspecialchars($diastolic); ?>" 
+                                                        value="<?= $diastolic; ?>" 
                                                         oninput="updateBloodPressure()">mmHg
 
                                                     <!-- Hidden input to store the combined value -->

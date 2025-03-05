@@ -526,9 +526,9 @@ class PrintNewFormCtrl extends Controller
         if(!empty($data->pregnant_form->health_worker)){$pdf->MultiCell(0, 7, self::black($pdf, "Accompanied by the Health Worker: ") . self::orange($pdf, utf8_decode($data->pregnant_form->health_worker), "Accompanied by the Health Worker:"), 0, 'L');}
 
         if(!empty($data->pregnant_form->referred_facility)){$pdf->MultiCell ($x / 2, 7, self::black($pdf, "Referred To: ") . self::orange($pdf, $data->pregnant_form->referred_facility, "Referred To:"), 0, 'L');}
-        if(!empty($data->pregnant_form->referred_contact)){$pdf->MultiCell ($x / 2, 7, self::black($pdf, "Referred Contact #: ") . self::orange($pdf, $data->pregnant_form->referred_contact, "Referred Contact #:"), 0, 'L');}
+        if(!empty($data->pregnant_form->referred_contact)){$pdf->MultiCell ($x / 2, 7, self::black($pdf, "Referred Contact #: ") . "\n" . self::orange($pdf, $data->pregnant_form->referred_contact, "Referred Contact #:"), 0, 'L');}
         $y = $pdf->getY();
-        $pdf->SetXY($x / 2 + 40, $y - 7);
+        // $pdf->SetXY($x / 2 + 40, $y - 7);
         if(!empty($department->description)){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Department: ") . self::orange($pdf, $department->description, "Department:"), 0);}
      
         if(!empty($referred_to->address)){$pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, utf8_decode($referred_to->address), "Address:"), 0, 'L');}
@@ -668,7 +668,7 @@ class PrintNewFormCtrl extends Controller
             if(!empty($tracking_data->date_transferred)){
                 if ($tracking_data->date_transferred !== '0000-00-00 00:00:00'){$pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, $tracking_data->date_transferred, "Date/Time Transferred:"), 0);} 
             }else{
-                $pdf->MultiCell($x / 2, 7, self::black($pdf, "Date/Time Transferred: ") . self::orange($pdf, null, "Date/Time Transferred:"), 0);
+                $pdf->MultiCell($x / 2, 7, self::black($pdf, "") . self::orange($pdf, null, ""), 0);
             }
     
             // $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of Patient: ") . "\n" . self::orange($pdf, $woman_name, "Name of Patient:"), 0, 'L');
