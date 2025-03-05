@@ -242,8 +242,6 @@
         <p class="text-center">All Rights Reserved {{ date("Y") }} | Version 6.7 </p>
     </div>
 </footer>
-
-
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- jQuery UI 1.11.4 -->

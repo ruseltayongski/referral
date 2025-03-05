@@ -21,9 +21,6 @@ $multi_faci = Session::get('multiple_login');
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{ url('doctor/patient') }}"><i class="fa fa-table"></i> List of Patients</a></li>
-                    @if($user->department_id == 5)
-                    <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
-                    @endif
                     {{-- <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Appointment Calendar</a></li> --}}
                     <!-- @if($user->level == 'support')
                         <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
@@ -87,7 +84,7 @@ $multi_faci = Session::get('multiple_login');
                         </a>
                     </li>
                     <li class="divider"></li>
-                    
+                    <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
                     <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports </a>
                     <ul class="dropdown-menu">
