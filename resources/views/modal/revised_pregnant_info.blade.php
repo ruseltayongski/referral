@@ -152,7 +152,6 @@ $facilities = \App\Facility::select('id','name')
         visibility: hidden;
     }
 
-
     #prenatal_table {
         display: block;
         white-space: nowrap;
@@ -340,18 +339,18 @@ $facilities = \App\Facility::select('id','name')
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                            <small class="text-success">REFERRED TO:</small><span class="text-red"><b>*</b></span><br>
+                            <small class="text-success"><b>REFERRED TO: </b></small><br>
                                 <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
-                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" style="width:250px" require>
-                                    <option value="">Select Facility...</option>
-                                    @foreach($facilities as $row)
-                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                <select name="referred_to" class="select2 edit_facility_pregnant form-control" require>
+                                    <option value="{{ $row->name }}">Select Facility...</option>
+                                    @foreach($facilities as $row)            
+                                        <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>      
                                     @endforeach
                                 </select>
                                 {{--<span class="referred_name">{{ $form['pregnant']->referred_facility }}</span>--}}
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">DEPARTMENT: </small><span class="text-red"><b>*</b></span><br>&emsp;
+                            <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
                                 <select name="department_id" class="form-control-select edit_department_pregnant" required>
                                     <option value="">Select Department...</option>
                                 </select>
@@ -387,47 +386,8 @@ $facilities = \App\Facility::select('id','name')
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <small class="text-success">Civil Status</small> <span class="text-red">*</span><br>
-                                <select name="civil_status" style="width: 100%;" class="civil_status form-control" required>
-                                @if ( $civil_status == "Single")
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    @elseif($civil_status == "Married")
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    @elseif($civil_status == "Divorced")
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    @elseif($civil_status == "Separated")
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    @elseif($civil_status == "Widowed")
-                                    <option>Widowed</option>
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    @else
-                                    <option value="">Select...</option>    
-                                    <option>Single</option>
-                                    <option>Married</option>
-                                    <option>Divorced</option>
-                                    <option>Separated</option>
-                                    <option>Widowed</option>
-                                    @endif
-                                </select>
+                                <small ><small class="text-success">STATUS: </small></small><br> &nbsp;
+                                <span class="civil_status">{{$civil_status}}</span>
                             </div>
                         </div>
                         <br>
@@ -552,24 +512,6 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>          
-
-                        <!-- <div class="row" style="margin: 5px;">
-                            <div class="col-lg-12">
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_illness_history_pregInfo" aria-expanded="false" aria-controls="collapse_illness_history_pregInfo">
-                                        <small class="text-success">HISTORY OF PRESENT ILLNESS</small><i> (required)</i><span class="text-red">*</span>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
-                              
-                                <div class="collapse" id="collapse_illness_history_pregInfo" style="width: 100%">
-                                    <small class="text-success">CASE SUMMARY:</small>
-                                    <textarea class="form-control" name="case_summary" style="resize: none;width: 100%;" rows="7" required>{{$form['pregnant']->case_summary}}</textarea><br><br>
-                                    <small class="text-success">CHIEF COMPLAINTS:</small>
-                                    <textarea class="form-control" name="reco_summary" style="resize: none;width: 100%;" rows="7" required>{{$form['pregnant']->reco_summary}}</textarea><br><br>
-                                </div>
-                            </div>
-                        </div> -->
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
@@ -980,7 +922,7 @@ $facilities = \App\Facility::select('id','name')
                                 <div class="container-referral" style="padding: 5px;">  
 
                                 <small class="text-success"><b>LAST (BREAST) FEED (TIME):</b></small>
-                                <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br>
+                                <input type="text" class="form-control form_datetime" name="baby_last_feed" placeholder="Date/Time" value="{{$form['baby']->baby_last_feed}}"/><br>
                                 <small class="text-success"><b>BEFORE REFERRAL</b></small>
                                 <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" value="{{$form['baby']->baby_before_treatment}}"/>
                                 <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" value="{{$form['baby']->baby_before_given_time}}"/><br>
@@ -1095,9 +1037,9 @@ $facilities = \App\Facility::select('id','name')
 
                                     <div class="container-referral">
                                         <small class="text-success">LMP</small>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
+                                        <input type="text" class="form-control form_datetime" style="width:25%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>" placeholder="Date/Time">
                                         <small class="text-success">EDC</small><i>(if pregnant)</i>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
+                                        <input type="text" class="form-control form_datetime" style="width:25%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>" placeholder="Date/Time">
                                     </div><br>
 
                                     <small class="text-success"><b>AOG</b></small>
@@ -1114,6 +1056,7 @@ $facilities = \App\Facility::select('id','name')
 
                                     <small class="text-success"><b>PRENATAL HISTORY</b></small><br>
                                     <textarea class="form-control" name="prenatal_history" style="resize: none;width: 100%;" rows="4"><?php echo $obstetric_and_gynecologic_history->prenatal_history; ?></textarea><br><br>
+                                    
                                     <div class="table-responsive" style="overflow-x: auto;">
                                         <table class="table table-bordered" id="prenatal_table">
                                             <thead>
@@ -1144,7 +1087,7 @@ $facilities = \App\Facility::select('id','name')
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" id="gestation_pregnant_info" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
+                                                        <input class="form-control" id="gestation_normal_info" type="text" name="pregnancy_history_gestation[]" value="{{ $preg['pregnancy_gestation_completed'] }}">
                                                     </td>
                                                     <td>
                                                         <input class="form-control" type="text" name="pregnancy_history_outcome[]" value="{{ $preg['pregnancy_outcome'] }}">
@@ -1160,7 +1103,7 @@ $facilities = \App\Facility::select('id','name')
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
+                                                        <input class="form-control" type="text" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
                                                     </td>
                                                     <td>
                                                         <input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $preg['pregnancy_present_status'] }}">
@@ -2259,14 +2202,20 @@ $facilities = \App\Facility::select('id','name')
                                         <div class="row">
                                             <div class="col-md-4">
                                             <small class="text-success"> Blood Pressure:</small>
+                                            <?php
+                                                // Ensure blood pressure value exists and is formatted correctly (e.g., "120/80")
+                                                $bp = isset($latest_vital_signs->blood_pressure) ? explode("/", $latest_vital_signs->blood_pressure) : [null, null];
+                                                $systolic = htmlspecialchars($bp[0] ?? '');
+                                                $diastolic = htmlspecialchars($bp[1] ?? '');
+                                            ?>
                                                 <input type="number" id="systolic_pregnant_info" placeholder="Systolic (e.g., 100)" 
                                                         style="width:18%;" min="0" max="300" 
-                                                        value="<?php echo htmlspecialchars($systolic); ?>" 
+                                                        value="<?= $systolic; ?>" 
                                                         oninput="updateBloodPressure()"> /
 
                                                     <input type="number" id="diastolic_pregnant_info" placeholder="Diastolic (e.g., 90)" 
                                                         style="width:18%;" min="0" max="200" 
-                                                        value="<?php echo htmlspecialchars($diastolic); ?>" 
+                                                        value="<?= $diastolic; ?>" 
                                                         oninput="updateBloodPressure()">mmHg
 
                                                     <!-- Hidden input to store the combined value -->
@@ -2607,7 +2556,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-
+                      
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -2619,13 +2568,14 @@ $facilities = \App\Facility::select('id','name')
                                 <div class="collapse" id="collapse_reason_referral_pregInfo" style="width: 100%;">
                                 <small class="text-success"> <i>Select reason for referral:</i> </small>
                                     <div class="container-referral">
-                                        <select name="reason_referral" class="form-control-select select2 reason_referral" required="">
-                                            <option value="">Select reason for referral</option>
-                                            <option value="-1">Other reason for referral</option>
-                                            @foreach($reason_for_referral as $reason_referral)
+                                    <small class="text-success"><b>REASON FOR REFERRAL: </b></small><span class="text-red">*</span>
+                                    <select name="reason_referral" class="form-control-select select2 reason_referral" required="">
+                                        <option value="">Select reason for referral</option>
+                                        <option value="-1">Other reason for referral</option>
+                                        @foreach($reason_for_referral as $reason_referral)
                                             <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
-                                            @endforeach
-                                        </select><br><br>
+                                        @endforeach
+                                    </select><br><br>
                                         <div id="other_reason_referral"></div>
                                     </div>
                                 </div>
@@ -2658,54 +2608,26 @@ $facilities = \App\Facility::select('id','name')
 </div>
 
 <script>
+    $(document).ready(function () {
+        // Open the collapse when the form loads
+        $("#patient_treatment_give_time").collapse('show');
+        $("#collapse_diagnosis_pregInfo").collapse('show');
+        $("#collapse_reason_referral_pregInfo").collapse('show');
 
-     // Uncollapse the REASON FOR REFERRAL section
-    //  const referralCollapse = document.getElementById("collapse_reason_referral_pregInfo");
-    // const referralButton = document.querySelector("[data-target='#collapse_reason_referral_pregInfo']");
-    // if (referralCollapse && referralButton) {
-    //     referralCollapse.classList.add("show");
-    //     referralButton.setAttribute("aria-expanded", "true");
-    // } else {
-    //     console.warn("Reason for Referral section or button not found.");
-    // }
+        // Ensure button toggle works properly
+        $(".btn[data-target='#patient_treatment_give_time']").on("click", function () {
+            $("#patient_treatment_give_time").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_diagnosis_pregInfo']").on("click", function () {
+            $("#collapse_diagnosis_pregInfo").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_reason_referral_pregInfo']").on("click", function () {
+            $("#collapse_reason_referral_pregInfo").collapse("toggle");
+        });
+    });
+</script>
 
-    // Uncollapse the HISTORY OF PRESENT ILLNESS section
-    // const illnessCollapse = document.getElementById("collapse_illness_history_pregInfo");
-    // const illnessButton = document.querySelector("[data-target='#collapse_illness_history_pregInfo']");
-    // if (illnessCollapse && illnessButton) {
-    //     illnessCollapse.classList.add("show");
-    //     illnessButton.setAttribute("aria-expanded", "true");
-    // } else {
-    //     console.warn("History of Present Illness section or button not found.");
-    // }
-
-    // Uncollapse the DIAGNOSIS section
-    // const diagnosisCollapse = document.getElementById("collapse_diagnosis_pregInfo");
-    // const diagnosisButton = document.querySelector("[data-target='#collapse_diagnosis_pregInfo']");
-    // if (diagnosisCollapse && diagnosisButton) {
-    //     diagnosisCollapse.classList.add("show");
-    //     diagnosisButton.setAttribute("aria-expanded", "true");
-    // } else {
-    //     console.warn("Diagnosis section or button not found.");
-    // }
-
-    //  // Uncollapse the TREATMENTS GIVE TIME section
-    //  const treatmentCollapse = document.getElementById("patient_treatment_give_time");
-    //     const treatmentButton = document.querySelector("[data-target='#patient_treatment_give_time']");
-    // if (treatmentCollapse && treatmentButton) {
-    //     treatmentCollapse.classList.add("show");
-    //     treatmentButton.setAttribute("aria-expanded", "true");
-    // }
-
-    // $('.select_facility').select2();
-    //    $('#pedia_show').hide();
-    //    $('#menarche_show').hide();
-    //
-    //    var pt_age = parseInt($('.pt_age').val(), 10);
-    //    if(pt_age > 18)
-    //        $('#pedia_show').show();
-    //    if($('.patient_sex').val() === "Female")
-    //        $('#menarche_show').show();
+<script>
 
     $(".collapse").on('show.bs.collapse', function() {
         $(this).prev(".container-referral2").find(".fa").removeClass("fa-plus").addClass("fa-minus");

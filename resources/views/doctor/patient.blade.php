@@ -610,7 +610,27 @@ $counter = 0;
                                             </a>
                                         
                                     @elseif ($user->facility_id == 63 && $row->sex=='Male')
-                                        <a href="#normalFormModal" 
+                                        <a href="#nonPregnantChooseVersionModal" 
+                                            data-patient_id="{{ $row->id }}" 
+                                            data-backdrop="static" 
+                                            data-toggle="modal" 
+                                            data-type="normal" 
+                                            style="width:100%;margin-bottom:5px;" 
+                                            onclick="handleRefer()" 
+                                            class="btn btn-primary btn-xs profile_info patient-emergency hidden">
+                                            <i class="fa fa-ambulance"></i>
+                                            Refer
+                                        </a>
+                                        <a href="#normalFormModal" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" onclick="handleTelemedicine()" style="width:100%;margin-bottom:5px;" class="btn btn-success btn-xs profile_info patient-consultation hidden">
+                                            <i class="fa fa-stethoscope"></i>
+                                            Consultation
+                                        </a><br>
+                                        <a href="#" id="walkinNormal{{ $counter }}" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" onclick="promptWalkinNormal(<?php echo $counter++ ?>)" style="width:100%;" class="btn btn-warning btn-xs profile_info patient-emergency hidden">
+                                            <i class="fa fa-stethoscope"></i>
+                                            Walk-In
+                                        </a>
+                                    @elseif ($user->facility_id == 63 && $row->sex=='Female' && $age <= 9)
+                                    <a href="#pregnantchooseVersionModal" 
                                             data-patient_id="{{ $row->id }}" 
                                             data-backdrop="static" 
                                             data-toggle="modal" 
@@ -835,18 +855,18 @@ $counter = 0;
                 console.log("Facility ID: ", referred_facility);
         
                
-                // if (referred_facility == 63) {
-                //     if (type == 'pregnant') {
-                //         $('#pregnantModal').modal('hide');
-                //         $('#pregnantchooseVersionModal').modal('show');
-                //         selectFormTitle("BEmONC/ CEmONC ");
-                //     } else if (type == 'normal') {
-                //         $('#pregnantModal').modal('hide');
-                //         $('#nonPregnantChooseVersionModal').modal('show');
-                //         selectFormTitle("Clinical");
-                //         $('#baby_show').hide();
-                //     }
-                // } else {
+                if (referred_facility == 63) {
+                    if (type == 'pregnant') {
+                        $('#pregnantModal').modal('hide');
+                        $('#pregnantchooseVersionModal').modal('show');
+                        selectFormTitle("BEmONC/ CEmONC ");
+                    } else if (type == 'normal') {
+                        $('#pregnantModal').modal('hide');
+                        $('#nonPregnantChooseVersionModal').modal('show');
+                        selectFormTitle("Clinical");
+                        $('#baby_show').hide();
+                    }
+                } else {
                     if(type == "pregnant") {
                         selectFormTitle("BEmONC/ CEmONC ");
                         $('#pregnantFormModal').modal('show');
@@ -856,7 +876,7 @@ $counter = 0;
                     }
                     $('#menarche_show_normal').hide();
                     $('#pedia_show_normal').hide();
-                // }
+                }
         }
 
 

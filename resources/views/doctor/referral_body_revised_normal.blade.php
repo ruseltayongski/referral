@@ -119,81 +119,7 @@
     <tr>
         <td colspan="6">Surveillance Category: <span class="surveillance_category form-details" style="text-transform: capitalize;">{{ $form->refer_sur_category }}</span></td>
     </tr>
-    <tr>
-        <td colspan="6">
-            Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
-            <br />
-            <span class="case_summary form-details">{!! nl2br($form->case_summary) !!}</span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="6">
-            Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):
-            <br />
-            <span class="reco_summary form-details">{!! nl2br($form->reco_summary) !!}</span>
-        </td>
-    </tr>
-    @if(isset($icd[0]))
-        <tr>
-            <td colspan="6">
-                ICD-10 Code and Description:
-                <br />
-                @foreach($icd as $i)
-                    <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
-                @endforeach
-            </td>
-        </tr>
-    @endif
-    @if(isset($form->diagnosis))
-        <tr>
-            <td colspan="6">
-                Diagnosis/Impression:
-                <br />
-                <span class="diagnosis form-details">{!! nl2br($form->diagnosis) !!}</span>
-            </td>
-        </tr>
-    @endif
-    @if(isset($form->other_diagnoses))
-        <tr>
-            <td colspan="6">
-                Other Diagnoses:
-                <br />
-                <span class="reason form-details">{{ $form->other_diagnoses }}</span>
-            </td>
-        </tr>
-    @endif
-    @if(isset($reason))
-        <tr>
-            <td colspan="6">
-                Reason for referral:
-                <br />
-                <span class="reason form-details">{{ $reason->reason }}</span>
-            </td>
-        </tr>
-    @endif
-    @if(isset($form->other_reason_referral))
-        <tr>
-            <td colspan="6">
-                Reason for referral:
-                <br />
-                <span class="reason form-details">{{ $form->other_reason_referral }}</span>
-            </td>
-        </tr>
-    @endif
-    @if(isset($file_path))
-        <tr>
-            <td colspan="6">
-                @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif
-                @for($i = 0; $i < count($file_path); $i++)
-                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
-                    @if($i + 1 != count($file_path))
-                        ,&nbsp
-                    @endif
-                @endfor
-                {{--<a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
-            </td>
-        </tr>
-    @endif
+   
     <tr>
         <td colspan="6">
             Name of referring MD/HCW: <span class="referring_md form-details">{{ $form->md_referring }}</span>
@@ -208,64 +134,237 @@
         <td colspan="6">Name of referred MD/HCW- Mobile Contact # (ReCo): <span class="referred_md form-details">{{ $form->md_referred }}</span></td>
     </tr>
     <?php 
-        function explodeToArray($string){
-            $array = explode(',',$string);
+        // function explodeToArray($string){
+        //     $array = explode(',',$string);
 
-            $filteredOptions = array_filter($array, function ($value) {
-                return $value !== "Select All";
-            });
+        //     $filteredOptions = array_filter($array, function ($value) {
+        //         return $value !== "Select All";
+        //     });
 
-                return $filteredOptions;
-        }
-        $commordities_arr = explodeToArray($past_medical_history->commordities);
-        $allergies_arr = explodeToArray($past_medical_history->allergies);
-        $heredofamilial_arr = explodeToArray($past_medical_history->heredofamilial_diseases);
+        //         return $filteredOptions;
+        // }
         $pertinent_arr = explodeToArray($pertinent_laboratory->pertinent_laboratory_and_procedures);
-        $review_skin = explodeToArray($review_of_system->skin);
-        $review_head = explodeToArray($review_of_system->head);
-        $review_eyes = explodeToArray($review_of_system->eyes);
-        $review_ears = explodeToArray($review_of_system->ears);
-        $review_nose = explodeToArray($review_of_system->nose_or_sinuses);
-        $review_mouth = explodeToArray($review_of_system->mouth_or_throat);
-        $review_neck = explodeToArray($review_of_system->neck);
-        $review_breast = explodeToArray($review_of_system->breast);
-        $review_respiratory = explodeToArray($review_of_system->respiratory_or_cardiac);
-        $review_gastrointestinal = explodeToArray($review_of_system->gastrointestinal);
-        $review_urinary = explodeToArray($review_of_system->urinary);
-        $review_peripheral = explodeToArray($review_of_system->peripheral_vascular);
-        $review_musculoskeletal = explodeToArray($review_of_system->musculoskeletal);
-        $review_neurologic = explodeToArray($review_of_system->neurologic);
-        $review_hematologic = explodeToArray($review_of_system->hematologic);
-        $review_endocrine = explodeToArray($review_of_system->endocrine);
-        $review_psychiatric = explodeToArray($review_of_system->psychiatric)
+      
     ?>
+
+
     
-    @if (!empty(implode(",",$commordities_arr)) || !empty(implode(",",$allergies_arr))
-    || !empty(implode(",",$heredofamilial_arr)) || !empty($past_medical_history->previous_hospitalization))
+    <?php 
+    function explodeToArray($string){
+        $array = explode(',', $string);
+        return array_filter($array, function ($value) {
+            return $value !== "Select All";
+        });
+    }
+
+    // PAST MEDICAL HISTORY
+    $commordities_arr = explodeToArray($past_medical_history->commordities);
+    $allergies_arr = explodeToArray($past_medical_history->allergies);
+    $heredofamilial_arr = explodeToArray($past_medical_history->heredofamilial_diseases);
+    // REVIEW OF SYSTEMS
+    $review_skin = explodeToArray($review_of_system->skin);
+    $review_head = explodeToArray($review_of_system->head);
+    $review_eyes = explodeToArray($review_of_system->eyes);
+    $review_ears = explodeToArray($review_of_system->ears);
+    $review_nose = explodeToArray($review_of_system->nose_or_sinuses);
+    $review_mouth = explodeToArray($review_of_system->mouth_or_throat);
+    $review_neck = explodeToArray($review_of_system->neck);
+    $review_breast = explodeToArray($review_of_system->breast);
+    $review_respiratory = explodeToArray($review_of_system->respiratory_or_cardiac);
+    $review_gastrointestinal = explodeToArray($review_of_system->gastrointestinal);
+    $review_urinary = explodeToArray($review_of_system->urinary);
+    $review_peripheral = explodeToArray($review_of_system->peripheral_vascular);
+    $review_musculoskeletal = explodeToArray($review_of_system->musculoskeletal);
+    $review_neurologic = explodeToArray($review_of_system->neurologic);
+    $review_hematologic = explodeToArray($review_of_system->hematologic);
+    $review_endocrine = explodeToArray($review_of_system->endocrine);
+    $review_psychiatric = explodeToArray($review_of_system->psychiatric);
+    // dd($past_medical_history);
+
+    // PAST MEDICAL HISTORY - NULL CHECKER VALIDATOR
+    $commorbidities_null_checker = (!empty($past_medical_history->commordities));
+    $allergies_null_checker = (!empty($past_medical_history->allergies));
+    $heredofamilial_null_checker = (!empty($past_medical_history->heredofamilial_diseases));
+    $validation_checker_past_medical_history = ($commorbidities_null_checker || $allergies_null_checker || $heredofamilial_null_checker);
+    // REVIEW OF SYSTEMS - NULL CHECKER VALIDATOR
+    $review_skin_null_checker = (!empty($review_of_system->skin));
+    $review_head_null_checker = (!empty($review_of_system->head));
+    $review_eyes_null_checker = (!empty($review_of_system->eyes));
+    $review_ears_null_checker = (!empty($review_of_system->ears));
+    $review_nose_null_checker = (!empty($review_of_system->nose_or_sinuses));
+    $review_mouth_null_checker = (!empty($review_of_system->mouth_or_throat));
+    $review_neck_null_checker = (!empty($review_of_system->neck));
+    $review_breast_null_checker = (!empty($review_of_system->breast));
+    $review_respiratory_null_checker = (!empty($review_of_system->respiratory_or_cardiac));
+    $review_gastrointestinal_null_checker = (!empty($review_of_system->gastrointestinal));
+    $review_urinary_null_checker = (!empty($review_of_system->urinary));
+    $review_peripheral_null_checker = (!empty($review_of_system->peripheral_vascular));
+    $review_musculoskeletal_null_checker = (!empty($review_of_system->musculoskeletal));
+    $review_neurologic_null_checker = (!empty($review_of_system->neurologic));
+    $review_hematologic_null_checker = (!empty($review_of_system->hematologic));
+    $review_endocrine_null_checker = (!empty($review_of_system->endocrine));
+    $review_psychiatric_null_checker = (!empty($review_of_system->psychiatric));
+    $validation_checker_review_of_systems = ($review_skin_null_checker || $review_head_null_checker || $review_eyes_null_checker || $review_ears_null_checker
+    || $review_nose_null_checker || $review_mouth_null_checker || $review_neck_null_checker || $review_breast_null_checker || $review_respiratory_null_checker
+    || $review_gastrointestinal_null_checker || $review_urinary_null_checker || $review_peripheral_null_checker || $review_musculoskeletal_null_checker
+    || $review_neurologic_null_checker || $review_hematologic_null_checker || $review_endocrine_null_checker || $review_psychiatric_null_checker);
+
+    ?>
+
+    @if(!empty($form->case_summary) || !empty($form->reco_summary))
     <tr class="bg-gray">
-        <td colspan="6">Past Medical History</td>
+                <td colspan="6">History of Present Illness</td>
     </tr>
-    @endif
-    @if (!empty(implode(",",$commordities_arr)))
-    <tr> 
-        <td colspan="6">Commorbidities: <span class="woman_commorbidities_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$commordities_arr) }}</span></td>       
-    </tr>
-    @endif
-    @if (!empty(implode(",",$allergies_arr)))
-    <tr>    
-        <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$allergies_arr) }}</span></td>
-    </tr>
-    @endif
-    @if (!empty(implode(",",$heredofamilial_arr)))
     <tr>
-        <td colspan="6">Heredofamilial: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",",$heredofamilial_arr) }}</span></td>
+        <td colspan="6">
+            Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
+            <br />
+            <span class="case_summary form-details">{!! nl2br($form->case_summary) !!}</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):
+            <br />
+            <span class="reco_summary form-details">{!! nl2br($form->reco_summary) !!}</span>
+        </td>
     </tr>
     @endif
+
+
+        @if(!empty($form->diagnosis) || !empty($form->other_diagnoses) || !empty($icd[0]))
+        <tr class="bg-gray">
+                <td colspan="6">Diagnosis</td>
+        </tr>
+        @endif
+        @if(isset($icd[0]))
+            <tr>
+                <td colspan="6">
+                    ICD-10 Code and Description:
+                    <br />
+                    @foreach($icd as $i)
+                        <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
+                    @endforeach
+                </td>
+            </tr>
+        @endif
+        @if(isset($form->diagnosis))
+            <tr>
+                <td colspan="6">
+                    Diagnosis/Impression:
+                    <br />
+                    <span class="diagnosis form-details">{!! nl2br($form->diagnosis) !!}</span>
+                </td>
+            </tr>
+        @endif
+        @if(isset($form->other_diagnoses))
+            <tr>
+                <td colspan="6">
+                    Other Diagnosis:
+                    <br />
+                    <span class="reason form-details">{{ $form->other_diagnoses }}</span>
+                </td>
+            </tr>
+        @endif
+
+    @if ($validation_checker_past_medical_history)
+        <tr class="bg-gray">
+            <td colspan="6">Past Medical History</td>
+        </tr>
+    @endif
+    
+    @if($commorbidities_null_checker)
+        @php $commorbidities_data = []; @endphp
+
+        @foreach ($commordities_arr as $commorbidities)
+            @if($commorbidities === 'Hypertension')
+                @php $commorbidities_data[] = "Hypertension-" . $past_medical_history->commordities_hyper_year; @endphp
+            @endif
+            @if($commorbidities === 'Diabetes')
+                @php $commorbidities_data[] = "Diabetes-" . $past_medical_history->commordities_diabetes_year; @endphp
+            @endif
+            @if($commorbidities === 'Asthma')
+                @php $commorbidities_data[] = "Asthma-" . $past_medical_history->commordities_asthma_year; @endphp
+            @endif
+            @if($commorbidities === 'COPD')
+                @php $commorbidities_data[] = "COPD"; @endphp
+            @endif
+            @if($commorbidities === 'Dyslipidemia')
+                @php $commorbidities_data[] = "Dyslipidemia"; @endphp
+            @endif
+            @if($commorbidities === 'Others')
+                @php $commorbidities_data[] = "Others-" . $past_medical_history->commordities_others; @endphp
+            @endif
+            @if($commorbidities === 'Cancer')
+                @php $commorbidities_data[] = "Cancer-" . $past_medical_history->commordities_cancer; @endphp
+            @endif
+           
+        @endforeach
+
+        {{-- Display the formatted data --}}
+        <tr>
+            <td colspan="6">Comorbidities: 
+                <span class="woman_commorbidities_treatment form-details"></span> - 
+                <span class="woman_before_given_time form-details">{{ implode(", ", $commorbidities_data) }}</span>
+            </td>
+        </tr>
+    @endif
+
+    @if ($allergies_null_checker)
+        @php $allergies_data = []; @endphp
+    
+        @foreach ($allergies_arr as $allergies)
+          @if($allergies === 'Food')  @php $allergies_data[] = "Food-" . $past_medical_history->allergy_food_cause; @endphp@endif
+          @if($allergies === 'Drugs')  @php $allergies_data[] = "Drugs-" . $past_medical_history->allergy_drugs_cause; @endphp@endif
+          @if($allergies === 'Others')  @php $allergies_data[] = "Others-" . $past_medical_history->allergy_others_cause; @endphp@endif
+        @endforeach
+        
+    <tr>    
+        <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $allergies_data) }}</span></td>
+    </tr>
+    @endif
+
+   @if($heredofamilial_null_checker)
+        @php $heredofamilial_data = []; @endphp
+
+        @foreach ($heredofamilial_arr as $heredofamilial)
+            @if($heredofamilial === 'Hypertension')
+                @php $heredofamilial_data[] = "Hypertension-" . $past_medical_history->heredo_hyper_side; @endphp
+            @endif
+            @if($heredofamilial === 'Diabetes')
+                @php $heredofamilial_data[] = "Diabetes-" . $past_medical_history->heredo_diab_side; @endphp
+            @endif
+            @if($heredofamilial === 'Asthma')
+                @php $heredofamilial_data[] = "Asthma-" . $past_medical_history->heredo_asthma_side; @endphp
+            @endif
+            @if($heredofamilial === 'Cancer')
+                @php $heredofamilial_data[] = "Cancer-" . $past_medical_history->heredo_cancer_side; @endphp
+            @endif
+            @if($heredofamilial === 'Kidney Disease')
+                @php $heredofamilial_data[] = "Kidney Disease-" . $past_medical_history->heredo_kidney_side; @endphp
+            @endif
+            @if($heredofamilial === 'Thyroid Disease')
+                @php $heredofamilial_data[] = "Thyroid Disease-" . $past_medical_history->heredo_thyroid_side; @endphp
+            @endif
+            @if($heredofamilial === 'Others')
+                @php $heredofamilial_data[] = "Others-" . $past_medical_history->heredo_others; @endphp
+            @endif
+        @endforeach
+
+        {{-- Display the formatted data --}}
+        <tr>
+            <td colspan="6">Heredofamilial: 
+                <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(", ", $heredofamilial_data) }}</span>
+            </td>
+        </tr>
+    @endif
+
     @if (!empty($past_medical_history->previous_hospitalization))
     <tr>
         <td colspan="6">Previous Hospitalization: <span class="woman_allergies_treatment form-details"></span> - <span class="woman_before_given_time form-details">{{ $past_medical_history->previous_hospitalization }}</span></td>
     </tr>
     @endif
+
 
 
     @php
@@ -410,8 +509,7 @@
         $psh->smoking ?? null, 
         $psh->alcohol_drinking ?? null,
         $psh->illicit_drugs ?? null, 
-        $psh->illicit_drugs_taken ?? null, 
-        $psh->current_medications ?? null
+        $psh->illicit_drugs_taken ?? null
     ]);
     @endphp
 
@@ -422,12 +520,11 @@
     @endif
 
     @if (!empty($psh->smoking))
-    <tr>
-        <td colspan="3">Smoking: - <span class="woman_prenatal form-details">{{$psh->smoking}}</span></td>
+    <tr><td colspan="3">Smoking: - <span class="woman_prenatal form-details">{{$psh->smoking}}</span></td>
         @if ($psh->smoking === "Yes")
             <td colspan="3">Sticks per Day: - <span class="woman_prenatal form-details">{{$psh->smoking_sticks_per_day ?? 'N/A'}}</span></td>
         @elseif ($psh->smoking === "Quit")
-            <td colspan="6">Quit Year: - <span class="woman_prenatal form-details">{{$psh->smoking_quit_year ?? 'N/A'}}</span></td>
+            <td colspan="3">Quit Year: - <span class="woman_prenatal form-details">{{$psh->smoking_quit_year ?? 'N/A'}}</span></td>
         @elseif ($psh->smoking === "No")
     </tr>
     <tr>
@@ -438,7 +535,7 @@
 
     @if (!empty($psh->alcohol_drinking))
     <tr>
-        <td colspan="6" class="woman_prenatal form-details">Alcohol: - <span>{{$psh->alcohol_drinking}}</span></td>
+        <td colspan="6">Alcohol: - <span class="woman_pregnatal form-details">{{$psh->alcohol_drinking}}</span></td>
     </tr>
     @if ($psh->alcohol_drinking === "Yes")
     <tr>
@@ -467,9 +564,10 @@
     @endif
     @endif
 
-
-
     @if (!empty($personal_and_social_history->current_medications))
+    <tr class="bg-gray">
+        <td colspan="6">Current Medications </td>
+    </tr>
     <tr>
         <td colspan="6">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
     </tr>
@@ -484,6 +582,21 @@
     <tr>   
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
+ 
+    @if(isset($file_path))
+        <tr>
+            <td colspan="6">
+                @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif
+                @for($i = 0; $i < count($file_path); $i++)
+                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
+                    @if($i + 1 != count($file_path))
+                        ,&nbsp
+                    @endif
+                @endfor
+                {{--<a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
+            </td>
+        </tr>
+    @endif
     @endif
     @if ($patient_age >= 9 && $form->patient_sex === "Female")
     @php
@@ -501,9 +614,9 @@
             'PT' => $obstetric_and_gynecologic_history->parity_pt ?? '',
             'A' => $obstetric_and_gynecologic_history->parity_a ?? '',
             'L' => $obstetric_and_gynecologic_history->parity_l ?? '',
-            'LMP' => $obstetric_and_gynecologic_history->parity_lnmp ?? '',
-            'EDC' => $obstetric_and_gynecologic_history->parity_edc ?? '',
-            'AOG by LMP' => $obstetric_and_gynecologic_history->aog_lnmp ?? '',
+            'LMP' => $obstetetric_parity_date->parity_lnmp ?? '',
+            'EDC' => $obstetetric_parity_date->parity_edc ?? '',
+            'AOG by LMP' => $formatted_LMP ?? '',
             'AOG by UTZ' => $obstetric_and_gynecologic_history->aog_eutz ?? '',
             'Prenatal History' => $obstetric_and_gynecologic_history->prenatal_history ?? '',
         ];
@@ -525,44 +638,97 @@
         @endif
     @endif
 
-    
-    @php
-    $review_sections = [
-        'Skin' => $review_skin,
-        'Head' => $review_head,
-        'Eyes' => $review_eyes,
-        'Ears' => $review_ears,
-        'Nose/Sinuses' => $review_nose,
-        'Mouth/Throat' => $review_mouth,
-        'Neck' => $review_neck,
-        'Breast' => $review_breast,
-        'Respiratory/Cardiac' => $review_respiratory,
-        'Gastrointestinal' => $review_gastrointestinal,
-        'Urinary' => $review_urinary,
-        'Peripheral Vascular' => $review_peripheral,
-        'Musculoskeletal' => $review_musculoskeletal,
-        'Neurologic' => $review_neurologic,
-        'Hematologic' => $review_hematologic,
-        'Endocrine' => $review_endocrine,
-        'Psychiatric' => $review_psychiatric,
-    ];
 
-    $filtered_sections = array_filter($review_sections, fn($section) => !empty(array_filter($section)));
-    @endphp
-
-    @if (!empty($filtered_sections))
-        <tr class="bg-gray">
-            <td colspan="6">Review of Systems</td>
-        </tr>
-
-        @foreach ($filtered_sections as $section_name => $values)
-            <tr>
-                <td colspan="6">{{ $section_name }}:<span class="woman_prenatal form-details"></span> - 
-                    <span class="woman_prenatal form-details">{{ implode(', ', $values) }}</span>
-                </td>
+            @if ($validation_checker_review_of_systems)
+            <tr class="bg-gray">
+                <td colspan="6">Review of Systems </td>
             </tr>
-        @endforeach
-    @endif
+            @endif
+            @if ($review_skin_null_checker)
+            <tr>
+            <td colspan="6">Skin:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_skin)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_head_null_checker)
+            <tr>
+            <td colspan="6">Head:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_head)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_eyes_null_checker)
+            <tr>
+            <td colspan="6">Eyes:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_eyes)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_ears_null_checker)
+            <tr>
+            <td colspan="6">Ears:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_ears)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_nose_null_checker)
+            <tr>
+            <td colspan="6">Nose/Sinuses:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_nose)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_mouth_null_checker)
+            <tr>
+            <td colspan="6">Mouth/Throat:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_mouth)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_neck_null_checker)
+            <tr>
+            <td colspan="6">Neck:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neck)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_breast_null_checker)
+            <tr>
+            <td colspan="6">Breast:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_breast)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_respiratory_null_checker)
+            <tr>
+            <td colspan="6">Respiratory/Cardiac:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_respiratory)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_gastrointestinal_null_checker)
+            <tr>
+            <td colspan="6">Gastrointestinal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_gastrointestinal)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_urinary_null_checker)
+            <tr>
+            <td colspan="6">Urinary:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_urinary)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty(implode(',',$review_peripheral)))
+            <tr>
+            <td colspan="6">Peripheral Vascular:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_peripheral)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_musculoskeletal_null_checker)
+            <tr>
+            <td colspan="6">Musculoskeletal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_musculoskeletal)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_neurologic_null_checker )
+            <tr>
+            <td colspan="6">Neurologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neurologic)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_hematologic_null_checker)
+            <tr>
+            <td colspan="6">Hematologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_hematologic)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_endocrine_null_checker)
+            <tr>
+            <td colspan="6">Endocrine:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_endocrine)}}</span></td>
+            </tr>
+            @endif
+            @if ($review_psychiatric_null_checker)
+            <tr>
+            <td colspan="6">Psychiatric:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_psychiatric)}}</span></td>
+            </tr>
+            @endif
 
     @php
     $nutritionalFields = array_filter([
@@ -579,7 +745,7 @@
     ]);
     @endphp
 
-    @if (!empty($nutritionalFields) || !empty($vitalSignsFields))
+    @if (!empty($nutritionalFields))
     <tr class="bg-gray">
         <td colspan="6">Nutritional Status</td>
     </tr>
@@ -671,10 +837,32 @@
         <td colspan="6">GCS Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
     </tr>
     @endif
+
+    @if(isset($reason))
+    <tr class="bg-gray">
+        <td colspan="6">Reason for Referral</td>
+    </tr>
+        <tr>
+            <td colspan="6">
+                Reason for referral:
+                <br />
+                <span class="reason form-details">{{ $reason->reason }}</span>
+            </td>
+        </tr>
+    @endif
+    @if(isset($form->other_reason_referral))
+        <tr>
+            <td colspan="6">
+                Reason for referral:
+                <br />
+                <span class="reason form-details">{{ $form->other_reason_referral }}</span>
+            </td>
+        </tr>
+    @endif
 </table>
 <hr/>
 
-@if($form->patient_sex === "Female")
+@if($form->patient_sex === "Female" && !empty($filteredHistory))
 <div class="row">
     <div class="col-sm-12">
         <div class="table-responsive">
@@ -758,43 +946,3 @@
 </div>
 <div class="clearfix"></div>
 
-<script>
-    function getParameterByName(name) {
-        url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-    if(getParameterByName('referredCode')) {
-        $("#telemedicine").addClass('hide');
-        $(".edit_form_revised_btn").addClass('hide');
-    }
-
-    function openTelemedicine(tracking_id, code, action_md, referring_md) {
-        console.log("mao");
-        var url = "<?php echo asset('api/video/call'); ?>";
-        var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "tracking_id" : tracking_id,
-            "code" : code,
-            "action_md" : action_md,
-            "referring_md" : referring_md,
-            "trigger_by" : "{{ $user->id }}",
-            "form_type" : "normal"
-        };
-        $.post(url,json,function(){
-
-        });
-        var windowName = 'NewWindow'; // Name of the new window
-        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=normal&referring_md=yes", windowName, windowFeatures);
-        if (newWindow && newWindow.outerWidth) {
-            // If the window was successfully opened, attempt to maximize it
-            newWindow.moveTo(0, 0);
-            newWindow.resizeTo(screen.availWidth, screen.availHeight);
-        }
-    }
-</script>

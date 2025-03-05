@@ -714,7 +714,7 @@ Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescription
 Route::match(['GET','POST'],'/revised/referral', 'doctor\NewFormCtrl@index');
 Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@redirect_referral_info')->name('redirect-referral-info');
 Route::match(['GET','POST'],'submit-referral/{type}', 'doctor\NewFormCtrl@saveReferral')->name('submit-referral');
-Route::get('/generate-pdf/{patient_id}/{track_id}/{form_type}', 'doctor\NewFormCtrl@generatePdf')->name('generate-pdf');
+Route::get('/generate-pdf/{patient_id}/{track_id}/{form_type}', 'doctor\PrintNewFormCtrl@generatePdf')->name('generate-pdf');
 Route::post('/update-referral/{patient_id}/{id}/{type}/{status}', 'doctor\NewFormCtrl@updateReferral')->name('update-referral');
 Route::get('show-choose-version', 'doctor\NewFormCtrl@view_choose_versionModal')->name('show-choose-version');
 Route::get('get-form-type/{form_id}', 'doctor\NewFormCtrl@getFormType')->name('get-form-type');
