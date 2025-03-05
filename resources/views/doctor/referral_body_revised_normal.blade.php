@@ -119,67 +119,6 @@
     <tr>
         <td colspan="6">Surveillance Category: <span class="surveillance_category form-details" style="text-transform: capitalize;">{{ $form->refer_sur_category }}</span></td>
     </tr>
-    <tr>
-        <td colspan="6">
-            Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
-            <br />
-            <span class="case_summary form-details">{!! nl2br($form->case_summary) !!}</span>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="6">
-            Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):
-            <br />
-            <span class="reco_summary form-details">{!! nl2br($form->reco_summary) !!}</span>
-        </td>
-    </tr>
-    @if(isset($icd[0]))
-        <tr>
-            <td colspan="6">
-                ICD-10 Code and Description:
-                <br />
-                @foreach($icd as $i)
-                    <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
-                @endforeach
-            </td>
-        </tr>
-    @endif
-    @if(isset($form->diagnosis))
-        <tr>
-            <td colspan="6">
-                Diagnosis/Impression:
-                <br />
-                <span class="diagnosis form-details">{!! nl2br($form->diagnosis) !!}</span>
-            </td>
-        </tr>
-    @endif
-    @if(isset($form->other_diagnoses))
-        <tr>
-            <td colspan="6">
-                Other Diagnosis:
-                <br />
-                <span class="reason form-details">{{ $form->other_diagnoses }}</span>
-            </td>
-        </tr>
-    @endif
-    @if(isset($reason))
-        <tr>
-            <td colspan="6">
-                Reason for referral:
-                <br />
-                <span class="reason form-details">{{ $reason->reason }}</span>
-            </td>
-        </tr>
-    @endif
-    @if(isset($form->other_reason_referral))
-        <tr>
-            <td colspan="6">
-                Reason for referral:
-                <br />
-                <span class="reason form-details">{{ $form->other_reason_referral }}</span>
-            </td>
-        </tr>
-    @endif
    
     <tr>
         <td colspan="6">
@@ -271,6 +210,62 @@
     || $review_neurologic_null_checker || $review_hematologic_null_checker || $review_endocrine_null_checker || $review_psychiatric_null_checker);
 
     ?>
+
+    @if(!empty($form->case_summary) || !empty($form->reco_summary))
+    <tr class="bg-gray">
+                <td colspan="6">History of Present Illness</td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
+            <br />
+            <span class="case_summary form-details">{!! nl2br($form->case_summary) !!}</span>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="6">
+            Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):
+            <br />
+            <span class="reco_summary form-details">{!! nl2br($form->reco_summary) !!}</span>
+        </td>
+    </tr>
+    @endif
+
+
+        @if(!empty($form->diagnosis) || !empty($form->other_diagnoses) || !empty($icd[0]))
+        <tr class="bg-gray">
+                <td colspan="6">Diagnosis</td>
+        </tr>
+        @endif
+        @if(isset($icd[0]))
+            <tr>
+                <td colspan="6">
+                    ICD-10 Code and Description:
+                    <br />
+                    @foreach($icd as $i)
+                        <span class="reason form-details">{{ $i->code }} - {{ $i->description }}</span><br>
+                    @endforeach
+                </td>
+            </tr>
+        @endif
+        @if(isset($form->diagnosis))
+            <tr>
+                <td colspan="6">
+                    Diagnosis/Impression:
+                    <br />
+                    <span class="diagnosis form-details">{!! nl2br($form->diagnosis) !!}</span>
+                </td>
+            </tr>
+        @endif
+        @if(isset($form->other_diagnoses))
+            <tr>
+                <td colspan="6">
+                    Other Diagnosis:
+                    <br />
+                    <span class="reason form-details">{{ $form->other_diagnoses }}</span>
+                </td>
+            </tr>
+        @endif
 
     @if ($validation_checker_past_medical_history)
         <tr class="bg-gray">
@@ -525,12 +520,11 @@
     @endif
 
     @if (!empty($psh->smoking))
-    <tr>
-        <td colspan="3">Smoking: - <span class="woman_prenatal form-details">{{$psh->smoking}}</span></td>
+    <tr><td colspan="3">Smoking: - <span class="woman_prenatal form-details">{{$psh->smoking}}</span></td>
         @if ($psh->smoking === "Yes")
             <td colspan="3">Sticks per Day: - <span class="woman_prenatal form-details">{{$psh->smoking_sticks_per_day ?? 'N/A'}}</span></td>
         @elseif ($psh->smoking === "Quit")
-            <td colspan="6">Quit Year: - <span class="woman_prenatal form-details">{{$psh->smoking_quit_year ?? 'N/A'}}</span></td>
+            <td colspan="3">Quit Year: - <span class="woman_prenatal form-details">{{$psh->smoking_quit_year ?? 'N/A'}}</span></td>
         @elseif ($psh->smoking === "No")
     </tr>
     <tr>
@@ -541,7 +535,7 @@
 
     @if (!empty($psh->alcohol_drinking))
     <tr>
-        <td colspan="6" class="woman_prenatal form-details">Alcohol: - <span>{{$psh->alcohol_drinking}}</span></td>
+        <td colspan="6">Alcohol: - <span class="woman_pregnatal form-details">{{$psh->alcohol_drinking}}</span></td>
     </tr>
     @if ($psh->alcohol_drinking === "Yes")
     <tr>
@@ -588,6 +582,7 @@
     <tr>   
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
+ 
     @if(isset($file_path))
         <tr>
             <td colspan="6">
@@ -619,9 +614,9 @@
             'PT' => $obstetric_and_gynecologic_history->parity_pt ?? '',
             'A' => $obstetric_and_gynecologic_history->parity_a ?? '',
             'L' => $obstetric_and_gynecologic_history->parity_l ?? '',
-            'LMP' => $obstetric_and_gynecologic_history->parity_lnmp ?? '',
-            'EDC' => $obstetric_and_gynecologic_history->parity_edc ?? '',
-            'AOG by LMP' => $obstetric_and_gynecologic_history->aog_lnmp ?? '',
+            'LMP' => $obstetetric_parity_date->parity_lnmp ?? '',
+            'EDC' => $obstetetric_parity_date->parity_edc ?? '',
+            'AOG by LMP' => $formatted_LMP ?? '',
             'AOG by UTZ' => $obstetric_and_gynecologic_history->aog_eutz ?? '',
             'Prenatal History' => $obstetric_and_gynecologic_history->prenatal_history ?? '',
         ];
@@ -642,6 +637,7 @@
             @endforeach
         @endif
     @endif
+
 
             @if ($validation_checker_review_of_systems)
             <tr class="bg-gray">
@@ -840,6 +836,28 @@
     <tr>
         <td colspan="6">GCS Response:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$glasgocoma_scale->gsc_score}}</span></td>
     </tr>
+    @endif
+
+    @if(isset($reason))
+    <tr class="bg-gray">
+        <td colspan="6">Reason for Referral</td>
+    </tr>
+        <tr>
+            <td colspan="6">
+                Reason for referral:
+                <br />
+                <span class="reason form-details">{{ $reason->reason }}</span>
+            </td>
+        </tr>
+    @endif
+    @if(isset($form->other_reason_referral))
+        <tr>
+            <td colspan="6">
+                Reason for referral:
+                <br />
+                <span class="reason form-details">{{ $form->other_reason_referral }}</span>
+            </td>
+        </tr>
     @endif
 </table>
 <hr/>

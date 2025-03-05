@@ -355,9 +355,9 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                         <br>
                 <div class="row" style="margin: 5px;">
                     <div class="col-md-4">
-                        <small ><small class="text-success">REFERRED TO: </small></small> &nbsp;<span class="text-red">*</span><br>
+                        <small class="text-success"><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
                         <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
-                        <select name="referred_to" class="select2 edit_facility_normal form-control" style="width: 250px;" required>
+                        <select name="referred_to" class="select2 edit_facility_normal form-control" require>
                             <option value="">Select Facility...</option>
                             @foreach($facilities as $row)
                                 @if($row->id == $form->referred_fac_id)
@@ -369,8 +369,8 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <small ><small class="text-success">DEPARTMENT: </small></small> <span class="text-red">*</span><br>
-                        <select name="department_id" class="form-control edit_department_normal" style="width: 250px;" required>
+                        <small class="text-success"><b>DEPARTMENT: </b></small> <span class="text-red">*</span><br>
+                        <select name="department_id" class="form-control edit_department_normal" style="width: 100%;" required>
                             <option value="">Select Option</option>
                         </select>
                     </div>
@@ -1097,9 +1097,9 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
 
                                     <div class="container-referral">
                                         <small class="text-success">LMP</small>
-                                        <input type="number" step="0.01" min="0" style="width:15%;" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>">&emsp;&emsp;&emsp;
+                                        <input type="text" class="form-control form_datetime" min="0" name="parity_lnmp" value="<?php echo $parity_lnmp_value; ?>" placeholder="Date/Time">
                                         <small class="text-success">EDC</small><i>(if pregnant)</i>
-                                        <input type="number" step="0.01" min="0" style="width:15%;" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>">
+                                        <input type="text" class="form-control form_datetime" min="0" name="parity_edc_ifpregnant" value="<?php echo $parity_edc_value; ?>" placeholder="Date/Time">
                                     </div><br>
 
                                     <small class="text-success"><b>AOG</b></small>
@@ -1162,7 +1162,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                         </select>
                                                     </td>
                                                     <td>
-                                                        <input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
+                                                        <input class="form-control" type="text" name="pregnancy_history_birthweight[]" value="{{ $preg['pregnancy_birth_weight'] }}">
                                                     </td>
                                                     <td>
                                                         <input class="form-control" type="text" name="pregnancy_history_presentstatus[]" value="{{ $preg['pregnancy_present_status'] }}">

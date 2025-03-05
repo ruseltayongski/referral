@@ -97,10 +97,12 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success">Referred to</small> <span class="text-red"><b>*</b></span><br>
-                                <select name="referred_facility" id="referred_to" class="form-control-select modal-select2 select_facility" required>
+                                <select name="referred_facility" class="form-control-select modal-select2 select_facility" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                    <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                        @if ($row->id == 24) 
+                                            <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
+                                        @endif 
                                     @endforeach
                                 </select>
                             </div>
@@ -501,7 +503,7 @@
                                     <div class="container-referral" style="padding: 5px;">
                                         <small class="text-success"><b>TREATMENTS GIVE TIME</b></small>
                                         <small class="text-success"><b>LAST (BREAST) FEED (TIME):</b></small>
-                                        <input type="text" class="form-control form_datetime" style="width: 100%" name="baby_last_feed" placeholder="Date/Time"/><br>  
+                                        <input type="text" class="form-control form_datetime" name="baby_last_feed" placeholder="Date/Time"/><br>  
                                         <small class="text-success"><b>BEFORE REFERRAL</b></small>
                                         <input type="text" class="form-control" name="baby_before_treatment" placeholder="Treatment Given" />
                                         <input type="text" class="form-control form_datetime" name="baby_before_given_time" placeholder="Date/Time Given" /><br>
@@ -612,9 +614,9 @@
 
                                     <div class="container-referral">
                                         <small class="text-success">LMP</small>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_lnmp">&emsp;&emsp;&emsp;
+                                        <input type="text" class="form-control form_datetime" name="parity_lnmp" placeholder="Date/Time">
                                         <small class="text-success">EDC</small><i>(if pregnant)</i>
-                                        <input type="number" step="0.01" style="width:15%;" name="parity_edc_ifpregnant">
+                                        <input type="text" class="form-control form_datetime" name="parity_edc_ifpregnant" placeholder="Date/Time">
                                     </div><br>
 
                                     <small class="text-success"><b>AOG</b></small>
@@ -667,7 +669,7 @@
                                                             <option value="F">Female</option>
                                                         </select>
                                                     </td>
-                                                    <td><input class="form-control" type="number" min="0" step="0.01" name="pregnancy_history_birthweight[]"></td>
+                                                    <td><input class="form-control" type="text" name="pregnancy_history_birthweight[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_presentstatus[]"></td>
                                                     <td><input class="form-control" type="text" name="pregnancy_history_complications[]"></td>
                                                 </tr> 
@@ -2081,7 +2083,7 @@
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
                                     <i>Select reason for referral:</i>
                                     <div class="container-referral">
-                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" required>
+                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
                                             <option value="">Select reason for referral</option>
                                             <option value="-1">Other reason for referral</option>
                                             @foreach($reason_for_referral as $reason_referral)
@@ -2090,7 +2092,7 @@
                                         </select><br><br>
                                         <div id="pregnant_other_reason_referral_div" style="display:none;">
                                             <span>Other Reason for Referral:</span> <br/>
-                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>
+                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" require></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -3021,7 +3023,12 @@
         // lobibox for icd10 
         if(!($("#icd_preg").val()) && !($("#other_diag_preg").val())){
             Lobibox.alert("error", {
-                msg: "Select ICD-10 / Other diagnosis!"
+                msg: "Select ICD-10 / Other diagnosis!",
+                callback: function(){
+                    $('#icd-modal-pregnant_revised').animate({
+                        scrollTop: $("#collapse_diagnosis_pregnant").offset().top - $('#icd-modal-pregnant_revised').offset().top + $('#icd-modal-pregnant_revised').scrollTop()
+                    }, 500);
+                }
             });
             return false;
         }

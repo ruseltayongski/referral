@@ -381,7 +381,13 @@
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                             <br />
                            
-                            @if($user->facility_id==$act->referred_from || $act->referred_from && $latest_act->status=='rejected')
+                            {{-- @if($user->facility_id==$act->referred_from || $act->referred_from && $latest_act->status=='rejected')
+                            <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
+                                <i class="fa fa-ambulance"></i> Redirect to other facility<br>
+                            </button>
+                            @endif --}}
+
+                            @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
                             <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
                                 <i class="fa fa-ambulance"></i> Redirect to other facility<br>
                             </button>
