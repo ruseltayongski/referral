@@ -502,7 +502,7 @@ $facilities = \App\Facility::select('id','name')
                                     <input type="text" class="form-control woman_before_treatment" name="woman_before_treatment" placeholder="Treatment Given" />
                                     <input type="text" class="form-control form_datetime woman_before_given_time" name="woman_before_given_time" placeholder="Date/Time Given" /></br>
                                     <small class="text-success"><b>DURING TRANSPORT </b></small>
-                                        <input type="text" class="form-control" name="woman_during_transport" placeholder="Treatment Given" />
+                                        <input type="text" class="form-control woman_during_transport" name="woman_during_transport" placeholder="Treatment Given" />
                                         <input type="text" class="form-control form_datetime woman_transport_given_time" name="woman_transport_given_time" placeholder="Date/Time Given" />
                                     </div><br>
 

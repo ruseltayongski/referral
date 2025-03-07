@@ -2352,7 +2352,7 @@
     });
 
     /* *****ALLERGY***** */
-    $('#allergy_food_pregnant, #allergy_drug, #allergy_other').hide();
+    $('#allergy_food_pregnant, #allergy_drug_pregnant, #allergy_other_pregnant').hide();
     $('#allergy_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
             $('#allergy_none_cbox_pregnant').prop('checked', false);
