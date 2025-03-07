@@ -492,7 +492,7 @@ console.log("referring call duration:", this.referring_md);
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-8">
+      <div class="col-lg-7">
         <div class="mainPic">
           <div class="remotePlayerDiv">
             <div id="calling">
@@ -651,13 +651,14 @@ console.log("referring call duration:", this.referring_md);
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-5">
         <div class="telemedForm">
           <div class="row-fluid">
-            <div>
+            <div style="height: 10px;">
               <img :src="dohLogoUrl" alt="Image3" class="dohLogo" />
             </div>
             <div class="formHeader">
+            <div>
               <p>Republic of the Philippines</p>
               <p>DEPARTMENT OF HEALTH</p>
               <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
@@ -671,6 +672,7 @@ console.log("referring call duration:", this.referring_md);
                 <span style="color: blue">http://www.ro7.doh.gov.ph</span> Email
                 Address: dohro7@gmail.com
               </p>
+            </div>
             </div>
             <div class="clinical">
               <!-- <input type="text" id="activity_id" value=""> -->

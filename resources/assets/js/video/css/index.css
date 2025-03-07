@@ -140,12 +140,11 @@
 /*------------------------------------------*/
 
 .container-fluid {
-  border: 4px outset green;
-  /*height: 978px;
-    object-fit: cover;*/
-
-  width: 100vw;
-  height: 100vh;
+  /* border: 4px outset green; */
+   /* height: 978px; */
+  /* object-fit: cover; */
+  width: auto;
+  height: auto;
 }
 #calling {
   display: flex;
@@ -216,7 +215,7 @@
   font-size: 14px;
   font-family: Calibri;
 
-  height: 99%;
+  height: auto;
 }
 .tableForm {
   position: relative;
@@ -237,13 +236,26 @@
 .dohLogo {
   position: relative;
   border: 1px outset transparent;
-  top: 10px;
-  left: 10px;
+  top: 15px;
+  left: 15px;
   z-index: 2;
   height: 72px;
   width: 76px;
 }
+
 .formHeader {
+  position: absolute;
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: center; /* Center the form header */
+  text-align: center;
+  padding: 10px;
+  position: relative; /* Allows absolute positioning of the logo */
+  line-height: 0.1px;
+  font-size: 13px;
+}
+
+/* .formHeader {  
   position: absolute;
   top: 15px;
   left: 95px;
@@ -251,11 +263,12 @@
   text-align: center;
   line-height: 0.1px;
   font-size: 13px;
-}
-.clinical {
+} */
+
+.clinical {  
   position: relative;
   text-align: center;
-  margin-top: 28px;
+  margin-top: 5px;
   border: 1px outset transparent;
   font-size: 18px;
   font-family: Calibri;
@@ -266,8 +279,8 @@
   height: 98.5vh;
 }
 .remotePlayerDiv {
-  height: 960px;
-  width: 100%;
+  height: auto;
+  width: auto;
 }
 .localPlayerLayer {
   height: 300px;
@@ -403,7 +416,7 @@ tr:nth-child(even) {
     position: relative;
     border: 1px outset transparent;
     top: 5px;
-    left: 5px;
+    left: 15px;
     z-index: 2;
     height: 32px;
     width: 36px;
@@ -8492,15 +8505,15 @@ tr:nth-child(even) {
     bottom: 10px;
   }
   .container-fluid {
-    /* border: 1px outset green;
-        height: auto;*/
+    border: 1px outset green;
+    height: auto;
   }
   .tableForm {
     font-size: 11px;
     height: 82.5vh;
   }
   .telemedForm {
-    /*height: 621px;*/
+    height: 621px;
   }
   .dohLogo {
     position: relative;
@@ -8827,9 +8840,9 @@ tr:nth-child(even) {
     font-size: 15px;
     height: 555px;
   }
-  .telemedForm {
+  /* .telemedForm {
     height: 685px;
-  }
+  } */
   .dohLogo {
     position: relative;
     border: 1px outset transparent;
@@ -8902,7 +8915,7 @@ tr:nth-child(even) {
   padding: 5px 10px;
   border-radius: 5px;
   position: absolute;
-  z-index: 1;
+  z-index: 0;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
@@ -8927,5 +8940,5 @@ tr:nth-child(even) {
 
 .button-container {
   display: inline-block;
-  position: relative;
+  position:relative;
 }
