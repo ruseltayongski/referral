@@ -158,7 +158,7 @@
 .mainPic {
   position: relative;
   border: 2px outset transparent;
-  height: 100%;
+  /* height: 100%; */
   width: 100%;
 }
 .img-fluid {
@@ -209,13 +209,13 @@
 .telemedForm {
   position: relative;
   border: 2px outset black;
-  margin-top: 5px;
+  /* margin-top: 5px; */
   /* height: 917px;*/
   padding: 0;
   font-size: 14px;
   font-family: Calibri;
 
-  height: auto;
+  /* height: auto; */
 }
 .tableForm {
   position: relative;
@@ -231,7 +231,8 @@
   overflow-y: auto;
   overflow-x: hidden;
 
-  height: 83.5vh;
+  /* height: 83.5vh; */
+  height: 75vh;
 }
 .dohLogo {
   position: relative;
@@ -283,8 +284,8 @@
   width: auto;
 }
 .localPlayerLayer {
-  height: 300px;
-  width: 250px;
+  height: 200px;
+  width: 150px;
 }
 
 .localPlayerLayer div {
@@ -8936,6 +8937,7 @@ tr:nth-child(even) {
 
 .tooltip-container:hover .tooltip-text {
   visibility: visible;
+  z-index: 10;
 }
 
 .button-container {

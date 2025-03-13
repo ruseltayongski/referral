@@ -490,7 +490,7 @@ console.log("referring call duration:", this.referring_md);
 
 <template>
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
-  <div class="container-fluid">
+  <div class="fullscreen-div">
     <div class="row">
       <div class="col-lg-7">
         <div class="mainPic">
@@ -675,7 +675,6 @@ console.log("referring call duration:", this.referring_md);
             </div>
             </div>
             <div class="clinical">
-              <!-- <input type="text" id="activity_id" value=""> -->
               <span style="color: #4caf50"><b>CLINICAL REFERRAL FORM</b></span>
             </div>
             <div class="tableForm">
@@ -864,7 +863,6 @@ console.log("referring call duration:", this.referring_md);
                     </tr>
                 </tbody>
               </table>
-              <!-- <div v-if="referring_md == 'yes'"> -->
                 <button
                   class="btn btn-success btn-md btn-block"
                   type="button"
@@ -879,7 +877,6 @@ console.log("referring call duration:", this.referring_md);
                 >
                   <i class="bi bi-prescription"></i> Generate Lab Request
                 </button>
-              <!-- </div> -->
             </div>
           </div>
         </div>
@@ -912,4 +909,21 @@ console.log("referring call duration:", this.referring_md);
 
 <style scoped>
 @import "./css/index.css";
+.fullscreen-div {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden; /* Prevent scrolling */
+    position: fixed; /* Keep it fixed in the viewport */
+    top: 0;
+    left: 0;
+}
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+.remotePlayerDiv, .localPlayerDiv {
+    max-height: 100%;
+    overflow: hidden;
+}
 </style>
