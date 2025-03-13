@@ -339,7 +339,7 @@ $facilities = \App\Facility::select('id','name')
                             <textarea class="form-control other_diagnosis" name="other_diagnoses" style="resize: none;" rows="5">{{ $form['pregnant']->other_diagnoses }}</textarea>
                         </td>
                     </tr>
-                    {{dd($reason_referral->id)}}
+                
                     <tr>
                         <td colspan="4">
                             <small class="text-success"><b>REASON FOR REFERRAL: </b></small><span class="text-red">*</span>
