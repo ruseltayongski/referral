@@ -354,7 +354,7 @@ class PrintCtrl extends Controller
         // $facility = Facility::select('id','name')->get();
 
         $activity = Activity::with([
-            'patient',
+            'patient.municipal',
             'referredTo',
             'labRequest' => function ($query) {
                 $query->select('activity_id', 'laboratory_code', 'requested_by','created_at')
@@ -363,8 +363,8 @@ class PrintCtrl extends Controller
                     }]);
             }
         ])
-            ->find($activity_id);
-
+        ->find($activity_id);
+        // return response()->json($activity);
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -430,7 +430,6 @@ class PrintCtrl extends Controller
         else
             $patient_age .= $patient_age_month['days']." days old"; 
 
-
         //===============================================================================
         $formattedDate = date("m/d/Y", strtotime($activity->labRequest[0]->created_at));
         $pdf->SetFillColor(222, 250, 238);  
@@ -462,7 +461,7 @@ class PrintCtrl extends Controller
         $pdf->SetFont('Arial', 'B', 10); 
         $pdf->Cell(19, 8, "Address: ", 0, 0, '', true); 
         $pdf->SetFont('Arial', 'I', 10); 
-        $pdf->Cell(0, 8, iconv('UTF-8', 'windows-1252', "{$patient->muncity}"), 0, 1, '', true);
+        $pdf->Cell(0, 8, iconv('UTF-8', 'windows-1252', "{$patient->municipal->description}"), 0, 1, '', true);
         $pdf->Ln(10);
 
         //===============================================================================
@@ -498,10 +497,10 @@ class PrintCtrl extends Controller
             $prescriptionCounter++;
             
             $rowText = "{$row->laboratory_description}";
-            $pdf->MultiCell(0, 5, $rowText, 0, 'L');
+            $pdf->MultiCell(0, 3, $rowText, 0, 'L');
 
-            $rowText2 = "{$row->laboratory_code}";
-            $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
+            // $rowText2 = "{$row->laboratory_code}";
+            $pdf->MultiCell(0, 3, $rowText2, 0, 'L');
 
             $pdf->Ln();
         }
