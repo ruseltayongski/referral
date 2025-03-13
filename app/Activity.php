@@ -13,6 +13,11 @@ class Activity extends Model
         return $this->belongsTo(Patients::class, 'patient_id', 'id');
     }
 
+    // public function municipal()
+    // {
+    //     return $this->belongsTo(Muncity::class, 'muncity', 'id');
+    // }
+
     public function referredTo() {
         return $this->belongsTo(Facility::class, 'referred_to', 'id');
     }
