@@ -357,7 +357,7 @@ class PrintCtrl extends Controller
             'patient',
             'referredTo',
             'labRequest' => function ($query) {
-                $query->select('activity_id', 'laboratory_code', 'requested_by')
+                $query->select('activity_id', 'laboratory_code', 'requested_by','created_at')
                     ->with(['requestedBy' => function ($query) {
                         $query->select('id', 'fname', 'lname', 'signature', 'license');
                     }]);
@@ -432,7 +432,7 @@ class PrintCtrl extends Controller
 
 
         //===============================================================================
-        $formattedDate = date("m/d/Y", strtotime($patient->prescription_date));
+        $formattedDate = date("m/d/Y", strtotime($activity->labRequest[0]->created_at));
         $pdf->SetFillColor(222, 250, 238);  
         $pdf->SetFont('Arial', 'B', 10); 
         $pdf->Cell(13, 8, "Name: ", 0, 0, '', true); 
