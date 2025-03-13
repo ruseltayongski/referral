@@ -12,4 +12,14 @@ class Cofig_schedule extends Model
     public function appointmentSchedules(){
         return $this->hasMany(AppointmentSchedule::class, 'configId','id');
     }
+
+    public function creator(){
+        
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function subOpdCateg(){
+        return $this->belongsTo(SubOpd::class, 'subopd_id');
+    }
+
 }

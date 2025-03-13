@@ -54,7 +54,7 @@ $subOpd = App\SubOpd::get();
                         <i class="fa fa-search"></i> Search
                     </button>
 
-                    <button type="button" class="btn btn-primary btn-sm btn-flat" id="add-appointment" data-toggle="modal" data-target="#addconfigModal">
+                    <button type="button" class="btn btn-primary btn-sm btn-flat" id="add-appointment">
                         <i class="fa fa-calendar-plus-o"></i> Add
                     </button>
 
@@ -96,7 +96,7 @@ $subOpd = App\SubOpd::get();
                             <tr style="font-size: 12px">
                                 <td>{{$schedule->description}}</td>
                                 <td>  
-                                    {{$schedule->subopd_id}}
+                                    {{$schedule->subOpdCateg->description}}
                                 </td>
                                 <td>{{ $facility->name }}</td>
                                 <td>{{ $schedule->category }}</td>
@@ -105,7 +105,14 @@ $subOpd = App\SubOpd::get();
                                         <i class="fa fa-eye"></i>
                                     </button>
                                 </td>
-                                <td>{{ $name }}</td>
+                               
+                                 <td>
+                                    {{$schedule->creator->fname}}
+                                    {{$schedule->creator->mname}}
+                                    {{$schedule->creator->lname}}
+
+                                 </td>
+                                
                                 <td class="text-center">
                                     <!-- <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editModal{{$schedule->id}}">
                                         <i class="fa fa-pencil"></i>
@@ -194,12 +201,6 @@ $subOpd = App\SubOpd::get();
                                                                 <input type="text" class="form-control" name="deleteconfigdesc" id="Configdesc" value="{{$schedule->description}}" required disabled>
                                                                 <input type="hidden" name="configId" value="{{$configId}}">
                                                                 <label for="update_opdCategory">OPD Category:</label>
-                                                                <!-- <select class="form-control select2" id="add_department" name="delete_department_id" required disabled>
-                                                                    <option selected value="">Select Department Category</option>
-                                                                @foreach($department as $dept)
-                                                                    <option value="{{$dept->id}}" @if($dept->id === $schedule->department_id) selected @endif>{{$dept->description}}</option>
-                                                                @endforeach
-                                                                </select> -->
                                                                 <input type="text" class="form-control" value="{{$schedule->subopd_id}}" disabled>
                                                                 <input type="hidden" class="form-control" name="delete_department_id" value="{{$schedule->subopd_id}}">
 
@@ -366,21 +367,6 @@ $subOpd = App\SubOpd::get();
                                                     <input type="checkbox" class="update-day-checkbox" name="days[]" value="Monday"> Monday
                                                 </label>
                                                 <div class="edit-time-slots" style="margin-left: 20px; display:none;">
-                                                    <div class="row Update-time-slots">
-                                                        <div class="col-md-5">
-                                                            <label>Time From:</label>
-                                                            <input type="time" name="update_time_from[Monday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label>Time To:</label>
-                                                            <input type="time" name="update_time_to[Monday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
                                                     <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="Monday" style="margin-top: 10px;">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                     </button>
@@ -391,21 +377,6 @@ $subOpd = App\SubOpd::get();
                                                     <input type="checkbox" class="update-day-checkbox" name="days[]" value="Tuesday"> Tuesday
                                                 </label>
                                                 <div class="edit-time-slots" style="margin-left: 20px; display:none;">
-                                                    <div class="row Update-time-slots">
-                                                        <div class="col-md-5">
-                                                            <label>Time From:</label>
-                                                            <input type="time" name="update_time_from[Tuesday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label>Time To:</label>
-                                                            <input type="time" name="update_time_to[Tuesday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
                                                     <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="Tuesday" style="margin-top: 10px;">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                     </button>
@@ -416,21 +387,6 @@ $subOpd = App\SubOpd::get();
                                                     <input type="checkbox" class="update-day-checkbox" name="days[]" value="Wednesday"> Wednesday
                                                 </label>
                                                 <div class="edit-time-slots" style="margin-left: 20px; display:none;">
-                                                    <div class="row Update-time-slots">
-                                                        <div class="col-md-5">
-                                                            <label>Time From:</label>
-                                                            <input type="time" name="update_time_from[Wednesday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label>Time To:</label>
-                                                            <input type="time" name="update_time_to[Wednesday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
                                                     <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="Wednesday" style="margin-top: 10px;">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                     </button>
@@ -441,21 +397,6 @@ $subOpd = App\SubOpd::get();
                                                     <input type="checkbox" class="update-day-checkbox" name="days[]" value="Thursday"> Thursday
                                                 </label>
                                                 <div class="edit-time-slots" style="margin-left: 20px; display:none;">
-                                                    <div class="row Update-time-slots">
-                                                        <div class="col-md-5">
-                                                            <label>Time From:</label>
-                                                            <input type="time" name="update_time_from[Thursday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label>Time To:</label>
-                                                            <input type="time" name="update_time_to[Thursday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
                                                     <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="Thursday" style="margin-top: 10px;">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                     </button>
@@ -466,21 +407,6 @@ $subOpd = App\SubOpd::get();
                                                     <input type="checkbox" class="update-day-checkbox" name="days[]" value="Friday"> Friday
                                                 </label>
                                                 <div class="edit-time-slots" style="margin-left: 20px; display:none;">
-                                                    <div class="row Update-time-slots">
-                                                        <div class="col-md-5">
-                                                            <label>Time From:</label>
-                                                            <input type="time" name="update_time_from[Friday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label>Time To:</label>
-                                                            <input type="time" name="update_time_to[Friday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
                                                     <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="Friday" style="margin-top: 10px;">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                     </button>
@@ -491,21 +417,6 @@ $subOpd = App\SubOpd::get();
                                                     <input type="checkbox" class="update-day-checkbox" name="days[]" value="Saturday"> Saturday
                                                 </label>
                                                 <div class="edit-time-slots" style="margin-left: 20px; display:none;">
-                                                    <div class="row Update-time-slots">
-                                                        <div class="col-md-5">
-                                                            <label>Time From:</label>
-                                                            <input type="time" name="update_time_from[Saturday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label>Time To:</label>
-                                                            <input type="time" name="update_time_to[Saturday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
                                                     <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="Saturday" style="margin-top: 10px;">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                     </button>
@@ -516,21 +427,6 @@ $subOpd = App\SubOpd::get();
                                                     <input type="checkbox" class="update-day-checkbox" name="days[]" value="Sunday"> Sunday
                                                 </label>
                                                 <div class="edit-time-slots" style="margin-left: 20px; display:none;">
-                                                    <div class="row Update-time-slots">
-                                                        <div class="col-md-5">
-                                                            <label>Time From:</label>
-                                                            <input type="time" name="update_time_from[Sunday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-5">
-                                                            <label>Time To:</label>
-                                                            <input type="time" name="update_time_to[Sunday][]" class="form-control input-sm">
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
                                                     <button type="button" class="btn btn-primary btn-xs Update-time-slot" data-day="Sunday" style="margin-top: 10px;">
                                                             <i class="fa fa-plus"></i> Add Time Slot
                                                     </button>
@@ -592,11 +488,6 @@ $subOpd = App\SubOpd::get();
                                         <option value="1 Week">1 Week</option>
                                         <option value="1 Month">1 Month</option>
                                     </select>
-
-                                    <label for="defaultCategory">Date Range:</label>
-                                    <!-- <input type="date" name="date_range" class="form-control"  id="dateRange"> -->
-                                    <input type="text" class="form-control" name="date_range" id="config_date_range" readonly>
-
                                 
                                     <label for="Facility">Facility:</label>
                                     <input type="hidden" name="facility_id" value="{{$fact[0]->id}}">
@@ -614,21 +505,6 @@ $subOpd = App\SubOpd::get();
                                                 <input type="checkbox" class="day-checkbox" name="days[]" value="Monday"> Monday
                                             </label>
                                             <div class="time-slots" style="margin-left: 20px; display:none;">
-                                                <div class="row time-slot">
-                                                    <div class="col-md-5">
-                                                        <label>Time From:</label>
-                                                        <input type="time" name="time_from[Monday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Time To:</label>
-                                                        <input type="time" name="time_to[Monday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Monday">
                                                     <i class="fa fa-plus"></i> Add Time Slot
                                                 </button>
@@ -639,21 +515,6 @@ $subOpd = App\SubOpd::get();
                                                 <input type="checkbox" class="day-checkbox" name="days[]" value="Tuesday"> Tuesday
                                             </label>
                                             <div class="time-slots" style="margin-left: 20px; display:none;">
-                                                <div class="row time-slot">
-                                                    <div class="col-md-5">
-                                                        <label>Time From:</label>
-                                                        <input type="time" name="time_from[Tuesday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Time To:</label>
-                                                        <input type="time" name="time_to[Tuesday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Tuesday">
                                                     <i class="fa fa-plus"></i> Add Time Slot
                                                 </button>
@@ -664,21 +525,6 @@ $subOpd = App\SubOpd::get();
                                                 <input type="checkbox" class="day-checkbox" name="days[]" value="Wednesday"> Wednesday
                                             </label>
                                             <div class="time-slots" style="margin-left: 20px; display:none;">
-                                                <div class="row time-slot">
-                                                    <div class="col-md-5">
-                                                        <label>Time From:</label>
-                                                        <input type="time" name="time_from[Wednesday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Time To:</label>
-                                                        <input type="time" name="time_to[Wednesday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Wednesday">
                                                     <i class="fa fa-plus"></i> Add Time Slot
                                                 </button>
@@ -689,21 +535,6 @@ $subOpd = App\SubOpd::get();
                                                 <input type="checkbox" class="day-checkbox" name="days[]" value="Thursday"> Thursday
                                             </label>
                                             <div class="time-slots" style="margin-left: 20px; display:none;">
-                                                <div class="row time-slot">
-                                                    <div class="col-md-5">
-                                                        <label>Time From:</label>
-                                                        <input type="time" name="time_from[Thursday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Time To:</label>
-                                                        <input type="time" name="time_to[Thursday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Thursday">
                                                     <i class="fa fa-plus"></i> Add Time Slot
                                                 </button>
@@ -714,21 +545,6 @@ $subOpd = App\SubOpd::get();
                                                 <input type="checkbox" class="day-checkbox" name="days[]" value="Friday"> Friday
                                             </label>
                                             <div class="time-slots" style="margin-left: 20px; display:none;">
-                                                <div class="row time-slot">
-                                                    <div class="col-md-5">
-                                                        <label>Time From:</label>
-                                                        <input type="time" name="time_from[Friday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Time To:</label>
-                                                        <input type="time" name="time_to[Friday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Friday">
                                                     <i class="fa fa-plus"></i> Add Time Slot
                                                 </button>
@@ -739,21 +555,6 @@ $subOpd = App\SubOpd::get();
                                                 <input type="checkbox" class="day-checkbox" name="days[]" value="Saturday"> Saturday
                                             </label>
                                             <div class="time-slots" style="margin-left: 20px; display:none;">
-                                                <div class="row time-slot">
-                                                    <div class="col-md-5">
-                                                        <label>Time From:</label>
-                                                        <input type="time" name="time_from[Saturday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Time To:</label>
-                                                        <input type="time" name="time_to[Saturday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Saturday">
                                                     <i class="fa fa-plus"></i> Add Time Slot
                                                 </button>
@@ -764,21 +565,6 @@ $subOpd = App\SubOpd::get();
                                                 <input type="checkbox" class="day-checkbox" name="days[]" value="Sunday"> Sunday
                                             </label>
                                             <div class="time-slots" style="margin-left: 20px; display:none;">
-                                                <div class="row time-slot">
-                                                    <div class="col-md-5">
-                                                        <label>Time From:</label>
-                                                        <input type="time" name="time_from[Sunday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-5">
-                                                        <label>Time To:</label>
-                                                        <input type="time" name="time_to[Sunday][]" class="form-control input-sm">
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot days-checkbox">
-                                                            <i class="fa fa-trash"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
                                                 <button type="button" class="btn btn-primary btn-xs add-time-slot" data-day="Sunday">
                                                     <i class="fa fa-plus"></i> Add Time Slot
                                                 </button>
@@ -809,6 +595,22 @@ $subOpd = App\SubOpd::get();
 
 <script>
 $(document).ready(function() {
+    
+    //Add Time Slot Validation
+    let usertype = @json($usertype);
+
+    $("#add-appointment").click(function (e) {
+        if(usertype !== "support"){
+        e.preventDefault();
+            Lobibox.alert("error", {
+                msg: "You are not authorized to add a Config appointment. Only IT Support can access this feature."
+            });
+        }else{
+            $("#addconfigModal").modal("show");
+        }
+
+    });
+
 
     $('#defaultCategory').change(function() {
         var selectedCategory = $(this).val();
@@ -854,6 +656,20 @@ $(document).ready(function() {
 
 });
     // Add Config
+    document.getElementById("addAppointmentConfigModal").addEventListener("submit", function(event){
+        let checkboxes = document.querySelectorAll(".day-checkbox");
+        let isChecked = Array.from(checkboxes).some(check => check.checked);
+
+        if(!isChecked){
+            Lobibox.alert("error",
+            {
+                msg: `Please select at least one day!`
+            });
+            event.preventDefault();
+        }
+        
+    });
+
     $(document).on('click', '.add-time-slot', function() {
         let day = $(this).data('day');
         let timeSlot = 
@@ -880,6 +696,47 @@ $(document).ready(function() {
         $(this).closest('.time-slot').remove();
     });
 
+    //will automatic populate the first time slot
+    $(document).ready(function() {
+        $('.day-checkbox').on('change', function() {
+            // Get the parent time-slots div
+            var timeSlotDiv = $(this).closest('.checkbox').find('.time-slots');
+            var day = $(this).val(); // Get the day value from the checkbox
+            
+            if ($(this).is(':checked')) {
+                // Show the time slots div
+                timeSlotDiv.show();
+                
+                // Check if this is the first time slot for this day
+                if (timeSlotDiv.find('.time-slot').length === 0) {
+                    // Add the first time slot automatically
+                    let firstTimeSlot = `
+                    <div class="row time-slot">
+                        <div class="col-md-5">
+                            <label>Time From:</label>
+                            <input type="time" name="time_from[${day}][]" class="form-control input-sm" required>
+                        </div>
+                        <div class="col-md-5">
+                            <label>Time To:</label>
+                            <input type="time" name="time_to[${day}][]" class="form-control input-sm" required>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm remove-time-slots">
+                                <i class="fa fa-trash"></i>
+                            </button>   
+                        </div>
+                    </div>`;
+                    
+                    // Add the time slot before the "Add Time Slot" button
+                    timeSlotDiv.find('.add-time-slot').before(firstTimeSlot);
+                }
+            } else {
+                timeSlotDiv.hide();
+                timeSlotDiv.find('.time-slot').remove(); 
+            }
+        });
+    });
+
     $(document).on('change', '.day-checkbox', function() {
         let  checkboxContainer = $(this).closest('.checkbox');
         if($(this).is(':checked')){
@@ -891,6 +748,71 @@ $(document).ready(function() {
         timeSlots.find('.time-slot:not(:first)').remove();
         }
     });
+
+    $(document).on('change', 'input[type="time"]', function () {
+
+        validateAllDays();
+        
+    });
+
+    function validateAllDays(){
+
+        let now = new Date();
+        let today = now.toISOString().split('T')[0]; 
+        let allSelectedTimes = {};
+
+        $('.day-checkbox:checked').each(function () {
+
+            let day = $(this).val(); // Get the selected day
+            let timeSlots = $(this).closest('.checkbox').find('.time-slot');
+
+            allSelectedTimes[day] = [];
+
+            timeSlots.each(function () {
+                let timeFrom = $(this).find('input[name^="time_from"]').val();
+                let timeTo = $(this).find('input[name^="time_to"]').val();
+            
+                if(timeFrom && timeTo){
+                    let startTime = new Date(`${today}T${timeFrom}`);
+                    let endTime = new Date(`${today}T${timeTo}`);
+
+                    if (startTime >= endTime) {
+                        Lobibox.alert("error",
+                        {
+                            msg: `End time for ${day} must be after start time!`
+                        });
+
+                        $(this).find('input[name^="time_to"]').val("");
+                        return;
+                    }
+
+                   for ( let prevSlot of allSelectedTimes[day]){
+                     let prevStart = prevSlot.start;
+                     let prevEnd =  prevSlot.end;
+
+                     if (
+                            (startTime >= prevStart && startTime < prevEnd) ||  
+                            (endTime > prevStart && endTime <= prevEnd) || 
+                            (startTime <= prevStart && endTime >= prevEnd)  
+                        ) {
+                            Lobibox.alert("error",
+                            {
+                                msg: `Time slot conflicts with an existing slot on ${day}!`
+                            });
+
+                            $(this).find('input[name^="time_from"]').val("");
+                            $(this).find('input[name^="time_to"]').val("");
+                            return;
+                        }
+                   }
+
+                    allSelectedTimes[day].push({ start: startTime, end: endTime});
+                 
+                }
+            });
+        });
+    }
+
 
 //*********************update Config Set multiple time********************//
 // remove the null value in request name attribute
@@ -909,7 +831,7 @@ $(document).ready(function() {
         });
     });
 
-    function UpdateConfig(configId) {
+    function UpdateConfig(configId, selectedDay = null) {
         
         $.ajax({
             url: `get-config/${configId}`,
@@ -919,8 +841,7 @@ $(document).ready(function() {
                 const days = res.days;
                 const times = res.times;
                 const category = res.category.trim();
-                // console.log('days', days, 'times', times, 'res.category', res.category);
-                console.log(`category value: ${category}`);
+        
                 $('#Config_desc').val(res.descript);
                 $('#editdepartment_config').val(res.subOpdId).trigger('change');
                 $('#edit_default_Category').val(category).trigger('change');
@@ -932,38 +853,40 @@ $(document).ready(function() {
 
                 // $('.update-day-checkbox').prop('checked', false);
                 // $('.edit-time-slots').hide().empty();
-
                 days.forEach(day => {
-                    $(`.update-day-checkbox[value="${day}"]`).prop("checked", true);
+                    if (selectedDay === null || selectedDay === day) {
+                        $(`.update-day-checkbox[value="${day}"]`).prop("checked", true);
 
-                    const $timeSlotsDiv = $(`input[name="days[]"][value="${day}"]`).closest('.checkbox').find('.edit-time-slots');
-                    
-                    $timeSlotsDiv.show();
-                    
-                    // $timeSlotsDiv.find('.Update-time-slots').remove();
-                    
-                    const dayTimes = times[day] || [];
-                    dayTimes.forEach(slot => {
-                        const [timeFrom, timeTo] = slot.split('-');
-                        console.log("dayTimes", timeTo);
-                        const timeSlotHtml = `
-                            <div class="row Update-time-slots"> 
-                                <div class="col-md-5">
-                                    <label>Time From:</label>
-                                    <input type="time" name="update_time_from[${day}][]" class="form-control input-sm" value="${timeFrom}">
-                                </div>
-                                <div class="col-md-5">
-                                    <label>Time To:</label>
-                                    <input type="time" name="update_time_to[${day}][]" class="form-control input-sm" value="${timeTo}">
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" class="btn btn-danger btn-sm editremove-time-slot" style="margin-top: 32px;">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>`;
-                        $timeSlotsDiv.append(timeSlotHtml);
-                    });
+                        const $timeSlotsDiv = $(`input[name="days[]"][value="${day}"]`).closest('.checkbox').find('.edit-time-slots');
+                        
+                        $timeSlotsDiv.show();
+                        const $addButton = $timeSlotsDiv.find('.Update-time-slot');
+                        // $timeSlotsDiv.find('.Update-time-slots').remove();
+                        
+                        const dayTimes = times[day] || [];
+                        dayTimes.forEach(slot => {
+                            const [timeFrom, timeTo] = slot.split('-');
+                            console.log("dayTimes", timeTo);
+                            const timeSlotHtml = `
+                                <div class="row Update-time-slots" data-day="${day}"> 
+                                    <div class="col-md-5">
+                                        <label>Time From:</label>
+                                        <input type="time" name="update_time_from[${day}][]" class="form-control input-sm" value="${timeFrom}">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label>Time To:</label>
+                                        <input type="time" name="update_time_to[${day}][]" class="form-control input-sm" value="${timeTo}">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot_edit" style="margin-top: 30px;">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                     <input type="hidden" class="time-slot-day" value="${day}">
+                                </div>`;
+                            $(timeSlotHtml).insertBefore($addButton);
+                        });
+                    }
                 });
             }, 
             error: function(error) {
@@ -974,34 +897,129 @@ $(document).ready(function() {
         $('#IdetconfigModal').modal('show');
     }
 
+    //Remove Slot
+    $(document).on("click", ".remove-time-slot_edit", function () {
+
+        let $slotRow = $(this).closest(".Update-time-slots");
+
+
+        let day = $slotRow.find('.time-slot-day').val();  
+
+        let timeFrom = $slotRow.find('input[name^="update_time_from"]').val();
+        let timeTo = $slotRow.find('input[name^="update_time_to"]').val();
+        let configId = $("#update-config_id").val();
+
+        console.log("my day::", day);
+
+        var urlSlot = "<?php echo asset('/remove-time-slot') ?>";
+
+        Lobibox.confirm({
+            msg: "Are you sure you want to remove this time slot?",
+            callback: function ($this, type, ev) {
+                if(type === 'yes') {
+                    var json = {
+                        "_token" : "<?php echo csrf_token(); ?>",
+                        "code" : code
+                    };
+                    $.ajax({
+                        url: urlSlot,
+                        method: "POST",
+                        data: {
+                            "_token": "<?php echo csrf_token(); ?>",
+                            configId: configId,
+                            timeFrom: timeFrom,
+                            timeTo: timeTo,
+                            day: day,
+                        },
+                        success: function (response){
+
+                            console.log("my TimeSlot Price", response.message);
+                            if(response.message){
+                                $slotRow.remove();
+                                Lobibox.alert("success", {
+                                    msg: "Time Slot succesfully removed."
+                                });
+                            }
+                            else{
+                                Lobibox.alert("error", {
+                                    msg: "Failed to remove time slot."
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            console.error("Error removing time slot:", error);
+                            alert("An error occurred.");
+                        },
+                    });
+                }
+            }
+        });
+
+        // $(this).closest('.Update-time-slots').remove();
+
+    });
+
     $(document).on('click', '.Update-time-slot', function () {
         let day = $(this).data('day');
-        console.log("day selected", day);
+   
         let timeSlot = `
         <div class="row Update-time-slots">
             <div class="col-md-5">
                 <label>Time From:</label>
-                <input type="time" name="update_time_from[${day}][]" class="form-control input-sm update_time_from">
+                <input type="time" name="update_time_from[${day}][]" class="form-control input-sm update_time_from" required>
             </div>
             <div class="col-md-5">
                 <label>Time To:</label>
-                <input type="time" name="update_time_to[${day}][]" class="form-control input-sm update_time_to">
+                <input type="time" name="update_time_to[${day}][]" class="form-control input-sm update_time_to" required>
             </div>
             <div class="col-md-2">
-                <button type="button" class="btn btn-danger btn-sm update_remove-time-slot">
+                <button type="button" class="btn btn-danger btn-sm editremove-time-slot" style="margin-top: 30px;">
                     <i class="fa fa-trash"></i>
                 </button>
             </div>
         </div>`;
         $(this).before(timeSlot);
     });
+
     // Remove a time slot
     $(document).on('click', '.editremove-time-slot', function () {
         $(this).closest('.Update-time-slots').remove();
     });
-    // Remove time slot
-    $(document).on('click', '.update_remove-time-slot', function () {
-        $(this).closest('.time-slot_edit').remove();
+
+    //will automatic populate the first time slot
+    $(document).ready(function() {
+   
+        $('.update-day-checkbox').on('change', function() {
+           
+            var timeSlotDiv = $(this).closest('label').siblings('.edit-time-slots');
+            var day = $(this).val(); // Get the day value from the checkbox
+            
+            if ($(this).is(':checked')) {
+                // Show the time slots div
+                timeSlotDiv.show();
+                
+                // Add the first time slot automatically
+                let firstTimeSlot = `
+                <div class="row Update-time-slots">
+                    <div class="col-md-5">
+                        <label>Time From:</label>
+                        <input type="time" name="update_time_from[${day}][]" class="form-control input-sm update_time_from" required>
+                    </div>
+                    <div class="col-md-5">
+                        <label>Time To:</label>
+                        <input type="time" name="update_time_to[${day}][]" class="form-control input-sm update_time_to" required>
+                    </div>
+                </div>`;
+                
+                // Add the time slot before the "Add Time Slot" button
+                timeSlotDiv.find('.Update-time-slot').before(firstTimeSlot);
+            } else {
+                // If unchecked, hide the time slots div and remove any added time slots
+                timeSlotDiv.hide();
+                timeSlotDiv.find('.Update-time-slots').remove();
+            }
+        });
+
     });
 
     // Show or hide time slots based on checkbox
@@ -1016,6 +1034,92 @@ $(document).ready(function() {
             timeSlots.find('.edit-time-slots:not(:first)').remove();
         }
     });
-    
+
+    $(document).on('change', `[name^="update_time_from"], [name^="update_time_to"]`, function () {
+
+        EditDays();
+
+    });
+
+    function EditDays(){
+
+        let now = new Date();
+        let today = now.toISOString().split('T')[0]; 
+        let getSelectedTimes = {}; 
+
+        $('.update-day-checkbox:checked').each(function () {
+
+            let day = $(this).val(); // Get the selected day
+            let timeSlots = $(this).closest('.checkbox').find('.Update-time-slots');
+            
+            getSelectedTimes[day] = [];
+
+            timeSlots.each(function () {
+
+                let edit_timeFrom = $(this).find('input[name^="update_time_from"]').val();
+                let edit_timeTo = $(this).find('input[name^="update_time_to"]').val();
+
+                if(edit_timeFrom && edit_timeTo){
+                    let edit_startTime = new Date(`${today}T${edit_timeFrom}`);
+                    let edit_endTime = new Date(`${today}T${edit_timeTo}`);
+
+                    if (edit_startTime >= edit_endTime) {
+
+                        Lobibox.alert("error",
+                        {
+                            msg: `End time for ${day} must be after start time!`
+                        });
+                       
+                        $(this).find('input[name^="update_time_to"]').val("");
+                        return;
+                    }
+
+                    for ( let prevSlot of getSelectedTimes[day]){
+                     let prevStart = prevSlot.start;
+                     let prevEnd =  prevSlot.end;
+
+                     if (
+                            (edit_startTime >= prevStart && edit_startTime < prevEnd) ||  
+                            (edit_endTime > prevStart && edit_endTime <= prevEnd) || 
+                            (edit_startTime <= prevStart && edit_endTime >= prevEnd)  
+                        ) {
+                            Lobibox.alert("error",
+                            {
+                                msg: `Time slot conflicts with an existing slot on ${day}!`
+                            });
+                          
+                            $(this).find('input[name^="update_time_from"]').val("");
+                            $(this).find('input[name^="update_time_to"]').val("");
+                            return;
+                        }
+                   }
+
+                   getSelectedTimes[day].push({ start: edit_startTime, end: edit_endTime});
+
+                }
+            });
+        });
+    }
+
+    // clear all previous open modal
+
+    function clearConfigModalform() {
+
+        $('.update-day-checkbox').prop('checked', false);
+
+        $('.edit-time-slots').hide();
+
+        $('.Update-time-slots').remove();
+
+        $('#EditConfigIt')[0].reset();
+    }
+
+    $('#IdetconfigModal').on('show.bs.modal', function (e){
+        
+        clearConfigModalform();
+    });
+
+
+
 </script>
 @endsection

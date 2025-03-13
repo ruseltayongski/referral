@@ -171,8 +171,16 @@
             <div class="col-md-3">
                 <div style="padding: 2px;">
                     @if($user->level != 'vaccine' && !$multiple_login)
-                        <span style="color: white">{{ \App\Facility::find($user->facility_id)->name }}</span>
-                    @endif
+                        @php
+                            $facility = \App\Facility::find($user->facility_id);
+                        @endphp
+                        <span style="color: white">
+                            {{ $facility->name }}
+                            @if(!in_array($facility->level, ['infirmary', 'RHU', 'primary_care_facility', 'dialysis_center', 'clinic']))
+                                {{ $facility->level ? ' - Level ' . $facility->level : '' }}
+                            @endif
+                        </span>
+                    @endif  
                 </div>
             </div>
             <div class="col-md-3">

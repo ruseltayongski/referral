@@ -85,6 +85,7 @@ $multi_faci = Session::get('multiple_login');
                     </li>
                     <li class="divider"></li>
                     <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
+                    <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
                     <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports </a>
                     <ul class="dropdown-menu">
@@ -267,7 +268,7 @@ $multi_faci = Session::get('multiple_login');
                 </li>
                 @endif
                 <li class="dropdown-submenu">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings </a>
                     <ul class="dropdown-menu">
                         @if($user->level == 'opcen')
                             <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As </a></li>

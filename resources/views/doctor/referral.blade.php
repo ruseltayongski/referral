@@ -170,14 +170,14 @@ $user = Session::get('auth');
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
 
                                 $department = '"Not specified department"';
-                                $subdepartment = '"Not specified sub department"';
+                                // $subdepartment = '"Not specified sub department"';
 
                                 $check_dept = \App\Department::find($row->department_id);
-                                $check_subdeOpd = \App\SubOpd::find($row->subopd_id);
+                                // $check_subdeOpd = \App\SubOpd::find($row->subopd_id);
                              
-                                if($row->subopd_id){
-                                    $subdepartment = $check_subdeOpd;
-                                }
+                                // if($row->subopd_id){
+                                //     $subdepartment = $check_subdeOpd;
+                                // }
                                 
                                 if($check_dept)
                                 {
@@ -207,7 +207,7 @@ $user = Session::get('auth');
                                                 <small class="status">
                                                     [ {{ $row->sex }}, {{ $row->patient_age }} ]
                                                 </small>
-                                                was <span class="text-blue">
+                                                was  <span class="text-blue">
                                                     @if($row->telemedicine)
                                                     consulted
                                                     @else

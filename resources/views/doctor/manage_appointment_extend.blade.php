@@ -270,7 +270,7 @@
                                                 </div>
                                                 <div class="col-md-6" style="padding: 0;">
                                                     <label for="slot" style="padding:0;">Slot :</label>
-                                                    <input type="number" name="number_slot" class="form-control">
+                                                    <input type="number" id="number_slot" name="number_slot" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -317,7 +317,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Add_Cancel_appointment"><i class="fa fa-times"></i> Cancel</button>
-                            <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-send"></i> Submit</button>
+                            <button type="submit" class="btn btn-success btn-sm" id="Addappointment"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </form>
                 </div>
@@ -831,6 +831,19 @@
         </div>
     </div>
 <script>
+
+$(document).ready(function () {
+
+    $("#Add_Cancel_appointment").on('click', function () {
+        $("#please_select_categ").hide();
+    });
+
+    $('.modal').on('hidden.bs.modal', function () {
+        $("#please_select_categ").hide(); // Ensure it's hidden when modal closes
+    });
+
+});
+
 const deleteConfigUrl = "{{ url('delete-Config') }}";
 const editConfigUrl = "{{ url('get-config-data-sched') }}"
 function DeleteConfig(scheduleId, configId){
@@ -853,147 +866,6 @@ function DeleteConfig(scheduleId, configId){
     
     $('#deleteConfigAppointment').modal('show');
 }
-
-//Change this in future to optimize the query in update Config doctor
-// function UpdateConfig(config_appointment_id, config_id) {
-//     console.log(`Requesting URL: update-Config/${editConfigUrl}/${config_id}`);
-//     $.ajax({
-//         url: `${editConfigUrl}/${config_id}`, 
-//         method: 'GET',
-//         success: function (response) {
-//             if (response.status === 'success') {
-//                 const configData = response.data;
-
-//                 let days = configData.days.split('|');
-//                 let timeSlots = configData.time.split('|');
-//                 let category = configData.category;
-
-//                 const appointmentConfig = response.data.appointment_schedules[0];
-               
-//                 const $defaultCategory = $("#editdefaultCateg");
-//                 console.log("Selected Config:", category);
-//                 $defaultCategory.val(config_id).trigger('change');
-
-//                 $('#Appointment_schedule_id').val(config_appointment_id);
-
-//                 // Update UI elements based on fetched data
-//                 $("#editffective_date").val(appointmentConfig.appointed_date);
-//                 updateScheduleDisplay(appointmentConfig.appointed_date, category);
-
-//                 $('.edit-time-slots').hide().find(".edit_time-slot").remove();
-//                 updateTimeSlots(days, timeSlots);
-
-//                 // Update time slots dynamically
-//                 function updateTimeSlots(days, timeSlots) {
-//                     $('.edit-time-slots').hide().find('.edit_time-slot, .time-slot_edit').remove();
-//                     $(`.editday-checkbox`).prop("checked", false);
-
-//                     const dayTimemap = {};
-//                     let currentDay = null;
-
-//                     timeSlots.forEach(slot => {
-//                         if (isNaN(slot[0])) {
-//                             currentDay = slot;
-//                             dayTimemap[currentDay] = [];
-//                         } else if (currentDay) {
-//                             dayTimemap[currentDay].push(slot);
-//                         }
-//                     });
-
-//                     days.forEach(day => {
-//                         $(`.editday-checkbox[value="${day}"]`).prop("checked", true);
-//                         const $timeSlotsDiv = $(`.editday-checkbox[value="${day}"]`).closest('.checkbox').find('.edit-time-slots');
-//                         $timeSlotsDiv.show();
-
-//                         if (dayTimemap[day]) {
-//                             dayTimemap[day].forEach(sched => {
-//                                 const [timeFrom, timeTo] = sched.split('-');
-//                                 const timeSlotHtml = `
-//                                     <div class="row edit_time-slot"> 
-//                                         <div class="col-md-5">
-//                                             <label>Time From:</label>
-//                                             <input type="time" name="edit_time_from[${day}][]" class="form-control input-sm" value="${timeFrom}">
-//                                         </div>
-//                                         <div class="col-md-5">
-//                                             <label>Time To:</label>
-//                                             <input type="time" name="edit_time_to[${day}][]" class="form-control input-sm" value="${timeTo}">
-//                                         </div>
-//                                         <div class="col-md-2">
-//                                             <button type="button" class="btn btn-danger btn-sm editremove-time-slot" style="margin-top: 32px;">
-//                                                 <i class="fa fa-trash"></i>
-//                                             </button>
-//                                         </div>
-//                                     </div>`;
-//                                 $timeSlotsDiv.append(timeSlotHtml);
-//                             });
-//                         }
-//                     });
-//                 }
-
-//                 function updateScheduleDisplay(dateValue, WeekToMonth) {
-//                     console.log("WeekToMonth", WeekToMonth);
-//                     if(dateValue){
-//                         const startDate = new Date(dateValue);
-//                         let endDate;
-
-//                         if(WeekToMonth === "1 Week"){
-//                             endDate = new Date(startDate);
-//                             endDate.setDate(startDate.getDate() + 6);
-//                         }else if(WeekToMonth === "1 Month"){
-//                             endDate = new Date(startDate);
-//                             endDate.setMonth(startDate.getMonth() + 1);
-//                             endDate.setDate(endDate.getDate() - 1);
-//                         }
-
-//                         $("#EditSchedCategory").html(`
-//                             <div class="col-md-12 schedule-output text-center" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; margin-top: 10px;">
-//                                 <span class="schedule-range">
-//                                     <i class="fa fa-calendar"></i> <strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> <strong> - </strong> 
-//                                     <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
-//                                     <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
-//                                     <i class="fa fa-calendar"></i> <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>
-//                                         &nbsp; <span class="schedule-category" style="font-weight: bold;"> (${WeekToMonth})</span>
-//                                 </span>
-//                             </div>
-//                         `);
-//                     }
-//                 }
-
-//                 function formatedSchedule(date){
-//                     const year = date.getFullYear();
-//                     const month = (date.getMonth() + 1).toString().padStart(2, '0');
-//                     const day = date.getDate().toString().padStart(2, '0');
-//                     return `${month}-${day}-${year}`;
-//                 }
-
-//                 $(document).on('click', '.editremove-time-slot', function() {
-//                     $(this).closest('.edit-time-slots').remove();
-//                 });
-
-//                 $(document).on('change', '.editday-checkbox', function () {
-//                     let checkboxContainer = $(this).closest('.checkbox');
-//                     if ($(this).is(':checked')) {
-//                         checkboxContainer.find('.edit-time-slots').slideDown();
-//                     } else {
-//                         let timeSlots = checkboxContainer.find('.edit-time-slots');
-//                         timeSlots.slideUp();
-//                         timeSlots.find('input[type="time"]').val('');
-//                         timeSlots.find('.edit-time-slots:not(:first)').remove();
-//                     }
-//                 });
-                
-//             } else {
-//                 console.error("Error fetching config data:", response.message);
-//             }
-//         },
-//         error: function (error) {
-//             console.error("AJAX Error:", error);
-//         }
-
-//     });
-    
-//     $('#UpdateConfigAppointment').modal('show');
-// }
 
 function UpdateConfig(config_appointment_id, config_id) {
 

@@ -700,6 +700,7 @@ Route::get('/count/Consultation', 'doctor\TelemedicineCtrl@countconsultation');
 Route::get('get-config-data-sched/{id}', 'doctor\TelemedicineCtrl@getdoctorconfig');
 Route::get('/configSchedule',  'doctor\TelemedicineCtrl@configSched')->name('ConfigSchedule');
 Route::get('get-config/{id}', 'doctor\TelemedicineCtrl@getConfig');
+Route::post('/remove-time-slot', 'doctor\TelemedicineCtrl@removeTimeSlot');
 // Route::get('delete-Config/{id}/{id}', 'doctor\TelemedicineCtrl@deleteSchedule');
 
 Route::post('/add/configSched', 'doctor\TelemedicineCtrl@AddconfigSched')->name('add.configSched');

@@ -33,13 +33,18 @@ class TelemedicineCtrl extends Controller
     {
         $user = Session::get('auth');
         $facility = $user->facility_id;
+        $sub_Opd = SubOpd::select('id', 'description')
+            ->get();
+
         $config_sched = Cofig_schedule::select('id','department_id','facility_id','subopd_id','created_by','description','category','days','time')->get();
         $query = AppointmentSchedule::
             with([
                 'createdBy' => function ($query) {
                     $query->select(
                         'id',
-                        'username'
+                        'fname',
+                        'lname',
+                        'mname'
                     );
                 },
                 'facility' => function ($query) {
@@ -68,19 +73,18 @@ class TelemedicineCtrl extends Controller
             ]);
             // ->where('opdCategory', $user->subopd_id)
 
-
             if ($user->level === 'doctor') {
                 $query->where('opdCategory', $user->subopd_id);
             }
 
             // Apply facility filter for all users
             $query->where('facility_id', $facility);
-        
+            $query->where('created_by', $user->id);
 
         $appointment_schedule = $query->orderBy('created_at', 'desc')
             //->where('status', $appointmentstatus)
             ->paginate(20);
-   
+    
         $user_facility = User::where('department_id',$user->department_id)
         //  ->where('level','doctor')
         ->where('facility_id',$facility)
@@ -95,7 +99,8 @@ class TelemedicineCtrl extends Controller
             'status' => $req->input('status_filter', ''),
             'date' => $req->input('date_filter', ''),
             'configs' => $config_sched,
-            'appointment_filter' => $appointmentstatus
+            'appointment_filter' => $appointmentstatus,
+            'subOpd' => $sub_Opd
         ];
 
         return view('doctor.manage_appointment', $data);
@@ -105,15 +110,18 @@ class TelemedicineCtrl extends Controller
         $user = Session::get('auth');
         $department = Department::all();
         $config_sched = Cofig_schedule::select('id','department_id','subopd_id','facility_id','created_by','description','category','days','time')
+                        ->with('creator:id,fname,mname,lname,level')
+                        ->with('subOpdCateg:id,description')
                         ->where('facility_id', $user->facility_id)
                         ->get();
-        
+
         $facility = Facility::select('id','name')->where('id', $user->facility_id)->get();
         
         return view('doctor.config_schedule',[
             'department' => $department,
             'fact' => $facility,
-            'config' => $config_sched
+            'config' => $config_sched,
+            'usertype' => $user->level
         ]);
     }
 
@@ -151,6 +159,78 @@ class TelemedicineCtrl extends Controller
             'category' => $getconfig->category,
             'configId' => $getconfig->id,
             'subOpdId' => $getconfig ->subopd_id
+        ]);
+    }
+
+    public function removeTimeSlot(Request $req) {
+
+        $remove_slot = Cofig_schedule::find($req->configId);
+
+        $selectedDay = $req->day;
+        $timeToRemove = "{$req->timeFrom}-{$req->timeTo}";
+
+        if (!$remove_slot) {
+            return response()->json(['error' => 'Schedule not found'], 404);
+        }
+
+        $selectedDay = $req->day;
+        $timeToRemove = "{$req->timeFrom}-{$req->timeTo}";
+
+        $currentDays = $remove_slot->days;
+        $currentTime = $remove_slot->time;
+
+        $timeElements = explode('|', $currentTime);
+        $timeStructure = [];
+        $currentDay = null;
+
+        foreach ($timeElements as $element) {
+            if (strpos($element, '-') === false) {
+                // This is a day name
+                $currentDay = $element;
+                $timeStructure[$currentDay] = [];
+            } else {
+                // This is a time slot
+                if ($currentDay !== null) {
+                    $timeStructure[$currentDay][] = $element;
+                }
+            }
+        }
+
+            // Remove the specific time slot
+            if (isset($timeStructure[$selectedDay])) {
+                $timeStructure[$selectedDay] = array_values(array_filter($timeStructure[$selectedDay], function($slot) use ($timeToRemove) {
+                    return $slot !== $timeToRemove;
+                }));
+                
+                // If no time slots left for this day, remove the day entirely
+                if (empty($timeStructure[$selectedDay])) {
+                    unset($timeStructure[$selectedDay]);
+                    
+                    // Also remove from days column
+                    $daysArray = explode('|', $currentDays);
+                    $daysArray = array_filter($daysArray, function($day) use ($selectedDay) {
+                        return $day !== $selectedDay;
+                    });
+                    $remove_slot->days = implode('|', $daysArray);
+                }
+            }
+            
+            // Rebuild the time string
+            $newTimeString = [];
+            foreach ($timeStructure as $day => $slots) {
+                $newTimeString[] = $day; // Add the day name
+                $newTimeString = array_merge($newTimeString, $slots); // Add all time slots
+            }
+            
+            $remove_slot->time = implode('|', $newTimeString);
+            $remove_slot->save();
+        
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully removed {$timeToRemove} from {$selectedDay}",
+            'updated_days' => $remove_slot->days,
+            'updated_time' => $remove_slot->time
         ]);
     }
 
@@ -222,6 +302,8 @@ class TelemedicineCtrl extends Controller
 
         foreach($req->days as $day){
             $timeSlots = [];
+            $uniqueTimeSlots = [];
+
 
             if (!empty($req->update_time_from[$day]) && !empty($req->update_time_to[$day])) {
  
@@ -230,15 +312,18 @@ class TelemedicineCtrl extends Controller
 
                      if(!empty($timeFrom) && !empty($timeTo)){
 
-                        $timeSlots[] = "{$timeFrom}-{$timeTo}";
+                        $timeSlot = "{$timeFrom}-{$timeTo}";
+
+                        if(!in_array($timeSlot, $uniqueTimeSlots)){
+                            $uniqueTimeSlots[] = $timeSlot;
+                            $timeSlots[] = $timeSlot;
+                        }
                      }
                  }
             }
 
             if(!empty($timeSlots)){
                 $scheduleData[] = "{$day}|" . implode('|', $timeSlots);
-            }else{
-
             }
         }
 
@@ -375,11 +460,9 @@ class TelemedicineCtrl extends Controller
             return redirect()->to('manage/appointment?filterappointment=config'); 
         } else {
             for($i=1; $i<=$request->appointment_count; $i++) {
-
                 // if (empty($request['add_appointed_time'.$i]) || empty($request['add_appointed_time_to'.$i]) || empty($request->add_opdCategory.$i) || empty($request['add_available_doctor'.$i])) {
                 //     continue;
                 // }
-    
                 $appointment_schedule = new AppointmentSchedule();
                 $appointment_schedule->appointed_date = $request->appointed_date;
                 $appointment_schedule->facility_id = $request->facility_id;
@@ -396,14 +479,6 @@ class TelemedicineCtrl extends Controller
                 $appointment_schedule->slot = $request->slot;
                 $appointment_schedule->created_by = $user->id;
                 $appointment_schedule->save();
-    
-                // for($x=0; $x<count($request['add_available_doctor'.$i]); $x++) {
-                //     $tele_assign_doctor = new TelemedAssignDoctor();
-                //     $tele_assign_doctor->appointment_id = $appointment_schedule->id;
-                //     $tele_assign_doctor->doctor_id = $request['add_available_doctor'.$i][$x];
-                //     $tele_assign_doctor->created_by = $user->id;
-                //     $tele_assign_doctor->save();
-                // }
             }
     
             Session::put('appointment_save',true);
@@ -571,77 +646,69 @@ class TelemedicineCtrl extends Controller
             for($i=2; $i<=$requestCount; $i++) { 
                 $appointment_id = $request->input('appointment_id' . $i);
            
-                $appointment = AppointmentSchedule::with(['telemedAssignedDoctor' => function ($query) {
-                    $query->with(['doctor' => function ($query) {
-                        $query->select('id', 'fname', 'lname');
-                    }]);
-                }])->find($appointment_id);
+                $appointment = AppointmentSchedule::find($appointment_id);
                 
                 if($appointment){
 
                     $appointment->appointed_date = $request->input('appointed_date'); 
                     $appointment->appointed_time =  $request->input('update_appointed_time' . $i);  
                     $appointment->appointedTime_to = $request->input('update_appointed_time_to' . $i);
+                    $appointment->slot = $request->input('update_slot' . $i);
                     $appointment->opdCategory = $request->input('opdCategory' . $i);
+
                     $appointment->save();
                     
                    // $appointment->telemedAssignedDoctor()->delete();
-
-                    $doctor_ids = $request->input('Update_available_doctor' . $i);
-                    if(!is_array($doctor_ids)){
-                        $doctor_ids = [$doctor_ids];
-                    }
-
-                    $existingDoctorIds = $appointment->telemedAssignedDoctor->pluck('doctor_id')->toArray();
-                    $doctorsToDelete = array_diff($existingDoctorIds, $doctor_ids);
-
-                    $doctorsToAdd = array_diff($doctor_ids, $existingDoctorIds);
-
-                    if(!empty($doctorsToDelete)){ // Delete doctors that are no longer in the request
-                        $appointment->telemedAssignedDoctor()->whereIn('doctor_id', $doctorsToDelete)->delete();
-                    }
-
-                    foreach($doctorsToAdd as $doctor_id){
-                        $appointment->telemedAssignedDoctor()->create([
-                            'doctor_id' => $doctor_id
-                        ]);
-                    }
+                    // $doctor_ids = $request->input('Update_available_doctor' . $i);
+                    // if(!is_array($doctor_ids)){
+                    //     $doctor_ids = [$doctor_ids];
+                    // }
+                    // $existingDoctorIds = $appointment->telemedAssignedDoctor->pluck('doctor_id')->toArray();
+                    // $doctorsToDelete = array_diff($existingDoctorIds, $doctor_ids);
+                    // $doctorsToAdd = array_diff($doctor_ids, $existingDoctorIds);
+                    // if(!empty($doctorsToDelete)){ // Delete doctors that are no longer in the request
+                    //     $appointment->telemedAssignedDoctor()->whereIn('doctor_id', $doctorsToDelete)->delete();
+                    // }
+                    // foreach($doctorsToAdd as $doctor_id){
+                    //     $appointment->telemedAssignedDoctor()->create([
+                    //         'doctor_id' => $doctor_id
+                    //     ]);
+                    // }
                     // foreach($appointment->telemedAssignedDoctor as $assignedoctor){
-                      
                     //     $assignedoctor->doctor_id = $request->input('available_doctor' . $i);
                     //     $assignedoctor->save();
                     // }  
                 }
             }
        
-           
         for($i=1; $i<=$request->appointment_count; $i++) { 
-                
-                if(empty($request['Add_appointed_time'.$i]) || empty($request['Add_appointed_time_to'.$i]) || empty($request['opdCategory'.$i])) {
+                if(empty($request['empty_Add_appointed_time'.$i]) || empty($request['empty_Add_appointed_time_to'.$i]) || empty($request['opdCategory'.$i])) {
                     continue;
                 }
+               
+                $Update_appointment = new AppointmentSchedule();
+                $Update_appointment->appointed_date = $appointmentDate;
+                $Update_appointment->facility_id = $request->facility_id;
+                $Update_appointment->department_id = 5;
+                $Update_appointment->appointed_time = $request['empty_Add_appointed_time'.$i];
+                $Update_appointment->appointedTime_to = $request['empty_Add_appointed_time_to'.$i];
+                $Update_appointment->slot = $request['Addupdate_slot'.$i];
+                $Update_appointment->opdCategory = $request['opdCategory'.$i];
+
+                $Update_appointment->created_by = $user->id;
+                $Update_appointment->save();
                 
-                $Update_appointment_data = new AppointmentSchedule();
-                $Update_appointment_data->appointed_date = $appointmentDate;
-                $Update_appointment_data->facility_id = $request->facility_id;
-                $Update_appointment_data->department_id = 5;
-                $Update_appointment_data->appointed_time = $request['Add_appointed_time'.$i];
-                $Update_appointment_data->appointedTime_to = $request['Add_appointed_time_to'.$i];
-                $Update_appointment_data->opdCategory = $request['opdCategory'.$i];
-                $Update_appointment_data->created_by = $user->id;
-                $Update_appointment_data->save();
-                
-                $availableDoctors = is_array($request['Add_Update_available_doctor'.$i])
-                ? $request['Add_Update_available_doctor'.$i]
-                : [$request['Add_Update_available_doctor'.$i]];
+                // $availableDoctors = is_array($request['Add_Update_available_doctor'.$i])
+                // ? $request['Add_Update_available_doctor'.$i]
+                // : [$request['Add_Update_available_doctor'.$i]];
     
-                foreach($availableDoctors as $doctorId){
-                    $tele_assign_doctor = new TelemedAssignDoctor();
-                    $tele_assign_doctor->appointment_id = $Update_appointment_data->id;
-                    $tele_assign_doctor->doctor_id = $doctorId;
-                    $tele_assign_doctor->created_by = $user->id;
-                    $tele_assign_doctor->save();
-                }
+                // foreach($availableDoctors as $doctorId){
+                //     $tele_assign_doctor = new TelemedAssignDoctor();
+                //     $tele_assign_doctor->appointment_id = $Update_appointment_data->id;
+                //     $tele_assign_doctor->doctor_id = $doctorId;
+                //     $tele_assign_doctor->created_by = $user->id;
+                //     $tele_assign_doctor->save();
+                // }
         }
 
            

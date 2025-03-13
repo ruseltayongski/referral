@@ -11,6 +11,8 @@
     $telemed_appointed_date = json_decode(json_decode($appointmentParam, true), true)[0]['configDate'] ?? json_decode($appointmentParam, true)[0]['configDate'];
     $telemed_config_time = json_decode(json_decode($appointmentParam, true), true)[0]['configtime'] ?? json_decode($appointmentParam, true)[0]['configtime'];
 
+    $telemed_subOpdId = json_decode(json_decode($appointmentParam, true), true)[0]['subOpdId'] ?? json_decode($appointmentParam, true)[0]['subOpdId'];
+    
     if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== false){
         [$timeFrom, $timeTo] = explode('-', $telemed_config_time);
     }else{
@@ -66,7 +68,8 @@
                     <input type="hidden" name="configId" value="{{$telemed_config_id}}">
                     <input type="hidden" name="configTimeFrom" value="{{$timeFrom}}">
                     <input type="hidden" name="configtimeto" value="{{$timeTo}}">
-                    
+                    <input type="hidden" name="opdSubId" value="{{$telemed_subOpdId}}">
+
                     <div class="row">
                         <div class="col-md-12">
                             <b>REFERRAL RECORD</b>

@@ -472,6 +472,7 @@ class PatientCtrl extends Controller
             "redirect_track" => $redirect_track,
             "position" => 0, //default for first referred
             "subOpdId" => $subOPD_Id,
+            'telemedicine' => $req->telemedicine,
         ];
 
         broadcast(new NewReferral($new_referral));
@@ -596,6 +597,7 @@ class PatientCtrl extends Controller
             session()->forget('profileSearch.telemedicine');
             self::addTracking($code, $patient_id, $user, $req, $type, $form->id,'refer');
         } else if ($type === 'pregnant') {
+        
             $baby = array(
                 'fname' => ($req->baby_fname) ? $req->baby_fname : '',
                 'mname' => ($req->baby_mname) ? $req->baby_mname : '',
