@@ -8944,3 +8944,8 @@ tr:nth-child(even) {
   display: inline-block;
   position:relative;
 }
+
+body.modal-open .fullscreen-div {
+  position: absolute;
+  overflow: visible;
+}
