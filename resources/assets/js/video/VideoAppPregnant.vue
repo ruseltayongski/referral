@@ -359,7 +359,7 @@ export default {
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="container-fluid">
     <div class="row">
-      <div class="col-lg-8">
+      <div class="col-lg-7">
         <div class="mainPic">
           <div class="remotePlayerDiv">
             <div id="calling">
@@ -495,7 +495,7 @@ export default {
           </div>
         </div>
       </div>
-      <div class="col-lg-4">
+      <div class="col-lg-5">
         <div class="telemedForm">
           <div class="row-fluid">
             <div>

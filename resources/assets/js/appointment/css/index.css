@@ -45,10 +45,12 @@
 }
 .widget-user-header .widget-user-desc {
     max-width: 65%;
-    font-size: 14px;
+    /* font-size: 14px; */
+    font-size: clamp(14px, 2vw, 12px);
 }
 .widget-user-header .widget-user-username {
-    font-size: 21px;
+     /* font-size: 21px;  */
+     font-size: clamp(18px, 2vw, 12px);
 }
 .widget-user .widget-user-image {
     position: absolute;
@@ -60,27 +62,43 @@
     position: relative;
     display: inline-block;
 }
+.with-badge {
+    position: relative;
+}
+
+.with-badge {
+    position: relative;
+}
+
 .with-badge::before {
     content: '';
     position: absolute;
-    top: 2;
-    right: 0;
+    top: 3px;
+    right: 4px;
     width: 50px;
     height: 50px;
     background: linear-gradient(to bottom left, transparent 30%, #ef233c 4%, #ef233c 50.5%, transparent 50.5%);
     transform-origin: bottom right;
-    z-index: 1;
+    z-index: 5;
 }
+
 .with-badge::after {
     content: 'Government';
     position: absolute;
-    top: 10%;
-    right: 5%;
-    transform: translate(50%, -50%) rotate(45deg);
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    text-align: center;
+    transform: rotate(45deg);
     color: white;
     font-size: 8px;
     font-weight: bold;
-    z-index: 2;
+    z-index: 5;
+    pointer-events: none; /* Prevents interaction issues */
 }
 
 .widget-user-image {
@@ -192,7 +210,8 @@
     .widget-user-header .widget-user-username,
     .widget-user-header .widget-user-desc {
         max-width: 90%; /* Allow more space */
-        font-size: 14px; /* Reduce font size if necessary */
+        /* font-size: 14px; Reduce font size if necessary */
+        font-size: clamp(8px, 2vw, 14px);
         white-space: normal; /* Allow text wrapping */
         word-wrap: break-word;
         overflow-wrap: break-word;
@@ -220,12 +239,14 @@
 /* iPad Pro */
 @media screen and (min-width: 821px) {
     .widget-user-header .widget-user-username {
-        font-size: 24px;
+        /* font-size: 24px; */
+        font-size: clamp(18px, 2vw, 12px);
     }
 
     .widget-user-header .widget-user-desc {
         max-width: 75%;
-        font-size: 16px;
+        /* font-size: 16px; */
+        font-size: clamp(10px, 2vw, 14px);
     }
 
     .widget-user .widget-user-image {
