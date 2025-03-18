@@ -22,8 +22,13 @@ $user = Session::get('auth');
 
         .card-wrap {
             display: flex;
+            flex-direction: column; /* Ensures content stacks properly */
             padding: 10px;
             width: 200px; /* Fixed width for all cards */
+            word-wrap: break-word; /* Ensures long words wrap */
+            overflow-wrap: break-word; /* Alternative for compatibility */
+            white-space: normal; /* Allows text to wrap */
+            text-align: center; /* Optional: keeps text aligned */
         }
         
         .card {
@@ -86,7 +91,7 @@ $user = Session::get('auth');
                                 }
                                 $total_online++;
                                 ?>
-                                <div class="">
+                                <!-- <div class=""> -->
                                     <div class="card-wrap">
                                         <div class="card">
                                             <div class="widget-user-header bg-{{ $color }}-active">
@@ -115,7 +120,7 @@ $user = Session::get('auth');
                                             @endif
                                         </div>
                                     </div>
-                                </div>
+                                <!-- </div> -->
                             @endfor
                             </div>
                             <div class="clearfix"></div>
