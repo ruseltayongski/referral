@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Session;
 use Matrix\Exception;
 use App\Events\SocketReco;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
@@ -2689,8 +2690,14 @@ class ApiController extends Controller
 
     public function store(Request $request)
     {
+     
         labRequest::where('activity_id', $request->activity_id)
         ->delete();
+        //  Log::info('Variable Data:', ['data' => $request->all()]);
+        $others = is_array($request->laboratory_others)
+                    ? end($request->laboratory_others)
+                    : $request->laboratory_others;
+        
         foreach($request->laboratory_code as $row) {
             LabRequest::create([
                 'activity_id' => $request->activity_id,
@@ -2698,6 +2705,11 @@ class ApiController extends Controller
                 'laboratory_code' => $row
             ]);
         }
+        LabRequest::create([
+            'activity_id' => $request->activity_id,
+            'requested_by' => $request->requested_by,
+            'others' => $others
+        ]);
         // $broadcast_labrequest = [ // I add this changes
         //     "laboratory_code" =>$request->laboratory_code,
         //     "request_by" =>$request->requested_by,

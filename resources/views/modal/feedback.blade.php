@@ -30,7 +30,7 @@
                         <div class="input-group">
                             <textarea placeholder="Type Message ..." class="mytextarea1"></textarea>
                             <span class="input-group-btn">
-                                <button type="submit" class="btn btn-success btn-lg">Send</button>
+                                <button type="submit" class="btn btn-success btn-md">Send</button>
                             </span>
                         </div>
                     </form>
@@ -101,3 +101,13 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<script>
+
+    $(document).ready(function () {
+        $("#feedbackModal .modal-dialog").draggable({
+            handle: ".box-header",
+            containment: "window"
+        });
+    });
+
+</script>
