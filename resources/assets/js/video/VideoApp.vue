@@ -185,6 +185,7 @@ console.log("referring call duration:", this.referring_md);
             img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
             msg: content
         });
+        
     },
     appendReco(code, name_sender, facility_sender, date_now, msg) {
         let picture_sender = $("#broadcasting_url").val()+"/resources/img/receiver.png";
@@ -614,7 +615,7 @@ console.log("referring call duration:", this.referring_md);
                     data-toggle="modal"
                     data-target="#labRequestModal"
                     type="button"
-                    v-if="referring_md == 'no'"
+                    v-if="referring_md == 'yes'"
                     @mouseover="showTooltip = true"
                     @mouseleave="showTooltip = false"
                   >
@@ -863,20 +864,21 @@ console.log("referring call duration:", this.referring_md);
                     </tr>
                 </tbody>
               </table>
-                <button
-                  class="btn btn-success btn-md btn-block"
-                  type="button"
-                  @click="generatePrescription()"
-                >
-                  <i class="bi bi-prescription"></i> Generate Prescription
-                </button>
-                 <button
-                  class="btn btn-primary btn-md btn-block"
-                  type="button"
-                  @click="generateLabrequest()"
-                >
-                  <i class="bi bi-prescription"></i> Generate Lab Request
-                </button>
+              <div class="row g-0">
+                <div class="col-6">
+                    <button class="btn btn-success btn-md w-100 ml-2"  type="button" @click="generatePrescription()">
+                        <i class="bi bi-prescription"></i> Generate Prescription
+                    </button>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-primary btn-md w-100" type="button" @click="generateLabrequest()" 
+                      style="background-color: #0d6efd; border-color: #0d6efd; box-shadow: none; pointer-events: auto;"
+                      onmouseover="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
+                      onmouseout="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';">
+                      <i class="bi bi-clipboard2-pulse"></i> Generate Lab Request
+                  </button>
+              </div>
+            </div>
             </div>
           </div>
         </div>

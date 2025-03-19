@@ -68,13 +68,13 @@
 <script>
     $(document).ready(function() {
 
-        let appointmentJson = @json($appointmentId);
-     
+        let appointmentJson = @json($appointmentId);     
         console.log("appointmentID::", appointmentJson);
         if (!appointmentJson || appointmentJson === "" || appointmentJson === "N/A") {
             $("#pregnantButton").prop("disabled", false); // Enable if empty, null, or N/A
         } else {
             $("#pregnantButton").prop("disabled", true); // Disable if appointmentId exists
         }
+
     });
 </script>

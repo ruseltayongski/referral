@@ -8,6 +8,8 @@
                 laboratories: [],
                 laboratoriesHolder: [],
                 checkedLaboratories: [],
+                isOtherSelected: false,
+                otherLabRequest: '',
             };
 
         },
@@ -46,11 +48,20 @@
                 
             },
             submitForm() {
-                if(this.checkedLaboratories.length > 0) {
+
+                 let selectedLabs = [...this.checkedLaboratories];
+                
+                if(this.isOtherSelected && this.otherLabRequest.trim() !== ''){
+                     selectedLabs.push(this.otherLabRequest.trim());
+                }
+
+                if(this.checkedLaboratories.length > 0 || selectedLabs.length > 0) {
+               
                     const params = {
                         activity_id: this.activity_id,
                         requested_by: this.requested_by,
-                        laboratory_code: this.checkedLaboratories
+                        laboratory_code: this.checkedLaboratories,
+                        laboratory_others: selectedLabs
                     }
                     this.__saveLaboratories(params)
                     $("#labRequestModal").modal("hide");
@@ -101,6 +112,19 @@
                                 {{ `${laboratoryDescription}` }}
                             </label>
                         </div>
+
+                         <!-- "Others" Option -->
+                        <div class="form-check laboratory-check">
+                            <input class="form-check-input" type="checkbox" v-model="isOtherSelected">
+                            <label class="form-check-label">
+                                Others (Specify)
+                            </label>
+                        </div>
+
+                        <div v-if="isOtherSelected" class="mt-2">
+                            <input type="text" class="form-control" v-model="otherLabRequest" placeholder="Enter specific lab request...">
+                        </div>
+
                     </div>
                 </div>
 

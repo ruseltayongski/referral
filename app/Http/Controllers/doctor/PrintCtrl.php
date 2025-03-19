@@ -13,6 +13,7 @@ use App\Http\Controllers\doctor\ReferralCtrl;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\ParamCtrl;
 use App\PrescribedPrescription;
+use Illuminate\Support\Facades\Log;
 
 class PDFPrescription extends FPDF
 {
@@ -357,7 +358,7 @@ class PrintCtrl extends Controller
             'patient.municipal',
             'referredTo',
             'labRequest' => function ($query) {
-                $query->select('activity_id', 'laboratory_code', 'requested_by','created_at')
+                $query->select('activity_id', 'laboratory_code','others','requested_by','created_at')
                     ->with(['requestedBy' => function ($query) {
                         $query->select('id', 'fname', 'lname', 'signature', 'license');
                     }]);
@@ -366,7 +367,7 @@ class PrintCtrl extends Controller
         ->find($activity_id);
         // return response()->json($activity);
         $curl = curl_init();
-
+    
         curl_setopt_array($curl, array(
             CURLOPT_URL => asset('api/laboratories'),
             CURLOPT_RETURNTRANSFER => true,
@@ -383,7 +384,7 @@ class PrintCtrl extends Controller
         curl_close($curl);
 
         $data = json_decode($response, true);
-
+   
         $activity->labRequest->each(function ($labRequest) use ($data) {
             $labRequest->laboratory_description = $data[$labRequest->laboratory_code] ?? null;
         });
@@ -499,8 +500,8 @@ class PrintCtrl extends Controller
             $rowText = "{$row->laboratory_description}";
             $pdf->MultiCell(0, 3, $rowText, 0, 'L');
 
-            // $rowText2 = "{$row->laboratory_code}";
-            $pdf->MultiCell(0, 3, $rowText2, 0, 'L');
+            $rowText2 = "{$row->others}";
+            $pdf->MultiCell(0, 2, $rowText2, 0, 'L');
 
             $pdf->Ln();
         }

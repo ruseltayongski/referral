@@ -16,17 +16,31 @@ $user = Session::get('auth');
         .online_container {
             display: flex;
             flex-flow: row wrap;
+            justify-content: flex-start; /* Align items to the left */
+            align-items: flex-start; /* Align items to the top */
         }
+
         .card-wrap {
-            flex: 0 0 33%;
             display: flex;
-            padding: 10px; /* gutter width */
+            flex-direction: column; /* Ensures content stacks properly */
+            padding: 10px;
+            width: 200px; /* Fixed width for all cards */
+            word-wrap: break-word; /* Ensures long words wrap */
+            overflow-wrap: break-word; /* Alternative for compatibility */
+            white-space: normal; /* Allows text to wrap */
+            text-align: center; /* Optional: keeps text aligned */
         }
+        
         .card {
             box-shadow: 0 0 4px rgba(0,0,0,0.4);
             flex: 0 0 100%;
             background-color: white;
         }
+
+        section {
+            display: block !important;
+        }
+
     </style>
     <div class="row">
         <div class="col-md-8">
@@ -77,34 +91,36 @@ $user = Session::get('auth');
                                 }
                                 $total_online++;
                                 ?>
-                                <div class="card-wrap">
-                                    <div class="card">
-                                        <div class="widget-user-header bg-{{ $color }}-active">
-                                            <span>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! strtoupper($row->fname." ".$row->lname) !!}</span><br>
-                                            &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>
-                                        </div>
-                                        <div class="box-footer no-padding">
-                                            <ul class="nav nav-stacked">
-                                                <?php
-                                                $contact = $explode = explode(",",$row->contact);
-                                                ?>
-                                                <li><a href="#" style="word-wrap: break-word">
-                                                        @foreach($contact as $con)
-                                                            {{ $con }}
-                                                        @endforeach
-                                                        <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
-                                                <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
-                                                <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
-                                            </ul>
-                                        </div>
-                                        <?php $doctor_online_count++;?>
-                                        @if( ($doctor_online_count % 3) == 0 )
+                                <!-- <div class=""> -->
+                                    <div class="card-wrap">
+                                        <div class="card">
+                                            <div class="widget-user-header bg-{{ $color }}-active">
+                                                <span>{{ $row->level == 'doctor' ? 'Dr. ' : '' }} {!! strtoupper($row->fname." ".$row->lname) !!}</span><br>
+                                                &nbsp;<small class="widget-user-desc badge bg-maroon" style="margin-left: 0px;">{{ $row->abbr ? $row->abbr : "NO ABBR" }}</small>
                                             </div>
-                                            <div class="clearfix"></div>
-                                            <div class="online_container">
-                                        @endif
+                                            <div class="box-footer no-padding">
+                                                <ul class="nav nav-stacked">
+                                                    <?php
+                                                    $contact = $explode = explode(",",$row->contact);
+                                                    ?>
+                                                    <li><a href="#" style="word-wrap: break-word">
+                                                            @foreach($contact as $con)
+                                                                {{ $con }}
+                                                            @endforeach
+                                                            <span class="pull-right badge bg-blue"><i class="fa fa-phone"></i> </span></a></li>
+                                                    <li><a href="#">{{ $row->department ? $row->department : "." }} <span class="pull-right badge bg-aqua"><i class="fa fa-hospital-o"></i> </span></a></li>
+                                                    <li><a href="#" class="text-{{ $color }}">{!! $status !!} <span class="pull-right badge bg-{{ $color }}">{{ date('h:i A',strtotime($row->login)) }}</span></a></li>
+                                                </ul>
+                                            </div>
+                                            <?php $doctor_online_count++;?>
+                                            @if( ($doctor_online_count % 3) == 0 )
+                                                </div>
+                                                <div class="clearfix"></div>
+                                                <div class="online_container">
+                                            @endif
+                                        </div>
                                     </div>
-                                </div>
+                                <!-- </div> -->
                             @endfor
                             </div>
                             <div class="clearfix"></div>
