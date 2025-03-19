@@ -22526,7 +22526,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var prescriptionContent = CKEDITOR.instances.editor.getData();
       var combinedPrescriptions = {
         singlePrescription: {
-          prescriptions: prescriptionContent,
+          prescription_v2: prescriptionContent,
           code: this.code,
           activity_id: this.activity_id,
           form_type: this.form_type,

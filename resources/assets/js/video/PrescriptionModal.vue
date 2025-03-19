@@ -372,14 +372,16 @@
     },
     methods: {
         savePrescriptions() {
+   
         const prescriptionContent = CKEDITOR.instances.editor.getData();
         const combinedPrescriptions = {
             singlePrescription: {
-                prescriptions: prescriptionContent,
+                prescription_v2: prescriptionContent,
                 code: this.code,
                 activity_id: this.activity_id,
                 form_type: this.form_type,
                 prescribed_activity_id: this.prescribed_activity_id,
+   
             }       
         };
  

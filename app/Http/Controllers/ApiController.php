@@ -2742,60 +2742,45 @@ class ApiController extends Controller
                     $patient_form = PregnantForm::where("code",$singlePrescription['code'])->first();
                     $patient_id = $patient_form->patient_woman_id;
                 }
-                  
-                $latestActivity = new Activity();
-                $latestActivity->patient_id = $patient_id;
-                $latestActivity->date_referred = $patient_form->time_referred;
-                $latestActivity->date_seen = $patient_form->time_transferred;
-                $latestActivity->referred_from = $patient_form->referring_facility;
-                $latestActivity->referred_to = $patient_form->referred_to;
-                $latestActivity->department_id = $patient_form->department_id;
-                $latestActivity->referring_md = $patient_form->referring_md;
-                $latestActivity->action_md = $patient_form->referred_md;
-                $latestActivity->code = $singlePrescription['code'];
-                $latestActivity->status = "prescription";
-                $latestActivity->remarks = "prescription examined";
-                $latestActivity->save();
 
-                $prescribed_activity_id = $latestActivity->id;
 
-                $prescribed = PrescribedPrescription::where('prescribed_activity_id', $prescribed_activity_id)->first();
+                    $latestActivity = new Activity();
+                    $latestActivity->patient_id = $patient_id;
+                    $latestActivity->date_referred = $patient_form->time_referred;
+                    $latestActivity->date_seen = $patient_form->time_transferred;
+                    $latestActivity->referred_from = $patient_form->referring_facility;
+                    $latestActivity->referred_to = $patient_form->referred_to;
+                    $latestActivity->department_id = $patient_form->department_id;
+                    $latestActivity->referring_md = $patient_form->referring_md;
+                    $latestActivity->action_md = $patient_form->referred_md;
+                    $latestActivity->code = $singlePrescription['code'];
+                    $latestActivity->status = "prescription";
+                    $latestActivity->remarks = "prescription examined";
+                    $latestActivity->save();
 
-                // if ($prescribed) {
-                //     $prescribed->update([
-                //         'code'             => $latestActivity->code,
-                //         'prescription_v2'  => $singlePrescription['prescriptions'],
-                //         'referred_from'    => $latestActivity->referred_from,
-                //         'referred_to'      => $latestActivity->referred_to,
-                //     ]);
-                // } else {
-                //     $prescribed = new PrescribedPrescription();
-                //     $prescribed->prescribed_activity_id = $prescribed_activity_id;
-                //     $prescribed->code = $latestActivity->code;
-                //     $prescribed->prescription_v2 = $singlePrescription['prescriptions'];
-                //     $prescribed->referred_from = $latestActivity->referred_from;
-                //     $prescribed->referred_to = $latestActivity->referred_to;
-                //     $prescribed->save();
-                // }
-                
+                    $prescribed_activity_id = $latestActivity->id;
 
-                $existingPrescription = PrescribedPrescription::where([
-                    'code' => $singlePrescription['code'],
-                    'prescribed_activity_id' => $prescribed_activity_id,
-                ])->first();
+                    // $prescribed = new PrescribedPrescription();
+                    // $prescribed->prescribed_activity_id = $prescribed_activity_id;
+                    // $prescribed->code = $latestActivity->code;
+                    // $prescribed->prescription_v2 = $singlePrescription['prescriptions'];
+                    // $prescribed->referred_from = $latestActivity->referred_from;
+                    // $prescribed->referred_to = $latestActivity->referred_to;
+                    // $prescribed->save();
 
-                if ($existingPrescription) {
-                    $existingPrescription->update($singlePrescription);
-                } else {
-                    $prescribed = new PrescribedPrescription();
-                    $prescribed->prescribed_activity_id = $prescribed_activity_id;
-                    $prescribed->code = $latestActivity->code;
-                    $prescribed->prescription_v2 = $singlePrescription['prescriptions'];
-                    $prescribed->referred_from = $latestActivity->referred_from;
-                    $prescribed->referred_to = $latestActivity->referred_to;
-                    $prescribed->save();
-                }
-       
+                    $prescribed= PrescribedPrescription::updateOrCreate(
+                        ['code' => $singlePrescription['code'],
+                          'prescribed_activity_id' => $prescribed_activity_id,  
+                        ],
+                        [
+                            'prescribed_activity_id' => $prescribed_activity_id,
+                            'code' => $latestActivity->code,
+                            'prescription_v2' => $singlePrescription['prescription_v2'],
+                            'referred_from' => $latestActivity->referred_from,
+                            'referred_to' => $latestActivity->referred_to,
+                        ]
+                    );
+        
         }
 
         //----------------------------------------------------- jondy added
@@ -2822,7 +2807,7 @@ class ApiController extends Controller
     public function savePrescription_version2(Request $req)
     {
         $validatedData = $req->validate([
-            'singlePrescription.prescriptions' => 'required|string',
+            'singlePrescription.prescription_v2' => 'required|string',
             'singlePrescription.code' => 'required|string',
             'singlePrescription.form_type' => 'required|string',
             'singlePrescription.prescribed_activity_id' => '',
