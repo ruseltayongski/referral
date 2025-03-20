@@ -332,7 +332,6 @@
     // };
 
     // ----------------------------- Prescription using CKEditor ------------------- 
-
     import axios from 'axios';
     export default {
     props: {
@@ -344,7 +343,7 @@
     data() {
         return {
             prescriptionSubmitted: false,
-            prescription_v2: "", // Correct property name
+            prescription_v2: "", 
             prescribed_activity_id: ""
         };
     },
@@ -352,22 +351,36 @@
         const prescriptionCode = this.code;
         this.fetchPrescriptions(prescriptionCode);
     },
+
     mounted() {
         const script = document.createElement('script');
-        script.src = 'https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js';
+        script.src = 'https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js'; // Using the locally saved CKEditor file
         script.onload = () => {
-        CKEDITOR.replace('editor');
-        CKEDITOR.config.versionCheck = false;
+            CKEDITOR.replace('editor', {
+                toolbar: [
+                    ['Bold', 'Italic', 'Underline', 'Strike'], // Basic formatting
+                    ['NumberedList', 'BulletedList'], // Structured list
+                    ['Highlight'], // Highlighting text
+                    ['Format'], // Format dropdown
+                    ['Link'], // Hyperlinking
+                    ['Source'] // View/edit HTML
+                ],
+                removePlugins: 'image,table,media,forms' // Remove unnecessary tools
+            });
+
+            CKEDITOR.config.versionCheck = false; // Disable version checking
+
             // Set initial content if available
             if (this.prescription_v2) {
                 CKEDITOR.instances.editor.setData(this.prescription_v2);
             }
-                
-            // Listen for changes in the editor and update the Vue data
+
+            // Listen for changes and update Vue data
             CKEDITOR.instances.editor.on('change', () => {
                 this.prescription_v2 = CKEDITOR.instances.editor.getData();
             });
         };
+
         document.head.appendChild(script);
     },
     methods: {
@@ -384,23 +397,32 @@
    
             }       
         };
- 
-        axios.post(`${this.baseUrl}/api/video/prescriptions/version2`, combinedPrescriptions)
-        .then(() => {
-            this.prescriptionSubmitted = true;
-            this.fetchPrescriptions(this.code);
-            console.log('Success data:', combinedPrescriptions);
-            Lobibox.alert("success", {
-                msg: "Prescription Prescription successfully!",
+
+        if (prescriptionContent){
+            axios.post(`${this.baseUrl}/api/video/prescriptions/version2`, combinedPrescriptions)
+            .then(() => {
+                this.prescriptionSubmitted = true;
+                this.fetchPrescriptions(this.code);
+
+                console.log('Success data:', combinedPrescriptions);
+                Lobibox.alert("success", {
+                    msg: "Prescription Prescription successfully!",
+                });
+            })
+            .catch((error) => {
+                console.error('Error message:', error);
+                console.log('Error data:', combinedPrescriptions);
+                Lobibox.alert("error", {
+                    msg: "Failed to save prescription.",
+                });
             });
-        })
-        .catch((error) => {
-            console.error('Error message:', error);
-            console.log('Error data:', combinedPrescriptions);
+        }else {
             Lobibox.alert("error", {
-                msg: "Failed to save prescription.",
-            });
-        });
+                    msg: "Please input your prescription.",
+                });
+        }
+ 
+       
         },
 
         async fetchPrescriptions(code) {

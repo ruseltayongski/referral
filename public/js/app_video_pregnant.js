@@ -22378,7 +22378,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 // ----------------------------- Prescription using CKEditor ------------------- 
 
-
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     activity_id: Number,
@@ -22390,7 +22389,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     return {
       prescriptionSubmitted: false,
       prescription_v2: "",
-      // Correct property name
       prescribed_activity_id: ""
     };
   },
@@ -22401,16 +22399,31 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   mounted: function mounted() {
     var _this = this;
     var script = document.createElement('script');
-    script.src = 'https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js';
+    script.src = 'https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js'; // Using the locally saved CKEditor file
     script.onload = function () {
-      CKEDITOR.replace('editor');
-      CKEDITOR.config.versionCheck = false;
+      CKEDITOR.replace('editor', {
+        toolbar: [['Bold', 'Italic', 'Underline', 'Strike'],
+        // Basic formatting
+        ['NumberedList', 'BulletedList'],
+        // Structured list
+        ['Highlight'],
+        // Highlighting text
+        ['Format'],
+        // Format dropdown
+        ['Link'],
+        // Hyperlinking
+        ['Source'] // View/edit HTML
+        ],
+        removePlugins: 'image,table,media,forms' // Remove unnecessary tools
+      });
+      CKEDITOR.config.versionCheck = false; // Disable version checking
+
       // Set initial content if available
       if (_this.prescription_v2) {
         CKEDITOR.instances.editor.setData(_this.prescription_v2);
       }
 
-      // Listen for changes in the editor and update the Vue data
+      // Listen for changes and update Vue data
       CKEDITOR.instances.editor.on('change', function () {
         _this.prescription_v2 = CKEDITOR.instances.editor.getData();
       });
@@ -22430,20 +22443,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           prescribed_activity_id: this.prescribed_activity_id
         }
       };
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescriptions/version2"), combinedPrescriptions).then(function () {
-        _this2.prescriptionSubmitted = true;
-        _this2.fetchPrescriptions(_this2.code);
-        console.log('Success data:', combinedPrescriptions);
-        Lobibox.alert("success", {
-          msg: "Prescription Prescription successfully!"
+      if (prescriptionContent) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescriptions/version2"), combinedPrescriptions).then(function () {
+          _this2.prescriptionSubmitted = true;
+          _this2.fetchPrescriptions(_this2.code);
+          console.log('Success data:', combinedPrescriptions);
+          Lobibox.alert("success", {
+            msg: "Prescription Prescription successfully!"
+          });
+        })["catch"](function (error) {
+          console.error('Error message:', error);
+          console.log('Error data:', combinedPrescriptions);
+          Lobibox.alert("error", {
+            msg: "Failed to save prescription."
+          });
         });
-      })["catch"](function (error) {
-        console.error('Error message:', error);
-        console.log('Error data:', combinedPrescriptions);
+      } else {
         Lobibox.alert("error", {
-          msg: "Failed to save prescription."
+          msg: "Please input your prescription."
         });
-      });
+      }
     },
     fetchPrescriptions: function fetchPrescriptions(code) {
       var _this3 = this;
