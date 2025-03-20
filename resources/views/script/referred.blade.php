@@ -2,12 +2,22 @@
     <?php $user=Session::get('auth');?>
     var myfacility_name = "{{ \App\Facility::find($user->facility_id)->name }}";
 
-    function telemedicineReferPatient(alreadyRedirected,alreadyFollowup,code,referred_id) { 
+    function telemedicineReferPatient(alreadyRedirected,alreadyFollowup,code,referred_id,ownfacility,referred_from) { 
         // console.log('upward level', endorseUpward);
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
         console.log('alreadyRedirected', alreadyRedirected, 'alreadyFollowup', alreadyFollowup);
         $(".telemedicine").val(0);
         $("#telemedicine_redirected_code").val(code);
+
+        if(ownfacility == referred_from){
+            Lobibox.alert("error",
+                {
+                    msg: "You are not authorized to proceed with the Referred.!"
+                });
+
+            return;
+        }
+
         if(upwardIsCompleted && !alreadyRedirected && !alreadyFollowup) {
             $("#telemedicineRedirectedFormModal").modal('show');
         }
@@ -31,13 +41,20 @@
         }
     }
 
-    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack) { // I add this FollowTrack
+    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack,ownfacility,referred_from) { // I add this FollowTrack
         const prescriptionIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed'); // nag add ko ani kay para sa error messages kung ikaduha siya click para sa already treated
         const examPatientCompleted = document.getElementById(`examined_progress${code}${referred_id}`).classList.contains('completed');
 
-        console.log('upward', alreadyUpward, !treatedIsCompleted, !alreadyTreated);
+        if(ownfacility == referred_from){
+            Lobibox.alert("error",
+                {
+                    msg: "You are not authorized to proceed with the Treated.!"
+                });
+
+            return;
+        }
 
         if((alreadyUpward || upwardIsCompleted) && (!alreadyTreated || !treatedIsCompleted)){ // I add this condition para sa error nga treated kung ma upward na siya
             Lobibox.alert("error",
@@ -701,16 +718,23 @@
         }
     }
 
-    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward) { // I am adding  alreadyTreated and  alreadyUpward
+    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward,ownfacility,referred_to) { // I am adding  alreadyTreated and  alreadyUpward
         $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
         $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed');
         const prescribedIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
-        //--------
-        console.log("alreadyFollowup", alreadyFollowUp);
-        //---------
+        
+        if(referred_to == ownfacility){
+            Lobibox.alert("error",
+                {
+                    msg: "You are not authorized to proceed with the follow up.!"
+                });
+
+            return;
+        }
+
         if(alreadyFollowUp) {
             Lobibox.alert("error",
                 {
@@ -825,11 +849,22 @@
         $("#telemedicineFollowupFormModal").modal('show');
     }
 
-    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow) {
+    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility) {
         const upwardIsCompleted = $('#upward_progress'+code+activity_id).hasClass('completed');
         const treatedIsCompleted = $('#treated_progress'+code+activity_id).hasClass('completed');
         const acceptedComplete = $("#accepted_progress"+code+activity_id).hasClass('completed');
-        console.log('accepted',acceptedComplete)
+        console.log('accepted',acceptedComplete);
+        console.log("referred_to::", referred_to, "ownfacility:", ownfacility);
+      
+        if (referred_to == ownfacility) {
+
+            Lobibox.alert("error",
+                {
+                    msg: "You are not authorized to proceed with the consultation.!"
+                });
+
+            return;
+        }
         if(alreadyTreated || alreadyfollow || treatedIsCompleted    ){// I am adding this condition for consultation tracking icon condition
             Lobibox.alert("error",
                 {

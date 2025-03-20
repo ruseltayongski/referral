@@ -107,6 +107,7 @@ export default {
      
       let currentDateTime = new Date(); // get the current date and time
       this.$nextTick(() => {
+          const targetDate = event.start.format("YYYY-MM-DD");
         const targetTd = $(
           ".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']"
         );
@@ -116,141 +117,100 @@ export default {
         const targetGrid = $(".fc-day-grid-event");
         const dateString = targetTd.attr("data-date");
         let timeslot = null;
-        let passconfigId = null;
-        
-        this.appointmentSlot.some((appointment) => {
-         
-          appointment.appointment_schedules.forEach((sched) => {
-            if(sched.configId && this.facilitySelectedId === sched.facility_id) {
-              // console.log("my sched list::", sched.telemed_assigned_doctor);
-              
-              const Date_start = new Date(sched.appointed_date); // Start date
-              const date_end = new Date(sched.date_end); // End date
-              const timeSlot = sched.config_schedule.time.split('|');
-              const daysSched = sched.config_schedule.days.split('|');
-                //console.log("daysSched", daysSched, "timeSlot", timeSlot);
-                // Iterate through all days in the range
-                let currentDate = new Date(Date_start); // Initialize with start date
-              //  console.log("timeSlot", timeSlot);
-                while (currentDate <= date_end) {
-                  const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' }); // Get current day's name
-                  
-                  if (daysSched.includes(currentDayName) && !passconfigId) {
-                    
-                    // Highlight specific day if it matches
-                    const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
 
-
-                     if(targetTd.length){
-                        targetTd.css("background-color", "#00a65a"); // Green for available
-                    }
-
-                    const list_Appointed_date = targetTd.data("date");
-                    
-                    let selectedDates = Array.isArray(list_Appointed_date)
-                      ? list_Appointed_date.filter((date) => date !== undefined)
-                      : [list_Appointed_date].filter((date) => date !== undefined);
-
-                    selectedDates = [...new Set(selectedDates.filter((date) => date))];
-                   // Log only non-empty arrays
-                    if (selectedDates.length > 0) {
-
-                      console.log("Filtered selectedDates:", selectedDates);
-                      selectedDates.forEach((date) => {
-                          const dbEntriesForDate = sched.telemed_assigned_doctor.filter((entry) => entry.appointed_date === date);
-                          
-                          const allSlotsSaved = timeSlot.every((slot) => {
-                              const [start, end] = slot.split("-");
-                              console.log("Checking slot:", slot, "Start:", start, "End:", end);
-                              return dbEntriesForDate.some(
-                                (entry) => entry.start_time === `${start}:00` && entry.end_time === `${end}:00`
-                              );
-                          });
-
-                          const targetTd = $(".fc-day[data-date='" + date + "']");
-                          console.log("allSlotsSaved:", allSlotsSaved);
-                          if(allSlotsSaved){
-                            targetTd.css("background-color", "rgb(255 214 214)"); // Gray for disabled
-                            // console.log(`Date ${date} is fully booked and disabled.`);
-                          }else{
-                            targetTd.css("background-color", "#00a65a") 
-                            console.log(`Date ${date} is partially available.`);
-                          }
-                      });
-
-                    } else {
-                      // console.log("No valid dates found.");
-                    }
-                    
-                  } else {
-                    const targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
-                    if (targetTd.length) {
-                      targetTd.css("background-color", ""); // Remove background color
-                      targetTd.removeClass("add-cursor-pointer");
-                      
-                      $(".fc-event-container").remove();
-                      $(".fc-title").remove();
-                      $(".fc-resizer").remove();
-                    }
-                  }
-                  // Move to the next day
-                  currentDate.setDate(currentDate.getDate() + 1);
-                }
-            }
-            
-          });
-        });
-
-        // Manual Appointment
-        const isfullyBooked = this.appointmentSlot.some((appointment) => {
-          if (appointment.appointment_schedules.length > 0) {
-            const slotOndate = appointment.appointment_schedules.filter(
-              (slot) => slot.appointed_date === dateString
+       const allSlotsForDate = [];
+        this.appointmentSlot.forEach(appointment => {
+          if (appointment.appointment_schedules && appointment.appointment_schedules.length > 0) {
+            const slotsOnDate = appointment.appointment_schedules.filter(
+              slot => slot.appointed_date === targetDate
             );
-        
-              // Group by appointment_id
-              const groupedByAppointmentId = slotOndate.reduce((acc, slot) => {
-                 
-                passconfigId = slot.configId;
-                if(!slot.configId){
-                  timeslot = slot.appointed_time ;
-                  const id = slot.appointment_id;
-                  if (!acc[id]) acc[id] = [];
-                  acc[id].push(
-                    slot.telemed_assigned_doctor.map(
-                      (doctor) => doctor.appointment_by
-                    )
-                  );
-
-                }
-                return acc;               
-              }, {});
-              // Check if all appointment_by for each appointment_id are assigned
-              return Object.values(groupedByAppointmentId).some((appointments) =>
-                appointments.every((appointment_by_list) =>
-                  appointment_by_list.every((appointment_by) => appointment_by)
-                )
-              );
+            
+            if (slotsOnDate.length > 0) {
+              allSlotsForDate.push(...slotsOnDate);
+            }
           }
-          return false;
         });
-         
-        let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
+          console.log(`All slots for ${targetDate}:`, allSlotsForDate);
 
-        if(!passconfigId) {
-          // if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-          if (dateTimeAppointed <= currentDateTime) {
-            targetTd.css("background-color", "rgb(255 214 214)"); //not available color red
-            targetTd.css("border-color", "rgb(230 193 193)");
-          } else {
-            targetTd.css("background-color", "#00a65a"); //available color green'
-            targetdrag.css("border-color", "#00a65a");
-          }
-          
-            targetGrid.remove();
-            targetTd.addClass("add-cursor-pointer");
-            $(".fc-content").remove();
+        if (allSlotsForDate.length === 0) {
+          console.log(`No slots found for date ${targetDate}`);
+          return;
         }
+
+      // Check each slot booking status individually
+        const slotStatus = allSlotsForDate.map(slot => {
+          const assignedCount = slot.telemed_assigned_doctor ? 
+            slot.telemed_assigned_doctor.filter(doctor => doctor.appointment_id === slot.id).length : 0;
+          
+          const isSlotFull = assignedCount >= slot.slot;
+          
+          console.log(`Slot ID ${slot.id}, Time: ${slot.appointed_time}, Assigned: ${assignedCount}/${slot.slot}, Full: ${isSlotFull}`);
+          
+          return {
+            id: slot.id,
+            time: slot.appointed_time,
+            assigned: assignedCount,
+            capacity: slot.slot,
+            isFull: isSlotFull
+          };
+        });
+    
+       // Check if ALL slots are fully booked
+      const allSlotsFullyBooked = slotStatus.every(slot => slot.isFull);
+      // console.log(`All slots fully booked for ${targetDate}: ${allSlotsFullyBooked}`);
+      
+      // Check if all slots for this date are in the past
+      const allSlotsInPast = allSlotsForDate.every(slot => {
+        const slotDateTime = new Date(`${targetDate}T${slot.appointed_time}`);
+        const isPast = slotDateTime <= currentDateTime;
+        console.log(`Slot ${slot.id} time ${slot.appointed_time} is in past: ${isPast}`);
+        return isPast;
+      });
+
+      // console.log(`All slots in past for ${targetDate}: ${allSlotsInPast}`);
+      if (allSlotsFullyBooked || allSlotsInPast) {
+        console.log(`Setting background to RED for date ${targetDate}`);
+        targetTd.css("background-color", "#dd4b39"); // not available color red
+        // targetTd.css("border-color", "#dd4b39");
+      } else {
+        console.log(`Setting background to GREEN for date ${targetDate}`);
+        targetTd.css("background-color", "#00a65a"); // available color green
+        targetdrag.css("border-color", "#00a65a");
+      }
+        // Manual Appointment
+        // const isfullyBooked = this.appointmentSlot.some((appointment) => {
+
+        //   if (appointment.appointment_schedules.length > 0) {
+        //     const slotOndate = appointment.appointment_schedules.filter(
+        //       (slot) => slot.appointed_date === dateString
+        //     );
+        
+        //     return slotOndate.some((slot) => {
+        //       timeslot = slot.appointed_time;
+        //       console.log("all slot:", slot);
+        //       const assignedCount = slot.telemed_assigned_doctor.filter(
+        //         (doctor) => doctor.appointment_id == slot.id
+        //       ).length;
+           
+        //       return assignedCount >= slot.slot
+        //     });
+        //   }
+        //   return false;
+        // });
+         
+        // let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
+
+        // if (isfullyBooked || dateTimeAppointed <= currentDateTime) {
+        //   targetTd.css("background-color", "rgb(255 214 214)"); //not available color red
+        //   targetTd.css("border-color", "rgb(230 193 193)");
+        // } else {
+        //   targetTd.css("background-color", "#00a65a"); //available color green'
+        //   targetdrag.css("border-color", "#00a65a");
+        // }
+
+        targetGrid.remove();
+        targetTd.addClass("add-cursor-pointer");
+        $(".fc-content").remove();
 
       });
     },

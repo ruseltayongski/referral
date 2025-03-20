@@ -22104,10 +22104,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _api_index__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./api/index */ "./resources/assets/js/appointment/api/index.js");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
-function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
@@ -22230,137 +22226,103 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var _this2 = this;
       var currentDateTime = new Date(); // get the current date and time
       this.$nextTick(function () {
+        var targetDate = event.start.format("YYYY-MM-DD");
         var targetTd = $(".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']");
         var targetdrag = $(".fc-draggable[data-date='" + event.start.format("YYYY-MM-DD") + "']");
         var targetGrid = $(".fc-day-grid-event");
         var dateString = targetTd.attr("data-date");
         var timeslot = null;
-        var passconfigId = null;
-        _this2.appointmentSlot.some(function (appointment) {
-          appointment.appointment_schedules.forEach(function (sched) {
-            if (sched.configId && _this2.facilitySelectedId === sched.facility_id) {
-              // console.log("my sched list::", sched.telemed_assigned_doctor);
-
-              var Date_start = new Date(sched.appointed_date); // Start date
-              var date_end = new Date(sched.date_end); // End date
-              var timeSlot = sched.config_schedule.time.split('|');
-              var daysSched = sched.config_schedule.days.split('|');
-              //console.log("daysSched", daysSched, "timeSlot", timeSlot);
-              // Iterate through all days in the range
-              var currentDate = new Date(Date_start); // Initialize with start date
-              //  console.log("timeSlot", timeSlot);
-              while (currentDate <= date_end) {
-                var currentDayName = currentDate.toLocaleDateString('en-US', {
-                  weekday: 'long'
-                }); // Get current day's name
-
-                if (daysSched.includes(currentDayName) && !passconfigId) {
-                  // Highlight specific day if it matches
-                  var _targetTd = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
-                  if (_targetTd.length) {
-                    _targetTd.css("background-color", "#00a65a"); // Green for available
-                  }
-                  var list_Appointed_date = _targetTd.data("date");
-                  var selectedDates = Array.isArray(list_Appointed_date) ? list_Appointed_date.filter(function (date) {
-                    return date !== undefined;
-                  }) : [list_Appointed_date].filter(function (date) {
-                    return date !== undefined;
-                  });
-                  selectedDates = _toConsumableArray(new Set(selectedDates.filter(function (date) {
-                    return date;
-                  })));
-                  // Log only non-empty arrays
-                  if (selectedDates.length > 0) {
-                    console.log("Filtered selectedDates:", selectedDates);
-                    selectedDates.forEach(function (date) {
-                      var dbEntriesForDate = sched.telemed_assigned_doctor.filter(function (entry) {
-                        return entry.appointed_date === date;
-                      });
-                      var allSlotsSaved = timeSlot.every(function (slot) {
-                        var _slot$split = slot.split("-"),
-                          _slot$split2 = _slicedToArray(_slot$split, 2),
-                          start = _slot$split2[0],
-                          end = _slot$split2[1];
-                        console.log("Checking slot:", slot, "Start:", start, "End:", end);
-                        return dbEntriesForDate.some(function (entry) {
-                          return entry.start_time === "".concat(start, ":00") && entry.end_time === "".concat(end, ":00");
-                        });
-                      });
-                      var targetTd = $(".fc-day[data-date='" + date + "']");
-                      console.log("allSlotsSaved:", allSlotsSaved);
-                      if (allSlotsSaved) {
-                        targetTd.css("background-color", "rgb(255 214 214)"); // Gray for disabled
-                        // console.log(`Date ${date} is fully booked and disabled.`);
-                      } else {
-                        targetTd.css("background-color", "#00a65a");
-                        console.log("Date ".concat(date, " is partially available."));
-                      }
-                    });
-                  } else {
-                    // console.log("No valid dates found.");
-                  }
-                } else {
-                  var _targetTd2 = $(".fc-day[data-date='" + moment(currentDate).format("YYYY-MM-DD") + "']");
-                  if (_targetTd2.length) {
-                    _targetTd2.css("background-color", ""); // Remove background color
-                    _targetTd2.removeClass("add-cursor-pointer");
-                    $(".fc-event-container").remove();
-                    $(".fc-title").remove();
-                    $(".fc-resizer").remove();
-                  }
-                }
-                // Move to the next day
-                currentDate.setDate(currentDate.getDate() + 1);
-              }
+        var allSlotsForDate = [];
+        _this2.appointmentSlot.forEach(function (appointment) {
+          if (appointment.appointment_schedules && appointment.appointment_schedules.length > 0) {
+            var slotsOnDate = appointment.appointment_schedules.filter(function (slot) {
+              return slot.appointed_date === targetDate;
+            });
+            if (slotsOnDate.length > 0) {
+              allSlotsForDate.push.apply(allSlotsForDate, _toConsumableArray(slotsOnDate));
             }
-          });
-        });
-
-        // Manual Appointment
-        var isfullyBooked = _this2.appointmentSlot.some(function (appointment) {
-          if (appointment.appointment_schedules.length > 0) {
-            var slotOndate = appointment.appointment_schedules.filter(function (slot) {
-              return slot.appointed_date === dateString;
-            });
-
-            // Group by appointment_id
-            var groupedByAppointmentId = slotOndate.reduce(function (acc, slot) {
-              passconfigId = slot.configId;
-              if (!slot.configId) {
-                timeslot = slot.appointed_time;
-                var id = slot.appointment_id;
-                if (!acc[id]) acc[id] = [];
-                acc[id].push(slot.telemed_assigned_doctor.map(function (doctor) {
-                  return doctor.appointment_by;
-                }));
-              }
-              return acc;
-            }, {});
-            // Check if all appointment_by for each appointment_id are assigned
-            return Object.values(groupedByAppointmentId).some(function (appointments) {
-              return appointments.every(function (appointment_by_list) {
-                return appointment_by_list.every(function (appointment_by) {
-                  return appointment_by;
-                });
-              });
-            });
           }
-          return false;
         });
-        var dateTimeAppointed = new Date("".concat(dateString, "T").concat(timeslot));
-        if (!passconfigId) {
-          // if (dateTimeAppointed <= currentDateTime || isfullyBooked) {
-          if (dateTimeAppointed <= currentDateTime) {
-            targetTd.css("background-color", "rgb(255 214 214)"); //not available color red
-            targetTd.css("border-color", "rgb(230 193 193)");
-          } else {
-            targetTd.css("background-color", "#00a65a"); //available color green'
-            targetdrag.css("border-color", "#00a65a");
-          }
-          targetGrid.remove();
-          targetTd.addClass("add-cursor-pointer");
-          $(".fc-content").remove();
+        console.log("All slots for ".concat(targetDate, ":"), allSlotsForDate);
+        if (allSlotsForDate.length === 0) {
+          console.log("No slots found for date ".concat(targetDate));
+          return;
         }
+
+        // Check each slot booking status individually
+        var slotStatus = allSlotsForDate.map(function (slot) {
+          var assignedCount = slot.telemed_assigned_doctor ? slot.telemed_assigned_doctor.filter(function (doctor) {
+            return doctor.appointment_id === slot.id;
+          }).length : 0;
+          var isSlotFull = assignedCount >= slot.slot;
+          console.log("Slot ID ".concat(slot.id, ", Time: ").concat(slot.appointed_time, ", Assigned: ").concat(assignedCount, "/").concat(slot.slot, ", Full: ").concat(isSlotFull));
+          return {
+            id: slot.id,
+            time: slot.appointed_time,
+            assigned: assignedCount,
+            capacity: slot.slot,
+            isFull: isSlotFull
+          };
+        });
+
+        // Check if ALL slots are fully booked
+        var allSlotsFullyBooked = slotStatus.every(function (slot) {
+          return slot.isFull;
+        });
+        // console.log(`All slots fully booked for ${targetDate}: ${allSlotsFullyBooked}`);
+
+        // Check if all slots for this date are in the past
+        var allSlotsInPast = allSlotsForDate.every(function (slot) {
+          var slotDateTime = new Date("".concat(targetDate, "T").concat(slot.appointed_time));
+          var isPast = slotDateTime <= currentDateTime;
+          console.log("Slot ".concat(slot.id, " time ").concat(slot.appointed_time, " is in past: ").concat(isPast));
+          return isPast;
+        });
+
+        // console.log(`All slots in past for ${targetDate}: ${allSlotsInPast}`);
+        if (allSlotsFullyBooked || allSlotsInPast) {
+          console.log("Setting background to RED for date ".concat(targetDate));
+          targetTd.css("background-color", "#dd4b39"); // not available color red
+          // targetTd.css("border-color", "#dd4b39");
+        } else {
+          console.log("Setting background to GREEN for date ".concat(targetDate));
+          targetTd.css("background-color", "#00a65a"); // available color green
+          targetdrag.css("border-color", "#00a65a");
+        }
+        // Manual Appointment
+        // const isfullyBooked = this.appointmentSlot.some((appointment) => {
+
+        //   if (appointment.appointment_schedules.length > 0) {
+        //     const slotOndate = appointment.appointment_schedules.filter(
+        //       (slot) => slot.appointed_date === dateString
+        //     );
+
+        //     return slotOndate.some((slot) => {
+        //       timeslot = slot.appointed_time;
+        //       console.log("all slot:", slot);
+        //       const assignedCount = slot.telemed_assigned_doctor.filter(
+        //         (doctor) => doctor.appointment_id == slot.id
+        //       ).length;
+
+        //       return assignedCount >= slot.slot
+        //     });
+        //   }
+        //   return false;
+        // });
+
+        // let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
+
+        // if (isfullyBooked || dateTimeAppointed <= currentDateTime) {
+        //   targetTd.css("background-color", "rgb(255 214 214)"); //not available color red
+        //   targetTd.css("border-color", "rgb(230 193 193)");
+        // } else {
+        //   targetTd.css("background-color", "#00a65a"); //available color green'
+        //   targetdrag.css("border-color", "#00a65a");
+        // }
+
+        targetGrid.remove();
+        targetTd.addClass("add-cursor-pointer");
+        $(".fc-content").remove();
       });
     },
     dayClickFunction: function dayClickFunction(date, allDay, jsEvent, view) {
@@ -23032,9 +22994,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     areAllAppointmentFull: function areAllAppointmentFull() {
       var _this = this;
-      return false;
+      var currentDateTime = new Date();
+      var currentDate = currentDateTime.toISOString().split("T")[0];
+      var currentTime = currentDateTime.toTimeString().split(" ")[0].substring(0, 5);
       return this.appointedTimes.every(function (appointment) {
-        return _this.areAllDoctorsNotAvailable(appointment.telemed_assigned_doctor, appointment.appointed_date, appointment.appointed_time);
+        var date = appointment.appointed_date,
+          time = appointment.appointed_time;
+
+        // Check if the appointment date is in the past
+        if (date < currentDate) {
+          return true; // Past date, slot is unavailable
+        }
+
+        // Check if the appointment time is in the past for the current date
+        if (date === currentDate && time < currentTime) {
+          return true; // Past time, slot is unavailable
+        }
+        return _this.areAllSlotAvailable(appointment.telemed_assigned_doctor, date, time);
       });
     }
   },
@@ -23066,45 +23042,60 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     formatTimeSlot: function formatTimeSlot(timeSlot) {
       return timeSlot.replace('-', ' to ');
     },
-    areAllDoctorsNotAvailable: function areAllDoctorsNotAvailable(doctors, date, time) {
-      var currentDateTime = new Date();
-      var currentDate = currentDateTime.toISOString().split("T")[0];
-      var currentTime = currentDateTime.toTimeString().split(" ")[0].substring(0, 5);
-      //console.log("time", time);
-      var doctor_available = doctors.every(function (doctor) {
-        return doctor.appointment_by;
-      });
-      //console.log("doctor_available", doctor_available);
-
-      if (date) {
-        // Check if the date is in the past
-        if (date < currentDate) {
-          return true;
-        }
-        // If the date is today, check if the time is in the past
-        if (date === currentDate) {
-          if (time < currentTime) {
-            return true;
-          }
-        }
-        return doctor_available; // Disable if all doctors are not available
+    areAllSlotAvailable: function areAllSlotAvailable(telemed_assigned_doctor, date, time) {
+      var _telemed_assigned_doc;
+      if (!telemed_assigned_doctor || !Array.isArray(telemed_assigned_doctor) || telemed_assigned_doctor.length === 0) {
+        return false;
       }
-      return doctor_available; // Default to doctor availability if date is not provided
+      var assignedCount = telemed_assigned_doctor.length;
+      var appointmentId = (_telemed_assigned_doc = telemed_assigned_doctor[0]) === null || _telemed_assigned_doc === void 0 ? void 0 : _telemed_assigned_doc.appointment_id;
+      var slotCapacity = this.getSlotCapacity(appointmentId);
+      if (slotCapacity === undefined) {
+        slotCapacity = 1;
+      }
+      var isSlotFull = assignedCount >= slotCapacity;
+      console.log("assignedCount", assignedCount, 'slotCapacity', appointmentId, "isSlotFull", isSlotFull);
+      if (date) {
+        var currentDateTime = new Date();
+        var currentDate = currentDateTime.toISOString().split("T")[0];
+        var currentTime = currentDateTime.toTimeString().split(" ")[0].substring(0, 5);
+        if (date < currentDate) {
+          return true; // Past date, slot is unavailable
+        }
+        if (date === currentDate && time < currentTime) {
+          return true; // Past time on current date, slot is unavailable
+        }
+      }
+      return isSlotFull; // Return true if slot is full (to disable it)
+    },
+    getSlotCapacity: function getSlotCapacity(appoinmentId) {
+      if (!appoinmentId) {
+        return 1; // Default to 1 if no appointmentId
+      }
+      var appointment = this.appointedTimes.find(function (app) {
+        return app.id === appoinmentId;
+      });
+      if (!appointment) {
+        console.warn("Warning: No appointment found with id ".concat(appoinmentId));
+        return 1; // Default to 1 if not found
+      }
+
+      // Return the slot value from the appointment
+      return appointment.slot || 1; // Default to 1 if no slot property
     },
     isPastDatetime: function isPastDatetime(appointedDate, appointedTime) {
       var now = new Date();
       var appointmentDateTime = new Date("".concat(appointedDate, "T").concat(appointedTime));
-
-      // If the appointment time is before the current time, return true (disabled)
       return appointmentDateTime < now;
     },
     proceedAppointment: function proceedAppointment(configtime, configDate, appointmentId, configId, opdSubcateg) {
+      console.log("selectedCategory::", this.selectedCategory);
       if (!configId && !this.selectedAppointmentTime || configId && !configtime) {
         Lobibox.alert("error", {
           msg: "Please Select Time"
         });
         return;
-      } else if (configId && !opdSubcateg) {
+      } else if (!this.selectedCategory) {
         Lobibox.alert("error", {
           msg: "Please Select Opd Sub category"
         });
@@ -23435,145 +23426,86 @@ var _hoisted_7 = {
   "class": "box box-solid"
 };
 var _hoisted_8 = {
-  key: 0
-};
-var _hoisted_9 = {
-  "class": "box-body config-remove-all"
-};
-var _hoisted_10 = {
-  "class": "appointment-time-list1"
-};
-var _hoisted_11 = ["value", "onChange", "disabled"];
-var _hoisted_12 = {
-  key: 0,
-  "class": "doctor-list1"
-};
-var _hoisted_13 = ["value"];
-var _hoisted_14 = {
-  key: 1
-};
-var _hoisted_15 = {
   key: 0,
   "class": "box-body"
 };
-var _hoisted_16 = ["value"];
-var _hoisted_17 = {
-  "class": "text-green"
-};
-var _hoisted_18 = {
+var _hoisted_9 = ["value", "disabled"];
+var _hoisted_10 = {
   key: 0,
   "class": "doctor-list"
 };
-var _hoisted_19 = ["value"];
-var _hoisted_20 = {
+var _hoisted_11 = ["value"];
+var _hoisted_12 = {
   "class": "text-green"
 };
-var _hoisted_21 = {
+var _hoisted_13 = {
   key: 1,
   type: "button",
   id: "consultation",
   "class": "btn bt-md btn-block",
   style: {
-    "background-color": "rgb(255 214 214)",
+    "background-color": "#dd4b39",
     "font-weight": "bold",
     "color": "rgb(255, 255, 255)"
   },
-  disabled: ""
+  "aria-readonly": "true"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[17] || (_cache[17] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_cache[10] || (_cache[10] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "page-header"
-  }, "Time Slot", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"row\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"box-header with-border\">\r\n                  <h4 class=\"box-title\">Legends</h4>\r\n                </div> "), _cache[16] || (_cache[16] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, "Time Slot", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("section", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"row\"> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"box-header with-border\">\r\n                  <h4 class=\"box-title\">Legends</h4>\r\n                </div> "), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event bg-green"
   }, "Available Slot"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "external-event",
     style: {
-      "background-color": "rgb(255 214 214)",
+      "background-color": "#dd4b39",
       "color": "#ffff"
     }
-  }, " Not Available ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[15] || (_cache[15] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, " Not Available ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "box-header with-border"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <h3 class=\"box-title timeDoctor\">\r\n                      Please choose Time and OPD\r\n                      {{currentConfig}}\r\n                    </h3> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "date-selected"
-  })], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" :disabled=\"areAllAppointmentNotAvailable()\" "), $props.appointmentclickDate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($options.currentConfig.timeSlots, function (timeSlot, index) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
-      key: index
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-      type: "radio",
-      "class": "hours_radio",
-      value: timeSlot,
-      "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-        return $data.configSelectedTime = $event;
-      }),
-      onChange: function onChange($event) {
-        return $options.handleconfigTimeSelection(timeSlot);
-      },
-      disabled: $options.configAppointmentNot(timeSlot)
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_11), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configSelectedTime]]), _cache[9] || (_cache[9] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
-      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
-        'text-green': !$options.configAppointmentNot(timeSlot),
-        'text-red': $options.configAppointmentNot(timeSlot)
-      })
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatTimeSlot(timeSlot)), 3 /* TEXT, CLASS */), $data.configSelectedTime === timeSlot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-      type: "radio",
-      "class": "hours_radio",
-      "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
-        return $data.configOpdcategory = $event;
-      }),
-      value: $options.currentConfig.opdSubId,
-      onChange: _cache[2] || (_cache[2] = function ($event) {
-        return $options.handleconfigcategory($options.currentConfig.opdSubId);
-      })
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_13), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.configOpdcategory]]), _cache[8] || (_cache[8] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
-      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
-        'text-green': !$options.configAppointmentNot(timeSlot),
-        'text-red': $options.configAppointmentNot(timeSlot)
-      })
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.currentConfig.Opdcategory), 3 /* TEXT, CLASS */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
-  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    type: "button",
-    id: "consultation",
-    "class": "btn btn-success bt-md btn-block",
-    onClick: _cache[3] || (_cache[3] = function ($event) {
-      return $options.proceedAppointment($data.configSelectedTime, $options.currentConfig.date, $options.currentConfig.appointment_id, $options.currentConfig.configId, $options.currentConfig.opdSubId);
-    })
-  }, _cache[10] || (_cache[10] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
-    "class": "fa fa-calendar"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <button\r\n                        type=\"button\"\r\n                        id=\"consultation\"\r\n                        class=\"btn bt-md btn-block\"\r\n                        style=\"background-color: rgb(255 214 214);font-weight:bold; color: rgb(255, 255, 255)\"\r\n                        disabled\r\n                      >\r\n                        <i class=\"fa fa-calendar\"></i>&nbsp;&nbsp;All appointments are full\r\n                      </button> ")])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, [$props.appointedTimes.length > 0 && $data.showAppointmentTime && $props.manualDate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointedTimes, function (appointment) {
+  })], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" :disabled=\"areAllAppointmentNotAvailable()\" "), $props.appointedTimes.length > 0 && $data.showAppointmentTime && $props.manualDate ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_8, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.appointedTimes, function (appointment) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "appointment-time-list",
       key: appointment.id
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <input\r\n                            type=\"radio\"\r\n                            class=\"hours_radio\"\r\n                            v-model=\"selectedAppointmentTime\"\r\n                            :value=\"appointment.id\"\r\n                            @change=\"handleAppointmentTimeChange\"\r\n                            :disabled=\"\r\n                              areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor,\r\n                                appointment.appointed_date,\r\n                                appointment.appointed_time\r\n                              ) || isPastDatetime(appointment.appointed_date,appointment.appointed_time)\r\n                            \"\r\n                          />&nbsp;&nbsp; "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "radio",
       "class": "hours_radio",
-      "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+      "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
         return $data.selectedAppointmentTime = $event;
       }),
       value: appointment.id,
-      onChange: _cache[5] || (_cache[5] = function () {
+      onChange: _cache[1] || (_cache[1] = function () {
         return $options.handleAppointmentTimeChange && $options.handleAppointmentTimeChange.apply($options, arguments);
+      }),
+      disabled: $options.areAllSlotAvailable(appointment.telemed_assigned_doctor, appointment.appointed_date, appointment.appointed_time) || $options.isPastDatetime(appointment.appointed_date, appointment.appointed_time)
+    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_9), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)({
+        'text-green': !$options.areAllSlotAvailable(appointment.telemed_assigned_doctor),
+        'text-red': $options.areAllSlotAvailable(appointment.telemed_assigned_doctor)
       })
-    }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_16), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedAppointmentTime]]), _cache[12] || (_cache[12] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointed_time) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointedTime_to), 1 /* TEXT */), $data.selectedAppointmentTime === appointment.id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_18, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointed_time) + " to " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.appointedTime_to), 3 /* TEXT, CLASS */), $data.selectedAppointmentTime === appointment.id ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("ul", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       type: "radio",
       "class": "hours_radio",
-      "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+      "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
         return $data.selectedCategory = $event;
       }),
       value: appointment.sub_opd.id
-    }, null, 8 /* PROPS */, _hoisted_19), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedCategory]]), _cache[11] || (_cache[11] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.sub_opd.description), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span\r\n                            :class=\"{\r\n                              'text-green': !areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                              'text-red': areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                            }\"\r\n                            >{{ appointment.appointed_time }} to\r\n                            {{ appointment.appointedTime_to }}</span\r\n                          > "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <ul\r\n                            v-if=\"appointment.id == selectedAppointmentTime\"\r\n                            class=\"doctor-list\"\r\n                            v-for=\"assignedDoctor in appointment.telemed_assigned_doctor\"\r\n                            :key=\"assignedDoctor.id\"\r\n                          >\r\n                            <li>\r\n                              <input\r\n                                type=\"radio\"\r\n                                class=\"hours_radio\"\r\n                                v-model=\"selectedAppointmentDoctor\"\r\n                                :value=\"assignedDoctor.doctor.id\"\r\n                                @change=\"\r\n                                  handleDoctorChange(assignedDoctor.doctor.id, appointment.id)\r\n                                \"\r\n                                :disabled=\"assignedDoctor.appointment_by\"\r\n                              />&nbsp;&nbsp;\r\n                              <small\r\n                                :class=\"{\r\n                                  'text-green': !assignedDoctor.appointment_by,\r\n                                  'text-red': assignedDoctor.appointment_by,\r\n                                }\"\r\n                              >\r\n                                {{\r\n                                  `Dr. ${assignedDoctor.doctor.fname} ${assignedDoctor.doctor.lname}`\r\n                                }}\r\n                              </small>\r\n                            </li>\r\n                          </ul> ")]);
+    }, null, 8 /* PROPS */, _hoisted_11), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelRadio, $data.selectedCategory]]), _cache[4] || (_cache[4] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(appointment.sub_opd.description), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span\r\n                            :class=\"{\r\n                              'text-green': !areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                              'text-red': areAllDoctorsNotAvailable(\r\n                                appointment.telemed_assigned_doctor\r\n                              ),\r\n                            }\"\r\n                            >{{ appointment.appointed_time }} to\r\n                            {{ appointment.appointedTime_to }}</span\r\n                          > "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <ul\r\n                            v-if=\"appointment.id == selectedAppointmentTime\"\r\n                            class=\"doctor-list\"\r\n                            v-for=\"assignedDoctor in appointment.telemed_assigned_doctor\"\r\n                            :key=\"assignedDoctor.id\"\r\n                          >\r\n                            <li>\r\n                              <input\r\n                                type=\"radio\"\r\n                                class=\"hours_radio\"\r\n                                v-model=\"selectedAppointmentDoctor\"\r\n                                :value=\"assignedDoctor.doctor.id\"\r\n                                @change=\"\r\n                                  handleDoctorChange(assignedDoctor.doctor.id, appointment.id)\r\n                                \"\r\n                                :disabled=\"assignedDoctor.appointment_by\"\r\n                              />&nbsp;&nbsp;\r\n                              <small\r\n                                :class=\"{\r\n                                  'text-green': !assignedDoctor.appointment_by,\r\n                                  'text-red': assignedDoctor.appointment_by,\r\n                                }\"\r\n                              >\r\n                                {{\r\n                                  `Dr. ${assignedDoctor.doctor.fname} ${assignedDoctor.doctor.lname}`\r\n                                }}\r\n                              </small>\r\n                            </li>\r\n                          </ul> ")]);
   }), 128 /* KEYED_FRAGMENT */)), !$options.areAllAppointmentFull ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 0,
     type: "button",
     id: "consultation",
     "class": "btn btn-success bt-md btn-block",
-    onClick: _cache[7] || (_cache[7] = function () {
+    onClick: _cache[3] || (_cache[3] = function () {
       return $options.proceedAppointment && $options.proceedAppointment.apply($options, arguments);
     })
-  }, _cache[13] || (_cache[13] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[6] || (_cache[6] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")]))) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_21, _cache[14] || (_cache[14] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  Appointment ")]))) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_13, _cache[7] || (_cache[7] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-calendar"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  All appointments are full ")])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")])])])]);
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("  All appointments are full ")])))])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" </div> ")])])])]);
 }
 
 /***/ }),
