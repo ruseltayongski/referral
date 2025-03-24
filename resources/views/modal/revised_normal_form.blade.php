@@ -239,10 +239,8 @@
                                     <small class="text-success">Referred to</small> <span class="text-red">*</span><br>
                                     <select name="referred_facility" class="modal-select2 select_facility form-control" required>
                                         <option value="">Select Facility...</option>
-                                        @foreach($facilities as $row)
-                                        @if ($row->id == 24)
+                                        @foreach($facilities as $row)        
                                         <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endif
                                         @endforeach
                                     </select>
                                 </div>

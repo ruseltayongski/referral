@@ -100,9 +100,7 @@
                                 <select name="referred_facility" class="form-control-select modal-select2 select_facility" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                        @if ($row->id == 24) 
                                             <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endif 
                                     @endforeach
                                 </select>
                             </div>

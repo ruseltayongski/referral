@@ -286,8 +286,7 @@
 <!-- VUE Scripts -->
 <script src="{{ asset('public/js/app_layout.js?version=').date('YmdHis') }}" defer></script>
 
-/* ck editor */
-/* <script src="{{ asset('public/js/ckeditor.js') }}"></script> */
+<!-- <script src="{{ asset('public/js/ckeditor.js') }}"></script> -->
 
 @include('layouts.app_script')
 {{--@include('script.firebase')--}}
