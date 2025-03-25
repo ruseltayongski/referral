@@ -379,7 +379,8 @@ class ReferralCtrl extends Controller
             'patient_form.refer_sur_category',
             'patient_form.case_summary',
             'patient_form.reco_summary',
-            'patient_form.other_reason_referral',
+            'patient_form.other_reason_referral as other_reason_referral',
+            'patient_form.reason_referral as reason_referral',
             'patient_form.diagnosis',
             'patient_form.other_diagnoses',
             DB::raw("if(
@@ -444,10 +445,22 @@ class ReferralCtrl extends Controller
             $age = ParamCtrl::getMonths($form['dob']);
             $ageType = "m";
         }
+
+        $reason_referral = $form['reason_referral'];
+        $other_reason_referral = $form['other_reason_referral'];
+        
+        if ($reason_referral) {
+            $reasonModel = ReasonForReferral::find($reason_referral);
+            $reason = $reasonModel ? $reasonModel->reason : $other_reason_referral;
+        } else {
+            $reason = $other_reason_referral;
+        }
+
+        $form->reason = $reason;
         return [
             "form" => $form,
             "age" => $age,
-            "ageType" => $ageType
+            "ageType" => $ageType,
         ];
     }
 
