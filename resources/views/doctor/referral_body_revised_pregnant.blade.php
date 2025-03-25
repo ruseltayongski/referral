@@ -358,6 +358,9 @@ $user = Session::get('auth');
                 @if($commorbidities === 'Cancer')
                     @php $commorbidities_data[] = "Cancer-" . $past_medical_history->commordities_cancer; @endphp
                 @endif
+                @if($commorbidities === 'None')
+                    @php $commorbidities_data[] = "-" . $past_medical_history->commordities; @endphp
+                @endif
             
             @endforeach
 
@@ -375,6 +378,7 @@ $user = Session::get('auth');
                     @if($allergies === 'Food')  @php $allergies_data[] = "Food-" . $past_medical_history->allergy_food_cause; @endphp@endif
                     @if($allergies === 'Drugs')  @php $allergies_data[] = "Drugs-" . $past_medical_history->allergy_drugs_cause; @endphp@endif
                     @if($allergies === 'Others')  @php $allergies_data[] = "Others-" . $past_medical_history->allergy_others_cause; @endphp@endif
+                    @if($allergies === 'None')  @php $allergies_data[] = "-" . $past_medical_history->allergies; @endphp@endif
                     @endforeach        
                 <tr>    
                     <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $allergies_data) }}</span></td>
@@ -404,6 +408,9 @@ $user = Session::get('auth');
                     @endif
                     @if($heredofamilial === 'Others')
                         @php $heredofamilial_data[] = "Others-" . $past_medical_history->heredo_others; @endphp
+                    @endif
+                    @if($heredofamilial === 'None')
+                        @php $heredofamilial_data[] = "-" . $past_medical_history->heredofamilial_diseases; @endphp
                     @endif
                 @endforeach
 

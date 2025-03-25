@@ -1028,13 +1028,13 @@
                                 <div class="col-lg-12">
                                     <div class="container-referral2">
                                         <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication" aria-expanded="false" aria-controls="collapse_medication">
-                                            <b>CURRENT MEDICATION(S)</b>
+                                            <b>CURRENT MEDICATION(S)</b><i> (required)</i><span class="text-red">*</span>
                                             <span class="pull-right"><i class="fa fa-plus"></i></span>
                                         </button><br><br>
                                     </div>
                                     <div class="collapse" id="collapse_medication" style="width: 100%;">
-                                        <small class="text-success"><i>Specify number of doses given and time of last dose given.</i></small>
-                                        <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5"></textarea><br><br>
+                                        <small class="text-success"><i>Specify number of doses given and time of last dose given.</i></small><span class="text-red">*</span>
+                                        <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5" required></textarea><br><br>
                                     </div>
                                 </div>
                             </div>
@@ -1935,7 +1935,7 @@
                                 <div class="col-lg-12">
                                     <div class="container-referral2">
                                         <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
-                                            <b>LATEST VITAL SIGNS</b>
+                                            <b>LATEST VITAL SIGNS</b><i> (required)</i><span class="text-red">*</span>
                                             <span class="pull-right"><i class="fa fa-plus"></i></span>
                                         </button><br><br>
                                     </div>
@@ -1943,30 +1943,30 @@
                                         <div class="container-referral">
                                             <div class="row">
                                                 <div class="col-md-4">
-                                                <small class="text-success"><b>Temperature:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp"> &#176;C
+                                                <small class="text-success"><b>Temperature:</b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_temp" required> &#176;C
                                                 </div>
                                                 <div class="col-md-4">
-                                                <small class="text-success"><b> Pulse Rate/Heart Rate:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse"> bpm
+                                                <small class="text-success"><b> Pulse Rate/Heart Rate:</b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_pulse" required> bpm
                                                 </div>
                                                 <div class="col-md-4">
-                                                <small class="text-success"><b>Respiratory Rate: </b></small><input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate"> cpm
+                                                <small class="text-success"><b>Respiratory Rate:</b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_respi_rate" required> cpm
                                                 </div>
                                             </div><br>
                                             <div class="row">
                                                     <div class="col-md-4">
-                                                        <small class="text-success"><b>Blood Pressure:</b></small>
+                                                        <small class="text-success"><b>Blood Pressure:</b></small><span class="text-red">*</span>
                                                         <input type="number" id="systolic_normal" placeholder="Systolic (e.g., 100)" 
                                                             style="width:18%;" min="0" max="300" 
-                                                            oninput="updateBloodPressureNormal()"> /
+                                                            oninput="updateBloodPressureNormal()" required> /
                                                         <input type="number" id="diastolic_normal" placeholder="Diastolic (e.g., 90)" 
                                                             style="width:18%;" min="0" max="200" 
-                                                            oninput="updateBloodPressureNormal()">mmHg
+                                                            oninput="updateBloodPressureNormal()" required>mmHg
 
                                                         <!-- Hidden input to store the combined value -->
                                                         <input type="hidden" name="vital_bp" id="vital_bp_normal">
                                                     </div>
                                                 <div class="col-md-4">
-                                                <small class="text-success"><b>O2 Saturation</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
+                                                <small class="text-success"><b>O2 Saturation</b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_oxy_saturation" required> %
                                                 </div>
                                             </div><br>
                                         </div>
@@ -2328,12 +2328,12 @@
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b>
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                    <i>Select reason for referral:</i><span class="text-red">*</span>
                                     <div class="container-referral">
                                         <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
                                             <option value="">Select reason for referral</option>
@@ -2409,6 +2409,8 @@
         $("#collapse_illness_history_normal").collapse('show');
         $("#collapse_diagnosis_normal").collapse('show');
         $("#collapse_reason_referral").collapse('show');
+        $("#collapse_vital_signs").collapse('show');
+        $("#collapse_medication").collapse('show');
 
         // Ensure button toggle works properly
         $(".btn[data-target='#collapse_illness_history_normal']").on("click", function () {
@@ -2416,6 +2418,12 @@
         });
         $(".btn[data-target='#collapse_diagnosis_normal']").on("click", function () {
             $("#collapse_diagnosis_normal").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_vital_signs']").on("click", function () {
+            $("#collapse_vital_signs").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_medication']").on("click", function () {
+            $("#collapse_medication").collapse("toggle");
         });
         $(".btn[data-target='#collapse_reason_referral']").on("click", function () {
             $("#collapse_reason_referral").collapse("toggle");
