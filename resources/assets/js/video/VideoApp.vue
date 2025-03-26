@@ -817,7 +817,7 @@ console.log("referring call duration:", this.referring_md);
                     <td colspan="12">
                         Reason for referral:
                         <span class="forDetails">
-                        {{ form.other_reason_referral }}
+                        {{ form.reason }}
                         </span>
                     </td>
                     </tr>
