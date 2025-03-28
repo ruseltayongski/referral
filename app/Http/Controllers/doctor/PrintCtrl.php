@@ -163,6 +163,8 @@ class PrintCtrl extends Controller
     {
         $this->middleware('auth');
     }
+    
+  
 
     public function printPrescription($tracking_id,$activity_id,Request $request) {
 
@@ -312,41 +314,160 @@ class PrintCtrl extends Controller
         $pdf->SetLeftMargin($leftMargin);
         $pdf->setY($prescriptionSetY);
 
-        $prescriptionCounter = 0;
-        $totalPrescriptionCount = 0;
+        // $prescriptionCounter = 0;
+        // $totalPrescriptionCount = 0;
 
-        foreach ($prescriptions as $prescription) {
-            $totalPrescriptionCount++;
+        // foreach ($prescriptions as $prescription) {
+        //     $totalPrescriptionCount++;
 
-            if ($prescriptionCounter == 7) {
-                $pdf->AddPage();
-                $prescriptionSetY = 85;
-                $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx_3.png');
-                $pdf->Image($rxPath, 12, $prescriptionSetY, 18, 0);
-                $pdf->setY($prescriptionSetY);
-                $prescriptionCounter = 0;
+        //     if ($prescriptionCounter == 7) {
+        //         $pdf->AddPage();
+        //         $prescriptionSetY = 85;
+        //         $rxPath = realpath(__DIR__.'/../../../../resources/img/video/rx_3.png');
+        //         $pdf->Image($rxPath, 12, $prescriptionSetY, 18, 0);
+        //         $pdf->setY($prescriptionSetY);
+        //         $prescriptionCounter = 0;
 
-                $prescriptionSetY = 103;
-                $pdf->setY($prescriptionSetY);
+        //         $prescriptionSetY = 103;
+        //         $pdf->setY($prescriptionSetY);
+        //     }
+        //     $prescriptionCounter++;
+
+        //     $brandname = !empty($prescription->brandname) ? $prescription->brandname : 'N/A';
+        //     $rowText = "{$totalPrescriptionCount}. {$prescription->generic_name}    ({$brandname})    {$prescription->dosage}     #{$prescription->quantity}";
+
+        //     $availableWidth = $pdf->getPageWidth() - $pdf->GetX() - 20;
+
+        //     if ($pdf->getStringWidth($rowText) + $pdf->getStringWidth($prescription->formulation) > $availableWidth) {
+        //         $pdf->MultiCell(0, 5, $rowText, 0, 'L');
+        //         $pdf->SetX(39);
+        //         $pdf->MultiCell(0, 5, $prescription->formulation, 0, 'L');
+        //     } else {
+        //         $pdf->MultiCell(0, 5, $rowText . '     ' . $prescription->formulation, 0, 'L');
+        //     }
+        //     $rowText2 = "    Sig:   {$prescription->frequency}    {$prescription->duration}";
+        //     $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
+        //     $pdf->Ln();
+        // }
+
+        // Convert HTML to plain text
+        // Define tag patterns
+
+       
+        // Clean up HTML
+        $html = str_replace(['&nbsp;', "\n"], ' ', $prescriptions[0]->prescription_v2);
+        $html = preg_replace('/\s+/', ' ', $html);
+        
+        // Handle paragraphs and line breaks
+        $html = str_replace(['<p>', '</p>', '<br>'], "\n", $html);
+        
+        $pdf->SetFont('Arial', '', 10);
+        $fontSize = $pdf->FontSizePt; // Get current font size in points
+        
+        // List Tracking
+        $listType = null;
+        $listCount = 0;
+        $indentation = 5;
+        $leftMargin = 10; // Adjust this value to control the left margin
+        
+        foreach (explode("\n", $html) as $line) {
+            $line = trim($line);
+            if ($line === '') continue;
+        
+            $bold = false;
+            $italic = false;
+            $strike = false;
+        
+            preg_match_all('/(<\/?.*?>|[^<]+)/', $line, $matches);
+            $pdf->SetX($leftMargin);  // Apply left margin
+            $xStart = $pdf->GetX();
+            $textWidth = 0;
+        
+            foreach ($matches[0] as $part) {
+                // Handle List Tags
+                if ($part === '<ul>' || $part === '<ol>') {
+                    $listType = $part === '<ul>' ? 'ul' : 'ol';
+                    $listCount = 0;
+                    $pdf->Ln(0.5);
+                    continue;
+                }
+                if ($part === '</ul>' || $part === '</ol>') {
+                    $listType = null;
+                    $pdf->Ln(0.5);
+                    continue;
+                }
+                if ($part === '<li>') {
+                    $pdf->SetX($leftMargin + $indentation);
+                    if ($listType === 'ul') {
+                        $pdf->Write(10, chr(149) . ' ');
+                    } elseif ($listType === 'ol') {
+                        $listCount++;
+                        $pdf->Write(10, "{$listCount}. ");
+                    }
+                    $xStart = $pdf->GetX();
+                    continue;
+                }
+                if ($part === '</li>') {
+                    $pdf->Ln();  // New line after each item
+                    continue;
+                }
+        
+                // Handle Formatting Tags
+                if ($part === '<strong>') {
+                    $bold = true;
+                    $pdf->SetFont('', ($italic ? 'BI' : 'B'));
+                    continue;
+                }
+                if ($part === '</strong>') {
+                    $bold = false;
+                    $pdf->SetFont('', ($italic ? 'I' : ''));
+                    continue;
+                }
+                if ($part === '<i>' || $part === '<em>') {
+                    $italic = true;
+                    $pdf->SetFont('', ($bold ? 'BI' : 'I'));
+                    continue;
+                }
+                if ($part === '</i>' || $part === '</em>') {
+                    $italic = false;
+                    $pdf->SetFont('', ($bold ? 'B' : ''));
+                    continue;
+                }
+                if ($part === '<s>') {
+                    $strike = true;
+                    continue;
+                }
+                if ($part === '</s>') {
+                    $strike = false;
+                    continue;
+                }
+        
+                // Process Text
+                $text = strip_tags($part);
+                $textWidth = $pdf->GetStringWidth($text);
+        
+                if ($strike) {
+                    $currentY = $pdf->GetY();
+                    $yMid = $currentY + ($fontSize / 2);
+                    $pdf->Line($xStart, $yMid, $xStart + $textWidth, $yMid);
+                }
+        
+                $pdf->Write(10, $text);
+                $xStart += $textWidth;
             }
-            $prescriptionCounter++;
-
-            $brandname = !empty($prescription->brandname) ? $prescription->brandname : 'N/A';
-            $rowText = "{$totalPrescriptionCount}. {$prescription->generic_name}    ({$brandname})    {$prescription->dosage}     #{$prescription->quantity}";
-
-            $availableWidth = $pdf->getPageWidth() - $pdf->GetX() - 20;
-
-            if ($pdf->getStringWidth($rowText) + $pdf->getStringWidth($prescription->formulation) > $availableWidth) {
-                $pdf->MultiCell(0, 5, $rowText, 0, 'L');
-                $pdf->SetX(39);
-                $pdf->MultiCell(0, 5, $prescription->formulation, 0, 'L');
-            } else {
-                $pdf->MultiCell(0, 5, $rowText . '     ' . $prescription->formulation, 0, 'L');
-            }
-            $rowText2 = "    Sig:   {$prescription->frequency}    {$prescription->duration}";
-            $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
             $pdf->Ln();
         }
+        
+        // Reset font at the end
+        $pdf->SetFont('Arial', '', 10);
+        
+
+
+
+
+        // $rowText2 = "{$html}";
+        // $pdf->MultiCell(0, 5, $rowText2, 0, 'L');
+        
         $pdf->Output();
         exit;
     }

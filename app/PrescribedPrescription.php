@@ -25,6 +25,9 @@ class PrescribedPrescription extends Model
         'frequency',
         'duration',
         'quantity',
+        'prescription_v2', // Add these
+        'referred_from',    // Add these
+        'referred_to',      // Add these
     ];
 
     public function activity() {

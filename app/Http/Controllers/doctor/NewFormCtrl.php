@@ -1946,11 +1946,42 @@ class NewFormCtrl extends Controller
          
             PastMedicalHistory::where('patient_id', $patient_id)->update($data['past_medical_history_data']);
             PertinentLaboratory::where('patient_id', $patient_id)->update($data['pertinent_lab']);
+            PediatricHistory::where('patient_id', $patient_id)->update($data['pediatric_history']);
+            ObstetricAndGynecologicHistory::where('patient_id', $patient_id)->update($data['obstetric_history']);
             PersonalAndSocialHistory::where('patient_id', $patient_id)->update($data['personal_history']);
             ReviewOfSystems::where('patient_id', $patient_id)->update($data['review_of_system']);
             NutritionalStatus::where('patient_id', $patient_id)->update($data['nutritional_status']);
             GlasgoComaScale::where('patient_id', $patient_id)->update($data['glasgocoma_scale']);
             LatestVitalSigns::where('patient_id', $patient_id)->update($data['vital_signs']);
+
+            $orders = $request->input('pregnancy_history_order');
+            $years = $request->input('pregnancy_history_year');
+            $gestations = $request->input('pregnancy_history_gestation');
+            $outcomes = $request->input('pregnancy_history_outcome');
+            $placesOfBirth = $request->input('pregnancy_history_placeofbirth');
+            $sexes = $request->input('prenatal_history_sex');
+            $birthWeights = $request->input('pregnancy_history_birthweight');
+            $presentStatuses = $request->input('pregnancy_history_presentstatus');
+            $complications = $request->input('pregnancy_history_complications');
+    
+            foreach ($orders as $key => $order) {
+                Pregnancy::updateOrCreate(
+                    [
+                        'patient_id' => $patient_id,
+                        'pregnancy_order' => $order // assuming order is unique per patient
+                    ],
+                    [
+                        'pregnancy_year' => $years[$key],
+                        'pregnancy_gestation_completed' => $gestations[$key],
+                        'pregnancy_outcome' => $outcomes[$key],
+                        'pregnancy_place_of_birth' => $placesOfBirth[$key],
+                        'pregnancy_sex' => $sexes[$key],
+                        'pregnancy_birth_weight' => $birthWeights[$key],
+                        'pregnancy_present_status' => $presentStatuses[$key],
+                        'pregnancy_complication' => $complications[$key],
+                    ]
+                );
+            }
 
             self::editForm($request,$status,$type,$patient_id);
             return redirect()->back();

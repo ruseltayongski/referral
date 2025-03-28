@@ -298,7 +298,9 @@
             @if($commorbidities === 'Cancer')
                 @php $commorbidities_data[] = "Cancer-" . $past_medical_history->commordities_cancer; @endphp
             @endif
-           
+            @if($commorbidities === 'None')
+                    @php $commorbidities_data[] = "-" . $past_medical_history->commordities; @endphp
+            @endif
         @endforeach
 
         {{-- Display the formatted data --}}
@@ -317,6 +319,7 @@
           @if($allergies === 'Food')  @php $allergies_data[] = "Food-" . $past_medical_history->allergy_food_cause; @endphp@endif
           @if($allergies === 'Drugs')  @php $allergies_data[] = "Drugs-" . $past_medical_history->allergy_drugs_cause; @endphp@endif
           @if($allergies === 'Others')  @php $allergies_data[] = "Others-" . $past_medical_history->allergy_others_cause; @endphp@endif
+          @if($allergies === 'None')  @php $allergies_data[] = "-" . $past_medical_history->allergies; @endphp@endif
         @endforeach
         
     <tr>    
@@ -348,6 +351,9 @@
             @endif
             @if($heredofamilial === 'Others')
                 @php $heredofamilial_data[] = "Others-" . $past_medical_history->heredo_others; @endphp
+            @endif
+            @if($heredofamilial === 'None')
+                        @php $heredofamilial_data[] = "-" . $past_medical_history->heredofamilial_diseases; @endphp
             @endif
         @endforeach
 

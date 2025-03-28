@@ -44,6 +44,10 @@
     <link rel="manifest" href="{{ asset('/manifest.json') }}" />
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
+
+    <!-- CKeditor -->
+ 
+    
     
     <title>
         @yield('title','Home')
@@ -251,7 +255,7 @@
     </div>
 </footer>
 <!-- Bootstrap core JavaScript
-================================================== -->
+<!-- ================================================== -->
 <!-- jQuery UI 1.11.4 -->
 <script src="{{ asset('resources/plugin/bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
 
@@ -281,6 +285,8 @@
 
 <!-- VUE Scripts -->
 <script src="{{ asset('public/js/app_layout.js?version=').date('YmdHis') }}" defer></script>
+
+<!-- <script src="{{ asset('public/js/ckeditor.js') }}"></script> -->
 
 @include('layouts.app_script')
 {{--@include('script.firebase')--}}

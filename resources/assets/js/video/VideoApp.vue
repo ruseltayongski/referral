@@ -513,7 +513,7 @@ console.log("referring call duration:", this.referring_md);
                     Audio
                   </div>
                   <button
-                    class="btn btn-info btn-lg mic-button"
+                    class="btn btn-info btn-md mic-button"
                     :class="{ 'mic-button-slash': !audioStreaming }"
                     @click="audioStreamingOnAnddOff"
                     type="button"
@@ -533,7 +533,7 @@ console.log("referring call duration:", this.referring_md);
                     Video
                   </div>
                   <button
-                    class="btn btn-success btn-lg video-button"
+                    class="btn btn-success btn-md video-button"
                     :class="{ 'video-button-slash': !videoStreaming }"
                     @click="videoStreamingOnAndOff"
                     type="button"
@@ -553,7 +553,7 @@ console.log("referring call duration:", this.referring_md);
                     End Call
                   </div>
                   <button
-                    class="btn btn-danger btn-lg decline-button"
+                    class="btn btn-danger btn-md decline-button"
                     @click="leaveChannel"
                     type="button"
                     @mouseover="showEndcall = true"
@@ -572,7 +572,7 @@ console.log("referring call duration:", this.referring_md);
                     Upward
                   </div>
                   <button
-                    class="btn btn-warning btn-lg upward-button"
+                    class="btn btn-warning btn-md upward-button"
                     @click="endorseUpward"
                     type="button"
                     v-if="referring_md == 'no'"
@@ -591,7 +591,7 @@ console.log("referring call duration:", this.referring_md);
                     Prescription
                   </div>
                   <button
-                    class="btn btn-success btn-lg prescription-button"
+                    class="btn btn-success btn-md prescription-button"
                     data-toggle="modal"
                     data-target="#prescriptionModal"
                     type="button"
@@ -611,7 +611,7 @@ console.log("referring call duration:", this.referring_md);
                     Lab Request
                   </div>
                   <button
-                    class="btn btn-primary btn-lg prescription-button"
+                    class="btn btn-primary btn-md prescription-button"
                     data-toggle="modal"
                     data-target="#labRequestModal"
                     type="button"
@@ -633,7 +633,7 @@ console.log("referring call duration:", this.referring_md);
                     Reco
                   </div>
                   <button
-                    class="btn btn-info btn-lg reco-button"
+                    class="btn btn-info btn-md reco-button"
                     data-toggle="modal"
                     data-target="#feedbackModal"
                     :data-code="referral_code"

@@ -589,6 +589,41 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
 
                         ?>
 
+                        @php
+                            $past_array_filter = array_filter([
+                                $past_medical_history->commordities ?? null,
+                                $past_medical_history->commordities_hyper_year ?? null,
+                                $past_medical_history->commordities_diabetes_year ?? null,
+                                $past_medical_history->commordities_asthma_year ?? null,
+                                $past_medical_history->commordities_others ?? null,
+                                $past_medical_history->commordities_cancer ?? null,
+                                $past_medical_history->heredofamilial_diseases ?? null,
+                                $past_medical_history->heredo_hyper_side ?? null,
+                                $past_medical_history->heredo_diab_side ?? null,
+                                $past_medical_history->heredo_asthma_side ?? null,
+                                $past_medical_history->heredo_cancer_side ?? null,
+                                $past_medical_history->heredo_kidney_side ?? null,
+                                $past_medical_history->heredo_thyroid_side ?? null,
+                                $past_medical_history->heredo_others ?? null,
+                                $past_medical_history->allergies ?? null,
+                                $past_medical_history->allergy_food_cause ?? null,
+                                $past_medical_history->allergy_drugs_cause ?? null,
+                                $past_medical_history->allergy_others_cause ?? null,
+                                $past_medical_history->previous_hospitalization ?? null,
+                            ]);
+                        @endphp
+
+                        @if(!empty($past_array_filter))
+                            <script>
+                                $("#collapse_medical_history").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_medical_history']").on("click", function () {
+                                    $("#collapse_medical_history").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -997,7 +1032,45 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                             ?>
 
                         {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
-                      
+                            
+                        @php
+                            $obstetric_array_filter = array_filter([
+                                $obstetric_and_gynecologic_history->menarche ?? null,
+                                $obstetric_and_gynecologic_history->menopause ?? null,
+                                $obstetric_and_gynecologic_history->menopausal_age ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle ?? null,
+                                $obstetric_and_gynecologic_history->mens_irreg_xmos ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_dysmenorrhea ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_duration ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_padsperday ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_medication ?? null,
+                                $obstetric_and_gynecologic_history->contraceptive_history ?? "",
+                                $obstetric_and_gynecologic_history->contraceptive_others ?? null,
+                                $obstetric_and_gynecologic_history->parity_g ?? null,
+                                $obstetric_and_gynecologic_history->parity_p ?? null,
+                                $obstetric_and_gynecologic_history->parity_ft ?? null,
+                                $obstetric_and_gynecologic_history->parity_pt ?? null,
+                                $obstetric_and_gynecologic_history->parity_a ?? null,
+                                $obstetric_and_gynecologic_history->parity_l ?? null,
+                                $obstetric_and_gynecologic_history->parity_lnmp ?? null,
+                                $obstetric_and_gynecologic_history->parity_edc ?? null,
+                                $obstetric_and_gynecologic_history->aog_lnmp ?? null,
+                                $obstetric_and_gynecologic_history->aog_eutz ?? null,
+                                $obstetric_and_gynecologic_history->prenatal_history ?? null,
+                            ]);
+                        @endphp
+
+
+                        @if(!empty($obstetric_array_filter))
+                            <script>
+                                $("#collapse_gyne_history").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_gyne_history']").on("click", function () {
+                                    $("#collapse_gyne_history").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
                 
                         @if ($patient_age >= 9 && $form->patient_sex === "Female" && $age_type==="y")
                         <div class="row" style="margin: 5px;" id="menarche_show">
@@ -1184,6 +1257,34 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                         </div>
                        @endif
 
+                       @php
+                         $personal_history_array_filter = array_filter([
+                            $personal_and_social_history->smoking ?? null,
+                            $personal_and_social_history->smoking_sticks_per_day ?? null,
+                            $personal_and_social_history->smoking_quit_year ?? null,
+                            $personal_and_social_history->smoking_remarks ?? null,
+                            $personal_and_social_history->alcohol_drinking ?? null,
+                            $personal_and_social_history->alcohol_liquor_type ?? null,
+                            $personal_and_social_history->alcohol_bottles_per_day ?? null,
+                            $personal_and_social_history->alcohol_drinking_quit_year ?? null,
+                            $personal_and_social_history->illicit_drugs ?? null,
+                            $personal_and_social_history->illicit_drugs_taken ?? null,
+                            $personal_and_social_history->illicit_drugs_quit_year ?? null
+                         ]);
+                       @endphp
+
+            
+                       @if(!empty($personal_history_array_filter))
+                            <script>
+                                $("#collapse_personal_history").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_personal_history']").on("click", function () {
+                                    $("#collapse_personal_history").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -1308,10 +1409,30 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                 </div>
                                 <div class="collapse" id="collapse_medication" style="width: 100%;">
                                    <small class="text-success"> <i>Specify number of doses given and time of last dose given.</i></small>
-                                    <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5"><?php echo htmlspecialchars($personal_and_social_history->current_medications); ?></textarea><br><br>
+                                    <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5" required><?php echo htmlspecialchars($personal_and_social_history->current_medications); ?></textarea><br><br>
                                 </div>
                             </div>
                         </div>
+
+                        @php
+                            $pertinent_array_filter = array_filter([
+                                $pertinent_laboratory->pertinent_laboratory_and_procedures ?? null,
+                                $pertinent_laboratory->lab_procedure_other ?? null,
+                            ]);
+                        @endphp
+
+        
+
+                        @if(!empty($pertinent_array_filter))
+                            <script>
+                                $("#collapse_lab_procedures").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_lab_procedures']").on("click", function () {
+                                    $("#collapse_lab_procedures").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
@@ -1410,7 +1531,40 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                 </div>
                             </div>
                         </div>
+                         
+                        @php
+                          $review_system_array_filter = array_filter([
+                            $review_of_system->skin ?? null,
+                            $review_of_system->head ?? null,
+                            $review_of_system->eyes ?? null,
+                            $review_of_system->ears ?? null,
+                            $review_of_system->nose_or_sinuses ?? null,
+                            $review_of_system->mouth_or_throat ?? null,
+                            $review_of_system->neck ?? null,
+                            $review_of_system->breast ?? null,
+                            $review_of_system->respiratory_or_cardiac ?? null,
+                            $review_of_system->gastrointestinal ?? null,
+                            $review_of_system->urinary ?? null,
+                            $review_of_system->peripheral_vascular ?? null,
+                            $review_of_system->musculoskeletal ?? null,
+                            $review_of_system->neurologic ?? null,
+                            $review_of_system->hematologic ?? null,
+                            $review_of_system->endocrine ?? null,
+                            $review_of_system->psychiatric ?? null,
+                          ]);
 
+                        @endphp
+
+                        @if(!empty($review_system_array_filter))
+                            <script>
+                                $("#collapse_review_system").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_review_system']").on("click", function () {
+                                    $("#collapse_review_system").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
 
                         <div class="row" style="margin: 5px;">
                            
@@ -2175,8 +2329,25 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                         </div>
                                     </div><br>
                                 </div>
-                        
                         </div>
+
+                        @php 
+                            $nutrition_stat_array_filter = array_filter([
+                              $nutritional_status->diet ?? null,
+                              $nutritional_status->specify_diets ?? null,
+                            ]);
+                        @endphp
+
+                        @if(!empty($nutrition_stat_array_filter))
+                            <script>
+                                $("#collapse_nutri_status").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_nutri_status']").on("click", function () {
+                                    $("#collapse_nutri_status").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
 
                         <div class="row" style="margin:5px">
                            
@@ -2232,7 +2403,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                            
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs" aria-expanded="false" aria-controls="collapse_vital_signs">
-                                        <b>LATEST VITAL SIGNS</b>
+                                        <b>LATEST VITAL SIGNS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -2240,13 +2411,13 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                              <small class="text-success"><b>Temperature:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp" value="<?php echo htmlspecialchars( $latest_vital_signs->temperature); ?>"> &#176;C
+                                              <small class="text-success"><b>Temperature:</b></small><span class="text-red">*</span> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp" value="<?php echo htmlspecialchars( $latest_vital_signs->temperature); ?>" required> &#176;C
                                             </div>
                                             <div class="col-md-4">
-                                              <small class="text-success"><b>Pulse Rate/Heart Rate:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse" value="<?php echo htmlspecialchars( $latest_vital_signs->pulse_rate); ?>"> bpm
+                                              <small class="text-success"><b>Pulse Rate/Heart Rate:</b></small><span class="text-red">*</span> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse" value="<?php echo htmlspecialchars( $latest_vital_signs->pulse_rate); ?>" required> bpm
                                             </div>
                                             <div class="col-md-4">
-                                               <small class="text-success"><b> Respiratory Rate: </b></small><input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate" value="<?php echo htmlspecialchars( $latest_vital_signs->respiratory_rate); ?>"> cpm
+                                               <small class="text-success"><b> Respiratory Rate: </b></small><span class="text-red">*</span><input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate" value="<?php echo htmlspecialchars( $latest_vital_signs->respiratory_rate); ?>" required> cpm
                                             </div>
                                         </div><br>
                                         <div class="row">
@@ -2257,7 +2428,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 $systolic = htmlspecialchars($bp[0] ?? '');
                                                 $diastolic = htmlspecialchars($bp[1] ?? '');
                                             ?>
-                                               <small class="text-success"><b>Blood Pressure:</b></small></label>
+                                               <small class="text-success"><b>Blood Pressure:</b></small><span class="text-red">*</span></label>
                                                <input type="number" id="systolic_normal_info" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
                                                     value="<?= $systolic; ?>" 
@@ -2273,7 +2444,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                     value="<?php echo htmlspecialchars($latest_vital_signs->blood_pressure); ?>">
                                                 </div>
                                             <div class="col-md-4">
-                                                O2 Saturation <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo htmlspecialchars( $latest_vital_signs->oxygen_saturation); ?>"> %
+                                               <small class="text-success"> O2 Saturation</small><span class="text-red">*</span> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation" value="<?php echo htmlspecialchars( $latest_vital_signs->oxygen_saturation); ?>" required> %
                                             </div>
                                         </div><br>
                                     </div>
@@ -2290,6 +2461,26 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                 document.getElementById('vital_bp_normal_info').value = systolic_normal_info + '/' + diastolic;
                             }
                         </script>
+
+                        @php
+                            $glasgocoma_array_filter = array_filter([
+                                $glasgocoma_scale->pupil_size_chart ?? null,
+                                $glasgocoma_scale->motor_response ?? null,
+                                $glasgocoma_scale->verbal_response ?? null,
+                                $glasgocoma_scale->eye_response ?? null,
+                            ]);
+                        @endphp
+                        
+                        @if(!empty($glasgocoma_array_filter))
+                            <script>
+                                $("#collapse_glasgow").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_glasgow']").on("click", function () {
+                                    $("#collapse_glasgow").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
 
                         <div class="row" style="margin:5px">
                                 <div class="container-referral2">
@@ -2675,6 +2866,8 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
         $("#collapse_illness_history_normInfo").collapse('show');
         $("#collapse_diagnosis_normInfo").collapse('show');
         $("#collapse_reason_referral_normInfo").collapse('show');
+        $("#collapse_vital_signs").collapse('show');
+        $("#collapse_medication").collapse('show');
 
         // Ensure button toggle works properly
         $(".btn[data-target='#collapse_illness_history_normInfo']").on("click", function () {
@@ -2682,6 +2875,12 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
         });
         $(".btn[data-target='#collapse_diagnosis_normInfo']").on("click", function () {
             $("#collapse_diagnosis_normInfo").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_vital_signs']").on("click", function () {
+            $("#collapse_vital_signs").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_medication']").on("click", function () {
+            $("#collapse_medication").collapse("toggle");
         });
         $(".btn[data-target='#collapse_reason_referral_normInfo']").on("click", function () {
             $("#collapse_reason_referral_normInfo").collapse("toggle");

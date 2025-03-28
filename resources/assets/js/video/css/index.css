@@ -182,13 +182,19 @@
 }
 .mic-button {
   border-radius: 50%;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
 }
 .video-button {
   border-radius: 50%;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
 }
 .decline-button {
   border-radius: 50%;
   border: 0;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
 }
 
 .upward-button {
@@ -196,21 +202,30 @@
   border: 0;
   margin-right: 8px;
   z-index: 11;
+  color: white;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
 }
 
 .prescription-button {
   border-radius: 50%;
   margin-right: 8px;
   z-index: 11;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
 }
 .reco-button{
   border-radius: 50%;
   margin-right: 8px;
   z-index: 11;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
 }
 .lab-button {
   border-radius: 50%;
   z-index: 11;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
 }
 .telemedForm {
   position: relative;
@@ -398,12 +413,18 @@ tr:nth-child(even) {
 .video-button:hover,
 .mic-button:hover,
 .decline-button:hover,
-.upward-button:hover,
 .prescription-button:hover,
 .reco-button:hover,
 .lab-button:hover {
-  background-color: rgba(2, 133, 221, 0.911);
-  box-shadow: 0 0.5rem 1rem rgba(2, 133, 221, 0.911);
+  background-color: rgba(17, 17, 17, 0.637);
+  color: white;
+  box-shadow: 0 0.5rem 1rem transparent;
+  border-color: transparent;
+}
+.decline-button:hover{
+  background-color: red;
+  box-shadow: 0 0.5rem 1rem transparent;
+  border-color: transparent;
 }
 
 .tooltip-text {
@@ -439,6 +460,7 @@ tr:nth-child(even) {
 
 .button-container {
   display: inline-block;
+  background-color: transparent;
   position:relative;
 }
 
