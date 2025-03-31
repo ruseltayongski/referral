@@ -59,7 +59,7 @@ $user = Session::get('auth');
     </tr>
     <tr>
         <td colspan="2">Referring Name: <span class="md_referring form-details">{{ $form['pregnant']->md_referring }}</span></td>
-        <td colspan="2">Arrival Date: </td>
+        <td colspan="4">Arrival Date: </td>
     </tr>
     <tr>
         <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact form-details">{{ $form['pregnant']->referring_md_contact }}</span></td>
@@ -75,7 +75,7 @@ $user = Session::get('auth');
     </tr>
     <tr>
         <td colspan="2">Referred To: <span class="referred_name form-details">{{ $form['pregnant']->referred_facility }}</span></td>
-        <td colspan="2">Department: <span class="department_name form-details">{{ $form['pregnant']->department }}</span></td>
+        <td colspan="4">Department: <span class="department_name form-details">{{ $form['pregnant']->department }}</span></td>
     </tr>
     <tr>
         <td colspan="4">Covid Number: <span class="covid_number form-details">{{ $form['pregnant']->covid_number }}</span></td>
@@ -96,7 +96,7 @@ $user = Session::get('auth');
             </tr>
             <tr>
                 <td colspan="3">Name: <span class="woman_name form-details">{{ $form['pregnant']->woman_name }}</span></td>
-                <td>Age: <span class="patient_age form-details"> {{ $form['pregnant']->woman_age }}</span><br><small><i>(at time of referral)</i></small></td>
+                <td colspan="4">Age: <span class="patient_age form-details"> {{ $form['pregnant']->woman_age }}</span><br><small><i>(at time of referral)</i></small></td>
             </tr>
             <tr>
                 <td colspan="4">Address: <span class="woman_address form-details">{{ $form['pregnant']->patient_address }}</span></td>
@@ -142,7 +142,7 @@ $user = Session::get('auth');
             </tr>
             <tr>
                 <td colspan="2">Birth Weight: <span class="weight form-details">{{ $form['baby']->weight }}</span></td>
-                <td>Gestational Age: <span class="gestational_age form-details">{{ $form['baby']->gestational_age }}</span></td>
+                <td colspan="4">Gestational Age: <span class="gestational_age form-details">{{ $form['baby']->gestational_age }}</span></td>
             </tr>
             <tr>
                 <td colspan="4">
@@ -211,11 +211,34 @@ $user = Session::get('auth');
                 $review_endocrine = explodeToArray($review_of_system->endocrine);
                 $review_psychiatric = explodeToArray($review_of_system->psychiatric);
 
+
                  // PAST MEDICAL HISTORY - NULL CHECKER VALIDATOR
+               
+                 $pastmedical_filter = array_filter([
+                    $past_medical_history->commordities ?? null,
+                    $past_medical_history->commordities_hyper_year ?? null,
+                    $past_medical_history->commordities_diabetes_year ?? null,
+                    $past_medical_history->commordities_asthma_year ?? null,
+                    $past_medical_history->commordities_others ?? null,
+                    $past_medical_history->commordities_cancer ?? null,
+                    $past_medical_history->heredofamilial_diseases ?? null,
+                    $past_medical_history->heredo_hyper_side ?? null,
+                    $past_medical_history->heredo_diab_side ?? null,
+                    $past_medical_history->heredo_asthma_side ?? null,
+                    $past_medical_history->heredo_cancer_side ?? null,
+                    $past_medical_history->heredo_kidney_side ?? null,
+                    $past_medical_history->heredo_thyroid_side ?? null,
+                    $past_medical_history->heredo_others ?? null,
+                    $past_medical_history->allergies ?? null,
+                    $past_medical_history->allergy_food_cause ?? null,
+                    $past_medical_history->allergy_drugs_cause ?? null,
+                    $past_medical_history->allergy_others_cause ?? null,
+                    $past_medical_history->previous_hospitalization ?? null,
+                 ]);
                 $commorbidities_null_checker = (!empty($past_medical_history->commordities));
                 $allergies_null_checker = (!empty($past_medical_history->allergies));
                 $heredofamilial_null_checker = (!empty($past_medical_history->heredofamilial_diseases));
-                $validation_checker_past_medical_history = ($commorbidities_null_checker || $allergies_null_checker || $heredofamilial_null_checker);
+                $validation_checker_past_medical_history = !empty($pastmedical_filter);
                 // REVIEW OF SYSTEMS - NULL CHECKER VALIDATOR
                 $review_skin_null_checker = (!empty($review_of_system->skin));
                 $review_head_null_checker = (!empty($review_of_system->head));
@@ -234,10 +257,26 @@ $user = Session::get('auth');
                 $review_hematologic_null_checker = (!empty($review_of_system->hematologic));
                 $review_endocrine_null_checker = (!empty($review_of_system->endocrine));
                 $review_psychiatric_null_checker = (!empty($review_of_system->psychiatric));
-                $validation_checker_review_of_systems = ($review_skin_null_checker || $review_head_null_checker || $review_eyes_null_checker || $review_ears_null_checker
-                || $review_nose_null_checker || $review_mouth_null_checker || $review_neck_null_checker || $review_breast_null_checker || $review_respiratory_null_checker
-                || $review_gastrointestinal_null_checker || $review_urinary_null_checker || $review_peripheral_null_checker || $review_musculoskeletal_null_checker
-                || $review_neurologic_null_checker || $review_hematologic_null_checker || $review_endocrine_null_checker || $review_psychiatric_null_checker);
+                $review_system_filter = array_filter([
+                    $review_of_system->skin ?? null,
+                    $review_of_system->head ?? null,
+                    $review_of_system->eyes ?? null,
+                    $review_of_system->ears ?? null,
+                    $review_of_system->nose_or_sinuses ?? null,
+                    $review_of_system->mouth_or_throat ?? null,
+                    $review_of_system->neck ?? null,
+                    $review_of_system->breast ?? null,
+                    $review_of_system->respiratory_or_cardiac ?? null,
+                    $review_of_system->gastrointestinal ?? null,
+                    $review_of_system->urinary ?? null,
+                    $review_of_system->peripheral_vascular ?? null,
+                    $review_of_system->musculoskeletal ?? null,
+                    $review_of_system->neurologic ?? null,
+                    $review_of_system->hematologic ?? null,
+                    $review_of_system->endocrine ?? null,
+                    $review_of_system->psychiatric ?? null,
+                ]);
+                $validation_checker_review_of_systems = !empty($review_system_filter);
                 // PERSONAL AND SOCIAL HISTORY
                 $smoking_null_checker = (!empty($personal_and_social_history->smoking));
                 $smoking_quit_year_null_checker =(!empty($personal_and_social_history->smoking_quit_year));
@@ -250,9 +289,21 @@ $user = Session::get('auth');
                 $illicit_drugs_null_checker=(!empty($personal_and_social_history->illicit_drugs));
                 $illicit_drugs_taken_null_checker =(!empty($personal_and_social_history->illicit_drugs_taken));
                 $illicit_drugs_quit_year_null_checker =(!empty($personal_and_social_history->Illicit_drugs_quit_year));
-                $personal_history_validation_checker = ($smoking_null_checker || $smoking_quit_year_null_checker || $smoking_sticks_per_day_null_checker
-                || $smoking_remarks_null_checker || $alcohol_dringking_null_checker || $alcohol_liquor_type_null_checker || $alcohol_dringking_quit_year_null_checker
-                || $alcohol_bottles_per_day_null_checker || $illicit_drugs_null_checker || $illicit_drugs_taken_null_checker || $illicit_drugs_quit_year_null_checker);
+                $personal_and_social_filter = array_filter([
+                    $personal_and_social_history->smoking ?? null,
+                    $personal_and_social_history->smoking_sticks_per_day ?? null,
+                    $personal_and_social_history->smoking_quit_year ?? null,
+                    $personal_and_social_history->smoking_remarks ?? null,
+                    $personal_and_social_history->alcohol_drinking ?? null,
+                    $personal_and_social_history->alcohol_liquor_type ?? null,
+                    $personal_and_social_history->alcohol_bottles_per_day ?? null,
+                    $personal_and_social_history->alcohol_drinking_quit_year ?? null,
+                    $personal_and_social_history->illicit_drugs ?? null,
+                    $personal_and_social_history->illicit_drugs_taken ?? null,
+                    $personal_and_social_history->illicit_drugs_quit_year ?? null,
+                    $personal_and_social_history->current_medications ?? null,
+                ]);
+                $personal_history_validation_checker = !empty($personal_and_social_filter);
                 // GLASGOCOMA SCALE
                 $glasgo_pupil_size_null_checker = (!empty($glasgocoma_scale->pupil_size_chart));
                 $glasgo_motor_response_null_checker =(!empty($glasgocoma_scale->motor_response));
@@ -279,11 +330,31 @@ $user = Session::get('auth');
                 $obstetric_and_gynecologic_aog_lnmp=(!empty($obstetric_and_gynecologic_history->aog_lnmp));
                 $obstetric_and_gynecologic_aog_eutz=(!empty($obstetric_and_gynecologic_history->aog_eutz));
                 $obstetric_and_gynecologic_prenatal_history=(!empty($obstetric_and_gynecologic_history->prenatal_history));
-                $obstetric_and_gynecologic_validation_checker=($obstetric_and_gynecologic_menarche_null_checker || $obstetric_and_gynecologic_menopausal_null_checker || $obstetric_and_gynecologic_menstrual_cycle
-                || $obstetric_and_gynecologic_menstrual_duration || $obstetric_and_gynecologic_menstrual_padsperday || $obstetric_and_gynecologic_menstrual_medication || $obstetric_and_gynecologic_constraceptives
-                || $obstetric_and_gynecologic_parity_g || $obstetric_and_gynecologic_parity_p || $obstetric_and_gynecologic_parity_ft || $obstetric_and_gynecologic_parity_pt || $obstetric_and_gynecologic_parity_a
-                || $obstetric_and_gynecologic_parity_l || $obstetric_and_gynecologic_parity_lnmp || $obstetric_and_gynecologic_parity_edc || $obstetric_and_gynecologic_aog_lnmp || $obstetric_and_gynecologic_aog_eutz
-                || $obstetric_and_gynecologic_prenatal_history);
+                $obstetric_and_gyne_filter = array_filter([
+                    $obstetric_and_gynecologic_history->menarche ?? null,
+                    $obstetric_and_gynecologic_history->menopause ?? null,
+                    $obstetric_and_gynecologic_history->menopausal_age ?? null,
+                    $obstetric_and_gynecologic_history->menstrual_cycle ?? null,
+                    $obstetric_and_gynecologic_history->mens_irreg_xmos ?? null,
+                    $obstetric_and_gynecologic_history->menstrual_cycle_dysmenorrhea ?? null,
+                    $obstetric_and_gynecologic_history->menstrual_cycle_duration ?? null,
+                    $obstetric_and_gynecologic_history->menstrual_cycle_padsperday ?? null,
+                    $obstetric_and_gynecologic_history->menstrual_cycle_medication ?? null,
+                    $obstetric_and_gynecologic_history->contraceptive_history ?? null,
+                    $obstetric_and_gynecologic_history->contraceptive_others ?? null,
+                    $obstetric_and_gynecologic_history->parity_g ?? null,
+                    $obstetric_and_gynecologic_history->parity_p ?? null,
+                    $obstetric_and_gynecologic_history->parity_ft ?? null,
+                    $obstetric_and_gynecologic_history->parity_pt ?? null,
+                    $obstetric_and_gynecologic_history->parity_a ?? null,
+                    $obstetric_and_gynecologic_history->parity_l ?? null,
+                    $obstetric_and_gynecologic_history->parity_lnmp ?? null,
+                    $obstetric_and_gynecologic_history->parity_edc ?? null,
+                    $obstetric_and_gynecologic_history->aog_lnmp ?? null,
+                    $obstetric_and_gynecologic_history->aog_eutz ?? null,
+                    $obstetric_and_gynecologic_history->prenatal_history ?? null,
+                ]);
+                $obstetric_and_gynecologic_validation_checker=!empty($obstetric_and_gyne_filter);
             ?>
 
 <hr style="border-top: 1px solid #ccc;">
@@ -358,6 +429,9 @@ $user = Session::get('auth');
                 @if($commorbidities === 'Cancer')
                     @php $commorbidities_data[] = "Cancer-" . $past_medical_history->commordities_cancer; @endphp
                 @endif
+                @if($commorbidities === 'None')
+                    @php $commorbidities_data[] = "-" . $past_medical_history->commordities; @endphp
+                @endif
             
             @endforeach
 
@@ -375,6 +449,7 @@ $user = Session::get('auth');
                     @if($allergies === 'Food')  @php $allergies_data[] = "Food-" . $past_medical_history->allergy_food_cause; @endphp@endif
                     @if($allergies === 'Drugs')  @php $allergies_data[] = "Drugs-" . $past_medical_history->allergy_drugs_cause; @endphp@endif
                     @if($allergies === 'Others')  @php $allergies_data[] = "Others-" . $past_medical_history->allergy_others_cause; @endphp@endif
+                    @if($allergies === 'None')  @php $allergies_data[] = "-" . $past_medical_history->allergies; @endphp@endif
                     @endforeach        
                 <tr>    
                     <td colspan="6">Allergies: <span class="woman_allergies_food form-details"></span> - <span class="woman_before_given_time form-details">{{ implode(",", $allergies_data) }}</span></td>
@@ -405,6 +480,9 @@ $user = Session::get('auth');
                     @if($heredofamilial === 'Others')
                         @php $heredofamilial_data[] = "Others-" . $past_medical_history->heredo_others; @endphp
                     @endif
+                    @if($heredofamilial === 'None')
+                        @php $heredofamilial_data[] = "-" . $past_medical_history->heredofamilial_diseases; @endphp
+                    @endif
                 @endforeach
 
                 {{-- Display the formatted data --}}
@@ -427,26 +505,26 @@ $user = Session::get('auth');
             @endif
 
             <tr>
-            @if($smoking_null_checker) <td colspan="3">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td>@else<td colspan="3"></td>@endif
+            @if($smoking_null_checker) <td colspan="3">Smoking:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking}}</span></td>@endif
             @if($smoking_sticks_per_day_null_checker)<td colspan="3">Sticks per Day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_sticks_per_day}}</span></td>@else<td colspan="3"></td>@endif
             </tr>
             
             <tr>
-            @if($smoking_quit_year_null_checker)<td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td>@else<td colspan="3"></td>@endif
-            @if($smoking_remarks_null_checker)<td colspan="3">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td>@else<td colspan="3"></td>@endif
+            @if($smoking_quit_year_null_checker)<td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_quit_year}}</span></td>@endif
+            @if($smoking_remarks_null_checker)<td colspan="4">Smoking Remarks:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->smoking_remarks}}</span></td>@elseif(!empty($personal_and_social_history->smoking_remarks)) <td colspan="3"></td>@endif
             </tr>
             
             <tr>
-            @if($alcohol_dringking_null_checker)<td colspan="3">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td>@else<td colspan="3"></td>@endif
+            @if($alcohol_dringking_null_checker)<td colspan="3">Alcohol:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking}}</span></td>@endif
             @if($alcohol_liquor_type_null_checker)<td colspan="3">Liquor Type:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_liquor_type}}</span></td>@else<td colspan="3"></td>@endif
             </tr>
             <tr>
-            @if($alcohol_dringking_quit_year_null_checker)<td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td>@else<td colspan="3"></td>@endif
-            @if($alcohol_bottles_per_day_null_checker)<td colspan="3">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td>@else<td colspan="3"></td>@endif
+            @if($alcohol_dringking_quit_year_null_checker)<td colspan="3">Year Quit:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_drinking_quit_year}}</span></td>@endif
+            @if($alcohol_bottles_per_day_null_checker)<td colspan="3">Alcohol bottles per day:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->alcohol_bottles_per_day}}</span></td>@endif
             </tr>
   
             <tr>
-            @if($illicit_drugs_null_checker)<td colspan="3">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs}}</span></td>@else<td colspan="3"></td>@endif
+            @if($illicit_drugs_null_checker)<td colspan="3">Illicit drugs:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs}}</span></td>@endif
             @if($illicit_drugs_taken_null_checker)<td colspan="3">Illicit drugs taken:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->illicit_drugs_taken}}</span></td>@else<td colspan="3"></td>@endif
             </tr>
             <tr>
@@ -711,23 +789,22 @@ $user = Session::get('auth');
         
         @if($obstetric_and_gynecologic_validation_checker)
         <tr class="bg-gray">
-                <td colspan="6">Obstetric and Gynecologic History </td>
+                <td colspan="6">Obstetric and Gynecologic History</td>
         </tr>
         @endif
-
         <tr>
-        @if($obstetric_and_gynecologic_menarche_null_checker)<td colspan="3">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_menopausal_null_checker)<td colspan="3">Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_menarche_null_checker)<td colspan="3">Menarche: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menarche}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menopausal_null_checker)<td colspan="6">Menopause: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menopausal_age}}</span></td>@else<td colspan="6"></td>@endif
         </tr>
         
         <tr>
-        @if($obstetric_and_gynecologic_menstrual_cycle)<td colspan="3">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_menstrual_duration)<td colspan="3">Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_cycle)<td colspan="3">Menstrual Cycle: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_duration)<td colspan="6">Menstrual Duration: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_duration}}</span></td>@endif
         </tr>
         
         <tr>
-        @if($obstetric_and_gynecologic_menstrual_padsperday)<td colspan="3">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_menstrual_medication)<td colspan="3">Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_padsperday)<td colspan="3">Menstrual Pads per Day: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_padsperday}}</span></td>@endif
+        @if($obstetric_and_gynecologic_menstrual_medication)<td colspan="6">Menstrual Medication: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->menstrual_cycle_medication}}</span></td>@endif
         </tr>
 
         @if ($obstetric_and_gynecologic_constraceptives)
@@ -746,18 +823,18 @@ $user = Session::get('auth');
         @endif
 
         <tr>
-        @if($obstetric_and_gynecologic_parity_g)<td colspan="3">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_parity_p)<td colspan="3">P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_parity_g)<td colspan="3">G:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_g}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_p)<td colspan="6">P:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_p}}</span></td>@endif
         </tr>
         
         <tr>
-        @if($obstetric_and_gynecologic_parity_ft)<td colspan="3">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_parity_pt)<td colspan="3">PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_parity_ft)<td colspan="3">FT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_ft}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_pt)<td colspan="6">PT:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_pt}}</span></td>@endif
         </tr>
 
         <tr>
-        @if($obstetric_and_gynecologic_parity_a)<td colspan="3">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_parity_l)<td colspan="3">L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_parity_a)<td colspan="3">A:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_a}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_l)<td colspan="6">L:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->parity_l}}</span></td>@endif
         </tr>
         <?php 
             $decoded_LMP = utf8_decode($obstetric_and_gynecologic_history->parity_lnmp);
@@ -766,8 +843,8 @@ $user = Session::get('auth');
             $formatted_EDC = date('F d, Y h:i A', strtotime($decoded_EDC));
         ?>
         <tr>
-        @if($obstetric_and_gynecologic_parity_lnmp)<td colspan="3">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$formatted_LMP}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_parity_edc)<td colspan="3">EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$formatted_EDC}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_parity_lnmp)<td colspan="3">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$formatted_LMP}}</span></td>@endif
+        @if($obstetric_and_gynecologic_parity_edc)<td colspan="6">EDC:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$formatted_EDC}}</span></td>@endif
         </tr>
 
         @if($obstetric_and_gynecologic_aog_lnmp || $obstetric_and_gynecologic_aog_eutz)
@@ -776,8 +853,8 @@ $user = Session::get('auth');
         </tr>
         @endif
         <tr>
-        @if($obstetric_and_gynecologic_aog_lnmp)<td colspan="3">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetetric_parity_date->parity_lnmp}}</span></td>@else<td colspan="3"></td>@endif
-        @if($obstetric_and_gynecologic_aog_eutz)<td colspan="3">UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetetric_parity_date->parity_edc}}</span></td>@else<td colspan="3"></td>@endif
+        @if($obstetric_and_gynecologic_aog_lnmp)<td colspan="3">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetetric_parity_date->parity_lnmp}}</span></td>@endif
+        @if($obstetric_and_gynecologic_aog_eutz)<td colspan="6">UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetetric_parity_date->parity_edc}}</span></td>@endif
         </tr>
        
         <tr>

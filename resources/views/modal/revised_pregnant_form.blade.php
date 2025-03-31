@@ -100,9 +100,7 @@
                                 <select name="referred_facility" class="form-control-select modal-select2 select_facility" required>
                                     <option value="">Select Facility...</option>
                                     @foreach($facilities as $row)
-                                        @if ($row->id == 24) 
                                             <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
-                                        @endif 
                                     @endforeach
                                 </select>
                             </div>
@@ -193,7 +191,7 @@
                                     </div><br>
                                 
                                     <div class="continer-referral">
-                                    <small class="text-success"><b>MAJOR FINDINGS:</b></small> <i> (Clinical and BP,Temp,Lab <span class="text-red"><b>*</b></span></i> <br />
+                                    <small class="text-success"><b>MAJOR FINDINGS:</b></small> <i> (Clinical and BP,Temp,Lab) <span class="text-red"><b>*</b></span></i> <br />
                                     <textarea class="form-control" id="woman_major_findings" name="woman_major_findings" style="resize: none;width: 100%" rows="5" required></textarea>
                                     </div><br>
 
@@ -802,13 +800,13 @@
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_medication_pregnant" aria-expanded="false" aria-controls="collapse_medication_pregnant">
-                                        <b>CURRENT MEDICATION(S)</b>
+                                        <b>CURRENT MEDICATION(S)</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_medication_pregnant" style="width: 100%;">
-                                    <small class="text-success"><i>Specify number of doses given and time of last dose given.</i></small>
-                                    <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5"></textarea><br><br>
+                                    <small class="text-success"><i>Specify number of doses given and time of last dose given.</i></small><span class="text-red">*</span>
+                                    <textarea class="form-control" name="current_meds" style="resize: none;width: 100%;" rows="5" required></textarea><br><br>
                                 </div>
                             </div>
                         </div>
@@ -1707,7 +1705,7 @@
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_vital_signs_pregnant" aria-expanded="false" aria-controls="collapse_vital_signs_pregnant">
-                                        <b>LATEST VITAL SIGNS</b>
+                                        <b>LATEST VITAL SIGNS</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
@@ -1715,30 +1713,30 @@
                                     <div class="container-referral">
                                         <div class="row">
                                             <div class="col-md-4">
-                                               <small class="text-success"><b> Temperature: </b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_temp"> &#176;C
+                                               <small class="text-success"><b> Temperature: </b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_temp" required> &#176;C
                                             </div>
                                             <div class="col-md-4">
-                                               <small class="text-success"><b> Pulse Rate/Heart Rate:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_pulse"> bpm
+                                               <small class="text-success"><b> Pulse Rate/Heart Rate:</b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_pulse" required> bpm
                                             </div>
                                             <div class="col-md-4">
-                                               <small class="text-success"><b> Respiratory Rate:</b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_respi_rate"> cpm
+                                               <small class="text-success"><b> Respiratory Rate:</b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_respi_rate" required> cpm
                                             </div>
                                         </div><br>
                                         <div class="row">
                                             <div class="col-md-4">
-                                                <label for="systolic"><small class="text-success"><b>Blood Pressure:</b></small></label>
+                                                <label for="systolic"><small class="text-success"><b>Blood Pressure:</b></small><span class="text-red">*</span></label>
                                                 <input type="number" id="systolic_pregnant" placeholder="Systolic (e.g., 100)" 
                                                     style="width:18%;" min="0" max="300" 
-                                                    oninput="updateBloodPressure()"> /
+                                                    oninput="updateBloodPressure()" required> /
                                                 <input type="number" id="diastolic_pregnant" placeholder="Diastolic (e.g., 90)" 
                                                     style="width:18%;" min="0" max="200" 
-                                                    oninput="updateBloodPressure()">mmHg
+                                                    oninput="updateBloodPressure()" required>mmHg
 
                                                 <!-- Hidden input to store the combined value -->
-                                                <input type="hidden" name="vital_bp" id="vital_bp_pregnant">
+                                                <input type="hidden" name="vital_bp" id="vital_bp_pregnant" required>
                                             </div>
                                             <div class="col-md-4">
-                                               <small class="text-success"><b> O2 Saturation </b></small> <input type="number" step="0.01" style="width:30%;" min="0" name="vital_oxy_saturation"> %
+                                               <small class="text-success"><b> O2 Saturation </b></small><span class="text-red">*</span> <input type="text" style="width:30%;" min="0" name="vital_oxy_saturation" required> %
                                             </div>
                                         </div><br>
                                     </div><br>
@@ -2076,12 +2074,12 @@
                             <div class="col-lg-12">
                                 <div class="container-referral2">
                                     <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral_pregnant" aria-expanded="false" aria-controls="collapse_reason_referral_pregnant">
-                                        <b>REASON FOR REFERRAL</b>
+                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
                                         <span class="pull-right"><i class="fa fa-plus"></i></span>
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_pregnant" style="width: 100%;">
-                                    <i>Select reason for referral:</i>
+                                    <i>Select reason for referral:</i><span class="text-red">*</span>
                                     <div class="container-referral">
                                         <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
                                             <option value="">Select reason for referral</option>
@@ -2160,6 +2158,8 @@
         $("#patient_treatment_give_time").collapse('show');
         $("#collapse_diagnosis_pregnant").collapse('show');
         $("#collapse_reason_referral_pregnant").collapse('show');
+        $("#collapse_vital_signs_pregnant").collapse('show');
+        $("#collapse_medication_pregnant").collapse('show');
 
         // Ensure button toggle works properly
         $(".btn[data-target='#patient_treatment_give_time']").on("click", function () {
@@ -2168,9 +2168,16 @@
         $(".btn[data-target='#collapse_diagnosis_pregnant']").on("click", function () {
             $("#collapse_diagnosis_pregnant").collapse("toggle");
         });
+        $(".btn[data-target='#collapse_vital_signs_pregnant']").on("click", function () {
+            $("#collapse_vital_signs_pregnant").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_medication_pregnant']").on("click", function () {
+            $("#collapse_medication_pregnant").collapse("toggle");
+        });
         $(".btn[data-target='#collapse_reason_referral_pregnant']").on("click", function () {
             $("#collapse_reason_referral_pregnant").collapse("toggle");
         });
+       
     });
 </script>
 

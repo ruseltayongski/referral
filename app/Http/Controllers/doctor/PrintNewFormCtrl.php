@@ -858,45 +858,61 @@ class PrintNewFormCtrl extends Controller
 
             $pdf->SetMargins(6.35, 6.35, 6.35);
             $pdf->ln(5);
-            // dd($data_);
-            
-            $pdf->AddPage('L');
 
-            $pdf->ln(5);
+            $pregnancy_filter = array_filter(array_map(function ($record) {
+                return array_filter([
+                    'pregnancy_order' => $record['pregnancy_order'] ?? null,
+                    'pregnancy_year' => $record['pregnancy_year'] ?? null,
+                    'pregnancy_gestation_completed' => $record['pregnancy_gestation_completed'] ?? null,
+                    'pregnancy_outcome' => $record['pregnancy_outcome'] ?? null,
+                    'pregnancy_place_of_birth' => $record['pregnancy_place_of_birth'] ?? null,
+                    'pregnancy_sex' => $record['pregnancy_sex'] ?? null,
+                    'pregnancy_birth_weight' => $record['pregnancy_birth_weight'] ?? null,
+                    'pregnancy_present_status' => $record['pregnancy_present_status'] ?? null,
+                    'pregnancy_complication' => $record['pregnancy_complication'] ?? null,
+                ]);
+            }, $data));
 
-            $pdf->SetFillColor(200, 200, 200);
-            $pdf->SetTextColor(0);
-            $pdf->SetDrawColor(200, 200, 200);
-            $pdf->SetLineWidth(.3);
-            $pdf->SetFont('Arial', 'B', 10);
-            
-            $colWidth = array(20, 16, 38, 34, 36, 10, 16, 34, 80);
 
-            foreach ($header as $i => $colHeader) {
-                $pdf->Cell($colWidth[$i], 7, $colHeader, 1, 0, 'C', true);
-            }
-            $pdf->Ln();
+            if (!empty($pregnancy_filter)) {
+                $pdf->AddPage('L');
 
-            $pdf->SetFillColor(224, 235, 255);
-            $pdf->SetTextColor(0);
-            $pdf->SetFont('Arial', '', 10);
-
-            $fill = false;
-            foreach ($data as $row) {
-                $pdf->Cell($colWidth[0], 6, $this->wrapText($pdf, $row['pregnancy_order'], $colWidth[0]), 'LR', 0, 'L', $fill);
-                $pdf->Cell($colWidth[1], 6, $this->wrapText($pdf, $row['pregnancy_year'], $colWidth[1]), 'LR', 0, 'L', $fill);
-                $pdf->Cell($colWidth[2], 6, $this->wrapText($pdf, $row['pregnancy_gestation_completed'], $colWidth[2]), 'LR', 0, 'L', $fill);
-                $pdf->Cell($colWidth[3], 6, $this->wrapText($pdf, $row['pregnancy_outcome'], $colWidth[3]), 'LR', 0, 'L', $fill);
-                $pdf->Cell($colWidth[4], 6, $this->wrapText($pdf, $row['pregnancy_place_of_birth'], $colWidth[4]), 'LR', 0, 'L', $fill);
-                $pdf->Cell($colWidth[5], 6, $this->wrapText($pdf, $row['pregnancy_sex'], $colWidth[5]), 'LR', 0, 'L', $fill);
-                $pdf->Cell($colWidth[6], 6, $this->wrapText($pdf, $row['pregnancy_birth_weight'], $colWidth[6]), 'LR', 0, 'R', $fill);
-                $pdf->Cell($colWidth[7], 6, $this->wrapText($pdf, $row['pregnancy_present_status'], $colWidth[7]), 'LR', 0, 'L', $fill);
-                $pdf->Cell($colWidth[8], 6, $this->wrapText($pdf, $row['pregnancy_complication'], $colWidth[7]), 'LR', 0, 'L', $fill);
+                $pdf->ln(5);
+    
+                $pdf->SetFillColor(200, 200, 200);
+                $pdf->SetTextColor(0);
+                $pdf->SetDrawColor(200, 200, 200);
+                $pdf->SetLineWidth(.3);
+                $pdf->SetFont('Arial', 'B', 10);
+                
+                $colWidth = array(20, 16, 38, 34, 36, 10, 16, 34, 80);
+    
+                foreach ($header as $i => $colHeader) {
+                    $pdf->Cell($colWidth[$i], 7, $colHeader, 1, 0, 'C', true);
+                }
                 $pdf->Ln();
-                $fill = !$fill;
-            }
-
-            $pdf->Cell(array_sum($colWidth), 0, '', 'T');
+    
+                $pdf->SetFillColor(224, 235, 255);
+                $pdf->SetTextColor(0);
+                $pdf->SetFont('Arial', '', 10);
+    
+                $fill = false;
+                foreach ($pregnancy_filter as $row) {
+                    $pdf->Cell($colWidth[0], 6, $this->wrapText($pdf, $row['pregnancy_order'], $colWidth[0]), 'LR', 0, 'L', $fill);
+                    $pdf->Cell($colWidth[1], 6, $this->wrapText($pdf, $row['pregnancy_year'], $colWidth[1]), 'LR', 0, 'L', $fill);
+                    $pdf->Cell($colWidth[2], 6, $this->wrapText($pdf, $row['pregnancy_gestation_completed'], $colWidth[2]), 'LR', 0, 'L', $fill);
+                    $pdf->Cell($colWidth[3], 6, $this->wrapText($pdf, $row['pregnancy_outcome'], $colWidth[3]), 'LR', 0, 'L', $fill);
+                    $pdf->Cell($colWidth[4], 6, $this->wrapText($pdf, $row['pregnancy_place_of_birth'], $colWidth[4]), 'LR', 0, 'L', $fill);
+                    $pdf->Cell($colWidth[5], 6, $this->wrapText($pdf, $row['pregnancy_sex'], $colWidth[5]), 'LR', 0, 'L', $fill);
+                    $pdf->Cell($colWidth[6], 6, $this->wrapText($pdf, $row['pregnancy_birth_weight'], $colWidth[6]), 'LR', 0, 'R', $fill);
+                    $pdf->Cell($colWidth[7], 6, $this->wrapText($pdf, $row['pregnancy_present_status'], $colWidth[7]), 'LR', 0, 'L', $fill);
+                    $pdf->Cell($colWidth[8], 6, $this->wrapText($pdf, $row['pregnancy_complication'], $colWidth[7]), 'LR', 0, 'L', $fill);
+                    $pdf->Ln();
+                    $fill = !$fill;
+                }
+    
+                $pdf->Cell(array_sum($colWidth), 0, '', 'T');
+            }         
         }
 
     }

@@ -2722,5 +2722,171 @@ class ApiController extends Controller
     public function checkLabResult(Request $request) {
         return labRequest::where('activity_id', $request->activity_id)->first();
     }
+    // ------------------ PRESCRIPTION USING CKEditor -----------
 
+    private function saveSinglePrescription_version2($singlePrescription, $request) {
+
+        if(!empty($singlePrescription)) {
+            if($request->username) //it means from mobile
+                $user = User::where('username',$request->username)->first();
+            else
+                $user = Session::get('auth');
+
+            $patient_form = null;
+            $patient_id = 0;
+                if($singlePrescription['form_type'] == 'normal') {
+                    $patient_form = PatientForm::where("code",$singlePrescription['code'])->first();
+                    $patient_id = $patient_form->patient_id;
+                }
+                else if($singlePrescription['form_type'] == 'pregnant') {
+                    $patient_form = PregnantForm::where("code",$singlePrescription['code'])->first();
+                    $patient_id = $patient_form->patient_woman_id;
+                }
+
+
+                    $latestActivity = new Activity();
+                    $latestActivity->patient_id = $patient_id;
+                    $latestActivity->date_referred = $patient_form->time_referred;
+                    $latestActivity->date_seen = $patient_form->time_transferred;
+                    $latestActivity->referred_from = $patient_form->referring_facility;
+                    $latestActivity->referred_to = $patient_form->referred_to;
+                    $latestActivity->department_id = $patient_form->department_id;
+                    $latestActivity->referring_md = $patient_form->referring_md;
+                    $latestActivity->action_md = $patient_form->referred_md;
+                    $latestActivity->code = $singlePrescription['code'];
+                    $latestActivity->status = "prescription";
+                    $latestActivity->remarks = "prescription examined";
+                    $latestActivity->save();
+
+                    $prescribed_activity_id = $latestActivity->id;
+
+                    // $prescribed = new PrescribedPrescription();
+                    // $prescribed->prescribed_activity_id = $prescribed_activity_id;
+                    // $prescribed->code = $latestActivity->code;
+                    // $prescribed->prescription_v2 = $singlePrescription['prescriptions'];
+                    // $prescribed->referred_from = $latestActivity->referred_from;
+                    // $prescribed->referred_to = $latestActivity->referred_to;
+                    // $prescribed->save();
+
+                    $prescribed= PrescribedPrescription::updateOrCreate(
+                        ['code' => $singlePrescription['code'],
+                          'prescribed_activity_id' => $prescribed_activity_id,  
+                        ],
+                        [
+                            'prescribed_activity_id' => $prescribed_activity_id,
+                            'code' => $latestActivity->code,
+                            'prescription_v2' => $singlePrescription['prescription_v2'],
+                            'referred_from' => $latestActivity->referred_from,
+                            'referred_to' => $latestActivity->referred_to,
+                        ]
+                    );
+        
+        }
+
+        //----------------------------------------------------- jondy added
+        $latest_activity = Activity::where("code",$latestActivity->code)->where(function($query) {
+            $query->where("status","referred")
+                ->orWhere("status","redirected")
+                ->orWhere("status","transferred")
+                ->orWhere('status',"followup");
+        })
+            ->orderBy("id","desc")
+            ->first();
+
+        $broadcast_prescribed = [
+            "activity_id" => $latest_activity->id,
+            "code" => $latestActivity->code,
+            "referred_from" => $latest_activity->referred_from,
+            "status" => "telemedicine",
+            "telemedicine_status" => "prescription",
+        ];
+        broadcast(new SocketReferralDischarged($broadcast_prescribed)); 
+        //-------------------------------------------------------jondy added
+    }
+
+    public function savePrescription_version2(Request $req)
+    {
+        $validatedData = $req->validate([
+            'singlePrescription.prescription_v2' => 'required|string',
+            'singlePrescription.code' => 'required|string',
+            'singlePrescription.form_type' => 'required|string',
+            'singlePrescription.prescribed_activity_id' => '',
+            'singlePrescription.referred_from' => '',
+            'singlePrescription.referred_to' => '',
+        ]);
+
+        $singlePrescription = $validatedData['singlePrescription'];
+        
+        $referredOrFollowup = Activity::where('code', $singlePrescription['code'])
+            ->whereIn('status', ['referred', 'followup'])
+            ->latest()
+            ->first();
+
+        $status = Activity::where('code', $singlePrescription['code'])
+            ->where('status', ['examined', 'prescription'] )
+            ->latest()
+            ->first();
+
+            if ($referredOrFollowup) {
+                if ($referredOrFollowup->status == 'followup') {
+
+                    $activityExisting = Activity::where('code', $singlePrescription['code'])
+                        ->where('status', 'prescription')
+                        ->where('id', $singlePrescription['prescribed_activity_id'])
+                        ->latest()
+                        ->first();
+        
+                    $existingFollowupPrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
+                        ->where('prescribed_activity_id', $activityExisting->id)
+                        ->first();
+
+                    if ($status->status == 'examined' && $status->created_at > $status->status == 'prescription' && $status->created_at) {
+
+                        if ($existingFollowupPrescription) {
+                            $existingFollowupPrescription->fill($singlePrescription);
+                            $existingFollowupPrescription->save();
+                        } 
+                        // $this->saveMultiPrescriptions($multiplePrescriptions, $request);
+                    } 
+                    else {
+                        if ($existingFollowupPrescription) {
+                            $existingFollowupPrescription->fill($singlePrescription);
+                            $existingFollowupPrescription->save();
+                        } 
+                        else {
+                            $this->saveSinglePrescription_version2($singlePrescription, $request);
+                        }
+                        // $this->saveMultiPrescriptions($multiplePrescriptions, $request);
+                    }
+                } 
+                elseif($referredOrFollowup->status == 'referred') {
+
+                    $existingReferredPrescription = PrescribedPrescription::where('code', $singlePrescription['code'])
+                    ->first();
+
+                    if ($status->status == 'examined' && $status->created_at > $status->status == 'prescription' && $status->created_at) {
+        
+                        if ($existingReferredPrescription) {
+                            $existingReferredPrescription->fill($singlePrescription);
+                            $existingReferredPrescription->save(); 
+                        } 
+                        // $this->saveMultiPrescriptions($multiplePrescriptions, $request);
+                    }
+                    else {
+                        if ($existingReferredPrescription) {
+                            $existingReferredPrescription->fill($singlePrescription);
+                            $existingReferredPrescription->save();
+                        } 
+                        else {
+                            $this->saveSinglePrescription_version2($singlePrescription, $request);
+                        }
+                        // $this->saveMultiPrescriptions($multiplePrescriptions, $request);
+                    }
+                }  
+            }
+
+        return response()->json(['message' => 'Prescriptions saved successfully!'], 200);
+    }
+
+    
 }

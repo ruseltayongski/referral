@@ -586,6 +586,43 @@ $facilities = \App\Facility::select('id','name')
                         }
 
                         ?>
+
+@php
+                            $past_array_filter = array_filter([
+                                $past_medical_history->commordities ?? null,
+                                $past_medical_history->commordities_hyper_year ?? null,
+                                $past_medical_history->commordities_diabetes_year ?? null,
+                                $past_medical_history->commordities_asthma_year ?? null,
+                                $past_medical_history->commordities_others ?? null,
+                                $past_medical_history->commordities_cancer ?? null,
+                                $past_medical_history->heredofamilial_diseases ?? null,
+                                $past_medical_history->heredo_hyper_side ?? null,
+                                $past_medical_history->heredo_diab_side ?? null,
+                                $past_medical_history->heredo_asthma_side ?? null,
+                                $past_medical_history->heredo_cancer_side ?? null,
+                                $past_medical_history->heredo_kidney_side ?? null,
+                                $past_medical_history->heredo_thyroid_side ?? null,
+                                $past_medical_history->heredo_others ?? null,
+                                $past_medical_history->allergies ?? null,
+                                $past_medical_history->allergy_food_cause ?? null,
+                                $past_medical_history->allergy_drugs_cause ?? null,
+                                $past_medical_history->allergy_others_cause ?? null,
+                                $past_medical_history->previous_hospitalization ?? null,
+                            ]);
+                        @endphp
+
+                        @if(!empty($past_array_filter))
+                            <script>
+                                $("#collapse_medical_history").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_medical_history']").on("click", function () {
+                                    $("#collapse_medical_history").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
+
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -861,6 +898,18 @@ $facilities = \App\Facility::select('id','name')
                         $aog_eutz_value = htmlspecialchars($gynecological_data['aog_eutz']);
                         ?>
 
+
+                        @if(!empty($form['baby']))
+                            <script>
+                                $("#baby_collapsed_pregnant").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#baby_collapsed_pregnant']").on("click", function () {
+                                    $("#baby_collapsed_pregnant").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
                         <div class="row" style="margin: 5px;" id="baby_show_pregnant">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -940,6 +989,46 @@ $facilities = \App\Facility::select('id','name')
                         </div> 
 
                             {{--TODO: COMPARE AGE IF >= 9 AND ONLY IF PT IS WOMAN--}}
+
+                            @php
+                            $obstetric_array_filter = array_filter([
+                                $obstetric_and_gynecologic_history->menarche ?? null,
+                                $obstetric_and_gynecologic_history->menopause ?? null,
+                                $obstetric_and_gynecologic_history->menopausal_age ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle ?? null,
+                                $obstetric_and_gynecologic_history->mens_irreg_xmos ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_dysmenorrhea ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_duration ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_padsperday ?? null,
+                                $obstetric_and_gynecologic_history->menstrual_cycle_medication ?? null,
+                                $obstetric_and_gynecologic_history->contraceptive_history ?? "",
+                                $obstetric_and_gynecologic_history->contraceptive_others ?? null,
+                                $obstetric_and_gynecologic_history->parity_g ?? null,
+                                $obstetric_and_gynecologic_history->parity_p ?? null,
+                                $obstetric_and_gynecologic_history->parity_ft ?? null,
+                                $obstetric_and_gynecologic_history->parity_pt ?? null,
+                                $obstetric_and_gynecologic_history->parity_a ?? null,
+                                $obstetric_and_gynecologic_history->parity_l ?? null,
+                                $obstetric_and_gynecologic_history->parity_lnmp ?? null,
+                                $obstetric_and_gynecologic_history->parity_edc ?? null,
+                                $obstetric_and_gynecologic_history->aog_lnmp ?? null,
+                                $obstetric_and_gynecologic_history->aog_eutz ?? null,
+                                $obstetric_and_gynecologic_history->prenatal_history ?? null,
+                            ]);
+                        @endphp
+
+
+                        @if(!empty($obstetric_array_filter))
+                            <script>
+                                $("#collapse_gyne_history").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_gyne_history']").on("click", function () {
+                                    $("#collapse_gyne_history").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
                             <div class="row" style="margin: 5px;" id="menarche_show">
                                 <div class="col-lg-12">
                                     <div class="container-referral2">
@@ -1124,6 +1213,35 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
+                        @php
+                         $personal_history_array_filter = array_filter([
+                            $personal_and_social_history->smoking ?? null,
+                            $personal_and_social_history->smoking_sticks_per_day ?? null,
+                            $personal_and_social_history->smoking_quit_year ?? null,
+                            $personal_and_social_history->smoking_remarks ?? null,
+                            $personal_and_social_history->alcohol_drinking ?? null,
+                            $personal_and_social_history->alcohol_liquor_type ?? null,
+                            $personal_and_social_history->alcohol_bottles_per_day ?? null,
+                            $personal_and_social_history->alcohol_drinking_quit_year ?? null,
+                            $personal_and_social_history->illicit_drugs ?? null,
+                            $personal_and_social_history->illicit_drugs_taken ?? null,
+                            $personal_and_social_history->illicit_drugs_quit_year ?? null
+                         ]);
+                       @endphp
+
+            
+                       @if(!empty($personal_history_array_filter))
+                            <script>
+                                $("#collapse_personal_history").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_personal_history']").on("click", function () {
+                                    $("#collapse_personal_history").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
+
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
@@ -1254,6 +1372,26 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
+                        @php
+                            $pertinent_array_filter = array_filter([
+                                $pertinent_laboratory->pertinent_laboratory_and_procedures ?? null,
+                                $pertinent_laboratory->lab_procedure_other ?? null,
+                            ]);
+                        @endphp
+
+        
+
+                        @if(!empty($pertinent_array_filter))
+                            <script>
+                                $("#collapse_lab_procedures").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_lab_procedures']").on("click", function () {
+                                    $("#collapse_lab_procedures").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -1365,6 +1503,39 @@ $facilities = \App\Facility::select('id','name')
                             </div>
                         </div>
 
+                        @php
+                          $review_system_array_filter = array_filter([
+                            $review_of_system->skin ?? null,
+                            $review_of_system->head ?? null,
+                            $review_of_system->eyes ?? null,
+                            $review_of_system->ears ?? null,
+                            $review_of_system->nose_or_sinuses ?? null,
+                            $review_of_system->mouth_or_throat ?? null,
+                            $review_of_system->neck ?? null,
+                            $review_of_system->breast ?? null,
+                            $review_of_system->respiratory_or_cardiac ?? null,
+                            $review_of_system->gastrointestinal ?? null,
+                            $review_of_system->urinary ?? null,
+                            $review_of_system->peripheral_vascular ?? null,
+                            $review_of_system->musculoskeletal ?? null,
+                            $review_of_system->neurologic ?? null,
+                            $review_of_system->hematologic ?? null,
+                            $review_of_system->endocrine ?? null,
+                            $review_of_system->psychiatric ?? null,
+                          ]);
+
+                        @endphp
+
+                        @if(!empty($review_system_array_filter))
+                            <script>
+                                $("#collapse_review_system").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_review_system']").on("click", function () {
+                                    $("#collapse_review_system").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
@@ -2131,6 +2302,25 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
+
+                        @php 
+                            $nutrition_stat_array_filter = array_filter([
+                              $nutritional_status->diet ?? null,
+                              $nutritional_status->specify_diets ?? null,
+                            ]);
+                        @endphp
+
+                        @if(!empty($nutrition_stat_array_filter))
+                            <script>
+                                $("#collapse_nutri_status").collapse('show');
+
+                                // Ensure button toggle works properly
+                                $(".btn[data-target='#collapse_nutri_status']").on("click", function () {
+                                    $("#collapse_nutri_status").collapse("toggle");
+                                });                            
+                            </script>
+                        @endif
+
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -2241,6 +2431,26 @@ $facilities = \App\Facility::select('id','name')
                                 document.getElementById('vital_bp_pregnant_info').value = systolic + '/' + diastolic;
                             }
                         </script>
+
+@php
+                            $glasgocoma_array_filter = array_filter([
+                                $glasgocoma_scale->pupil_size_chart ?? null,
+                                $glasgocoma_scale->motor_response ?? null,
+                                $glasgocoma_scale->verbal_response ?? null,
+                                $glasgocoma_scale->eye_response ?? null,
+                            ]);
+                            @endphp
+                            
+                            @if(!empty($glasgocoma_array_filter))
+                                <script>
+                                    $("#collapse_glasgow").collapse('show');
+
+                                    // Ensure button toggle works properly
+                                    $(".btn[data-target='#collapse_glasgow']").on("click", function () {
+                                        $("#collapse_glasgow").collapse("toggle");
+                                    });                            
+                                </script>
+                            @endif
 
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
@@ -2613,6 +2823,8 @@ $facilities = \App\Facility::select('id','name')
         $("#patient_treatment_give_time").collapse('show');
         $("#collapse_diagnosis_pregInfo").collapse('show');
         $("#collapse_reason_referral_pregInfo").collapse('show');
+        $("#collapse_vital_signs").collapse('show');
+        $("#collapse_medication").collapse('show');
 
         // Ensure button toggle works properly
         $(".btn[data-target='#patient_treatment_give_time']").on("click", function () {
@@ -2620,6 +2832,12 @@ $facilities = \App\Facility::select('id','name')
         });
         $(".btn[data-target='#collapse_diagnosis_pregInfo']").on("click", function () {
             $("#collapse_diagnosis_pregInfo").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_vital_signs']").on("click", function () {
+            $("#collapse_vital_signs").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_medication']").on("click", function () {
+            $("#collapse_medication").collapse("toggle");
         });
         $(".btn[data-target='#collapse_reason_referral_pregInfo']").on("click", function () {
             $("#collapse_reason_referral_pregInfo").collapse("toggle");
