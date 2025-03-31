@@ -573,7 +573,7 @@ $counter = 0;
                                         <i class="fa fa-stethoscope"></i>
                                         Walk-In
                                     </a>
-                                        @elseif ($user->facility_id == 63 && $row->sex=='Female' && $age >= 9)
+                                        @elseif ($row->sex=='Female' && $age >= 9)
                                         <a href="#pregnantModal"
                                                data-patient_id="{{ $row->id }}"
                                                data-backdrop="static"
@@ -609,7 +609,7 @@ $counter = 0;
                                                 Walk-In
                                             </a>
                                         
-                                    @elseif ($user->facility_id == 63 && $row->sex=='Male')
+                                    @elseif ($row->sex=='Male')
                                         <a href="#nonPregnantChooseVersionModal" 
                                             data-patient_id="{{ $row->id }}" 
                                             data-backdrop="static" 
@@ -629,7 +629,7 @@ $counter = 0;
                                             <i class="fa fa-stethoscope"></i>
                                             Walk-In
                                         </a>
-                                    @elseif ($user->facility_id == 63 && $row->sex=='Female' && $age <= 9)
+                                    @elseif ($row->sex=='Female' && $age <= 9)
                                     <a href="#pregnantchooseVersionModal" 
                                             data-patient_id="{{ $row->id }}" 
                                             data-backdrop="static" 
@@ -855,7 +855,7 @@ $counter = 0;
                 console.log("Facility ID: ", referred_facility);
         
                
-                if (referred_facility == 63) {
+                // if (referred_facility == 63) {
                     if (type == 'pregnant') {
                         $('#pregnantModal').modal('hide');
                         $('#pregnantchooseVersionModal').modal('show');
@@ -866,17 +866,17 @@ $counter = 0;
                         selectFormTitle("Clinical");
                         $('#baby_show').hide();
                     }
-                } else {
-                    if(type == "pregnant") {
-                        selectFormTitle("BEmONC/ CEmONC ");
-                        $('#pregnantFormModal').modal('show');
-                    } else if(type == "normal") {
-                        selectFormTitle("Clinical ");
-                        $('#normalFormModal').modal('show');
-                    }
-                    $('#menarche_show_normal').hide();
-                    $('#pedia_show_normal').hide();
-                }
+                // } else {
+                //     if(type == "pregnant") {
+                //         selectFormTitle("BEmONC/ CEmONC ");
+                //         $('#pregnantFormModal').modal('show');
+                //     } else if(type == "normal") {
+                //         selectFormTitle("Clinical ");
+                //         $('#normalFormModal').modal('show');
+                //     }
+                //     $('#menarche_show_normal').hide();
+                //     $('#pedia_show_normal').hide();
+                // }
         }
 
 
