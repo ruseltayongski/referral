@@ -421,6 +421,7 @@ Route::get('nvOGql1zXiEirNkXtPm7udIFsIaxBndB', 'ApiController@getIssue'); //GET 
 Route::get('q8d8Jh1KoC4ac6t1ksaGH0J4TcMTmazM/{offset}/{limit}', 'ApiController@getLogin'); //GET LOGIN
 Route::get('Rcha066KNYeBt10dvjgRjPPU04q4b9Ob', 'ApiController@getModeTransportation'); //GET MODE TRANSPORTATION
 Route::get('J9bXjSR50dZHHEuJ65qOLAWuor4x4Ztn', 'ApiController@getMuncity'); //GET MUNCITY
+Route::get('J9bXjSR50dZHHEuJ65qOLAWuorGLPAwew1', 'ApiController@getBarangay'); //GET BARANGAY
 Route::get('DOitGyz7gKVWWJ3IqjYA5ioLc1qbiEei/{offset}/{limit}', 'ApiController@getPatientForm'); //GET PATIENT FORM
 Route::get('WN3woYd8ZlxutRXg2B7Ud1qnEGqx7FSK/{offset}/{limit}', 'ApiController@getPatients'); //GET PATIENTS
 Route::get('Z9tE1ihdu37imqmVTSL3I8qOiotEwIla/{offset}/{limit}', 'ApiController@getPregnantForm'); //GET PREGNANT FORM
