@@ -630,7 +630,7 @@ $counter = 0;
                                             Walk-In
                                         </a>
                                     @elseif ($row->sex=='Female' && $age <= 9)
-                                    <a href="#pregnantchooseVersionModal" 
+                                    <a href="#nonPregnantChooseVersionModal" 
                                             data-patient_id="{{ $row->id }}" 
                                             data-backdrop="static" 
                                             data-toggle="modal" 

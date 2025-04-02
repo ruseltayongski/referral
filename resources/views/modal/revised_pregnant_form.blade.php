@@ -926,6 +926,31 @@
                                                 <input class="form-check-input" id="rs_skin_hairchange_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_hairchange_cbox" value="Yes">
                                                 <span> Change in hair or nails</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_abrasion_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_abrasion_cbox" value="Yes">
+                                                    <span> Abrasion</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_laceration_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_laceration_cbox" value="Yes">
+                                                    <span> Laceration</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_contusion_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_contusion_cbox" value="Yes">
+                                                    <span> Contusion (bruises)</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_avulsion_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_avulsion_cbox" value="Yes">
+                                                    <span> Avulsion</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_incision_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_incision_cbox" value="Yes">
+                                                    <span> Incision</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" name="rs_skin_others" id="rs_skin_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -2692,16 +2717,25 @@
     /* SKIN */
     $('#rs_skin_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant').prop('checked', true);
+            $('#rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant, #rs_skin_abrasion_cbox_pregnant, #rs_skin_laceration_cbox_pregnant, #rs_skin_contusion_cbox_pregnant, #rs_skin_avulsion_cbox_pregnant, #rs_skin_incision_cbox_pregnant').prop('checked', true);
             $('#rs_skin_none_cbox_pregnant').prop('checked', false);
         } else
-            $('#rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant').prop('checked', false);
+            $('#rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant,  #rs_skin_abrasion_cbox_pregnant, #rs_skin_laceration_cbox_pregnant, #rs_skin_contusion_cbox_pregnant, #rs_skin_avulsion_cbox_pregnant, #rs_skin_incision_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_skin_others_pregnant').hide(); 
+        $('#rs_skin_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_skin_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_skin_others_pregnant").val("");
+                $('#rs_skin_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
     $('#rs_skin_none_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_skin_all_cbox_pregnant, #rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant').prop('checked', false);
+            $('#rs_skin_all_cbox_pregnant, #rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant,  #rs_skin_abrasion_cbox_pregnant, #rs_skin_laceration_cbox_pregnant, #rs_skin_contusion_cbox_pregnant, #rs_skin_avulsion_cbox_pregnant, #rs_skin_incision_cbox_pregnant').prop('checked', false);
     });
-    $('#rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant').on('click', function() {
+    $('#rs_skin_rashes_cbox_pregnant, #rs_skin_itching_cbox_pregnant, #rs_skin_hairchange_cbox_pregnant,  #rs_skin_abrasion_cbox_pregnant, #rs_skin_laceration_cbox_pregnant, #rs_skin_contusion_cbox_pregnant, #rs_skin_avulsion_cbox_pregnant, #rs_skin_incision_cbox_pregnant').on('click', function() {
         $('#rs_skin_all_cbox_pregnant, #rs_skin_none_cbox_pregnant').prop('checked', false);
     });
 

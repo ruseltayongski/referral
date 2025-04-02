@@ -322,6 +322,24 @@ class NewFormCtrl extends Controller
             'Change in hair or nails' => [
                 'cbox' => 'rs_skin_hairchange_cbox',
             ],
+            'Abrasion' => [
+                'cbox' => 'rs_skin_abrasion_cbox'
+            ],
+            'Laceration' => [
+                'cbox' => 'rs_skin_laceration_cbox'
+            ],
+            'Contusion (bruises)' => [
+                'cbox' => 'rs_skin_contusion_cbox'
+            ],
+            'Avulsion' => [
+                'cbox' => 'rs_skin_avulsion_cbox'
+            ],
+            'Incision' => [
+                'cbox' => 'rs_skin_incision_cbox'
+            ],
+            'Others' => [
+                'cbox' => 'rs_skin_others_cbox'
+            ],
         ];
         $rs_head_fields = [
             'Select All' => [
@@ -1000,6 +1018,7 @@ class NewFormCtrl extends Controller
         $review_of_system = [
             'patient_id' => $patient_id,
             'skin' => $rs_skin_methods,
+            'skin_others' => $request->rs_skin_others,
             'head' => $rs_head_methods,
             'eyes' => $rs_eyes_methods,
             'ears' => $rs_ears_methods,
