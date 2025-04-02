@@ -1571,6 +1571,31 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="rs_skin_hairchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_hairchange_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Rashes'); ?>>
                                                 <span> Change in hair or nails</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_abrasion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_abrasion_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Abrasion'); ?>>
+                                                    <span> Abrasion</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_laceration_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_laceration_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Laceration'); ?>>
+                                                    <span> Laceration</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_contusion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_contusion_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Contusion (bruises)'); ?>>
+                                                    <span> Contusion (bruises)</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_avulsion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_avulsion_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Avulsion'); ?>>
+                                                    <span> Avulsion</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_incision_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_incision_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Incision'); ?>>
+                                                    <span> Incision</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_skin_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_others_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Others'); ?>>
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" name="rs_skin_others" id="rs_skin_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->skin_others); ?></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -3352,16 +3377,25 @@ $(document).ready(initializeGlasgowScale);
     /* SKIN */
     $('#rs_skin_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
-            $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', true);
+            $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox, #rs_skin_abrasion_cbox, #rs_skin_laceration_cbox, #rs_skin_contusion_cbox, #rs_skin_avulsion_cbox, #rs_skin_incision_cbox').prop('checked', true);
             $('#rs_skin_none_cbox').prop('checked', false);
         } else
-            $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
+            $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox, #rs_skin_abrasion_cbox, #rs_skin_laceration_cbox, #rs_skin_contusion_cbox, #rs_skin_avulsion_cbox, #rs_skin_incision_cbox').prop('checked', false);
     });
     $('#rs_skin_none_cbox').on('click', function() {
         if ($(this).is(':checked'))
-            $('#rs_skin_all_cbox, #rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').prop('checked', false);
+            $('#rs_skin_all_cbox, #rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox, #rs_skin_abrasion_cbox, #rs_skin_laceration_cbox, #rs_skin_contusion_cbox, #rs_skin_avulsion_cbox, #rs_skin_incision_cbox').prop('checked', false);
     });
-    $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox').on('click', function() {
+    $('#rs_skin_others').show(); 
+        $('#rs_skin_others_cbox').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_skin_others').show(); // Show when checked
+            } else {
+                $("#rs_skin_others").val("");
+                $('#rs_skin_others').hide(); // Hide when unchecked
+            }
+        });
+    $('#rs_skin_rashes_cbox, #rs_skin_itching_cbox, #rs_skin_hairchange_cbox, #rs_skin_abrasion_cbox, #rs_skin_laceration_cbox, #rs_skin_contusion_cbox, #rs_skin_avulsion_cbox, #rs_skin_incision_cbox').on('click', function() {
         $('#rs_skin_all_cbox, #rs_skin_none_cbox').prop('checked', false);
     });
 

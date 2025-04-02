@@ -301,7 +301,6 @@ $user = Session::get('auth');
                     $personal_and_social_history->illicit_drugs ?? null,
                     $personal_and_social_history->illicit_drugs_taken ?? null,
                     $personal_and_social_history->illicit_drugs_quit_year ?? null,
-                    $personal_and_social_history->current_medications ?? null,
                 ]);
                 $personal_history_validation_checker = !empty($personal_and_social_filter);
                 // GLASGOCOMA SCALE
@@ -679,6 +678,11 @@ $user = Session::get('auth');
             @if ($review_skin_null_checker)
             <tr>
             <td colspan="6">Skin:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_skin)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->skin_others))
+            <tr>
+            <td colspan="6">Skin Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->skin_others}}</span></td>
             </tr>
             @endif
             @if ($review_head_null_checker)

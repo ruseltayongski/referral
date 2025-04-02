@@ -179,7 +179,7 @@
     $review_hematologic = explodeToArray($review_of_system->hematologic);
     $review_endocrine = explodeToArray($review_of_system->endocrine);
     $review_psychiatric = explodeToArray($review_of_system->psychiatric);
-    // dd($past_medical_history);
+    // dd($review_of_system);
 
     // PAST MEDICAL HISTORY - NULL CHECKER VALIDATOR
     $commorbidities_null_checker = (!empty($past_medical_history->commordities));
@@ -187,28 +187,45 @@
     $heredofamilial_null_checker = (!empty($past_medical_history->heredofamilial_diseases));
     $validation_checker_past_medical_history = ($commorbidities_null_checker || $allergies_null_checker || $heredofamilial_null_checker);
     // REVIEW OF SYSTEMS - NULL CHECKER VALIDATOR
-    $review_skin_null_checker = (!empty($review_of_system->skin));
-    $review_head_null_checker = (!empty($review_of_system->head));
-    $review_eyes_null_checker = (!empty($review_of_system->eyes));
-    $review_ears_null_checker = (!empty($review_of_system->ears));
-    $review_nose_null_checker = (!empty($review_of_system->nose_or_sinuses));
-    $review_mouth_null_checker = (!empty($review_of_system->mouth_or_throat));
-    $review_neck_null_checker = (!empty($review_of_system->neck));
-    $review_breast_null_checker = (!empty($review_of_system->breast));
-    $review_respiratory_null_checker = (!empty($review_of_system->respiratory_or_cardiac));
-    $review_gastrointestinal_null_checker = (!empty($review_of_system->gastrointestinal));
-    $review_urinary_null_checker = (!empty($review_of_system->urinary));
-    $review_peripheral_null_checker = (!empty($review_of_system->peripheral_vascular));
-    $review_musculoskeletal_null_checker = (!empty($review_of_system->musculoskeletal));
-    $review_neurologic_null_checker = (!empty($review_of_system->neurologic));
-    $review_hematologic_null_checker = (!empty($review_of_system->hematologic));
-    $review_endocrine_null_checker = (!empty($review_of_system->endocrine));
-    $review_psychiatric_null_checker = (!empty($review_of_system->psychiatric));
-    $validation_checker_review_of_systems = ($review_skin_null_checker || $review_head_null_checker || $review_eyes_null_checker || $review_ears_null_checker
-    || $review_nose_null_checker || $review_mouth_null_checker || $review_neck_null_checker || $review_breast_null_checker || $review_respiratory_null_checker
-    || $review_gastrointestinal_null_checker || $review_urinary_null_checker || $review_peripheral_null_checker || $review_musculoskeletal_null_checker
-    || $review_neurologic_null_checker || $review_hematologic_null_checker || $review_endocrine_null_checker || $review_psychiatric_null_checker);
-
+   // REVIEW OF SYSTEMS - NULL CHECKER VALIDATOR
+   $review_skin_null_checker = (!empty($review_of_system->skin));
+   $review_head_null_checker = (!empty($review_of_system->head));
+   $review_eyes_null_checker = (!empty($review_of_system->eyes));
+   $review_ears_null_checker = (!empty($review_of_system->ears));
+   $review_nose_null_checker = (!empty($review_of_system->nose_or_sinuses));
+   $review_mouth_null_checker = (!empty($review_of_system->mouth_or_throat));
+   $review_neck_null_checker = (!empty($review_of_system->neck));
+   $review_breast_null_checker = (!empty($review_of_system->breast));
+   $review_respiratory_null_checker = (!empty($review_of_system->respiratory_or_cardiac));
+   $review_gastrointestinal_null_checker = (!empty($review_of_system->gastrointestinal));
+   $review_urinary_null_checker = (!empty($review_of_system->urinary));
+   $review_peripheral_null_checker = (!empty($review_of_system->peripheral_vascular));
+   $review_musculoskeletal_null_checker = (!empty($review_of_system->musculoskeletal));
+   $review_neurologic_null_checker = (!empty($review_of_system->neurologic));
+   $review_hematologic_null_checker = (!empty($review_of_system->hematologic));
+   $review_endocrine_null_checker = (!empty($review_of_system->endocrine));
+   $review_psychiatric_null_checker = (!empty($review_of_system->psychiatric));
+   $review_system_filter = array_filter([
+       $review_of_system->skin ?? null,
+       $review_of_system->skin_others ?? null,
+       $review_of_system->head ?? null,
+       $review_of_system->eyes ?? null,
+       $review_of_system->ears ?? null,
+       $review_of_system->nose_or_sinuses ?? null,
+       $review_of_system->mouth_or_throat ?? null,
+       $review_of_system->neck ?? null,
+       $review_of_system->breast ?? null,
+       $review_of_system->respiratory_or_cardiac ?? null,
+       $review_of_system->gastrointestinal ?? null,
+       $review_of_system->urinary ?? null,
+       $review_of_system->peripheral_vascular ?? null,
+       $review_of_system->musculoskeletal ?? null,
+       $review_of_system->neurologic ?? null,
+       $review_of_system->hematologic ?? null,
+       $review_of_system->endocrine ?? null,
+       $review_of_system->psychiatric ?? null,
+   ]);
+   $validation_checker_review_of_systems = !empty($review_system_filter);
     ?>
 
     @if(!empty($form->case_summary) || !empty($form->reco_summary))
@@ -653,7 +670,13 @@
             @if ($review_skin_null_checker)
             <tr>
             <td colspan="6">Skin:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_skin)}}</span></td>
+            </t>
+            @if (!empty($review_of_system->skin_others))
+            <tr>
+            <td colspan="6">Skin Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->skin_others}}</span></td>
             </tr>
+            @endif
+            
             @endif
             @if ($review_head_null_checker)
             <tr>

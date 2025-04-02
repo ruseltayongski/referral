@@ -112,11 +112,11 @@ class PrintNewFormCtrl extends Controller
     }
 
     public function printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type){
+        
         // DIAGNOSIS
-          if (!empty($data->other_diagnoses) || !empty($data->other_reason_referral)) {
+          if (!empty($data->other_diagnoses) || !empty($data->other_reason_referral) || !empty($data->diagnosis)) {
             $this->titleHeader($pdf, "DIAGNOSIS");
             if (isset($data->icd[0])) {
-                $pdf->MultiCell(0, 7, self::black($pdf, "ICD-10: "), 0, 'L');
                 $pdf->SetTextColor(102, 56, 0);
                 $pdf->SetFont('Arial', 'I', 10);
                 foreach ($data->icd as $icd) {
@@ -378,7 +378,7 @@ class PrintNewFormCtrl extends Controller
             $pdf->MultiCell(0, 7, "Pertinent Laboratory:" . self::green($pdf, $data->pertinent_laboratory_and_procedures, 'Pertinent Laboratory'), 1, 'L');
             if(!empty($data->lab_procedure_other)){$pdf->MultiCell(0, 7, "Other Procedures:" . self::green($pdf, $data->lab_procedure_other, 'Other Procedures'), 1, 'L');}
         }
-
+        
         // REVIEW OF SYSTEM
         if (!empty($data->skin) || !empty($data->head) || !empty($data->eyes) || !empty($data->ears) || !empty($data->nose_or_sinuses) || !empty($data->mouth_or_throat)
         || !empty($data->neck) || !empty($data->breast) || !empty($data->respiratory_or_cardiac) || !empty($data->gastrointestinal) || !empty($data->urinary)
@@ -386,6 +386,7 @@ class PrintNewFormCtrl extends Controller
         || !empty($data->endocrine) || !empty($data->psychiatric)){
             $this->titleHeader($pdf, "REVIEW OF SYSTEMS");
            if(!empty($data->skin)){$pdf->MultiCell(0, 7, "Skin:" . self::green($pdf, NewFormCtrl::explodeString($data->skin), 'Skin'), 1, 'L');}
+           if(!empty($data->skin_others)){$pdf->MultiCell(0, 7, "Skin Others:" . self::green($pdf, NewFormCtrl::explodeString($data->skin_others), 'Skin Others:'), 1, 'L');}
            if(!empty($data->head) ){$pdf->MultiCell(0, 7, "Head:" . self::green($pdf, NewFormCtrl::explodeString($data->head), 'Head'), 1, 'L');}
            if(!empty($data->eyes)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Eyes: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->eyes)), 1, 'L');}
            if(!empty($data->ears)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Ears: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->ears)), 1, 'L');}
