@@ -114,6 +114,7 @@ class PrintNewFormCtrl extends Controller
     public function printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type){
         
         // DIAGNOSIS
+      
           if (!empty($data->other_diagnoses) || !empty($data->other_reason_referral) || !empty($data->diagnosis)) {
             $this->titleHeader($pdf, "DIAGNOSIS");
             if (isset($data->icd[0])) {
@@ -125,12 +126,22 @@ class PrintNewFormCtrl extends Controller
                 }
                 $pdf->Ln();
             }
-            if (isset($data->diagnosis)) {
-                $pdf->SetTextColor(102, 56, 0);
-                $pdf->SetFont('Arial', 'I', 10);
-                if(!empty($data->diagnosis)){
-                    $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->diagnosis)), 1, 'L');}
-                $pdf->Ln();
+            if ($form_type == 'pregnant'){
+                if (isset($data->notes_diagnoses)) {
+                    $pdf->SetTextColor(102, 56, 0);
+                    $pdf->SetFont('Arial', 'I', 10);
+                    if(!empty($data->notes_diagnoses)){
+                        $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->notes_diagnoses)), 1, 'L');}
+                    $pdf->Ln();
+                }
+            }else if($form_type == 'normal'){
+                if (isset($data->diagnosis)) {
+                    $pdf->SetTextColor(102, 56, 0);
+                    $pdf->SetFont('Arial', 'I', 10);
+                    if(!empty($data->diagnosis)){
+                        $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->diagnosis)), 1, 'L');}
+                    $pdf->Ln();
+                }
             }
     
             if (isset($data->other_diagnoses)) {
