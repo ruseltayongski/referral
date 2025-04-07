@@ -856,9 +856,10 @@ $user = Session::get('auth');
             <td colspan="6"><i>AOG</i></td>
         </tr>
         @endif
+ 
         <tr>
-        @if($obstetric_and_gynecologic_aog_lnmp)<td colspan="3">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetetric_parity_date->parity_lnmp}}</span></td>@endif
-        @if($obstetric_and_gynecologic_aog_eutz)<td colspan="6">UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetetric_parity_date->parity_edc}}</span></td>@endif
+        @if($obstetric_and_gynecologic_aog_lnmp)<td colspan="3">LMP:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_lnmp}}</span></td>@endif
+        @if($obstetric_and_gynecologic_aog_eutz)<td colspan="6">UTZ:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$obstetric_and_gynecologic_history->aog_eutz}}</span></td>@endif
         </tr>
        
         <tr>
