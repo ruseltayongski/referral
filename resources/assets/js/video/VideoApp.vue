@@ -488,60 +488,57 @@ console.log("referring call duration:", this.referring_md);
   },
 };
 
-document.addEventListener("DOMContentLoaded", function () {
-    const draggableDiv = document.getElementById("draggable-div");
-    const telemedForm = document.querySelector(".telemedForm"); // Selects telemedForm by class
+// document.addEventListener("DOMContentLoaded", function () {
+//     const draggableDiv = document.getElementById("draggable-div");
+//     const telemedForm = document.querySelector(".telemedForm"); // Selects telemedForm by class
     
 
-    if (!draggableDiv || !telemedForm) {
-        console.error("❌ Error: Elements not found!");
-        return;
-    }
+//     if (!draggableDiv || !telemedForm) {
+//         console.error("❌ Error: Elements not found!");
+//         return;
+//     }
 
-    let isDragging = false;
-    let offsetX, offsetY;
+//     let isDragging = false;
+//     let offsetX, offsetY;
 
-    draggableDiv.addEventListener("mousedown", (event) => {
-        isDragging = true;
-        offsetX = event.clientX - draggableDiv.getBoundingClientRect().left;
-        offsetY = event.clientY - draggableDiv.getBoundingClientRect().top;
-        draggableDiv.style.opacity = "0.5"; // Optional visual effect
-    });
+//     draggableDiv.addEventListener("mousedown", (event) => {
+//         isDragging = true;
+//         offsetX = event.clientX - draggableDiv.getBoundingClientRect().left;
+//         offsetY = event.clientY - draggableDiv.getBoundingClientRect().top;
+//         draggableDiv.style.opacity = "0.5"; // Optional visual effect
+//     });
 
-    document.addEventListener("mousemove", (event) => {
-        if (!isDragging) return;
+//     document.addEventListener("mousemove", (event) => {
+//         if (!isDragging) return;
 
-        let newX = event.clientX - offsetX;
-        let newY = event.clientY - offsetY;
+//         let newX = event.clientX - offsetX;
+//         let newY = event.clientY - offsetY;
 
-        // Get bounding boxes
-        const telemedBounds = telemedForm.getBoundingClientRect();
-        const draggableBounds = draggableDiv.getBoundingClientRect();
+//         // Get bounding boxes
+//         const telemedBounds = telemedForm.getBoundingClientRect();
+//         const draggableBounds = draggableDiv.getBoundingClientRect();
 
-        // Check if the draggable div enters the telemedForm
-        if (
-            newX + draggableBounds.width > telemedBounds.left &&
-            newX < telemedBounds.right &&
-            newY + draggableBounds.height > telemedBounds.top &&
-            newY < telemedBounds.bottom
-        ) {
-            console.log("❌ Cannot move inside telemedForm!");
-            return;
-        }
+//         // Check if the draggable div enters the telemedForm
+//         if (
+//             newX + draggableBounds.width > telemedBounds.left &&
+//             newX < telemedBounds.right &&
+//             newY + draggableBounds.height > telemedBounds.top &&
+//             newY < telemedBounds.bottom
+//         ) {
+//             console.log("❌ Cannot move inside telemedForm!");
+//             return;
+//         }
 
-        draggableDiv.style.left = `${newX}px`;
-        draggableDiv.style.top = `${newY}px`;
-        draggableDiv.style.position = "absolute";
-    });
+//         draggableDiv.style.left = `${newX}px`;
+//         draggableDiv.style.top = `${newY}px`;
+//         draggableDiv.style.position = "absolute";
+//     });
 
-    document.addEventListener("mouseup", () => {
-        isDragging = false;
-        draggableDiv.style.opacity = "1"; // Reset opacity
-    });
-});
-
-
-
+//     document.addEventListener("mouseup", () => {
+//         isDragging = false;
+//         draggableDiv.style.opacity = "1"; // Reset opacity
+//     });
+// });
 
 </script>
 
@@ -703,7 +700,7 @@ document.addEventListener("DOMContentLoaded", function () {
               </div>
             </div>
           </Transition>
-          <div class="localPlayerDiv" id="draggable-div" draggable="true">
+          <div class="localPlayerDiv" id="draggable-div">
             <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2" draggable="true"/>
           </div>
         </div>

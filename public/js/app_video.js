@@ -23144,45 +23144,57 @@ var doctorFeedback = "referral/doctor/feedback";
     }
   }
 });
-document.addEventListener("DOMContentLoaded", function () {
-  var draggableDiv = document.getElementById("draggable-div");
-  var telemedForm = document.querySelector(".telemedForm"); // Selects telemedForm by class
 
-  if (!draggableDiv || !telemedForm) {
-    console.error("❌ Error: Elements not found!");
-    return;
-  }
-  var isDragging = false;
-  var offsetX, offsetY;
-  draggableDiv.addEventListener("mousedown", function (event) {
-    isDragging = true;
-    offsetX = event.clientX - draggableDiv.getBoundingClientRect().left;
-    offsetY = event.clientY - draggableDiv.getBoundingClientRect().top;
-    draggableDiv.style.opacity = "0.5"; // Optional visual effect
-  });
-  document.addEventListener("mousemove", function (event) {
-    if (!isDragging) return;
-    var newX = event.clientX - offsetX;
-    var newY = event.clientY - offsetY;
+// document.addEventListener("DOMContentLoaded", function () {
+//     const draggableDiv = document.getElementById("draggable-div");
+//     const telemedForm = document.querySelector(".telemedForm"); // Selects telemedForm by class
 
-    // Get bounding boxes
-    var telemedBounds = telemedForm.getBoundingClientRect();
-    var draggableBounds = draggableDiv.getBoundingClientRect();
+//     if (!draggableDiv || !telemedForm) {
+//         console.error("❌ Error: Elements not found!");
+//         return;
+//     }
 
-    // Check if the draggable div enters the telemedForm
-    if (newX + draggableBounds.width > telemedBounds.left && newX < telemedBounds.right && newY + draggableBounds.height > telemedBounds.top && newY < telemedBounds.bottom) {
-      console.log("❌ Cannot move inside telemedForm!");
-      return;
-    }
-    draggableDiv.style.left = "".concat(newX, "px");
-    draggableDiv.style.top = "".concat(newY, "px");
-    draggableDiv.style.position = "absolute";
-  });
-  document.addEventListener("mouseup", function () {
-    isDragging = false;
-    draggableDiv.style.opacity = "1"; // Reset opacity
-  });
-});
+//     let isDragging = false;
+//     let offsetX, offsetY;
+
+//     draggableDiv.addEventListener("mousedown", (event) => {
+//         isDragging = true;
+//         offsetX = event.clientX - draggableDiv.getBoundingClientRect().left;
+//         offsetY = event.clientY - draggableDiv.getBoundingClientRect().top;
+//         draggableDiv.style.opacity = "0.5"; // Optional visual effect
+//     });
+
+//     document.addEventListener("mousemove", (event) => {
+//         if (!isDragging) return;
+
+//         let newX = event.clientX - offsetX;
+//         let newY = event.clientY - offsetY;
+
+//         // Get bounding boxes
+//         const telemedBounds = telemedForm.getBoundingClientRect();
+//         const draggableBounds = draggableDiv.getBoundingClientRect();
+
+//         // Check if the draggable div enters the telemedForm
+//         if (
+//             newX + draggableBounds.width > telemedBounds.left &&
+//             newX < telemedBounds.right &&
+//             newY + draggableBounds.height > telemedBounds.top &&
+//             newY < telemedBounds.bottom
+//         ) {
+//             console.log("❌ Cannot move inside telemedForm!");
+//             return;
+//         }
+
+//         draggableDiv.style.left = `${newX}px`;
+//         draggableDiv.style.top = `${newY}px`;
+//         draggableDiv.style.position = "absolute";
+//     });
+
+//     document.addEventListener("mouseup", () => {
+//         isDragging = false;
+//         draggableDiv.style.opacity = "1"; // Reset opacity
+//     });
+// });
 
 /***/ }),
 
@@ -23582,8 +23594,7 @@ var _hoisted_23 = {
 var _hoisted_24 = ["data-code"];
 var _hoisted_25 = {
   "class": "localPlayerDiv",
-  id: "draggable-div",
-  draggable: "true"
+  id: "draggable-div"
 };
 var _hoisted_26 = ["src"];
 var _hoisted_27 = {
