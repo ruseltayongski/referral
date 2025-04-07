@@ -639,7 +639,7 @@
             'L' => $obstetric_and_gynecologic_history->parity_l ?? '',
             'LMP' => $obstetetric_parity_date->parity_lnmp ?? '',
             'EDC' => $obstetetric_parity_date->parity_edc ?? '',
-            'AOG by LMP' => $formatted_LMP ?? '',
+            'AOG by LMP' => $obstetric_and_gynecologic_history->aog_eutz ?? '',
             'AOG by UTZ' => $obstetric_and_gynecologic_history->aog_eutz ?? '',
             'Prenatal History' => $obstetric_and_gynecologic_history->prenatal_history ?? '',
         ];
