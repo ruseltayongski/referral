@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class UserCtrl extends Controller
 {
@@ -84,6 +85,8 @@ class UserCtrl extends Controller
 
     public function store(Request $req)
     {
+
+        $otherDepartments = implode(',', $req->input('other_department_id', []));
         $user = Session::get('auth');
         $match = array(
             'fname' => $req->fname,
@@ -101,6 +104,7 @@ class UserCtrl extends Controller
             'email' => $req->email,
             'designation' => $req->designation,
             'department_id' => $req->department_id,
+            'other_department_telemed' => $otherDepartments,
             'subopd_id' => $req->opdSub_id,
             'username' => $req->username,
             'password' => bcrypt($req->password),
@@ -147,6 +151,10 @@ class UserCtrl extends Controller
 
     public function update(Request $req)
     {
+        $edit_other_departments = $req->input('edit_other_department_id');
+    
+        $other_department_telemed = implode(',', $edit_other_departments);
+
         $user = Session::get('auth');
         $facility = Facility::find($user->facility_id);
         $data = array(
@@ -158,6 +166,7 @@ class UserCtrl extends Controller
             'email' => ($req->email) ? $req->email: 'N/A',
             'designation' => $req->designation,
             'department_id' => $req->department_id,
+            'other_department_telemed' => $other_department_telemed, 
             'subopd_id' => $req->editopdSub_id,
             'username' => $req->username,
             'status' => $req->status,

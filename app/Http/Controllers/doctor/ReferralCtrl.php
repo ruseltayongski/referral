@@ -75,7 +75,8 @@ class ReferralCtrl extends Controller
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
         $user = Session::get('auth');
-        
+ 
+        $allowedDepartments = explode(',', $settings->other_department_telemed);
         $telemedOrReferral = $request->filterRef;
        
         $data = Tracking::select(
@@ -114,10 +115,10 @@ class ReferralCtrl extends Controller
                     ->orwhere('tracking.code',"$keyword");
             });
         }
-       
         if($request->department_filter)
         {
             $dept = $request->department_filter;
+            
             $data = $data->where('tracking.department_id',$dept);
         }
 

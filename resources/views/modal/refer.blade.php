@@ -194,12 +194,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('telemedicineFollowupForm').addEventListener('submit', function(event) {
         var filesInput = document.getElementById('file-input');
-        if(filesInput.files.length === 0){
-            event.preventDefault();
-            $("#err-msgpdf").html("Please select at least one file.");
-            $("#err-msgpdf").css('color', 'red');
-            return;
-        }
+        // if(filesInput.files.length === 0){
+        //     event.preventDefault();
+        //     $("#err-msgpdf").html("Please select at least one file.");
+        //     $("#err-msgpdf").css('color', 'red');
+        //     return;
+        // }
         $("#telemedicineFollowupFormModal").modal('hide');
     });
 

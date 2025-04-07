@@ -125,7 +125,7 @@
         $user = Session::get('auth');
         $department_id = $user->department_id;
         $department = null;
-
+        $departmentId = null;
         $getSubOpd = \App\SubOpd::find($user->subopd_id);
        
         $Getdepartment = \App\Department::select('id','description')->get();   
@@ -135,6 +135,7 @@
         foreach ($Getdepartment as $row) {
             if($user->department_id === $row->id){
                 $department = $row->description;
+                $departmentId = $row->id;
                 break;
             }
         } 
@@ -333,12 +334,7 @@
                                         @endforeach
 
                                         <label for="department_id">Department:</label>
-                                        @if($department == 'OPD')
-                                            <input type="text" class="form-control" name="department_id" id="department_id" value="{{ $department }}" readonly>
-                                        @else
-                                            <div class="alert-department" data-department="{{ $department }}"></div>
-                                        @endif
-
+                                        <input type="text" class="form-control" name="department_id alert-department"  data-department="{{ $department }}" data-subopd="{{$getSubOpd->id }}"  id="department_id"  value="{{ $department }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -395,12 +391,8 @@
                                         @endforeach
 
                                         <label for="department_id">Department:</label>
-                                        @if($department == 'OPD')
-                                            <input type="text" class="form-control" name="department_id" id="department_id" value="{{ $department }}" readonly>
-                                        @else
-                                            <div class="alert-department" data-department="{{ $department }}"></div>
-                                        @endif
-
+                                        <input type="text" class="form-control alert-department" data-department="{{ $department }}" data-subopd="{{$getSubOpd->id }}" name="department_id" id="department_id" value="{{ $department }}" readonly>
+                                    
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -745,34 +737,54 @@
         //---------------- for Config-Appointment ---------------//
 
         // function UpdateModal(appointmentId) {
+            var subOpdId = '{{ $getSubOpd->id }}'; 
+            var departmentId = '{{ $departmentId }}';
         $(document).ready(function() {
-            let shownDepartments = new Set();
+        
+            if ((!subOpdId && departmentId != 5)) {
+                Lobibox.alert('error', {
+                    msg: 'Only the Opd Department is allowed to create appointments.',
+                    closeOnEsc: true,
+                    closeButton: true,
+                    callback: function() {
+                        $('#addAppointmentModal').modal('hide');
+                        $('#updateConfirmationModal').modal('hide');
+                        $('#deleteConfirmationModal').modal('hide');
+                    }
+                });
 
-            $('.alert-department').each(function() {
-                var departmentName = $(this).data('department');
+                // Disable the appointment button
+                $('#add-appointment').prop('disabled', true);
+            }
 
-                console.log("departmentName", departmentName);
+            // let shownDepartments = new Set();
 
-                if(departmentName && !shownDepartments.has(departmentName)){
+            // $('.alert-department').each(function() {
+            //     var departmentName = $(this).data('department');
+            //     var subdescription = $(this).data('subopd');
 
-                    shownDepartments.add(departmentName);
+            //     console.log("departmentName", departmentName, subdescription);
 
-                    Lobibox.alert('error', {
-                        msg: 'Only the Opd Department is allowed to create appointments. Department: ' + departmentName + ' is not allowed.',
-                        closeOnEsc: true,
-                        closeButton: true,
-                        callback: function() {
-                            $('#addAppointmentModal').modal('hide');
-                            $('#updateConfirmationModal').modal('hide');
-                            $('#deleteConfirmationModal').modal('hide');
-                        }
-                    });
+            //     if(!subdescription || departmentName && !shownDepartments.has(departmentName)){
 
-                    $('#add-appointment').prop('disabled', true);
-                }
+            //         shownDepartments.add(departmentName);
+
+            //         Lobibox.alert('error', {
+            //             msg: 'Only the Opd Department is allowed to create appointments.',
+            //             closeOnEsc: true,
+            //             closeButton: true,
+            //             callback: function() {
+            //                 $('#addAppointmentModal').modal('hide');
+            //                 $('#updateConfirmationModal').modal('hide');
+            //                 $('#deleteConfirmationModal').modal('hide');
+            //             }
+            //         });
+
+            //         $('#add-appointment').prop('disabled', true);
+            //     }
            
-            });
-            shownDepartments.clear();
+            // });
+            // shownDepartments.clear();
 
             // $('#addAppointmentModal').on('show.bs.modal', function () {
             //     var departmentName = $('.alert-department').data('department');

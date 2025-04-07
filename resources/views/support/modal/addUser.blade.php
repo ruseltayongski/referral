@@ -40,7 +40,7 @@
                     </div>
                     <div class="form-group">
                         <label>Department:</label>
-                        <select class="form-control select2" name="department_id" id="deparment_select" required>
+                        <select class="form-control" name="department_id" id="department_select" required>
                             <option value="">Select Department...</option>
                             @foreach($departments as $dept)
                                 $depatment_id = $dept->id;
@@ -49,6 +49,23 @@
                         </select>
                     </div>
                     <div class="form-group" id="subOpdSection" style="display: none;">
+                        <label>Sub Opd:</label>
+                        <select class="form-control select2" name="opdSub_id">
+                            <option value="">Select Sub Opd...</option>
+                            @forEach($opdSub as $opd)
+                                    <option value="{{ $opd->id }}">{{ $opd->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Other Department:</label>
+                        <select class="form-control" name="other_department_id[]" id="other_department_select" multiple>
+                            @foreach($departments as $dept)
+                                <option value="{{ $dept->id }}">{{ $dept->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group" id="othersubOpdSection" style="display: none;">
                         <label>Sub Opd:</label>
                         <select class="form-control select2" name="opdSub_id">
                             <option value="">Select Sub Opd...</option>
@@ -157,7 +174,23 @@
                             @endforeach
                         </select>
                     </div>
-
+                    <div class="form-group">
+                        <label>Other Department:</label>
+                        <select class="form-control select2 edit_other_department_select" name="edit_other_department_id[]" id="edit_other_department_select" multiple="multiple">
+                            @foreach($departments as $dept)
+                                    <option value="{{ $dept->id }}">{{ $dept->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group" id="othereditsubOpdSection" style="display: none;">
+                        <label>Sub Opd:</label>
+                        <select class="form-control subOpdCateg" name="editopdSub_id" id="other_editsubOpdSelect">
+                            <option value="">Select Sub Opd...</option>
+                            @forEach($opdSub as $opd)
+                                    <option value="{{ $opd->id }}">{{ $opd->description }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                     <hr />
                     <div class="form-group">
                         <label>Status:</label>
@@ -207,3 +240,49 @@
         </form>
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+
+<script>
+
+$(document).ready(function() {
+
+    function updateOtherDepartmentOptions() {
+        var selectedDept = $('#department_select').val(); // Get selected department ID
+
+        // Reset all options first
+        $('#other_department_select option').prop('disabled', false);
+
+        if (selectedDept) {
+            // Disable the selected department in the "Other Department" dropdown
+            $('#other_department_select option[value="' + selectedDept + '"]').prop('disabled', true);
+            
+            // If the option was previously selected, remove it from selection
+            var currentSelections = $('#other_department_select').val() || [];
+            if (currentSelections.includes(selectedDept)) {
+                currentSelections = currentSelections.filter(id => id !== selectedDept);
+                $('#other_department_select').val(currentSelections);
+            }
+        }
+        
+        // Refresh Select2 to reflect changes
+        $('#other_department_select').trigger('change.select2');
+    }
+
+    // Run when department selection changes
+    $('#department_select').on('change', function() {
+        updateOtherDepartmentOptions();
+    });
+
+    // Run once on page load
+    updateOtherDepartmentOptions();
+
+      // Initialize Select2 for both dropdowns with explicit width
+    $('.select2').select2({
+            placeholder: "Select...",
+            allowClear: true,
+            width: '100%'
+        });
+
+});
+
+</script>
