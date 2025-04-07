@@ -488,29 +488,24 @@ class PatientCtrl extends Controller
         // return;
         if ($req->telemedicine) {
 
-            if($req->configId){
-                $configTimeSlot = new TelemedAssignDoctor();
-                $facility_id = $req->facility_id;
-                $configTimeSlot->appointment_id = $req->appointmentId;
-                $configTimeSlot->appointed_date = $req->config_appointedDate;
-                $configTimeSlot->start_time = $req->configTimeFrom;
-                $configTimeSlot->end_time = $req->configtimeto;
-                $configTimeSlot->save();
+            if($req->appointmentId){
+                $telemed_assigned = new TelemedAssignDoctor();
+                $telemed_assigned->appointment_id = $req->appointmentId;
+                $telemed_assigned->save();
 
                 $asigned_doctorId = $configTimeSlot->id;
-            } else {
-                $check_appointment_slot = AppointmentSchedule::find($req->appointmentId)->slot;
-                $check_tracking_slot = Tracking::where('appointmentId', $req->appointmentId)->count();
-                if($check_tracking_slot >= $check_appointment_slot) {
-                    return 'consultation_rejected';
-                }
+            } 
+                // $check_appointment_slot = AppointmentSchedule::find($req->appointmentId)->slot;
+                // $check_tracking_slot = Tracking::where('appointmentId', $req->appointmentId)->count();
+                // if($check_tracking_slot >= $check_appointment_slot) {
+                //     return 'consultation_rejected';
+                // }
                 // $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id', $req->appointmentId)->where('doctor_id', $req->doctorId)->first();
                 // if ($telemedAssignDoctor->appointment_by) {
                 //     return 'consultation_rejected';
                 // }
                 // $telemedAssignDoctor->appointment_by = $user->id;
                 // $telemedAssignDoctor->save();
-            }
         }
 
         $patient_id = $req->patient_id;
