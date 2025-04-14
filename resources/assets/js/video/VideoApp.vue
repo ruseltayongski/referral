@@ -5,6 +5,7 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue";
 import FeedbackModal from "./FeedbackModal.vue";
+import PDFViewerModal from "./PDFViewerModal.vue";
 
 let baseUrlfeedback = `referral/doctor/vue/feedback`;
 let doctorFeedback = `referral/doctor/feedback`
@@ -14,6 +15,7 @@ export default {
     PrescriptionModal,
     LabRequestModal,
     FeedbackModal,
+    PDFViewerModal,
   },
   data() {
     return {
@@ -85,6 +87,9 @@ export default {
       showDiv: false,
       form_type: "normal",
       reco_count : $("#reco_count_val").val(),
+
+       PdfUrl: '',
+
     };
   },
   mounted() {
@@ -118,10 +123,19 @@ export default {
 
     //this.hideDivAfterTimeout();
     window.addEventListener("click", this.showDivAgain);
+    
+    //******************************************** start here */
+     // Add window resize event listener
+     window.addEventListener('resize', this.handleResize);
+    // Call once to set initial sizing
+    this.handleResize();
+
   },
 
   beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
+     // Remove event listener when component is destroyed
+     window.removeEventListener('resize', this.handleResize);
   },
   props: ["user"],
   created() {
@@ -397,28 +411,25 @@ console.log("referring call duration:", this.referring_md);
     //--------------------------------------------------------------------------
 
     generatePrescription() {
-      const getPrescription = {
-        code: this.referral_code,
-        form_type: this.form_type,
-        tracking_id: this.tracking_id,
-      };
-      console.log(getPrescription);
+    const getPrescription = {
+      code: this.referral_code,
+      form_type: this.form_type,
+      tracking_id: this.tracking_id,
+    };
 
-      axios
+    axios
         .post(`${this.baseUrl}/api/video/prescription/check`, getPrescription)
         .then((response) => {
-          console.log(response);
           if (response.data.status === "success") {
-            const prescriptions =
-              response.data.prescriptions[0].prescribed_activity_id;
+            const prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
 
-            console.log("Prescriptions:", prescriptions);
+            // Set the PDF URL
+            this.PdfUrl = `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`;
 
-            const prescribedActivityId = prescriptions;
-            window.open(
-              `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`,
-              "_blank"
-            );
+            // Show the modal using the ref method
+            this.$nextTick(() => {
+              this.$refs.pdfViewer.openModal();
+            });
           } else {
             Lobibox.alert("error", {
               msg: "No added prescription!",
@@ -426,7 +437,7 @@ console.log("referring call duration:", this.referring_md);
           }
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     },
     generateLabrequest() {
@@ -434,13 +445,20 @@ console.log("referring call duration:", this.referring_md);
         const payload = {
           activity_id: this.activity_id 
         };
-       
-         axios
+
+      axios
         .post(url, payload)
         .then((response) => {
           if (response.data.id) {
             const pdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
-            window.open(pdfUrl, "_blank"); // Opens the PDF in a new tab
+            
+            // Set the PDF URL for the modal
+            this.PdfUrl = pdfUrl;
+
+            // Show the PDF in the custom modal
+            this.$nextTick(() => {
+              this.$refs.pdfViewer.openModal();
+            });
           } else {
             Lobibox.alert("error", {
               msg: "No lab request has been created by the referred doctor",
@@ -451,7 +469,6 @@ console.log("referring call duration:", this.referring_md);
           console.log(error);
         });
     },
-
     endorseUpward() {
       let self = this;
       Lobibox.confirm({
@@ -486,73 +503,728 @@ console.log("referring call duration:", this.referring_md);
       console.log("lab request");
     },
   },
+ // ************************************************************************************* start here
+  handleResize() {
+    // Get current window dimensions
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+      const isLandscape = windowWidth > windowHeight;
+      
+      // Detect device type for more specific adjustments
+      const isMobile = windowWidth < 768;
+      const isTablet = windowWidth >= 768 && windowWidth < 1024;
+      const isDesktop = windowWidth >= 1024;
+      
+      // Log resize information for debugging
+      console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
+      
+      // Apply layout adjustments based on screen size
+      if (isMobile) {
+        // Mobile specific adjustments
+        this.applyMobileLayout(isLandscape);
+      } else if (isTablet) {
+        // Tablet specific adjustments
+        this.applyTabletLayout(isLandscape);
+      } else {
+        // Desktop specific adjustments
+        this.applyDesktopLayout();
+      }
+      
+      // Adjust video and container sizes
+      this.adjustVideoSize();
+      
+      // Ensure draggable element stays within bounds after resize
+      this.enforceContainerBounds();
+      
+      // Recalculate any dynamic UI elements
+      this.updateUIElementsPositions();
+    },
+    adjustVideoSize() {
+      // Example: Get window dimensions and adjust component sizes
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+      
+      // You can use these dimensions to dynamically set sizes
+      // This is an example - adjust based on your specific needs
+      const remoteVideo = document.querySelector('.remotePlayerDiv');
+      if (remoteVideo) {
+        // Example adjustment - customize as needed
+        const isLandscape = windowWidth > windowHeight;
+        if (isLandscape && windowWidth < 1200) {
+          // Adjust remote video container
+          if (remoteVideo) {
+            remoteVideo.style.height = 'auto';
+            remoteVideo.style.maxHeight = '60vh';
+          }
+          
+          // Adjust the tooltip container positioning
+          const tooltipContainer = document.querySelector('.tooltip-container');
+          if (tooltipContainer) {
+            tooltipContainer.style.bottom = '5px';
+            tooltipContainer.style.left = '50%';
+            tooltipContainer.style.transform = 'translateX(-50%)';
+          }
+          
+          // Make buttons in the control panel smaller
+          const buttons = document.querySelectorAll('.iconCall button');
+          buttons.forEach(button => {
+            button.classList.remove('btn-md');
+            button.classList.add('btn-sm');
+          });
+          
+          // Adjust local video position and size
+          const localVideo = document.getElementById('draggable-div');
+          if (localVideo) {
+            localVideo.style.width = '20%'; // Smaller width
+            localVideo.style.maxWidth = '120px';
+            
+            // Reposition to a good default spot
+            this.xOffset = windowWidth * 0.75;
+            this.yOffset = windowHeight * 0.15;
+            this.setTranslate(this.xOffset, this.yOffset, localVideo);
+          }
+          
+          // Adjust form layout
+          const formContainer = document.querySelector('.form-container');
+          if (formContainer) {
+            formContainer.style.width = '100%';
+            formContainer.style.maxHeight = '50vh';
+          }
+          
+          // Make the main container flex direction change for better display
+          const mainContainer = document.querySelector('.main-container');
+          if (mainContainer) {
+            mainContainer.style.flexDirection = 'column';
+          }
+          
+          // Adjust form text to be more readable on small screens
+          const formDetails = document.querySelectorAll('.forDetails, .caseforDetails, .recoSummary, .mdHcw');
+          formDetails.forEach(element => {
+            element.style.fontSize = '0.9rem';
+          });
+        }
+      }
+    },
+    applyMobileLayout(isLandscape) {
+    // Get elements
+    const mainContainer = document.querySelector('.main-container');
+    const videoContainer = document.querySelector('.video-container');
+    const formContainer = document.querySelector('.form-container');
+    const iconCalls = document.querySelector('.iconCall');
+    
+    if (mainContainer) {
+      // Set direction based on orientation
+      mainContainer.style.flexDirection = isLandscape ? 'row' : 'column';
+    }
+    
+    if (videoContainer) {
+      videoContainer.style.height = isLandscape ? '100vh' : '40vh';
+      videoContainer.style.width = isLandscape ? '50%' : '100%';
+    }
+    
+    if (formContainer) {
+      formContainer.style.height = isLandscape ? '100vh' : '60vh';
+      formContainer.style.width = isLandscape ? '50%' : '100%';
+      formContainer.style.overflow = 'auto';
+    }
+    
+    if (iconCalls) {
+      // Make buttons smaller on mobile
+      const buttons = iconCalls.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.classList.remove('btn-md');
+        button.classList.add('btn-sm');
+        // Add some spacing between buttons on small screens
+        button.style.margin = '0 2px';
+      });
+    }
+  },
+
+  applyTabletLayout(isLandscape) {
+    // Get elements
+    const mainContainer = document.querySelector('.main-container');
+    const videoContainer = document.querySelector('.video-container');
+    const formContainer = document.querySelector('.form-container');
+    
+    if (mainContainer) {
+      mainContainer.style.flexDirection = isLandscape ? 'row' : 'column';
+    }
+    
+    if (videoContainer) {
+      videoContainer.style.height = isLandscape ? '100vh' : '50vh';
+      videoContainer.style.width = isLandscape ? '50%' : '100%';
+    }
+    
+    if (formContainer) {
+      formContainer.style.height = isLandscape ? '100vh' : '50vh';
+      formContainer.style.width = isLandscape ? '50%' : '100%';
+    }
+  },
+
+  applyDesktopLayout() {
+    // Get elements
+    const mainContainer = document.querySelector('.main-container');
+    const videoContainer = document.querySelector('.video-container');
+    const formContainer = document.querySelector('.form-container');
+    
+    if (mainContainer) {
+      mainContainer.style.flexDirection = 'row';
+    }
+    
+    if (videoContainer) {
+      videoContainer.style.height = '100vh';
+      videoContainer.style.width = '50%';
+    }
+    
+    if (formContainer) {
+      formContainer.style.height = '100vh';
+      formContainer.style.width = '50%';
+    }
+  },
+
+  enforceContainerBounds() {
+    // Ensure draggable element stays within bounds after resize
+    if (this.draggableDiv) {
+      const containerRect = document.querySelector('.mainPic').getBoundingClientRect();
+      const draggableRect = this.draggableDiv.getBoundingClientRect();
+      
+      // Check if draggable element is outside bounds
+      if (this.xOffset > containerRect.width - draggableRect.width) {
+        this.xOffset = containerRect.width - draggableRect.width;
+      }
+      
+      if (this.yOffset > containerRect.height - draggableRect.height) {
+        this.yOffset = containerRect.height - draggableRect.height;
+      }
+      
+      // Apply corrected position
+      this.setTranslate(this.xOffset, this.yOffset, this.draggableDiv);
+    }
+  },
+
+  updateUIElementsPositions() {
+    // Update positions of dynamic UI elements like tooltips
+    const tooltipContainer = document.querySelector('.tooltip-container');
+    if (tooltipContainer) {
+      const windowWidth = window.innerWidth;
+      
+      if (windowWidth < 768) {
+        // Center at bottom for mobile
+        tooltipContainer.style.bottom = '10px';
+        tooltipContainer.style.left = '50%';
+        tooltipContainer.style.transform = 'translateX(-50%)';
+      } else {
+        // Default position for larger screens
+        tooltipContainer.style.bottom = '20px';
+        tooltipContainer.style.left = '20px';
+        tooltipContainer.style.transform = 'none';
+      }
+    }
+  },
+
+  // Telemedicine Responsiveness
+
+  updateTelemedFormResponsiveness() {
+  const telemedForm = document.querySelector('.telemedForm');
+  const formScrollable = document.querySelector('.form-scrollable');
+  const formTable = document.querySelector('.formTable');
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  const isLandscape = windowWidth > windowHeight;
+
+  if (!telemedForm) return;
+
+  // Adjust the telemedForm container based on device size
+    if (windowWidth < 768) { // Mobile
+      telemedForm.style.height = isLandscape ? '100%' : '100%';
+      telemedForm.style.maxHeight = isLandscape ? '100vh' : '60vh';
+      telemedForm.style.overflowY = 'auto';
+      telemedForm.style.padding = '10px';
+      
+      if (formScrollable) {
+        formScrollable.style.maxHeight = isLandscape ? '90vh' : '55vh';
+      }
+
+      // Adjust text sizes for mobile
+      if (formTable) {
+        formTable.style.fontSize = '0.85rem';
+      }
+
+      // Adjust form details text for better readability
+      const formDetails = document.querySelectorAll('.forDetails, .caseforDetails, .recoSummary, .mdHcw');
+      formDetails.forEach(element => {
+        element.style.fontSize = '0.85rem';
+        element.style.lineHeight = '1.3';
+      });
+
+      // Make header smaller on mobile
+      const formHeader = document.querySelector('.formHeader');
+      if (formHeader) {
+        formHeader.style.fontSize = '0.8rem';
+        formHeader.querySelectorAll('p').forEach(p => {
+          p.style.margin = '0 0 2px 0';
+        });
+      }
+
+      // Adjust logo size
+      const dohLogo = document.querySelector('.dohLogo');
+      if (dohLogo) {
+        dohLogo.style.maxWidth = '40px';
+      }
+    } else if (windowWidth < 1024) { // Tablet
+      telemedForm.style.height = '100%';
+      telemedForm.style.maxHeight = '100vh';
+      telemedForm.style.overflowY = 'auto';
+      telemedForm.style.padding = '5px';
+      
+      if (formScrollable) {
+        formScrollable.style.maxHeight = '92vh';
+      }
+
+      // Adjust text sizes for tablet
+      if (formTable) {
+        formTable.style.fontSize = '0.9rem';
+      }
+
+      const formDetails = document.querySelectorAll('.forDetails, .caseforDetails, .recoSummary, .mdHcw');
+      formDetails.forEach(element => {
+        element.style.fontSize = '0.9rem';
+      });
+    } else { // Desktop
+      telemedForm.style.height = '100%';
+      telemedForm.style.maxHeight = '100vh';
+      telemedForm.style.overflowY = 'auto';
+      telemedForm.style.padding = '10px';
+      
+      if (formScrollable) {
+        formScrollable.style.maxHeight = '95vh';
+      }
+
+      // Reset text sizes for desktop
+      if (formTable) {
+        formTable.style.fontSize = '1rem';
+      }
+
+      const formDetails = document.querySelectorAll('.forDetails, .caseforDetails, .recoSummary, .mdHcw');
+      formDetails.forEach(element => {
+        element.style.fontSize = '1rem';
+      });
+    }
+    
+    // Apply specific adjustments for the table and buttons
+    this.adjustTableLayout();
+    this.adjustFormButtons();
+  },
+
+  // Handle table layout specifically
+  adjustTableLayout() {
+    const formTable = document.querySelector('.formTable');
+    const windowWidth = window.innerWidth;
+    
+    if (!formTable) return;
+    
+    if (windowWidth < 768) {
+      // Mobile table layout
+      formTable.style.width = '100%';
+      formTable.style.tableLayout = 'fixed';
+      
+      // Make sure long content wraps properly
+      const tableCells = formTable.querySelectorAll('td');
+      tableCells.forEach(cell => {
+        cell.style.wordBreak = 'break-word';
+        cell.style.overflowWrap = 'break-word';
+        cell.style.padding = '8px 5px';
+      });
+    } else {
+      // Desktop/tablet table layout
+      formTable.style.width = '100%';
+      formTable.style.tableLayout = 'fixed';
+      
+      const tableCells = formTable.querySelectorAll('td');
+      tableCells.forEach(cell => {
+        cell.style.padding = '10px 8px';
+        cell.style.wordBreak = 'normal';
+      });
+    }
+  },
+
+  // Adjust form buttons to be more responsive
+  adjustFormButtons() {
+    const buttonRow = document.querySelector('.row.g-0');
+    const windowWidth = window.innerWidth;
+    
+    if (!buttonRow) return;
+    
+    if (windowWidth < 576) {
+      // Stack buttons on very small screens
+      buttonRow.style.flexDirection = 'column';
+      
+      const buttonCols = buttonRow.querySelectorAll('.col-6');
+      buttonCols.forEach(col => {
+        col.classList.remove('col-6');
+        col.classList.add('col-12');
+        col.style.marginBottom = '10px';
+      });
+      
+      const buttons = buttonRow.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.style.fontSize = '0.85rem';
+        button.style.padding = '0.375rem 0.5rem';
+      });
+    } else {
+      // Side by side buttons for larger screens
+      buttonRow.style.flexDirection = 'row';
+      
+      const buttonCols = buttonRow.querySelectorAll('.col-12');
+      buttonCols.forEach(col => {
+        col.classList.remove('col-12');
+        col.classList.add('col-6');
+        col.style.marginBottom = '0';
+      });
+      
+      const buttons = buttonRow.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.style.fontSize = '1rem';
+        button.style.padding = '0.375rem 0.75rem';
+      });
+    }
+  },
+
+  // Modify the existing handleResize function to call our new telemedForm functions
+  handleResize() {
+    // Get current window dimensions
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const isLandscape = windowWidth > windowHeight;
+    
+    // Detect device type for more specific adjustments
+    const isMobile = windowWidth < 768;
+    const isTablet = windowWidth >= 768 && windowWidth < 1024;
+    const isDesktop = windowWidth >= 1024;
+    
+    // Log resize information for debugging
+    console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
+    
+    // Apply layout adjustments based on screen size
+    if (isMobile) {
+      // Mobile specific adjustments
+      this.applyMobileLayout(isLandscape);
+    } else if (isTablet) {
+      // Tablet specific adjustments
+      this.applyTabletLayout(isLandscape);
+    } else {
+      // Desktop specific adjustments
+      this.applyDesktopLayout();
+    }
+    
+    // Adjust video and container sizes
+    this.adjustVideoSize();
+    
+    // Update telemedForm responsiveness
+    this.updateTelemedFormResponsiveness();
+    
+    // Ensure draggable element stays within bounds after resize
+    this.enforceContainerBounds();
+    
+    // Recalculate any dynamic UI elements
+    this.updateUIElementsPositions();
+  },
+
+  // Modify the existing applyMobileLayout function to better handle the form
+  applyMobileLayout(isLandscape) {
+    // Get elements
+    const mainContainer = document.querySelector('.main-container');
+    const videoContainer = document.querySelector('.video-container');
+    const formContainer = document.querySelector('.form-container');
+    const iconCalls = document.querySelector('.iconCall');
+    
+    if (mainContainer) {
+      // Set direction based on orientation
+      mainContainer.style.flexDirection = isLandscape ? 'row' : 'column';
+    }
+    
+    if (videoContainer) {
+      videoContainer.style.height = isLandscape ? '100vh' : '40vh';
+      videoContainer.style.width = isLandscape ? '50%' : '100%';
+    }
+    
+    if (formContainer) {
+      formContainer.style.height = isLandscape ? '100vh' : '60vh';
+      formContainer.style.width = isLandscape ? '50%' : '100%';
+      formContainer.style.overflow = 'auto';
+      // Ensure the form is scrollable but not overflowing the screen
+      formContainer.style.maxHeight = isLandscape ? '100vh' : 'calc(60vh - 10px)';
+      // Add some breathing room around the form
+      formContainer.style.padding = isLandscape ? '5px' : '5px 5px 65px 5px'; // Extra padding at bottom in portrait for controls
+    }
+    
+    if (iconCalls) {
+      // Make buttons smaller on mobile
+      const buttons = iconCalls.querySelectorAll('button');
+      buttons.forEach(button => {
+        button.classList.remove('btn-md');
+        button.classList.add('btn-sm');
+        // Add some spacing between buttons on small screens
+        button.style.margin = '0 2px';
+      });
+    }
+    
+    // Handle form header in mobile mode
+    const formHeader = document.querySelector('.form-header-container');
+    if (formHeader) {
+      formHeader.style.flexDirection = 'column';
+      formHeader.style.alignItems = 'center';
+      formHeader.style.gap = '5px';
+    }
+  }
+
 };
 
-// document.addEventListener("DOMContentLoaded", function () {
-//     const draggableDiv = document.getElementById("draggable-div");
-//     const telemedForm = document.querySelector(".telemedForm"); // Selects telemedForm by class
+document.addEventListener("DOMContentLoaded", function () {
+    const draggableDiv = document.getElementById("draggable-div");
+    const telemedForm = document.querySelector(".telemedForm");
+    const mainPic = document.querySelector(".mainPic");
     
-
-//     if (!draggableDiv || !telemedForm) {
-//         console.error("❌ Error: Elements not found!");
-//         return;
-//     }
-
-//     let isDragging = false;
-//     let offsetX, offsetY;
-
-//     draggableDiv.addEventListener("mousedown", (event) => {
-//         isDragging = true;
-//         offsetX = event.clientX - draggableDiv.getBoundingClientRect().left;
-//         offsetY = event.clientY - draggableDiv.getBoundingClientRect().top;
-//         draggableDiv.style.opacity = "0.5"; // Optional visual effect
-//     });
-
-//     document.addEventListener("mousemove", (event) => {
-//         if (!isDragging) return;
-
-//         let newX = event.clientX - offsetX;
-//         let newY = event.clientY - offsetY;
-
-//         // Get bounding boxes
-//         const telemedBounds = telemedForm.getBoundingClientRect();
-//         const draggableBounds = draggableDiv.getBoundingClientRect();
-
-//         // Check if the draggable div enters the telemedForm
-//         if (
-//             newX + draggableBounds.width > telemedBounds.left &&
-//             newX < telemedBounds.right &&
-//             newY + draggableBounds.height > telemedBounds.top &&
-//             newY < telemedBounds.bottom
-//         ) {
-//             console.log("❌ Cannot move inside telemedForm!");
-//             return;
-//         }
-
-//         draggableDiv.style.left = `${newX}px`;
-//         draggableDiv.style.top = `${newY}px`;
-//         draggableDiv.style.position = "absolute";
-//     });
-
-//     document.addEventListener("mouseup", () => {
-//         isDragging = false;
-//         draggableDiv.style.opacity = "1"; // Reset opacity
-//     });
-// });
+    if (!draggableDiv || !telemedForm) {
+        console.error("❌ Error: Elements not found!");
+        return;
+    }
+    
+    // Override any existing styling with our fixed dimensions
+    draggableDiv.style.width = "150px";      // Fixed width instead of percentage
+    draggableDiv.style.minWidth = "150px";   // Ensure minimum width
+    draggableDiv.style.maxWidth = "none";    // Remove any maxWidth constraint
+    draggableDiv.style.height = "200px";     // Fixed height
+    draggableDiv.style.minHeight = "200px";  // Ensure minimum height
+    
+    // Clear any existing transforms that might be repositioning the element
+    draggableDiv.style.transform = "none";
+    
+    let isDragging = false;
+    let offsetX, offsetY;
+    
+    // Position in bottom right corner initially
+    positionInBottomRight();
+    
+    // Mouse events for desktop
+    draggableDiv.addEventListener("mousedown", startDrag);
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("mouseup", endDrag);
+    
+    // Touch events for mobile
+    draggableDiv.addEventListener("touchstart", startDragTouch);
+    document.addEventListener("touchmove", dragTouch);
+    document.addEventListener("touchend", endDrag);
+    
+    function positionInBottomRight() {
+        // Set absolute positioning
+        draggableDiv.style.position = "absolute";
+        
+        // Get container dimensions - use mainPic if available, otherwise use viewport
+        let containerWidth, containerHeight, containerLeft, containerTop;
+        
+        if (mainPic) {
+            const mainPicBounds = mainPic.getBoundingClientRect();
+            containerWidth = mainPicBounds.width;
+            containerHeight = mainPicBounds.height;
+            containerLeft = mainPicBounds.left;
+            containerTop = mainPicBounds.top;
+        } else {
+            containerWidth = window.innerWidth;
+            containerHeight = window.innerHeight;
+            containerLeft = 0; 
+            containerTop = 0;
+        }
+        
+        // Calculate position (20px padding from edges)
+        let newX = containerLeft + containerWidth - 150 - 20;  // Using fixed width of 150px
+        let newY = containerTop + containerHeight - 200 - 20;  // Using fixed height of 200px
+        
+        // Get the telemedForm bounds to avoid overlapping
+        const telemedBounds = telemedForm.getBoundingClientRect();
+        
+        // Ensure it doesn't overlap with telemedForm
+        if (newX + 150 > telemedBounds.left && 
+            newX < telemedBounds.right && 
+            newY + 200 > telemedBounds.top && 
+            newY < telemedBounds.bottom) {
+            // If it would overlap, move it above the form
+            newY = telemedBounds.top - 200 - 20;
+        }
+        
+        // Convert to relative position if needed
+        if (draggableDiv.offsetParent) {
+            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
+            newX -= parentRect.left;
+            newY -= parentRect.top;
+        }
+        
+        // Apply the position
+        draggableDiv.style.left = `${newX}px`;
+        draggableDiv.style.top = `${newY}px`;
+    }
+    
+    function startDrag(event) {
+        event.preventDefault();
+        isDragging = true;
+        
+        const rect = draggableDiv.getBoundingClientRect();
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+        
+        // Use box-shadow instead of transform for visual feedback
+        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+        draggableDiv.style.cursor = "grabbing";
+    }
+    
+    function startDragTouch(event) {
+        if (event.touches.length !== 1) return;
+        
+        event.preventDefault();
+        isDragging = true;
+        
+        const touch = event.touches[0];
+        const rect = draggableDiv.getBoundingClientRect();
+        offsetX = touch.clientX - rect.left;
+        offsetY = touch.clientY - rect.top;
+        
+        // Use box-shadow instead of transform for visual feedback
+        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+    }
+    
+    function drag(event) {
+        if (!isDragging) return;
+        
+        event.preventDefault();
+        moveElement(event.clientX, event.clientY);
+    }
+    
+    function dragTouch(event) {
+        if (!isDragging || event.touches.length !== 1) return;
+        
+        event.preventDefault();
+        const touch = event.touches[0];
+        moveElement(touch.clientX, touch.clientY);
+    }
+    
+    function moveElement(clientX, clientY) {
+        // Calculate new position
+        let newX = clientX - offsetX;
+        let newY = clientY - offsetY;
+        
+        // Get necessary bounding rectangles
+        const telemedBounds = telemedForm.getBoundingClientRect();
+        
+        // Check if the draggable div would enter the telemedForm
+        const wouldOverlapTelemedForm = 
+            newX + 150 > telemedBounds.left &&
+            newX < telemedBounds.right &&
+            newY + 200 > telemedBounds.top &&
+            newY < telemedBounds.bottom;
+        
+        if (wouldOverlapTelemedForm) {
+            // Don't update position if it would overlap with telemedForm
+            return;
+        }
+        
+        // Keep within mainPic boundaries if mainPic exists
+        if (mainPic) {
+            const mainPicBounds = mainPic.getBoundingClientRect();
+            // Calculate boundaries
+            const minX = mainPicBounds.left;
+            const maxX = mainPicBounds.right - 150;  // Using fixed width
+            const minY = mainPicBounds.top;
+            const maxY = mainPicBounds.bottom - 200; // Using fixed height
+            
+            // Apply constraints
+            newX = Math.max(minX, Math.min(maxX, newX));
+            newY = Math.max(minY, Math.min(maxY, newY));
+        }
+        
+        // Convert to relative position within parent element if needed
+        if (draggableDiv.offsetParent) {
+            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
+            newX -= parentRect.left;
+            newY -= parentRect.top;
+        }
+        
+        // Apply the position
+        draggableDiv.style.left = `${newX}px`;
+        draggableDiv.style.top = `${newY}px`;
+    }
+    
+    function endDrag() {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        // Reset the visual feedback
+        draggableDiv.style.boxShadow = "none";
+        draggableDiv.style.cursor = "grab";
+    }
+    
+    // Add cursor style to indicate draggability
+    draggableDiv.style.cursor = "grab";
+    
+    // Ensure our settings take precedence by applying them again after a short delay
+    setTimeout(function() {
+        draggableDiv.style.width = "150px"; 
+        draggableDiv.style.height = "200px";
+        draggableDiv.style.minWidth = "150px";
+        draggableDiv.style.minHeight = "200px";
+        draggableDiv.style.maxWidth = "none";
+    }, 100);
+    
+    // Override any external changes that might be made by other scripts
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.attributeName === "style") {
+                // Check if width or transform has been changed externally
+                const currentWidth = draggableDiv.style.width;
+                const currentTransform = draggableDiv.style.transform;
+                
+                if (currentWidth !== "150px" || 
+                    (currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale"))) {
+                    // Re-apply our fixed dimensions
+                    draggableDiv.style.width = "150px";
+                    draggableDiv.style.height = "200px";
+                    draggableDiv.style.minWidth = "150px";
+                    draggableDiv.style.minHeight = "200px";
+                    draggableDiv.style.maxWidth = "none";
+                    
+                    // Only clear transform if it's not our scaling effect
+                    if (currentTransform && !currentTransform.startsWith("scale")) {
+                        draggableDiv.style.transform = "none";
+                    }
+                }
+            }
+        });
+    });
+    
+    // Start observing the element for style changes
+    observer.observe(draggableDiv, { attributes: true });
+    
+    // Update position on window resize to maintain proper boundaries
+    window.addEventListener("resize", function() {
+        if (isDragging) return; // Don't interfere with active dragging
+        
+        // Reposition in bottom right on resize
+        positionInBottomRight();
+    });
+});
 
 </script>
 
 <template>
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="fullscreen-div">
-    <div class="row">
-      <div class="col-lg-7">
+    <div class="main-container">
+      <div class="video-container">
         <div class="mainPic">
           <div class="remotePlayerDiv">
             <div id="calling">
               <h3>Calling...</h3>
             </div>
-            <img :src="doctorUrl" class="img-fluid" alt="Image1" />
+            <img :src="doctorUrl" class="remote-img" alt="Image1" />
           </div>
           <Transition name="fade">
             <div class="tooltip-container">
@@ -676,7 +1348,6 @@ console.log("referring call duration:", this.referring_md);
                   </button>
                 </div>
                 
-
                  <div class="button-container">
                   <div
                     v-if="showTooltipFeedback"
@@ -705,31 +1376,31 @@ console.log("referring call duration:", this.referring_md);
           </div>
         </div>
       </div>
-      <div class="col-lg-5">
+      <div class="form-container">
         <div class="telemedForm">
-          <div class="row-fluid">
-            <div style="height: 10px;">
+          <div class="form-scrollable">
+            <div class="form-header-container">
               <img :src="dohLogoUrl" alt="Image3" class="dohLogo" />
-            </div>
-            <div class="formHeader">
-            <div>
-              <p>Republic of the Philippines</p>
-              <p>DEPARTMENT OF HEALTH</p>
-              <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
-              <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
-              <p>
-                Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032)
-                254-0109
-              </p>
-              <p>
-                Official Website:
-                <span style="color: blue">http://www.ro7.doh.gov.ph</span> Email
-                Address: dohro7@gmail.com
-              </p>
-            </div>
-            </div>
-            <div class="clinical">
-              <span style="color: #4caf50"><b>CLINICAL REFERRAL FORM</b></span>
+              <div class="formHeader">
+                <div>
+                  <p>Republic of the Philippines</p>
+                  <p>DEPARTMENT OF HEALTH</p>
+                  <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
+                  <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
+                  <p>
+                    Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032)
+                    254-0109
+                  </p>
+                  <p>
+                    Official Website:
+                    <span style="color: blue">http://www.ro7.doh.gov.ph</span> Email
+                    Address: dohro7@gmail.com
+                  </p>
+                </div>
+              </div>
+              <div class="clinical">
+                <span style="color: #4caf50"><b>CLINICAL REFERRAL FORM</b></span>
+              </div>
             </div>
             <div class="tableForm">
               <table class="table table-striped formTable">
@@ -958,27 +1629,123 @@ console.log("referring call duration:", this.referring_md);
       @refresh="refreshMessages"
       @close-modal="closeFeedbackModal"
     />
+    <PDFViewerModal ref="pdfViewer" :pdfUrl="PdfUrl" />
 
   </div>
 </template>
 
 <style scoped>
 @import "./css/index.css";
+
+td {
+ padding:5px; 
+}
+
+/* Fullscreen layout */
 .fullscreen-div {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden; /* Prevent scrolling */
-    position: fixed; /* Keep it fixed in the viewport */
-    top: 0;
-    left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* Prevent scrolling */
+  position: fixed; /* Keep it fixed in the viewport */
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+
+/* Main container layout */
+.main-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
 }
-.remotePlayerDiv, .localPlayerDiv {
-    max-height: 100%;
-    overflow: hidden;
+
+/* Video container (left side) */
+.video-container {
+  flex: 1.4;
+  height: 100%;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Form container (right side) */
+.form-container {
+  flex: 1;
+  padding: 5px;
+  height: 100%;
+  min-width: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Responsive layout for smaller screens */
+@media (max-width: 992px) {
+  .main-container {
+    flex-direction: column;
+  }
+  
+  .video-container, .form-container {
+    width: 100%;
+    flex: none;
+  }
+  
+  .video-container {
+    height: 50%;
+  }
+  
+  .form-container {
+    height: 50%;
+  }
+}
+
+.remote-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.form-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: white;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  
+}
+
+.form-header-container {
+  position: sticky;
+  background-color: #fff;
+  z-index: 2;
+  padding-bottom: 2px;
+}
+
+
+.clinical {
+  text-align: center;
+  margin: 10px 0;
+  font-size: 1.2rem;
+}
+
+.formTable {
+  width: 100%;
+  font-size: 0.85rem;
+}
+
+/* Transitions */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
 }
 </style>
