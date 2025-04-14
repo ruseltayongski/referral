@@ -1,6 +1,6 @@
 <?php $user = Session::get('auth'); ?>
 <script>    
-$('#deparment_select').on('change', function () {
+$('#department_select').on('change', function () {
     const selectedDepartment = parseInt($(this).val());
 
     if(selectedDepartment === 5){
@@ -9,6 +9,17 @@ $('#deparment_select').on('change', function () {
         $('#subOpdSection').hide();
     }
     
+});
+
+$('#other_department_select').on('change', function () {
+    const currentSelected = $(this).val() || []; 
+
+    if(currentSelected.includes("5")){
+        $("#othersubOpdSection").show();
+    }else{
+        $("#othersubOpdSection").hide();
+    }
+
 });
 
 var proceed,user_id,user_info;
@@ -169,7 +180,19 @@ $('.update_info').on('click',function(){
     });
 });
 
+$('#edit_other_department_select').on('change', function () {
+    const currentSelected = $(this).val() || []; 
+
+    if(currentSelected.includes("5")){
+        $("#othereditsubOpdSection").show();
+    }else{
+        $("#othereditsubOpdSection").hide();
+    }
+
+});
+
 function updateProfile() {
+    console.log("user_info::", user_info.subopd_id);
     $('.user_id').val(user_id);
     $('.fname').val(user_info.fname);
     $('.mname').val(user_info.mname);
@@ -178,9 +201,39 @@ function updateProfile() {
     $('.email').val(user_info.email);
     $('.designation').val(user_info.designation);
     $('.department_id').val(user_info.department_id);
+    // $('.edit_other_department_select').val();
     $('.username').val(user_info.username);
     $('.status').val(user_info.status);
     $('.level').val(user_info.level);
     $('#editsubOpdSelect').val(user_info.subopd_id);
+   $('#other_editsubOpdSelect').val(user_info.subopd_id);
+
+   $(".edit_other_department_select option").each(function() {
+
+        if($(this).val() == user_info.department_id){
+            $(this).remove();
+        }
+   });
+
+    if (user_info.other_department_telemed) {
+        // Split the comma-separated string into an array
+        var otherDeptIds = user_info.other_department_telemed.split(',').map(function(id) {
+            return id.trim();
+        });
+        console.log("otherDeptIds", otherDeptIds);
+        // Set the values for the multi-select
+        $('.edit_other_department_select').val(otherDeptIds).trigger('change');
+    } 
+
 }
+
+$('#updateUserModal').on('hidden.bs.modal', function () {
+
+    $(this).find('form')[0].reset();
+
+    $(this).find('select.select2').val(null).trigger('change');
+
+    $(this).find('.dynamic-content').empty();
+
+});
 </script>

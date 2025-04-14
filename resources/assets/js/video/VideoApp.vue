@@ -1529,7 +1529,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </tr>
                     <tr>
                     <td colspan="12">
-                        ICD-10 Code and Description: 
+                        ICD-10 Code and Description:
                         <li v-for="i in icd">
                         <span class="caseforDetails"
                             >{{ i.code }} - {{ i.description }}</span
