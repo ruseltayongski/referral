@@ -246,8 +246,7 @@
 .dohLogo {
   position: relative;
   border: 1px outset transparent;
-  top: 60px;
-  left: 15px;
+  top: 55px;
   z-index: 2;
   height: 72px;
   width: 76px;
