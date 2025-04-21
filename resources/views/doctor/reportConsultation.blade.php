@@ -156,16 +156,16 @@
             }]
         };
 
-        var adherenceData = {
-            labels: ['Followed Treatment', 'Did Not Follow Treatment'],
-            datasets: [{
-                label: 'Treatment Adherence',
-                data: [850, 150],
-                backgroundColor: ['#66FF66', '#FF6666'],
-                borderColor: ['#66FF66', '#FF6666'],
-                borderWidth: 1
-            }]
-        };
+        // var adherenceData = {
+        //     labels: ['Followed Treatment', 'Did Not Follow Treatment'],
+        //     datasets: [{
+        //         label: 'Treatment Adherence',
+        //         data: [850, 150],
+        //         backgroundColor: ['#66FF66', '#FF6666'],
+        //         borderColor: ['#66FF66', '#FF6666'],
+        //         borderWidth: 1
+        //     }]
+        // };
 
         // Create the charts
         new Chart(document.getElementById('doctorChart'), {
@@ -200,12 +200,12 @@
             }
         });
 
-        new Chart(document.getElementById('adherenceChart'), {
-            type: 'pie',
-            data: adherenceData,
-            options: {
-                responsive: true
-            }
-        });
+        // new Chart(document.getElementById('adherenceChart'), {
+        //     type: 'pie',
+        //     data: adherenceData,
+        //     options: {
+        //         responsive: true
+        //     }
+        // });
     </script>
 @endsection

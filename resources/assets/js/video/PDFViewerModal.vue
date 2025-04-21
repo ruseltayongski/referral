@@ -1,6 +1,6 @@
 <template>
   <div v-if="visible" class="custom-modal-backdrop">
-    <div class="modal-dialog modal-lg custom-modal">
+    <div class="custom-modal">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Document Viewer</h5>
@@ -8,14 +8,19 @@
             <span>&times;</span>
           </button>
         </div>
+
         <div class="modal-body">
-          <div class="embed-responsive embed-responsive-1by1">
-            <iframe v-if="pdfUrl" :src="pdfUrl" class="embed-responsive-item" style="height: 75vh;"></iframe>
-            <div v-else class="text-center p-5">
-              <p>No document to display</p>
-            </div>
+          <iframe
+            v-if="pdfUrl"
+            :src="pdfUrl"
+            class="responsive-iframe"
+            allowfullscreen
+          ></iframe>
+          <div v-else class="text-center p-5">
+            <p>No document to display</p>
           </div>
         </div>
+
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" @click="closeModal">Close</button>
           <a v-if="pdfUrl" :href="pdfUrl" target="_blank" class="btn btn-primary">Open in New Tab</a>
@@ -53,20 +58,65 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;
   z-index: 1050;
+  box-sizing: border-box;
 }
 
 .custom-modal {
+  width: 100%;
+  max-width: 800px;
+  height: 90vh;
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  width: 90%;
-  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.modal-header,
+.modal-footer {
+  flex-shrink: 0;
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.modal-body {
+  flex: 1;
+  padding: 0;
+}
+
+/* Fixed height for iframe, takes full modal body */
+.responsive-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .custom-modal {
+    max-width: 100%;
+    height: 95vh;
+  }
 }
 </style>
