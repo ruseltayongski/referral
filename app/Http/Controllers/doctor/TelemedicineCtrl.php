@@ -916,11 +916,55 @@ class TelemedicineCtrl extends Controller
             ->count('id');
         
         $totalConsulPerDepartment = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
-            ->where('telemedicine', 1)
-            ->where('referred_from', $user->facility_id)
+            ->where('tracking.telemedicine', 1)
+            ->where('tracking.referred_from', $user->facility_id)
             ->selectRaw('subopd.description, COUNT(tracking.id) as total_consultations')
             ->groupBy('subopd.id', 'subopd.description')
             ->get();
+        
+        $totalPatientDemographicPerAge = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
+            ->where('tracking.telemedicine', 1)
+            ->where('tracking.referred_from', $user->facility_id)
+            ->selectRaw("
+            COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) < 18 THEN 1 END) AS below_18,
+            COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) BETWEEN 18 AND 30 THEN 1 END) AS age_18_30,
+            COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) BETWEEN 31 AND 45 THEN 1 END) AS age_31_45,
+            COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) BETWEEN 46 AND 60 THEN 1 END) AS age_46_60,
+            COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) > 60 THEN 1 END) AS above_60
+            ")
+            ->first();
+        
+        $totalPatientPerGender = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
+            ->where('tracking.telemedicine', 1)
+            ->where('tracking.referred_from', $user->facility_id)
+            ->selectRaw("
+            COUNT(CASE WHEN patients.sex = 'Male' THEN 1 END) AS male_count,
+            COUNT(CASE WHEN patients.sex = 'Female' THEN 1 END) AS female_count
+            ")
+            ->first();
+
+        $totalDiagnosticStat = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
+            ->join('icd', 'icd.code', '=', 'tracking.code')
+            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+            ->where('tracking.telemedicine', 1)
+            ->where('tracking.referred_from', $user->facility_id)
+            ->select(
+                DB::raw("SUM(CASE WHEN icd10.description LIKE '%Hypertension%' THEN 1 ELSE 0 END) as hypertension_count"),
+                DB::raw("SUM(CASE WHEN icd10.description LIKE '%Diabetes%' THEN 1 ELSE 0 END) as diabetes_count"),
+                DB::raw("SUM(CASE WHEN icd10.description LIKE '%Respiratory%' THEN 1 ELSE 0 END) as respiratory_count"),
+                DB::raw("SUM(CASE WHEN icd10.description LIKE '%Cancer%' THEN 1 ELSE 0 END) as cancer_count"),
+                DB::raw("SUM(CASE WHEN 
+                    icd10.description NOT LIKE '%Hypertension%' AND
+                    icd10.description NOT LIKE '%Diabetes%' AND
+                    icd10.description NOT LIKE '%Respiratory%' AND
+                    icd10.description NOT LIKE '%Cancer%'
+                    THEN 1 ELSE 0 END) as others_count")
+                )
+            ->first();
+
+
+
+        
  
         return view('doctor.reportConsultation', [
             'countDepartment' => $countSubOpd ,
@@ -928,6 +972,9 @@ class TelemedicineCtrl extends Controller
             'totalConsult' => $totalConsultation,
             'totalperDepartment' => $totalConsulPerDepartment,
             'totalConsultationMinutes' => $formattedDuration,
+            'totalPatientDemographicPerAge' => $totalPatientDemographicPerAge,
+            'totalPatientPerGender' => $totalPatientPerGender,
+            'totalDiagnosticStat' => $totalDiagnosticStat,
         ]);
     }
 

@@ -61,7 +61,7 @@
             </div>
         </div>
     </div>
-
+  
     <!-- Diagnosis Statistics -->
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -93,10 +93,25 @@
 <script>
         // Example data for charts
         let consultPerDepartment = @json($totalperDepartment);
+        let totalPatientDemographicPerAge = @json($totalPatientDemographicPerAge);
+        let totalPatientPerGender = @json($totalPatientPerGender);
+        let totalDiagnosticStat = @json($totalDiagnosticStat);
         
         let PerDepartment = consultPerDepartment.map(item => item.description);
         let PerConsultation = consultPerDepartment.map(item => item.total_consultations);
-
+        let below_18 = totalPatientDemographicPerAge.below_18;
+        let age_18_30 = totalPatientDemographicPerAge.age_18_30;
+        let age_31_45 = totalPatientDemographicPerAge.age_31_45;
+        let age_46_60 = totalPatientDemographicPerAge.age_46_60;
+        let above_60 = totalPatientDemographicPerAge.above_60;
+        let total_male = totalPatientPerGender.male_count;
+        let total_female = totalPatientPerGender.female_count;
+        let hypertension_count = totalDiagnosticStat.hypertension_count;
+        let diabetes_count = totalDiagnosticStat.diabetes_count;
+        let respiratory_count = totalDiagnosticStat.respiratory_count;
+        let cancer_count = totalDiagnosticStat.cancer_count;
+        let others_count = totalDiagnosticStat.others_count;
+        
         var doctorData = {
             labels: PerDepartment,
             datasets: [{
@@ -109,10 +124,10 @@
         };
 
         var ageDistributionData = {
-            labels: ['<18', '18-30', '31-45', '46-60', '>60'],
+            labels: ['Below 18', '18-30', '31-45', '46-60', 'Above 60'],
             datasets: [{
                 label: 'Age Distribution',
-                data: [50, 200, 350, 300, 150],
+                data: [below_18, age_18_30, age_31_45, age_46_60, above_60],
                 backgroundColor: ['#FF9933', '#33FF99', '#3399FF', '#FF3399', '#FFFF33'],
                 borderColor: ['#FF9933', '#33FF99', '#3399FF', '#FF3399', '#FFFF33'],
                 borderWidth: 1
@@ -123,7 +138,7 @@
             labels: ['Male', 'Female'],
             datasets: [{
                 label: 'Gender Distribution',
-                data: [600, 500],
+                data: [total_male, total_female],
                 backgroundColor: ['#66B3FF', '#FF66B3'],
                 borderColor: ['#66B3FF', '#FF66B3'],
                 borderWidth: 1
@@ -134,23 +149,23 @@
             labels: ['Hypertension', 'Diabetes', 'Respiratory', 'Cancer', 'Other'],
             datasets: [{
                 label: 'Diagnosis Statistics',
-                data: [300, 450, 200, 100, 200],
+                data: [hypertension_count, diabetes_count, respiratory_count, cancer_count, others_count],
                 backgroundColor: ['#FF6666', '#66FF66', '#6699FF', '#FF66FF', '#FFCC33'],
                 borderColor: ['#FF6666', '#66FF66', '#6699FF', '#FF66FF', '#FFCC33'],
                 borderWidth: 1
             }]
         };
 
-        var adherenceData = {
-            labels: ['Followed Treatment', 'Did Not Follow Treatment'],
-            datasets: [{
-                label: 'Treatment Adherence',
-                data: [850, 150],
-                backgroundColor: ['#66FF66', '#FF6666'],
-                borderColor: ['#66FF66', '#FF6666'],
-                borderWidth: 1
-            }]
-        };
+        // var adherenceData = {
+        //     labels: ['Followed Treatment', 'Did Not Follow Treatment'],
+        //     datasets: [{
+        //         label: 'Treatment Adherence',
+        //         data: [850, 150],
+        //         backgroundColor: ['#66FF66', '#FF6666'],
+        //         borderColor: ['#66FF66', '#FF6666'],
+        //         borderWidth: 1
+        //     }]
+        // };
 
         // Create the charts
         new Chart(document.getElementById('doctorChart'), {
@@ -185,12 +200,12 @@
             }
         });
 
-        new Chart(document.getElementById('adherenceChart'), {
-            type: 'pie',
-            data: adherenceData,
-            options: {
-                responsive: true
-            }
-        });
+        // new Chart(document.getElementById('adherenceChart'), {
+        //     type: 'pie',
+        //     data: adherenceData,
+        //     options: {
+        //         responsive: true
+        //     }
+        // });
     </script>
 @endsection

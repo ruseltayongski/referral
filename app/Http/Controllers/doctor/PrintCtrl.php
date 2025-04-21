@@ -178,9 +178,9 @@ class PrintCtrl extends Controller
 
         $prescription = Tracking::select(
             "tracking.code",
-            \DB::raw("concat('Dr. ',action_md.fname,' ',action_md.lname) as action_md"),
-            "action_md.signature as action_md_signature",
-            "action_md.license",
+            \DB::raw("concat('Dr. ',referring_md.fname,' ',referring_md.lname) as referring_md"),
+            "referring_md.signature as referring_md_signature",
+            "referring_md.license",
             "department.description as department",
             "facility.name as facility",
             "facility.address as facility_address",
@@ -209,9 +209,9 @@ class PrintCtrl extends Controller
         )
             ->where("tracking.id", $tracking_id)
             ->where("activity.id", $activity_id)
-            ->leftJoin("users as action_md", "action_md.id", "=", "tracking.action_md")
-            ->leftJoin("department", "department.id", "=", "action_md.department_id")
-            ->leftJoin("facility", "facility.id", "=", "action_md.facility_id")
+            ->leftJoin("users as referring_md", "referring_md.id", "=", "tracking.referring_md")
+            ->leftJoin("department", "department.id", "=", "referring_md.department_id")
+            ->leftJoin("facility", "facility.id", "=", "referring_md.facility_id")
             ->leftJoin("patient_form as pf", "pf.code", "=", "tracking.code")
             ->leftJoin("pregnant_form as preg_f", "preg_f.code", "=", "tracking.code")
             ->leftJoin("patients", "patients.id", "=", \DB::raw("if(tracking.type = 'normal',pf.patient_id,preg_f.patient_woman_id)"))
@@ -220,17 +220,17 @@ class PrintCtrl extends Controller
             //->leftJoin("prescribed_prescriptions", "prescribed_prescriptions.code", "=", "tracking.code")
             ->leftJoin("prescribed_prescriptions", "prescribed_prescriptions.prescribed_activity_id", "=", "activity.id")
             ->first();
-
+      
         $prescribedActivityId = $prescription->prescribed_id;
         $prescriptions = PrescribedPrescription::where('prescribed_activity_id', $prescribedActivityId)->get();
 
-        $header = $prescription->action_md;
+        $header = $prescription->referring_md;
         $department = $prescription->department;
         $facility = $prescription->facility;
         $facility_address = $prescription->facility_address;
         $facility_contact = $prescription->facility_contact;
         $facility_email = $prescription->facility_email;
-        $signature_path = realpath(__DIR__ . '/../../../../' . $prescription->action_md_signature);
+        $signature_path = realpath(__DIR__ . '/../../../../' . $prescription->referring_md_signature);
 
         $pdf = new PDFPrescription($header, $department, $facility, $facility_address, $facility_contact, $facility_email, $signature_path, $prescription->license);
         $pdf->setTitle($prescription->facility);
