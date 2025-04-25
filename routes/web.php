@@ -733,3 +733,5 @@ Route::get('/test_push',  'ApiController@notifierPushNotification');
 // Route::post('/notifier/api/send_push_notification', 'ApiController@notifierPushNotification');
 // Route for prescription with CKEditor
 Route::post('/api/video/prescriptions/version2', 'ApiController@savePrescription_version2');
+Route::get('opcen/ckd', 'CKDController@CKDIncoming');
+Route::get('opcen/ckd/crossmatch', array('uses' => 'CKDController@crossmatch'));
