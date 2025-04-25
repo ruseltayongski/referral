@@ -1790,7 +1790,7 @@
                                 </div>
                                 <div class="collapse" id="collapse_glasgow_pregnant" style="width: 100%;">
                                     <small class="text-success"> <b>Pupil Size Chart</b></small> &emsp;
-                                    <input type="button" class="btn-m btn-warning btn-rounded" onclick="resetPupilSize()" value="Reset">
+                                    <input type="button" class="btn-m btn-warning btn-rounded" onclick="resetPupilSize_pregnant()" value="Reset">
                                     <div class="container-referral">
                                         <div class="row web-view">
                                             <div class="col-lg-1"></div>
@@ -2669,49 +2669,64 @@
     });
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
-    function resetPupilSize() {
-        $('input[name="glasgow_btn"]:checked').each(function() {
-            if ($(this).is(':checked'))
-                $(this).prop('checked', false);
-        })
+    var last_motor_pregnant = 0;
+    var last_verbal_pregnant = 0;
+    var last_eye_pregnant = 0;
+
+    function resetPupilSize_pregnant() {
+        // Reset pupil size radio buttons
+        $('input[name="glasgow_pupil_btn"]').prop('checked', false);
+
+        // Reset GCS component radios
+        $('input[name="motor_radio"]').prop('checked', false);
+        $('input[name="verbal_radio"]').prop('checked', false);
+        $('input[name="eye_radio"]').prop('checked', false);
+
+        // Reset total and last scores
+        $('#gcs_score_pregnant').val(0);
+        last_motor_pregnant = 0;
+        last_verbal_pregnant = 0;
+        last_eye_pregnant = 0;
     }
-    var last_motor = last_verbal = last_eye = 0;
-    $('input[name="motor_radio"]').on('change', function() {
-        var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score_pregnant').val(), 10);
-        var total = 0;
-        if (last_motor == 0)
-            total = gcs + motor;
-        else
-            total = (gcs - last_motor) + motor;
 
-        last_motor = motor;
-        $('#gcs_score_pregnant').val(total);
-    });
-    $('input[name="verbal_radio"]').on('change', function() {
-        var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score_pregnant').val(), 10);
-        var total = 0;
-        if (last_verbal == 0)
-            total = gcs + verbal;
-        else
-            total = (gcs - last_verbal) + verbal;
+    function updateGcsScore_pregnant(type, newValue) {
+        let gcs_pregnant = parseInt($('#gcs_score_pregnant').val(), 10) || 0;
+        let total_pregnant = 0;
 
-        last_verbal = verbal;
-        $('#gcs_score_pregnant').val(total);
-    });
-    $('input[name="eye_radio"]').on('change', function() {
-        var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score_pregnant').val(), 10);
-        var total = 0;
-        if (last_eye == 0)
-            total = gcs + eye;
-        else
-            total = (gcs - last_eye) + eye;
+        switch (type) {
+            case 'motor':
+                total_pregnant = gcs_pregnant - last_motor_pregnant + newValue;
+                last_motor_pregnant = newValue;
+                break;
+            case 'verbal':
+                total_pregnant = gcs_pregnant - last_verbal_pregnant + newValue;
+                last_verbal_pregnant = newValue;
+                break;
+            case 'eye':
+                total_pregnant = gcs_pregnant - last_eye_pregnant + newValue;
+                last_eye_pregnant = newValue;
+                break;
+        }
 
-        last_eye = eye;
-        $('#gcs_score_pregnant').val(total);
+        $('#gcs_score_pregnant').val(total_pregnant);
+    }
+
+    // Attach listeners
+    $('input[name="motor_radio"]').on('change', function () {
+        const value = parseInt($(this).val(), 10) || 0;
+        updateGcsScore_pregnant('motor', value);
     });
+
+    $('input[name="verbal_radio"]').on('change', function () {
+        const value = parseInt($(this).val(), 10) || 0;
+        updateGcsScore_pregnant('verbal', value);
+    });
+
+    $('input[name="eye_radio"]').on('change', function () {
+        const value = parseInt($(this).val(), 10) || 0;
+        updateGcsScore_pregnant('eye', value);
+    });
+
 
     /* *****REVIEW OF SYSTEMS***** */
     /* SKIN */

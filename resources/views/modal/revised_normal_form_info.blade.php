@@ -2516,7 +2516,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                 </div>
                                 <div class="collapse" id="collapse_glasgow" style="width: 100%;">
                                     <small class="text-success"><b>Pupil Size Chart</b></small> &emsp;
-                                    <input type="button" class="btn-m btn-warning btn-rounded" onclick="resetPupilSize()" value="Reset">
+                                    <input type="button" class="btn-m btn-warning btn-rounded" onclick="window.glasgowScale.resetToOriginal()" value="Reset">
                                     <div class="container-referral">
                                         <div class="row web-view">
                                             <div class="col-lg-1"></div>

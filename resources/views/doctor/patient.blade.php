@@ -858,7 +858,7 @@ $counter = 0;
                 // if (referred_facility == 63) {
                     if (type == 'pregnant') {
                         $('#pregnantModal').modal('hide');
-                        $('#pregnantchooseVersionModal').modal('show');
+                        // $('#pregnantchooseVersionModal').modal('show');
                         selectFormTitle("BEmONC/ CEmONC ");
                     } else if (type == 'normal') {
                         $('#pregnantModal').modal('hide');

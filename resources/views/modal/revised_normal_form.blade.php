@@ -2968,48 +2968,62 @@
     });
 
     /* *****MOTOR/VERBAL/EYE RESPONSE (GLASGOW COMA SCALE)***** */
+    var last_motor = 0;
+    var last_verbal = 0;
+    var last_eye = 0;
+
     function resetPupilSize() {
-        $('input[name="glasgow_btn"]:checked').each(function() {
-            if ($(this).is(':checked'))
-                $(this).prop('checked', false);
-        })
+        // Reset pupil size radio buttons
+        $('input[name="glasgow_pupil_btn"]').prop('checked', false);
+
+        // Reset GCS component radios
+        $('input[name="motor_radio"]').prop('checked', false);
+        $('input[name="verbal_radio"]').prop('checked', false);
+        $('input[name="eye_radio"]').prop('checked', false);
+
+        // Reset total and last scores
+        $('#gcs_score_normal').val(0);
+        last_motor = 0;
+        last_verbal = 0;
+        last_eye = 0;
     }
-    var last_motor = last_verbal = last_eye = 0;
-    $('input[name="motor_radio"]').on('change', function() {
-        var motor = parseInt($('input[name="motor_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score_normal').val(), 10);
-        var total = 0;
-        if (last_motor == 0)
-            total = gcs + motor;
-        else
-            total = (gcs - last_motor) + motor;
 
-        last_motor = motor;
+    function updateGcsScore(type, newValue) {
+        let gcs = parseInt($('#gcs_score_normal').val(), 10) || 0;
+        let total = 0;
+
+        switch (type) {
+            case 'motor':
+                total = gcs - last_motor + newValue;
+                last_motor = newValue;
+                break;
+            case 'verbal':
+                total = gcs - last_verbal + newValue;
+                last_verbal = newValue;
+                break;
+            case 'eye':
+                total = gcs - last_eye + newValue;
+                last_eye = newValue;
+                break;
+        }
+
         $('#gcs_score_normal').val(total);
+    }
+
+    // Attach listeners
+    $('input[name="motor_radio"]').on('change', function () {
+        const value = parseInt($(this).val(), 10) || 0;
+        updateGcsScore('motor', value);
     });
-    $('input[name="verbal_radio"]').on('change', function() {
-        var verbal = parseInt($('input[name="verbal_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score_normal').val(), 10);
-        var total = 0;
-        if (last_verbal == 0)
-            total = gcs + verbal;
-        else
-            total = (gcs - last_verbal) + verbal;
 
-        last_verbal = verbal;
-        $('#gcs_score_normal').val(total);
+    $('input[name="verbal_radio"]').on('change', function () {
+        const value = parseInt($(this).val(), 10) || 0;
+        updateGcsScore('verbal', value);
     });
-    $('input[name="eye_radio"]').on('change', function() {
-        var eye = parseInt($('input[name="eye_radio"]:checked').val(), 10);
-        var gcs = parseInt($('#gcs_score_normal').val(), 10);
-        var total = 0;
-        if (last_eye == 0)
-            total = gcs + eye;
-        else
-            total = (gcs - last_eye) + eye;
 
-        last_eye = eye;
-        $('#gcs_score_normal').val(total);
+    $('input[name="eye_radio"]').on('change', function () {
+        const value = parseInt($(this).val(), 10) || 0;
+        updateGcsScore('eye', value);
     });
 
     /* *****REVIEW OF SYSTEMS***** */
