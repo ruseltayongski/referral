@@ -28,7 +28,7 @@
                 </button>
                 <!-- <button data-target="#pregnantchooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6"> -->
                
-                <button id="pregnantButton"  data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="openNewForms('pregnant')">    
+                <button id="pregnantButton" data-target="#pregnantchooseVersionModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="openNewForms('pregnant')">    
                     <img src="{{ url('resources/img/pregnant.png') }}" width="100" />
                     <br />
                    Pregnant
@@ -68,13 +68,13 @@
 <script>
     $(document).ready(function() {
 
-        let appointmentJson = @json($appointmentId);     
-        console.log("appointmentID::", appointmentJson);
-        if (!appointmentJson || appointmentJson === "" || appointmentJson === "N/A") {
-            $("#pregnantButton").prop("disabled", false); // Enable if empty, null, or N/A
-        } else {
-            $("#pregnantButton").prop("disabled", true); // Disable if appointmentId exists
-        }
+        // let appointmentJson = @json($appointmentId);     
+        // console.log("appointmentID::", appointmentJson);
+        // if (!appointmentJson || appointmentJson === "" || appointmentJson === "N/A") {
+        //     $("#pregnantButton").prop("disabled", false); // Enable if empty, null, or N/A
+        // } else {
+        //     $("#pregnantButton").prop("disabled", true); // Disable if appointmentId exists
+        // }
 
     });
 </script>
