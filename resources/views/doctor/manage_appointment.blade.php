@@ -182,7 +182,7 @@
                             <th class="text-center">Time To</th>
                             <th class="text-center">Created By</th>
                             <th class="text-center">Facility</th>
-                            <th class="text-center">Department</th>
+                            <!-- <th class="text-center">Department</th> -->
                             <th class="text-center">OPD Category</th> 
                             <th class="text-center">Slot</th>
                             <!-- <th class="text-center">Slot</th> -->
@@ -221,7 +221,7 @@
                                 <td> {{ $row->appointedTime_to ?  $row->appointedTime_to : 'N/A'}}</td>
                                 <td> Dr. {{ $row->createdBy->fname }} {{ $row->createdBy->mname }} {{$row->createdBy->lname}}</td>
                                 <td> {{ $row->facility->name }} </td>
-                                <td> {{ $row->department->description }} </td>
+                                <!-- <td> {{ $row->department->description }} </td> -->
                                 <td> {{ $row->subOpd->description }}</td>
                                 <td>{{ $row->slot}}</td> 
                                 <!-- <td> {{ count($row->telemedAssignedDoctor) }} </td> -->

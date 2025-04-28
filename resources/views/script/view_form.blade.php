@@ -6,15 +6,34 @@
         status = $(this).data('status');
         type = $(this).data('type');
         form_id = $(this).data('id');
+        patient_emr = $(this).data('emr');
+        patient_id = $(this).data('patient');
         referred_from = $(this).data('referred_from');
         patient_name = $(this).data('patient_name');
         facility = $(item).find('.facility').html();
         var referral_status = $(this).data('referral_status');
 
+       //EMR patient
+       if(patient_emr == 10){
+            console.log("Patient Data", patient_id);
+            $.ajax({
+                url:"{{ url('doctor/emr-form/data')}}/" + patient_id,
+                type: "GET",
+                success: function(response){
+                  
+                        $(".referral_body").html(loading);
+                        
+                        setTimeout(function() {
+                            $(".referral_body").html(response); 
+                        }, 300)
+                },
+                error: function(){
+                    $('#serverModal').modal();
+                }
+            });
+            return;
+        }
 
-        
-      
-       
         $.ajax({
         url: "{{ url('get-form-type')}}/" + form_id,
         type: 'GET',

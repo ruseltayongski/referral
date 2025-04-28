@@ -44,7 +44,6 @@ use App\Facility;
 $subOpd = App\SubOpd::get();
 
 ?>
-
     <div class="box box-primary">
         <div class="box-header with-border">
             <div class="pull-right form-inline">
@@ -337,12 +336,15 @@ $subOpd = App\SubOpd::get();
                                         <input type="hidden" name="department_id" id="" value="5">
 
                                         <label for="add_opdCategory">Opd Category:</label>
-                                        <select class="form-control select2" id="editdepartment_config" name="subopd_id" required>
+                                        <!-- <select class="form-control select2" id="editdepartment_config" name="subopd_id" required>
                                             <option selected value="">Select Opd Category</option>
                                             @foreach($subOpd as $sub)
                                                 <option value="{{$sub->id}}">{{ $sub->description}}</option>
                                             @endforeach              
-                                        </select>
+                                        </select> -->
+
+                                        <input type="hidden" name="subopd_id" value="{{ $userInfo->subopd_id }}">
+                                        <input type="text" class="form-control" value="{{  App\SubOpd::find($userInfo->subopd_id)->description }}" required readonly>
 
                                         <label for="defaultCategory">Default Category:</label>
                                         <select class="form-control select2" id="edit_default_Category" name="default_category" required>
@@ -475,12 +477,15 @@ $subOpd = App\SubOpd::get();
                                     <input type="text" class="form-control" name="configdesc" id="Configdesc" required>
                                     <input type="hidden" name="department_id" id="" value="5">                          
                                     <label for="add_opdCategory">OPD Category:</label>
-                                    <select class="form-control select2" id="add_department" name="subOpd_id" required>
+                                    <!-- <select class="form-control select2" id="add_department" name="subOpd_id" required>
                                         <option selected value="">Select OPD Category</option>
                                         @foreach($subOpd as $sub)
-                                            <option value="{{$sub->id}}">{{ $sub->description}}</option>
+                                            <option value="{{$sub->id}}" @if($userInfo->subopd_id == $sub->id) selected @endif>{{ $sub->description}}</option>
                                         @endforeach 
-                                    </select>                                
+                                    </select>-->
+                                
+                                    <input type="hidden" name="subOpd_id" value="{{ $userInfo->subopd_id }}">
+                                    <input type="text" class="form-control" value="{{  App\SubOpd::find($userInfo->subopd_id)->description }}" required readonly>
                                  
                                     <label for="defaultCategory">Default Category:</label>
                                     <select class="form-control select2" id="defaultCategory" name="default_category" required>
@@ -597,16 +602,17 @@ $subOpd = App\SubOpd::get();
 $(document).ready(function() {
     
     //Add Time Slot Validation
-    let usertype = @json($usertype);
-
+    let usertype = @json($userInfo);
+    console.log("usertype", usertype);
     $("#add-appointment").click(function (e) {
-        if(usertype !== "support"){
-        e.preventDefault();
-            Lobibox.alert("error", {
-                msg: "You are not authorized to add a Config appointment. Only IT Support can access this feature."
-            });
-        }else{
+        if(usertype.level === "doctor"){
             $("#addconfigModal").modal("show");
+  
+        }else{
+            e.preventDefault();
+            Lobibox.alert("error", {
+                msg: "You are not authorized to add a Config appointment. Only doctors can access this feature."
+            });
         }
 
     });

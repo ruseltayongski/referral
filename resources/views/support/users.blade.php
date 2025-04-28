@@ -146,42 +146,7 @@ if($searchKeyword){
 @endsection
 
 @section('js')
-@include('support.script.users')
-<script>
-
-$(document).ready(function() {
-    // Initialize Select2 for both dropdowns
-    $('#department_select, #other_department_select').select2({
-        placeholder: "Select Department...",
-        allowClear: true
-    });
-
-    function updateOtherDepartmentOptions() {
-        var selectedDept = $('#department_select').val(); // Get selected department ID
-        console.log("selectedDept", selectedDept);
-        // Show all options first
-        $('#other_department_select option').show();
-
-        if (selectedDept) {
-            // Hide the selected department from "Other Department" options
-            $('#other_department_select option[value="' + selectedDept + '"]').hide();
-        }
-
-        // Refresh Select2 to reflect changes
-        $('#other_department_select').select2();
-    }
-
-    // Run when department selection changes
-    $('#department_select').on('change', function() {
-        updateOtherDepartmentOptions();
-    });
-
-    // Run once on page load (in case of pre-filled values)
-    updateOtherDepartmentOptions();
-});
-
-</script>
-    
+@include('support.script.users')    
 
 @endsection
 

@@ -1501,4 +1501,117 @@ class PatientCtrl extends Controller
             "date_end" => $date_end
         ]);
     }
+
+    public function loadEmrForm($patientId){
+
+        $patient = Patients::find($patientId);
+
+        $firstname = $patient->fname;
+        $mname = $patient->mname;
+        $lname = $patient->lname;
+        $dob = $patient->dob; 
+        $province = $patient->province;
+        $municipal = $patient->muncity;
+        $barangay = $patient->brgy;
+
+        $Emr_patient = DB::table('patients')
+        ->leftJoin('patient_form', 'patient_form.patient_id', '=', 'patients.id')
+        ->leftJoin('icd as icd_pf', 'icd_pf.code', '=', 'patient_form.code')
+        ->leftJoin('icd10 as icd10_pf', 'icd10_pf.id', '=', 'icd_pf.icd_id')
+    
+        ->leftJoin('pregnant_form', 'pregnant_form.patient_woman_id', '=', 'patients.id')
+        ->leftJoin('icd as icd_pg', 'icd_pg.code', '=', 'pregnant_form.code')
+        ->leftJoin('icd10 as icd10_pg', 'icd10_pg.id', '=', 'icd_pg.icd_id')
+    
+        ->where('patients.fname', $firstname)
+        ->where('patients.mname', $mname)
+        ->where('patients.lname', $lname)
+        ->where('patients.dob', $dob)
+        ->where('patients.province', $province)
+        ->where('patients.muncity', $municipal)
+        ->where('patients.brgy', $barangay)
+    
+        ->select(
+            'patients.*',
+    
+            // All patient_form fields
+            'patient_form.id as patient_form_id',
+            'patient_form.code as patientCode',
+            'patient_form.referring_facility as patient_refer_facility',
+            'patient_form.referred_to as patient_refer_to',
+            'patient_form.refer_clinical_status as patient_clinical_status',
+            'patient_form.refer_sur_category as patient_sur_category',
+            'patient_form.dis_clinical_status as patient_dis_clinical_status',
+            'patient_form.dis_sur_category as patient_dis_sur_category',
+            'patient_form.time_referred as patient_time_referred',
+            'patient_form.case_summary as patient_case_summary',
+            'patient_form.reco_summary as patient_reco_summary',
+            'patient_form.diagnosis as patient_diagnosis',
+            'patient_form.referring_md as patient_referring_md',
+            'patient_form.referred_md as patient_reffered_md',
+            'patient_form.other_reason_referral as patient_other_reason_referral',
+            'patient_form.file_path as patient_file_path',
+            'patient_form.other_diagnoses as patient_other_diag',
+            'patient_form.notes_diagnoses as patient_notes_diag',
+            
+            // All pregnant_form fields
+            'pregnant_form.id as pregnant_form_id',
+            'pregnant_form.code as pregnantCode',
+            'pregnant_form.referring_facility as pregnant_refer_facility',
+            'pregnant_form.referred_by as pregnant_refer_facility',
+            'pregnant_form.record_no as pregnant_record_no',
+            'pregnant_form.referred_date as pregnant_referred_date',
+            'pregnant_form.referred_to as pregnant_referred_to',
+            'pregnant_form.refer_clinical_status as pregnant_refer_clinical_status',
+            'pregnant_form.refer_sur_category as pregnant_refer_sur_category',
+            'pregnant_form.dis_clinical_status as pregnant_dis_clinical_status',
+            'pregnant_form.dis_sur_category as pregnant_dis_sur_category',
+            'pregnant_form.health_worker as pregnant_health_worker',
+            'pregnant_form.woman_reason',
+            'pregnant_form.woman_major_findings',
+            'pregnant_form.woman_before_treatment',
+            'pregnant_form.woman_before_given_time',
+            'pregnant_form.woman_during_transport',
+            'pregnant_form.woman_transport_given_time',
+            'pregnant_form.woman_information_given',
+            'pregnant_form.notes_diagnoses as pregnant_notes_diagnosis',
+            'pregnant_form.other_diagnoses as pregnant_other_diagnoses',
+            'pregnant_form.reason_referral as pregnant_reason_referral',
+            'pregnant_form.other_reason_referral as pregnant_other_reason_referral',
+            'pregnant_form.file_path as pregnant_file_path',
+            'pregnant_form.baby_reason',
+            'pregnant_form.baby_major_findings',
+            'pregnant_form.baby_last_feed',
+            'pregnant_form.baby_before_treatment',
+            'pregnant_form.baby_before_given_time',
+            'pregnant_form.baby_during_transport',
+            'pregnant_form.baby_transport_given_time',
+            'pregnant_form.baby_information_given',
+
+
+    
+            // Grouped ICD10 descriptions
+            DB::raw('JSON_ARRAYAGG(DISTINCT icd10_pf.description) as patient_icd10_desc'),
+            DB::raw('JSON_ARRAYAGG(DISTINCT icd10_pg.description) as pregnant_icd10_desc')
+        )
+    
+        ->groupBy(
+            'patients.id',
+            'patient_form.id',
+            'pregnant_form.id'
+        )
+    
+        ->orderByRaw('GREATEST(COALESCE(patient_form.id, 0), COALESCE(pregnant_form.id, 0)) DESC')
+    
+        ->get();
+    
+        // dd($Emr_patient);
+
+        $arr = [
+            "form" => 'normal data',
+            "patient" => $patientId
+        ];
+
+        return view('doctor.emr_body', $arr);
+    }
 }

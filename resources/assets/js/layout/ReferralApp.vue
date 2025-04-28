@@ -49,11 +49,18 @@
             }
         },
         methods: {
-            playAudio() {
-                audioElement.play();
-                setTimeout(function(){
-                    audioElement.pause();
-                },10000);
+            playAudio(telemedicine) {
+                if(parseInt(telemedicine) == 1){
+                    audioTelemed.play();
+                    setTimeout(function(){
+                        audioTelemed.pause();
+                    },16000);
+                }else{
+                    audioElement.play();
+                    setTimeout(function(){
+                        audioElement.pause();
+                    },10000);
+                }
             },
             async playVideoCallAudio() {
                 await this.$refs.audioVideo.play();
@@ -546,7 +553,7 @@
                 .listen('NewReferral', (event) => {
                     console.log("newly incoming Telemed::", event, event.payload.telemedicine == 1, this.user.subopd_id == event.payload.subOpdId);
                     if(this.user.facility_id === event.payload.referred_to || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred')) {
-                        this.playAudio();
+                        this.playAudio(event.payload.telemedicine);
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {
                             console.log("append the refer patient");
@@ -579,7 +586,7 @@
                                     '        <div class="timeline-footer">\n';
 
                                 /*if(my_department_id==data.department_id) {*/
-                                let telemedText = (event.payload.telemedicine == 1)
+                                let telemedText = (parseInt(event.payload.telemedicine) == 1)
                                     ? '<h5 class="text-red blink_new_referral pull-right">New Telemed</h5>'
                                     : '<h5 class="text-red blink_new_referral pull-right">New Referral</h5>';
                                 content +=  '     <div class="form-group">' +
@@ -876,7 +883,7 @@
                                 this.notifyReferralUpdateFormFaciChanged(msg);
                             }
                             if(event.payload.referred_to === this.user.facility_id) {
-                                this.playAudio();
+                                this.playAudio(event.payload.telemedicine);
                                 this.increment_referral++;
                                 if($("#referral_page_check").val()) {
                                     console.log("append the refer patient");
