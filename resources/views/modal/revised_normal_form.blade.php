@@ -1201,6 +1201,11 @@
                                                     <input class="form-check-input" id="rs_head_injury_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_injury_cbox" value="Yes">
                                                     <span> Head injury</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_head_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_head_others_normal" name="rs_head_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1243,6 +1248,11 @@
                                                     <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes">
                                                     <span> Glaucoma/Cataracts</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_eyes_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_eyes_others_normal" name="rs_eyes_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1281,6 +1291,11 @@
                                                     <input class="form-check-input" id="rs_ears_dizziness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_dizziness_cbox" value="Yes">
                                                     <span> Dizziness</span>
                                                 </div>
+                                                <div class="col-md-2">
+                                                    <input class="form-check-input" id="rs_ears_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_ears_others_normal" name="rs_ears_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1308,6 +1323,11 @@
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_nose_colds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_colds_cbox" value="Yes">
                                                     <span> Frequent Colds</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_nose_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_nose_others_normal" name="rs_nose_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div><br>
@@ -1341,6 +1361,11 @@
                                                     <input class="form-check-input" id="rs_mouth_hoarse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_hoarse_cbox" value="Yes">
                                                     <span> Hoarseness</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_mouth_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_mouth_others_normal" name="rs_mouth_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1373,6 +1398,11 @@
                                                     <input class="form-check-input" id="rs_neck_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_stiff_cbox" value="Yes">
                                                     <span> Stiffness</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_neck_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_neck_others_normal" name="rs_neck_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1404,6 +1434,11 @@
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_breast_bse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_bse_cbox" value="Yes">
                                                     <span> BSE</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_breast_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_breast_others_normal" name="rs_breast_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div><br>
@@ -1491,6 +1526,11 @@
                                                     <input class="form-check-input" id="rs_respi_rheumaticheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_rheumaticheart_cbox" value="Yes">
                                                     <span> Rheumatic heart disease</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_respiratory_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respiratory_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_respiratory_others_normal" name="rs_respiratory_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1573,6 +1613,11 @@
                                                     <input class="form-check-input" id="rs_gastro_rectalbleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_rectalbleed_cbox" value="Yes">
                                                     <span> Rectal bleeding/Hemorrhoids</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_gastrointestinal_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastrointestinal_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_gastrointestinal_others_normal" name="rs_gastrointestinal_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1629,6 +1674,11 @@
                                                     <input class="form-check-input" id="rs_urin_uti_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_uti_cbox" value="Yes">
                                                     <span> UTI/stones/prostate infection</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_urinary_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urinary_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_urinary_others_normal" name="rs_urinary_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1660,6 +1710,11 @@
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_peri_edema_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_edema_cbox" value="Yes">
                                                     <span> Edema</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_peripheral_vascular_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peripheral_vascular_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_peripheral_vascular_others_normal" name="rs_peripheral_vascular_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div><br>
@@ -1718,6 +1773,11 @@
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_muscle_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_spasm_cbox" value="Yes">
                                                     <span> Muscle Spasm</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_musculoskeletal_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musculoskeletal_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_musculoskeletal_others_normal" name="rs_musculoskeletal_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div><br>
@@ -1787,6 +1847,11 @@
                                                     <input class="form-check-input" id="rs_neuro_tingles_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tingles_cbox" value="Yes">
                                                     <span> Feeling of "pins and needles/tingles"</span>
                                                 </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_neurologic_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neurologic_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_neurologic_others_normal" name="rs_neurologic_others" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                             </div>
                                         </div><br>
 
@@ -1814,6 +1879,11 @@
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rss_hema_transfusion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rss_hema_transfusion_cbox" value="Yes">
                                                     <span> Past Transfusions</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_hematologic_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hematologic_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_hematologic_others_normal" name="rs_hematologic_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div><br>
@@ -1856,6 +1926,11 @@
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_endo_sweat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" value="Yes">
                                                     <span> Excessive sweating</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_endocrine_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endocrine_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_endocrine_others_normal" name="rs_endocrine_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div><br>
@@ -1906,6 +1981,11 @@
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_psych_moodchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_moodchange_cbox" value="Yes">
                                                     <span> Change in mood/change in attitude towards family/friends</span>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_psychiatric_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psychiatric_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body)</span>
+                                                    <textarea class="form-control" id="rs_psychiatric_others_normal" name="rs_psychiatric_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
                                         </div><br>
@@ -3068,6 +3148,15 @@
     $('#rs_head_headache_cbox, #rs_head_injury_cbox').on('click', function() {
         $('#rs_head_all_cbox, #rs_head_none_cbox').prop('checked', false);
     })
+    $('#rs_head_others_normal').hide(); 
+        $('#rs_head_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_head_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_head_others_normal").val("");
+                $('#rs_head_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* EYES */
     $('#rs_eyes_all_cbox').on('click', function() {
@@ -3089,6 +3178,15 @@
     $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').on('click', function() {
         $('#rs_eyes_all_cbox, #rs_eyes_none_cbox').prop('checked', false);
     });
+    $('#rs_eyes_others_normal').hide(); 
+        $('#rs_eyes_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_eyes_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_eyes_others_normal").val("");
+                $('#rs_eyes_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* EARS */
     $('#rs_ears_all_cbox').on('click', function() {
@@ -3105,7 +3203,15 @@
     $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').on('click', function() {
         $('#rs_ears_all_cbox, #rs_ears_none_cbox').prop('checked', false);
     });
-
+    $('#rs_ears_others_normal').hide(); 
+        $('#rs_ears_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_ears_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_ears_others_normal").val("");
+                $('#rs_ears_others_normal').hide(); // Hide when unchecked
+            }
+        });
     /* NOSE/SINUSES */
     $('#rs_nose_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3121,6 +3227,15 @@
     $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').on('click', function() {
         $('#rs_nose_all_cbox, #rs_nose_none_cbox').prop('checked', false);
     });
+    $('#rs_nose_others_normal').hide(); 
+        $('#rs_nose_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_nose_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_nose_others_normal").val("");
+                $('#rs_nose_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* MOUTH/THROAT */
     $('#rs_mouth_all_cbox').on('click', function() {
@@ -3137,7 +3252,15 @@
     $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').on('click', function() {
         $('#rs_mouth_all_cbox, #rs_mouth_none_cbox').prop('checked', false);
     });
-
+    $('#rs_mouth_others_normal').hide(); 
+        $('#rs_mouth_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_mouth_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_mouth_others_normal").val("");
+                $('#rs_mouth_others_normal').hide(); // Hide when unchecked
+            }
+        });
     /* NECK */
     $('#rs_neck_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3153,6 +3276,15 @@
     $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').on('click', function() {
         $('#rs_neck_all_cbox, #rs_neck_none_cbox').prop('checked', false);
     });
+    $('#rs_neck_others_normal').hide(); 
+        $('#rs_neck_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_neck_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_neck_others_normal").val("");
+                $('#rs_neck_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* BREAST */
     $('#rs_breast_all_cbox').on('click', function() {
@@ -3169,6 +3301,15 @@
     $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').on('click', function() {
         $('#rs_breast_all_cbox, #rs_breast_none_cbox').prop('checked', false);
     });
+    $('#rs_breast_others_normal').hide(); 
+        $('#rs_breast_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_breast_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_breast_others_normal").val("");
+                $('#rs_breast_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* RESPIRATORY/CARDIAC */
     $('#rs_respi_all_cbox').on('click', function() {
@@ -3199,6 +3340,15 @@
     $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').on('click', function() {
         $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
     });
+    $('#rs_respiratory_others_normal').hide(); 
+        $('#rs_respiratory_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_respiratory_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_respiratory_others_normal").val("");
+                $('#rs_respiratory_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* GASTROINTESTINAL */
     $('#rs_gastro_all_cbox').on('click', function() {
@@ -3229,6 +3379,15 @@
     $('#rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').on('click', function() {
         $('#rs_gastro_all_cbox, #rs_gastro_none_cbox').prop('checked', false);
     });
+    $('#rs_gastrointestinal_others_normal').hide(); 
+        $('#rs_gastrointestinal_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_gastrointestinal_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_gastrointestinal_others_normal").val("");
+                $('#rs_gastrointestinal_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* URINARY */
     $('#rs_urin_all_cbox').on('click', function() {
@@ -3253,7 +3412,15 @@
     $('#rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').on('click', function() {
         $('#rs_urin_all_cbox, #rs_urin_none_cbox').prop('checked', false);
     });
-
+    $('#rs_urinary_others_normal').hide(); 
+        $('#rs_urinary_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_urinary_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_urinary_others_normal").val("");
+                $('#rs_urinary_others_normal').hide(); // Hide when unchecked
+            }
+        });
     /* PERIPHERAL VASCULAR */
     $('#rs_peri_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3269,7 +3436,15 @@
     $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').on('click', function() {
         $('#rs_peri_all_cbox, #rs_peri_none_cbox').prop('checked', false);
     });
-
+    $('#rs_peripheral_vascular_others_normal').hide(); 
+        $('#rs_peripheral_vascular_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_peripheral_vascular_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_peripheral_vascular_others_normal").val("");
+                $('#rs_peripheral_vascular_others_normal').hide(); // Hide when unchecked
+            }
+        });
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3289,7 +3464,15 @@
     $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
-
+    $('#rs_musculoskeletal_others_normal').hide(); 
+        $('#rs_musculoskeletal_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_musculoskeletal_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_musculoskeletal_others_normal").val("");
+                $('#rs_musculoskeletal_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox').on('click', function() {
@@ -3314,7 +3497,15 @@
     $('#rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').on('click', function() {
         $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
     });
-
+    $('#rs_neurologic_others_normal').hide(); 
+        $('#rs_neurologic_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_neurologic_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_neurologic_others_normal").val("");
+                $('#rs_neurologic_others_normal').hide(); // Hide when unchecked
+            }
+        });
     /* HEMATOLOGIC */
     $('#rs_hema_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3330,6 +3521,15 @@
     $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').on('click', function() {
         $('#rs_hema_all_cbox, #rs_hema_none_cbox').prop('checked', false);
     });
+    $('#rs_hematologic_others_normal').hide(); 
+        $('#rs_hematologic_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_hematologic_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_hematologic_others_normal").val("");
+                $('#rs_hematologic_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* ENDOCRINE */
     $('#rs_endo_all_cbox').on('click', function() {
@@ -3354,6 +3554,15 @@
     $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').on('click', function() {
         $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
     });
+    $('#rs_endocrine_others_normal').hide(); 
+        $('#rs_endocrine_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_endocrine_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_endocrine_others_normal").val("");
+                $('#rs_endocrine_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /* PSYCHIATRIC */
     $('#rs_psych_all_cbox').on('click', function() {
@@ -3370,6 +3579,15 @@
     $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
         $('#rs_psych_all_cbox, #rs_psych_none_cbox').prop('checked', false);
     });
+    $('#rs_psychiatric_others_normal').hide(); 
+        $('#rs_psychiatric_others_cbox_normal').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_psychiatric_others_normal').show(); // Show when checked
+            } else {
+                $("#rs_psychiatric_others_normal").val("");
+                $('#rs_psychiatric_others_normal').hide(); // Hide when unchecked
+            }
+        });
 
     /**************************************************************************/
    
