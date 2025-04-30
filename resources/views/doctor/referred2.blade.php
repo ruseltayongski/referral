@@ -165,7 +165,6 @@ $user = Session::get('auth');
 
                         </div>
                       
-                        
                         @if($row->telemedicine)
                             @include('doctor.include.telemedicine_panel_body')
                         @else
@@ -287,6 +286,17 @@ $user = Session::get('auth');
                                     @endif
                                @endif
                             @endif
+                      
+                            @if($row->telemedicine == 1)
+
+                            <a data-toggle="modal" href="#EmrForm" 
+                               data-patient="{{ $row->patient_id }}"
+                               data-emr="10"
+                               class="view_form btn btn-warning btn-xs">
+                                <i class="fa fa-folder"></i> EMR 
+                            </a>
+
+                            @endif
                         </div>
                     </div>
                 @endforeach
@@ -311,6 +321,7 @@ $user = Session::get('auth');
     @include('modal.caller')
     @include('modal.cancel')
     @include('modal.transfer')
+
 @endsection
 
 @section('js')

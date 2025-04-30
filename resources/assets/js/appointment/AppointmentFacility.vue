@@ -85,9 +85,10 @@ export default {
   computed: {
     AvailableSlot(){
       
-      let totalSlots = 0;  // Total number of slots
-      let assignedSlots = 0; // Slots that have been assigned
-      let expiredSlots  = 0;
+      // let totalSlots = 0;  // Total number of slots
+      // let assignedSlots = 0; // Slots that have been assigned
+      // let expiredSlots  = 0;
+      let availableSlots = 0;
 
       const now = new Date();
       // Step 1: Sum all slots from appointment_schedules
@@ -95,85 +96,46 @@ export default {
         this.appointment.appointment_schedules.forEach((sched) => {
 
           const countslot = (sched.slot) || 0
-          totalSlots += countslot; // Add each slot to total
-
           const scheduleDateTime = new Date(`${sched.appointed_date}T${sched.appointed_time}`)
 
-          if(scheduleDateTime < now){
-            expiredSlots += countslot;
-          }else{
-
-            console.log("number save:", sched.telemed_assigned_doctor.length);
-            console.log("count slot", countslot);
-            // Step 2: Check assigned slots within the schedule
-            if (sched.telemed_assigned_doctor && sched.telemed_assigned_doctor.length > 0) {
-              assignedSlots += sched.telemed_assigned_doctor.length;
-            }
-
+          if(scheduleDateTime > now && sched.telemed_assigned_doctor.length < countslot){
+            availableSlots += countslot - sched.telemed_assigned_doctor.length;
           }
          
         });
       }
 
-      // Step 3: Calculate remaining available slots
-      let availableSlots = totalSlots - assignedSlots;
-      console.log("Total Slots:", totalSlots);
-      console.log("Assigned Slots:", assignedSlots);
-      console.log("Remaining Available Slots:", availableSlots);
-      console.log("Expired Slots:", expiredSlots);
-
-      this.asigned_slot = assignedSlots;
-
-      return availableSlots; // Return value if needed
+     return availableSlots;
 
     },  
     balanceSlotThisMonth() {
 
-      return this.asigned_slot;
-    //   let count = 0;
-    //  // let totalTimeSlots = 0;
-    //   const now = new Date();
-    //   //for config Schedule display facility 
+      let totalAppointments = 0;
+      const now = new Date();
+      const currentMonth = now.getMonth();
+      const currentYear = now.getFullYear();
 
-    //   // for manual Schedule
-    //   if (this.appointment && this.appointment.appointment_schedules) {
-    //     const appointmentIdMap = new Map();
+        if (this.appointment && this.appointment.appointment_schedules) {
+           this.appointment.appointment_schedules.forEach((sched) => {
+            const countSlot = sched.slot || 0;
+            const scheduleDateTime = new Date(`${sched.appointed_date}T${sched.appointed_time}`);
 
-    //     this.appointment.appointment_schedules.forEach((sched) => {
-    //       // Combine appointed_date and appointed_time into a single Date object
-    //       const appointedDatetime = new Date(
-    //         `${sched.appointed_date}T${sched.appointed_time}`
-    //       );
+            const isCurrentMonth = scheduleDateTime.getMonth() === currentMonth && scheduleDateTime.getFullYear() === currentYear;
 
-    //       // Check if the schedule is in the future
-    //       if (appointedDatetime > now) {
-    //         sched.telemed_assigned_doctor.forEach((doctor) => {
-    //           const appointmentId = doctor.appointment_id;
-    //           // Initialize the map for this appointment_id if not done already
-    //           if (!appointmentIdMap.has(appointmentId)) {
-    //             appointmentIdMap.set(appointmentId, {
-    //               allNull: true, // Assume all appointment_by are null initially
-    //               hasNull: false, // Track if there's at least one null
-    //             });
-    //           }
-    //           // Initialize the map for this appointment_id if not done already
-    //           const status = appointmentIdMap.get(appointmentId);
-    //           if (doctor.appointment_by) {
-    //             status.allNull = false;
-    //           } else {
-    //             status.hasNull = true;
-    //           }
-    //         });
-    //       }
-    //     });
-    //     // Count the number of appointment_ids where all appointment_by are null
-    //     appointmentIdMap.forEach((status, appointmentId) => {
-    //       if (status.hasNull) {
-    //         count++;
-    //       }
-    //     });
-    //   }
-    //   return count;
+            if(isCurrentMonth){
+               if (sched.telemed_assigned_doctor && sched.telemed_assigned_doctor.length > 0) {
+                  totalAppointments += sched.telemed_assigned_doctor.length;
+                }
+
+               if (scheduleDateTime < now) {
+                totalAppointments += (countSlot - (sched.telemed_assigned_doctor.length || 0));
+              }
+            }
+
+           });
+        }
+
+          return totalAppointments;
     },
     shouldDisplayFacility() {
       const now = new Date();

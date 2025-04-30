@@ -3,8 +3,13 @@
     audioElement.setAttribute('src', "{{ url('public/notify.mp3') }}");
     audioElement.addEventListener('ended', function() {
         this.play();
-    }, false);
+    }, false);  
 
+    var audioTelemed = document.createElement('audio');
+    audioTelemed.setAttribute('src', "{{ url('public/announce.mp3') }}");
+    audioTelemed.addEventListener('ended', function() {
+        this.play();
+    }, false);
     /*function play()
     {
         audioElement.play();

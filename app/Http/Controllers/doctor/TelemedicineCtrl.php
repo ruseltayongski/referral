@@ -121,7 +121,7 @@ class TelemedicineCtrl extends Controller
             'department' => $department,
             'fact' => $facility,
             'config' => $config_sched,
-            'usertype' => $user->level
+            'userInfo' => $user
         ]);
     }
 
