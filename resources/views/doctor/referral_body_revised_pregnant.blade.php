@@ -666,7 +666,7 @@ $user = Session::get('auth');
     </div>
     
   
-    
+
     <div class="col-sm-6">
     <div class="table-responsive">
         <table class="table bg-warning">
@@ -690,9 +690,19 @@ $user = Session::get('auth');
             <td colspan="6">Head:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_head)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->head_others))
+            <tr>
+            <td colspan="6">Head Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->head_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_eyes_null_checker)
             <tr>
             <td colspan="6">Eyes:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_eyes)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->eyes_others))
+            <tr>
+            <td colspan="6">Eyes Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->eyes_others}}</span></td>
             </tr>
             @endif
             @if ($review_ears_null_checker)
@@ -700,9 +710,19 @@ $user = Session::get('auth');
             <td colspan="6">Ears:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_ears)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->ears_others))
+            <tr>
+            <td colspan="6">Ears Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->ears_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_nose_null_checker)
             <tr>
             <td colspan="6">Nose/Sinuses:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_nose)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->nose_others))
+            <tr>
+            <td colspan="6">Nose Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->nose_others}}</span></td>
             </tr>
             @endif
             @if ($review_mouth_null_checker)
@@ -710,9 +730,19 @@ $user = Session::get('auth');
             <td colspan="6">Mouth/Throat:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_mouth)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->mouth_others))
+            <tr>
+            <td colspan="6">Mouth Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->mouth_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_neck_null_checker)
             <tr>
             <td colspan="6">Neck:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neck)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->neck_others))
+            <tr>
+            <td colspan="6">Neck Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->neck_others}}</span></td>
             </tr>
             @endif
             @if ($review_breast_null_checker)
@@ -720,9 +750,19 @@ $user = Session::get('auth');
             <td colspan="6">Breast:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_breast)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->breast_others))
+            <tr>
+            <td colspan="6">Breast Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->breast_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_respiratory_null_checker)
             <tr>
             <td colspan="6">Respiratory/Cardiac:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_respiratory)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->respiratory_others))
+            <tr>
+            <td colspan="6">Respiratory/Cardiac Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->respiratory_others}}</span></td>
             </tr>
             @endif
             @if ($review_gastrointestinal_null_checker)
@@ -730,9 +770,19 @@ $user = Session::get('auth');
             <td colspan="6">Gastrointestinal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_gastrointestinal)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->gastrointestinal_others))
+            <tr>
+            <td colspan="6">Gastrointestinal Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->gastrointestinal_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_urinary_null_checker)
             <tr>
             <td colspan="6">Urinary:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_urinary)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->urinary_others))
+            <tr>
+            <td colspan="6">Urinary Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->urinary_others}}</span></td>
             </tr>
             @endif
             @if ($review_peripheral_null_checker)
@@ -740,9 +790,19 @@ $user = Session::get('auth');
             <td colspan="6">Peripheral Vascular:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_peripheral)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->peripheral_vascular_others))
+            <tr>
+            <td colspan="6">Peripheral Vascular Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->peripheral_vascular_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_musculoskeletal_null_checker)
             <tr>
             <td colspan="6">Musculoskeletal:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_musculoskeletal)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->musculoskeletal_others))
+            <tr>
+            <td colspan="6">Musculoskeletal Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->musculoskeletal_others}}</span></td>
             </tr>
             @endif
             @if ($review_neurologic_null_checker)
@@ -750,9 +810,19 @@ $user = Session::get('auth');
             <td colspan="6">Neurologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_neurologic)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->neurologic_others))
+            <tr>
+            <td colspan="6">Neurologic Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->neurologic_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_hematologic_null_checker)
             <tr>
             <td colspan="6">Hematologic:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_hematologic)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->hematologic_others))
+            <tr>
+            <td colspan="6">Hematologic Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->hematologic_others}}</span></td>
             </tr>
             @endif
             @if ($review_endocrine_null_checker)
@@ -760,9 +830,19 @@ $user = Session::get('auth');
             <td colspan="6">Endocrine:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_endocrine)}}</span></td>
             </tr>
             @endif
+            @if (!empty($review_of_system->endocrine_others))
+            <tr>
+            <td colspan="6">Endocrine Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->endocrine_others}}</span></td>
+            </tr>
+            @endif
             @if ($review_psychiatric_null_checker)
             <tr>
             <td colspan="6">Psychiatric:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(',',$review_psychiatric)}}</span></td>
+            </tr>
+            @endif
+            @if (!empty($review_of_system->psychiatric_others))
+            <tr>
+            <td colspan="6">Psychiatric Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$review_of_system->psychiatric_others}}</span></td>
             </tr>
             @endif
         
