@@ -443,11 +443,11 @@ class PrintNewFormCtrl extends Controller
         // LATEST VITAL SIGNS
         if (!empty($data->pulse_rate)|| !empty($data->temperature) || !empty($data->blood_pressure) || !empty($data->oxygen_saturation) || !empty($data->respiratory_rate)){
             $this->titleHeader($pdf, "LATEST VITAL SIGNS");
-            if(!empty($data->temperature)){$pdf->MultiCell(0, 7, "Temperature:" . self::green($pdf, $data->temperature, 'Temperature'), 1, 'L');}
-            if(!empty($data->pulse_rate)){$pdf->MultiCell(0, 7, "Pulse Rate:" . self::green($pdf, $data->pulse_rate, 'Pulse Rate'), 1, 'L');}
-            if(!empty($data->respiratory_rate)){$pdf->MultiCell(0, 7, "Respiratory Rate:" . self::green($pdf, $data->respiratory_rate, 'Respiratory Rate'), 1, 'L');}
-            if(!empty($data->blood_pressure)){$pdf->MultiCell(0, 7, "Blood Pressure:" . self::green($pdf, $data->blood_pressure, 'Blood Pressure'), 1, 'L');}
-            if(!empty($data->oxygen_saturation)){$pdf->MultiCell(0, 7, "Oxgen Saturation:" . self::green($pdf, $data->oxygen_saturation, 'Oxygen Saturation'), 1, 'L');}
+            if(!empty($data->temperature)){$pdf->MultiCell(0, 7, "Temperature:" . self::green($pdf, $data->temperature . utf8_decode(' °C'), 'Temperature'), 1, 'L');}
+            if(!empty($data->pulse_rate)){$pdf->MultiCell(0, 7, "Pulse Rate:" . self::green($pdf, $data->pulse_rate . ' bpm', 'Pulse Rate'), 1, 'L');}
+            if(!empty($data->respiratory_rate)){$pdf->MultiCell(0, 7, "Respiratory Rate:" . self::green($pdf, $data->respiratory_rate . ' cpm', 'Respiratory Rate'), 1, 'L');}
+            if(!empty($data->blood_pressure)){$pdf->MultiCell(0, 7, "Blood Pressure:" . self::green($pdf, $data->blood_pressure . ' mmHg', 'Blood Pressure'), 1, 'L');}
+            if(!empty($data->oxygen_saturation)){$pdf->MultiCell(0, 7, "Oxgen Saturation:" . self::green($pdf, $data->oxygen_saturation . ' %', 'Oxygen Saturation'), 1, 'L');}
         }
 
         // GLASGOW COMA SCALE
