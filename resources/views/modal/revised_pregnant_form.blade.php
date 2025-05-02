@@ -948,7 +948,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_skin_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_skin_others" id="rs_skin_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -975,7 +975,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_head_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_head_others" id="rs_head_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1022,7 +1022,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_eyes_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_eyes_others" id="rs_eyes_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1063,7 +1063,7 @@
                                             </div>
                                             <div class="col-md-2">
                                                     <input class="form-check-input" id="rs_ears_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_ears_others" id="rs_ears_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1096,7 +1096,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_nose_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_nose_others" id="rs_nose_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1133,7 +1133,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_mouth_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_mouth_others" id="rs_mouth_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1170,7 +1170,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_neck_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_neck_others" id="rs_neck_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1207,7 +1207,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_breast_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_breast_others" id="rs_breast_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1298,7 +1298,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_respiratory_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respiratory_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_respiratory_others" id="rs_respiratory_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1385,7 +1385,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_gastrointestinal_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastrointestinal_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_gastrointestinal_others" id="rs_gastrointestinal_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1446,7 +1446,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_urinary_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urinary_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_urinary_others" id="rs_urinary_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1483,7 +1483,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_peripheral_vascular_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peripheral_vascular_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_peripheral_vascular_others" id="rs_peripheral_vascular_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1546,7 +1546,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_musculoskeletal_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musculoskeletal_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_musculoskeletal_others" id="rs_musculoskeletal_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1619,7 +1619,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_neurologic_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neurologic_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_neurologic_others" id="rs_neurologic_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1652,7 +1652,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_hematologic_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hematologic_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_hematologic_others" id="rs_hematologic_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1699,7 +1699,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_endocrine_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endocrine_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_endocrine_others" id="rs_endocrine_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -1754,7 +1754,7 @@
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_psychiatric_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psychiatric_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_psychiatric_others" id="rs_psychiatric_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>

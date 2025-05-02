@@ -1176,7 +1176,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_skin_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_skin_others_normal" name="rs_skin_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1203,7 +1203,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_head_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_head_others_normal" name="rs_head_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1250,7 +1250,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_eyes_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_eyes_others_normal" name="rs_eyes_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1293,7 +1293,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <input class="form-check-input" id="rs_ears_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_ears_others_normal" name="rs_ears_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1326,7 +1326,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_nose_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_nose_others_normal" name="rs_nose_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1363,7 +1363,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_mouth_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_mouth_others_normal" name="rs_mouth_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1400,7 +1400,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_neck_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_neck_others_normal" name="rs_neck_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1437,7 +1437,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_breast_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_breast_others_normal" name="rs_breast_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1528,7 +1528,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_respiratory_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respiratory_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_respiratory_others_normal" name="rs_respiratory_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1615,7 +1615,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_gastrointestinal_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastrointestinal_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_gastrointestinal_others_normal" name="rs_gastrointestinal_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1676,7 +1676,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_urinary_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urinary_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_urinary_others_normal" name="rs_urinary_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1713,7 +1713,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_peripheral_vascular_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peripheral_vascular_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_peripheral_vascular_others_normal" name="rs_peripheral_vascular_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1776,7 +1776,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_musculoskeletal_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musculoskeletal_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_musculoskeletal_others_normal" name="rs_musculoskeletal_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1849,7 +1849,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_neurologic_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neurologic_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_neurologic_others_normal" name="rs_neurologic_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1882,7 +1882,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_hematologic_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hematologic_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_hematologic_others_normal" name="rs_hematologic_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1929,7 +1929,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_endocrine_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endocrine_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_endocrine_others_normal" name="rs_endocrine_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
@@ -1984,7 +1984,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_psychiatric_others_cbox_normal" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psychiatric_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" id="rs_psychiatric_others_normal" name="rs_psychiatric_others" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                             </div>
