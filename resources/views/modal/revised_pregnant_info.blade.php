@@ -1593,7 +1593,7 @@ $facilities = \App\Facility::select('id','name')
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_skin_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_others_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_skin_others" id="rs_skin_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->skin_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1620,7 +1620,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_head_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_others_cbox" value="Yes" <?= isChecked($review_of_system, 'head', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_head_others" id="rs_head_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->head_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1667,7 +1667,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_eyes_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_others_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_eyes_others" id="rs_eyes_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->eyes_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1708,7 +1708,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_ears_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_others_cbox" value="Yes" <?= isChecked($review_of_system, 'ears', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_ears_others" id="rs_ears_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->ears_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1741,7 +1741,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_nose_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_others_cbox" value="Yes" <?= isChecked($review_of_system, 'nose_or_sinuses', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_nose_others" id="rs_nose_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->nose_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1778,7 +1778,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_mouth_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_others_cbox" value="Yes" <?= isChecked($review_of_system, 'nose_or_sinuses', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_mouth_others" id="rs_mouth_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->nose_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1815,7 +1815,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_neck_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_others_cbox" value="Yes" <?= isChecked($review_of_system, 'neck', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_neck_others" id="rs_neck_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->neck_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1850,6 +1850,11 @@ $facilities = \App\Facility::select('id','name')
                                                 <input class="form-check-input" id="rs_breast_bse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_bse_cbox" value="Yes" <?= isChecked($review_of_system, 'breast', 'BSE'); ?>>
                                                 <span> BSE</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_breast_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_others_cbox" value="Yes" <?= isChecked($review_of_system, 'breast', 'Others'); ?>>
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_breast_others" id="rs_breast_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->breast_others); ?></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1938,7 +1943,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_respiratory_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respiratory_others_cbox" value="Yes" <?= isChecked($review_of_system, 'respiratory_or_cardiac', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_respiratory_others" id="rs_respiratory_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->respiratory_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2025,7 +2030,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_gastrointestinal_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastrointestinal_others_cbox" value="Yes" <?= isChecked($review_of_system, 'gastrointestinal', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_gastrointestinal_others" id="rs_gastrointestinal_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->gastrointestinal_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2086,7 +2091,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_urinary_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urinary_others_cbox" value="Yes" <?= isChecked($review_of_system, 'urinary', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_urinary_others" id="rs_urinary_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->urinary_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2123,7 +2128,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_peripheral_vascular_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peripheral_vascular_others_cbox" value="Yes" <?= isChecked($review_of_system, 'peripheral_vascular', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_peripheral_vascular_others" id="rs_peripheral_vascular_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->peripheral_vascular_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2186,7 +2191,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_musculoskeletal_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musculoskeletal_others_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_musculoskeletal_others" id="rs_musculoskeletal_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->musculoskeletal_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2259,7 +2264,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_neurologic_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neurologic_others_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_neurologic_others" id="rs_neurologic_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->neurologic_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2292,7 +2297,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_hematologic_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hematologic_others_cbox" value="Yes" <?= isChecked($review_of_system, 'hematologic', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_hematologic_others" id="rs_hematologic_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->hematologic_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2339,7 +2344,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_endocrine_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endocrine_others_cbox" value="Yes" <?= isChecked($review_of_system, 'endocrine', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_endocrine_others" id="rs_endocrine_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->endocrine_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -2394,7 +2399,7 @@ $facilities = \App\Facility::select('id','name')
                                             </div>
                                             <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_psychiatric_others_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psychiatric_others_cbox" value="Yes" <?= isChecked($review_of_system, 'psychiatric', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_psychiatric_others" id="rs_psychiatric_others" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->psychiatric_others); ?></textarea>
                                                 </div>
                                         </div>
