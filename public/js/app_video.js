@@ -22756,6 +22756,9 @@ var doctorFeedback = "referral/doctor/feedback";
   },
   mounted: function mounted() {
     var _this = this;
+    // Automatically start screen recording when the component is mounted
+    this.startScreenRecording();
+
     //for minutes timer
     this.startCallTimer();
     window.addEventListener('beforeunload', this.stopCallTimer);
@@ -22815,8 +22818,88 @@ var doctorFeedback = "referral/doctor/feedback";
     });
   },
   methods: {
-    startCallTimer: function startCallTimer() {
+    startScreenRecording: function startScreenRecording() {
       var _this3 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var stream;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              _context.next = 3;
+              return navigator.mediaDevices.getDisplayMedia({
+                video: true,
+                audio: true
+              });
+            case 3:
+              stream = _context.sent;
+              // Initialize MediaRecorder
+              _this3.screenRecorder = new MediaRecorder(stream, {
+                mimeType: "video/webm; codecs=vp8" // WebM format
+              });
+              _this3.recordedChunks = [];
+
+              // Collect recorded data
+              _this3.screenRecorder.ondataavailable = function (event) {
+                if (event.data.size > 0) {
+                  _this3.recordedChunks.push(event.data);
+                }
+              };
+
+              // Start recording
+              _this3.screenRecorder.start();
+              console.log("Screen recording started.");
+              _context.next = 15;
+              break;
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](0);
+              console.error("Error starting screen recording:", _context.t0);
+              // Show an error message
+              Lobibox.alert("error", {
+                msg: "Failed to start screen recording. Please check browser permissions.",
+                callback: function callback() {
+                  window.top.close(); // Close the window when "OK" is clicked
+                }
+              });
+              // Close the window if permission is denied
+              // setTimeout(() => {
+              //     window.top.close();
+              // }, 2000); // Add a slight delay to allow the alert to display
+            case 15:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[0, 11]]);
+      }))();
+    },
+    saveScreenRecording: function saveScreenRecording() {
+      if (this.recordedChunks.length > 0) {
+        // Convert recorded chunks to a Blob
+        var blob = new Blob(this.recordedChunks, {
+          type: "video/webm"
+        });
+
+        // Convert WebM to MP4 using a third-party library (optional)
+        // For simplicity, we'll save it as WebM with an .mp4 extension
+        var url = URL.createObjectURL(blob);
+
+        // Automatically save the file
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "screen_recording_".concat(Date.now(), ".mp4"); // Save as .mp4
+        a.click();
+
+        // Clean up
+        URL.revokeObjectURL(url);
+        this.recordedChunks = [];
+        console.log("Screen recording saved successfully.");
+      } else {
+        console.error("No recorded data available to save.");
+      }
+    },
+    startCallTimer: function startCallTimer() {
+      var _this4 = this;
       var startTime = localStorage.getItem('callStartTime');
       if (startTime) {
         this.callMinutes = Math.floor((Date.now() - startTime) / 60000);
@@ -22825,8 +22908,8 @@ var doctorFeedback = "referral/doctor/feedback";
         localStorage.setItem('callStartTime', Date.now());
       }
       this.callTimer = setInterval(function () {
-        _this3.callMinutes++;
-        console.log("Current call duration:", _this3.callMinutes);
+        _this4.callMinutes++;
+        console.log("Current call duration:", _this4.callMinutes);
       }, 60000);
       console.log("referring call duration:", this.referring_md);
     },
@@ -22847,11 +22930,11 @@ var doctorFeedback = "referral/doctor/feedback";
       $(".reco-body" + code).append('<div class=\'direct-chat-msg left\'>\n' + '                    <div class=\'direct-chat-info clearfix\'>\n' + '                    <span class="direct-chat-name text-info pull-left">' + facility_sender + '</span><br>' + '                    <span class=\'direct-chat-name pull-left\'>' + name_sender + '</span>\n' + '                    <span class=\'direct-chat-timestamp pull-right\'>' + date_now + '</span>\n' + '                    </div>\n' + '                    <img class=\'direct-chat-img\' title=\'\' src="' + picture_sender + '" alt=\'Message User Image\'>\n' + '                    <div class=\'direct-chat-text\'>\n' + '                    ' + message + '\n' + '                    </div>\n' + '                    </div>');
     },
     startBasicCall: function startBasicCall() {
-      var _this4 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var _this5 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var agoraEngine, remotePlayerContainer, localPlayerContainer, self;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
               // Create an instance of the Agora Engine
               agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
@@ -22860,15 +22943,15 @@ var doctorFeedback = "referral/doctor/feedback";
               }); // Dynamically create a container in the form of a DIV element to play the remote video track.
               remotePlayerContainer = document.createElement("div"); // Dynamically create a container in the form of a DIV element to play the local video track.
               localPlayerContainer = document.createElement("div"); // Specify the ID of the DIV container. You can use the uid of the local user.
-              localPlayerContainer.id = _this4.options.uid;
+              localPlayerContainer.id = _this5.options.uid;
               // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
-              self = _this4;
+              self = _this5;
               agoraEngine.on("user-published", /*#__PURE__*/function () {
-                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(user, mediaType) {
-                  return _regeneratorRuntime().wrap(function _callee$(_context) {
-                    while (1) switch (_context.prev = _context.next) {
+                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(user, mediaType) {
+                  return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+                    while (1) switch (_context2.prev = _context2.next) {
                       case 0:
-                        _context.next = 2;
+                        _context2.next = 2;
                         return agoraEngine.subscribe(user, mediaType);
                       case 2:
                         console.log("subscribe success");
@@ -22907,9 +22990,9 @@ var doctorFeedback = "referral/doctor/feedback";
                         });
                       case 6:
                       case "end":
-                        return _context.stop();
+                        return _context2.stop();
                     }
-                  }, _callee);
+                  }, _callee2);
                 }));
                 return function (_x, _x2) {
                   return _ref.apply(this, arguments);
@@ -22920,9 +23003,9 @@ var doctorFeedback = "referral/doctor/feedback";
               };
             case 7:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2);
+        }, _callee3);
       }))();
     },
     getUrlVars: function getUrlVars() {
@@ -22937,29 +23020,29 @@ var doctorFeedback = "referral/doctor/feedback";
       return vars;
     },
     joinVideo: function joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
               console.log("local");
               // Join a channel.
-              _context3.next = 3;
+              _context4.next = 3;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
             case 3:
-              _context3.next = 5;
+              _context4.next = 5;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
             case 5:
-              channelParameters.localAudioTrack = _context3.sent;
-              _context3.next = 8;
+              channelParameters.localAudioTrack = _context4.sent;
+              _context4.next = 8;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 8:
-              channelParameters.localVideoTrack = _context3.sent;
+              channelParameters.localVideoTrack = _context4.sent;
               // Append the local video container to the page body.
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
               $(localPlayerContainer).addClass("localPlayerLayer");
               // Publish the local audio and video tracks in the channel.
-              _context3.next = 14;
+              _context4.next = 14;
               return agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
             case 14:
               // Play the local video track.
@@ -22967,87 +23050,98 @@ var doctorFeedback = "referral/doctor/feedback";
               console.log("publish success!");
             case 16:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3);
+        }, _callee4);
       }))();
     },
     sendCallDuration: function sendCallDuration() {
-      var _this5 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var finalDuration, response;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
-            case 0:
-              if (!_this5.isLeavingChannel) {
-                _context4.next = 2;
-                break;
-              }
-              return _context4.abrupt("return");
-            case 2:
-              // Prevent duplicate sends
-              _this5.isLeavingChannel = true;
-              if (!(_this5.callMinutes > 0)) {
-                _context4.next = 18;
-                break;
-              }
-              _context4.prev = 4;
-              // Calculate final duration before sending
-              finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
-              _context4.next = 8;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this5.baseUrl, "/save-call-duration"), {
-                call_duration: finalDuration,
-                tracking_id: _this5.tracking_id,
-                referral_code: _this5.referral_code
-              });
-            case 8:
-              response = _context4.sent;
-              console.log("Call duration saved:", response.data);
-              localStorage.removeItem('callStartTime'); // Clean up
-              return _context4.abrupt("return", true);
-            case 14:
-              _context4.prev = 14;
-              _context4.t0 = _context4["catch"](4);
-              console.error("Error saving call duration:", _context4.t0);
-              return _context4.abrupt("return", false);
-            case 18:
-              return _context4.abrupt("return", false);
-            case 19:
-            case "end":
-              return _context4.stop();
-          }
-        }, _callee4, null, [[4, 14]]);
-      }))();
-    },
-    leaveChannel: function leaveChannel() {
       var _this6 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+        var finalDuration, response;
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
+              if (!_this6.isLeavingChannel) {
+                _context5.next = 2;
+                break;
+              }
+              return _context5.abrupt("return");
+            case 2:
+              // Prevent duplicate sends
+              _this6.isLeavingChannel = true;
+              if (!(_this6.callMinutes > 0)) {
+                _context5.next = 18;
+                break;
+              }
+              _context5.prev = 4;
+              // Calculate final duration before sending
+              finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
+              _context5.next = 8;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this6.baseUrl, "/save-call-duration"), {
+                call_duration: finalDuration,
+                tracking_id: _this6.tracking_id,
+                referral_code: _this6.referral_code
+              });
+            case 8:
+              response = _context5.sent;
+              console.log("Call duration saved:", response.data);
+              localStorage.removeItem('callStartTime'); // Clean up
+              return _context5.abrupt("return", true);
+            case 14:
+              _context5.prev = 14;
+              _context5.t0 = _context5["catch"](4);
+              console.error("Error saving call duration:", _context5.t0);
+              return _context5.abrupt("return", false);
+            case 18:
+              return _context5.abrupt("return", false);
+            case 19:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, null, [[4, 14]]);
+      }))();
+    },
+    leaveChannel: function leaveChannel() {
+      var _this7 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
               if (!confirm("Are you sure you want to leave this channel?")) {
-                _context5.next = 7;
+                _context6.next = 10;
                 break;
               }
-              if (!(_this6.referring_md == 'yes')) {
-                _context5.next = 6;
+              // Stop screen recording and save the file
+              if (_this7.screenRecorder && _this7.screenRecorder.state !== "inactive") {
+                _this7.screenRecorder.stop();
+                _this7.screenRecorder.onstop = function () {
+                  _this7.saveScreenRecording();
+                };
+              }
+
+              // Wait for duration to be sent before closing
+              if (!(_this7.referring_md === "yes")) {
+                _context6.next = 9;
                 break;
               }
-              clearInterval(_this6.callTimer); // Stop the timer
-              _context5.next = 5;
-              return _this6.sendCallDuration();
-            case 5:
+              clearInterval(_this7.callTimer); // Stop the timer
+              _context6.next = 6;
+              return _this7.sendCallDuration();
+            case 6:
               // Give more time for the request to complete
               setTimeout(function () {
                 window.top.close();
               }, 2000);
-            case 6:
+              _context6.next = 10;
+              break;
+            case 9:
               window.top.close();
-            case 7:
+            case 10:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5);
+        }, _callee6);
       }))();
     },
     stopCallTimer: function stopCallTimer() {
@@ -23095,30 +23189,30 @@ var doctorFeedback = "referral/doctor/feedback";
       clearTimeout(this.timeoutId);
     }),
     ringingPhoneFunc: function ringingPhoneFunc() {
-      var _this7 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+      var _this8 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
         var self;
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
             case 0:
-              _context6.next = 2;
-              return _this7.$refs.ringingPhone.play();
+              _context7.next = 2;
+              return _this8.$refs.ringingPhone.play();
             case 2:
-              self = _this7;
+              self = _this8;
               setTimeout(function () {
                 console.log("pause");
                 self.$refs.ringingPhone.pause();
               }, 60000);
             case 4:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
-        }, _callee6);
+        }, _callee7);
       }))();
     },
     //--------------------------------------------------------------------------
     generatePrescription: function generatePrescription() {
-      var _this8 = this;
+      var _this9 = this;
       var getPrescription = {
         code: this.referral_code,
         form_type: this.form_type,
@@ -23129,11 +23223,11 @@ var doctorFeedback = "referral/doctor/feedback";
           var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
 
           // Set the PDF URL
-          _this8.PdfUrl = "".concat(_this8.baseUrl, "/doctor/print/prescription/").concat(_this8.tracking_id, "/").concat(prescribedActivityId);
+          _this9.PdfUrl = "".concat(_this9.baseUrl, "/doctor/print/prescription/").concat(_this9.tracking_id, "/").concat(prescribedActivityId);
 
           // Show the modal using the ref method
-          _this8.$nextTick(function () {
-            _this8.$refs.pdfViewer.openModal();
+          _this9.$nextTick(function () {
+            _this9.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
@@ -23145,21 +23239,21 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     },
     generateLabrequest: function generateLabrequest() {
-      var _this9 = this;
+      var _this10 = this;
       var url = "".concat(this.baseUrl, "/api/check/labresult");
       var payload = {
         activity_id: this.activity_id
       };
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
         if (response.data.id) {
-          var pdfUrl = "".concat(_this9.baseUrl, "/doctor/print/labresult/").concat(_this9.activity_id);
+          var pdfUrl = "".concat(_this10.baseUrl, "/doctor/print/labresult/").concat(_this10.activity_id);
 
           // Set the PDF URL for the modal
-          _this9.PdfUrl = pdfUrl;
+          _this10.PdfUrl = pdfUrl;
 
           // Show the PDF in the custom modal
-          _this9.$nextTick(function () {
-            _this9.$refs.pdfViewer.openModal();
+          _this10.$nextTick(function () {
+            _this10.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
