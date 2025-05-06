@@ -170,44 +170,61 @@ export default {
   },
   methods: {
     async startScreenRecording() {
-        try {
-            // Request screen capture of the current window
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-                video: true,
-                audio: true,
-            });
+    try {
+        // Request screen capture with desktop audio
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            audio: {
+                echoCancellation: true, // Reduce echo
+                noiseSuppression: true, // Reduce background noise
+                sampleRate: 44100,      // Set sample rate for better quality
+            },
+        });
 
-            // Initialize MediaRecorder
-            this.screenRecorder = new MediaRecorder(stream, {
-                mimeType: "video/webm; codecs=vp8", // WebM format
-            });
-            this.recordedChunks = [];
+        // Request microphone audio
+        const micStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                echoCancellation: true, // Reduce echo
+                noiseSuppression: true, // Reduce background noise
+                sampleRate: 44100,      // Set sample rate for better quality
+            },
+        });
 
-            // Collect recorded data
-            this.screenRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    this.recordedChunks.push(event.data);
-                }
-            };
+        // Combine desktop and microphone audio tracks
+        const combinedStream = new MediaStream([
+            ...screenStream.getVideoTracks(),  // Desktop video
+            ...screenStream.getAudioTracks(), // Desktop audio
+            ...micStream.getAudioTracks(),    // Microphone audio
+        ]);
 
-            // Start recording
-            this.screenRecorder.start();
-            console.log("Screen recording started.");
-        } catch (error) {
-            console.error("Error starting screen recording:", error);
-              // Show an error message
-            Lobibox.alert("error", {
-                msg: "Failed to start screen recording. Please check browser permissions.",
-                callback: function () {
+        // Initialize MediaRecorder with the combined stream
+        this.screenRecorder = new MediaRecorder(combinedStream, {
+            mimeType: "video/webm; codecs=vp8", // WebM format
+        });
+        this.recordedChunks = [];
+
+        // Collect recorded data
+        this.screenRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                this.recordedChunks.push(event.data);
+            }
+        };
+
+        // Start recording
+        this.screenRecorder.start();
+        console.log("Screen recording started with desktop and microphone audio.");
+    } catch (error) {
+        console.error("Error starting screen recording:", error);
+        // Show an error message
+        Lobibox.alert("error", {
+            msg: "Failed to start screen recording. Please check browser permissions.",
+            closeButton: false,
+            callback: function () {
                 window.top.close(); // Close the window when "OK" is clicked
             },
-            });
-             // Close the window if permission is denied
-            // setTimeout(() => {
-            //     window.top.close();
-            // }, 2000); // Add a slight delay to allow the alert to display
-        }
-    },
+        });
+    }
+},
 
     saveScreenRecording() {
         if (this.recordedChunks.length > 0) {
@@ -1071,238 +1088,325 @@ export default {
 
 };
 
+// document.addEventListener("DOMContentLoaded", function () {
+//     const draggableDiv = document.getElementById("draggable-div");
+//     const telemedForm = document.querySelector(".telemedForm");
+//     const mainPic = document.querySelector(".mainPic");
+    
+//     if (!draggableDiv || !telemedForm) {
+//         console.error("❌ Error: Elements not found!");
+//         return;
+//     }
+    
+//     // Override any existing styling with our fixed dimensions
+//     draggableDiv.style.width = "150px";      // Fixed width instead of percentage
+//     draggableDiv.style.minWidth = "150px";   // Ensure minimum width
+//     draggableDiv.style.maxWidth = "none";    // Remove any maxWidth constraint
+//     draggableDiv.style.height = "200px";     // Fixed height
+//     draggableDiv.style.minHeight = "200px";  // Ensure minimum height
+    
+//     // Clear any existing transforms that might be repositioning the element
+//     draggableDiv.style.transform = "none";
+    
+//     let isDragging = false;
+//     let offsetX, offsetY;
+    
+//     // Position in bottom right corner initially
+//     positionInBottomRight();
+    
+//     // Mouse events for desktop
+//     draggableDiv.addEventListener("mousedown", startDrag);
+//     document.addEventListener("mousemove", drag);
+//     document.addEventListener("mouseup", endDrag);
+    
+//     // Touch events for mobile
+//     draggableDiv.addEventListener("touchstart", startDragTouch);
+//     document.addEventListener("touchmove", dragTouch);
+//     document.addEventListener("touchend", endDrag);
+    
+//     function positionInBottomRight() {
+//         // Set absolute positioning
+//         draggableDiv.style.position = "absolute";
+        
+//         // Get container dimensions - use mainPic if available, otherwise use viewport
+//         let containerWidth, containerHeight, containerLeft, containerTop;
+        
+//         if (mainPic) {
+//             const mainPicBounds = mainPic.getBoundingClientRect();
+//             containerWidth = mainPicBounds.width;
+//             containerHeight = mainPicBounds.height;
+//             containerLeft = mainPicBounds.left;
+//             containerTop = mainPicBounds.top;
+//         } else {
+//             containerWidth = window.innerWidth;
+//             containerHeight = window.innerHeight;
+//             containerLeft = 0; 
+//             containerTop = 0;
+//         }
+        
+//         // Calculate position (20px padding from edges)
+//         let newX = containerLeft + containerWidth - 150 - 20;  // Using fixed width of 150px
+//         let newY = containerTop + containerHeight - 200 - 20;  // Using fixed height of 200px
+        
+//         // Get the telemedForm bounds to avoid overlapping
+//         const telemedBounds = telemedForm.getBoundingClientRect();
+        
+//         // Ensure it doesn't overlap with telemedForm
+//         if (newX + 150 > telemedBounds.left && 
+//             newX < telemedBounds.right && 
+//             newY + 200 > telemedBounds.top && 
+//             newY < telemedBounds.bottom) {
+//             // If it would overlap, move it above the form
+//             newY = telemedBounds.top - 200 - 20;
+//         }
+        
+//         // Convert to relative position if needed
+//         if (draggableDiv.offsetParent) {
+//             const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
+//             newX -= parentRect.left;
+//             newY -= parentRect.top;
+//         }
+        
+//         // Apply the position
+//         draggableDiv.style.left = `${newX}px`;
+//         draggableDiv.style.top = `${newY}px`;
+//     }
+    
+//     function startDrag(event) {
+//         event.preventDefault();
+//         isDragging = true;
+        
+//         const rect = draggableDiv.getBoundingClientRect();
+//         offsetX = event.clientX - rect.left;
+//         offsetY = event.clientY - rect.top;
+        
+//         // Use box-shadow instead of transform for visual feedback
+//         draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+//         draggableDiv.style.cursor = "grabbing";
+//     }
+    
+//     function startDragTouch(event) {
+//         if (event.touches.length !== 1) return;
+        
+//         event.preventDefault();
+//         isDragging = true;
+        
+//         const touch = event.touches[0];
+//         const rect = draggableDiv.getBoundingClientRect();
+//         offsetX = touch.clientX - rect.left;
+//         offsetY = touch.clientY - rect.top;
+        
+//         // Use box-shadow instead of transform for visual feedback
+//         draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+//     }
+    
+//     function drag(event) {
+//         if (!isDragging) return;
+        
+//         event.preventDefault();
+//         moveElement(event.clientX, event.clientY);
+//     }
+    
+//     function dragTouch(event) {
+//         if (!isDragging || event.touches.length !== 1) return;
+        
+//         event.preventDefault();
+//         const touch = event.touches[0];
+//         moveElement(touch.clientX, touch.clientY);
+//     }
+    
+//     function moveElement(clientX, clientY) {
+//         // Calculate new position
+//         let newX = clientX - offsetX;
+//         let newY = clientY - offsetY;
+        
+//         // Get necessary bounding rectangles
+//         const telemedBounds = telemedForm.getBoundingClientRect();
+        
+//         // Check if the draggable div would enter the telemedForm
+//         const wouldOverlapTelemedForm = 
+//             newX + 150 > telemedBounds.left &&
+//             newX < telemedBounds.right &&
+//             newY + 200 > telemedBounds.top &&
+//             newY < telemedBounds.bottom;
+        
+//         if (wouldOverlapTelemedForm) {
+//             // Don't update position if it would overlap with telemedForm
+//             return;
+//         }
+        
+//         // Keep within mainPic boundaries if mainPic exists
+//         if (mainPic) {
+//             const mainPicBounds = mainPic.getBoundingClientRect();
+//             // Calculate boundaries
+//             const minX = mainPicBounds.left;
+//             const maxX = mainPicBounds.right - 150;  // Using fixed width
+//             const minY = mainPicBounds.top;
+//             const maxY = mainPicBounds.bottom - 200; // Using fixed height
+            
+//             // Apply constraints
+//             newX = Math.max(minX, Math.min(maxX, newX));
+//             newY = Math.max(minY, Math.min(maxY, newY));
+//         }
+        
+//         // Convert to relative position within parent element if needed
+//         if (draggableDiv.offsetParent) {
+//             const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
+//             newX -= parentRect.left;
+//             newY -= parentRect.top;
+//         }
+        
+//         // Apply the position
+//         draggableDiv.style.left = `${newX}px`;
+//         draggableDiv.style.top = `${newY}px`;
+//     }
+    
+//     function endDrag() {
+//         if (!isDragging) return;
+        
+//         isDragging = false;
+//         // Reset the visual feedback
+//         draggableDiv.style.boxShadow = "none";
+//         draggableDiv.style.cursor = "grab";
+//     }
+    
+//     // Add cursor style to indicate draggability
+//     draggableDiv.style.cursor = "grab";
+    
+//     // Ensure our settings take precedence by applying them again after a short delay
+//     setTimeout(function() {
+//         draggableDiv.style.width = "150px"; 
+//         draggableDiv.style.height = "200px";
+//         draggableDiv.style.minWidth = "150px";
+//         draggableDiv.style.minHeight = "200px";
+//         draggableDiv.style.maxWidth = "none";
+//     }, 100);
+    
+//     // Override any external changes that might be made by other scripts
+//     const observer = new MutationObserver(function(mutations) {
+//         mutations.forEach(function(mutation) {
+//             if (mutation.attributeName === "style") {
+//                 // Check if width or transform has been changed externally
+//                 const currentWidth = draggableDiv.style.width;
+//                 const currentTransform = draggableDiv.style.transform;
+                
+//                 if (currentWidth !== "150px" || 
+//                     (currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale"))) {
+//                     // Re-apply our fixed dimensions
+//                     draggableDiv.style.width = "150px";
+//                     draggableDiv.style.height = "200px";
+//                     draggableDiv.style.minWidth = "150px";
+//                     draggableDiv.style.minHeight = "200px";
+//                     draggableDiv.style.maxWidth = "none";
+                    
+//                     // Only clear transform if it's not our scaling effect
+//                     if (currentTransform && !currentTransform.startsWith("scale")) {
+//                         draggableDiv.style.transform = "none";
+//                     }
+//                 }
+//             }
+//         });
+//     });
+    
+//     // Start observing the element for style changes
+//     observer.observe(draggableDiv, { attributes: true });
+    
+//     // Update position on window resize to maintain proper boundaries
+//     window.addEventListener("resize", function() {
+//         if (isDragging) return; // Don't interfere with active dragging
+        
+//         // Reposition in bottom right on resize
+//         positionInBottomRight();
+//     });
+// });
 document.addEventListener("DOMContentLoaded", function () {
     const draggableDiv = document.getElementById("draggable-div");
-    const telemedForm = document.querySelector(".telemedForm");
     const mainPic = document.querySelector(".mainPic");
-    
-    if (!draggableDiv || !telemedForm) {
-        console.error("❌ Error: Elements not found!");
+
+    if (!draggableDiv) {
+        console.error("❌ Error: Draggable element not found!");
         return;
     }
-    
-    // Override any existing styling with our fixed dimensions
-    draggableDiv.style.width = "150px";      // Fixed width instead of percentage
-    draggableDiv.style.minWidth = "150px";   // Ensure minimum width
-    draggableDiv.style.maxWidth = "none";    // Remove any maxWidth constraint
-    draggableDiv.style.height = "200px";     // Fixed height
-    draggableDiv.style.minHeight = "200px";  // Ensure minimum height
-    
-    // Clear any existing transforms that might be repositioning the element
-    draggableDiv.style.transform = "none";
-    
+
     let isDragging = false;
-    let offsetX, offsetY;
-    
-    // Position in bottom right corner initially
+    let offsetX = 0, offsetY = 0;
+
+    // Position the draggable div in the bottom-right corner initially
     positionInBottomRight();
-    
+
     // Mouse events for desktop
     draggableDiv.addEventListener("mousedown", startDrag);
     document.addEventListener("mousemove", drag);
     document.addEventListener("mouseup", endDrag);
-    
+
     // Touch events for mobile
     draggableDiv.addEventListener("touchstart", startDragTouch);
     document.addEventListener("touchmove", dragTouch);
     document.addEventListener("touchend", endDrag);
-    
+
     function positionInBottomRight() {
-        // Set absolute positioning
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const padding = 20;
+
         draggableDiv.style.position = "absolute";
-        
-        // Get container dimensions - use mainPic if available, otherwise use viewport
-        let containerWidth, containerHeight, containerLeft, containerTop;
-        
-        if (mainPic) {
-            const mainPicBounds = mainPic.getBoundingClientRect();
-            containerWidth = mainPicBounds.width;
-            containerHeight = mainPicBounds.height;
-            containerLeft = mainPicBounds.left;
-            containerTop = mainPicBounds.top;
-        } else {
-            containerWidth = window.innerWidth;
-            containerHeight = window.innerHeight;
-            containerLeft = 0; 
-            containerTop = 0;
-        }
-        
-        // Calculate position (20px padding from edges)
-        let newX = containerLeft + containerWidth - 150 - 20;  // Using fixed width of 150px
-        let newY = containerTop + containerHeight - 200 - 20;  // Using fixed height of 200px
-        
-        // Get the telemedForm bounds to avoid overlapping
-        const telemedBounds = telemedForm.getBoundingClientRect();
-        
-        // Ensure it doesn't overlap with telemedForm
-        if (newX + 150 > telemedBounds.left && 
-            newX < telemedBounds.right && 
-            newY + 200 > telemedBounds.top && 
-            newY < telemedBounds.bottom) {
-            // If it would overlap, move it above the form
-            newY = telemedBounds.top - 200 - 20;
-        }
-        
-        // Convert to relative position if needed
-        if (draggableDiv.offsetParent) {
-            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-            newX -= parentRect.left;
-            newY -= parentRect.top;
-        }
-        
-        // Apply the position
-        draggableDiv.style.left = `${newX}px`;
-        draggableDiv.style.top = `${newY}px`;
+        draggableDiv.style.left = `${containerBounds.right - draggableDiv.offsetWidth - padding}px`;
+        draggableDiv.style.top = `${containerBounds.bottom - draggableDiv.offsetHeight - padding}px`;
     }
-    
+
     function startDrag(event) {
-        event.preventDefault();
         isDragging = true;
-        
         const rect = draggableDiv.getBoundingClientRect();
         offsetX = event.clientX - rect.left;
         offsetY = event.clientY - rect.top;
-        
-        // Use box-shadow instead of transform for visual feedback
-        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
         draggableDiv.style.cursor = "grabbing";
     }
-    
+
     function startDragTouch(event) {
         if (event.touches.length !== 1) return;
-        
-        event.preventDefault();
         isDragging = true;
-        
         const touch = event.touches[0];
         const rect = draggableDiv.getBoundingClientRect();
         offsetX = touch.clientX - rect.left;
         offsetY = touch.clientY - rect.top;
-        
-        // Use box-shadow instead of transform for visual feedback
-        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
     }
-    
+
     function drag(event) {
         if (!isDragging) return;
-        
         event.preventDefault();
         moveElement(event.clientX, event.clientY);
     }
-    
+
     function dragTouch(event) {
         if (!isDragging || event.touches.length !== 1) return;
-        
         event.preventDefault();
         const touch = event.touches[0];
         moveElement(touch.clientX, touch.clientY);
     }
-    
+
     function moveElement(clientX, clientY) {
-        // Calculate new position
-        let newX = clientX - offsetX;
-        let newY = clientY - offsetY;
-        
-        // Get necessary bounding rectangles
-        const telemedBounds = telemedForm.getBoundingClientRect();
-        
-        // Check if the draggable div would enter the telemedForm
-        const wouldOverlapTelemedForm = 
-            newX + 150 > telemedBounds.left &&
-            newX < telemedBounds.right &&
-            newY + 200 > telemedBounds.top &&
-            newY < telemedBounds.bottom;
-        
-        if (wouldOverlapTelemedForm) {
-            // Don't update position if it would overlap with telemedForm
-            return;
-        }
-        
-        // Keep within mainPic boundaries if mainPic exists
-        if (mainPic) {
-            const mainPicBounds = mainPic.getBoundingClientRect();
-            // Calculate boundaries
-            const minX = mainPicBounds.left;
-            const maxX = mainPicBounds.right - 150;  // Using fixed width
-            const minY = mainPicBounds.top;
-            const maxY = mainPicBounds.bottom - 200; // Using fixed height
-            
-            // Apply constraints
-            newX = Math.max(minX, Math.min(maxX, newX));
-            newY = Math.max(minY, Math.min(maxY, newY));
-        }
-        
-        // Convert to relative position within parent element if needed
-        if (draggableDiv.offsetParent) {
-            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-            newX -= parentRect.left;
-            newY -= parentRect.top;
-        }
-        
-        // Apply the position
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const newX = Math.min(
+            Math.max(clientX - offsetX, containerBounds.left),
+            containerBounds.right - draggableDiv.offsetWidth
+        );
+        const newY = Math.min(
+            Math.max(clientY - offsetY, containerBounds.top),
+            containerBounds.bottom - draggableDiv.offsetHeight
+        );
+
         draggableDiv.style.left = `${newX}px`;
         draggableDiv.style.top = `${newY}px`;
     }
-    
+
     function endDrag() {
         if (!isDragging) return;
-        
         isDragging = false;
-        // Reset the visual feedback
-        draggableDiv.style.boxShadow = "none";
         draggableDiv.style.cursor = "grab";
     }
-    
-    // Add cursor style to indicate draggability
-    draggableDiv.style.cursor = "grab";
-    
-    // Ensure our settings take precedence by applying them again after a short delay
-    setTimeout(function() {
-        draggableDiv.style.width = "150px"; 
-        draggableDiv.style.height = "200px";
-        draggableDiv.style.minWidth = "150px";
-        draggableDiv.style.minHeight = "200px";
-        draggableDiv.style.maxWidth = "none";
-    }, 100);
-    
-    // Override any external changes that might be made by other scripts
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.attributeName === "style") {
-                // Check if width or transform has been changed externally
-                const currentWidth = draggableDiv.style.width;
-                const currentTransform = draggableDiv.style.transform;
-                
-                if (currentWidth !== "150px" || 
-                    (currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale"))) {
-                    // Re-apply our fixed dimensions
-                    draggableDiv.style.width = "150px";
-                    draggableDiv.style.height = "200px";
-                    draggableDiv.style.minWidth = "150px";
-                    draggableDiv.style.minHeight = "200px";
-                    draggableDiv.style.maxWidth = "none";
-                    
-                    // Only clear transform if it's not our scaling effect
-                    if (currentTransform && !currentTransform.startsWith("scale")) {
-                        draggableDiv.style.transform = "none";
-                    }
-                }
-            }
-        });
-    });
-    
-    // Start observing the element for style changes
-    observer.observe(draggableDiv, { attributes: true });
-    
-    // Update position on window resize to maintain proper boundaries
-    window.addEventListener("resize", function() {
-        if (isDragging) return; // Don't interfere with active dragging
-        
-        // Reposition in bottom right on resize
-        positionInBottomRight();
-    });
-});
 
+    // Ensure the draggable div stays within bounds on window resize
+    window.addEventListener("resize", positionInBottomRight);
+});
 </script>
 
 <template>
@@ -1838,5 +1942,14 @@ td {
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+#draggable-div {
+    width: 195px;
+    height: 200px;
+    min-width: 150px;
+    min-height: 200px;
+    max-width: 150px;
+    max-height: 200px;
 }
 </style>

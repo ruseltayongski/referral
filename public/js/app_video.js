@@ -22669,6 +22669,12 @@ function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
@@ -22821,7 +22827,7 @@ var doctorFeedback = "referral/doctor/feedback";
     startScreenRecording: function startScreenRecording() {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var stream;
+        var screenStream, micStream, combinedStream;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
@@ -22829,12 +22835,31 @@ var doctorFeedback = "referral/doctor/feedback";
               _context.next = 3;
               return navigator.mediaDevices.getDisplayMedia({
                 video: true,
-                audio: true
+                audio: {
+                  echoCancellation: true,
+                  // Reduce echo
+                  noiseSuppression: true,
+                  // Reduce background noise
+                  sampleRate: 44100 // Set sample rate for better quality
+                }
               });
             case 3:
-              stream = _context.sent;
-              // Initialize MediaRecorder
-              _this3.screenRecorder = new MediaRecorder(stream, {
+              screenStream = _context.sent;
+              _context.next = 6;
+              return navigator.mediaDevices.getUserMedia({
+                audio: {
+                  echoCancellation: true,
+                  // Reduce echo
+                  noiseSuppression: true,
+                  // Reduce background noise
+                  sampleRate: 44100 // Set sample rate for better quality
+                }
+              });
+            case 6:
+              micStream = _context.sent;
+              // Combine desktop and microphone audio tracks
+              combinedStream = new MediaStream([].concat(_toConsumableArray(screenStream.getVideoTracks()), _toConsumableArray(screenStream.getAudioTracks()), _toConsumableArray(micStream.getAudioTracks()))); // Initialize MediaRecorder with the combined stream
+              _this3.screenRecorder = new MediaRecorder(combinedStream, {
                 mimeType: "video/webm; codecs=vp8" // WebM format
               });
               _this3.recordedChunks = [];
@@ -22848,29 +22873,26 @@ var doctorFeedback = "referral/doctor/feedback";
 
               // Start recording
               _this3.screenRecorder.start();
-              console.log("Screen recording started.");
-              _context.next = 15;
+              console.log("Screen recording started with desktop and microphone audio.");
+              _context.next = 19;
               break;
-            case 11:
-              _context.prev = 11;
+            case 15:
+              _context.prev = 15;
               _context.t0 = _context["catch"](0);
               console.error("Error starting screen recording:", _context.t0);
               // Show an error message
               Lobibox.alert("error", {
                 msg: "Failed to start screen recording. Please check browser permissions.",
+                closeButton: false,
                 callback: function callback() {
                   window.top.close(); // Close the window when "OK" is clicked
                 }
               });
-              // Close the window if permission is denied
-              // setTimeout(() => {
-              //     window.top.close();
-              // }, 2000); // Add a slight delay to allow the alert to display
-            case 15:
+            case 19:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 11]]);
+        }, _callee, null, [[0, 15]]);
       }))();
     },
     saveScreenRecording: function saveScreenRecording() {
@@ -23729,28 +23751,250 @@ var doctorFeedback = "referral/doctor/feedback";
     formHeader.style.gap = '5px';
   }
 }));
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     const draggableDiv = document.getElementById("draggable-div");
+//     const telemedForm = document.querySelector(".telemedForm");
+//     const mainPic = document.querySelector(".mainPic");
+
+//     if (!draggableDiv || !telemedForm) {
+//         console.error("❌ Error: Elements not found!");
+//         return;
+//     }
+
+//     // Override any existing styling with our fixed dimensions
+//     draggableDiv.style.width = "150px";      // Fixed width instead of percentage
+//     draggableDiv.style.minWidth = "150px";   // Ensure minimum width
+//     draggableDiv.style.maxWidth = "none";    // Remove any maxWidth constraint
+//     draggableDiv.style.height = "200px";     // Fixed height
+//     draggableDiv.style.minHeight = "200px";  // Ensure minimum height
+
+//     // Clear any existing transforms that might be repositioning the element
+//     draggableDiv.style.transform = "none";
+
+//     let isDragging = false;
+//     let offsetX, offsetY;
+
+//     // Position in bottom right corner initially
+//     positionInBottomRight();
+
+//     // Mouse events for desktop
+//     draggableDiv.addEventListener("mousedown", startDrag);
+//     document.addEventListener("mousemove", drag);
+//     document.addEventListener("mouseup", endDrag);
+
+//     // Touch events for mobile
+//     draggableDiv.addEventListener("touchstart", startDragTouch);
+//     document.addEventListener("touchmove", dragTouch);
+//     document.addEventListener("touchend", endDrag);
+
+//     function positionInBottomRight() {
+//         // Set absolute positioning
+//         draggableDiv.style.position = "absolute";
+
+//         // Get container dimensions - use mainPic if available, otherwise use viewport
+//         let containerWidth, containerHeight, containerLeft, containerTop;
+
+//         if (mainPic) {
+//             const mainPicBounds = mainPic.getBoundingClientRect();
+//             containerWidth = mainPicBounds.width;
+//             containerHeight = mainPicBounds.height;
+//             containerLeft = mainPicBounds.left;
+//             containerTop = mainPicBounds.top;
+//         } else {
+//             containerWidth = window.innerWidth;
+//             containerHeight = window.innerHeight;
+//             containerLeft = 0; 
+//             containerTop = 0;
+//         }
+
+//         // Calculate position (20px padding from edges)
+//         let newX = containerLeft + containerWidth - 150 - 20;  // Using fixed width of 150px
+//         let newY = containerTop + containerHeight - 200 - 20;  // Using fixed height of 200px
+
+//         // Get the telemedForm bounds to avoid overlapping
+//         const telemedBounds = telemedForm.getBoundingClientRect();
+
+//         // Ensure it doesn't overlap with telemedForm
+//         if (newX + 150 > telemedBounds.left && 
+//             newX < telemedBounds.right && 
+//             newY + 200 > telemedBounds.top && 
+//             newY < telemedBounds.bottom) {
+//             // If it would overlap, move it above the form
+//             newY = telemedBounds.top - 200 - 20;
+//         }
+
+//         // Convert to relative position if needed
+//         if (draggableDiv.offsetParent) {
+//             const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
+//             newX -= parentRect.left;
+//             newY -= parentRect.top;
+//         }
+
+//         // Apply the position
+//         draggableDiv.style.left = `${newX}px`;
+//         draggableDiv.style.top = `${newY}px`;
+//     }
+
+//     function startDrag(event) {
+//         event.preventDefault();
+//         isDragging = true;
+
+//         const rect = draggableDiv.getBoundingClientRect();
+//         offsetX = event.clientX - rect.left;
+//         offsetY = event.clientY - rect.top;
+
+//         // Use box-shadow instead of transform for visual feedback
+//         draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+//         draggableDiv.style.cursor = "grabbing";
+//     }
+
+//     function startDragTouch(event) {
+//         if (event.touches.length !== 1) return;
+
+//         event.preventDefault();
+//         isDragging = true;
+
+//         const touch = event.touches[0];
+//         const rect = draggableDiv.getBoundingClientRect();
+//         offsetX = touch.clientX - rect.left;
+//         offsetY = touch.clientY - rect.top;
+
+//         // Use box-shadow instead of transform for visual feedback
+//         draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
+//     }
+
+//     function drag(event) {
+//         if (!isDragging) return;
+
+//         event.preventDefault();
+//         moveElement(event.clientX, event.clientY);
+//     }
+
+//     function dragTouch(event) {
+//         if (!isDragging || event.touches.length !== 1) return;
+
+//         event.preventDefault();
+//         const touch = event.touches[0];
+//         moveElement(touch.clientX, touch.clientY);
+//     }
+
+//     function moveElement(clientX, clientY) {
+//         // Calculate new position
+//         let newX = clientX - offsetX;
+//         let newY = clientY - offsetY;
+
+//         // Get necessary bounding rectangles
+//         const telemedBounds = telemedForm.getBoundingClientRect();
+
+//         // Check if the draggable div would enter the telemedForm
+//         const wouldOverlapTelemedForm = 
+//             newX + 150 > telemedBounds.left &&
+//             newX < telemedBounds.right &&
+//             newY + 200 > telemedBounds.top &&
+//             newY < telemedBounds.bottom;
+
+//         if (wouldOverlapTelemedForm) {
+//             // Don't update position if it would overlap with telemedForm
+//             return;
+//         }
+
+//         // Keep within mainPic boundaries if mainPic exists
+//         if (mainPic) {
+//             const mainPicBounds = mainPic.getBoundingClientRect();
+//             // Calculate boundaries
+//             const minX = mainPicBounds.left;
+//             const maxX = mainPicBounds.right - 150;  // Using fixed width
+//             const minY = mainPicBounds.top;
+//             const maxY = mainPicBounds.bottom - 200; // Using fixed height
+
+//             // Apply constraints
+//             newX = Math.max(minX, Math.min(maxX, newX));
+//             newY = Math.max(minY, Math.min(maxY, newY));
+//         }
+
+//         // Convert to relative position within parent element if needed
+//         if (draggableDiv.offsetParent) {
+//             const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
+//             newX -= parentRect.left;
+//             newY -= parentRect.top;
+//         }
+
+//         // Apply the position
+//         draggableDiv.style.left = `${newX}px`;
+//         draggableDiv.style.top = `${newY}px`;
+//     }
+
+//     function endDrag() {
+//         if (!isDragging) return;
+
+//         isDragging = false;
+//         // Reset the visual feedback
+//         draggableDiv.style.boxShadow = "none";
+//         draggableDiv.style.cursor = "grab";
+//     }
+
+//     // Add cursor style to indicate draggability
+//     draggableDiv.style.cursor = "grab";
+
+//     // Ensure our settings take precedence by applying them again after a short delay
+//     setTimeout(function() {
+//         draggableDiv.style.width = "150px"; 
+//         draggableDiv.style.height = "200px";
+//         draggableDiv.style.minWidth = "150px";
+//         draggableDiv.style.minHeight = "200px";
+//         draggableDiv.style.maxWidth = "none";
+//     }, 100);
+
+//     // Override any external changes that might be made by other scripts
+//     const observer = new MutationObserver(function(mutations) {
+//         mutations.forEach(function(mutation) {
+//             if (mutation.attributeName === "style") {
+//                 // Check if width or transform has been changed externally
+//                 const currentWidth = draggableDiv.style.width;
+//                 const currentTransform = draggableDiv.style.transform;
+
+//                 if (currentWidth !== "150px" || 
+//                     (currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale"))) {
+//                     // Re-apply our fixed dimensions
+//                     draggableDiv.style.width = "150px";
+//                     draggableDiv.style.height = "200px";
+//                     draggableDiv.style.minWidth = "150px";
+//                     draggableDiv.style.minHeight = "200px";
+//                     draggableDiv.style.maxWidth = "none";
+
+//                     // Only clear transform if it's not our scaling effect
+//                     if (currentTransform && !currentTransform.startsWith("scale")) {
+//                         draggableDiv.style.transform = "none";
+//                     }
+//                 }
+//             }
+//         });
+//     });
+
+//     // Start observing the element for style changes
+//     observer.observe(draggableDiv, { attributes: true });
+
+//     // Update position on window resize to maintain proper boundaries
+//     window.addEventListener("resize", function() {
+//         if (isDragging) return; // Don't interfere with active dragging
+
+//         // Reposition in bottom right on resize
+//         positionInBottomRight();
+//     });
+// });
 document.addEventListener("DOMContentLoaded", function () {
   var draggableDiv = document.getElementById("draggable-div");
-  var telemedForm = document.querySelector(".telemedForm");
   var mainPic = document.querySelector(".mainPic");
-  if (!draggableDiv || !telemedForm) {
-    console.error("❌ Error: Elements not found!");
+  if (!draggableDiv) {
+    console.error("❌ Error: Draggable element not found!");
     return;
   }
-
-  // Override any existing styling with our fixed dimensions
-  draggableDiv.style.width = "150px"; // Fixed width instead of percentage
-  draggableDiv.style.minWidth = "150px"; // Ensure minimum width
-  draggableDiv.style.maxWidth = "none"; // Remove any maxWidth constraint
-  draggableDiv.style.height = "200px"; // Fixed height
-  draggableDiv.style.minHeight = "200px"; // Ensure minimum height
-
-  // Clear any existing transforms that might be repositioning the element
-  draggableDiv.style.transform = "none";
   var isDragging = false;
-  var offsetX, offsetY;
+  var offsetX = 0,
+    offsetY = 0;
 
-  // Position in bottom right corner initially
+  // Position the draggable div in the bottom-right corner initially
   positionInBottomRight();
 
   // Mouse events for desktop
@@ -23763,70 +24007,26 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("touchmove", dragTouch);
   document.addEventListener("touchend", endDrag);
   function positionInBottomRight() {
-    // Set absolute positioning
+    var containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+    var padding = 20;
     draggableDiv.style.position = "absolute";
-
-    // Get container dimensions - use mainPic if available, otherwise use viewport
-    var containerWidth, containerHeight, containerLeft, containerTop;
-    if (mainPic) {
-      var mainPicBounds = mainPic.getBoundingClientRect();
-      containerWidth = mainPicBounds.width;
-      containerHeight = mainPicBounds.height;
-      containerLeft = mainPicBounds.left;
-      containerTop = mainPicBounds.top;
-    } else {
-      containerWidth = window.innerWidth;
-      containerHeight = window.innerHeight;
-      containerLeft = 0;
-      containerTop = 0;
-    }
-
-    // Calculate position (20px padding from edges)
-    var newX = containerLeft + containerWidth - 150 - 20; // Using fixed width of 150px
-    var newY = containerTop + containerHeight - 200 - 20; // Using fixed height of 200px
-
-    // Get the telemedForm bounds to avoid overlapping
-    var telemedBounds = telemedForm.getBoundingClientRect();
-
-    // Ensure it doesn't overlap with telemedForm
-    if (newX + 150 > telemedBounds.left && newX < telemedBounds.right && newY + 200 > telemedBounds.top && newY < telemedBounds.bottom) {
-      // If it would overlap, move it above the form
-      newY = telemedBounds.top - 200 - 20;
-    }
-
-    // Convert to relative position if needed
-    if (draggableDiv.offsetParent) {
-      var parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-      newX -= parentRect.left;
-      newY -= parentRect.top;
-    }
-
-    // Apply the position
-    draggableDiv.style.left = "".concat(newX, "px");
-    draggableDiv.style.top = "".concat(newY, "px");
+    draggableDiv.style.left = "".concat(containerBounds.right - draggableDiv.offsetWidth - padding, "px");
+    draggableDiv.style.top = "".concat(containerBounds.bottom - draggableDiv.offsetHeight - padding, "px");
   }
   function startDrag(event) {
-    event.preventDefault();
     isDragging = true;
     var rect = draggableDiv.getBoundingClientRect();
     offsetX = event.clientX - rect.left;
     offsetY = event.clientY - rect.top;
-
-    // Use box-shadow instead of transform for visual feedback
-    draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
     draggableDiv.style.cursor = "grabbing";
   }
   function startDragTouch(event) {
     if (event.touches.length !== 1) return;
-    event.preventDefault();
     isDragging = true;
     var touch = event.touches[0];
     var rect = draggableDiv.getBoundingClientRect();
     offsetX = touch.clientX - rect.left;
     offsetY = touch.clientY - rect.top;
-
-    // Use box-shadow instead of transform for visual feedback
-    draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
   }
   function drag(event) {
     if (!isDragging) return;
@@ -23840,101 +24040,20 @@ document.addEventListener("DOMContentLoaded", function () {
     moveElement(touch.clientX, touch.clientY);
   }
   function moveElement(clientX, clientY) {
-    // Calculate new position
-    var newX = clientX - offsetX;
-    var newY = clientY - offsetY;
-
-    // Get necessary bounding rectangles
-    var telemedBounds = telemedForm.getBoundingClientRect();
-
-    // Check if the draggable div would enter the telemedForm
-    var wouldOverlapTelemedForm = newX + 150 > telemedBounds.left && newX < telemedBounds.right && newY + 200 > telemedBounds.top && newY < telemedBounds.bottom;
-    if (wouldOverlapTelemedForm) {
-      // Don't update position if it would overlap with telemedForm
-      return;
-    }
-
-    // Keep within mainPic boundaries if mainPic exists
-    if (mainPic) {
-      var mainPicBounds = mainPic.getBoundingClientRect();
-      // Calculate boundaries
-      var minX = mainPicBounds.left;
-      var maxX = mainPicBounds.right - 150; // Using fixed width
-      var minY = mainPicBounds.top;
-      var maxY = mainPicBounds.bottom - 200; // Using fixed height
-
-      // Apply constraints
-      newX = Math.max(minX, Math.min(maxX, newX));
-      newY = Math.max(minY, Math.min(maxY, newY));
-    }
-
-    // Convert to relative position within parent element if needed
-    if (draggableDiv.offsetParent) {
-      var parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-      newX -= parentRect.left;
-      newY -= parentRect.top;
-    }
-
-    // Apply the position
+    var containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+    var newX = Math.min(Math.max(clientX - offsetX, containerBounds.left), containerBounds.right - draggableDiv.offsetWidth);
+    var newY = Math.min(Math.max(clientY - offsetY, containerBounds.top), containerBounds.bottom - draggableDiv.offsetHeight);
     draggableDiv.style.left = "".concat(newX, "px");
     draggableDiv.style.top = "".concat(newY, "px");
   }
   function endDrag() {
     if (!isDragging) return;
     isDragging = false;
-    // Reset the visual feedback
-    draggableDiv.style.boxShadow = "none";
     draggableDiv.style.cursor = "grab";
   }
 
-  // Add cursor style to indicate draggability
-  draggableDiv.style.cursor = "grab";
-
-  // Ensure our settings take precedence by applying them again after a short delay
-  setTimeout(function () {
-    draggableDiv.style.width = "150px";
-    draggableDiv.style.height = "200px";
-    draggableDiv.style.minWidth = "150px";
-    draggableDiv.style.minHeight = "200px";
-    draggableDiv.style.maxWidth = "none";
-  }, 100);
-
-  // Override any external changes that might be made by other scripts
-  var observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-      if (mutation.attributeName === "style") {
-        // Check if width or transform has been changed externally
-        var currentWidth = draggableDiv.style.width;
-        var currentTransform = draggableDiv.style.transform;
-        if (currentWidth !== "150px" || currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale")) {
-          // Re-apply our fixed dimensions
-          draggableDiv.style.width = "150px";
-          draggableDiv.style.height = "200px";
-          draggableDiv.style.minWidth = "150px";
-          draggableDiv.style.minHeight = "200px";
-          draggableDiv.style.maxWidth = "none";
-
-          // Only clear transform if it's not our scaling effect
-          if (currentTransform && !currentTransform.startsWith("scale")) {
-            draggableDiv.style.transform = "none";
-          }
-        }
-      }
-    });
-  });
-
-  // Start observing the element for style changes
-  observer.observe(draggableDiv, {
-    attributes: true
-  });
-
-  // Update position on window resize to maintain proper boundaries
-  window.addEventListener("resize", function () {
-    if (isDragging) return; // Don't interfere with active dragging
-
-    // Reposition in bottom right on resize
-    positionInBottomRight();
-  });
+  // Ensure the draggable div stays within bounds on window resize
+  window.addEventListener("resize", positionInBottomRight);
 });
 
 /***/ }),
@@ -26986,7 +27105,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_css_index_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n padding:5px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.video-container[data-v-3180088c], .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\n}\n.video-container[data-v-3180088c] {\r\n    height: 50%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 50%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c], .fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c], .fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n padding:5px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.video-container[data-v-3180088c], .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\n}\n.video-container[data-v-3180088c] {\r\n    height: 50%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 50%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c], .fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c], .fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-3180088c] {\r\n    width: 195px;\r\n    height: 200px;\r\n    min-width: 150px;\r\n    min-height: 200px;\r\n    max-width: 150px;\r\n    max-height: 200px;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
