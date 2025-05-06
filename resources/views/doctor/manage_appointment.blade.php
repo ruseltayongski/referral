@@ -332,9 +332,10 @@
                                         <input type="text" class="form-control" name="facility_id" id="facility_id" value="{{ $Facility->facility->name }}" readonly>
                                         <input type="hidden" class="form-control" name="facility_id" id="id" value="{{ $Facility->facility->id }}" readonly>
                                         @endforeach
-
+                                           
                                         <label for="department_id">Department:</label>
-                                        <input type="text" class="form-control" name="department_id alert-department"  data-department="{{ $department }}" data-subopd="{{$getSubOpd->id }}"  id="department_id"  value="{{ $department }}" readonly>
+                                        <input type="hidden" class="form-control" name="department_id alert-department"  data-department="{{ $department }}" data-subopd="{{$getSubOpd->id }}"  id="department_id"  value="{{ $department }}" readonly>
+                                        <input type="text" class="form-control" id="department_id"  value="{{ App\SubOpd::find($user->subopd_id)->description }}" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-8">
@@ -445,7 +446,7 @@
         <?php Session::put('appointment_delete',false); ?>
         @endif
         //---------------- for Config-Appointment ---------------//
-
+        var userData = @json($user);
         $(document).ready(function () {
 
             const $defaultCategorySelect = $("#defaultCategorySelect");
@@ -1066,20 +1067,8 @@
                 // $('#add_slots').prop('disabled', false);
             });
 
-            // $(document).ready(function() {
-                $('.select2').select2();
-                
-                // $.each(query_doctor_store, function (index, userData) {
-                //     $(`.available_doctor${currentCount}`).append($('<option>', {
-                //         value: userData.id,
-                //         text: "Dr. "+userData.fname + ' ' + userData.lname
-                //     }));
-                // });
+            $('.select2').select2();
 
-                // $('.select2').select2();
-            // });
-
-              // Reinitialize the select2 plugin after adding a new element
             $(`.available_doctor${currentCount}`).select2();
 
             $('#additionalTimeContainer').show();
@@ -1240,7 +1229,7 @@
             var appointments = appointment ? appointment : '';
             // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
             var appointmentDate = appointment && appointment.appointed_date ? appointment.appointed_date : '';
-            let selectedSubOpd = subOpd.find(opd => opd.id == appointments.opdCategory ? appointments.opdCategory  : userSud);
+            // let selectedSubOpd = subOpd.find(opd => opd.id == appointments.opdCategory ? appointments.opdCategory  : userSud);
                if(appointment){
                 var selectId = "Update_available_doctor" + currentCount;
                 var additionalTimeInput = `<div class="label-border-time">
@@ -1266,7 +1255,7 @@
                                                             <span>Slot:</span>
                                                             <input type="number" class="form-control" id="update_slot${currentCount}" name="update_slot${currentCount}" value="${appointments.slot}">
                                                         </div>
-                                                         <input type="hidden" class="form-control" id="update_opdCategory${currentCount}" name="opdCategory${currentCount}" value="${selectedSubOpd.id}">
+                                                         <input type="hidden" class="form-control" id="update_opdCategory${currentCount}" name="opdCategory${currentCount}" value="${userData.subopd_id}">
                                                     </div>
                                                 </div>
                                             </div>`;
@@ -1288,7 +1277,7 @@
                                                             <span>Slot:</span>
                                                             <input type="number" class="form-control" id="Addupdate_slot${currentCount}" name="Addupdate_slot${currentCount}" value="${appointments.slot}">
                                                         </div>
-                                                        <input type="hidden" class="form-control" id="Add_update_opdCategory${currentCount}" name="opdCategory${currentCount}" value="${selectedSubOpd.id}">
+                                                        <input type="hidden" class="form-control" id="Add_update_opdCategory${currentCount}" name="opdCategory${currentCount}" value="${userData.subopd_id}">
                                                     </div>
                                                 </div>
                                             </div>`;
@@ -1823,8 +1812,9 @@ function deleteTimeInput(appointment){
                             // console.log("response::", response);
                             var timeConflict = false;
                             var dateConflict = false;
-                
+                          
                             response.forEach(function(appoint){
+                               
                                 if(appoint.appointed_date === appointmentDate){
 
 
@@ -1847,7 +1837,7 @@ function deleteTimeInput(appointment){
                             if (timeConflict) {
                                 Lobibox.alert("error",
                                 {
-                                    msg: "This time and doctor is already taken. From this Appointed Date!"
+                                    msg: "This slot has already been created!"
                                 });
 
                                 return;

@@ -26,6 +26,7 @@ class VerifyCsrfToken extends BaseVerifier
         'xZzl92SjyZPkGQOaLzsQhE9PFIvfjmil/api/check/username',
         'api/video/examined',
         'api/video/prescription/update',
-        '/api/video/upward'
+        '/api/video/upward',
+        'api/telemedicine/clear-call',
     ];
 }

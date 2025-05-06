@@ -4,6 +4,10 @@
     </div>
     <?php
     $count = \App\Http\Controllers\doctor\ReferralCtrl::countReferral();
+
+    $filterRef = request('filterRef');
+
+
     ?>
     <div class="panel-body" style="max-height:200px"> 
         <div class="list-group">
@@ -16,12 +20,24 @@
 
                     </span>
             </a> --}}
-            <a href="{{ asset('doctor/referred') }}" class="list-group-item clearfix">
-                Referred
-                <span class="pull-right">
+            @if( $filterRef == 1)
+
+                <a href="{{ asset('doctor/referred') }}?filterRef=1" class="list-group-item clearfix">
+                    Referred
+                    <span class="pull-right">
                         <i class="fa fa-ambulance"></i>
                     </span>
-            </a>
+                </a>
+                
+            @else
+                <a href="{{ asset('doctor/referred') }}?filterRef=0" class="list-group-item clearfix">
+                        Referred
+                        <span class="pull-right">
+                            <i class="fa fa-ambulance"></i>
+                        </span>
+                </a>
+            @endif
+            
             <a href="{{ asset('doctor/accepted') }}" class="list-group-item clearfix">
                 Accepted
                 <span class="pull-right">

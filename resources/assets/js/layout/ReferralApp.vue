@@ -476,35 +476,38 @@
                     '                                                <i class="fa fa-stethoscope"></i> Track\n' +
                     '                                            </a>';
             },
-            callADoctor(tracking_id,code) {
-                this.tracking_id = tracking_id
-                this.referral_code = code
-                this.playVideoCallAudio();
-                $(document).ready(function() {
-                    console.log( "ready!" );
-                    $("#video-call-confirmation").modal('toggle');
-                });
+            callADoctor(tracking_id,code,subopd_id) {
+                
+                if(this.user.subopd_id == subopd_id){
+                    this.tracking_id = tracking_id
+                    this.referral_code = code
+                    this.playVideoCallAudio();
+                    $(document).ready(function() {
+                        console.log( "ready!" );
+                        $("#video-call-confirmation").modal('toggle');
+                    });
+                }
             },
             acceptCall() {
                 this.$refs.audioVideo.pause();
                 $("#video-call-confirmation").modal('toggle');
-                let windowName = 'NewWindow'; // Name of the new window
-                let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-                const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
-                let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
-                let newWindow = window.open(url, windowName, windowFeatures);
-                if (newWindow && newWindow.outerWidth) {
-                    // If the window was successfully opened, attempt to maximize it
-                    console.log("the open open of wendow");
-                    newWindow.moveTo(0, 0);
-                    newWindow.resizeTo(screen.availWidth, screen.availHeight);
-                }
-                
-                localStorage.setItem('callStartTime', Date.now());
+                    let windowName = 'NewWindow'; // Name of the new window
+                    let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+                    const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
+                    let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
+                    let newWindow = window.open(url, windowName, windowFeatures);
+                    if (newWindow && newWindow.outerWidth) {
+                        // If the window was successfully opened, attempt to maximize it
+                        console.log("the open open of wendow");
+                        newWindow.moveTo(0, 0);
+                        newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                    }
+                    
+                    localStorage.setItem('callStartTime', Date.now());
 
-                this.telemedicineExamined();
-                console.log("windowFeatures", windowFeatures);
-                  console.log("Video call started at:", new Date());
+                    this.telemedicineExamined();
+                    console.log("windowFeatures", windowFeatures);
+                    console.log("Video call started at:", new Date());
             },
             examinedCompleted(patient_code, activity_id) {
                 $("#examined_progress"+patient_code+activity_id).addClass("completed");
@@ -706,12 +709,12 @@
                     // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
-                            console.log("callAdoctor");
+                            console.log("callAdoctor", event);
                             this.action_md = event.payload.action_md;
                             this.doctorCaller = event.payload.doctorCaller;
                             this.telemedicineFormType = event.payload.form_type;
                             this.activity_id = event.payload.activity_id;
-                            this.callADoctor(event.payload.tracking_id,event.payload.code);
+                            this.callADoctor(event.payload.tracking_id,event.payload.code,event.payload.subopd_id);
                         } 
                         else if(event.payload.referred_from === this.user.facility_id) {
                             if(event.payload.telemedicine_status === 'examined') {
