@@ -65,6 +65,12 @@ $user = Session::get('auth');
             height: 60px; /* Compact size */
             /* transform: rotate(+0deg); Angled like a stamp */
         }
+        .telemedicine-stamp {
+            position: absolute;
+            top: 40px; /* Adjusted position */
+            right: 20px; /* Adjusted position */
+            /* transform: rotate(+0deg); Angled like a stamp */
+        }
         .stamp-img {
             width: 100px;
             height: 65px;
@@ -114,8 +120,10 @@ $user = Session::get('auth');
                         ->orderBy('id','desc')
                         ->get();
 
+                     
                     $department_name = 'N/A';
                     $dept = \App\Department::find($row->department_id);
+                    $subOPD = \App\SubOpd::find($row->subopd_id);
                     if($dept) {
                         $department_name = $dept->description;
                     }
@@ -162,7 +170,12 @@ $user = Session::get('auth');
                                 <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
                                   @endif
                             </div>
-
+                            
+                            @if($row->telemedicine == 1)
+                                <div class="telemedicine-stamp">
+                                   <strong>{{ $subOPD->description }}</strong>
+                                </div>
+                            @endif
                         </div>
                       
                         @if($row->telemedicine)
