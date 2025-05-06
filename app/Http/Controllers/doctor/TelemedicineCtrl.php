@@ -100,7 +100,8 @@ class TelemedicineCtrl extends Controller
             'date' => $req->input('date_filter', ''),
             'configs' => $config_sched,
             'appointment_filter' => $appointmentstatus,
-            'subOpd' => $sub_Opd
+            'subOpd' => $sub_Opd,
+            'user' => $user
         ];
 
         return view('doctor.manage_appointment', $data);
@@ -463,6 +464,7 @@ class TelemedicineCtrl extends Controller
                 // if (empty($request['add_appointed_time'.$i]) || empty($request['add_appointed_time_to'.$i]) || empty($request->add_opdCategory.$i) || empty($request['add_available_doctor'.$i])) {
                 //     continue;
                 // }
+                
                 $appointment_schedule = new AppointmentSchedule();
                 $appointment_schedule->appointed_date = $request->appointed_date;
                 $appointment_schedule->facility_id = $request->facility_id;
@@ -476,7 +478,7 @@ class TelemedicineCtrl extends Controller
                 }
                 // $appointment_schedule->opdCategory = $request['add_opdCategory'.$i];
                 // $appointment_schedule->status = "manual";
-                $appointment_schedule->slot = $request->slot;
+                $appointment_schedule->slot = $request['slot'.$i];
                 $appointment_schedule->created_by = $user->id;
                 $appointment_schedule->save();
             }
@@ -493,6 +495,7 @@ class TelemedicineCtrl extends Controller
 
         // $bookDates = AppointmentSchedule::where('facility_id', $user->facility_id)->pluck('appointed_date')->toArray();
         $bookDates = AppointmentSchedule::with(['telemedAssignedDoctor'])
+                    ->where('created_by', $user->id)
                     ->where('facility_id', $user->facility_id)->get();
         return response()->json($bookDates);
     }
@@ -516,7 +519,7 @@ class TelemedicineCtrl extends Controller
         // ->pluck('doctor_id')->first();
         // $appointment = AppointmentSchedule::find($request->id);
         $facility = Session::get('auth')->facility_id;
-
+        $user = Session::get('auth');
         $appointed_date = AppointmentSchedule::where('id', $request->id)
         ->pluck('appointed_date')
         ->first();
@@ -550,6 +553,7 @@ class TelemedicineCtrl extends Controller
                     }]);
                 }
             ])->where('facility_id', $facility)
+            ->where('created_by', $user->id)
             ->get();
 
            
@@ -559,7 +563,7 @@ class TelemedicineCtrl extends Controller
 
     public function deleteAppointmentSched(Request $request){
         $facility_id = Session::get('auth')->facility_id;
-
+        $user = Session::get('auth');
         $appointed_date = AppointmentSchedule::where('id', $request->id)
         ->pluck('appointed_date')
         ->first();
@@ -593,6 +597,7 @@ class TelemedicineCtrl extends Controller
                     }]);
                 }
             ])->where('facility_id', $facility_id)
+            ->where('created_by', $user->id)
             ->get();
     
         return response()->json($appointment);
@@ -732,6 +737,7 @@ class TelemedicineCtrl extends Controller
     public function deleteAppointment(Request $request)
     {
         $appointedIds = [];
+        $user = Session::get('auth');
         for($i=2; $i<=$request->appointment_count; $i++) { 
             $appointedId = $request->input('appointment_id' . $i);
             $key = 'appointment_id' . $i;
@@ -739,7 +745,9 @@ class TelemedicineCtrl extends Controller
             ->pluck('appointed_date')
             ->first();
            
-           $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)->delete();
+           $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)
+            ->where('created_by', $user->id)
+            ->delete();
            //TelemedAssignDoctor
 
            if(array_key_exists($key, $request->all())){

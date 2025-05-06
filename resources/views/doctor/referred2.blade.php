@@ -289,12 +289,12 @@ $user = Session::get('auth');
                       
                             @if($row->telemedicine == 1)
 
-                            <a data-toggle="modal" href="#EmrForm" 
+                            <!-- <a data-toggle="modal" href="#EmrForm" 
                                data-patient="{{ $row->patient_id }}"
                                data-emr="10"
                                class="view_form btn btn-warning btn-xs">
                                 <i class="fa fa-folder"></i> EMR 
-                            </a>
+                            </a> -->
 
                             @endif
                         </div>

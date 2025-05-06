@@ -393,7 +393,7 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '')
+    public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '', $telemed_assign_id)
     {
         $subOPD_Id = (int) $req->opdSubId;
         $match = array(
@@ -426,6 +426,12 @@ class PatientCtrl extends Controller
         }
 
         $tracking = Tracking::updateOrCreate($match, $track);
+
+        if($telemed_assign_id){
+            $telemed_assign = TelemedAssignDoctor::where('id', $telemed_assign_id)->first();
+            $telemed_assign->tracking_id = $tracking->id;
+            $telemed_assign->save();
+        }
 
         $activity = array(
             'code' => $code,
@@ -482,7 +488,7 @@ class PatientCtrl extends Controller
     public function referPatient(Request $req, $type)
     {
         $user = Session::get('auth');
-        $asigned_doctorId = null;
+        $telemed_assigned_id = null;
 
         // Log::info("Files Received1212: ", $_FILES["file_upload"]["name"]);
         // return;
@@ -491,9 +497,11 @@ class PatientCtrl extends Controller
             if($req->appointmentId){
                 $telemed_assigned = new TelemedAssignDoctor();
                 $telemed_assigned->appointment_id = $req->appointmentId;
+                $telemed_assigned->subopd_id = $req->opdSubId;
+                $telemed_assigned->doctor_id = $user->id;
                 $telemed_assigned->save();
-
                 $asigned_doctorId = $configTimeSlot->id;
+                $telemed_assigned_id = $telemed_assigned->id;
             } 
                 // $check_appointment_slot = AppointmentSchedule::find($req->appointmentId)->slot;
                 // $check_tracking_slot = Tracking::where('appointmentId', $req->appointmentId)->count();
@@ -590,7 +598,7 @@ class PatientCtrl extends Controller
             } //push notification for cebu south medical center
 
             session()->forget('profileSearch.telemedicine');
-            self::addTracking($code, $patient_id, $user, $req, $type, $form->id,'refer');
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id,'refer', $telemed_assigned_id);
         } else if ($type === 'pregnant') {
         
             $baby = array(
@@ -696,7 +704,7 @@ class PatientCtrl extends Controller
 
             } //push notification for cebu south medical center
             session()->forget('profileSearch.telemedicine');
-            self::addTracking($code, $patient_id, $user, $req, $type, $form->id);
+            self::addTracking($code, $patient_id, $user, $req, $type, $form->id,null,$telemed_assigned_id);
         }
 
         if ($req->referred_facility == 790 || $req->referred_facility == 23) {

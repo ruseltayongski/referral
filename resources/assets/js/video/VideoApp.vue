@@ -348,6 +348,7 @@ console.log("referring call duration:", this.referring_md);
 
     async leaveChannel() {
       if (confirm("Are you sure you want to leave this channel?")) {
+        
         // Wait for duration to be sent before closing
         if(this.referring_md == 'yes'){
           clearInterval(this.callTimer); // Stop the timer

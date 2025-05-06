@@ -156,6 +156,7 @@
                 </a>
             </div>
         @endif
+        
         @if($row->status == 'accepted' && $row->telemedicine)
             <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->where('status','referred')->orderBy('id','desc')->first() ?>
             <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine({{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>

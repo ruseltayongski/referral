@@ -295,7 +295,7 @@
                                                                 </div>
                                                                 <div class="col-md-6" style="margin-top: 10px;">
                                                                     <span>Slot:</span>
-                                                                    <input type="number" class="form-control" name="slot">
+                                                                    <input type="number" class="form-control" name="slot1">
                                                                 </div>
                                                                 <br>
                                                                 <!-- <div class="col-md-12" id="additionalTimeContainer" style="display: none;"></div>

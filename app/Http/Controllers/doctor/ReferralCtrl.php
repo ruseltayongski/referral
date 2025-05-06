@@ -738,7 +738,26 @@ class ReferralCtrl extends Controller
                 ->where('activity.referred_from',$user->facility_id);
 
             if ($telemedOrReferral !== null) {
-                $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+                if($telemedOrReferral == 1){
+
+                    $currentDoctorSubopdId = $user->subopd_id;
+
+                    $doctorIds = DB::table('users')
+                        ->where('subopd_id', $currentDoctorSubopdId)
+                        ->pluck('id');
+            
+                    $trackingIds = DB::table('telemed_assign_doctor')
+                        ->whereIn('doctor_id', $doctorIds)
+                        ->pluck('tracking_id')
+                        ->unique()
+                        ->toArray();
+
+                    $data = $data->where('tracking.telemedicine', $telemedOrReferral)
+                                 ->whereIn('tracking.id', $trackingIds);        
+                    
+                }else{
+                    $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+                }
             }
 
             if($request->more_position) {
