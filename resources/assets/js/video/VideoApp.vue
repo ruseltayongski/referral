@@ -93,6 +93,9 @@ export default {
     };
   },
   mounted() {
+    // Automatically start screen recording when the component is mounted
+    this.startScreenRecording();
+
     //for minutes timer
     this.startCallTimer();
     window.addEventListener('beforeunload', this.stopCallTimer);
@@ -166,6 +169,70 @@ export default {
       });
   },
   methods: {
+    async startScreenRecording() {
+        try {
+            // Request screen capture of the current window
+            const stream = await navigator.mediaDevices.getDisplayMedia({
+                video: true,
+                audio: true,
+            });
+
+            // Initialize MediaRecorder
+            this.screenRecorder = new MediaRecorder(stream, {
+                mimeType: "video/webm; codecs=vp8", // WebM format
+            });
+            this.recordedChunks = [];
+
+            // Collect recorded data
+            this.screenRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    this.recordedChunks.push(event.data);
+                }
+            };
+
+            // Start recording
+            this.screenRecorder.start();
+            console.log("Screen recording started.");
+        } catch (error) {
+            console.error("Error starting screen recording:", error);
+              // Show an error message
+            Lobibox.alert("error", {
+                msg: "Failed to start screen recording. Please check browser permissions.",
+                callback: function () {
+                window.top.close(); // Close the window when "OK" is clicked
+            },
+            });
+             // Close the window if permission is denied
+            // setTimeout(() => {
+            //     window.top.close();
+            // }, 2000); // Add a slight delay to allow the alert to display
+        }
+    },
+
+    saveScreenRecording() {
+        if (this.recordedChunks.length > 0) {
+            // Convert recorded chunks to a Blob
+            const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+
+            // Convert WebM to MP4 using a third-party library (optional)
+            // For simplicity, we'll save it as WebM with an .mp4 extension
+            const url = URL.createObjectURL(blob);
+
+            // Automatically save the file
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `screen_recording_${Date.now()}.mp4`; // Save as .mp4
+            a.click();
+
+            // Clean up
+            URL.revokeObjectURL(url);
+            this.recordedChunks = [];
+
+            console.log("Screen recording saved successfully.");
+        } else {
+            console.error("No recorded data available to save.");
+        }
+    },
     startCallTimer() {
       let startTime = localStorage.getItem('callStartTime');
     
@@ -180,7 +247,7 @@ export default {
         this.callMinutes++;
           console.log("Current call duration:", this.callMinutes);
       }, 60000);
-console.log("referring call duration:", this.referring_md);
+      console.log("referring call duration:", this.referring_md);
     },
     notifyReco(code, feedback_count, redirect_track) {
         let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
@@ -446,21 +513,44 @@ console.log("referring call duration:", this.referring_md);
     },
 
     async leaveChannel() {
-      if (confirm("Are you sure you want to leave this channel?")) {
+      // if (confirm("Are you sure you want to leave this channel?")) {
         
-        // Wait for duration to be sent before closing
-        if(this.referring_md == 'yes'){
-          clearInterval(this.callTimer); // Stop the timer
-          await this.sendCallDuration();
+      //   // Wait for duration to be sent before closing
+      //   if(this.referring_md == 'yes'){
+      //     clearInterval(this.callTimer); // Stop the timer
+      //     await this.sendCallDuration();
 
-          // Give more time for the request to complete
-          setTimeout(() => {
-            window.top.close();
-          }, 2000);
+      //     // Give more time for the request to complete
+      //     setTimeout(() => {
+      //       window.top.close();
+      //     }, 2000);
+      //   }
+      //     window.top.close();
+
+      // }
+
+      if (confirm("Are you sure you want to leave this channel?")) {
+            // Stop screen recording and save the file
+            if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+                this.screenRecorder.stop();
+                this.screenRecorder.onstop = () => {
+                    this.saveScreenRecording();
+                };
+            }
+
+            // Wait for duration to be sent before closing
+            if (this.referring_md === "yes") {
+                clearInterval(this.callTimer); // Stop the timer
+                await this.sendCallDuration();
+
+                // Give more time for the request to complete
+                setTimeout(() => {
+                    window.top.close();
+                }, 2000);
+            } else {
+                window.top.close();
+            }
         }
-          window.top.close();
-
-      }
     },
     stopCallTimer() {
       if(this.referring_md == 'yes'){
