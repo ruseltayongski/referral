@@ -22848,82 +22848,178 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     startBasicCall: function startBasicCall() {
       var _this4 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var agoraEngine, remotePlayerContainer, localPlayerContainer, self;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
               // Create an instance of the Agora Engine
               agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
                 mode: "rtc",
                 codec: "vp8"
-              }); // Dynamically create a container in the form of a DIV element to play the remote video track.
-              remotePlayerContainer = document.createElement("div"); // Dynamically create a container in the form of a DIV element to play the local video track.
-              localPlayerContainer = document.createElement("div"); // Specify the ID of the DIV container. You can use the uid of the local user.
+              }); // Setup channel parameters with user count tracking
+              if (!_this4.channelParameters) {
+                _this4.channelParameters = {};
+              }
+              _this4.channelParameters.userCount = 1; // Count ourselves as the first user
+              _this4.channelParameters.maxUsers = 2; // Maximum 2 users allowed
+
+              // Dynamically create containers for video elements
+              remotePlayerContainer = document.createElement("div");
+              localPlayerContainer = document.createElement("div");
               localPlayerContainer.id = _this4.options.uid;
-              // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
-              self = _this4;
-              agoraEngine.on("user-published", /*#__PURE__*/function () {
-                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(user, mediaType) {
+              self = _this4; // Listen for when a user joins the channel
+              agoraEngine.on("user-joined", /*#__PURE__*/function () {
+                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee(user) {
                   return _regeneratorRuntime().wrap(function _callee$(_context) {
                     while (1) switch (_context.prev = _context.next) {
                       case 0:
-                        _context.next = 2;
-                        return agoraEngine.subscribe(user, mediaType);
-                      case 2:
-                        console.log("subscribe success");
-                        // Subscribe and play the remote video in the container If the remote user publishes a video track.
-                        if (mediaType == "video") {
-                          console.log("remote");
-                          // Retrieve the remote video track.
-                          self.channelParameters.remoteVideoTrack = user.videoTrack;
-                          // Retrieve the remote audio track.
-                          self.channelParameters.remoteAudioTrack = user.audioTrack;
-                          // Save the remote user id for reuse.
-                          self.channelParameters.remoteUid = user.uid.toString();
-                          // Specify the ID of the DIV container. You can use the uid of the remote user.
-                          remotePlayerContainer.id = user.uid.toString();
-                          self.channelParameters.remoteUid = user.uid.toString();
-                          /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
-                          // Append the remote container to the page body.
-                          self.$refs.ringingPhone.pause();
-                          document.body.append(remotePlayerContainer);
-                          $(".remotePlayerDiv").html(remotePlayerContainer);
-                          $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
-                          $(remotePlayerContainer).addClass("remotePlayerLayer");
-                          // Play the remote video track.
-                          self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
+                        console.log("User joined:", user.uid);
+                        self.channelParameters.userCount++;
+
+                        // Check if channel already has maximum users
+                        if (!(self.channelParameters.userCount > self.channelParameters.maxUsers)) {
+                          _context.next = 8;
+                          break;
                         }
-                        // Subscribe and play the remote audio track If the remote user publishes the audio track only.
-                        if (mediaType == "audio") {
-                          // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
-                          self.channelParameters.remoteAudioTrack = user.audioTrack;
-                          // Play the remote audio track. No need to pass any DOM element.
-                          self.channelParameters.remoteAudioTrack.play();
-                        }
-                        // Listen for the "user-unpublished" event.
-                        agoraEngine.on("user-unpublished", function (user) {
-                          console.log(user.uid + "has left the channel");
-                        });
-                      case 6:
+                        console.log("Channel is full! Maximum users reached.");
+                        // Optionally notify the user that the channel is full
+                        self.showChannelFullMessage();
+                        // Disconnect this user since the channel is full
+                        _context.next = 7;
+                        return agoraEngine.leave();
+                      case 7:
+                        return _context.abrupt("return");
+                      case 8:
                       case "end":
                         return _context.stop();
                     }
                   }, _callee);
                 }));
-                return function (_x, _x2) {
+                return function (_x) {
                   return _ref.apply(this, arguments);
                 };
               }());
-              window.onload = function () {
+
+              // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
+              agoraEngine.on("user-published", /*#__PURE__*/function () {
+                var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(user, mediaType) {
+                  return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+                    while (1) switch (_context2.prev = _context2.next) {
+                      case 0:
+                        if (!(self.channelParameters.userCount > self.channelParameters.maxUsers)) {
+                          _context2.next = 3;
+                          break;
+                        }
+                        console.log("Ignoring new user, channel is full");
+                        return _context2.abrupt("return");
+                      case 3:
+                        _context2.next = 5;
+                        return agoraEngine.subscribe(user, mediaType);
+                      case 5:
+                        console.log("subscribe success");
+
+                        // Handle video track
+                        if (mediaType == "video") {
+                          console.log("remote video connected");
+                          // Retrieve the remote video track
+                          self.channelParameters.remoteVideoTrack = user.videoTrack;
+                          // Retrieve the remote audio track
+                          self.channelParameters.remoteAudioTrack = user.audioTrack;
+                          // Save the remote user id for reuse
+                          self.channelParameters.remoteUid = user.uid.toString();
+                          // Specify the ID of the DIV container using remote user's uid
+                          remotePlayerContainer.id = user.uid.toString();
+
+                          // Stop any ringing sounds
+                          if (self.$refs.ringingPhone) {
+                            self.$refs.ringingPhone.pause();
+                          }
+
+                          // Add remote video container to the page
+                          document.body.append(remotePlayerContainer);
+                          $(".remotePlayerDiv").html(remotePlayerContainer);
+                          $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
+                          $(remotePlayerContainer).addClass("remotePlayerLayer");
+
+                          // Play the remote video track
+                          self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
+                        }
+
+                        // Handle audio track
+                        if (mediaType == "audio") {
+                          self.channelParameters.remoteAudioTrack = user.audioTrack;
+                          self.channelParameters.remoteAudioTrack.play();
+                        }
+                      case 8:
+                      case "end":
+                        return _context2.stop();
+                    }
+                  }, _callee2);
+                }));
+                return function (_x2, _x3) {
+                  return _ref2.apply(this, arguments);
+                };
+              }());
+
+              // Listen for users leaving the channel
+              agoraEngine.on("user-unpublished", function (user) {
+                console.log(user.uid + " has left the channel");
+                self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
+              });
+
+              // Handle user leaving completely
+              agoraEngine.on("user-left", function (user) {
+                console.log(user.uid + " has left the channel completely");
+                self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
+
+                // Optional: Clean up the remote user container
+                if (remotePlayerContainer && remotePlayerContainer.id === user.uid.toString()) {
+                  remotePlayerContainer.remove();
+                }
+              });
+
+              // Handle client-role-changed event (if using live broadcasting mode)
+              agoraEngine.on("client-role-changed", function (oldRole, newRole) {
+                console.log("Client role changed from " + oldRole + " to " + newRole);
+              });
+
+              // Initialize the connection when window loads
+              if (document.readyState === "complete") {
                 self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
-              };
-            case 7:
+              } else {
+                window.onload = function () {
+                  self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
+                };
+              }
+            case 14:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2);
+        }, _callee3);
       }))();
+    },
+    // Method to show channel full message to user
+    showChannelFullMessage: function showChannelFullMessage() {
+      // Create an alert or message to inform user
+      var fullMessage = document.createElement("div");
+      fullMessage.className = "channel-full-message";
+      fullMessage.textContent = "This channel is full. Maximum 2 users allowed.";
+      fullMessage.style.position = "fixed";
+      fullMessage.style.top = "50%";
+      fullMessage.style.left = "50%";
+      fullMessage.style.transform = "translate(-50%, -50%)";
+      fullMessage.style.padding = "20px";
+      fullMessage.style.backgroundColor = "rgba(0,0,0,0.8)";
+      fullMessage.style.color = "white";
+      fullMessage.style.borderRadius = "5px";
+      fullMessage.style.zIndex = "9999";
+      document.body.appendChild(fullMessage);
+
+      // Remove the message after a few seconds
+      setTimeout(function () {
+        fullMessage.remove();
+      }, 5000);
     },
     getUrlVars: function getUrlVars() {
       var vars = [],
@@ -22937,104 +23033,116 @@ var doctorFeedback = "referral/doctor/feedback";
       return vars;
     },
     joinVideo: function joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              console.log("local");
-              // Join a channel.
-              _context3.next = 3;
+              _context4.prev = 0;
+              console.log("Attempting to join channel...", self.options.channel);
+              // Join the channel without checking member count first
+              // (we'll handle the check after joining)
+              _context4.next = 4;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
-            case 3:
-              _context3.next = 5;
+            case 4:
+              console.log("Successfully joined channel");
+
+              // Create a local audio track from the microphone
+              _context4.next = 7;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
-            case 5:
-              channelParameters.localAudioTrack = _context3.sent;
-              _context3.next = 8;
+            case 7:
+              channelParameters.localAudioTrack = _context4.sent;
+              _context4.next = 10;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
-            case 8:
-              channelParameters.localVideoTrack = _context3.sent;
-              // Append the local video container to the page body.
+            case 10:
+              channelParameters.localVideoTrack = _context4.sent;
+              // Append the local video container to the page
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
               $(localPlayerContainer).addClass("localPlayerLayer");
-              // Publish the local audio and video tracks in the channel.
-              _context3.next = 14;
+
+              // Publish the local audio and video tracks in the channel
+              _context4.next = 16;
               return agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
-            case 14:
-              // Play the local video track.
+            case 16:
+              // Play the local video track
               channelParameters.localVideoTrack.play(localPlayerContainer);
               console.log("publish success!");
-            case 16:
+              _context4.next = 23;
+              break;
+            case 20:
+              _context4.prev = 20;
+              _context4.t0 = _context4["catch"](0);
+              console.error("Error joining channel:", _context4.t0);
+            case 23:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
-        }, _callee3);
+        }, _callee4, null, [[0, 20]]);
       }))();
     },
     sendCallDuration: function sendCallDuration() {
       var _this5 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
         var finalDuration, response;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
             case 0:
               if (!_this5.isLeavingChannel) {
-                _context4.next = 2;
+                _context5.next = 2;
                 break;
               }
-              return _context4.abrupt("return");
+              return _context5.abrupt("return");
             case 2:
               // Prevent duplicate sends
               _this5.isLeavingChannel = true;
               if (!(_this5.callMinutes > 0)) {
-                _context4.next = 18;
+                _context5.next = 18;
                 break;
               }
-              _context4.prev = 4;
+              _context5.prev = 4;
               // Calculate final duration before sending
               finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
-              _context4.next = 8;
+              _context5.next = 8;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this5.baseUrl, "/save-call-duration"), {
                 call_duration: finalDuration,
                 tracking_id: _this5.tracking_id,
                 referral_code: _this5.referral_code
               });
             case 8:
-              response = _context4.sent;
+              response = _context5.sent;
               console.log("Call duration saved:", response.data);
               localStorage.removeItem('callStartTime'); // Clean up
-              return _context4.abrupt("return", true);
+              return _context5.abrupt("return", true);
             case 14:
-              _context4.prev = 14;
-              _context4.t0 = _context4["catch"](4);
-              console.error("Error saving call duration:", _context4.t0);
-              return _context4.abrupt("return", false);
+              _context5.prev = 14;
+              _context5.t0 = _context5["catch"](4);
+              console.error("Error saving call duration:", _context5.t0);
+              return _context5.abrupt("return", false);
             case 18:
-              return _context4.abrupt("return", false);
+              return _context5.abrupt("return", false);
             case 19:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
-        }, _callee4, null, [[4, 14]]);
+        }, _callee5, null, [[4, 14]]);
       }))();
     },
     leaveChannel: function leaveChannel() {
       var _this6 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
               if (!confirm("Are you sure you want to leave this channel?")) {
-                _context5.next = 7;
+                _context6.next = 7;
                 break;
               }
               if (!(_this6.referring_md == 'yes')) {
-                _context5.next = 6;
+                _context6.next = 6;
                 break;
               }
               clearInterval(_this6.callTimer); // Stop the timer
-              _context5.next = 5;
+              _context6.next = 5;
               return _this6.sendCallDuration();
             case 5:
               // Give more time for the request to complete
@@ -23045,9 +23153,9 @@ var doctorFeedback = "referral/doctor/feedback";
               window.top.close();
             case 7:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5);
+        }, _callee6);
       }))();
     },
     stopCallTimer: function stopCallTimer() {
@@ -23096,12 +23204,12 @@ var doctorFeedback = "referral/doctor/feedback";
     }),
     ringingPhoneFunc: function ringingPhoneFunc() {
       var _this7 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
         var self;
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
             case 0:
-              _context6.next = 2;
+              _context7.next = 2;
               return _this7.$refs.ringingPhone.play();
             case 2:
               self = _this7;
@@ -23111,9 +23219,9 @@ var doctorFeedback = "referral/doctor/feedback";
               }, 60000);
             case 4:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
-        }, _callee6);
+        }, _callee7);
       }))();
     },
     //--------------------------------------------------------------------------
