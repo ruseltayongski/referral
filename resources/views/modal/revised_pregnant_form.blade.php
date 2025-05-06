@@ -948,7 +948,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_skin_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_others_cbox" value="Yes">
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_skin_others" id="rs_skin_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
                                                 </div>
                                         </div>
@@ -973,6 +973,11 @@
                                                 <input class="form-check-input" id="rs_head_injury_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_injury_cbox" value="Yes">
                                                 <span> Head injury</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_head_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_head_others" id="rs_head_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1015,6 +1020,11 @@
                                                 <input class="form-check-input" id="rs_eyes_glaucoma_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes">
                                                 <span> Glaucoma/Cataracts</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_eyes_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_eyes_others" id="rs_eyes_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1051,6 +1061,11 @@
                                                 <input class="form-check-input" id="rs_ears_dizziness_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_dizziness_cbox" value="Yes">
                                                 <span> Dizziness</span>
                                             </div>
+                                            <div class="col-md-2">
+                                                    <input class="form-check-input" id="rs_ears_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_ears_others" id="rs_ears_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1079,6 +1094,11 @@
                                                 <input class="form-check-input" id="rs_nose_colds_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_colds_cbox" value="Yes">
                                                 <span> Frequent Colds</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_nose_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_nose_others" id="rs_nose_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1111,6 +1131,11 @@
                                                 <input class="form-check-input" id="rs_mouth_hoarse_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_hoarse_cbox" value="Yes">
                                                 <span> Hoarseness</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_mouth_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_mouth_others" id="rs_mouth_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1143,6 +1168,11 @@
                                                 <input class="form-check-input" id="rs_neck_stiff_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_stiff_cbox" value="Yes">
                                                 <span> Stiffness</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_neck_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_neck_others" id="rs_neck_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1175,6 +1205,11 @@
                                                 <input class="form-check-input" id="rs_breast_bse_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_bse_cbox" value="Yes">
                                                 <span> BSE</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_breast_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_breast_others" id="rs_breast_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1261,6 +1296,11 @@
                                                 <input class="form-check-input" id="rs_respi_rheumaticheart_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_rheumaticheart_cbox" value="Yes">
                                                 <span> Rheumatic heart disease</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_respiratory_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respiratory_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_respiratory_others" id="rs_respiratory_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1343,6 +1383,11 @@
                                                 <input class="form-check-input" id="rs_gastro_rectalbleed_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_rectalbleed_cbox" value="Yes">
                                                 <span> Rectal bleeding/Hemorrhoids</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_gastrointestinal_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastrointestinal_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_gastrointestinal_others" id="rs_gastrointestinal_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1399,6 +1444,11 @@
                                                 <input class="form-check-input" id="rs_urin_uti_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_uti_cbox" value="Yes">
                                                 <span> UTI/stones/prostate infection</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_urinary_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urinary_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_urinary_others" id="rs_urinary_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1431,6 +1481,11 @@
                                                 <input class="form-check-input" id="rs_peri_edema_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_edema_cbox" value="Yes">
                                                 <span> Edema</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_peripheral_vascular_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peripheral_vascular_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_peripheral_vascular_others" id="rs_peripheral_vascular_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1489,6 +1544,11 @@
                                                 <input class="form-check-input" id="rs_muscle_spasm_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_spasm_cbox" value="Yes">
                                                 <span> Muscle Spasm</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_musculoskeletal_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musculoskeletal_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_musculoskeletal_others" id="rs_musculoskeletal_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1557,6 +1617,11 @@
                                                 <input class="form-check-input" id="rs_neuro_tingles_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tingles_cbox" value="Yes">
                                                 <span> Feeling of "pins and needles/tingles"</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_neurologic_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neurologic_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_neurologic_others" id="rs_neurologic_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1585,6 +1650,11 @@
                                                 <input class="form-check-input" id="rss_hema_transfusion_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rss_hema_transfusion_cbox" value="Yes">
                                                 <span> Past Transfusions</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_hematologic_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hematologic_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_hematologic_others" id="rs_hematologic_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1627,6 +1697,11 @@
                                                 <input class="form-check-input" id="rs_endo_sweat_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" value="Yes">
                                                 <span> Excessive sweating</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_endocrine_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endocrine_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_endocrine_others" id="rs_endocrine_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1677,6 +1752,11 @@
                                                 <input class="form-check-input" id="rs_psych_moodchange_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_moodchange_cbox" value="Yes">
                                                 <span> Change in mood/change in attitude towards family/friends</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_psychiatric_others_cbox_pregnant" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psychiatric_others_cbox" value="Yes">
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_psychiatric_others" id="rs_psychiatric_others_pregnant" style="resize: none;width: 100%;" rows="2"></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
                                 </div>
@@ -2769,6 +2849,15 @@
     $('#rs_head_headache_cbox_pregnant, #rs_head_injury_cbox_pregnant').on('click', function() {
         $('#rs_head_all_cbox_pregnant, #rs_head_none_cbox_pregnant').prop('checked', false);
     })
+    $('#rs_head_others_pregnant').hide(); 
+        $('#rs_head_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_head_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_head_others_pregnant").val("");
+                $('#rs_head_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* EYES */
     $('#rs_eyes_all_cbox_pregnant').on('click', function() {
@@ -2790,6 +2879,15 @@
     $('#rs_eyes_glasses_cbox_pregnant, #rs_eyes_vision_cbox_pregnant, #rs_eyes_pain_cbox_pregnant, #rs_eyes_doublevision_cbox_pregnant, #rs_eyes_flashing_cbox_pregnant, #rs_eyes_glaucoma_cbox_pregnant').on('click', function() {
         $('#rs_eyes_all_cbox_pregnant, #rs_eyes_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_eyes_others_pregnant').hide(); 
+        $('#rs_eyes_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_eyes_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_eyes_others_pregnant").val("");
+                $('#rs_eyes_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* EARS */
     $('#rs_ears_all_cbox_pregnant').on('click', function() {
@@ -2806,6 +2904,15 @@
     $('#rs_ears_changehearing_cbox_pregnant, #rs_ears_pain_cbox_pregnant, #rs_ears_discharge_cbox_pregnant, #rs_ears_ringing_cbox_pregnant, #rs_ears_dizziness_cbox_pregnant').on('click', function() {
         $('#rs_ears_all_cbox_pregnant, #rs_ears_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_ears_others_pregnant').hide(); 
+        $('#rs_ears_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_ears_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_ears_others_pregnant").val("");
+                $('#rs_ears_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* NOSE/SINUSES */
     $('#rs_nose_all_cbox_pregnant').on('click', function() {
@@ -2822,6 +2929,15 @@
     $('#rs_nose_bleeds_cbox_pregnant, #rs_nose_stuff_cbox_pregnant, #rs_nose_colds_cbox_pregnant').on('click', function() {
         $('#rs_nose_all_cbox_pregnant, #rs_nose_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_nose_others_pregnant').hide(); 
+        $('#rs_nose_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_nose_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_nose_others_pregnant").val("");
+                $('#rs_nose_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* MOUTH/THROAT */
     $('#rs_mouth_all_cbox_pregnant').on('click', function() {
@@ -2838,6 +2954,15 @@
     $('#rs_mouth_bleed_cbox_pregnant, #rs_mouth_soretongue_cbox_pregnant, #rs_mouth_sorethroat_cbox_pregnant, #rs_mouth_hoarse_cbox_pregnant').on('click', function() {
         $('#rs_mouth_all_cbox_pregnant, #rs_mouth_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_mouth_others_pregnant').hide(); 
+        $('#rs_mouth_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_mouth_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_mouth_others_pregnant").val("");
+                $('#rs_mouth_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* NECK */
     $('#rs_neck_all_cbox_pregnant').on('click', function() {
@@ -2854,7 +2979,15 @@
     $('#rs_neck_lumps_cbox_pregnant, #rs_neck_swollen_cbox_pregnant, #rs_neck_goiter_cbox_pregnant, #rs_neck_stiff_cbox_pregnant').on('click', function() {
         $('#rs_neck_all_cbox_pregnant, #rs_neck_none_cbox_pregnant').prop('checked', false);
     });
-
+    $('#rs_neck_others_pregnant').hide(); 
+        $('#rs_neck_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_neck_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_neck_others_pregnant").val("");
+                $('#rs_neck_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
     /* BREAST */
     $('#rs_breast_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
@@ -2870,6 +3003,15 @@
     $('#rs_breast_lumps_cbox_pregnant, #rs_breast_pain_cbox_pregnant, #rs_breast_discharge_cbox_pregnant, #rs_breast_bse_cbox_pregnant').on('click', function() {
         $('#rs_breast_all_cbox_pregnant, #rs_breast_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_breast_others_pregnant').hide(); 
+        $('#rs_breast_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_breast_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_breast_others_pregnant").val("");
+                $('#rs_breast_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* RESPIRATORY/CARDIAC */
     $('#rs_respi_all_cbox_pregnant').on('click', function() {
@@ -2900,6 +3042,15 @@
     $('#rs_respi_highbp_cbox_pregnant, #rs_respi_skipheartbeats_cbox_pregnant, #rs_respi_heartmurmur_cbox_pregnant, #rs_respi_hxheart_cbox_pregnant, #rs_respi_brochitis_cbox_pregnant, #rs_respi_rheumaticheart_cbox_pregnant').on('click', function() {
         $('#rs_respi_all_cbox_pregnant, #rs_respi_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_respiratory_others_pregnant').hide(); 
+        $('#rs_respiratory_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_respiratory_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_respiratory_others_pregnant").val("");
+                $('#rs_respiratory_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* GASTROINTESTINAL */
     $('#rs_gastro_all_cbox_pregnant').on('click', function() {
@@ -2930,6 +3081,15 @@
     $('#rs_gastro_jaundice_cbox_pregnant, #rs_gastro_intolerance_cbox_pregnant, #rs_gastro_rectalbleed_cbox_pregnant').on('click', function() {
         $('#rs_gastro_all_cbox_pregnant, #rs_gastro_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_gastrointestinal_others_pregnant').hide(); 
+        $('#rs_gastrointestinal_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_gastrointestinal_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_gastrointestinal_others_pregnant").val("");
+                $('#rs_gastrointestinal_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* URINARY */
     $('#rs_urin_all_cbox_pregnant').on('click', function() {
@@ -2954,6 +3114,15 @@
     $('#rs_urin_dribbling_cbox_pregnant, #rs_urin_decreased_cbox_pregnant, #rs_urin_blood_cbox_pregnant, #rs_urin_uti_cbox_pregnant').on('click', function() {
         $('#rs_urin_all_cbox_pregnant, #rs_urin_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_urinary_others_pregnant').hide(); 
+        $('#rs_urinary_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_urinary_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_urinary_others_pregnant").val("");
+                $('#rs_urinary_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* PERIPHERAL VASCULAR */
     $('#rs_peri_all_cbox_pregnant').on('click', function() {
@@ -2970,6 +3139,15 @@
     $('#rs_peri_legcramp_cbox_pregnant, #rs_peri_varicose_cbox_pregnant, #rs_peri_veinclot_cbox_pregnant, #rs_peri_edema_cbox_pregnant').on('click', function() {
         $('#rs_peri_all_cbox_pregnant, #rs_peri_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_peripheral_vascular_others_pregnant').hide(); 
+        $('#rs_peripheral_vascular_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_peripheral_vascular_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_peripheral_vascular_others_pregnant").val("");
+                $('#rs_peripheral_vascular_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox_pregnant').on('click', function() {
@@ -2990,7 +3168,15 @@
     $('#rs_muscle_spasm_cbox_pregnant, #rs_muscle_sizeloss_cbox_pregnant, #rs_muscle_pain_cbox_pregnant, #rs_muscle_swell_cbox_pregnant, #rs_muscle_stiff_cbox_pregnant, #rs_muscle_decmotion_cbox_pregnant, #rs_muscle_fracture_cbox_pregnant, #rs_muscle_sprain_cbox_pregnant, #rs_muscle_arthritis_cbox_pregnant, #rs_muscle_gout_cbox_pregnant, #rs_musclgit_cbox_pregnant').on('click', function() {
         $('#rs_muscle_all_cbox_pregnant, #rs_muscle_none_cbox_pregnant').prop('checked', false);
     });
-
+    $('#rs_musculoskeletal_others_pregnant').hide(); 
+        $('#rs_musculoskeletal_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_musculoskeletal_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_musculoskeletal_others_pregnant").val("");
+                $('#rs_musculoskeletal_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox_pregnant').on('click', function() {
@@ -3015,6 +3201,15 @@
     $('#rs_neuro_tremor_cbox_pregnant, #rs_neuro_involuntary_cbox_pregnant, #rs_neuro_unsteadygait_cbox_pregnant, #rs_neuro_numbness_cbox_pregnant, #rs_neuro_tingles_cbox_pregnant').on('click', function() {
         $('#rs_neuro_all_cbox_pregnant, #rs_neuro_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_neurologic_others_pregnant').hide(); 
+        $('#rs_neurologic_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_neurologic_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_neurologic_others_pregnant").val("");
+                $('#rs_neurologic_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* HEMATOLOGIC */
     $('#rs_hema_all_cbox_pregnant').on('click', function() {
@@ -3031,6 +3226,15 @@
     $('#rs_hema_anemia_cbox_pregnant, #rs_hema_bruising_cbox_pregnant, #rss_hema_transfusion_cbox_pregnant').on('click', function() {
         $('#rs_hema_all_cbox_pregnant, #rs_hema_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_hematologic_others_pregnant').hide(); 
+        $('#rs_hematologic_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_hematologic_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_hematologic_others_pregnant").val("");
+                $('#rs_hematologic_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /* ENDOCRINE */
     $('#rs_endo_all_cbox_pregnant').on('click', function() {
@@ -3055,7 +3259,15 @@
     $('#rs_endo_heatcold_cbox_pregnant, #rs_endo_sweat_cbox_pregnant').on('click', function() {
         $('#rs_endo_all_cbox_pregnant, #rs_endo_none_cbox_pregnant').prop('checked', false);
     });
-
+    $('#rs_endocrine_others_pregnant').hide(); 
+        $('#rs_endocrine_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_endocrine_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_endocrine_others_pregnant").val("");
+                $('#rs_endocrine_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
     /* PSYCHIATRIC */
     $('#rs_psych_all_cbox_pregnant').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3071,6 +3283,15 @@
     $('#rs_psych_tension_cbox_pregnant, #rs_psych_depression_cbox_pregnant, #rs_psych_suicideideation_cbox_pregnant, #rs_psych_memory_cbox_pregnant, #rs_psych_unusual_cbox_pregnant, #rs_psych_sleep_cbox_pregnant, #rs_psych_treatment_cbox_pregnant, #rs_psych_moodchange_cbox_pregnant').on('click', function() {
         $('#rs_psych_all_cbox_pregnant, #rs_psych_none_cbox_pregnant').prop('checked', false);
     });
+    $('#rs_psychiatric_others_pregnant').hide(); 
+        $('#rs_psychiatric_others_cbox_pregnant').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_psychiatric_others_pregnant').show(); // Show when checked
+            } else {
+                $("#rs_psychiatric_others_pregnant").val("");
+                $('#rs_psychiatric_others_pregnant').hide(); // Hide when unchecked
+            }
+        });
 
     /**************************************************************************/
 

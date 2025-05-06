@@ -354,6 +354,9 @@ class NewFormCtrl extends Controller
             'Head injury' => [
                 'cbox' => 'rs_head_injury_cbox',
             ],
+            'Others' => [
+                'cbox' => 'rs_head_others_cbox'
+            ],
         ];
         $rs_eyes_fields = [
             'Select All' => [
@@ -383,6 +386,9 @@ class NewFormCtrl extends Controller
             'Last eye exam' => [
                 'cbox' => 'rs_eye_exam_cbox',
             ],
+            'Others' => [
+                'cbox' => 'rs_eyes_others_cbox'
+            ],
         ];
         $rs_ears_fields = [
             'Select All' => [
@@ -406,6 +412,9 @@ class NewFormCtrl extends Controller
             'Dizziness' => [
                 'cbox' => 'rs_ears_dizziness_cbox',
             ],
+            'Others' => [
+                'cbox' => 'rs_ears_others_cbox'
+            ],
         ];
         $rs_nose_fields = [
             'Select All' => [
@@ -422,6 +431,9 @@ class NewFormCtrl extends Controller
             ],
             'Frequent Colds' => [
                 'cbox' => 'rs_nose_colds_cbox',
+            ],
+            'Others' => [
+                'cbox' => 'rs_nose_others_cbox'
             ],
         ];
         $rs_mouth_fields = [
@@ -443,6 +455,9 @@ class NewFormCtrl extends Controller
             'Hoarseness' => [
                 'cbox' => 'rs_mouth_hoarse_cbox',
             ],
+            'Others' => [
+                'cbox' => 'rs_mouth_others_cbox'
+            ],
         ];
         $rs_neck_fields = [
             'Select All' => [
@@ -462,6 +477,9 @@ class NewFormCtrl extends Controller
             ],
             'Stiffness' => [
                 'cbox' => 'rs_neck_stiff_cbox',
+            ],
+            'Others' => [
+                'cbox' => 'rs_neck_others_cbox'
             ],
         ];
 
@@ -483,6 +501,9 @@ class NewFormCtrl extends Controller
             ],
             'BSE' => [
                 'cbox' => 'rs_breast_bse_cbox',
+            ],
+            'Others' => [
+                'cbox' => 'rs_breast_others_cbox'
             ],
         ];
         $rs_respiratory_fields = [
@@ -540,7 +561,9 @@ class NewFormCtrl extends Controller
             'Rheumatic heart disease' => [
                 'cbox' => 'rs_respi_rheumaticheart_cbox',
             ],
-
+            'Others' => [
+                'cbox' => 'rs_respiratory_others_cbox'
+            ],
         ];
         $rs_gastrointestinal_fields = [
             'Select All' => [
@@ -594,6 +617,9 @@ class NewFormCtrl extends Controller
             'Rectal bleeding/Hemorrhoids' => [
                 'cbox' => 'rs_gastro_rectalbleed_cbox',
             ],
+            'Others' => [
+                'cbox' => 'rs_gastrointestinal_others_cbox'
+            ],
         ];
         $rs_urinary_fields = [
             'Select All' => [
@@ -629,6 +655,9 @@ class NewFormCtrl extends Controller
             'UTI/stones/prostate infection' => [
                 'cbox' => 'rs_urin_uti_cbox',
             ],
+            'Others' => [
+                'cbox' => 'rs_urinary_others_cbox'
+            ],
         ];
         $rs_peripheral_fields = [
             'Select All' => [
@@ -648,7 +677,10 @@ class NewFormCtrl extends Controller
             ],
             'Edema' => [
                 'cbox' => 'rs_peri_edema_cbox',
-            ]
+            ],
+            'Others' => [
+                'cbox' => 'rs_peripheral_vascular_others_cbox'
+            ],
         ];
 
         $rs_musculoskeletal_fields = [
@@ -687,6 +719,9 @@ class NewFormCtrl extends Controller
             ],
             'Muscle Spasm' => [
                 'cbox' => 'rs_muscle_spasm_cbox',
+            ],
+            'Others' => [
+                'cbox' => 'rs_musculoskeletal_others_cbox'
             ],
         ];
         $rs_neurologic_fields = [
@@ -731,7 +766,10 @@ class NewFormCtrl extends Controller
             ],
             'Slurring Speech' => [
                 'cbox' => 'rs_neuro_slurringspeech_cbox'
-            ]
+            ],
+            'Others' => [
+                'cbox' => 'rs_neurologic_others_cbox'
+            ],
         ];
         $rs_hematologic_fields = [
             'Select All' => [
@@ -748,6 +786,9 @@ class NewFormCtrl extends Controller
             ],
             'Past Transfusions' => [
                 'cbox' => 'rss_hema_transfusion_cbox',
+            ],
+            'Others' => [
+                'cbox' => 'rs_hematologic_others_cbox'
             ],
         ];
         $rs_endocrine_fields = [
@@ -774,6 +815,9 @@ class NewFormCtrl extends Controller
             ],
             'Excessive sweating' => [
                 'cbox' => 'rs_endo_sweat_cbox',
+            ],
+            'Others' => [
+                'cbox' => 'rs_endocrine_others_cbox'
             ],
         ];
         $rs_psychiatric_fields = [
@@ -807,6 +851,9 @@ class NewFormCtrl extends Controller
             ],
             'Change in mood/change in attitude towards family/friends' => [
                 'cbox' => 'rs_psych_moodchange_cbox',
+            ],
+            'Others' => [
+                'cbox' => 'rs_psychiatric_others_cbox'
             ],
         ];
         // Define the fields for contraceptive with associated causes
@@ -1020,21 +1067,37 @@ class NewFormCtrl extends Controller
             'skin' => $rs_skin_methods,
             'skin_others' => $request->rs_skin_others,
             'head' => $rs_head_methods,
+            'head_others' => $request->rs_head_others,
             'eyes' => $rs_eyes_methods,
+            'eyes_others' => $request->rs_eyes_others,
             'ears' => $rs_ears_methods,
+            'ears_others' => $request->rs_ears_others,
             'nose_or_sinuses' => $rs_nose_methods,
+            'nose_others' => $request->rs_nose_others,
             'mouth_or_throat' => $rs_mouth_methods,
+            'mouth_others' => $request->rs_mouth_others,
             'neck' => $rs_neck_methods,
+            'neck_others' => $request->rs_neck_others,
             'breast' => $rs_breast_methods,
+            'breast_others' => $request->rs_breast_others,
             'respiratory_or_cardiac' => $rs_respiratory_methods,
+            'respiratory_others' => $request->rs_respiratory_others,
             'gastrointestinal' => $rs_gastrointestinal_methods,
+            'gastrointestinal_others' => $request->rs_gastrointestinal_others,
             'urinary' => $rs_urinary_methods,
+            'urinary_others' => $request->rs_urinary_others,
             'peripheral_vascular' => $rs_peripheral_methods,
+            'peripheral_vascular_others' => $request->rs_peripheral_vascular_others,
             'musculoskeletal' => $rs_musculoskeletal_methods,
+            'musculoskeletal_others' => $request->rs_musculoskeletal_others,
             'neurologic' => $rs_neurologic_methods,
+            'neurologic_others' => $request->rs_neurologic_others,
             'hematologic' => $rs_hematologic_methods,
+            'hematologic_others' => $request->rs_hematologic_others,
             'endocrine' => $rs_endocrine_methods,
+            'endocrine_others' => $request->rs_endocrine_others,
             'psychiatric' => $rs_psychiatric_methods,
+            'psychiatric_others' => $request->rs_psychiatric_others,
         ];
         $nutritional_status = [
             'patient_id' => $patient_id,

@@ -1622,7 +1622,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 </div>
                                                 <div class="col-md-3">
                                                     <input class="form-check-input" id="rs_skin_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_skin_others_cbox" value="Yes" <?= isChecked($review_of_system, 'skin', 'Others'); ?>>
-                                                    <span> Others(specify part of the body)</span>
+                                                    <span> Others(specify part of the body / symptoms)</span>
                                                     <textarea class="form-control" name="rs_skin_others" id="rs_skin_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->skin_others); ?></textarea>
                                                 </div>
                                         </div>
@@ -1647,6 +1647,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_head_injury_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_injury_cbox" value="Yes" <?= isChecked($review_of_system, 'head', 'Head injury'); ?>>
                                                 <span> Head injury</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_head_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_head_others_cbox" value="Yes" <?= isChecked($review_of_system, 'head', 'Others'); ?>>
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_head_others" id="rs_head_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->head_others); ?></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1689,6 +1694,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_eyes_glaucoma_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_glaucoma_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Glaucoma/Cataracts'); ?>>
                                                 <span> Glaucoma/Cataracts</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_eyes_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_eyes_others_cbox" value="Yes" <?= isChecked($review_of_system, 'eyes', 'Others'); ?>>
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_eyes_others" id="rs_eyes_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->eyes_others); ?></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1725,6 +1735,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_ears_dizziness_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_dizziness_cbox" value="Yes" <?= isChecked($review_of_system, 'ears', 'Dizziness'); ?>>
                                                 <span> Dizziness</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                    <input class="form-check-input" id="rs_ears_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_ears_others_cbox" value="Yes" <?= isChecked($review_of_system, 'ears', 'Others'); ?>>
+                                                    <span> Others(specify part of the body / symptoms)</span>
+                                                    <textarea class="form-control" name="rs_ears_others" id="rs_ears_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->ears_others); ?></textarea>
+                                                </div>
                                         </div>
                                     </div><br>
 
@@ -1752,6 +1767,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_nose_colds_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_colds_cbox" value="Yes" <?= isChecked($review_of_system, 'nose_or_sinuses', 'Frequent Colds'); ?>>
                                                 <span> Frequent Colds</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_nose_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_nose_others_cbox" value="Yes" <?= isChecked($review_of_system, 'nose_or_sinuses', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_nose_others" id="rs_nose_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->nose_others); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1785,6 +1805,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_mouth_hoarse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_hoarse_cbox" value="Yes" <?= isChecked($review_of_system, 'mouth_or_throat', 'Hoarseness'); ?>>
                                                 <span> Hoarseness</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_mouth_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_mouth_others_cbox" value="Yes" <?= isChecked($review_of_system, 'mouth_or_throat', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_mouth_others" id="rs_mouth_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->mouth_others); ?></textarea>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -1817,6 +1842,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_neck_stiff_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_stiff_cbox" value="Yes" <?= isChecked($review_of_system, 'neck', 'Stiffness'); ?>>
                                                 <span> Stiffness</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neck_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neck_others_cbox" value="Yes" <?= isChecked($review_of_system, 'neck', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_neck_others" id="rs_neck_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->neck_others); ?></textarea>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -1848,6 +1878,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_breast_bse_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_bse_cbox" value="Yes" <?= isChecked($review_of_system, 'breast', 'BSE'); ?>>
                                                 <span> BSE</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_breast_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_breast_others_cbox" value="Yes" <?= isChecked($review_of_system, 'breast', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_breast_others" id="rs_breast_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->respiratory_others); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -1935,6 +1970,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_respi_rheumaticheart_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respi_rheumaticheart_cbox" value="Yes" <?= isChecked($review_of_system, 'respiratory_or_cardiac', 'Rheumatic heart disease'); ?>>
                                                 <span> Rheumatic heart disease</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_respiratory_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_respiratory_others_cbox" value="Yes" <?= isChecked($review_of_system, 'respiratory_or_cardiac', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_respiratory_others" id="rs_respiratory_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->respiratory_others); ?></textarea>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -2017,6 +2057,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_gastro_rectalbleed_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastro_rectalbleed_cbox" value="Yes" <?= isChecked($review_of_system, 'gastrointestinal', 'Rectal bleeding/Hemorrhoids'); ?>>
                                                 <span> Rectal bleeding/Hemorrhoids</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_gastrointestinal_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_gastrointestinal_others_cbox" value="Yes" <?= isChecked($review_of_system, 'gastrointestinal', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_gastrointestinal_others" id="rs_gastrointestinal_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->respiratory_others); ?></textarea>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -2073,6 +2118,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_urin_uti_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urin_uti_cbox" value="Yes" <?= isChecked($review_of_system, 'urinary', 'UTI/stones/prostate infection'); ?>>
                                                 <span> UTI/stones/prostate infection</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_urinary_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_urinary_others_cbox" value="Yes" <?= isChecked($review_of_system, 'urinary', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_urinary_others" id="rs_urinary_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->urinary_others); ?></textarea>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -2104,6 +2154,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_peri_edema_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peri_edema_cbox" value="Yes">
                                                 <span> Edema</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_peripheral_vascular_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_peripheral_vascular_others_cbox" value="Yes" <?= isChecked($review_of_system, 'peripheral_vascular', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_peripheral_vascular_others" id="rs_peripheral_vascular_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->peripheral_vascular_others); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -2162,6 +2217,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_muscle_spasm_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_muscle_spasm_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Muscle Spasm'); ?>>
                                                 <span> Muscle Spasm</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_musculoskeletal_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_musculoskeletal_others_cbox" value="Yes" <?= isChecked($review_of_system, 'musculoskeletal', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_musculoskeletal_others" id="rs_musculoskeletal_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->musculoskeletal_others); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -2231,6 +2291,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                                 <input class="form-check-input" id="rs_neuro_tingles_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neuro_tingles_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Feeling of pins and needles/tingles'); ?>>
                                                 <span> Feeling of pins and needles/tingles</span>
                                             </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_neurologic_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_neurologic_others_cbox" value="Yes" <?= isChecked($review_of_system, 'neurologic', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_neurologic_others" id="rs_neurologic_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->neurologic_others); ?></textarea>
+                                            </div>
                                         </div>
                                     </div><br>
 
@@ -2258,6 +2323,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rss_hema_transfusion_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rss_hema_transfusion_cbox" value="Yes" <?= isChecked($review_of_system, 'hematologic', 'Past Transfusions'); ?>>
                                                 <span> Past Transfusions</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_hematologic_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_hematologic_others_cbox" value="Yes" <?= isChecked($review_of_system, 'hematologic', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_hematologic_others" id="rs_hematologic_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->hematologic_others); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -2300,6 +2370,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_endo_sweat_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endo_sweat_cbox" value="Yes" <?= isChecked($review_of_system, 'endocrine', 'Excessive sweating'); ?>>
                                                 <span> Excessive sweating</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_endocrine_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_endocrine_others_cbox" value="Yes" <?= isChecked($review_of_system, 'endocrine', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_endocrine_others" id="rs_endocrine_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->endocrine_others); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -2350,6 +2425,11 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                             <div class="col-md-3">
                                                 <input class="form-check-input" id="rs_psych_moodchange_cbox" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psych_moodchange_cbox" value="Yes" <?= isChecked($review_of_system, 'psychiatric', 'Change in mood/change in attitude towards family/friends'); ?>>
                                                 <span> Change in mood/change in attitude towards family/friends</span>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input class="form-check-input" id="rs_psychiatric_others_cbox_normal_info" style="height: 18px;width: 18px;cursor: pointer;" type="checkbox" name="rs_psychiatric_others_cbox" value="Yes" <?= isChecked($review_of_system, 'psychiatric', 'Others'); ?>>
+                                                <span> Others(specify part of the body / symptoms)</span>
+                                                <textarea class="form-control" name="rs_psychiatric_others" id="rs_psychiatric_others_normal_info" style="resize: none;width: 100%;" rows="2"><?php echo htmlspecialchars($review_of_system->psychiatric_others); ?></textarea>
                                             </div>
                                         </div>
                                     </div><br>
@@ -3466,6 +3546,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_head_headache_cbox, #rs_head_injury_cbox').on('click', function() {
         $('#rs_head_all_cbox, #rs_head_none_cbox').prop('checked', false);
     })
+    $('#rs_head_others_normal_info').show(); 
+        $('#rs_head_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_head_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_head_others_normal_info").val("");
+                $('#rs_head_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* EYES */
     $('#rs_eyes_all_cbox').on('click', function() {
@@ -3487,6 +3576,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_eyes_glasses_cbox, #rs_eyes_vision_cbox, #rs_eyes_pain_cbox, #rs_eyes_doublevision_cbox, #rs_eyes_flashing_cbox, #rs_eyes_glaucoma_cbox').on('click', function() {
         $('#rs_eyes_all_cbox, #rs_eyes_none_cbox').prop('checked', false);
     });
+    $('#rs_eyes_others_normal_info').show(); 
+        $('#rs_eyes_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_eyes_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_eyes_others_normal_info").val("");
+                $('#rs_eyes_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* EARS */
     $('#rs_ears_all_cbox').on('click', function() {
@@ -3503,6 +3601,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_ears_changehearing_cbox, #rs_ears_pain_cbox, #rs_ears_discharge_cbox, #rs_ears_ringing_cbox, #rs_ears_dizziness_cbox').on('click', function() {
         $('#rs_ears_all_cbox, #rs_ears_none_cbox').prop('checked', false);
     });
+    $('#rs_ears_others_normal_info').show(); 
+        $('#rs_ears_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_ears_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_ears_others_normal_info").val("");
+                $('#rs_ears_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* NOSE/SINUSES */
     $('#rs_nose_all_cbox').on('click', function() {
@@ -3519,6 +3626,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_nose_bleeds_cbox, #rs_nose_stuff_cbox, #rs_nose_colds_cbox').on('click', function() {
         $('#rs_nose_all_cbox, #rs_nose_none_cbox').prop('checked', false);
     });
+    $('#rs_nose_others_normal_info').show(); 
+        $('#rs_nose_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_nose_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_nose_others_normal_info").val("");
+                $('#rs_nose_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* MOUTH/THROAT */
     $('#rs_mouth_all_cbox').on('click', function() {
@@ -3535,6 +3651,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_mouth_bleed_cbox, #rs_mouth_soretongue_cbox, #rs_mouth_sorethroat_cbox, #rs_mouth_hoarse_cbox').on('click', function() {
         $('#rs_mouth_all_cbox, #rs_mouth_none_cbox').prop('checked', false);
     });
+    $('#rs_mouth_others_normal_info').show(); 
+        $('#rs_mouth_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_mouth_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_mouth_others_normal_info").val("");
+                $('#rs_mouth_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* NECK */
     $('#rs_neck_all_cbox').on('click', function() {
@@ -3551,6 +3676,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_neck_lumps_cbox, #rs_neck_swollen_cbox, #rs_neck_goiter_cbox, #rs_neck_stiff_cbox').on('click', function() {
         $('#rs_neck_all_cbox, #rs_neck_none_cbox').prop('checked', false);
     });
+    $('#rs_neck_others_normal_info').show(); 
+        $('#rs_neck_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_neck_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_neck_others_normal_info").val("");
+                $('#rs_neck_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* BREAST */
     $('#rs_breast_all_cbox').on('click', function() {
@@ -3567,6 +3701,16 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_breast_lumps_cbox, #rs_breast_pain_cbox, #rs_breast_discharge_cbox, #rs_breast_bse_cbox').on('click', function() {
         $('#rs_breast_all_cbox, #rs_breast_none_cbox').prop('checked', false);
     });
+   
+    $('#rs_breast_others_normal_info').show(); 
+        $('#rs_breast_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_breast_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_breast_others_normal_info").val("");
+                $('#rs_breast_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* RESPIRATORY/CARDIAC */
     $('#rs_respi_all_cbox').on('click', function() {
@@ -3597,7 +3741,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_respi_highbp_cbox, #rs_respi_skipheartbeats_cbox, #rs_respi_heartmurmur_cbox, #rs_respi_hxheart_cbox, #rs_respi_brochitis_cbox, #rs_respi_rheumaticheart_cbox').on('click', function() {
         $('#rs_respi_all_cbox, #rs_respi_none_cbox').prop('checked', false);
     });
-
+    $('#rs_respiratory_others_normal_info').show(); 
+        $('#rs_respiratory_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_respiratory_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_respiratory_others_normal_info").val("");
+                $('#rs_respiratory_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /* GASTROINTESTINAL */
     $('#rs_gastro_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3627,7 +3779,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_gastro_jaundice_cbox, #rs_gastro_intolerance_cbox, #rs_gastro_rectalbleed_cbox').on('click', function() {
         $('#rs_gastro_all_cbox, #rs_gastro_none_cbox').prop('checked', false);
     });
-
+    $('#rs_gastrointestinal_others_normal_info').show(); 
+        $('#rs_gastrointestinal_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_gastrointestinal_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_gastrointestinal_others_normal_info").val("");
+                $('#rs_gastrointestinal_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /* URINARY */
     $('#rs_urin_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3651,7 +3811,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_urin_dribbling_cbox, #rs_urin_decreased_cbox, #rs_urin_blood_cbox, #rs_urin_uti_cbox').on('click', function() {
         $('#rs_urin_all_cbox, #rs_urin_none_cbox').prop('checked', false);
     });
-
+    $('#rs_urinary_others_normal_info').show(); 
+        $('#rs_urinary_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_urinary_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_urinary_others_normal_info").val("");
+                $('#rs_urinary_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /* PERIPHERAL VASCULAR */
     $('#rs_peri_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3667,6 +3835,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_peri_legcramp_cbox, #rs_peri_varicose_cbox, #rs_peri_veinclot_cbox, #rs_peri_edema_cbox').on('click', function() {
         $('#rs_peri_all_cbox, #rs_peri_none_cbox').prop('checked', false);
     });
+    $('#rs_peripheral_vascular_others_normal_info').show(); 
+        $('#rs_peripheral_vascular_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_peripheral_vascular_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_peripheral_vascular_others_normal_info").val("");
+                $('#rs_peripheral_vascular_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
 
     /* MUSCULOSKELETAL */
     $('#rs_muscle_all_cbox').on('click', function() {
@@ -3687,7 +3864,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_muscle_spasm_cbox, #rs_muscle_sizeloss_cbox, #rs_muscle_pain_cbox, #rs_muscle_swell_cbox, #rs_muscle_stiff_cbox, #rs_muscle_decmotion_cbox, #rs_muscle_fracture_cbox, #rs_muscle_sprain_cbox, #rs_muscle_arthritis_cbox, #rs_muscle_gout_cbox, #rs_musclgit_cbox').on('click', function() {
         $('#rs_muscle_all_cbox, #rs_muscle_none_cbox').prop('checked', false);
     });
-
+    $('#rs_musculoskeletal_others_normal_info').show(); 
+        $('#rs_musculoskeletal_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_musculoskeletal_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_musculoskeletal_others_normal_info").val("");
+                $('#rs_musculoskeletal_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /* NEUROLOGIC */
     $('#rs_neuro_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3711,7 +3896,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $(' #rs_neuro_tremor_cbox, #rs_neuro_involuntary_cbox, #rs_neuro_unsteadygait_cbox, #rs_neuro_numbness_cbox, #rs_neuro_tingles_cbox').on('click', function() {
         $('#rs_neuro_all_cbox, #rs_neuro_none_cbox').prop('checked', false);
     });
-
+    $('#rs_neurologic_others_normal_info').show(); 
+        $('#rs_neurologic_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_neurologic_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_neurologic_others_normal_info").val("");
+                $('#rs_neurologic_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /* HEMATOLOGIC */
     $('#rs_hema_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3727,7 +3920,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_hema_anemia_cbox, #rs_hema_bruising_cbox, #rss_hema_transfusion_cbox').on('click', function() {
         $('#rs_hema_all_cbox, #rs_hema_none_cbox').prop('checked', false);
     });
-
+    $('#rs_hematologic_others_normal_info').show(); 
+        $('#rs_hematologic_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_hematologic_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_hematologic_others_normal_info").val("");
+                $('#rs_hematologic_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /* ENDOCRINE */
     $('#rs_endo_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3751,7 +3952,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_endo_heatcold_cbox, #rs_endo_sweat_cbox').on('click', function() {
         $('#rs_endo_all_cbox, #rs_endo_none_cbox').prop('checked', false);
     });
-
+    $('#rs_endocrine_others_normal_info').show(); 
+        $('#rs_endocrine_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_endocrine_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_endocrine_others_normal_info").val("");
+                $('#rs_endocrine_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /* PSYCHIATRIC */
     $('#rs_psych_all_cbox').on('click', function() {
         if ($(this).is(':checked')) {
@@ -3767,7 +3976,15 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
     $('#rs_psych_tension_cbox, #rs_psych_depression_cbox, #rs_psych_suicideideation_cbox, #rs_psych_memory_cbox, #rs_psych_unusual_cbox, #rs_psych_sleep_cbox, #rs_psych_treatment_cbox, #rs_psych_moodchange_cbox').on('click', function() {
         $('#rs_psych_all_cbox, #rs_psych_none_cbox').prop('checked', false);
     });
-
+    $('#rs_psychiatric_others_normal_info').show(); 
+        $('#rs_psychiatric_others_cbox_normal_info').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('#rs_psychiatric_others_normal_info').show(); // Show when checked
+            } else {
+                $("#rs_psychiatric_others_normal_info").val("");
+                $('#rs_psychiatric_others_normal_info').hide(); // Hide when unchecked
+            }
+        });
     /**************************************************************************/
 
     // $("#sbmitBtnNormalRevised").on('click',function(e){

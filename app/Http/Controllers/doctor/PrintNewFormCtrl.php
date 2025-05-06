@@ -399,21 +399,37 @@ class PrintNewFormCtrl extends Controller
            if(!empty($data->skin)){$pdf->MultiCell(0, 7, "Skin:" . self::green($pdf, NewFormCtrl::explodeString($data->skin), 'Skin'), 1, 'L');}
            if(!empty($data->skin_others)){$pdf->MultiCell(0, 7, "Skin Others:" . self::green($pdf, NewFormCtrl::explodeString($data->skin_others), 'Skin Others:'), 1, 'L');}
            if(!empty($data->head) ){$pdf->MultiCell(0, 7, "Head:" . self::green($pdf, NewFormCtrl::explodeString($data->head), 'Head'), 1, 'L');}
+           if(!empty($data->head_others)){$pdf->MultiCell(0, 7, "Head Others:" . self::green($pdf, NewFormCtrl::explodeString($data->head_others), 'Head Others:'), 1, 'L');}
            if(!empty($data->eyes)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Eyes: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->eyes)), 1, 'L');}
+           if(!empty($data->eyes_others)){$pdf->MultiCell(0, 7, "Eyes Others:" . self::green($pdf, NewFormCtrl::explodeString($data->eyes_others), 'Eyes Others:'), 1, 'L');}
            if(!empty($data->ears)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Ears: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->ears)), 1, 'L');}
+           if(!empty($data->ears_others)){$pdf->MultiCell(0, 7, "Ears Others:" . self::green($pdf, NewFormCtrl::explodeString($data->ears_others), 'Ears Others:'), 1, 'L');}
            if(!empty($data->nose_or_sinuses)){$pdf->MultiCell(0, 7, "Nose/Sinuses:" . self::green($pdf, NewFormCtrl::explodeString($data->nose_or_sinuses), 'Nose/Sinuses'), 1, 'L');}
+           if(!empty($data->nose_others)){$pdf->MultiCell(0, 7, "Nose/Sinuses Others:" . self::green($pdf, NewFormCtrl::explodeString($data->nose_others), 'Nose/Sinuses Others:'), 1, 'L');}
            if(!empty($data->mouth_or_throat)){$pdf->MultiCell(0, 7, "Mouth/Throat:" . self::green($pdf, NewFormCtrl::explodeString($data->mouth_or_throat), 'Mouth/Throat'), 1, 'L');}
+           if(!empty($data->mouth_others)){$pdf->MultiCell(0, 7, "Mouth/Throat Others:" . self::green($pdf, NewFormCtrl::explodeString($data->mouth_others), 'Mouth/Throat Others:'), 1, 'L');}
            if(!empty($data->neck)){$pdf->MultiCell(0, 7, "Neck:" . self::green($pdf, NewFormCtrl::explodeString($data->neck), 'Neck'), 1, 'L');}
+           if(!empty($data->neck_others)){$pdf->MultiCell(0, 7, "Neck Others:" . self::green($pdf, NewFormCtrl::explodeString($data->neck_others), 'Neck Others:'), 1, 'L');}
            if(!empty($data->breast)){$pdf->MultiCell(0, 7, "Breast:" . self::green($pdf, $data->breast, 'Breast'), 1, 'L');}
+           if(!empty($data->breast_others)){$pdf->MultiCell(0, 7, "Breast Others:" . self::green($pdf, NewFormCtrl::explodeString($data->breast_others), 'Breast Others:'), 1, 'L');}
            if(!empty($data->respiratory_or_cardiac)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Respiratory/Cardiac: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->respiratory_or_cardiac)), 1, 'L');}
+           if(!empty($data->respiratory_others)){$pdf->MultiCell(0, 7, "Respiratory/Cardiac Others:" . self::green($pdf, NewFormCtrl::explodeString($data->respiratory_others), 'Respiratory/Cardiac Others:'), 1, 'L');}
            if(!empty($data->gastrointestinal)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Gastrointestinal: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->gastrointestinal)), 1, 'L');}
+           if(!empty($data->gastrointestinal_others)){$pdf->MultiCell(0, 7, "Gastrointestinal Others:" . self::green($pdf, NewFormCtrl::explodeString($data->gastrointestinal_others), 'Gastrointestinal Others:'), 1, 'L');}
            if(!empty($data->urinary)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Urinary: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->urinary)), 1, 'L');}
+           if(!empty($data->urinary_others)){$pdf->MultiCell(0, 7, "Urinary Others:" . self::green($pdf, NewFormCtrl::explodeString($data->urinary_others), 'Urinary Others:'), 1, 'L');}
            if(!empty($data->peripheral_vascular)){$pdf->MultiCell(0, 7, "Peripheral Vascular:" . self::green($pdf, NewFormCtrl::explodeString($data->peripheral_vascular), 'Peripheral Vascular'), 1, 'L');}
+           if(!empty($data->peripheral_vascular_others)){$pdf->MultiCell(0, 7, "Peripheral Vascular Others:" . self::green($pdf, NewFormCtrl::explodeString($data->peripheral_vascular_others), 'Peripheral Vascular Others:'), 1, 'L');}
            if(!empty($data->musculoskeletal)){$pdf->MultiCell(0, 7, "Musculoskeletal:" . self::green($pdf, NewFormCtrl::explodeString($data->musculoskeletal), 'Musculoskeletal'), 1, 'L');}
+           if(!empty($data->musculoskeletal_others)){$pdf->MultiCell(0, 7, "Musculoskeletal Others:" . self::green($pdf, NewFormCtrl::explodeString($data->musculoskeletal_others), 'Musculoskeletal Others:'), 1, 'L');}
            if(!empty($data->neurologic)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Neurologic: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->neurologic)), 1, 'L');}
+           if(!empty($data->neurologic_others)){$pdf->MultiCell(0, 7, "Neurologic Others:" . self::green($pdf, NewFormCtrl::explodeString($data->neurologic_others), 'Neurologic Others:'), 1, 'L');}
            if(!empty($data->hematologic)){$pdf->MultiCell(0, 7, "Hematologic:" . self::green($pdf, NewFormCtrl::explodeString($data->hematologic), 'Hematologic'), 1, 'L');}
+           if(!empty($data->hematologic_others)){$pdf->MultiCell(0, 7, "Hematologic Others:" . self::green($pdf, NewFormCtrl::explodeString($data->hematologic_others), 'Hematologic Others:'), 1, 'L');}
            if(!empty($data->endocrine)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Endocrine: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->endocrine)), 1, 'L');}
+           if(!empty($data->endocrine_others)){$pdf->MultiCell(0, 7, "Endocrine Others:" . self::green($pdf, NewFormCtrl::explodeString($data->endocrine_others), 'Endocrine Others:'), 1, 'L');}
            if(!empty($data->psychiatric)){$pdf->MultiCell(0, 7, self::staticBlack($pdf, "Psychiatric: ") . "\n" . self::staticGreen($pdf,NewFormCtrl::explodeString($data->psychiatric)), 1, 'L');}
+           if(!empty($data->psychiatric_others)){$pdf->MultiCell(0, 7, "Psychiatric Others:" . self::green($pdf, NewFormCtrl::explodeString($data->psychiatric_others), 'Psychiatric Others:'), 1, 'L');}
             // $pdf->addPage();
         }
 
@@ -427,11 +443,11 @@ class PrintNewFormCtrl extends Controller
         // LATEST VITAL SIGNS
         if (!empty($data->pulse_rate)|| !empty($data->temperature) || !empty($data->blood_pressure) || !empty($data->oxygen_saturation) || !empty($data->respiratory_rate)){
             $this->titleHeader($pdf, "LATEST VITAL SIGNS");
-            if(!empty($data->temperature)){$pdf->MultiCell(0, 7, "Temperature:" . self::green($pdf, $data->temperature, 'Temperature'), 1, 'L');}
-            if(!empty($data->pulse_rate)){$pdf->MultiCell(0, 7, "Pulse Rate:" . self::green($pdf, $data->pulse_rate, 'Pulse Rate'), 1, 'L');}
-            if(!empty($data->respiratory_rate)){$pdf->MultiCell(0, 7, "Respiratory Rate:" . self::green($pdf, $data->respiratory_rate, 'Respiratory Rate'), 1, 'L');}
-            if(!empty($data->blood_pressure)){$pdf->MultiCell(0, 7, "Blood Pressure:" . self::green($pdf, $data->blood_pressure, 'Blood Pressure'), 1, 'L');}
-            if(!empty($data->oxygen_saturation)){$pdf->MultiCell(0, 7, "Oxgen Saturation:" . self::green($pdf, $data->oxygen_saturation, 'Oxygen Saturation'), 1, 'L');}
+            if(!empty($data->temperature)){$pdf->MultiCell(0, 7, "Temperature:" . self::green($pdf, $data->temperature . utf8_decode(' °C'), 'Temperature'), 1, 'L');}
+            if(!empty($data->pulse_rate)){$pdf->MultiCell(0, 7, "Pulse Rate:" . self::green($pdf, $data->pulse_rate . ' bpm', 'Pulse Rate'), 1, 'L');}
+            if(!empty($data->respiratory_rate)){$pdf->MultiCell(0, 7, "Respiratory Rate:" . self::green($pdf, $data->respiratory_rate . ' cpm', 'Respiratory Rate'), 1, 'L');}
+            if(!empty($data->blood_pressure)){$pdf->MultiCell(0, 7, "Blood Pressure:" . self::green($pdf, $data->blood_pressure . ' mmHg', 'Blood Pressure'), 1, 'L');}
+            if(!empty($data->oxygen_saturation)){$pdf->MultiCell(0, 7, "Oxgen Saturation:" . self::green($pdf, $data->oxygen_saturation . ' %', 'Oxygen Saturation'), 1, 'L');}
         }
 
         // GLASGOW COMA SCALE
