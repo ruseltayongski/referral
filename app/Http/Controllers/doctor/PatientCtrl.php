@@ -1613,7 +1613,7 @@ class PatientCtrl extends Controller
     
         ->get();
     
-        // dd($Emr_patient);
+        dd($Emr_patient);
 
         $arr = [
             "form" => 'normal data',
