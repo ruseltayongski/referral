@@ -22665,6 +22665,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FeedbackModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FeedbackModal.vue */ "./resources/assets/js/video/FeedbackModal.vue");
 /* harmony import */ var _PDFViewerModal_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PDFViewerModal.vue */ "./resources/assets/js/video/PDFViewerModal.vue");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+var _methods;
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
@@ -22699,6 +22700,10 @@ var doctorFeedback = "referral/doctor/feedback";
       //start video in minutes
       callMinutes: 0,
       callTimer: null,
+      callDuration: "00:00:000",
+      // New variable for formatted time
+      startTime: null,
+      // Store the exact start time
       isLeavingChannel: false,
       //feedback
       feedbackUrl: baseUrlfeedback,
@@ -22757,7 +22762,8 @@ var doctorFeedback = "referral/doctor/feedback";
       showDiv: false,
       form_type: "normal",
       reco_count: $("#reco_count_val").val(),
-      PdfUrl: ''
+      PdfUrl: '',
+      loading: false
     };
   },
   mounted: function mounted() {
@@ -22793,6 +22799,7 @@ var doctorFeedback = "referral/doctor/feedback";
   },
   beforeUnmount: function beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
+    this.stopCallTimer();
     // Remove event listener when component is destroyed
     window.removeEventListener('resize', this.handleResize);
   },
@@ -22823,29 +22830,42 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     });
   },
-  methods: {
+  methods: (_methods = {
     startScreenRecording: function startScreenRecording() {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-        var screenStream, micStream, combinedStream;
+        var isSupported, screenStream, micStream, audioContext, destination, systemAudioSource, micAudioSource, combinedStream;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              _context.next = 3;
+              // Check for browser compatibility
+              isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
+              if (isSupported) {
+                _context.next = 5;
+                break;
+              }
+              Lobibox.alert("error", {
+                msg: "Your browser does not support screen recording with microphone audio. Please use the latest version of Chrome, Edge, or Firefox.",
+                closeButton: false
+              });
+              return _context.abrupt("return");
+            case 5:
+              // Inform the user about permissions
+              console.log("Requesting permissions for screen and microphone...");
+
+              // Request screen capture with system audio
+              _context.next = 8;
               return navigator.mediaDevices.getDisplayMedia({
                 video: true,
-                audio: {
-                  echoCancellation: true,
-                  // Reduce echo
-                  noiseSuppression: true,
-                  // Reduce background noise
-                  sampleRate: 44100 // Set sample rate for better quality
-                }
+                audio: true // Request system audio
               });
-            case 3:
+            case 8:
               screenStream = _context.sent;
-              _context.next = 6;
+              console.log("Screen stream obtained:", screenStream);
+
+              // Request microphone access
+              _context.next = 12;
               return navigator.mediaDevices.getUserMedia({
                 audio: {
                   echoCancellation: true,
@@ -22855,10 +22875,38 @@ var doctorFeedback = "referral/doctor/feedback";
                   sampleRate: 44100 // Set sample rate for better quality
                 }
               });
-            case 6:
+            case 12:
               micStream = _context.sent;
-              // Combine desktop and microphone audio tracks
-              combinedStream = new MediaStream([].concat(_toConsumableArray(screenStream.getVideoTracks()), _toConsumableArray(screenStream.getAudioTracks()), _toConsumableArray(micStream.getAudioTracks()))); // Initialize MediaRecorder with the combined stream
+              console.log("Microphone stream obtained:", micStream);
+
+              // Debugging: Log audio tracks from microphone
+              micStream.getAudioTracks().forEach(function (track) {
+                console.log("Microphone track:", track);
+              });
+
+              // Create an AudioContext for mixing audio
+              audioContext = new AudioContext();
+              destination = audioContext.createMediaStreamDestination(); // Connect system audio to the AudioContext
+              if (screenStream.getAudioTracks().length > 0) {
+                systemAudioSource = audioContext.createMediaStreamSource(screenStream);
+                systemAudioSource.connect(destination);
+              } else {
+                console.warn("No system audio track found in screen stream.");
+              }
+
+              // Connect microphone audio to the AudioContext
+              if (micStream.getAudioTracks().length > 0) {
+                micAudioSource = audioContext.createMediaStreamSource(micStream);
+                micAudioSource.connect(destination);
+              } else {
+                console.warn("No microphone audio track found.");
+              }
+
+              // Combine video from screenStream and mixed audio
+              combinedStream = new MediaStream([].concat(_toConsumableArray(screenStream.getVideoTracks()), _toConsumableArray(destination.stream.getAudioTracks())));
+              console.log("Combined stream created:", combinedStream);
+
+              // Initialize MediaRecorder with the combined stream
               _this3.screenRecorder = new MediaRecorder(combinedStream, {
                 mimeType: "video/webm; codecs=vp8" // WebM format
               });
@@ -22871,69 +22919,119 @@ var doctorFeedback = "referral/doctor/feedback";
                 }
               };
 
+              // Debugging: Monitor video and audio tracks for lag
+              combinedStream.getTracks().forEach(function (track) {
+                console.log("Track kind: ".concat(track.kind, ", readyState: ").concat(track.readyState));
+                track.onended = function () {
+                  return console.log("Track ended: ".concat(track.kind));
+                };
+              });
+
               // Start recording
               _this3.screenRecorder.start();
               console.log("Screen recording started with desktop and microphone audio.");
-              _context.next = 19;
+              _context.next = 33;
               break;
-            case 15:
-              _context.prev = 15;
+            case 29:
+              _context.prev = 29;
               _context.t0 = _context["catch"](0);
               console.error("Error starting screen recording:", _context.t0);
-              // Show an error message
-              Lobibox.alert("error", {
-                msg: "Failed to start screen recording. Please check browser permissions.",
-                closeButton: false,
-                callback: function callback() {
-                  window.top.close(); // Close the window when "OK" is clicked
-                }
-              });
-            case 19:
+
+              // Handle permission denial or other errors
+              if (_context.t0.name === "NotAllowedError") {
+                Lobibox.alert("error", {
+                  msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
+                  closeButton: false,
+                  callback: function callback() {
+                    window.top.close();
+                  }
+                });
+              } else if (_context.t0.name === "NotFoundError") {
+                Lobibox.alert("error", {
+                  msg: "No screen or microphone devices found. Please ensure your devices are connected and try again.",
+                  closeButton: false
+                });
+              } else {
+                Lobibox.alert("error", {
+                  msg: "An unexpected error occurred while starting screen recording. Please try again.",
+                  closeButton: false
+                });
+              }
+            case 33:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 15]]);
+        }, _callee, null, [[0, 29]]);
       }))();
     },
     saveScreenRecording: function saveScreenRecording() {
+      var _this4 = this;
       if (this.recordedChunks.length > 0) {
+        this.loading = true; // Show loader
+
         // Convert recorded chunks to a Blob
         var blob = new Blob(this.recordedChunks, {
           type: "video/webm"
         });
 
-        // Convert WebM to MP4 using a third-party library (optional)
-        // For simplicity, we'll save it as WebM with an .mp4 extension
-        var url = URL.createObjectURL(blob);
+        // Simulate a delay for large files (optional)
+        setTimeout(function () {
+          var url = URL.createObjectURL(blob);
+          // Generate the filename
+          var patientName = _this4.form.patient_name || "Unknown_Patient";
+          var callDuration = _this4.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+          var currentDate = new Date();
+          var dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+          var timeStart = new Date(_this4.startTime).toLocaleTimeString("en-US", {
+            hour12: false
+          }).replace(/:/g, "-");
+          var timeEnd = currentDate.toLocaleTimeString("en-US", {
+            hour12: false
+          }).replace(/:/g, "-");
+          var fileName = "".concat(patientName, "-").concat(callDuration, "-(Date_").concat(dateSave, "_Start_").concat(timeStart, "_End_").concat(timeEnd, ").mp4");
 
-        // Automatically save the file
-        var a = document.createElement("a");
-        a.href = url;
-        a.download = "screen_recording_".concat(Date.now(), ".mp4"); // Save as .mp4
-        a.click();
+          // Automatically save the file
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = fileName; // Save with the new format
+          a.click();
 
-        // Clean up
-        URL.revokeObjectURL(url);
-        this.recordedChunks = [];
-        console.log("Screen recording saved successfully.");
+          // Clean up
+          URL.revokeObjectURL(url);
+          _this4.recordedChunks = []; // Clear recorded chunks to free memory
+          _this4.loading = false; // Hide loader
+
+          console.log("Screen recording saved successfully.");
+        }, 1000); // Simulate delay for demonstration
       } else {
         console.error("No recorded data available to save.");
       }
     },
+    closeFeedbackModal: function closeFeedbackModal() {
+      this.feedbackModalVisible = false; // Hide the feedback modal
+    },
     startCallTimer: function startCallTimer() {
-      var _this4 = this;
-      var startTime = localStorage.getItem('callStartTime');
-      if (startTime) {
-        this.callMinutes = Math.floor((Date.now() - startTime) / 60000);
-      } else {
-        // Store the start time if not already set
-        localStorage.setItem('callStartTime', Date.now());
-      }
+      var _this5 = this;
+      // Store the start time in milliseconds
+      this.startTime = Date.now();
+
+      // Update the timer every 10 milliseconds
       this.callTimer = setInterval(function () {
-        _this4.callMinutes++;
-        console.log("Current call duration:", _this4.callMinutes);
-      }, 60000);
-      console.log("referring call duration:", this.referring_md);
+        var elapsedTime = Date.now() - _this5.startTime;
+
+        // Calculate minutes, seconds, and milliseconds
+        var hours = Math.floor(elapsedTime / 3600000);
+        var minutes = Math.floor(elapsedTime % 3600000 / 60000);
+        var seconds = Math.floor(elapsedTime % 60000 / 1000);
+
+        // Format the time as mm:ss:ms
+        _this5.callDuration = "".concat(String(hours).padStart(2, "0"), " hours ").concat(String(minutes).padStart(2, "0"), " minutes ").concat(String(seconds).padStart(2, "0"), " seconds");
+      }, 10);
+    },
+    stopCallTimer: function stopCallTimer() {
+      if (this.callTimer) {
+        clearInterval(this.callTimer);
+      }
     },
     notifyReco: function notifyReco(code, feedback_count, redirect_track) {
       var content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' + '                               data-target=\'#feedbackModal\'\n' + '                               data-code="' + code + '" ' + '                               >\n' + '                           <i class=\'fa fa-comments\'></i> ReCo <span class=\'badge bg-blue\' id="reco_count' + code + '">' + feedback_count + '</span>\n' + '                       </button><a href="' + redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '                                                <i class=\'fa fa-stethoscope\'></i> Track\n' + '                                            </a>';
@@ -22952,7 +23050,7 @@ var doctorFeedback = "referral/doctor/feedback";
       $(".reco-body" + code).append('<div class=\'direct-chat-msg left\'>\n' + '                    <div class=\'direct-chat-info clearfix\'>\n' + '                    <span class="direct-chat-name text-info pull-left">' + facility_sender + '</span><br>' + '                    <span class=\'direct-chat-name pull-left\'>' + name_sender + '</span>\n' + '                    <span class=\'direct-chat-timestamp pull-right\'>' + date_now + '</span>\n' + '                    </div>\n' + '                    <img class=\'direct-chat-img\' title=\'\' src="' + picture_sender + '" alt=\'Message User Image\'>\n' + '                    <div class=\'direct-chat-text\'>\n' + '                    ' + message + '\n' + '                    </div>\n' + '                    </div>');
     },
     startBasicCall: function startBasicCall() {
-      var _this5 = this;
+      var _this6 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
         var agoraEngine, remotePlayerContainer, localPlayerContainer, self;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
@@ -22963,17 +23061,15 @@ var doctorFeedback = "referral/doctor/feedback";
                 mode: "rtc",
                 codec: "vp8"
               }); // Setup channel parameters with user count tracking
-              if (!_this5.channelParameters) {
-                _this5.channelParameters = {};
+              if (!_this6.channelParameters) {
+                _this6.channelParameters = {};
               }
-              _this5.channelParameters.userCount = 1; // Count ourselves as the first user
-              _this5.channelParameters.maxUsers = 2; // Maximum 2 users allowed
-
-              // Dynamically create containers for video elements
+              _this6.channelParameters.userCount = 0; // Initialize user count
+              _this6.channelParameters.maxUsers = 2; // Maximum 2 users allowed
               remotePlayerContainer = document.createElement("div");
               localPlayerContainer = document.createElement("div");
-              localPlayerContainer.id = _this5.options.uid;
-              self = _this5; // Listen for when a user joins the channel
+              localPlayerContainer.id = _this6.options.uid;
+              self = _this6; // Listen for when a user joins the channel
               agoraEngine.on("user-joined", /*#__PURE__*/function () {
                 var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(user) {
                   return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -22984,18 +23080,18 @@ var doctorFeedback = "referral/doctor/feedback";
 
                         // Check if channel already has maximum users
                         if (!(self.channelParameters.userCount > self.channelParameters.maxUsers)) {
-                          _context2.next = 8;
+                          _context2.next = 9;
                           break;
                         }
                         console.log("Channel is full! Maximum users reached.");
-                        // Optionally notify the user that the channel is full
                         self.showChannelFullMessage();
                         // Disconnect this user since the channel is full
                         _context2.next = 7;
                         return agoraEngine.leave();
                       case 7:
+                        self.channelParameters.userCount--; // Decrement user count after leaving
                         return _context2.abrupt("return");
-                      case 8:
+                      case 9:
                       case "end":
                         return _context2.stop();
                     }
@@ -23023,36 +23119,18 @@ var doctorFeedback = "referral/doctor/feedback";
                         return agoraEngine.subscribe(user, mediaType);
                       case 5:
                         console.log("subscribe success");
-
-                        // Handle video track
-                        if (mediaType == "video") {
-                          console.log("remote video connected");
-                          // Retrieve the remote video track
+                        if (mediaType === "video") {
                           self.channelParameters.remoteVideoTrack = user.videoTrack;
-                          // Retrieve the remote audio track
                           self.channelParameters.remoteAudioTrack = user.audioTrack;
-                          // Save the remote user id for reuse
                           self.channelParameters.remoteUid = user.uid.toString();
-                          // Specify the ID of the DIV container using remote user's uid
                           remotePlayerContainer.id = user.uid.toString();
-
-                          // Stop any ringing sounds
-                          if (self.$refs.ringingPhone) {
-                            self.$refs.ringingPhone.pause();
-                          }
-
-                          // Add remote video container to the page
                           document.body.append(remotePlayerContainer);
                           $(".remotePlayerDiv").html(remotePlayerContainer);
                           $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
                           $(remotePlayerContainer).addClass("remotePlayerLayer");
-
-                          // Play the remote video track
                           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                         }
-
-                        // Handle audio track
-                        if (mediaType == "audio") {
+                        if (mediaType === "audio") {
                           self.channelParameters.remoteAudioTrack = user.audioTrack;
                           self.channelParameters.remoteAudioTrack.play();
                         }
@@ -23068,40 +23146,43 @@ var doctorFeedback = "referral/doctor/feedback";
               }());
 
               // Listen for users leaving the channel
-              agoraEngine.on("user-unpublished", function (user) {
-                console.log(user.uid + " has left the channel");
-                self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
-              });
-
-              // Handle user leaving completely
               agoraEngine.on("user-left", function (user) {
-                console.log(user.uid + " has left the channel completely");
-                self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
-
-                // Optional: Clean up the remote user container
-                if (remotePlayerContainer && remotePlayerContainer.id === user.uid.toString()) {
-                  remotePlayerContainer.remove();
-                }
+                console.log(user.uid + " has left the channel");
+                self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
               });
-
-              // Handle client-role-changed event (if using live broadcasting mode)
-              agoraEngine.on("client-role-changed", function (oldRole, newRole) {
-                console.log("Client role changed from " + oldRole + " to " + newRole);
-              });
-
-              // Initialize the connection when window loads
-              if (document.readyState === "complete") {
-                self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
-              } else {
-                window.onload = function () {
-                  self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
-                };
-              }
-            case 14:
+              _context4.prev = 11;
+              console.log("Attempting to join channel...", self.options.channel);
+              _context4.next = 15;
+              return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
+            case 15:
+              console.log("Successfully joined channel");
+              _context4.next = 18;
+              return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
+            case 18:
+              self.channelParameters.localAudioTrack = _context4.sent;
+              _context4.next = 21;
+              return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
+            case 21:
+              self.channelParameters.localVideoTrack = _context4.sent;
+              document.body.append(localPlayerContainer);
+              $(".localPlayerDiv").html(localPlayerContainer);
+              $(localPlayerContainer).addClass("localPlayerLayer");
+              _context4.next = 27;
+              return agoraEngine.publish([self.channelParameters.localAudioTrack, self.channelParameters.localVideoTrack]);
+            case 27:
+              self.channelParameters.localVideoTrack.play(localPlayerContainer);
+              console.log("publish success!");
+              _context4.next = 34;
+              break;
+            case 31:
+              _context4.prev = 31;
+              _context4.t0 = _context4["catch"](11);
+              console.error("Error joining channel:", _context4.t0);
+            case 34:
             case "end":
               return _context4.stop();
           }
-        }, _callee4);
+        }, _callee4, null, [[11, 31]]);
       }))();
     },
     // Method to show channel full message to user
@@ -23186,21 +23267,21 @@ var doctorFeedback = "referral/doctor/feedback";
       }))();
     },
     sendCallDuration: function sendCallDuration() {
-      var _this6 = this;
+      var _this7 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
         var finalDuration, response;
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
-              if (!_this6.isLeavingChannel) {
+              if (!_this7.isLeavingChannel) {
                 _context6.next = 2;
                 break;
               }
               return _context6.abrupt("return");
             case 2:
               // Prevent duplicate sends
-              _this6.isLeavingChannel = true;
-              if (!(_this6.callMinutes > 0)) {
+              _this7.isLeavingChannel = true;
+              if (!(_this7.callMinutes > 0)) {
                 _context6.next = 18;
                 break;
               }
@@ -23208,10 +23289,10 @@ var doctorFeedback = "referral/doctor/feedback";
               // Calculate final duration before sending
               finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
               _context6.next = 8;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this6.baseUrl, "/save-call-duration"), {
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this7.baseUrl, "/save-call-duration"), {
                 call_duration: finalDuration,
-                tracking_id: _this6.tracking_id,
-                referral_code: _this6.referral_code
+                tracking_id: _this7.tracking_id,
+                referral_code: _this7.referral_code
               });
             case 8:
               response = _context6.sent;
@@ -23233,7 +23314,7 @@ var doctorFeedback = "referral/doctor/feedback";
       }))();
     },
     leaveChannel: function leaveChannel() {
-      var _this7 = this;
+      var _this8 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
         return _regeneratorRuntime().wrap(function _callee7$(_context7) {
           while (1) switch (_context7.prev = _context7.next) {
@@ -23243,21 +23324,21 @@ var doctorFeedback = "referral/doctor/feedback";
                 break;
               }
               // Stop screen recording and save the file
-              if (_this7.screenRecorder && _this7.screenRecorder.state !== "inactive") {
-                _this7.screenRecorder.stop();
-                _this7.screenRecorder.onstop = function () {
-                  _this7.saveScreenRecording();
+              if (_this8.screenRecorder && _this8.screenRecorder.state !== "inactive") {
+                _this8.screenRecorder.stop();
+                _this8.screenRecorder.onstop = function () {
+                  _this8.saveScreenRecording();
                 };
               }
 
               // Wait for duration to be sent before closing
-              if (!(_this7.referring_md === "yes")) {
+              if (!(_this8.referring_md === "yes")) {
                 _context7.next = 9;
                 break;
               }
-              clearInterval(_this7.callTimer); // Stop the timer
+              clearInterval(_this8.callTimer); // Stop the timer
               _context7.next = 6;
-              return _this7.sendCallDuration();
+              return _this8.sendCallDuration();
             case 6:
               // Give more time for the request to complete
               setTimeout(function () {
@@ -23273,159 +23354,141 @@ var doctorFeedback = "referral/doctor/feedback";
           }
         }, _callee7);
       }))();
-    },
-    stopCallTimer: function stopCallTimer() {
-      if (this.referring_md == 'yes') {
-        if (this.callTimer) {
-          clearInterval(this.callTimer);
-        }
-        this.sendCallDuration();
-        localStorage.removeItem('callStartTime');
-      }
-    },
-    beforeDestroy: function beforeDestroy() {
-      clearInterval(this.callTimer);
-      // Remove sendCallDuration from here since it's handled in leaveChannel
-    },
-    videoStreamingOnAndOff: function videoStreamingOnAndOff() {
-      this.videoStreaming = this.videoStreaming ? false : true;
-      this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
-    },
-    audioStreamingOnAnddOff: function audioStreamingOnAnddOff() {
-      this.audioStreaming = this.audioStreaming ? false : true;
-      this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
-    },
-    // hideDivAfterTimeout() {
-    // setTimeout(() => {
-    //   $(".iconCall").removeClass("fade-in");
-    //   this.showDiv = false;
-    // }, 10000);
-    // },
-    showDivAgain: function showDivAgain() {
-      this.showDiv = true;
-      //  this.hideDivAfterTimeout();
-    },
-    clearTimeout: function (_clearTimeout) {
-      function clearTimeout() {
-        return _clearTimeout.apply(this, arguments);
-      }
-      clearTimeout.toString = function () {
-        return _clearTimeout.toString();
-      };
-      return clearTimeout;
-    }(function () {
-      // Clear the timeout if the component is about to be unmounted
-      // to prevent memory leaks
-      clearTimeout(this.timeoutId);
-    }),
-    ringingPhoneFunc: function ringingPhoneFunc() {
-      var _this8 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
-        var self;
-        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-          while (1) switch (_context8.prev = _context8.next) {
-            case 0:
-              _context8.next = 2;
-              return _this8.$refs.ringingPhone.play();
-            case 2:
-              self = _this8;
-              setTimeout(function () {
-                console.log("pause");
-                self.$refs.ringingPhone.pause();
-              }, 60000);
-            case 4:
-            case "end":
-              return _context8.stop();
-          }
-        }, _callee8);
-      }))();
-    },
-    //--------------------------------------------------------------------------
-    generatePrescription: function generatePrescription() {
-      var _this9 = this;
-      var getPrescription = {
-        code: this.referral_code,
-        form_type: this.form_type,
-        tracking_id: this.tracking_id
-      };
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
-        if (response.data.status === "success") {
-          var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
-
-          // Set the PDF URL
-          _this9.PdfUrl = "".concat(_this9.baseUrl, "/doctor/print/prescription/").concat(_this9.tracking_id, "/").concat(prescribedActivityId);
-
-          // Show the modal using the ref method
-          _this9.$nextTick(function () {
-            _this9.$refs.pdfViewer.openModal();
-          });
-        } else {
-          Lobibox.alert("error", {
-            msg: "No added prescription!"
-          });
-        }
-      })["catch"](function (error) {
-        console.error(error);
-      });
-    },
-    generateLabrequest: function generateLabrequest() {
-      var _this10 = this;
-      var url = "".concat(this.baseUrl, "/api/check/labresult");
-      var payload = {
-        activity_id: this.activity_id
-      };
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
-        if (response.data.id) {
-          var pdfUrl = "".concat(_this10.baseUrl, "/doctor/print/labresult/").concat(_this10.activity_id);
-
-          // Set the PDF URL for the modal
-          _this10.PdfUrl = pdfUrl;
-
-          // Show the PDF in the custom modal
-          _this10.$nextTick(function () {
-            _this10.$refs.pdfViewer.openModal();
-          });
-        } else {
-          Lobibox.alert("error", {
-            msg: "No lab request has been created by the referred doctor"
-          });
-        }
-      })["catch"](function (error) {
-        console.log(error);
-      });
-    },
-    endorseUpward: function endorseUpward() {
-      var self = this;
-      Lobibox.confirm({
-        msg: "Do you want to endorse this patient for an upward level of referral?",
-        callback: function callback($this, type, ev) {
-          if (type == "yes") {
-            var endorseUpward = {
-              code: self.referral_code,
-              form_type: self.form_type
-            };
-            axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
-              console.log(response.status);
-              console.log('data Upward:', response.data);
-              console.log("endorseUpward:", endorseUpward);
-              if (response.data.trim() === "success") {
-                Lobibox.alert("success", {
-                  msg: "Successfully endorse the patient for upward referral!"
-                });
-              } else {
-                Lobibox.alert("error", {
-                  msg: "Error in server!"
-                });
-              }
-            });
-          }
-        }
-      });
-    },
-    labRequest: function labRequest() {
-      console.log("lab request");
     }
-  },
+  }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_methods, "stopCallTimer", function stopCallTimer() {
+    if (this.referring_md == 'yes') {
+      if (this.callTimer) {
+        clearInterval(this.callTimer);
+      }
+      this.sendCallDuration();
+      localStorage.removeItem('callStartTime');
+    }
+  }), "beforeDestroy", function beforeDestroy() {
+    clearInterval(this.callTimer);
+    // Remove sendCallDuration from here since it's handled in leaveChannel
+  }), "videoStreamingOnAndOff", function videoStreamingOnAndOff() {
+    this.videoStreaming = this.videoStreaming ? false : true;
+    this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
+  }), "audioStreamingOnAnddOff", function audioStreamingOnAnddOff() {
+    this.audioStreaming = this.audioStreaming ? false : true;
+    this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
+  }), "showDivAgain", function showDivAgain() {
+    this.showDiv = true;
+    //  this.hideDivAfterTimeout();
+  }), "clearTimeout", function (_clearTimeout) {
+    function clearTimeout() {
+      return _clearTimeout.apply(this, arguments);
+    }
+    clearTimeout.toString = function () {
+      return _clearTimeout.toString();
+    };
+    return clearTimeout;
+  }(function () {
+    // Clear the timeout if the component is about to be unmounted
+    // to prevent memory leaks
+    clearTimeout(this.timeoutId);
+  })), "ringingPhoneFunc", function ringingPhoneFunc() {
+    var _this9 = this;
+    return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
+      var self;
+      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+        while (1) switch (_context8.prev = _context8.next) {
+          case 0:
+            _context8.next = 2;
+            return _this9.$refs.ringingPhone.play();
+          case 2:
+            self = _this9;
+            setTimeout(function () {
+              console.log("pause");
+              self.$refs.ringingPhone.pause();
+            }, 60000);
+          case 4:
+          case "end":
+            return _context8.stop();
+        }
+      }, _callee8);
+    }))();
+  }), "generatePrescription", function generatePrescription() {
+    var _this10 = this;
+    var getPrescription = {
+      code: this.referral_code,
+      form_type: this.form_type,
+      tracking_id: this.tracking_id
+    };
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
+      if (response.data.status === "success") {
+        var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
+
+        // Set the PDF URL
+        _this10.PdfUrl = "".concat(_this10.baseUrl, "/doctor/print/prescription/").concat(_this10.tracking_id, "/").concat(prescribedActivityId);
+
+        // Show the modal using the ref method
+        _this10.$nextTick(function () {
+          _this10.$refs.pdfViewer.openModal();
+        });
+      } else {
+        Lobibox.alert("error", {
+          msg: "No added prescription!"
+        });
+      }
+    })["catch"](function (error) {
+      console.error(error);
+    });
+  }), "generateLabrequest", function generateLabrequest() {
+    var _this11 = this;
+    var url = "".concat(this.baseUrl, "/api/check/labresult");
+    var payload = {
+      activity_id: this.activity_id
+    };
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
+      if (response.data.id) {
+        var pdfUrl = "".concat(_this11.baseUrl, "/doctor/print/labresult/").concat(_this11.activity_id);
+
+        // Set the PDF URL for the modal
+        _this11.PdfUrl = pdfUrl;
+
+        // Show the PDF in the custom modal
+        _this11.$nextTick(function () {
+          _this11.$refs.pdfViewer.openModal();
+        });
+      } else {
+        Lobibox.alert("error", {
+          msg: "No lab request has been created by the referred doctor"
+        });
+      }
+    })["catch"](function (error) {
+      console.log(error);
+    });
+  }), "endorseUpward", function endorseUpward() {
+    var self = this;
+    Lobibox.confirm({
+      msg: "Do you want to endorse this patient for an upward level of referral?",
+      callback: function callback($this, type, ev) {
+        if (type == "yes") {
+          var endorseUpward = {
+            code: self.referral_code,
+            form_type: self.form_type
+          };
+          axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
+            console.log(response.status);
+            console.log('data Upward:', response.data);
+            console.log("endorseUpward:", endorseUpward);
+            if (response.data.trim() === "success") {
+              Lobibox.alert("success", {
+                msg: "Successfully endorse the patient for upward referral!"
+              });
+            } else {
+              Lobibox.alert("error", {
+                msg: "Error in server!"
+              });
+            }
+          });
+        }
+      }
+    });
+  }), _defineProperty(_methods, "labRequest", function labRequest() {
+    console.log("lab request");
+  })),
   // ************************************************************************************* start here
   handleResize: function handleResize() {
     // Get current window dimensions
@@ -23859,238 +23922,6 @@ var doctorFeedback = "referral/doctor/feedback";
     formHeader.style.gap = '5px';
   }
 }));
-
-// document.addEventListener("DOMContentLoaded", function () {
-//     const draggableDiv = document.getElementById("draggable-div");
-//     const telemedForm = document.querySelector(".telemedForm");
-//     const mainPic = document.querySelector(".mainPic");
-
-//     if (!draggableDiv || !telemedForm) {
-//         console.error("❌ Error: Elements not found!");
-//         return;
-//     }
-
-//     // Override any existing styling with our fixed dimensions
-//     draggableDiv.style.width = "150px";      // Fixed width instead of percentage
-//     draggableDiv.style.minWidth = "150px";   // Ensure minimum width
-//     draggableDiv.style.maxWidth = "none";    // Remove any maxWidth constraint
-//     draggableDiv.style.height = "200px";     // Fixed height
-//     draggableDiv.style.minHeight = "200px";  // Ensure minimum height
-
-//     // Clear any existing transforms that might be repositioning the element
-//     draggableDiv.style.transform = "none";
-
-//     let isDragging = false;
-//     let offsetX, offsetY;
-
-//     // Position in bottom right corner initially
-//     positionInBottomRight();
-
-//     // Mouse events for desktop
-//     draggableDiv.addEventListener("mousedown", startDrag);
-//     document.addEventListener("mousemove", drag);
-//     document.addEventListener("mouseup", endDrag);
-
-//     // Touch events for mobile
-//     draggableDiv.addEventListener("touchstart", startDragTouch);
-//     document.addEventListener("touchmove", dragTouch);
-//     document.addEventListener("touchend", endDrag);
-
-//     function positionInBottomRight() {
-//         // Set absolute positioning
-//         draggableDiv.style.position = "absolute";
-
-//         // Get container dimensions - use mainPic if available, otherwise use viewport
-//         let containerWidth, containerHeight, containerLeft, containerTop;
-
-//         if (mainPic) {
-//             const mainPicBounds = mainPic.getBoundingClientRect();
-//             containerWidth = mainPicBounds.width;
-//             containerHeight = mainPicBounds.height;
-//             containerLeft = mainPicBounds.left;
-//             containerTop = mainPicBounds.top;
-//         } else {
-//             containerWidth = window.innerWidth;
-//             containerHeight = window.innerHeight;
-//             containerLeft = 0; 
-//             containerTop = 0;
-//         }
-
-//         // Calculate position (20px padding from edges)
-//         let newX = containerLeft + containerWidth - 150 - 20;  // Using fixed width of 150px
-//         let newY = containerTop + containerHeight - 200 - 20;  // Using fixed height of 200px
-
-//         // Get the telemedForm bounds to avoid overlapping
-//         const telemedBounds = telemedForm.getBoundingClientRect();
-
-//         // Ensure it doesn't overlap with telemedForm
-//         if (newX + 150 > telemedBounds.left && 
-//             newX < telemedBounds.right && 
-//             newY + 200 > telemedBounds.top && 
-//             newY < telemedBounds.bottom) {
-//             // If it would overlap, move it above the form
-//             newY = telemedBounds.top - 200 - 20;
-//         }
-
-//         // Convert to relative position if needed
-//         if (draggableDiv.offsetParent) {
-//             const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-//             newX -= parentRect.left;
-//             newY -= parentRect.top;
-//         }
-
-//         // Apply the position
-//         draggableDiv.style.left = `${newX}px`;
-//         draggableDiv.style.top = `${newY}px`;
-//     }
-
-//     function startDrag(event) {
-//         event.preventDefault();
-//         isDragging = true;
-
-//         const rect = draggableDiv.getBoundingClientRect();
-//         offsetX = event.clientX - rect.left;
-//         offsetY = event.clientY - rect.top;
-
-//         // Use box-shadow instead of transform for visual feedback
-//         draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-//         draggableDiv.style.cursor = "grabbing";
-//     }
-
-//     function startDragTouch(event) {
-//         if (event.touches.length !== 1) return;
-
-//         event.preventDefault();
-//         isDragging = true;
-
-//         const touch = event.touches[0];
-//         const rect = draggableDiv.getBoundingClientRect();
-//         offsetX = touch.clientX - rect.left;
-//         offsetY = touch.clientY - rect.top;
-
-//         // Use box-shadow instead of transform for visual feedback
-//         draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
-//     }
-
-//     function drag(event) {
-//         if (!isDragging) return;
-
-//         event.preventDefault();
-//         moveElement(event.clientX, event.clientY);
-//     }
-
-//     function dragTouch(event) {
-//         if (!isDragging || event.touches.length !== 1) return;
-
-//         event.preventDefault();
-//         const touch = event.touches[0];
-//         moveElement(touch.clientX, touch.clientY);
-//     }
-
-//     function moveElement(clientX, clientY) {
-//         // Calculate new position
-//         let newX = clientX - offsetX;
-//         let newY = clientY - offsetY;
-
-//         // Get necessary bounding rectangles
-//         const telemedBounds = telemedForm.getBoundingClientRect();
-
-//         // Check if the draggable div would enter the telemedForm
-//         const wouldOverlapTelemedForm = 
-//             newX + 150 > telemedBounds.left &&
-//             newX < telemedBounds.right &&
-//             newY + 200 > telemedBounds.top &&
-//             newY < telemedBounds.bottom;
-
-//         if (wouldOverlapTelemedForm) {
-//             // Don't update position if it would overlap with telemedForm
-//             return;
-//         }
-
-//         // Keep within mainPic boundaries if mainPic exists
-//         if (mainPic) {
-//             const mainPicBounds = mainPic.getBoundingClientRect();
-//             // Calculate boundaries
-//             const minX = mainPicBounds.left;
-//             const maxX = mainPicBounds.right - 150;  // Using fixed width
-//             const minY = mainPicBounds.top;
-//             const maxY = mainPicBounds.bottom - 200; // Using fixed height
-
-//             // Apply constraints
-//             newX = Math.max(minX, Math.min(maxX, newX));
-//             newY = Math.max(minY, Math.min(maxY, newY));
-//         }
-
-//         // Convert to relative position within parent element if needed
-//         if (draggableDiv.offsetParent) {
-//             const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-//             newX -= parentRect.left;
-//             newY -= parentRect.top;
-//         }
-
-//         // Apply the position
-//         draggableDiv.style.left = `${newX}px`;
-//         draggableDiv.style.top = `${newY}px`;
-//     }
-
-//     function endDrag() {
-//         if (!isDragging) return;
-
-//         isDragging = false;
-//         // Reset the visual feedback
-//         draggableDiv.style.boxShadow = "none";
-//         draggableDiv.style.cursor = "grab";
-//     }
-
-//     // Add cursor style to indicate draggability
-//     draggableDiv.style.cursor = "grab";
-
-//     // Ensure our settings take precedence by applying them again after a short delay
-//     setTimeout(function() {
-//         draggableDiv.style.width = "150px"; 
-//         draggableDiv.style.height = "200px";
-//         draggableDiv.style.minWidth = "150px";
-//         draggableDiv.style.minHeight = "200px";
-//         draggableDiv.style.maxWidth = "none";
-//     }, 100);
-
-//     // Override any external changes that might be made by other scripts
-//     const observer = new MutationObserver(function(mutations) {
-//         mutations.forEach(function(mutation) {
-//             if (mutation.attributeName === "style") {
-//                 // Check if width or transform has been changed externally
-//                 const currentWidth = draggableDiv.style.width;
-//                 const currentTransform = draggableDiv.style.transform;
-
-//                 if (currentWidth !== "150px" || 
-//                     (currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale"))) {
-//                     // Re-apply our fixed dimensions
-//                     draggableDiv.style.width = "150px";
-//                     draggableDiv.style.height = "200px";
-//                     draggableDiv.style.minWidth = "150px";
-//                     draggableDiv.style.minHeight = "200px";
-//                     draggableDiv.style.maxWidth = "none";
-
-//                     // Only clear transform if it's not our scaling effect
-//                     if (currentTransform && !currentTransform.startsWith("scale")) {
-//                         draggableDiv.style.transform = "none";
-//                     }
-//                 }
-//             }
-//         });
-//     });
-
-//     // Start observing the element for style changes
-//     observer.observe(draggableDiv, { attributes: true });
-
-//     // Update position on window resize to maintain proper boundaries
-//     window.addEventListener("resize", function() {
-//         if (isDragging) return; // Don't interfere with active dragging
-
-//         // Reposition in bottom right on resize
-//         positionInBottomRight();
-//     });
-// });
 document.addEventListener("DOMContentLoaded", function () {
   var draggableDiv = document.getElementById("draggable-div");
   var mainPic = document.querySelector(".mainPic");
@@ -24533,39 +24364,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
-var _hoisted_1 = ["src"];
-var _hoisted_2 = {
+var _hoisted_1 = {
+  key: 0,
+  "class": "loader-overlay"
+};
+var _hoisted_2 = ["src"];
+var _hoisted_3 = {
   "class": "fullscreen-div"
 };
-var _hoisted_3 = {
+var _hoisted_4 = {
   "class": "main-container"
 };
-var _hoisted_4 = {
+var _hoisted_5 = {
   "class": "video-container"
 };
-var _hoisted_5 = {
+var _hoisted_6 = {
   "class": "mainPic"
 };
-var _hoisted_6 = {
+var _hoisted_7 = {
   "class": "remotePlayerDiv"
 };
-var _hoisted_7 = ["src"];
-var _hoisted_8 = {
-  "class": "tooltip-container"
-};
+var _hoisted_8 = ["src"];
 var _hoisted_9 = {
-  key: 0,
-  "class": "iconCall position-absolute fade-in"
+  "class": "call-duration"
 };
 var _hoisted_10 = {
-  "class": "button-container"
+  "class": "tooltip-container"
 };
 var _hoisted_11 = {
   key: 0,
-  "class": "tooltip-text",
-  style: {
-    "background-color": "#138496"
-  }
+  "class": "iconCall position-absolute fade-in"
 };
 var _hoisted_12 = {
   "class": "button-container"
@@ -24574,7 +24402,7 @@ var _hoisted_13 = {
   key: 0,
   "class": "tooltip-text",
   style: {
-    "background-color": "#218838"
+    "background-color": "#138496"
   }
 };
 var _hoisted_14 = {
@@ -24584,7 +24412,7 @@ var _hoisted_15 = {
   key: 0,
   "class": "tooltip-text",
   style: {
-    "background-color": "#c82333"
+    "background-color": "#218838"
   }
 };
 var _hoisted_16 = {
@@ -24594,7 +24422,7 @@ var _hoisted_17 = {
   key: 0,
   "class": "tooltip-text",
   style: {
-    "background-color": "#e0a800"
+    "background-color": "#c82333"
   }
 };
 var _hoisted_18 = {
@@ -24604,7 +24432,7 @@ var _hoisted_19 = {
   key: 0,
   "class": "tooltip-text",
   style: {
-    "background-color": "#218838"
+    "background-color": "#e0a800"
   }
 };
 var _hoisted_20 = {
@@ -24614,7 +24442,7 @@ var _hoisted_21 = {
   key: 0,
   "class": "tooltip-text",
   style: {
-    "background-color": "#007bff"
+    "background-color": "#218838"
   }
 };
 var _hoisted_22 = {
@@ -24624,39 +24452,43 @@ var _hoisted_23 = {
   key: 0,
   "class": "tooltip-text",
   style: {
+    "background-color": "#007bff"
+  }
+};
+var _hoisted_24 = {
+  "class": "button-container"
+};
+var _hoisted_25 = {
+  key: 0,
+  "class": "tooltip-text",
+  style: {
     "background-color": "#17a2b8"
   }
 };
-var _hoisted_24 = ["data-code"];
-var _hoisted_25 = {
+var _hoisted_26 = ["data-code"];
+var _hoisted_27 = {
   "class": "localPlayerDiv",
   id: "draggable-div"
 };
-var _hoisted_26 = ["src"];
-var _hoisted_27 = {
+var _hoisted_28 = ["src"];
+var _hoisted_29 = {
   "class": "form-container"
 };
-var _hoisted_28 = {
+var _hoisted_30 = {
   "class": "telemedForm"
 };
-var _hoisted_29 = {
+var _hoisted_31 = {
   "class": "form-scrollable"
 };
-var _hoisted_30 = {
+var _hoisted_32 = {
   "class": "form-header-container"
 };
-var _hoisted_31 = ["src"];
-var _hoisted_32 = {
+var _hoisted_33 = ["src"];
+var _hoisted_34 = {
   "class": "tableForm"
 };
-var _hoisted_33 = {
-  "class": "table table-striped formTable"
-};
-var _hoisted_34 = {
-  colspan: "12"
-};
 var _hoisted_35 = {
-  "class": "forDetails"
+  "class": "table table-striped formTable"
 };
 var _hoisted_36 = {
   colspan: "12"
@@ -24671,7 +24503,7 @@ var _hoisted_39 = {
   "class": "forDetails"
 };
 var _hoisted_40 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_41 = {
   "class": "forDetails"
@@ -24683,25 +24515,25 @@ var _hoisted_43 = {
   "class": "forDetails"
 };
 var _hoisted_44 = {
-  colspan: "12"
+  colspan: "6"
 };
 var _hoisted_45 = {
   "class": "forDetails"
 };
 var _hoisted_46 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_47 = {
-  "class": "dateReferred"
+  "class": "forDetails"
 };
 var _hoisted_48 = {
   colspan: "6"
 };
 var _hoisted_49 = {
-  "class": "forDetails"
+  "class": "dateReferred"
 };
 var _hoisted_50 = {
-  colspan: "4"
+  colspan: "6"
 };
 var _hoisted_51 = {
   "class": "forDetails"
@@ -24719,7 +24551,7 @@ var _hoisted_55 = {
   "class": "forDetails"
 };
 var _hoisted_56 = {
-  colspan: "6"
+  colspan: "4"
 };
 var _hoisted_57 = {
   "class": "forDetails"
@@ -24743,7 +24575,7 @@ var _hoisted_63 = {
   "class": "forDetails"
 };
 var _hoisted_64 = {
-  colspan: "12"
+  colspan: "6"
 };
 var _hoisted_65 = {
   "class": "forDetails"
@@ -24764,47 +24596,47 @@ var _hoisted_70 = {
   colspan: "12"
 };
 var _hoisted_71 = {
-  "class": "caseforDetails"
+  "class": "forDetails"
 };
 var _hoisted_72 = {
   colspan: "12"
 };
 var _hoisted_73 = {
-  "class": "recoSummary"
+  "class": "caseforDetails"
 };
 var _hoisted_74 = {
   colspan: "12"
 };
 var _hoisted_75 = {
-  "class": "caseforDetails"
+  "class": "recoSummary"
 };
 var _hoisted_76 = {
   colspan: "12"
 };
 var _hoisted_77 = {
-  "class": "forDetails"
+  "class": "caseforDetails"
 };
 var _hoisted_78 = {
-  key: 0
+  colspan: "12"
 };
 var _hoisted_79 = {
-  colspan: "12"
+  "class": "forDetails"
 };
 var _hoisted_80 = {
   key: 0
 };
 var _hoisted_81 = {
-  key: 1
-};
-var _hoisted_82 = ["href"];
-var _hoisted_83 = {
-  key: 0
-};
-var _hoisted_84 = {
   colspan: "12"
 };
+var _hoisted_82 = {
+  key: 0
+};
+var _hoisted_83 = {
+  key: 1
+};
+var _hoisted_84 = ["href"];
 var _hoisted_85 = {
-  "class": "forDetails"
+  key: 0
 };
 var _hoisted_86 = {
   colspan: "12"
@@ -24816,15 +24648,21 @@ var _hoisted_88 = {
   colspan: "12"
 };
 var _hoisted_89 = {
-  "class": "mdHcw"
+  "class": "forDetails"
 };
 var _hoisted_90 = {
-  "class": "row g-0"
+  colspan: "12"
 };
 var _hoisted_91 = {
-  "class": "col-6"
+  "class": "mdHcw"
 };
 var _hoisted_92 = {
+  "class": "row g-0"
+};
+var _hoisted_93 = {
+  "class": "col-6"
+};
+var _hoisted_94 = {
   "class": "col-6"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -24832,21 +24670,23 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_LabRequestModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LabRequestModal");
   var _component_FeedbackModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FeedbackModal");
   var _component_PDFViewerModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PDFViewerModal");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _cache[20] || (_cache[20] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "loader"
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Saving your recording, please wait...", -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
     ref: "ringingPhone",
     src: $data.ringingPhoneUrl,
     loop: ""
-  }, null, 8 /* PROPS */, _hoisted_1), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [_cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 8 /* PROPS */, _hoisted_2), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "calling"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Calling...")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl,
     "class": "remote-img",
     alt: "Image1"
-  }, null, 8 /* PROPS */, _hoisted_7)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+  }, null, 8 /* PROPS */, _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Call Duration: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.callDuration), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
     name: "fade"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [$data.showMic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, " Audio ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [$data.showMic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, " Audio ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-info btn-md mic-button", {
           'mic-button-slash': !$data.audioStreaming
         }]),
@@ -24860,9 +24700,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[2] || (_cache[2] = function ($event) {
           return $data.showMic = false;
         })
-      }, _cache[21] || (_cache[21] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[22] || (_cache[22] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-mic-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [$data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [$data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-md video-button", {
           'video-button-slash': !$data.videoStreaming
         }]),
@@ -24876,9 +24716,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[5] || (_cache[5] = function ($event) {
           return $data.showVedio = false;
         })
-      }, _cache[22] || (_cache[22] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[23] || (_cache[23] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-camera-video-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [$data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[30] || (_cache[30] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [$data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger btn-md decline-button",
         onClick: _cache[6] || (_cache[6] = function () {
           return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
@@ -24890,9 +24730,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[8] || (_cache[8] = function ($event) {
           return $data.showEndcall = false;
         })
-      }, _cache[23] || (_cache[23] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[24] || (_cache[24] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-telephone-x-fill"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)]), _cache[30] || (_cache[30] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [$data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'no' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)]), _cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [$data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'no' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-warning btn-md upward-button",
         onClick: _cache[9] || (_cache[9] = function () {
@@ -24905,9 +24745,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[11] || (_cache[11] = function ($event) {
           return $data.showUpward = false;
         })
-      }, _cache[24] || (_cache[24] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[25] || (_cache[25] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-hospital"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [$data.showPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, " Prescription ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [$data.showPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, " Prescription ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-success btn-md prescription-button",
         "data-toggle": "modal",
@@ -24919,9 +24759,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[13] || (_cache[13] = function ($event) {
           return $data.showPrescription = false;
         })
-      }, _cache[25] || (_cache[25] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [$data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [$data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-primary btn-md prescription-button",
         "data-toggle": "modal",
@@ -24933,9 +24773,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[15] || (_cache[15] = function ($event) {
           return $data.showTooltip = false;
         })
-      }, _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription2"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [$data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [$data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-info btn-md reco-button",
         "data-toggle": "modal",
         "data-target": "#feedbackModal",
@@ -24947,24 +24787,24 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[17] || (_cache[17] = function ($event) {
           return $data.showTooltipFeedback = false;
         })
-      }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[28] || (_cache[28] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-chat-left-text"
-      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_24)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
+      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_26)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
     }),
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl1,
     id: "local-image",
     "class": "img2",
     alt: "Image2",
     draggable: "true"
-  }, null, 8 /* PROPS */, _hoisted_26)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, null, 8 /* PROPS */, _hoisted_28)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.dohLogoUrl,
     alt: "Image3",
     "class": "dohLogo"
-  }, null, 8 /* PROPS */, _hoisted_31), _cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-3180088c><div data-v-3180088c><p data-v-3180088c>Republic of the Philippines</p><p data-v-3180088c>DEPARTMENT OF HEALTH</p><p data-v-3180088c><b data-v-3180088c>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-3180088c>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-3180088c> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-3180088c> Official Website: <span style=\"color:blue;\" data-v-3180088c>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-3180088c><span style=\"color:#4caf50;\" data-v-3180088c><b data-v-3180088c>CLINICAL REFERRAL FORM</b></span></div>", 2))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_34, [_cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring Facility: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_35, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_36, [_cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Facility Contact #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_38, [_cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_40, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Referred to: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_42, [_cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Department: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_44, [_cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_46, [_cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Referred (ReCo): ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_48, [_cache[39] || (_cache[39] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Transferred:")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_50, [_cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Patient: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_52, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Age: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.patient_age), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sex: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_55, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_56, [_cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_58, [_cache[44] || (_cache[44] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [_cache[45] || (_cache[45] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_62, [_cache[46] || (_cache[46] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_64, [_cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Covid Number: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [_cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Clinical Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_68, [_cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Surviellance Category: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_sur_category), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_70, [_cache[50] || (_cache[50] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Case Summary (pertinent Hx/PE, including meds, labs, course etc.): ")), _cache[51] || (_cache[51] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_72, [_cache[52] || (_cache[52] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):")), _cache[53] || (_cache[53] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_74, [_cache[54] || (_cache[54] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ICD-10 Code and Description: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.icd, function (i) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_75, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.code) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.description), 1 /* TEXT */)]);
-  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_76, [_cache[55] || (_cache[55] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_77, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reason), 1 /* TEXT */)])]), $data.file_path ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_78, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_79, [$data.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_80, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_81, "File Attachment: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.file_path, function (path, index) {
+  }, null, 8 /* PROPS */, _hoisted_33), _cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-3180088c><div data-v-3180088c><p data-v-3180088c>Republic of the Philippines</p><p data-v-3180088c>DEPARTMENT OF HEALTH</p><p data-v-3180088c><b data-v-3180088c>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-3180088c>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-3180088c> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-3180088c> Official Website: <span style=\"color:blue;\" data-v-3180088c>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-3180088c><span style=\"color:#4caf50;\" data-v-3180088c><b data-v-3180088c>CLINICAL REFERRAL FORM</b></span></div>", 2))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_36, [_cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring Facility: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_38, [_cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Facility Contact #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_40, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_42, [_cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Referred to: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_44, [_cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Department: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_46, [_cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_48, [_cache[39] || (_cache[39] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Referred (ReCo): ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_50, [_cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Transferred:")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_52, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Patient: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Age: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_55, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.patient_age), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_56, [_cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sex: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_58, [_cache[44] || (_cache[44] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [_cache[45] || (_cache[45] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_62, [_cache[46] || (_cache[46] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_64, [_cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [_cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Covid Number: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_68, [_cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Clinical Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_70, [_cache[50] || (_cache[50] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Surviellance Category: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_sur_category), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_72, [_cache[51] || (_cache[51] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Case Summary (pertinent Hx/PE, including meds, labs, course etc.): ")), _cache[52] || (_cache[52] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_74, [_cache[53] || (_cache[53] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):")), _cache[54] || (_cache[54] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_75, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_76, [_cache[55] || (_cache[55] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ICD-10 Code and Description: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.icd, function (i) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_77, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.code) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.description), 1 /* TEXT */)]);
+  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_78, [_cache[56] || (_cache[56] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_79, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reason), 1 /* TEXT */)])]), $data.file_path ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_80, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_81, [$data.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_82, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_83, "File Attachment: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.file_path, function (path, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
       key: index
     }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", {
@@ -24974,16 +24814,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "class": "reason",
       target: "_blank",
       download: ""
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.file_name[index]), 9 /* TEXT, PROPS */, _hoisted_82)), index + 1 !== $data.file_path.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_83, ", ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
-  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_84, [_cache[56] || (_cache[56] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_85, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_86, [_cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Contact # of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_87, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_88, [_cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of referred MD/HCW-Mobile Contact # (ReCo): ")), _cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_89, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1 /* TEXT */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_90, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_91, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.file_name[index]), 9 /* TEXT, PROPS */, _hoisted_84)), index + 1 !== $data.file_path.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_85, ", ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_86, [_cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_87, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_88, [_cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Contact # of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_89, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_90, [_cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of referred MD/HCW-Mobile Contact # (ReCo): ")), _cache[60] || (_cache[60] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_91, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1 /* TEXT */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_92, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_93, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-success btn-md w-100 ml-2",
     type: "button",
     onClick: _cache[18] || (_cache[18] = function ($event) {
       return $options.generatePrescription();
     })
-  }, _cache[60] || (_cache[60] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[61] || (_cache[61] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-prescription"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_92, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_94, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-md w-100",
     type: "button",
     onClick: _cache[19] || (_cache[19] = function ($event) {
@@ -24997,7 +24837,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     },
     onmouseover: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';",
     onmouseout: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
-  }, _cache[61] || (_cache[61] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[62] || (_cache[62] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-clipboard2-pulse"
   }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Lab Request ")]))])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PrescriptionModal, {
     activity_id: parseInt($data.activity_id),
@@ -25014,9 +24854,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     fetchUrl: $data.feedbackUrl,
     imageUrl: $data.baseUrlFeed,
     postUrl: $data.doctorfeedback,
-    onRefresh: _ctx.refreshMessages,
-    onCloseModal: _ctx.closeFeedbackModal
-  }, null, 8 /* PROPS */, ["isVisible", "code", "userId", "fetchUrl", "imageUrl", "postUrl", "onRefresh", "onCloseModal"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PDFViewerModal, {
+    onCloseModal: $options.closeFeedbackModal
+  }, null, 8 /* PROPS */, ["isVisible", "code", "userId", "fetchUrl", "imageUrl", "postUrl", "onCloseModal"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PDFViewerModal, {
     ref: "pdfViewer",
     pdfUrl: $data.PdfUrl
   }, null, 8 /* PROPS */, ["pdfUrl"])])], 64 /* STABLE_FRAGMENT */);
@@ -27213,7 +27052,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_css_index_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n padding:5px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.video-container[data-v-3180088c], .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\n}\n.video-container[data-v-3180088c] {\r\n    height: 50%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 50%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c], .fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c], .fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-3180088c] {\r\n    width: 195px;\r\n    height: 200px;\r\n    min-width: 150px;\r\n    min-height: 200px;\r\n    max-width: 150px;\r\n    max-height: 200px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n padding:5px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.video-container[data-v-3180088c], .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\n}\n.video-container[data-v-3180088c] {\r\n    height: 50%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 50%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c], .fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c], .fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-3180088c] {\r\n    width: 195px;\r\n    height: 200px;\r\n    min-width: 150px;\r\n    min-height: 200px;\r\n    max-width: 150px;\r\n    max-height: 200px;\n}\n.loader-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 9999;\n}\n.loader[data-v-3180088c] {\r\n  border: 8px solid #f3f3f3;\r\n  border-top: 8px solid #3498db;\r\n  border-radius: 50%;\r\n  width: 50px;\r\n  height: 50px;\r\n  animation: spin-3180088c 1s linear infinite;\n}\n@keyframes spin-3180088c {\n0% {\r\n    transform: rotate(0deg);\n}\n100% {\r\n    transform: rotate(360deg);\n}\n}\n.call-duration[data-v-3180088c] {\r\n  position: absolute;\r\n  top: 10px;\r\n  left: 10px;\r\n  background-color: rgba(0, 0, 0, 0.404);\r\n  color: white;\r\n  padding: 5px 10px;\r\n  margin: 5px;\r\n  border-radius: 5px;\r\n  font-size: 1rem;\r\n  z-index: 10;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
