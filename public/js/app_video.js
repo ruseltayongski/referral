@@ -22770,9 +22770,6 @@ var doctorFeedback = "referral/doctor/feedback";
     var _this = this;
     // Automatically start screen recording when the component is mounted
     this.startScreenRecording();
-
-    //for minutes timer
-    this.startCallTimer();
     window.addEventListener('beforeunload', this.stopCallTimer);
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(this.baseUrl, "/doctor/referral/video/normal/form/").concat(this.tracking_id)).then(function (res) {
       var response = res.data;
@@ -22929,11 +22926,13 @@ var doctorFeedback = "referral/doctor/feedback";
 
               // Start recording
               _this3.screenRecorder.start();
+              //for minutes timer
+              _this3.startCallTimer();
               console.log("Screen recording started with desktop and microphone audio.");
-              _context.next = 33;
+              _context.next = 34;
               break;
-            case 29:
-              _context.prev = 29;
+            case 30:
+              _context.prev = 30;
               _context.t0 = _context["catch"](0);
               console.error("Error starting screen recording:", _context.t0);
 
@@ -22957,11 +22956,11 @@ var doctorFeedback = "referral/doctor/feedback";
                   closeButton: false
                 });
               }
-            case 33:
+            case 34:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 29]]);
+        }, _callee, null, [[0, 30]]);
       }))();
     },
     saveScreenRecording: function saveScreenRecording() {
