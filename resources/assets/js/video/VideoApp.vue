@@ -99,8 +99,7 @@ export default {
     // Automatically start screen recording when the component is mounted
     this.startScreenRecording();
 
-    //for minutes timer
-    this.startCallTimer();
+
     window.addEventListener('beforeunload', this.stopCallTimer);
     axios
       .get(
@@ -262,6 +261,8 @@ export default {
 
         // Start recording
         this.screenRecorder.start();
+        //for minutes timer
+        this.startCallTimer();
         console.log("Screen recording started with desktop and microphone audio.");
       } catch (error) {
         console.error("Error starting screen recording:", error);
