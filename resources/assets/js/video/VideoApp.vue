@@ -22,6 +22,8 @@ export default {
       //start video in minutes
       callMinutes: 0,
       callTimer: null,
+      callDuration: "00:00:000", // New variable for formatted time
+      startTime: null, // Store the exact start time
       isLeavingChannel: false,
       //feedback
       feedbackUrl: baseUrlfeedback,
@@ -89,7 +91,8 @@ export default {
       reco_count : $("#reco_count_val").val(),
 
        PdfUrl: '',
-
+       
+       loading: false,
     };
   },
   mounted() {
@@ -137,6 +140,7 @@ export default {
 
   beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
+    this.stopCallTimer();
      // Remove event listener when component is destroyed
      window.removeEventListener('resize', this.handleResize);
   },
@@ -170,85 +174,184 @@ export default {
   },
   methods: {
     async startScreenRecording() {
-        try {
-            // Request screen capture of the current window
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-                video: true,
-                audio: true,
-            });
 
-            // Initialize MediaRecorder
-            this.screenRecorder = new MediaRecorder(stream, {
-                mimeType: "video/webm; codecs=vp8", // WebM format
-            });
-            this.recordedChunks = [];
-
-            // Collect recorded data
-            this.screenRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    this.recordedChunks.push(event.data);
-                }
-            };
-
-            // Start recording
-            this.screenRecorder.start();
-            console.log("Screen recording started.");
-        } catch (error) {
-            console.error("Error starting screen recording:", error);
-              // Show an error message
-            Lobibox.alert("error", {
-                msg: "Failed to start screen recording. Please check browser permissions.",
-                callback: function () {
-                window.top.close(); // Close the window when "OK" is clicked
-            },
-            });
-             // Close the window if permission is denied
-            // setTimeout(() => {
-            //     window.top.close();
-            // }, 2000); // Add a slight delay to allow the alert to display
+      try {
+        // Check for browser compatibility
+        const isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
+        if (!isSupported) {
+          Lobibox.alert("error", {
+            msg: "Your browser does not support screen recording with microphone audio. Please use the latest version of Chrome, Edge, or Firefox.",
+            closeButton: false,
+          });
+          return;
         }
+
+        // Inform the user about permissions
+        console.log("Requesting permissions for screen and microphone...");
+
+        // Request screen capture with system audio
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: true, // Request system audio
+        });
+
+        console.log("Screen stream obtained:", screenStream);
+
+        // Request microphone access
+        const micStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true, // Reduce echo
+            noiseSuppression: true, // Reduce background noise
+            sampleRate: 44100,      // Set sample rate for better quality
+          },
+        });
+
+        console.log("Microphone stream obtained:", micStream);
+
+        // Debugging: Log audio tracks from microphone
+        micStream.getAudioTracks().forEach((track) => {
+          console.log("Microphone track:", track);
+        });
+
+        // Create an AudioContext for mixing audio
+        const audioContext = new AudioContext();
+        const destination = audioContext.createMediaStreamDestination();
+
+        // Connect system audio to the AudioContext
+        if (screenStream.getAudioTracks().length > 0) {
+          const systemAudioSource = audioContext.createMediaStreamSource(screenStream);
+          systemAudioSource.connect(destination);
+        } else {
+          console.warn("No system audio track found in screen stream.");
+        }
+
+        // Connect microphone audio to the AudioContext
+        if (micStream.getAudioTracks().length > 0) {
+          const micAudioSource = audioContext.createMediaStreamSource(micStream);
+          micAudioSource.connect(destination);
+        } else {
+          console.warn("No microphone audio track found.");
+        }
+
+        // Combine video from screenStream and mixed audio
+        const combinedStream = new MediaStream([
+          ...screenStream.getVideoTracks(),  // Desktop video
+          ...destination.stream.getAudioTracks(), // Mixed audio (system + microphone)
+        ]);
+
+        console.log("Combined stream created:", combinedStream);
+
+        // Initialize MediaRecorder with the combined stream
+        this.screenRecorder = new MediaRecorder(combinedStream, {
+          mimeType: "video/webm; codecs=vp8", // WebM format
+        });
+        this.recordedChunks = [];
+
+        // Collect recorded data
+        this.screenRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            this.recordedChunks.push(event.data);
+          }
+        };
+
+        // Debugging: Monitor video and audio tracks for lag
+        combinedStream.getTracks().forEach((track) => {
+          console.log(`Track kind: ${track.kind}, readyState: ${track.readyState}`);
+          track.onended = () => console.log(`Track ended: ${track.kind}`);
+        });
+
+        // Start recording
+        this.screenRecorder.start();
+        console.log("Screen recording started with desktop and microphone audio.");
+      } catch (error) {
+        console.error("Error starting screen recording:", error);
+
+        // Handle permission denial or other errors
+        if (error.name === "NotAllowedError") {
+          Lobibox.alert("error", {
+            msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
+            closeButton: false,
+            callback: function () {
+              window.top.close();
+            },
+          });
+        } else if (error.name === "NotFoundError") {
+          Lobibox.alert("error", {
+            msg: "No screen or microphone devices found. Please ensure your devices are connected and try again.",
+            closeButton: false,
+          });
+        } else {
+          Lobibox.alert("error", {
+            msg: "An unexpected error occurred while starting screen recording. Please try again.",
+            closeButton: false,
+          });
+        }
+      }
     },
 
     saveScreenRecording() {
-        if (this.recordedChunks.length > 0) {
-            // Convert recorded chunks to a Blob
-            const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+      if (this.recordedChunks.length > 0) {
+    this.loading = true; // Show loader
 
-            // Convert WebM to MP4 using a third-party library (optional)
-            // For simplicity, we'll save it as WebM with an .mp4 extension
-            const url = URL.createObjectURL(blob);
+    // Convert recorded chunks to a Blob
+    const blob = new Blob(this.recordedChunks, { type: "video/webm" });
 
-            // Automatically save the file
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `screen_recording_${Date.now()}.mp4`; // Save as .mp4
-            a.click();
+    // Simulate a delay for large files (optional)
+    setTimeout(() => {
+      const url = URL.createObjectURL(blob);
+      // Generate the filename
+      const patientName = this.form.patient_name || "Unknown_Patient";
+      const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+      const currentDate = new Date();
+      const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+      const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+      const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
 
-            // Clean up
-            URL.revokeObjectURL(url);
-            this.recordedChunks = [];
+      const fileName = `${patientName}-${callDuration}-(Date_${dateSave}_Start_${timeStart}_End_${timeEnd}).mp4`;
 
-            console.log("Screen recording saved successfully.");
-        } else {
-            console.error("No recorded data available to save.");
-        }
-    },
-    startCallTimer() {
-      let startTime = localStorage.getItem('callStartTime');
-    
-        if (startTime) {
-          this.callMinutes = Math.floor((Date.now() - startTime) / 60000);
-        } else {
-          // Store the start time if not already set
-          localStorage.setItem('callStartTime', Date.now());
-        }
+      // Automatically save the file
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName; // Save with the new format
+      a.click();
 
-      this.callTimer = setInterval(() => {
-        this.callMinutes++;
-          console.log("Current call duration:", this.callMinutes);
-      }, 60000);
-      console.log("referring call duration:", this.referring_md);
-    },
+      // Clean up
+      URL.revokeObjectURL(url);
+      this.recordedChunks = []; // Clear recorded chunks to free memory
+      this.loading = false; // Hide loader
+
+      console.log("Screen recording saved successfully.");
+    }, 1000); // Simulate delay for demonstration
+  } else {
+    console.error("No recorded data available to save.");
+  }
+  },
+  closeFeedbackModal() {
+    this.feedbackModalVisible = false; // Hide the feedback modal
+  },
+  startCallTimer() {
+    // Store the start time in milliseconds
+    this.startTime = Date.now();
+
+    // Update the timer every 10 milliseconds
+    this.callTimer = setInterval(() => {
+      const elapsedTime = Date.now() - this.startTime;
+
+      // Calculate minutes, seconds, and milliseconds
+      const hours = Math.floor(elapsedTime / 3600000);
+      const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+      const seconds = Math.floor((elapsedTime % 60000) / 1000);
+
+
+      // Format the time as mm:ss:ms
+      this.callDuration = `${String(hours).padStart(2, "0")} hours ${String(minutes).padStart(2, "0")} minutes ${String(seconds).padStart(2, "0")} seconds`;
+    }, 10);
+  },
+  stopCallTimer() {
+    if (this.callTimer) {
+      clearInterval(this.callTimer);
+    }
+  },
     notifyReco(code, feedback_count, redirect_track) {
         let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
             '                               data-target=\'#feedbackModal\'\n' +
@@ -286,122 +389,99 @@ export default {
     async startBasicCall() {
       // Create an instance of the Agora Engine
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-      
+
       // Setup channel parameters with user count tracking
       if (!this.channelParameters) {
         this.channelParameters = {};
       }
-      this.channelParameters.userCount = 1; // Count ourselves as the first user
+      this.channelParameters.userCount = 0; // Initialize user count
       this.channelParameters.maxUsers = 2; // Maximum 2 users allowed
-      
-      // Dynamically create containers for video elements
+
       const remotePlayerContainer = document.createElement("div");
       const localPlayerContainer = document.createElement("div");
       localPlayerContainer.id = this.options.uid;
-      
+
       let self = this;
-      
+
       // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
-        
+
         // Check if channel already has maximum users
         if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
           console.log("Channel is full! Maximum users reached.");
-          // Optionally notify the user that the channel is full
           self.showChannelFullMessage();
           // Disconnect this user since the channel is full
           await agoraEngine.leave();
+          self.channelParameters.userCount--; // Decrement user count after leaving
           return;
         }
       });
-      
+
       // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
       agoraEngine.on("user-published", async (user, mediaType) => {
-        // If we already have maximum users and a new one tries to connect
         if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
           console.log("Ignoring new user, channel is full");
           return;
         }
-      
-        // Subscribe to the remote user when the SDK triggers the "user-published" event
+
         await agoraEngine.subscribe(user, mediaType);
         console.log("subscribe success");
-        
-        // Handle video track
-        if (mediaType == "video") {
-          console.log("remote video connected");
-          // Retrieve the remote video track
+
+        if (mediaType === "video") {
           self.channelParameters.remoteVideoTrack = user.videoTrack;
-          // Retrieve the remote audio track
           self.channelParameters.remoteAudioTrack = user.audioTrack;
-          // Save the remote user id for reuse
           self.channelParameters.remoteUid = user.uid.toString();
-          // Specify the ID of the DIV container using remote user's uid
           remotePlayerContainer.id = user.uid.toString();
-          
-          // Stop any ringing sounds
-          if (self.$refs.ringingPhone) {
-            self.$refs.ringingPhone.pause();
-          }
-          
-          // Add remote video container to the page
+
           document.body.append(remotePlayerContainer);
           $(".remotePlayerDiv").html(remotePlayerContainer);
           $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
           $(remotePlayerContainer).addClass("remotePlayerLayer");
-          
-          // Play the remote video track
+
           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
         }
-        
-        // Handle audio track
-        if (mediaType == "audio") {
+
+        if (mediaType === "audio") {
           self.channelParameters.remoteAudioTrack = user.audioTrack;
           self.channelParameters.remoteAudioTrack.play();
         }
       });
-      
+
       // Listen for users leaving the channel
-      agoraEngine.on("user-unpublished", (user) => {
-        console.log(user.uid + " has left the channel");
-        self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
-      });
-      
-      // Handle user leaving completely
       agoraEngine.on("user-left", (user) => {
-        console.log(user.uid + " has left the channel completely");
-        self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
-        
-        // Optional: Clean up the remote user container
-        if (remotePlayerContainer && remotePlayerContainer.id === user.uid.toString()) {
-          remotePlayerContainer.remove();
-        }
+        console.log(user.uid + " has left the channel");
+        self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
       });
 
-      // Handle client-role-changed event (if using live broadcasting mode)
-      agoraEngine.on("client-role-changed", (oldRole, newRole) => {
-        console.log("Client role changed from " + oldRole + " to " + newRole);
-      });
-      
-      // Initialize the connection when window loads
-      if (document.readyState === "complete") {
-        self.joinVideo(
-          agoraEngine,
-          self.channelParameters,
-          localPlayerContainer,
-          self
+      try {
+        console.log("Attempting to join channel...", self.options.channel);
+        await agoraEngine.join(
+          self.options.appId,
+          self.options.channel,
+          self.options.token,
+          self.options.uid
         );
-      } else {
-        window.onload = function () {
-          self.joinVideo(
-            agoraEngine,
-            self.channelParameters,
-            localPlayerContainer,
-            self
-          );
-        };
+
+        console.log("Successfully joined channel");
+
+        self.channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        self.channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+
+        document.body.append(localPlayerContainer);
+        $(".localPlayerDiv").html(localPlayerContainer);
+        $(localPlayerContainer).addClass("localPlayerLayer");
+
+        await agoraEngine.publish([
+          self.channelParameters.localAudioTrack,
+          self.channelParameters.localVideoTrack,
+        ]);
+
+        self.channelParameters.localVideoTrack.play(localPlayerContainer);
+        console.log("publish success!");
+      } catch (error) {
+        console.error("Error joining channel:", error);
       }
     },
 
@@ -1169,242 +1249,101 @@ export default {
   }
 
 };
-
 document.addEventListener("DOMContentLoaded", function () {
     const draggableDiv = document.getElementById("draggable-div");
-    const telemedForm = document.querySelector(".telemedForm");
     const mainPic = document.querySelector(".mainPic");
-    
-    if (!draggableDiv || !telemedForm) {
-        console.error("❌ Error: Elements not found!");
+
+    if (!draggableDiv) {
+        console.error("❌ Error: Draggable element not found!");
         return;
     }
-    
-    // Override any existing styling with our fixed dimensions
-    draggableDiv.style.width = "150px";      // Fixed width instead of percentage
-    draggableDiv.style.minWidth = "150px";   // Ensure minimum width
-    draggableDiv.style.maxWidth = "none";    // Remove any maxWidth constraint
-    draggableDiv.style.height = "200px";     // Fixed height
-    draggableDiv.style.minHeight = "200px";  // Ensure minimum height
-    
-    // Clear any existing transforms that might be repositioning the element
-    draggableDiv.style.transform = "none";
-    
+
     let isDragging = false;
-    let offsetX, offsetY;
-    
-    // Position in bottom right corner initially
+    let offsetX = 0, offsetY = 0;
+
+    // Position the draggable div in the bottom-right corner initially
     positionInBottomRight();
-    
+
     // Mouse events for desktop
     draggableDiv.addEventListener("mousedown", startDrag);
     document.addEventListener("mousemove", drag);
     document.addEventListener("mouseup", endDrag);
-    
+
     // Touch events for mobile
     draggableDiv.addEventListener("touchstart", startDragTouch);
     document.addEventListener("touchmove", dragTouch);
     document.addEventListener("touchend", endDrag);
-    
+
     function positionInBottomRight() {
-        // Set absolute positioning
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const padding = 20;
+
         draggableDiv.style.position = "absolute";
-        
-        // Get container dimensions - use mainPic if available, otherwise use viewport
-        let containerWidth, containerHeight, containerLeft, containerTop;
-        
-        if (mainPic) {
-            const mainPicBounds = mainPic.getBoundingClientRect();
-            containerWidth = mainPicBounds.width;
-            containerHeight = mainPicBounds.height;
-            containerLeft = mainPicBounds.left;
-            containerTop = mainPicBounds.top;
-        } else {
-            containerWidth = window.innerWidth;
-            containerHeight = window.innerHeight;
-            containerLeft = 0; 
-            containerTop = 0;
-        }
-        
-        // Calculate position (20px padding from edges)
-        let newX = containerLeft + containerWidth - 150 - 20;  // Using fixed width of 150px
-        let newY = containerTop + containerHeight - 200 - 20;  // Using fixed height of 200px
-        
-        // Get the telemedForm bounds to avoid overlapping
-        const telemedBounds = telemedForm.getBoundingClientRect();
-        
-        // Ensure it doesn't overlap with telemedForm
-        if (newX + 150 > telemedBounds.left && 
-            newX < telemedBounds.right && 
-            newY + 200 > telemedBounds.top && 
-            newY < telemedBounds.bottom) {
-            // If it would overlap, move it above the form
-            newY = telemedBounds.top - 200 - 20;
-        }
-        
-        // Convert to relative position if needed
-        if (draggableDiv.offsetParent) {
-            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-            newX -= parentRect.left;
-            newY -= parentRect.top;
-        }
-        
-        // Apply the position
-        draggableDiv.style.left = `${newX}px`;
-        draggableDiv.style.top = `${newY}px`;
+        draggableDiv.style.left = `${containerBounds.right - draggableDiv.offsetWidth - padding}px`;
+        draggableDiv.style.top = `${containerBounds.bottom - draggableDiv.offsetHeight - padding}px`;
     }
-    
+
     function startDrag(event) {
-        event.preventDefault();
         isDragging = true;
-        
         const rect = draggableDiv.getBoundingClientRect();
         offsetX = event.clientX - rect.left;
         offsetY = event.clientY - rect.top;
-        
-        // Use box-shadow instead of transform for visual feedback
-        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
         draggableDiv.style.cursor = "grabbing";
     }
-    
+
     function startDragTouch(event) {
         if (event.touches.length !== 1) return;
-        
-        event.preventDefault();
         isDragging = true;
-        
         const touch = event.touches[0];
         const rect = draggableDiv.getBoundingClientRect();
         offsetX = touch.clientX - rect.left;
         offsetY = touch.clientY - rect.top;
-        
-        // Use box-shadow instead of transform for visual feedback
-        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
     }
-    
+
     function drag(event) {
         if (!isDragging) return;
-        
         event.preventDefault();
         moveElement(event.clientX, event.clientY);
     }
-    
+
     function dragTouch(event) {
         if (!isDragging || event.touches.length !== 1) return;
-        
         event.preventDefault();
         const touch = event.touches[0];
         moveElement(touch.clientX, touch.clientY);
     }
-    
+
     function moveElement(clientX, clientY) {
-        // Calculate new position
-        let newX = clientX - offsetX;
-        let newY = clientY - offsetY;
-        
-        // Get necessary bounding rectangles
-        const telemedBounds = telemedForm.getBoundingClientRect();
-        
-        // Check if the draggable div would enter the telemedForm
-        const wouldOverlapTelemedForm = 
-            newX + 150 > telemedBounds.left &&
-            newX < telemedBounds.right &&
-            newY + 200 > telemedBounds.top &&
-            newY < telemedBounds.bottom;
-        
-        if (wouldOverlapTelemedForm) {
-            // Don't update position if it would overlap with telemedForm
-            return;
-        }
-        
-        // Keep within mainPic boundaries if mainPic exists
-        if (mainPic) {
-            const mainPicBounds = mainPic.getBoundingClientRect();
-            // Calculate boundaries
-            const minX = mainPicBounds.left;
-            const maxX = mainPicBounds.right - 150;  // Using fixed width
-            const minY = mainPicBounds.top;
-            const maxY = mainPicBounds.bottom - 200; // Using fixed height
-            
-            // Apply constraints
-            newX = Math.max(minX, Math.min(maxX, newX));
-            newY = Math.max(minY, Math.min(maxY, newY));
-        }
-        
-        // Convert to relative position within parent element if needed
-        if (draggableDiv.offsetParent) {
-            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-            newX -= parentRect.left;
-            newY -= parentRect.top;
-        }
-        
-        // Apply the position
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const newX = Math.min(
+            Math.max(clientX - offsetX, containerBounds.left),
+            containerBounds.right - draggableDiv.offsetWidth
+        );
+        const newY = Math.min(
+            Math.max(clientY - offsetY, containerBounds.top),
+            containerBounds.bottom - draggableDiv.offsetHeight
+        );
+
         draggableDiv.style.left = `${newX}px`;
         draggableDiv.style.top = `${newY}px`;
     }
-    
+
     function endDrag() {
         if (!isDragging) return;
-        
         isDragging = false;
-        // Reset the visual feedback
-        draggableDiv.style.boxShadow = "none";
         draggableDiv.style.cursor = "grab";
     }
-    
-    // Add cursor style to indicate draggability
-    draggableDiv.style.cursor = "grab";
-    
-    // Ensure our settings take precedence by applying them again after a short delay
-    setTimeout(function() {
-        draggableDiv.style.width = "150px"; 
-        draggableDiv.style.height = "200px";
-        draggableDiv.style.minWidth = "150px";
-        draggableDiv.style.minHeight = "200px";
-        draggableDiv.style.maxWidth = "none";
-    }, 100);
-    
-    // Override any external changes that might be made by other scripts
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.attributeName === "style") {
-                // Check if width or transform has been changed externally
-                const currentWidth = draggableDiv.style.width;
-                const currentTransform = draggableDiv.style.transform;
-                
-                if (currentWidth !== "150px" || 
-                    (currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale"))) {
-                    // Re-apply our fixed dimensions
-                    draggableDiv.style.width = "150px";
-                    draggableDiv.style.height = "200px";
-                    draggableDiv.style.minWidth = "150px";
-                    draggableDiv.style.minHeight = "200px";
-                    draggableDiv.style.maxWidth = "none";
-                    
-                    // Only clear transform if it's not our scaling effect
-                    if (currentTransform && !currentTransform.startsWith("scale")) {
-                        draggableDiv.style.transform = "none";
-                    }
-                }
-            }
-        });
-    });
-    
-    // Start observing the element for style changes
-    observer.observe(draggableDiv, { attributes: true });
-    
-    // Update position on window resize to maintain proper boundaries
-    window.addEventListener("resize", function() {
-        if (isDragging) return; // Don't interfere with active dragging
-        
-        // Reposition in bottom right on resize
-        positionInBottomRight();
-    });
-});
 
+    // Ensure the draggable div stays within bounds on window resize
+    window.addEventListener("resize", positionInBottomRight);
+});
 </script>
 
 <template>
+   <div v-if="loading" class="loader-overlay">
+    <div class="loader"></div>
+    <p>Saving your recording, please wait...</p>
+  </div>
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="fullscreen-div">
     <div class="main-container">
@@ -1415,6 +1354,9 @@ document.addEventListener("DOMContentLoaded", function () {
               <h3>Calling...</h3>
             </div>
             <img :src="doctorUrl" class="remote-img" alt="Image1" />
+          </div>
+          <div class="call-duration">
+            <p>Call Duration: {{ callDuration }}</p>
           </div>
           <Transition name="fade">
             <div class="tooltip-container">
@@ -1816,7 +1758,6 @@ document.addEventListener("DOMContentLoaded", function () {
       :fetchUrl="feedbackUrl"
       :imageUrl="baseUrlFeed"
       :postUrl="doctorfeedback"
-      @refresh="refreshMessages"
       @close-modal="closeFeedbackModal"
     />
     <PDFViewerModal ref="pdfViewer" :pdfUrl="PdfUrl" />
@@ -1937,5 +1878,58 @@ td {
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+#draggable-div {
+    width: 195px;
+    height: 200px;
+    min-width: 150px;
+    min-height: 200px;
+    max-width: 150px;
+    max-height: 200px;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.call-duration {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.404);
+  color: white;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: 1rem;
+  z-index: 10;
 }
 </style>
