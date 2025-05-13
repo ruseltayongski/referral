@@ -22948,12 +22948,18 @@ var doctorFeedback = "referral/doctor/feedback";
               } else if (_context.t0.name === "NotFoundError") {
                 Lobibox.alert("error", {
                   msg: "No screen or microphone devices found. Please ensure your devices are connected and try again.",
-                  closeButton: false
+                  closeButton: false,
+                  callback: function callback() {
+                    window.top.close();
+                  }
                 });
               } else {
                 Lobibox.alert("error", {
                   msg: "An unexpected error occurred while starting screen recording. Please try again.",
-                  closeButton: false
+                  closeButton: false,
+                  callback: function callback() {
+                    window.top.close();
+                  }
                 });
               }
             case 34:

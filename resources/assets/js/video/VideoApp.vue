@@ -280,11 +280,17 @@ export default {
           Lobibox.alert("error", {
             msg: "No screen or microphone devices found. Please ensure your devices are connected and try again.",
             closeButton: false,
+            callback: function () {
+              window.top.close();
+            },
           });
         } else {
           Lobibox.alert("error", {
             msg: "An unexpected error occurred while starting screen recording. Please try again.",
             closeButton: false,
+            callback: function () {
+              window.top.close();
+            },
           });
         }
       }
