@@ -90,16 +90,20 @@ export default {
       form_type: "normal",
       reco_count : $("#reco_count_val").val(),
 
-       PdfUrl: '',
+      PdfUrl: '',
        
-       loading: false,
+      loading: false,
+      uploadProgress: 0,
+      netSpeedMbps: null,
+      netSpeedStatus: '', // 'fast' or 'slow'
     };
   },
   mounted() {
     // Automatically start screen recording when the component is mounted
     this.startScreenRecording();
+    
 
-
+     window.addEventListener('beforeunload', this.preventCloseWhileUploading);
     window.addEventListener('beforeunload', this.stopCallTimer);
     axios
       .get(
@@ -134,11 +138,13 @@ export default {
      window.addEventListener('resize', this.handleResize);
     // Call once to set initial sizing
     this.handleResize();
+    
 
   },
 
   beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
+    window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
     this.stopCallTimer();
      // Remove event listener when component is destroyed
      window.removeEventListener('resize', this.handleResize);
@@ -295,44 +301,120 @@ export default {
         }
       }
     },
-
-    saveScreenRecording() {
+    preventCloseWhileUploading(event) {
+        if (this.loading) {
+          event.preventDefault();
+          event.returnValue = "File upload in progress. Please wait until it finishes.";
+          return event.returnValue;
+        }
+      },
+    async saveScreenRecording(closeAfterUpload = false) {
       if (this.recordedChunks.length > 0) {
-    this.loading = true; // Show loader
+        this.loading = true; // Show loader
 
-    // Convert recorded chunks to a Blob
-    const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+        // Convert recorded chunks to a Blob
+        const blob = new Blob(this.recordedChunks, { type: "video/webm" });
 
-    // Simulate a delay for large files (optional)
-    setTimeout(() => {
-      const url = URL.createObjectURL(blob);
-      // Generate the filename
-      const patientName = this.form.patient_name || "Unknown_Patient";
-      const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
-      const currentDate = new Date();
-      const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-      const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
-      const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+        // --- Max file size check (2GB) ---
+        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+        if (blob.size > maxSize) {
+          this.loading = false;
+          Lobibox.alert("error", {
+            msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
+          });
+          return;
+        }
 
-      const fileName = `${patientName}-${callDuration}-(Date_${dateSave}_Start_${timeStart}_End_${timeEnd}).mp4`;
+        // Generate the filename
+        const patientCode = this.form.code || "Unknown_Patient";
+        const activityId = this.activity_id;
+        const referring_md = this.form.referring_md;
+        const referred = this.form.action_md;
+        // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+        const currentDate = new Date();
+        const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+        const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
 
-      // Automatically save the file
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName; // Save with the new format
-      a.click();
+        const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
 
-      // Clean up
-      URL.revokeObjectURL(url);
-      this.recordedChunks = []; // Clear recorded chunks to free memory
-      this.loading = false; // Hide loader
+        // --- Detect upload speed and set chunk size ---
+        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
+        try {
+          // Create a 1MB test blob
+          const testBlob = blob.slice(0, 1 * 1024 * 1024);
+          const testFormData = new FormData();
+          testFormData.append("video", testBlob, "test.webm");
+          testFormData.append("fileName", "test.webm");
+          testFormData.append("chunkIndex", 0);
+          testFormData.append("totalChunks", 1);
 
-      console.log("Screen recording saved successfully.");
-    }, 1000); // Simulate delay for demonstration
-  } else {
-    console.error("No recorded data available to save.");
-  }
-  },
+          const startTime = performance.now();
+          await axios.post("http://192.168.111.122:8000/api/save-screen-record", testFormData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          const endTime = performance.now();
+          const durationSeconds = (endTime - startTime) / 1000;
+          const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
+
+          this.netSpeedMbps = speedMbps.toFixed(2);
+          this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
+          // Set chunk size based on speed
+          if (speedMbps > 8) { // ~8Mbps or higher is fast
+            chunkSize = 10 * 1024 * 1024; // 10MB
+          } else {
+            chunkSize = 5 * 1024 * 1024; // 5MB
+          }
+          // Optionally, delete the test chunk on the server if needed
+        } catch (e) {
+          // If test fails, fallback to 5MB
+          chunkSize = 5 * 1024 * 1024;
+          this.netSpeedMbps = null;
+          this.netSpeedStatus = 'slow';
+        }
+
+        const totalChunks = Math.ceil(blob.size / chunkSize);
+
+        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+          const start = chunkIndex * chunkSize;
+          const end = Math.min(blob.size, start + chunkSize);
+          const chunk = blob.slice(start, end);
+
+          const formData = new FormData();
+          formData.append("video", chunk, fileName);
+          formData.append("fileName", fileName);
+          formData.append("chunkIndex", chunkIndex);
+          formData.append("totalChunks", totalChunks);
+
+          try {
+            await axios.post("http://192.168.111.122:8000/api/save-screen-record", formData, {
+              headers: { "Content-Type": "multipart/form-data" },
+            });
+            // Update progress after each chunk
+            this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+          } catch (error) {
+            this.loading = false;
+            this.uploadProgress = 0; // Reset on error
+            Lobibox.alert("error", {
+              msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
+                (error.response?.data?.message || error.message),
+            });
+            return;
+          }
+        }
+
+        this.uploadProgress = 100; // Ensure it's 100% at the end
+        this.recordedChunks = []; // Clear recorded chunks to free memory
+        this.loading = false; // Hide loader
+        this.uploadProgress = 0; // Reset progress
+
+        if (closeAfterUpload) {
+          window.top.close();
+        }
+      } else {
+        console.error("No recorded data available to save.");
+      }
+    },
   closeFeedbackModal() {
     this.feedbackModalVisible = false; // Hide the feedback modal
   },
@@ -621,7 +703,7 @@ export default {
             if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
                 this.screenRecorder.stop();
                 this.screenRecorder.onstop = () => {
-                    this.saveScreenRecording();
+                    this.saveScreenRecording(true);
                 };
             }
 
@@ -630,10 +712,10 @@ export default {
                 clearInterval(this.callTimer); // Stop the timer
                 await this.sendCallDuration();
 
-                // Give more time for the request to complete
-                setTimeout(() => {
-                    window.top.close();
-                }, 2000);
+                // // Give more time for the request to complete
+                // setTimeout(() => {
+                //     window.top.close();
+                // }, 10000);
             } else {
                 window.top.close();
             }
@@ -1347,10 +1429,36 @@ document.addEventListener("DOMContentLoaded", function () {
 </script>
 
 <template>
-   <div v-if="loading" class="loader-overlay">
-    <div class="loader"></div>
-    <p>Saving your recording, please wait...</p>
-  </div>
+  <div v-if="loading" class="loader-overlay">
+    <div class="loader" style="margin-right: 20px"></div>
+    <div style="width: 300px; margin-top: 20px;">
+      <div style="background: #444; border-radius: 8px; overflow: hidden;">
+        <div
+          :style="{
+            width: uploadProgress + '%',
+            background: '#4caf50',
+            height: '18px',
+            transition: 'width 0.3s'
+          }"
+        >
+      </div>
+      </div>
+      <p style="color: white; text-align: center; margin: 5px 0 0 0;">
+        Please wait until upload is complete.<br>Do not close this window. {{ uploadProgress }}%
+      </p>
+    </div>
+  </div> 
+    <div
+      v-if="netSpeedMbps"
+      class="net-speed-indicator"
+      :class="netSpeedStatus"
+    >
+      <span>
+        {{ netSpeedMbps }} Mbps
+        <span v-if="netSpeedStatus === 'fast'">(Fast)</span>
+        <span v-else>(Slow)</span>
+      </span>
+    </div>
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="fullscreen-div">
     <div class="main-container">
@@ -1422,6 +1530,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     type="button"
                     @mouseover="showEndcall = true"
                     @mouseleave="showEndcall = false"
+                    :disabled="loading"
                   >
                     <i class="bi-telephone-x-fill"></i>
                   </button>
@@ -1521,7 +1630,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="form-header-container">
               <img :src="dohLogoUrl" alt="Image3" class="dohLogo" />
               <div class="formHeader">
-                <div>
+                  <div>
                   <p>Republic of the Philippines</p>
                   <p>DEPARTMENT OF HEALTH</p>
                   <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
@@ -1768,7 +1877,6 @@ document.addEventListener("DOMContentLoaded", function () {
       @close-modal="closeFeedbackModal"
     />
     <PDFViewerModal ref="pdfViewer" :pdfUrl="PdfUrl" />
-
   </div>
 </template>
 
@@ -1938,5 +2046,28 @@ td {
   border-radius: 5px;
   font-size: 1rem;
   z-index: 10;
+}
+
+.net-speed-indicator {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10000;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+  background: rgba(15, 15, 15, 0.103);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+.net-speed-indicator.fast {
+  border: 2px solid #4caf50;
+  color: #4caf50;
+}
+.net-speed-indicator.slow {
+  border: 2px solid #e53935;
+  color: #e53935;
 }
 </style>

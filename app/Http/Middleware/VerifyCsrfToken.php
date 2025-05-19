@@ -28,5 +28,7 @@ class VerifyCsrfToken extends BaseVerifier
         'api/video/prescription/update',
         '/api/video/upward',
         'api/telemedicine/clear-call',
+        '/save-screen-record',
+        'save-screen-record',
     ];
 }

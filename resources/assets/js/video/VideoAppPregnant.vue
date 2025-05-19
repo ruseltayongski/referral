@@ -357,15 +357,18 @@ export default {
 </script>
 <template>
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-lg-7">
+<div class="fullscreen-div">
+    <div class="main-container">
+      <div class="video-container">
         <div class="mainPic">
           <div class="remotePlayerDiv">
             <div id="calling">
               <h3>Calling...</h3>
             </div>
-            <img :src="doctorUrl" class="img-fluid" alt="Image1" />
+            <img :src="doctorUrl" class="remote-img" alt="Image1" />
+          </div>
+          <div class="call-duration">
+            <p>Call Duration: {{ callDuration }}</p>
           </div>
           <Transition name="fade">
             <div class="iconCall position-absolute fade-in" v-if="showDiv">
@@ -490,37 +493,38 @@ export default {
               </div>
             </div>
           </Transition>
-          <div class="localPlayerDiv">
-            <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2" />
+             <div class="localPlayerDiv" id="draggable-div">
+            <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2" draggable="true"/>
           </div>
         </div>
       </div>
-      <div class="col-lg-5">
+      <div class="form-container">
         <div class="telemedForm">
-          <div class="row-fluid">
-            <div>
+          <div class="form-scrollable">
+            <div class="form-header-container">
               <img :src="dohLogoUrl" alt="Image3" class="dohLogo" />
+              <div class="formHeader">
+                  <div>
+                  <p>Republic of the Philippines</p>
+                  <p>DEPARTMENT OF HEALTH</p>
+                  <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
+                  <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
+                  <p>
+                    Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032)
+                    254-0109
+                  </p>
+                  <p>
+                    Official Website:
+                    <span style="color: blue">http://www.ro7.doh.gov.ph</span> Email
+                    Address: dohro7@gmail.com
+                  </p>
+                </div>
+              </div>
+              <div class="clinical">
+                <span style="color: #4caf50"><b>CLINICAL REFERRAL FORM</b></span>
+              </div>
             </div>
-            <div class="formHeader">
-              <p>Republic of the Philippines</p>
-              <p>DEPARTMENT OF HEALTH</p>
-              <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
-              <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
-              <p>
-                Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032)
-                254-0109
-              </p>
-              <p>
-                Official Website:
-                <span style="color: blue">http://www.ro7.doh.gov.ph</span> Email
-                Address: dohro7@gmail.com
-              </p>
-            </div>
-            <div class="clinical">
-              <span style="color: #4caf50"
-                ><b>BEmONC/CEmONC REFERRAL FORM</b></span
-              >
-            </div>
+         
             <div class="tableForm">
               <table class="table table-striped form-label formTable">
                 <tbody>
@@ -901,7 +905,7 @@ export default {
                 </button>
               </div>
               <!-- ======================================================================= -->
-            </div>
+           </div>
           </div>
         </div>
       </div>
