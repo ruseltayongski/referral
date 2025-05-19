@@ -1229,7 +1229,7 @@ class NewFormCtrl extends Controller
                     "userid" => $user->id,
                     "patient_code" => $form->code
                 );
-                ApiController::pushNotificationCCMC($this->referred_patient_data);
+                ApiController::notifierPushNotification($this->referred_patient_data);
             }//push notification for cebu south medical center
             self::newFormSave($request);
             self::addTracking($code,$patient_id,$user,$request,$type,$form->id,'refer');
@@ -1334,7 +1334,7 @@ class NewFormCtrl extends Controller
                     "userid" => $user->id,
                     "patient_code" => $form->code
                 );
-                ApiController::pushNotificationCCMC($this->referred_patient_data);
+                ApiController::notifierPushNotification($this->referred_patient_data);
             }
             
             self::newFormSave($request);
