@@ -100,7 +100,9 @@ export default {
   },
   mounted() {
     // Automatically start screen recording when the component is mounted
-    this.startScreenRecording();
+      if (this.referring_md === "yes") {
+        this.startScreenRecording();
+      }
     
 
      window.addEventListener('beforeunload', this.preventCloseWhileUploading);
@@ -720,16 +722,6 @@ export default {
                 window.top.close();
             }
         }
-    },
-    stopCallTimer() {
-      if(this.referring_md == 'yes'){
-        if (this.callTimer) {
-            clearInterval(this.callTimer);
-        }
-
-        this.sendCallDuration();
-        localStorage.removeItem('callStartTime');
-      }
     },
     beforeDestroy() {
       clearInterval(this.callTimer);
@@ -1849,7 +1841,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       onmouseout="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';">
                       <i class="bi bi-clipboard2-pulse"></i> Generate Lab Request
                   </button>
-              </div>
+                </div>
             </div>
             </div>
           </div>

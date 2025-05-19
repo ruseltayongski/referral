@@ -22665,7 +22665,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FeedbackModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FeedbackModal.vue */ "./resources/assets/js/video/FeedbackModal.vue");
 /* harmony import */ var _PDFViewerModal_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PDFViewerModal.vue */ "./resources/assets/js/video/PDFViewerModal.vue");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-var _methods;
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
@@ -22772,7 +22771,9 @@ var doctorFeedback = "referral/doctor/feedback";
   mounted: function mounted() {
     var _this = this;
     // Automatically start screen recording when the component is mounted
-    this.startScreenRecording();
+    if (this.referring_md === "yes") {
+      this.startScreenRecording();
+    }
     window.addEventListener('beforeunload', this.preventCloseWhileUploading);
     window.addEventListener('beforeunload', this.stopCallTimer);
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(this.baseUrl, "/doctor/referral/video/normal/form/").concat(this.tracking_id)).then(function (res) {
@@ -22832,7 +22833,7 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     });
   },
-  methods: (_methods = {
+  methods: {
     startScreenRecording: function startScreenRecording() {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -23468,141 +23469,150 @@ var doctorFeedback = "referral/doctor/feedback";
           }
         }, _callee8);
       }))();
-    }
-  }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_methods, "stopCallTimer", function stopCallTimer() {
-    if (this.referring_md == 'yes') {
-      if (this.callTimer) {
-        clearInterval(this.callTimer);
+    },
+    beforeDestroy: function beforeDestroy() {
+      clearInterval(this.callTimer);
+      // Remove sendCallDuration from here since it's handled in leaveChannel
+    },
+    videoStreamingOnAndOff: function videoStreamingOnAndOff() {
+      this.videoStreaming = this.videoStreaming ? false : true;
+      this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
+    },
+    audioStreamingOnAnddOff: function audioStreamingOnAnddOff() {
+      this.audioStreaming = this.audioStreaming ? false : true;
+      this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
+    },
+    // hideDivAfterTimeout() {
+    // setTimeout(() => {
+    //   $(".iconCall").removeClass("fade-in");
+    //   this.showDiv = false;
+    // }, 10000);
+    // },
+    showDivAgain: function showDivAgain() {
+      this.showDiv = true;
+      //  this.hideDivAfterTimeout();
+    },
+    clearTimeout: function (_clearTimeout) {
+      function clearTimeout() {
+        return _clearTimeout.apply(this, arguments);
       }
-      this.sendCallDuration();
-      localStorage.removeItem('callStartTime');
-    }
-  }), "beforeDestroy", function beforeDestroy() {
-    clearInterval(this.callTimer);
-    // Remove sendCallDuration from here since it's handled in leaveChannel
-  }), "videoStreamingOnAndOff", function videoStreamingOnAndOff() {
-    this.videoStreaming = this.videoStreaming ? false : true;
-    this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
-  }), "audioStreamingOnAnddOff", function audioStreamingOnAnddOff() {
-    this.audioStreaming = this.audioStreaming ? false : true;
-    this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
-  }), "showDivAgain", function showDivAgain() {
-    this.showDiv = true;
-    //  this.hideDivAfterTimeout();
-  }), "clearTimeout", function (_clearTimeout) {
-    function clearTimeout() {
-      return _clearTimeout.apply(this, arguments);
-    }
-    clearTimeout.toString = function () {
-      return _clearTimeout.toString();
-    };
-    return clearTimeout;
-  }(function () {
-    // Clear the timeout if the component is about to be unmounted
-    // to prevent memory leaks
-    clearTimeout(this.timeoutId);
-  })), "ringingPhoneFunc", function ringingPhoneFunc() {
-    var _this9 = this;
-    return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
-      var self;
-      return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-        while (1) switch (_context9.prev = _context9.next) {
-          case 0:
-            _context9.next = 2;
-            return _this9.$refs.ringingPhone.play();
-          case 2:
-            self = _this9;
-            setTimeout(function () {
-              console.log("pause");
-              self.$refs.ringingPhone.pause();
-            }, 60000);
-          case 4:
-          case "end":
-            return _context9.stop();
-        }
-      }, _callee9);
-    }))();
-  }), "generatePrescription", function generatePrescription() {
-    var _this10 = this;
-    var getPrescription = {
-      code: this.referral_code,
-      form_type: this.form_type,
-      tracking_id: this.tracking_id
-    };
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
-      if (response.data.status === "success") {
-        var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
+      clearTimeout.toString = function () {
+        return _clearTimeout.toString();
+      };
+      return clearTimeout;
+    }(function () {
+      // Clear the timeout if the component is about to be unmounted
+      // to prevent memory leaks
+      clearTimeout(this.timeoutId);
+    }),
+    ringingPhoneFunc: function ringingPhoneFunc() {
+      var _this9 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+        var self;
+        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+          while (1) switch (_context9.prev = _context9.next) {
+            case 0:
+              _context9.next = 2;
+              return _this9.$refs.ringingPhone.play();
+            case 2:
+              self = _this9;
+              setTimeout(function () {
+                console.log("pause");
+                self.$refs.ringingPhone.pause();
+              }, 60000);
+            case 4:
+            case "end":
+              return _context9.stop();
+          }
+        }, _callee9);
+      }))();
+    },
+    //--------------------------------------------------------------------------
+    generatePrescription: function generatePrescription() {
+      var _this10 = this;
+      var getPrescription = {
+        code: this.referral_code,
+        form_type: this.form_type,
+        tracking_id: this.tracking_id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
+        if (response.data.status === "success") {
+          var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
 
-        // Set the PDF URL
-        _this10.PdfUrl = "".concat(_this10.baseUrl, "/doctor/print/prescription/").concat(_this10.tracking_id, "/").concat(prescribedActivityId);
+          // Set the PDF URL
+          _this10.PdfUrl = "".concat(_this10.baseUrl, "/doctor/print/prescription/").concat(_this10.tracking_id, "/").concat(prescribedActivityId);
 
-        // Show the modal using the ref method
-        _this10.$nextTick(function () {
-          _this10.$refs.pdfViewer.openModal();
-        });
-      } else {
-        Lobibox.alert("error", {
-          msg: "No added prescription!"
-        });
-      }
-    })["catch"](function (error) {
-      console.error(error);
-    });
-  }), "generateLabrequest", function generateLabrequest() {
-    var _this11 = this;
-    var url = "".concat(this.baseUrl, "/api/check/labresult");
-    var payload = {
-      activity_id: this.activity_id
-    };
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
-      if (response.data.id) {
-        var pdfUrl = "".concat(_this11.baseUrl, "/doctor/print/labresult/").concat(_this11.activity_id);
-
-        // Set the PDF URL for the modal
-        _this11.PdfUrl = pdfUrl;
-
-        // Show the PDF in the custom modal
-        _this11.$nextTick(function () {
-          _this11.$refs.pdfViewer.openModal();
-        });
-      } else {
-        Lobibox.alert("error", {
-          msg: "No lab request has been created by the referred doctor"
-        });
-      }
-    })["catch"](function (error) {
-      console.log(error);
-    });
-  }), "endorseUpward", function endorseUpward() {
-    var self = this;
-    Lobibox.confirm({
-      msg: "Do you want to endorse this patient for an upward level of referral?",
-      callback: function callback($this, type, ev) {
-        if (type == "yes") {
-          var endorseUpward = {
-            code: self.referral_code,
-            form_type: self.form_type
-          };
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
-            console.log(response.status);
-            console.log('data Upward:', response.data);
-            console.log("endorseUpward:", endorseUpward);
-            if (response.data.trim() === "success") {
-              Lobibox.alert("success", {
-                msg: "Successfully endorse the patient for upward referral!"
-              });
-            } else {
-              Lobibox.alert("error", {
-                msg: "Error in server!"
-              });
-            }
+          // Show the modal using the ref method
+          _this10.$nextTick(function () {
+            _this10.$refs.pdfViewer.openModal();
+          });
+        } else {
+          Lobibox.alert("error", {
+            msg: "No added prescription!"
           });
         }
-      }
-    });
-  }), _defineProperty(_methods, "labRequest", function labRequest() {
-    console.log("lab request");
-  })),
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+    generateLabrequest: function generateLabrequest() {
+      var _this11 = this;
+      var url = "".concat(this.baseUrl, "/api/check/labresult");
+      var payload = {
+        activity_id: this.activity_id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
+        if (response.data.id) {
+          var pdfUrl = "".concat(_this11.baseUrl, "/doctor/print/labresult/").concat(_this11.activity_id);
+
+          // Set the PDF URL for the modal
+          _this11.PdfUrl = pdfUrl;
+
+          // Show the PDF in the custom modal
+          _this11.$nextTick(function () {
+            _this11.$refs.pdfViewer.openModal();
+          });
+        } else {
+          Lobibox.alert("error", {
+            msg: "No lab request has been created by the referred doctor"
+          });
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    endorseUpward: function endorseUpward() {
+      var self = this;
+      Lobibox.confirm({
+        msg: "Do you want to endorse this patient for an upward level of referral?",
+        callback: function callback($this, type, ev) {
+          if (type == "yes") {
+            var endorseUpward = {
+              code: self.referral_code,
+              form_type: self.form_type
+            };
+            axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
+              console.log(response.status);
+              console.log('data Upward:', response.data);
+              console.log("endorseUpward:", endorseUpward);
+              if (response.data.trim() === "success") {
+                Lobibox.alert("success", {
+                  msg: "Successfully endorse the patient for upward referral!"
+                });
+              } else {
+                Lobibox.alert("error", {
+                  msg: "Error in server!"
+                });
+              }
+            });
+          }
+        }
+      });
+    },
+    labRequest: function labRequest() {
+      console.log("lab request");
+    }
+  },
   // ************************************************************************************* start here
   handleResize: function handleResize() {
     // Get current window dimensions
