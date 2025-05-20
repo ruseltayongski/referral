@@ -22665,7 +22665,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FeedbackModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FeedbackModal.vue */ "./resources/assets/js/video/FeedbackModal.vue");
 /* harmony import */ var _PDFViewerModal_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PDFViewerModal.vue */ "./resources/assets/js/video/PDFViewerModal.vue");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-var _methods;
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
 function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
 function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
@@ -22763,13 +22762,19 @@ var doctorFeedback = "referral/doctor/feedback";
       form_type: "normal",
       reco_count: $("#reco_count_val").val(),
       PdfUrl: '',
-      loading: false
+      loading: false,
+      uploadProgress: 0,
+      netSpeedMbps: null,
+      netSpeedStatus: '' // 'fast' or 'slow'
     };
   },
   mounted: function mounted() {
     var _this = this;
     // Automatically start screen recording when the component is mounted
-    this.startScreenRecording();
+    if (this.referring_md === "yes") {
+      this.startScreenRecording();
+    }
+    window.addEventListener('beforeunload', this.preventCloseWhileUploading);
     window.addEventListener('beforeunload', this.stopCallTimer);
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(this.baseUrl, "/doctor/referral/video/normal/form/").concat(this.tracking_id)).then(function (res) {
       var response = res.data;
@@ -22796,6 +22801,7 @@ var doctorFeedback = "referral/doctor/feedback";
   },
   beforeUnmount: function beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
+    window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
     this.stopCallTimer();
     // Remove event listener when component is destroyed
     window.removeEventListener('resize', this.handleResize);
@@ -22827,7 +22833,7 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     });
   },
-  methods: (_methods = {
+  methods: {
     startScreenRecording: function startScreenRecording() {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -22969,48 +22975,156 @@ var doctorFeedback = "referral/doctor/feedback";
         }, _callee, null, [[0, 30]]);
       }))();
     },
-    saveScreenRecording: function saveScreenRecording() {
-      var _this4 = this;
-      if (this.recordedChunks.length > 0) {
-        this.loading = true; // Show loader
-
-        // Convert recorded chunks to a Blob
-        var blob = new Blob(this.recordedChunks, {
-          type: "video/webm"
-        });
-
-        // Simulate a delay for large files (optional)
-        setTimeout(function () {
-          var url = URL.createObjectURL(blob);
-          // Generate the filename
-          var patientName = _this4.form.patient_name || "Unknown_Patient";
-          var callDuration = _this4.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
-          var currentDate = new Date();
-          var dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-          var timeStart = new Date(_this4.startTime).toLocaleTimeString("en-US", {
-            hour12: false
-          }).replace(/:/g, "-");
-          var timeEnd = currentDate.toLocaleTimeString("en-US", {
-            hour12: false
-          }).replace(/:/g, "-");
-          var fileName = "".concat(patientName, "-").concat(callDuration, "-(Date_").concat(dateSave, "_Start_").concat(timeStart, "_End_").concat(timeEnd, ").mp4");
-
-          // Automatically save the file
-          var a = document.createElement("a");
-          a.href = url;
-          a.download = fileName; // Save with the new format
-          a.click();
-
-          // Clean up
-          URL.revokeObjectURL(url);
-          _this4.recordedChunks = []; // Clear recorded chunks to free memory
-          _this4.loading = false; // Hide loader
-
-          console.log("Screen recording saved successfully.");
-        }, 1000); // Simulate delay for demonstration
-      } else {
-        console.error("No recorded data available to save.");
+    preventCloseWhileUploading: function preventCloseWhileUploading(event) {
+      if (this.loading) {
+        event.preventDefault();
+        event.returnValue = "File upload in progress. Please wait until it finishes.";
+        return event.returnValue;
       }
+    },
+    saveScreenRecording: function saveScreenRecording() {
+      var _arguments = arguments,
+        _this4 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, chunkSize, testBlob, testFormData, startTime, endTime, durationSeconds, speedMbps, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
+            case 0:
+              closeAfterUpload = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
+              if (!(_this4.recordedChunks.length > 0)) {
+                _context2.next = 75;
+                break;
+              }
+              _this4.loading = true; // Show loader
+
+              // Convert recorded chunks to a Blob
+              blob = new Blob(_this4.recordedChunks, {
+                type: "video/webm"
+              }); // --- Max file size check (2GB) ---
+              maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+              if (!(blob.size > maxSize)) {
+                _context2.next = 9;
+                break;
+              }
+              _this4.loading = false;
+              Lobibox.alert("error", {
+                msg: "The recording is too large to upload (max 2GB). Please record a shorter session."
+              });
+              return _context2.abrupt("return");
+            case 9:
+              // Generate the filename
+              patientCode = _this4.form.code || "Unknown_Patient";
+              activityId = _this4.activity_id;
+              referring_md = _this4.form.referring_md;
+              referred = _this4.form.action_md; // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+              currentDate = new Date();
+              dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+              timeStart = new Date(_this4.startTime).toLocaleTimeString("en-US", {
+                hour12: false
+              }).replace(/:/g, "-");
+              timeEnd = currentDate.toLocaleTimeString("en-US", {
+                hour12: false
+              }).replace(/:/g, "-");
+              fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // --- Detect upload speed and set chunk size ---
+              chunkSize = 5 * 1024 * 1024; // Default to 5MB
+              _context2.prev = 19;
+              // Create a 1MB test blob
+              testBlob = blob.slice(0, 1 * 1024 * 1024);
+              testFormData = new FormData();
+              testFormData.append("video", testBlob, "test.webm");
+              testFormData.append("fileName", "test.webm");
+              testFormData.append("chunkIndex", 0);
+              testFormData.append("totalChunks", 1);
+              startTime = performance.now();
+              _context2.next = 29;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://192.168.111.122:8000/api/save-screen-record", testFormData, {
+                headers: {
+                  "Content-Type": "multipart/form-data"
+                }
+              });
+            case 29:
+              endTime = performance.now();
+              durationSeconds = (endTime - startTime) / 1000;
+              speedMbps = 1 / durationSeconds * 8; // 1MB in MBps to Mbps
+              _this4.netSpeedMbps = speedMbps.toFixed(2);
+              _this4.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
+              // Set chunk size based on speed
+              if (speedMbps > 8) {
+                // ~8Mbps or higher is fast
+                chunkSize = 10 * 1024 * 1024; // 10MB
+              } else {
+                chunkSize = 5 * 1024 * 1024; // 5MB
+              }
+              // Optionally, delete the test chunk on the server if needed
+              _context2.next = 42;
+              break;
+            case 37:
+              _context2.prev = 37;
+              _context2.t0 = _context2["catch"](19);
+              // If test fails, fallback to 5MB
+              chunkSize = 5 * 1024 * 1024;
+              _this4.netSpeedMbps = null;
+              _this4.netSpeedStatus = 'slow';
+            case 42:
+              totalChunks = Math.ceil(blob.size / chunkSize);
+              chunkIndex = 0;
+            case 44:
+              if (!(chunkIndex < totalChunks)) {
+                _context2.next = 68;
+                break;
+              }
+              start = chunkIndex * chunkSize;
+              end = Math.min(blob.size, start + chunkSize);
+              chunk = blob.slice(start, end);
+              formData = new FormData();
+              formData.append("video", chunk, fileName);
+              formData.append("fileName", fileName);
+              formData.append("chunkIndex", chunkIndex);
+              formData.append("totalChunks", totalChunks);
+              _context2.prev = 53;
+              _context2.next = 56;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("http://192.168.111.122:8000/api/save-screen-record", formData, {
+                headers: {
+                  "Content-Type": "multipart/form-data"
+                }
+              });
+            case 56:
+              // Update progress after each chunk
+              _this4.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
+              _context2.next = 65;
+              break;
+            case 59:
+              _context2.prev = 59;
+              _context2.t1 = _context2["catch"](53);
+              _this4.loading = false;
+              _this4.uploadProgress = 0; // Reset on error
+              Lobibox.alert("error", {
+                msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context2.t1.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context2.t1.message)
+              });
+              return _context2.abrupt("return");
+            case 65:
+              chunkIndex++;
+              _context2.next = 44;
+              break;
+            case 68:
+              _this4.uploadProgress = 100; // Ensure it's 100% at the end
+              _this4.recordedChunks = []; // Clear recorded chunks to free memory
+              _this4.loading = false; // Hide loader
+              _this4.uploadProgress = 0; // Reset progress
+
+              if (closeAfterUpload) {
+                window.top.close();
+              }
+              _context2.next = 76;
+              break;
+            case 75:
+              console.error("No recorded data available to save.");
+            case 76:
+            case "end":
+              return _context2.stop();
+          }
+        }, _callee2, null, [[19, 37], [53, 59]]);
+      }))();
     },
     closeFeedbackModal: function closeFeedbackModal() {
       this.feedbackModalVisible = false; // Hide the feedback modal
@@ -23056,10 +23170,10 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     startBasicCall: function startBasicCall() {
       var _this6 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
         var agoraEngine, remotePlayerContainer, localPlayerContainer, self;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
             case 0:
               // Create an instance of the Agora Engine
               agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
@@ -23076,31 +23190,31 @@ var doctorFeedback = "referral/doctor/feedback";
               localPlayerContainer.id = _this6.options.uid;
               self = _this6; // Listen for when a user joins the channel
               agoraEngine.on("user-joined", /*#__PURE__*/function () {
-                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(user) {
-                  return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-                    while (1) switch (_context2.prev = _context2.next) {
+                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(user) {
+                  return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+                    while (1) switch (_context3.prev = _context3.next) {
                       case 0:
                         console.log("User joined:", user.uid);
                         self.channelParameters.userCount++;
 
                         // Check if channel already has maximum users
                         if (!(self.channelParameters.userCount > self.channelParameters.maxUsers)) {
-                          _context2.next = 9;
+                          _context3.next = 9;
                           break;
                         }
                         console.log("Channel is full! Maximum users reached.");
                         self.showChannelFullMessage();
                         // Disconnect this user since the channel is full
-                        _context2.next = 7;
+                        _context3.next = 7;
                         return agoraEngine.leave();
                       case 7:
                         self.channelParameters.userCount--; // Decrement user count after leaving
-                        return _context2.abrupt("return");
+                        return _context3.abrupt("return");
                       case 9:
                       case "end":
-                        return _context2.stop();
+                        return _context3.stop();
                     }
-                  }, _callee2);
+                  }, _callee3);
                 }));
                 return function (_x) {
                   return _ref.apply(this, arguments);
@@ -23109,18 +23223,18 @@ var doctorFeedback = "referral/doctor/feedback";
 
               // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
               agoraEngine.on("user-published", /*#__PURE__*/function () {
-                var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(user, mediaType) {
-                  return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-                    while (1) switch (_context3.prev = _context3.next) {
+                var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(user, mediaType) {
+                  return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+                    while (1) switch (_context4.prev = _context4.next) {
                       case 0:
                         if (!(self.channelParameters.userCount > self.channelParameters.maxUsers)) {
-                          _context3.next = 3;
+                          _context4.next = 3;
                           break;
                         }
                         console.log("Ignoring new user, channel is full");
-                        return _context3.abrupt("return");
+                        return _context4.abrupt("return");
                       case 3:
-                        _context3.next = 5;
+                        _context4.next = 5;
                         return agoraEngine.subscribe(user, mediaType);
                       case 5:
                         console.log("subscribe success");
@@ -23141,9 +23255,9 @@ var doctorFeedback = "referral/doctor/feedback";
                         }
                       case 8:
                       case "end":
-                        return _context3.stop();
+                        return _context4.stop();
                     }
-                  }, _callee3);
+                  }, _callee4);
                 }));
                 return function (_x2, _x3) {
                   return _ref2.apply(this, arguments);
@@ -23155,39 +23269,39 @@ var doctorFeedback = "referral/doctor/feedback";
                 console.log(user.uid + " has left the channel");
                 self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
               });
-              _context4.prev = 11;
+              _context5.prev = 11;
               console.log("Attempting to join channel...", self.options.channel);
-              _context4.next = 15;
+              _context5.next = 15;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
             case 15:
               console.log("Successfully joined channel");
-              _context4.next = 18;
+              _context5.next = 18;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
             case 18:
-              self.channelParameters.localAudioTrack = _context4.sent;
-              _context4.next = 21;
+              self.channelParameters.localAudioTrack = _context5.sent;
+              _context5.next = 21;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 21:
-              self.channelParameters.localVideoTrack = _context4.sent;
+              self.channelParameters.localVideoTrack = _context5.sent;
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
               $(localPlayerContainer).addClass("localPlayerLayer");
-              _context4.next = 27;
+              _context5.next = 27;
               return agoraEngine.publish([self.channelParameters.localAudioTrack, self.channelParameters.localVideoTrack]);
             case 27:
               self.channelParameters.localVideoTrack.play(localPlayerContainer);
               console.log("publish success!");
-              _context4.next = 34;
+              _context5.next = 34;
               break;
             case 31:
-              _context4.prev = 31;
-              _context4.t0 = _context4["catch"](11);
-              console.error("Error joining channel:", _context4.t0);
+              _context5.prev = 31;
+              _context5.t0 = _context5["catch"](11);
+              console.error("Error joining channel:", _context5.t0);
             case 34:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
-        }, _callee4, null, [[11, 31]]);
+        }, _callee5, null, [[11, 31]]);
       }))();
     },
     // Method to show channel full message to user
@@ -23224,276 +23338,281 @@ var doctorFeedback = "referral/doctor/feedback";
       return vars;
     },
     joinVideo: function joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.prev = 0;
+              _context6.prev = 0;
               console.log("Attempting to join channel...", self.options.channel);
               // Join the channel without checking member count first
               // (we'll handle the check after joining)
-              _context5.next = 4;
+              _context6.next = 4;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
             case 4:
               console.log("Successfully joined channel");
 
               // Create a local audio track from the microphone
-              _context5.next = 7;
+              _context6.next = 7;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
             case 7:
-              channelParameters.localAudioTrack = _context5.sent;
-              _context5.next = 10;
+              channelParameters.localAudioTrack = _context6.sent;
+              _context6.next = 10;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 10:
-              channelParameters.localVideoTrack = _context5.sent;
+              channelParameters.localVideoTrack = _context6.sent;
               // Append the local video container to the page
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
               $(localPlayerContainer).addClass("localPlayerLayer");
 
               // Publish the local audio and video tracks in the channel
-              _context5.next = 16;
+              _context6.next = 16;
               return agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
             case 16:
               // Play the local video track
               channelParameters.localVideoTrack.play(localPlayerContainer);
               console.log("publish success!");
-              _context5.next = 23;
+              _context6.next = 23;
               break;
             case 20:
-              _context5.prev = 20;
-              _context5.t0 = _context5["catch"](0);
-              console.error("Error joining channel:", _context5.t0);
+              _context6.prev = 20;
+              _context6.t0 = _context6["catch"](0);
+              console.error("Error joining channel:", _context6.t0);
             case 23:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, null, [[0, 20]]);
+        }, _callee6, null, [[0, 20]]);
       }))();
     },
     sendCallDuration: function sendCallDuration() {
       var _this7 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
         var finalDuration, response;
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
             case 0:
               if (!_this7.isLeavingChannel) {
-                _context6.next = 2;
+                _context7.next = 2;
                 break;
               }
-              return _context6.abrupt("return");
+              return _context7.abrupt("return");
             case 2:
               // Prevent duplicate sends
               _this7.isLeavingChannel = true;
               if (!(_this7.callMinutes > 0)) {
-                _context6.next = 18;
+                _context7.next = 18;
                 break;
               }
-              _context6.prev = 4;
+              _context7.prev = 4;
               // Calculate final duration before sending
               finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
-              _context6.next = 8;
+              _context7.next = 8;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this7.baseUrl, "/save-call-duration"), {
                 call_duration: finalDuration,
                 tracking_id: _this7.tracking_id,
                 referral_code: _this7.referral_code
               });
             case 8:
-              response = _context6.sent;
+              response = _context7.sent;
               console.log("Call duration saved:", response.data);
               localStorage.removeItem('callStartTime'); // Clean up
-              return _context6.abrupt("return", true);
+              return _context7.abrupt("return", true);
             case 14:
-              _context6.prev = 14;
-              _context6.t0 = _context6["catch"](4);
-              console.error("Error saving call duration:", _context6.t0);
-              return _context6.abrupt("return", false);
+              _context7.prev = 14;
+              _context7.t0 = _context7["catch"](4);
+              console.error("Error saving call duration:", _context7.t0);
+              return _context7.abrupt("return", false);
             case 18:
-              return _context6.abrupt("return", false);
+              return _context7.abrupt("return", false);
             case 19:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
-        }, _callee6, null, [[4, 14]]);
+        }, _callee7, null, [[4, 14]]);
       }))();
     },
     leaveChannel: function leaveChannel() {
       var _this8 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
-        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-          while (1) switch (_context7.prev = _context7.next) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) switch (_context8.prev = _context8.next) {
             case 0:
               if (!confirm("Are you sure you want to leave this channel?")) {
-                _context7.next = 10;
+                _context8.next = 9;
                 break;
               }
               // Stop screen recording and save the file
               if (_this8.screenRecorder && _this8.screenRecorder.state !== "inactive") {
                 _this8.screenRecorder.stop();
                 _this8.screenRecorder.onstop = function () {
-                  _this8.saveScreenRecording();
+                  _this8.saveScreenRecording(true);
                 };
               }
 
               // Wait for duration to be sent before closing
               if (!(_this8.referring_md === "yes")) {
-                _context7.next = 9;
+                _context8.next = 8;
                 break;
               }
               clearInterval(_this8.callTimer); // Stop the timer
-              _context7.next = 6;
+              _context8.next = 6;
               return _this8.sendCallDuration();
             case 6:
-              // Give more time for the request to complete
-              setTimeout(function () {
-                window.top.close();
-              }, 2000);
-              _context7.next = 10;
+              _context8.next = 9;
               break;
-            case 9:
+            case 8:
               window.top.close();
-            case 10:
+            case 9:
             case "end":
-              return _context7.stop();
+              return _context8.stop();
           }
-        }, _callee7);
+        }, _callee8);
       }))();
-    }
-  }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_methods, "stopCallTimer", function stopCallTimer() {
-    if (this.referring_md == 'yes') {
-      if (this.callTimer) {
-        clearInterval(this.callTimer);
+    },
+    beforeDestroy: function beforeDestroy() {
+      clearInterval(this.callTimer);
+      // Remove sendCallDuration from here since it's handled in leaveChannel
+    },
+    videoStreamingOnAndOff: function videoStreamingOnAndOff() {
+      this.videoStreaming = this.videoStreaming ? false : true;
+      this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
+    },
+    audioStreamingOnAnddOff: function audioStreamingOnAnddOff() {
+      this.audioStreaming = this.audioStreaming ? false : true;
+      this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
+    },
+    // hideDivAfterTimeout() {
+    // setTimeout(() => {
+    //   $(".iconCall").removeClass("fade-in");
+    //   this.showDiv = false;
+    // }, 10000);
+    // },
+    showDivAgain: function showDivAgain() {
+      this.showDiv = true;
+      //  this.hideDivAfterTimeout();
+    },
+    clearTimeout: function (_clearTimeout) {
+      function clearTimeout() {
+        return _clearTimeout.apply(this, arguments);
       }
-      this.sendCallDuration();
-      localStorage.removeItem('callStartTime');
-    }
-  }), "beforeDestroy", function beforeDestroy() {
-    clearInterval(this.callTimer);
-    // Remove sendCallDuration from here since it's handled in leaveChannel
-  }), "videoStreamingOnAndOff", function videoStreamingOnAndOff() {
-    this.videoStreaming = this.videoStreaming ? false : true;
-    this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
-  }), "audioStreamingOnAnddOff", function audioStreamingOnAnddOff() {
-    this.audioStreaming = this.audioStreaming ? false : true;
-    this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
-  }), "showDivAgain", function showDivAgain() {
-    this.showDiv = true;
-    //  this.hideDivAfterTimeout();
-  }), "clearTimeout", function (_clearTimeout) {
-    function clearTimeout() {
-      return _clearTimeout.apply(this, arguments);
-    }
-    clearTimeout.toString = function () {
-      return _clearTimeout.toString();
-    };
-    return clearTimeout;
-  }(function () {
-    // Clear the timeout if the component is about to be unmounted
-    // to prevent memory leaks
-    clearTimeout(this.timeoutId);
-  })), "ringingPhoneFunc", function ringingPhoneFunc() {
-    var _this9 = this;
-    return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
-      var self;
-      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-        while (1) switch (_context8.prev = _context8.next) {
-          case 0:
-            _context8.next = 2;
-            return _this9.$refs.ringingPhone.play();
-          case 2:
-            self = _this9;
-            setTimeout(function () {
-              console.log("pause");
-              self.$refs.ringingPhone.pause();
-            }, 60000);
-          case 4:
-          case "end":
-            return _context8.stop();
-        }
-      }, _callee8);
-    }))();
-  }), "generatePrescription", function generatePrescription() {
-    var _this10 = this;
-    var getPrescription = {
-      code: this.referral_code,
-      form_type: this.form_type,
-      tracking_id: this.tracking_id
-    };
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
-      if (response.data.status === "success") {
-        var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
+      clearTimeout.toString = function () {
+        return _clearTimeout.toString();
+      };
+      return clearTimeout;
+    }(function () {
+      // Clear the timeout if the component is about to be unmounted
+      // to prevent memory leaks
+      clearTimeout(this.timeoutId);
+    }),
+    ringingPhoneFunc: function ringingPhoneFunc() {
+      var _this9 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+        var self;
+        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+          while (1) switch (_context9.prev = _context9.next) {
+            case 0:
+              _context9.next = 2;
+              return _this9.$refs.ringingPhone.play();
+            case 2:
+              self = _this9;
+              setTimeout(function () {
+                console.log("pause");
+                self.$refs.ringingPhone.pause();
+              }, 60000);
+            case 4:
+            case "end":
+              return _context9.stop();
+          }
+        }, _callee9);
+      }))();
+    },
+    //--------------------------------------------------------------------------
+    generatePrescription: function generatePrescription() {
+      var _this10 = this;
+      var getPrescription = {
+        code: this.referral_code,
+        form_type: this.form_type,
+        tracking_id: this.tracking_id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
+        if (response.data.status === "success") {
+          var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
 
-        // Set the PDF URL
-        _this10.PdfUrl = "".concat(_this10.baseUrl, "/doctor/print/prescription/").concat(_this10.tracking_id, "/").concat(prescribedActivityId);
+          // Set the PDF URL
+          _this10.PdfUrl = "".concat(_this10.baseUrl, "/doctor/print/prescription/").concat(_this10.tracking_id, "/").concat(prescribedActivityId);
 
-        // Show the modal using the ref method
-        _this10.$nextTick(function () {
-          _this10.$refs.pdfViewer.openModal();
-        });
-      } else {
-        Lobibox.alert("error", {
-          msg: "No added prescription!"
-        });
-      }
-    })["catch"](function (error) {
-      console.error(error);
-    });
-  }), "generateLabrequest", function generateLabrequest() {
-    var _this11 = this;
-    var url = "".concat(this.baseUrl, "/api/check/labresult");
-    var payload = {
-      activity_id: this.activity_id
-    };
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
-      if (response.data.id) {
-        var pdfUrl = "".concat(_this11.baseUrl, "/doctor/print/labresult/").concat(_this11.activity_id);
-
-        // Set the PDF URL for the modal
-        _this11.PdfUrl = pdfUrl;
-
-        // Show the PDF in the custom modal
-        _this11.$nextTick(function () {
-          _this11.$refs.pdfViewer.openModal();
-        });
-      } else {
-        Lobibox.alert("error", {
-          msg: "No lab request has been created by the referred doctor"
-        });
-      }
-    })["catch"](function (error) {
-      console.log(error);
-    });
-  }), "endorseUpward", function endorseUpward() {
-    var self = this;
-    Lobibox.confirm({
-      msg: "Do you want to endorse this patient for an upward level of referral?",
-      callback: function callback($this, type, ev) {
-        if (type == "yes") {
-          var endorseUpward = {
-            code: self.referral_code,
-            form_type: self.form_type
-          };
-          axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
-            console.log(response.status);
-            console.log('data Upward:', response.data);
-            console.log("endorseUpward:", endorseUpward);
-            if (response.data.trim() === "success") {
-              Lobibox.alert("success", {
-                msg: "Successfully endorse the patient for upward referral!"
-              });
-            } else {
-              Lobibox.alert("error", {
-                msg: "Error in server!"
-              });
-            }
+          // Show the modal using the ref method
+          _this10.$nextTick(function () {
+            _this10.$refs.pdfViewer.openModal();
+          });
+        } else {
+          Lobibox.alert("error", {
+            msg: "No added prescription!"
           });
         }
-      }
-    });
-  }), _defineProperty(_methods, "labRequest", function labRequest() {
-    console.log("lab request");
-  })),
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+    generateLabrequest: function generateLabrequest() {
+      var _this11 = this;
+      var url = "".concat(this.baseUrl, "/api/check/labresult");
+      var payload = {
+        activity_id: this.activity_id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
+        if (response.data.id) {
+          var pdfUrl = "".concat(_this11.baseUrl, "/doctor/print/labresult/").concat(_this11.activity_id);
+
+          // Set the PDF URL for the modal
+          _this11.PdfUrl = pdfUrl;
+
+          // Show the PDF in the custom modal
+          _this11.$nextTick(function () {
+            _this11.$refs.pdfViewer.openModal();
+          });
+        } else {
+          Lobibox.alert("error", {
+            msg: "No lab request has been created by the referred doctor"
+          });
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    endorseUpward: function endorseUpward() {
+      var self = this;
+      Lobibox.confirm({
+        msg: "Do you want to endorse this patient for an upward level of referral?",
+        callback: function callback($this, type, ev) {
+          if (type == "yes") {
+            var endorseUpward = {
+              code: self.referral_code,
+              form_type: self.form_type
+            };
+            axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
+              console.log(response.status);
+              console.log('data Upward:', response.data);
+              console.log("endorseUpward:", endorseUpward);
+              if (response.data.trim() === "success") {
+                Lobibox.alert("success", {
+                  msg: "Successfully endorse the patient for upward referral!"
+                });
+              } else {
+                Lobibox.alert("error", {
+                  msg: "Error in server!"
+                });
+              }
+            });
+          }
+        }
+      });
+    },
+    labRequest: function labRequest() {
+      console.log("lab request");
+    }
+  },
   // ************************************************************************************* start here
   handleResize: function handleResize() {
     // Get current window dimensions
@@ -24373,93 +24492,90 @@ var _hoisted_1 = {
   key: 0,
   "class": "loader-overlay"
 };
-var _hoisted_2 = ["src"];
+var _hoisted_2 = {
+  style: {
+    "width": "300px",
+    "margin-top": "20px"
+  }
+};
 var _hoisted_3 = {
-  "class": "fullscreen-div"
+  style: {
+    "background": "#444",
+    "border-radius": "8px",
+    "overflow": "hidden"
+  }
 };
 var _hoisted_4 = {
-  "class": "main-container"
+  style: {
+    "color": "white",
+    "text-align": "center",
+    "margin": "5px 0 0 0"
+  }
 };
 var _hoisted_5 = {
-  "class": "video-container"
+  key: 0
 };
 var _hoisted_6 = {
-  "class": "mainPic"
+  key: 1
 };
-var _hoisted_7 = {
-  "class": "remotePlayerDiv"
+var _hoisted_7 = ["src"];
+var _hoisted_8 = {
+  "class": "fullscreen-div"
 };
-var _hoisted_8 = ["src"];
 var _hoisted_9 = {
-  "class": "call-duration"
+  "class": "main-container"
 };
 var _hoisted_10 = {
-  "class": "tooltip-container"
+  "class": "video-container"
 };
 var _hoisted_11 = {
+  "class": "mainPic"
+};
+var _hoisted_12 = {
+  "class": "remotePlayerDiv"
+};
+var _hoisted_13 = ["src"];
+var _hoisted_14 = {
+  "class": "call-duration"
+};
+var _hoisted_15 = {
+  "class": "tooltip-container"
+};
+var _hoisted_16 = {
   key: 0,
   "class": "iconCall position-absolute fade-in"
 };
-var _hoisted_12 = {
+var _hoisted_17 = {
   "class": "button-container"
 };
-var _hoisted_13 = {
+var _hoisted_18 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#138496"
   }
 };
-var _hoisted_14 = {
+var _hoisted_19 = {
   "class": "button-container"
 };
-var _hoisted_15 = {
+var _hoisted_20 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#218838"
   }
 };
-var _hoisted_16 = {
+var _hoisted_21 = {
   "class": "button-container"
 };
-var _hoisted_17 = {
+var _hoisted_22 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#c82333"
   }
 };
-var _hoisted_18 = {
-  "class": "button-container"
-};
-var _hoisted_19 = {
-  key: 0,
-  "class": "tooltip-text",
-  style: {
-    "background-color": "#e0a800"
-  }
-};
-var _hoisted_20 = {
-  "class": "button-container"
-};
-var _hoisted_21 = {
-  key: 0,
-  "class": "tooltip-text",
-  style: {
-    "background-color": "#218838"
-  }
-};
-var _hoisted_22 = {
-  "class": "button-container"
-};
-var _hoisted_23 = {
-  key: 0,
-  "class": "tooltip-text",
-  style: {
-    "background-color": "#007bff"
-  }
-};
+var _hoisted_23 = ["disabled"];
 var _hoisted_24 = {
   "class": "button-container"
 };
@@ -24467,60 +24583,72 @@ var _hoisted_25 = {
   key: 0,
   "class": "tooltip-text",
   style: {
+    "background-color": "#e0a800"
+  }
+};
+var _hoisted_26 = {
+  "class": "button-container"
+};
+var _hoisted_27 = {
+  key: 0,
+  "class": "tooltip-text",
+  style: {
+    "background-color": "#218838"
+  }
+};
+var _hoisted_28 = {
+  "class": "button-container"
+};
+var _hoisted_29 = {
+  key: 0,
+  "class": "tooltip-text",
+  style: {
+    "background-color": "#007bff"
+  }
+};
+var _hoisted_30 = {
+  "class": "button-container"
+};
+var _hoisted_31 = {
+  key: 0,
+  "class": "tooltip-text",
+  style: {
     "background-color": "#17a2b8"
   }
 };
-var _hoisted_26 = ["data-code"];
-var _hoisted_27 = {
+var _hoisted_32 = ["data-code"];
+var _hoisted_33 = {
   "class": "localPlayerDiv",
   id: "draggable-div"
 };
-var _hoisted_28 = ["src"];
-var _hoisted_29 = {
+var _hoisted_34 = ["src"];
+var _hoisted_35 = {
   "class": "form-container"
 };
-var _hoisted_30 = {
+var _hoisted_36 = {
   "class": "telemedForm"
 };
-var _hoisted_31 = {
+var _hoisted_37 = {
   "class": "form-scrollable"
 };
-var _hoisted_32 = {
+var _hoisted_38 = {
   "class": "form-header-container"
 };
-var _hoisted_33 = ["src"];
-var _hoisted_34 = {
+var _hoisted_39 = ["src"];
+var _hoisted_40 = {
   "class": "tableForm"
 };
-var _hoisted_35 = {
+var _hoisted_41 = {
   "class": "table table-striped formTable"
 };
-var _hoisted_36 = {
-  colspan: "12"
-};
-var _hoisted_37 = {
-  "class": "forDetails"
-};
-var _hoisted_38 = {
-  colspan: "12"
-};
-var _hoisted_39 = {
-  "class": "forDetails"
-};
-var _hoisted_40 = {
-  colspan: "12"
-};
-var _hoisted_41 = {
-  "class": "forDetails"
-};
 var _hoisted_42 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_43 = {
   "class": "forDetails"
 };
 var _hoisted_44 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_45 = {
   "class": "forDetails"
@@ -24535,7 +24663,7 @@ var _hoisted_48 = {
   colspan: "6"
 };
 var _hoisted_49 = {
-  "class": "dateReferred"
+  "class": "forDetails"
 };
 var _hoisted_50 = {
   colspan: "6"
@@ -24544,37 +24672,37 @@ var _hoisted_51 = {
   "class": "forDetails"
 };
 var _hoisted_52 = {
-  colspan: "4"
+  colspan: "12"
 };
 var _hoisted_53 = {
   "class": "forDetails"
 };
 var _hoisted_54 = {
-  colspan: "4"
+  colspan: "6"
 };
 var _hoisted_55 = {
-  "class": "forDetails"
+  "class": "dateReferred"
 };
 var _hoisted_56 = {
-  colspan: "4"
+  colspan: "6"
 };
 var _hoisted_57 = {
   "class": "forDetails"
 };
 var _hoisted_58 = {
-  colspan: "6"
+  colspan: "4"
 };
 var _hoisted_59 = {
   "class": "forDetails"
 };
 var _hoisted_60 = {
-  colspan: "6"
+  colspan: "4"
 };
 var _hoisted_61 = {
   "class": "forDetails"
 };
 var _hoisted_62 = {
-  colspan: "6"
+  colspan: "4"
 };
 var _hoisted_63 = {
   "class": "forDetails"
@@ -24586,19 +24714,19 @@ var _hoisted_65 = {
   "class": "forDetails"
 };
 var _hoisted_66 = {
-  colspan: "12"
+  colspan: "6"
 };
 var _hoisted_67 = {
   "class": "forDetails"
 };
 var _hoisted_68 = {
-  colspan: "12"
+  colspan: "6"
 };
 var _hoisted_69 = {
   "class": "forDetails"
 };
 var _hoisted_70 = {
-  colspan: "12"
+  colspan: "6"
 };
 var _hoisted_71 = {
   "class": "forDetails"
@@ -24607,67 +24735,85 @@ var _hoisted_72 = {
   colspan: "12"
 };
 var _hoisted_73 = {
-  "class": "caseforDetails"
+  "class": "forDetails"
 };
 var _hoisted_74 = {
   colspan: "12"
 };
 var _hoisted_75 = {
-  "class": "recoSummary"
+  "class": "forDetails"
 };
 var _hoisted_76 = {
   colspan: "12"
 };
 var _hoisted_77 = {
-  "class": "caseforDetails"
+  "class": "forDetails"
 };
 var _hoisted_78 = {
   colspan: "12"
 };
 var _hoisted_79 = {
-  "class": "forDetails"
+  "class": "caseforDetails"
 };
 var _hoisted_80 = {
-  key: 0
+  colspan: "12"
 };
 var _hoisted_81 = {
-  colspan: "12"
+  "class": "recoSummary"
 };
 var _hoisted_82 = {
-  key: 0
+  colspan: "12"
 };
 var _hoisted_83 = {
-  key: 1
+  "class": "caseforDetails"
 };
-var _hoisted_84 = ["href"];
+var _hoisted_84 = {
+  colspan: "12"
+};
 var _hoisted_85 = {
-  key: 0
+  "class": "forDetails"
 };
 var _hoisted_86 = {
-  colspan: "12"
+  key: 0
 };
 var _hoisted_87 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_88 = {
-  colspan: "12"
+  key: 0
 };
 var _hoisted_89 = {
-  "class": "forDetails"
+  key: 1
 };
-var _hoisted_90 = {
-  colspan: "12"
-};
+var _hoisted_90 = ["href"];
 var _hoisted_91 = {
-  "class": "mdHcw"
+  key: 0
 };
 var _hoisted_92 = {
-  "class": "row g-0"
+  colspan: "12"
 };
 var _hoisted_93 = {
-  "class": "col-6"
+  "class": "forDetails"
 };
 var _hoisted_94 = {
+  colspan: "12"
+};
+var _hoisted_95 = {
+  "class": "forDetails"
+};
+var _hoisted_96 = {
+  colspan: "12"
+};
+var _hoisted_97 = {
+  "class": "mdHcw"
+};
+var _hoisted_98 = {
+  "class": "row g-0"
+};
+var _hoisted_99 = {
+  "class": "col-6"
+};
+var _hoisted_100 = {
   "class": "col-6"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -24675,23 +24821,36 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_LabRequestModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LabRequestModal");
   var _component_FeedbackModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FeedbackModal");
   var _component_PDFViewerModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PDFViewerModal");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _cache[20] || (_cache[20] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "loader"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Saving your recording, please wait...", -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "loader",
+    style: {
+      "margin-right": "20px"
+    }
+  }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
+      width: $data.uploadProgress + '%',
+      background: '#4caf50',
+      height: '18px',
+      transition: 'width 0.3s'
+    })
+  }, null, 4 /* STYLE */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_4, [_cache[20] || (_cache[20] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Please wait until upload is complete.")), _cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Do not close this window. " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.uploadProgress) + "% ", 1 /* TEXT */)])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.netSpeedMbps ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    key: 1,
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["net-speed-indicator", $data.netSpeedStatus])
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.netSpeedMbps) + " Mbps ", 1 /* TEXT */), $data.netSpeedStatus === 'fast' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_5, "(Fast)")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_6, "(Slow)"))])], 2 /* CLASS */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
     ref: "ringingPhone",
     src: $data.ringingPhoneUrl,
     loop: ""
-  }, null, 8 /* PROPS */, _hoisted_2), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, 8 /* PROPS */, _hoisted_7), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     id: "calling"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Calling...")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl,
     "class": "remote-img",
     alt: "Image1"
-  }, null, 8 /* PROPS */, _hoisted_8)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Call Duration: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.callDuration), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+  }, null, 8 /* PROPS */, _hoisted_13)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Call Duration: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.callDuration), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
     name: "fade"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [$data.showMic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, " Audio ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [$data.showMic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_18, " Audio ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-info btn-md mic-button", {
           'mic-button-slash': !$data.audioStreaming
         }]),
@@ -24705,9 +24864,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[2] || (_cache[2] = function ($event) {
           return $data.showMic = false;
         })
-      }, _cache[22] || (_cache[22] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[24] || (_cache[24] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-mic-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [$data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_15, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [$data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_20, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-md video-button", {
           'video-button-slash': !$data.videoStreaming
         }]),
@@ -24721,9 +24880,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[5] || (_cache[5] = function ($event) {
           return $data.showVedio = false;
         })
-      }, _cache[23] || (_cache[23] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[25] || (_cache[25] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-camera-video-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[30] || (_cache[30] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [$data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [$data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_22, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger btn-md decline-button",
         onClick: _cache[6] || (_cache[6] = function () {
           return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
@@ -24734,10 +24893,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         }),
         onMouseleave: _cache[8] || (_cache[8] = function ($event) {
           return $data.showEndcall = false;
-        })
-      }, _cache[24] || (_cache[24] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+        }),
+        disabled: $data.loading
+      }, _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-telephone-x-fill"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)]), _cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [$data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'no' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_23)]), _cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [$data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'no' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-warning btn-md upward-button",
         onClick: _cache[9] || (_cache[9] = function () {
@@ -24750,9 +24910,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[11] || (_cache[11] = function ($event) {
           return $data.showUpward = false;
         })
-      }, _cache[25] || (_cache[25] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-hospital"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [$data.showPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, " Prescription ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [$data.showPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, " Prescription ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-success btn-md prescription-button",
         "data-toggle": "modal",
@@ -24764,9 +24924,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[13] || (_cache[13] = function ($event) {
           return $data.showPrescription = false;
         })
-      }, _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[28] || (_cache[28] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [$data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [$data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-primary btn-md prescription-button",
         "data-toggle": "modal",
@@ -24778,9 +24938,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[15] || (_cache[15] = function ($event) {
           return $data.showTooltip = false;
         })
-      }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[29] || (_cache[29] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription2"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [$data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [$data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-info btn-md reco-button",
         "data-toggle": "modal",
         "data-target": "#feedbackModal",
@@ -24792,24 +24952,24 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[17] || (_cache[17] = function ($event) {
           return $data.showTooltipFeedback = false;
         })
-      }, _cache[28] || (_cache[28] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[30] || (_cache[30] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-chat-left-text"
-      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_26)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
+      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_32)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
     }),
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl1,
     id: "local-image",
     "class": "img2",
     alt: "Image2",
     draggable: "true"
-  }, null, 8 /* PROPS */, _hoisted_28)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, null, 8 /* PROPS */, _hoisted_34)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.dohLogoUrl,
     alt: "Image3",
     "class": "dohLogo"
-  }, null, 8 /* PROPS */, _hoisted_33), _cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-3180088c><div data-v-3180088c><p data-v-3180088c>Republic of the Philippines</p><p data-v-3180088c>DEPARTMENT OF HEALTH</p><p data-v-3180088c><b data-v-3180088c>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-3180088c>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-3180088c> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-3180088c> Official Website: <span style=\"color:blue;\" data-v-3180088c>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-3180088c><span style=\"color:#4caf50;\" data-v-3180088c><b data-v-3180088c>CLINICAL REFERRAL FORM</b></span></div>", 2))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_36, [_cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring Facility: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_37, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_38, [_cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Facility Contact #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_39, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_40, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_42, [_cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Referred to: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_44, [_cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Department: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_46, [_cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_48, [_cache[39] || (_cache[39] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Referred (ReCo): ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_50, [_cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Transferred:")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_52, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Patient: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Age: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_55, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.patient_age), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_56, [_cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sex: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_58, [_cache[44] || (_cache[44] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [_cache[45] || (_cache[45] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_62, [_cache[46] || (_cache[46] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_64, [_cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [_cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Covid Number: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_68, [_cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Clinical Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_70, [_cache[50] || (_cache[50] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Surviellance Category: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_sur_category), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_72, [_cache[51] || (_cache[51] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Case Summary (pertinent Hx/PE, including meds, labs, course etc.): ")), _cache[52] || (_cache[52] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_74, [_cache[53] || (_cache[53] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):")), _cache[54] || (_cache[54] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_75, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_76, [_cache[55] || (_cache[55] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ICD-10 Code and Description: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.icd, function (i) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_77, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.code) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.description), 1 /* TEXT */)]);
-  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_78, [_cache[56] || (_cache[56] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_79, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reason), 1 /* TEXT */)])]), $data.file_path ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_80, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_81, [$data.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_82, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_83, "File Attachment: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.file_path, function (path, index) {
+  }, null, 8 /* PROPS */, _hoisted_39), _cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-3180088c><div data-v-3180088c><p data-v-3180088c>Republic of the Philippines</p><p data-v-3180088c>DEPARTMENT OF HEALTH</p><p data-v-3180088c><b data-v-3180088c>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-3180088c>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-3180088c> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-3180088c> Official Website: <span style=\"color:blue;\" data-v-3180088c>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-3180088c><span style=\"color:#4caf50;\" data-v-3180088c><b data-v-3180088c>CLINICAL REFERRAL FORM</b></span></div>", 2))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_42, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring Facility: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_43, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_name), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_44, [_cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Facility Contact #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_45, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_46, [_cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_47, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_48, [_cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Referred to: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_49, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_50, [_cache[39] || (_cache[39] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Department: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_51, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.department), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_52, [_cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_53, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referred_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_54, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Referred (ReCo): ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_55, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_referred), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_56, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Date/Time Transferred:")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_57, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.time_transferred), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_58, [_cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Patient: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_59, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_60, [_cache[44] || (_cache[44] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Age: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.patient_age), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_62, [_cache[45] || (_cache[45] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sex: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_63, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_sex), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_64, [_cache[46] || (_cache[46] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Address: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_65, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_address), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [_cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.patient_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_68, [_cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_69, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_status), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_70, [_cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Philhealth #: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_71, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.phic_id), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_72, [_cache[50] || (_cache[50] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Covid Number: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.covid_number), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_74, [_cache[51] || (_cache[51] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Clinical Status: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_75, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_clinical_status), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_76, [_cache[52] || (_cache[52] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Surviellance Category: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_77, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.refer_sur_category), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_78, [_cache[53] || (_cache[53] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Case Summary (pertinent Hx/PE, including meds, labs, course etc.): ")), _cache[54] || (_cache[54] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_79, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.case_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_80, [_cache[55] || (_cache[55] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):")), _cache[56] || (_cache[56] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_81, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reco_summary), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_82, [_cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ICD-10 Code and Description: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.icd, function (i) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_83, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.code) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.description), 1 /* TEXT */)]);
+  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_84, [_cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_85, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reason), 1 /* TEXT */)])]), $data.file_path ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_86, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_87, [$data.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_88, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_89, "File Attachment: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.file_path, function (path, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
       key: index
     }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", {
@@ -24819,16 +24979,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "class": "reason",
       target: "_blank",
       download: ""
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.file_name[index]), 9 /* TEXT, PROPS */, _hoisted_84)), index + 1 !== $data.file_path.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_85, ", ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
-  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_86, [_cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_87, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_88, [_cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Contact # of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_89, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_90, [_cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of referred MD/HCW-Mobile Contact # (ReCo): ")), _cache[60] || (_cache[60] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_91, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1 /* TEXT */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_92, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_93, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.file_name[index]), 9 /* TEXT, PROPS */, _hoisted_90)), index + 1 !== $data.file_path.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_91, ", ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_92, [_cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_93, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referring), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_94, [_cache[60] || (_cache[60] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Contact # of Referring MD/HCW: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_95, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.referring_md_contact), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_96, [_cache[61] || (_cache[61] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Name of referred MD/HCW-Mobile Contact # (ReCo): ")), _cache[62] || (_cache[62] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_97, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.md_referred), 1 /* TEXT */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_98, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_99, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-success btn-md w-100 ml-2",
     type: "button",
     onClick: _cache[18] || (_cache[18] = function ($event) {
       return $options.generatePrescription();
     })
-  }, _cache[61] || (_cache[61] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[63] || (_cache[63] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-prescription"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_94, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_100, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-md w-100",
     type: "button",
     onClick: _cache[19] || (_cache[19] = function ($event) {
@@ -24842,7 +25002,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     },
     onmouseover: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';",
     onmouseout: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
-  }, _cache[62] || (_cache[62] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[64] || (_cache[64] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-clipboard2-pulse"
   }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Lab Request ")]))])])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PrescriptionModal, {
     activity_id: parseInt($data.activity_id),
@@ -27057,7 +27217,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_css_index_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n padding:5px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.video-container[data-v-3180088c], .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\n}\n.video-container[data-v-3180088c] {\r\n    height: 50%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 50%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c], .fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c], .fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-3180088c] {\r\n    width: 195px;\r\n    height: 200px;\r\n    min-width: 150px;\r\n    min-height: 200px;\r\n    max-width: 150px;\r\n    max-height: 200px;\n}\n.loader-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 9999;\n}\n.loader[data-v-3180088c] {\r\n  border: 8px solid #f3f3f3;\r\n  border-top: 8px solid #3498db;\r\n  border-radius: 50%;\r\n  width: 50px;\r\n  height: 50px;\r\n  animation: spin-3180088c 1s linear infinite;\n}\n@keyframes spin-3180088c {\n0% {\r\n    transform: rotate(0deg);\n}\n100% {\r\n    transform: rotate(360deg);\n}\n}\n.call-duration[data-v-3180088c] {\r\n  position: absolute;\r\n  top: 10px;\r\n  left: 10px;\r\n  background-color: rgba(0, 0, 0, 0.404);\r\n  color: white;\r\n  padding: 5px 10px;\r\n  margin: 5px;\r\n  border-radius: 5px;\r\n  font-size: 1rem;\r\n  z-index: 10;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n padding:5px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.video-container[data-v-3180088c], .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\n}\n.video-container[data-v-3180088c] {\r\n    height: 50%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 50%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c], .fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c], .fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-3180088c] {\r\n    width: 195px;\r\n    height: 200px;\r\n    min-width: 150px;\r\n    min-height: 200px;\r\n    max-width: 150px;\r\n    max-height: 200px;\n}\n.loader-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 9999;\n}\n.loader[data-v-3180088c] {\r\n  border: 8px solid #f3f3f3;\r\n  border-top: 8px solid #3498db;\r\n  border-radius: 50%;\r\n  width: 50px;\r\n  height: 50px;\r\n  animation: spin-3180088c 1s linear infinite;\n}\n@keyframes spin-3180088c {\n0% {\r\n    transform: rotate(0deg);\n}\n100% {\r\n    transform: rotate(360deg);\n}\n}\n.call-duration[data-v-3180088c] {\r\n  position: absolute;\r\n  top: 10px;\r\n  left: 10px;\r\n  background-color: rgba(0, 0, 0, 0.404);\r\n  color: white;\r\n  padding: 5px 10px;\r\n  margin: 5px;\r\n  border-radius: 5px;\r\n  font-size: 1rem;\r\n  z-index: 10;\n}\n.net-speed-indicator[data-v-3180088c] {\r\n  position: fixed;\r\n  right: 20px;\r\n  bottom: 20px;\r\n  z-index: 10000;\r\n  padding: 8px 16px;\r\n  border-radius: 20px;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  background: rgba(15, 15, 15, 0.103);\r\n  color: #fff;\r\n  box-shadow: 0 2px 8px rgba(0,0,0,0.2);\r\n  pointer-events: none;\n}\n.net-speed-indicator.fast[data-v-3180088c] {\r\n  border: 2px solid #4caf50;\r\n  color: #4caf50;\n}\n.net-speed-indicator.slow[data-v-3180088c] {\r\n  border: 2px solid #e53935;\r\n  color: #e53935;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -610,13 +610,13 @@ document.querySelectorAll('.ckd_info').forEach(button => {
         .then(res => res.json())
         .then(fetch => {
             if (fetch.match) {
-                Lobibox.notify('success', {
-                    title: 'Match found. Data updated!',
-                });
+                // Lobibox.notify('success', {
+                //     title: 'Match found. Data updated!',
+                // });
             } else {
-                Lobibox.notify('success', {
-                    title: 'New patient created!',
-                });
+                // Lobibox.notify('success', {
+                //     title: 'New patient created!',
+                // });
             }
             processedPatientData = {
                 patient_id: fetch.data.id,
@@ -788,6 +788,17 @@ function selectFormTitle(initialTitle) {
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @if($trigger_ckd_info == true)
+            console.log('Triggering CKD Info link...');
+            const ckdInfoLink = document.querySelector('.ckd_info'); // gets the first element
+            if (ckdInfoLink) {
+                ckdInfoLink.click();
+            } else {
+                console.warn('No .ckd_info element found.');
+            }
+        @endif
+    });
 
     function showPrivacyNotice(modalSelector) {
     
