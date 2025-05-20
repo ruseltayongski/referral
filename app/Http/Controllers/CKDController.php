@@ -4,9 +4,90 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Patients;
+use App\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use App\Login;
 
 class CKDController extends Controller
 {
+    public function referFromCKD(Request $request,$patient_id = null)
+    {
+        // $defaultToken = 'p4a6jgZJGP96GHhknTn2mKK6HSYT1clRqI1pHPBL8xhglULPY1xVPSfdi5w2';
+        // $bearerToken = $request->bearerToken();
+
+        // if ($bearerToken !== $defaultToken) {
+        //     return response()->json(['error' => 'Invalid token'], 401);
+        // }
+
+        // Instead of redirecting through validateLogin, let's handle this directly
+        // Authenticate hardcoded user (you already have this logic)
+        $user = User::where('username', 'rhu1-vicente')->first();
+        
+        if (!$user || !Hash::check('123', $user->password)) {
+            return response()->json(['error' => 'User not found or invalid credentials'], 401);
+        }       
+
+        if ($user->status === 'inactive') {
+            return response()->json(['error' => 'Your account was deactivated by the administrator, please call 711 DOH health line.'], 403);
+        }
+
+        // Set session and login tracking
+        Session::put('auth', $user);
+        $last_login = now();
+        User::where('id', $user->id)->update([
+            'last_login' => $last_login,
+            'login_status' => 'login'
+        ]);
+
+        $checkLastLogin = Login::where('userId', $user->id)->where('status', 'login')->latest()->first();
+        if ($checkLastLogin) {
+            Login::where('id', $checkLastLogin->id)->update([
+                'logout' => $last_login,
+                'status' => 'logout'
+            ]);
+        }
+
+        $login = new Login();
+        $login->userId = $user->id;
+        $login->login = $last_login;
+        $login->status = 'login';
+        $login->type = 'api';
+        $login->login_link = 'validateToken';
+        $login->save();
+
+        $url = "https://ckd.cvchd7.com/ckd_referral";
+        $json = file_get_contents($url);
+        $allData = json_decode($json, true);
+        $patients = collect($allData['patient'] ?? []);
+
+        if ($patient_id) {
+            $filtered = $patients->where('id', (int)$patient_id)->values();
+            if ($filtered->isEmpty()) {
+                   return response()->json(['message' => 'Data not found'], 404);
+            }
+        } else {
+            $filtered = $patients;
+        }
+
+        // Manually paginate
+        $perPage = 10;
+        $currentPage = LengthAwarePaginator::resolveCurrentPage();
+        $currentItems = $filtered->slice(($currentPage - 1) * $perPage, $perPage)->values();
+
+        $data['patient']  = new LengthAwarePaginator(
+            $currentItems,
+            $filtered->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        return view('opcen.ckd_incoming', ['data' => $data,'trigger_ckd_info' => true]);
+    }
+
     public function CKDIncoming(){
         $url = "https://ckd.cvchd7.com/ckd_referral";
         $json = file_get_contents($url);
@@ -30,7 +111,7 @@ class CKDController extends Controller
             ['path' => request()->url(), 'query' => request()->query()]
         );
     
-        return view('opcen.ckd_incoming', ['data' => $data]);
+        return view('opcen.ckd_incoming', ['data' => $data,'trigger_ckd_info' => false]);
     }
 
     public function crossmatch(Request $request)
@@ -97,6 +178,4 @@ class CKDController extends Controller
             ]);
         }
     }
-    
-    
 }
