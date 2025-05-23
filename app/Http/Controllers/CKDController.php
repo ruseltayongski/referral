@@ -15,12 +15,12 @@ class CKDController extends Controller
 {
     public function referFromCKD(Request $request,$patient_id = null)
     {
-        // $defaultToken = 'p4a6jgZJGP96GHhknTn2mKK6HSYT1clRqI1pHPBL8xhglULPY1xVPSfdi5w2';
-        // $bearerToken = $request->bearerToken();
+        $defaultToken = 'p4a6jgZJGP96GHhknTn2mKK6HSYT1clRqI1pHPBL8xhglULPY1xVPSfdi5w2';
+        $bearerToken = $request->bearerToken();
 
-        // if ($bearerToken !== $defaultToken) {
-        //     return response()->json(['error' => 'Invalid token'], 401);
-        // }
+        if ($bearerToken !== $defaultToken) {
+            return response()->json(['error' => 'Invalid token'], 401);
+        }
 
         // Instead of redirecting through validateLogin, let's handle this directly
         // Authenticate hardcoded user (you already have this logic)

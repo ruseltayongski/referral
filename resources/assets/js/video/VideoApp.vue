@@ -352,7 +352,7 @@ export default {
           testFormData.append("totalChunks", 1);
 
           const startTime = performance.now();
-          await axios.post("http://192.168.111.122:8000/api/save-screen-record", testFormData, {
+          await axios.post("https://telemedapi.cvchd.com/api/save-screen-record", testFormData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
           const endTime = performance.now();
@@ -389,7 +389,7 @@ export default {
           formData.append("totalChunks", totalChunks);
 
           try {
-            await axios.post("http://192.168.111.122:8000/api/save-screen-record", formData, {
+            await axios.post("https://telemedapi.cvchd.com/api/save-screen-record", formData, {
               headers: { "Content-Type": "multipart/form-data" },
             });
             // Update progress after each chunk
@@ -538,6 +538,11 @@ export default {
           self.channelParameters.remoteAudioTrack = user.audioTrack;
           self.channelParameters.remoteAudioTrack.play();
         }
+        
+        // Start the timer only if not already started
+        if (!self.callTimer) {
+          self.startCallTimer();
+        }
       });
 
       // Listen for users leaving the channel
@@ -653,6 +658,7 @@ export default {
         // Play the local video track
         channelParameters.localVideoTrack.play(localPlayerContainer);
         console.log("publish success!");
+        // Start the call timer when the user joins and publishes
       } catch (error) {
         console.error("Error joining channel:", error);
       }
