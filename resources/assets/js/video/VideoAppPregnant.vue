@@ -3,62 +3,61 @@ import axios from "axios";
 import { Transition } from "vue";
 import AgoraRTC from "agora-rtc-sdk-ng";
 import PrescriptionModal from "./PrescriptionModal.vue";
-import LabRequestModal from "./LabRequestModal.vue"; // I add this
+import LabRequestModal from "./LabRequestModal.vue";
 import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
+
 export default {
   name: "RecoApp",
   components: {
     PrescriptionModal,
     LabRequestModal,
     PDFViewerModal,
+    FeedbackModal,
   },
+  props: ["user"],
   data() {
     return {
-      //start video in minutes
       callMinutes: 0,
       callTimer: null,
-      callDuration: "00:00:000", // New variable for formatted time
-      startTime: null, // Store the exact start time
+      callDuration: "00:00:000",
+      startTime: null,
       showAudio: false,
       showVedio: false,
       Endcall: false,
       showUpward: false,
       showPrescription: false,
-      showLab: false,
+      showTooltip: false,
+      showTooltipFeedback: false,
+      showEndcall: false,
+      feedbackModalVisible: false,
+      currentCode: "",
+      feedbackUrl: "",
+      baseUrlFeed: "",
+      doctorfeedback: "",
       ringingPhoneUrl: $("#broadcasting_url").val() + "/public/ringing.mp3",
       baseUrl: $("#broadcasting_url").val(),
-      doctorUrl:
-        $("#broadcasting_url").val() + "/resources/img/video/Doctor5.png",
-      doctorUrl1:
-        $("#broadcasting_url").val() + "/resources/img/video/Doctor6.png",
-      declineUrl:
-        $("#broadcasting_url").val() + "/resources/img/video/decline.png",
-      videoCallUrl:
-        $("#broadcasting_url").val() + "/resources/img/video/videocall.png",
+      doctorUrl: $("#broadcasting_url").val() + "/resources/img/video/Doctor5.png",
+      doctorUrl1: $("#broadcasting_url").val() + "/resources/img/video/Doctor6.png",
+      declineUrl: $("#broadcasting_url").val() + "/resources/img/video/decline.png",
+      videoCallUrl: $("#broadcasting_url").val() + "/resources/img/video/videocall.png",
       micUrl: $("#broadcasting_url").val() + "/resources/img/video/mic.png",
-      dohLogoUrl:
-        $("#broadcasting_url").val() + "/resources/img/video/doh-logo.png",
-      tracking_id: this.getUrlVars()["id"],
-      referral_code: this.getUrlVars()["code"],
-      referring_md: this.getUrlVars()["referring_md"],
-      activity_id: this.getUrlVars()["activity_id"],
+      dohLogoUrl: $("#broadcasting_url").val() + "/resources/img/video/doh-logo.png",
+      tracking_id: "",
+      referral_code: "",
+      referring_md: "",
+      activity_id: "",
       options: {
-        // Pass your App ID here.
         appId: "0fc02f6b7ce04fbcb1991d71df2dbe0d",
-        // Set the channel name.
-        channel: this.getUrlVars()["code"],
-        // Pass your temp token here.
+        channel: "",
         token: null,
-        // Set the user ID.
         uid: 0,
       },
-
       form: {
         pregnant: {
-          notes_diagnoses: "", // Set this to the value of $form['pregnant']->notes_diagnoses
-          other_diagnoses: "", // Set this to the value of $form['pregnant']->other_diagnoses
-          other_reason_referral: "", // Set this to the value of $form['pregnant']->other_reason_referral
+          notes_diagnoses: "",
+          other_diagnoses: "",
+          other_reason_referral: "",
         },
       },
       patient_age: "",
@@ -67,96 +66,85 @@ export default {
       icd: [],
       reason: {},
       formBaby: {},
-
       videoStreaming: true,
       audioStreaming: true,
       channelParameters: {
-        // A variable to hold a local audio track.
         localAudioTrack: null,
-        // A variable to hold a local video track.
         localVideoTrack: null,
-        // A variable to hold a remote audio track.
         remoteAudioTrack: null,
-        // A variable to hold a remote video track.
         remoteVideoTrack: null,
-        // A variable to hold the remote user id.s
         remoteUid: null,
       },
       showDiv: false,
       prescription: "",
       prescriptionSubmitted: false,
       form_type: "pregnant",
-      PdfUrl: "", // <-- Add this line
-
+      PdfUrl: "",
       loading: false,
       uploadProgress: 0,
       netSpeedMbps: null,
-      netSpeedStatus: '', // 'fast' or 'slow'
+      netSpeedStatus: "",
+      isLeavingChannel: false,
+      screenRecorder: null,
+      recordedChunks: [],
+      timeoutId: null,
     };
   },
+  computed: {
+    // Example: computed property for formatted patient age
+    formattedPatientAge() {
+      if (this.patient_age) return this.patient_age;
+      return "";
+    },
+  },
   mounted() {
-     // Automatically start screen recording when the component is mounted
-     if (this.referring_md === "yes") {
-        this.startScreenRecording();
-      }
-    
-    
-    window.addEventListener('beforeunload', this.preventCloseWhileUploading);
-    window.addEventListener('beforeunload', this.stopCallTimer);
+    // Parse URL vars once and assign to data
+    const urlVars = this.getUrlVars();
+    this.tracking_id = urlVars["id"];
+    this.referral_code = urlVars["code"];
+    this.referring_md = urlVars["referring_md"];
+    this.activity_id = urlVars["activity_id"];
+    this.options.channel = urlVars["code"];
+
+    if (this.referring_md === "yes") {
+      this.startScreenRecording();
+    }
+
+    window.addEventListener("beforeunload", this.preventCloseWhileUploading);
+    window.addEventListener("beforeunload", this.stopCallTimer);
+    window.addEventListener("click", this.showDivAgain);
+
     axios
-      .get(
-        `${this.baseUrl}/doctor/referral/video/pregnant/form/${this.tracking_id}`
-      )
+      .get(`${this.baseUrl}/doctor/referral/video/pregnant/form/${this.tracking_id}`)
       .then((res) => {
         const response = res.data;
-        console.log("testing");
-        console.log(response);
         this.form = response.form["pregnant"];
         this.formBaby = response.form["baby"];
-
         if (response.age_type === "y")
           this.patient_age = response.patient_age + " Years Old";
         else if (response.age_type === "m")
           this.patient_age = response.patient_age + " Months Old";
-
         this.icd = response.icd;
-        console.log("testing\n" + this.icd);
-
         this.file_path = response.file_path;
         this.file_name = response.file_name;
         this.reason = response.reason;
-
-        console.log(response);
       })
       .catch((error) => {
         console.log(error);
       });
 
-    //this.hideDivAfterTimeout();
-    window.addEventListener("click", this.showDivAgain);
+    this.startBasicCall();
   },
   beforeUnmount() {
-    //this.clearTimeout();
     window.removeEventListener("click", this.showDivAgain);
-    window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
+    window.removeEventListener("beforeunload", this.preventCloseWhileUploading);
+    window.removeEventListener("beforeunload", this.stopCallTimer);
     this.stopCallTimer();
-     // Remove event listener when component is destroyed
-     window.removeEventListener('resize', this.handleResize);
-  },
-  props: ["user"],
-  created() {
-    let self = this;
-    $(document).ready(function () {
-      console.log("ready!");
-      self.ringingPhoneFunc();
-    });
-    this.startBasicCall();
+    window.removeEventListener("resize", this.handleResize);
   },
   methods: {
     async startScreenRecording() {
-
       try {
-        // Check for browser compatibility
         const isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
         if (!isSupported) {
           Lobibox.alert("error", {
@@ -165,90 +153,46 @@ export default {
           });
           return;
         }
-
-        // Inform the user about permissions
-        console.log("Requesting permissions for screen and microphone...");
-
-        // Request screen capture with system audio
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
           video: true,
-          audio: true, // Request system audio
+          audio: true,
         });
-
-        console.log("Screen stream obtained:", screenStream);
-
-        // Request microphone access
         const micStream = await navigator.mediaDevices.getUserMedia({
           audio: {
-            echoCancellation: true, // Reduce echo
-            noiseSuppression: true, // Reduce background noise
-            sampleRate: 44100,      // Set sample rate for better quality
+            echoCancellation: true,
+            noiseSuppression: true,
+            sampleRate: 44100,
           },
         });
-
-        console.log("Microphone stream obtained:", micStream);
-
-        // Debugging: Log audio tracks from microphone
-        micStream.getAudioTracks().forEach((track) => {
-          console.log("Microphone track:", track);
-        });
-
-        // Create an AudioContext for mixing audio
         const audioContext = new AudioContext();
         const destination = audioContext.createMediaStreamDestination();
-
-        // Connect system audio to the AudioContext
         if (screenStream.getAudioTracks().length > 0) {
           const systemAudioSource = audioContext.createMediaStreamSource(screenStream);
           systemAudioSource.connect(destination);
-        } else {
-          console.warn("No system audio track found in screen stream.");
         }
-
-        // Connect microphone audio to the AudioContext
         if (micStream.getAudioTracks().length > 0) {
           const micAudioSource = audioContext.createMediaStreamSource(micStream);
           micAudioSource.connect(destination);
-        } else {
-          console.warn("No microphone audio track found.");
         }
-
-        // Combine video from screenStream and mixed audio
         const combinedStream = new MediaStream([
-          ...screenStream.getVideoTracks(),  // Desktop video
-          ...destination.stream.getAudioTracks(), // Mixed audio (system + microphone)
+          ...screenStream.getVideoTracks(),
+          ...destination.stream.getAudioTracks(),
         ]);
-
-        console.log("Combined stream created:", combinedStream);
-
-        // Initialize MediaRecorder with the combined stream
         this.screenRecorder = new MediaRecorder(combinedStream, {
-          mimeType: "video/webm; codecs=vp8", // WebM format
+          mimeType: "video/webm; codecs=vp8",
         });
         this.recordedChunks = [];
-
-        // Collect recorded data
         this.screenRecorder.ondataavailable = (event) => {
           if (event.data.size > 0) {
             this.recordedChunks.push(event.data);
           }
         };
-
-        // Debugging: Monitor video and audio tracks for lag
         combinedStream.getTracks().forEach((track) => {
-          console.log(`Track kind: ${track.kind}, readyState: ${track.readyState}`);
-          track.onended = () => console.log(`Track ended: ${track.kind}`);
+          track.onended = () => {};
         });
-
-        // Start recording
         this.screenRecorder.start();
-        //for minutes timer
-        this.startCallTimer();
-        console.log("Screen recording started with desktop and microphone audio.");
+        // this.startCallTimer();
       } catch (error) {
-        console.error("Error starting screen recording:", error);
-
-        // Handle permission denial or other errors
         if (error.name === "NotAllowedError") {
           Lobibox.alert("error", {
             msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
@@ -278,13 +222,9 @@ export default {
     },
     async saveScreenRecording(closeAfterUpload = false) {
       if (this.recordedChunks.length > 0) {
-        this.loading = true; // Show loader
-
-        // Convert recorded chunks to a Blob
+        this.loading = true;
         const blob = new Blob(this.recordedChunks, { type: "video/webm" });
-
-        // --- Max file size check (2GB) ---
-        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+        const maxSize = 2 * 1024 * 1024 * 1024;
         if (blob.size > maxSize) {
           this.loading = false;
           Lobibox.alert("error", {
@@ -292,24 +232,18 @@ export default {
           });
           return;
         }
-
-        // Generate the filename
         const patientCode = this.form.code || "Unknown_Patient";
         const activityId = this.activity_id;
         const referring_md = this.form.referring_md;
         const referred = this.form.action_md;
-        // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
         const currentDate = new Date();
-        const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        const dateSave = currentDate.toISOString().split("T")[0];
         const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
         const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
-
         const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
 
-        // --- Detect upload speed and set chunk size ---
-        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
+        let chunkSize = 5 * 1024 * 1024;
         try {
-          // Create a 1MB test blob
           const testBlob = blob.slice(0, 1 * 1024 * 1024);
           const testFormData = new FormData();
           testFormData.append("video", testBlob, "test.webm");
@@ -323,46 +257,37 @@ export default {
           });
           const endTime = performance.now();
           const durationSeconds = (endTime - startTime) / 1000;
-          const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
-
+          const speedMbps = (1 / durationSeconds) * 8;
           this.netSpeedMbps = speedMbps.toFixed(2);
-          this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
-          // Set chunk size based on speed
-          if (speedMbps > 8) { // ~8Mbps or higher is fast
-            chunkSize = 10 * 1024 * 1024; // 10MB
+          this.netSpeedStatus = speedMbps > 8 ? "fast" : "slow";
+          if (speedMbps > 8) {
+            chunkSize = 10 * 1024 * 1024;
           } else {
-            chunkSize = 5 * 1024 * 1024; // 5MB
+            chunkSize = 5 * 1024 * 1024;
           }
-          // Optionally, delete the test chunk on the server if needed
         } catch (e) {
-          // If test fails, fallback to 5MB
           chunkSize = 5 * 1024 * 1024;
           this.netSpeedMbps = null;
-          this.netSpeedStatus = 'slow';
+          this.netSpeedStatus = "slow";
         }
-
         const totalChunks = Math.ceil(blob.size / chunkSize);
-
         for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
           const start = chunkIndex * chunkSize;
           const end = Math.min(blob.size, start + chunkSize);
           const chunk = blob.slice(start, end);
-
           const formData = new FormData();
           formData.append("video", chunk, fileName);
           formData.append("fileName", fileName);
           formData.append("chunkIndex", chunkIndex);
           formData.append("totalChunks", totalChunks);
-
           try {
             await axios.post("https://telemedapi.cvchd.com/api/save-screen-record", formData, {
               headers: { "Content-Type": "multipart/form-data" },
             });
-            // Update progress after each chunk
             this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
           } catch (error) {
             this.loading = false;
-            this.uploadProgress = 0; // Reset on error
+            this.uploadProgress = 0;
             Lobibox.alert("error", {
               msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
                 (error.response?.data?.message || error.message),
@@ -370,12 +295,10 @@ export default {
             return;
           }
         }
-
-        this.uploadProgress = 100; // Ensure it's 100% at the end
-        this.recordedChunks = []; // Clear recorded chunks to free memory
-        this.loading = false; // Hide loader
-        this.uploadProgress = 0; // Reset progress
-
+        this.uploadProgress = 100;
+        this.recordedChunks = [];
+        this.loading = false;
+        this.uploadProgress = 0;
         if (closeAfterUpload) {
           window.top.close();
         }
@@ -384,97 +307,77 @@ export default {
       }
     },
     preventCloseWhileUploading(event) {
-        if (this.loading) {
-          event.preventDefault();
-          event.returnValue = "File upload in progress. Please wait until it finishes.";
-          return event.returnValue;
-        }
+      if (this.loading) {
+        event.preventDefault();
+        event.returnValue = "File upload in progress. Please wait until it finishes.";
+        return event.returnValue;
+      }
     },
     startCallTimer() {
-    // Store the start time in milliseconds
-    this.startTime = Date.now();
-
-    // Update the timer every 10 milliseconds
-    this.callTimer = setInterval(() => {
-      const elapsedTime = Date.now() - this.startTime;
-
-      // Calculate minutes, seconds, and milliseconds
-      const hours = Math.floor(elapsedTime / 3600000);
-      const minutes = Math.floor((elapsedTime % 3600000) / 60000);
-      const seconds = Math.floor((elapsedTime % 60000) / 1000);
-
-
-      // Format the time as mm:ss:ms
-      this.callDuration = `${String(hours).padStart(2, "0")} hours ${String(minutes).padStart(2, "0")} minutes ${String(seconds).padStart(2, "0")} seconds`;
-    }, 10);
+      if (this.callTimer) return; // Prevent multiple timers
+      this.startTime = Date.now();
+      this.callTimer = setInterval(() => {
+        const elapsedTime = Date.now() - this.startTime;
+        const hours = Math.floor(elapsedTime / 3600000);
+        const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+        const seconds = Math.floor((elapsedTime % 60000) / 1000);
+        this.callDuration = `${String(hours).padStart(2, "0")} hours ${String(minutes).padStart(2, "0")} minutes ${String(seconds).padStart(2, "0")} seconds`;
+      }, 10);
+    },
+    stopCallTimer() {
+      if (this.callTimer) {
+        clearInterval(this.callTimer);
+        this.callTimer = null;
+      }
     },
     async startBasicCall() {
-      // Create an instance of the Agora Engine
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-      // Dynamically create a container in the form of a DIV element to play the remote video track.
       const remotePlayerContainer = document.createElement("div");
-      // Dynamically create a container in the form of a DIV element to play the local video track.
       const localPlayerContainer = document.createElement("div");
-      // Specify the ID of the DIV container. You can use the uid of the local user.
       localPlayerContainer.id = this.options.uid;
-      // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
       let self = this;
       agoraEngine.on("user-published", async (user, mediaType) => {
-        // Subscribe to the remote user when the SDK triggers the "user-published" event.
         await agoraEngine.subscribe(user, mediaType);
-        console.log("subscribe success");
-        // Subscribe and play the remote video in the container If the remote user publishes a video track.
         if (mediaType == "video") {
-          console.log("remote");
-          // Retrieve the remote video track.
           self.channelParameters.remoteVideoTrack = user.videoTrack;
-          // Retrieve the remote audio track.
           self.channelParameters.remoteAudioTrack = user.audioTrack;
-          // Save the remote user id for reuse.
           self.channelParameters.remoteUid = user.uid.toString();
-          // Specify the ID of the DIV container. You can use the uid of the remote user.
           remotePlayerContainer.id = user.uid.toString();
           self.channelParameters.remoteUid = user.uid.toString();
-          /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
-          // Append the remote container to the page body.
           self.$refs.ringingPhone.pause();
           document.body.append(remotePlayerContainer);
           $(".remotePlayerDiv").html(remotePlayerContainer);
           $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
           $(remotePlayerContainer).addClass("remotePlayerLayer");
-          // Play the remote video track.
           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
         }
-        // Subscribe and play the remote audio track If the remote user publishes the audio track only.
         if (mediaType == "audio") {
-          // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
           self.channelParameters.remoteAudioTrack = user.audioTrack;
-          // Play the remote audio track. No need to pass any DOM element.
           self.channelParameters.remoteAudioTrack.play();
         }
-        // Listen for the "user-unpublished" event.
+        // Start timer only when remote user joins
+        if (!self.callTimer) {
+          this.startCallTimer();
+        }
         agoraEngine.on("user-unpublished", (user) => {
-          console.log(user.uid + "has left the channel");
+          // Handle user leaving
         });
       });
-      window.onload = function () {
-        self.joinVideo(
-          agoraEngine,
-          self.channelParameters,
-          localPlayerContainer,
-          self
-        );
-      };
+      self.joinVideo(
+        agoraEngine,
+        self.channelParameters,
+        localPlayerContainer,
+        self
+      );
     },
     getUrlVars() {
-      var vars = [],
+      var vars = {},
         hash;
       var hashes = window.location.href
         .slice(window.location.href.indexOf("?") + 1)
         .split("&");
       for (var i = 0; i < hashes.length; i++) {
         hash = hashes[i].split("=");
-        vars.push(hash[0]);
         vars[hash[0]] = hash[1];
       }
       return vars;
@@ -485,131 +388,78 @@ export default {
       localPlayerContainer,
       self
     ) {
-      console.log("local");
-      // Join a channel.
       await agoraEngine.join(
         self.options.appId,
         self.options.channel,
         self.options.token,
         self.options.uid
       );
-      // Create a local audio track from the audio sampled by a microphone.
       channelParameters.localAudioTrack =
         await AgoraRTC.createMicrophoneAudioTrack();
-      // Create a local video track from the video captured by a camera.
       channelParameters.localVideoTrack =
         await AgoraRTC.createCameraVideoTrack();
-      // Append the local video container to the page body.
       document.body.append(localPlayerContainer);
       $(".localPlayerDiv").html(localPlayerContainer);
       $(localPlayerContainer).addClass("localPlayerLayer");
-      // Publish the local audio and video tracks in the channel.
       await agoraEngine.publish([
         channelParameters.localAudioTrack,
         channelParameters.localVideoTrack,
       ]);
-      // Play the local video track.
       channelParameters.localVideoTrack.play(localPlayerContainer);
-      console.log("publish success!");
     },
     async sendCallDuration() {
-      if (this.isLeavingChannel) return; // Prevent duplicate sends
+      if (this.isLeavingChannel) return;
       this.isLeavingChannel = true;
-
       if (this.callMinutes > 0) {
         try {
-          // Calculate final duration before sending
-          const finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
-          
+          const finalDuration = Math.floor((Date.now() - localStorage.getItem("callStartTime")) / 60000);
           const response = await axios.post(`${this.baseUrl}/save-call-duration`, {
             call_duration: finalDuration,
             tracking_id: this.tracking_id,
-            referral_code: this.referral_code
+            referral_code: this.referral_code,
           });
-          
-          console.log("Call duration saved:", response.data);
-          localStorage.removeItem('callStartTime'); // Clean up
+          localStorage.removeItem("callStartTime");
           return true;
         } catch (error) {
-          console.error("Error saving call duration:", error);
           return false;
         }
       }
       return false;
     },
     async leaveChannel() {
-      // if (confirm("Are you sure you want to leave this channel?")) {
-        
-      //   // Wait for duration to be sent before closing
-      //   if(this.referring_md == 'yes'){
-      //     clearInterval(this.callTimer); // Stop the timer
-      //     await this.sendCallDuration();
-
-      //     // Give more time for the request to complete
-      //     setTimeout(() => {
-      //       window.top.close();
-      //     }, 2000);
-      //   }
-      //     window.top.close();
-
-      // }
-
       if (confirm("Are you sure you want to leave this channel?")) {
-            // Stop screen recording and save the file
-            if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
-                this.screenRecorder.stop();
-                this.screenRecorder.onstop = () => {
-                    this.saveScreenRecording(true);
-                };
-            }
-
-            // Wait for duration to be sent before closing
-            if (this.referring_md === "yes") {
-                clearInterval(this.callTimer); // Stop the timer
-                await this.sendCallDuration();
-
-                // // Give more time for the request to complete
-                // setTimeout(() => {
-                //     window.top.close();
-                // }, 10000);
-            } else {
-                window.top.close();
-            }
+        if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+          this.screenRecorder.stop();
+          this.screenRecorder.onstop = () => {
+            this.saveScreenRecording(true);
+          };
         }
-    },
-   stopCallTimer() {
-    if (this.callTimer) {
-      clearInterval(this.callTimer);
-    }
+        if (this.referring_md === "yes") {
+          this.stopCallTimer();
+          await this.sendCallDuration();
+        } else {
+          window.top.close();
+        }
+      }
     },
     videoStreamingOnAndOff() {
-      this.videoStreaming = this.videoStreaming ? false : true;
+      this.videoStreaming = !this.videoStreaming;
       this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
     },
     audioStreamingOnAnddOff() {
-      this.audioStreaming = this.audioStreaming ? false : true;
+      this.audioStreaming = !this.audioStreaming;
       this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
     },
-    // hideDivAfterTimeout() {
-    //     setTimeout(() => {
-    //         $(".iconCall").removeClass("fade-in");
-    //         this.showDiv = false;
-    //     }, 10000);
-    // },
     showDivAgain() {
       this.showDiv = true;
-      //this.hideDivAfterTimeout();
     },
     clearTimeout() {
-      // Clear the timeout if the component is about to be unmounted
-      // to prevent memory leaks
       clearTimeout(this.timeoutId);
     },
     async ringingPhoneFunc() {
       await this.$refs.ringingPhone.play();
       let self = this;
       setTimeout(function () {
-        console.log("pause");
         self.$refs.ringingPhone.pause();
       }, 60000);
     },
@@ -621,12 +471,8 @@ export default {
           form_type: this.form_type,
         };
         axios
-          .post(
-            `${this.baseUrl}/api/video/prescription/update`,
-            updatePrescription
-          )
+          .post(`${this.baseUrl}/api/video/prescription/update`, updatePrescription)
           .then((response) => {
-            console.log(response);
             if (response.data === "success") {
               this.prescriptionSubmitted = true;
               Lobibox.alert("success", {
@@ -645,22 +491,17 @@ export default {
       }
     },
     generatePrescription() {
-    const getPrescription = {
-      code: this.referral_code,
-      form_type: this.form_type,
-      tracking_id: this.tracking_id,
-    };
-
-    axios
+      const getPrescription = {
+        code: this.referral_code,
+        form_type: this.form_type,
+        tracking_id: this.tracking_id,
+      };
+      axios
         .post(`${this.baseUrl}/api/video/prescription/check`, getPrescription)
         .then((response) => {
           if (response.data.status === "success") {
             const prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
-
-            // Set the PDF URL
             this.PdfUrl = `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`;
-
-            // Show the modal using the ref method
             this.$nextTick(() => {
               this.$refs.pdfViewer.openModal();
             });
@@ -670,26 +511,19 @@ export default {
             });
           }
         })
-        .catch((error) => {
-          console.error(error);
-        });
+        .catch((error) => {});
     },
     generateLabrequest() {
-       const url = `${this.baseUrl}/api/check/labresult`;
-        const payload = {
-          activity_id: this.activity_id 
-        };
-
+      const url = `${this.baseUrl}/api/check/labresult`;
+      const payload = {
+        activity_id: this.activity_id,
+      };
       axios
         .post(url, payload)
         .then((response) => {
           if (response.data.id) {
             const pdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
-            
-            // Set the PDF URL for the modal
             this.PdfUrl = pdfUrl;
-
-            // Show the PDF in the custom modal
             this.$nextTick(() => {
               this.$refs.pdfViewer.openModal();
             });
@@ -699,9 +533,7 @@ export default {
             });
           }
         })
-        .catch((error) => {
-          console.log(error);
-        });
+        .catch((error) => {});
     },
     endorseUpward() {
       let self = this;
@@ -716,7 +548,6 @@ export default {
             axios
               .post(`${self.baseUrl}/api/video/upward`, endorseUpward)
               .then((response) => {
-                console.log(response.data);
                 var successData = response.data.trim();
                 if (successData === "success") {
                   Lobibox.alert("success", {
@@ -732,9 +563,25 @@ export default {
         },
       });
     },
+    // Tooltip handlers for better performance
+    handleMicMouseOver() { this.showMic = true; },
+    handleMicMouseLeave() { this.showMic = false; },
+    handleVideoMouseOver() { this.showVedio = true; },
+    handleVideoMouseLeave() { this.showVedio = false; },
+    handleEndCallMouseOver() { this.showEndcall = true; },
+    handleEndCallMouseLeave() { this.showEndcall = false; },
+    handleUpwardMouseOver() { this.showUpward = true; },
+    handleUpwardMouseLeave() { this.showUpward = false; },
+    handlePrescriptionMouseOver() { this.showPrescription = true; },
+    handlePrescriptionMouseLeave() { this.showPrescription = false; },
+    handleLabMouseOver() { this.showTooltip = true; },
+    handleLabMouseLeave() { this.showTooltip = false; },
+    handleFeedbackMouseOver() { this.showTooltipFeedback = true; },
+    handleFeedbackMouseLeave() { this.showTooltipFeedback = false; },
   },
 };
 </script>
+
 <template>
     <div v-if="loading" class="loader-overlay">
     <div class="loader" style="margin-right: 20px"></div>
@@ -795,8 +642,8 @@ export default {
                     :class="{ 'mic-button-slash': !audioStreaming }"
                     @click="audioStreamingOnAnddOff"
                     type="button"
-                    @mouseover="showMic = true"
-                    @mouseleave="showMic = false"
+                    @mouseover="handleMicMouseOver"
+                    @mouseleave="handleMicMouseLeave"
                   >
                     <i class="bi-mic-fill"></i>
                   </button>
@@ -815,8 +662,8 @@ export default {
                     :class="{ 'video-button-slash': !videoStreaming }"
                     @click="videoStreamingOnAndOff"
                     type="button"
-                    @mouseover="showVedio = true"
-                    @mouseleave="showVedio = false"
+                    @mouseover="handleVideoMouseOver"
+                    @mouseleave="handleVideoMouseLeave"
                   >
                     <i class="bi-camera-video-fill"></i>
                   </button>
@@ -834,8 +681,8 @@ export default {
                     class="btn btn-danger btn-md decline-button"
                     @click="leaveChannel"
                     type="button"
-                    @mouseover="showEndcall = true"
-                    @mouseleave="showEndcall = false"
+                    @mouseover="handleEndCallMouseOver"
+                    @mouseleave="handleEndCallMouseLeave"
                     :disabled="loading"
                   >
                     <i class="bi-telephone-x-fill"></i>
@@ -855,8 +702,8 @@ export default {
                     @click="endorseUpward"
                     type="button"
                     v-if="referring_md == 'no'"
-                    @mouseover="showUpward = true"
-                    @mouseleave="showUpward = false"
+                     @mouseover="handleUpwardMouseOver"
+                     @mouseleave="handleUpwardMouseLeave"
                   >
                     <i class="bi-hospital"></i>
                   </button>
@@ -875,8 +722,8 @@ export default {
                     data-target="#prescriptionModal"
                     type="button"
                     v-if="referring_md == 'yes'"
-                    @mouseover="showPrescription = true"
-                    @mouseleave="showPrescription = false"
+                    @mouseover="handlePrescriptionMouseOver"
+                    @mouseleave="handlePrescriptionMouseLeave"
                   >
                     <i class="bi bi-prescription"></i>
                   </button>
@@ -895,8 +742,8 @@ export default {
                     data-target="#labRequestModal"
                     type="button"
                     v-if="referring_md == 'yes'"
-                    @mouseover="showTooltip = true"
-                    @mouseleave="showTooltip = false"
+                    @mouseover="handleLabMouseOver"
+                    @mouseleave="handleLabMouseLeave"
                   >
                     <i class="bi bi-prescription2"></i>
                   </button>
@@ -916,8 +763,8 @@ export default {
                     data-target="#feedbackModal"
                     :data-code="referral_code"
                     onclick="viewReco($(this))"
-                    @mouseover="showTooltipFeedback = true"
-                    @mouseleave="showTooltipFeedback = false"
+                    @mouseover="handleFeedbackMouseOver"
+                    @mouseleave="handleFeedbackMouseLeave"
                   >
                     <i class="bi bi-chat-left-text"></i>
                   </button>

@@ -22678,7 +22678,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
 
 
- // I add this
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -22686,23 +22686,29 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   components: {
     PrescriptionModal: _PrescriptionModal_vue__WEBPACK_IMPORTED_MODULE_3__["default"],
     LabRequestModal: _LabRequestModal_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
-    PDFViewerModal: _PDFViewerModal_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
+    PDFViewerModal: _PDFViewerModal_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
+    FeedbackModal: _FeedbackModal_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
+  props: ["user"],
   data: function data() {
     return {
-      //start video in minutes
       callMinutes: 0,
       callTimer: null,
       callDuration: "00:00:000",
-      // New variable for formatted time
       startTime: null,
-      // Store the exact start time
       showAudio: false,
       showVedio: false,
       Endcall: false,
       showUpward: false,
       showPrescription: false,
-      showLab: false,
+      showTooltip: false,
+      showTooltipFeedback: false,
+      showEndcall: false,
+      feedbackModalVisible: false,
+      currentCode: "",
+      feedbackUrl: "",
+      baseUrlFeed: "",
+      doctorfeedback: "",
       ringingPhoneUrl: $("#broadcasting_url").val() + "/public/ringing.mp3",
       baseUrl: $("#broadcasting_url").val(),
       doctorUrl: $("#broadcasting_url").val() + "/resources/img/video/Doctor5.png",
@@ -22711,27 +22717,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       videoCallUrl: $("#broadcasting_url").val() + "/resources/img/video/videocall.png",
       micUrl: $("#broadcasting_url").val() + "/resources/img/video/mic.png",
       dohLogoUrl: $("#broadcasting_url").val() + "/resources/img/video/doh-logo.png",
-      tracking_id: this.getUrlVars()["id"],
-      referral_code: this.getUrlVars()["code"],
-      referring_md: this.getUrlVars()["referring_md"],
-      activity_id: this.getUrlVars()["activity_id"],
+      tracking_id: "",
+      referral_code: "",
+      referring_md: "",
+      activity_id: "",
       options: {
-        // Pass your App ID here.
         appId: "0fc02f6b7ce04fbcb1991d71df2dbe0d",
-        // Set the channel name.
-        channel: this.getUrlVars()["code"],
-        // Pass your temp token here.
+        channel: "",
         token: null,
-        // Set the user ID.
         uid: 0
       },
       form: {
         pregnant: {
           notes_diagnoses: "",
-          // Set this to the value of $form['pregnant']->notes_diagnoses
           other_diagnoses: "",
-          // Set this to the value of $form['pregnant']->other_diagnoses
-          other_reason_referral: "" // Set this to the value of $form['pregnant']->other_reason_referral
+          other_reason_referral: ""
         }
       },
       patient_age: "",
@@ -22743,15 +22743,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       videoStreaming: true,
       audioStreaming: true,
       channelParameters: {
-        // A variable to hold a local audio track.
         localAudioTrack: null,
-        // A variable to hold a local video track.
         localVideoTrack: null,
-        // A variable to hold a remote audio track.
         remoteAudioTrack: null,
-        // A variable to hold a remote video track.
         remoteVideoTrack: null,
-        // A variable to hold the remote user id.s
         remoteUid: null
       },
       showDiv: false,
@@ -22759,58 +22754,58 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       prescriptionSubmitted: false,
       form_type: "pregnant",
       PdfUrl: "",
-      // <-- Add this line
-
       loading: false,
       uploadProgress: 0,
       netSpeedMbps: null,
-      netSpeedStatus: '' // 'fast' or 'slow'
+      netSpeedStatus: "",
+      isLeavingChannel: false,
+      screenRecorder: null,
+      recordedChunks: [],
+      timeoutId: null
     };
+  },
+  computed: {
+    // Example: computed property for formatted patient age
+    formattedPatientAge: function formattedPatientAge() {
+      if (this.patient_age) return this.patient_age;
+      return "";
+    }
   },
   mounted: function mounted() {
     var _this = this;
-    // Automatically start screen recording when the component is mounted
+    // Parse URL vars once and assign to data
+    var urlVars = this.getUrlVars();
+    this.tracking_id = urlVars["id"];
+    this.referral_code = urlVars["code"];
+    this.referring_md = urlVars["referring_md"];
+    this.activity_id = urlVars["activity_id"];
+    this.options.channel = urlVars["code"];
     if (this.referring_md === "yes") {
       this.startScreenRecording();
     }
-    window.addEventListener('beforeunload', this.preventCloseWhileUploading);
-    window.addEventListener('beforeunload', this.stopCallTimer);
+    window.addEventListener("beforeunload", this.preventCloseWhileUploading);
+    window.addEventListener("beforeunload", this.stopCallTimer);
+    window.addEventListener("click", this.showDivAgain);
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(this.baseUrl, "/doctor/referral/video/pregnant/form/").concat(this.tracking_id)).then(function (res) {
       var response = res.data;
-      console.log("testing");
-      console.log(response);
       _this.form = response.form["pregnant"];
       _this.formBaby = response.form["baby"];
       if (response.age_type === "y") _this.patient_age = response.patient_age + " Years Old";else if (response.age_type === "m") _this.patient_age = response.patient_age + " Months Old";
       _this.icd = response.icd;
-      console.log("testing\n" + _this.icd);
       _this.file_path = response.file_path;
       _this.file_name = response.file_name;
       _this.reason = response.reason;
-      console.log(response);
     })["catch"](function (error) {
       console.log(error);
     });
-
-    //this.hideDivAfterTimeout();
-    window.addEventListener("click", this.showDivAgain);
+    this.startBasicCall();
   },
   beforeUnmount: function beforeUnmount() {
-    //this.clearTimeout();
     window.removeEventListener("click", this.showDivAgain);
-    window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
+    window.removeEventListener("beforeunload", this.preventCloseWhileUploading);
+    window.removeEventListener("beforeunload", this.stopCallTimer);
     this.stopCallTimer();
-    // Remove event listener when component is destroyed
-    window.removeEventListener('resize', this.handleResize);
-  },
-  props: ["user"],
-  created: function created() {
-    var self = this;
-    $(document).ready(function () {
-      console.log("ready!");
-      self.ringingPhoneFunc();
-    });
-    this.startBasicCall();
+    window.removeEventListener("resize", this.handleResize);
   },
   methods: {
     startScreenRecording: function startScreenRecording() {
@@ -22821,7 +22816,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           while (1) switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              // Check for browser compatibility
               isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
               if (isSupported) {
                 _context.next = 5;
@@ -22833,95 +22827,53 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               });
               return _context.abrupt("return");
             case 5:
-              // Inform the user about permissions
-              console.log("Requesting permissions for screen and microphone...");
-
-              // Request screen capture with system audio
-              _context.next = 8;
+              _context.next = 7;
               return navigator.mediaDevices.getDisplayMedia({
                 video: true,
-                audio: true // Request system audio
+                audio: true
               });
-            case 8:
+            case 7:
               screenStream = _context.sent;
-              console.log("Screen stream obtained:", screenStream);
-
-              // Request microphone access
-              _context.next = 12;
+              _context.next = 10;
               return navigator.mediaDevices.getUserMedia({
                 audio: {
                   echoCancellation: true,
-                  // Reduce echo
                   noiseSuppression: true,
-                  // Reduce background noise
-                  sampleRate: 44100 // Set sample rate for better quality
+                  sampleRate: 44100
                 }
               });
-            case 12:
+            case 10:
               micStream = _context.sent;
-              console.log("Microphone stream obtained:", micStream);
-
-              // Debugging: Log audio tracks from microphone
-              micStream.getAudioTracks().forEach(function (track) {
-                console.log("Microphone track:", track);
-              });
-
-              // Create an AudioContext for mixing audio
               audioContext = new AudioContext();
-              destination = audioContext.createMediaStreamDestination(); // Connect system audio to the AudioContext
+              destination = audioContext.createMediaStreamDestination();
               if (screenStream.getAudioTracks().length > 0) {
                 systemAudioSource = audioContext.createMediaStreamSource(screenStream);
                 systemAudioSource.connect(destination);
-              } else {
-                console.warn("No system audio track found in screen stream.");
               }
-
-              // Connect microphone audio to the AudioContext
               if (micStream.getAudioTracks().length > 0) {
                 micAudioSource = audioContext.createMediaStreamSource(micStream);
                 micAudioSource.connect(destination);
-              } else {
-                console.warn("No microphone audio track found.");
               }
-
-              // Combine video from screenStream and mixed audio
               combinedStream = new MediaStream([].concat(_toConsumableArray(screenStream.getVideoTracks()), _toConsumableArray(destination.stream.getAudioTracks())));
-              console.log("Combined stream created:", combinedStream);
-
-              // Initialize MediaRecorder with the combined stream
               _this2.screenRecorder = new MediaRecorder(combinedStream, {
-                mimeType: "video/webm; codecs=vp8" // WebM format
+                mimeType: "video/webm; codecs=vp8"
               });
               _this2.recordedChunks = [];
-
-              // Collect recorded data
               _this2.screenRecorder.ondataavailable = function (event) {
                 if (event.data.size > 0) {
                   _this2.recordedChunks.push(event.data);
                 }
               };
-
-              // Debugging: Monitor video and audio tracks for lag
               combinedStream.getTracks().forEach(function (track) {
-                console.log("Track kind: ".concat(track.kind, ", readyState: ").concat(track.readyState));
-                track.onended = function () {
-                  return console.log("Track ended: ".concat(track.kind));
-                };
+                track.onended = function () {};
               });
-
-              // Start recording
               _this2.screenRecorder.start();
-              //for minutes timer
-              _this2.startCallTimer();
-              console.log("Screen recording started with desktop and microphone audio.");
-              _context.next = 34;
+              // this.startCallTimer();
+              _context.next = 26;
               break;
-            case 30:
-              _context.prev = 30;
+            case 23:
+              _context.prev = 23;
               _context.t0 = _context["catch"](0);
-              console.error("Error starting screen recording:", _context.t0);
-
-              // Handle permission denial or other errors
               if (_context.t0.name === "NotAllowedError") {
                 Lobibox.alert("error", {
                   msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
@@ -22947,11 +22899,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   }
                 });
               }
-            case 34:
+            case 26:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 30]]);
+        }, _callee, null, [[0, 23]]);
       }))();
     },
     saveScreenRecording: function saveScreenRecording() {
@@ -22967,13 +22919,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 _context2.next = 75;
                 break;
               }
-              _this3.loading = true; // Show loader
-
-              // Convert recorded chunks to a Blob
+              _this3.loading = true;
               blob = new Blob(_this3.recordedChunks, {
                 type: "video/webm"
-              }); // --- Max file size check (2GB) ---
-              maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+              });
+              maxSize = 2 * 1024 * 1024 * 1024;
               if (!(blob.size > maxSize)) {
                 _context2.next = 9;
                 break;
@@ -22984,23 +22934,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               });
               return _context2.abrupt("return");
             case 9:
-              // Generate the filename
               patientCode = _this3.form.code || "Unknown_Patient";
               activityId = _this3.activity_id;
               referring_md = _this3.form.referring_md;
-              referred = _this3.form.action_md; // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+              referred = _this3.form.action_md;
               currentDate = new Date();
-              dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+              dateSave = currentDate.toISOString().split("T")[0];
               timeStart = new Date(_this3.startTime).toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
               timeEnd = currentDate.toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
-              fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // --- Detect upload speed and set chunk size ---
-              chunkSize = 5 * 1024 * 1024; // Default to 5MB
+              fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm");
+              chunkSize = 5 * 1024 * 1024;
               _context2.prev = 19;
-              // Create a 1MB test blob
               testBlob = blob.slice(0, 1 * 1024 * 1024);
               testFormData = new FormData();
               testFormData.append("video", testBlob, "test.webm");
@@ -23017,26 +22965,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 29:
               endTime = performance.now();
               durationSeconds = (endTime - startTime) / 1000;
-              speedMbps = 1 / durationSeconds * 8; // 1MB in MBps to Mbps
+              speedMbps = 1 / durationSeconds * 8;
               _this3.netSpeedMbps = speedMbps.toFixed(2);
-              _this3.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
-              // Set chunk size based on speed
+              _this3.netSpeedStatus = speedMbps > 8 ? "fast" : "slow";
               if (speedMbps > 8) {
-                // ~8Mbps or higher is fast
-                chunkSize = 10 * 1024 * 1024; // 10MB
+                chunkSize = 10 * 1024 * 1024;
               } else {
-                chunkSize = 5 * 1024 * 1024; // 5MB
+                chunkSize = 5 * 1024 * 1024;
               }
-              // Optionally, delete the test chunk on the server if needed
               _context2.next = 42;
               break;
             case 37:
               _context2.prev = 37;
               _context2.t0 = _context2["catch"](19);
-              // If test fails, fallback to 5MB
               chunkSize = 5 * 1024 * 1024;
               _this3.netSpeedMbps = null;
-              _this3.netSpeedStatus = 'slow';
+              _this3.netSpeedStatus = "slow";
             case 42:
               totalChunks = Math.ceil(blob.size / chunkSize);
               chunkIndex = 0;
@@ -23061,7 +23005,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 }
               });
             case 56:
-              // Update progress after each chunk
               _this3.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
               _context2.next = 65;
               break;
@@ -23069,7 +23012,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context2.prev = 59;
               _context2.t1 = _context2["catch"](53);
               _this3.loading = false;
-              _this3.uploadProgress = 0; // Reset on error
+              _this3.uploadProgress = 0;
               Lobibox.alert("error", {
                 msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context2.t1.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context2.t1.message)
               });
@@ -23079,11 +23022,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context2.next = 44;
               break;
             case 68:
-              _this3.uploadProgress = 100; // Ensure it's 100% at the end
-              _this3.recordedChunks = []; // Clear recorded chunks to free memory
-              _this3.loading = false; // Hide loader
-              _this3.uploadProgress = 0; // Reset progress
-
+              _this3.uploadProgress = 100;
+              _this3.recordedChunks = [];
+              _this3.loading = false;
+              _this3.uploadProgress = 0;
               if (closeAfterUpload) {
                 window.top.close();
               }
@@ -23107,21 +23049,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     startCallTimer: function startCallTimer() {
       var _this4 = this;
-      // Store the start time in milliseconds
+      if (this.callTimer) return; // Prevent multiple timers
       this.startTime = Date.now();
-
-      // Update the timer every 10 milliseconds
       this.callTimer = setInterval(function () {
         var elapsedTime = Date.now() - _this4.startTime;
-
-        // Calculate minutes, seconds, and milliseconds
         var hours = Math.floor(elapsedTime / 3600000);
         var minutes = Math.floor(elapsedTime % 3600000 / 60000);
         var seconds = Math.floor(elapsedTime % 60000 / 1000);
-
-        // Format the time as mm:ss:ms
         _this4.callDuration = "".concat(String(hours).padStart(2, "0"), " hours ").concat(String(minutes).padStart(2, "0"), " minutes ").concat(String(seconds).padStart(2, "0"), " seconds");
       }, 10);
+    },
+    stopCallTimer: function stopCallTimer() {
+      if (this.callTimer) {
+        clearInterval(this.callTimer);
+        this.callTimer = null;
+      }
     },
     startBasicCall: function startBasicCall() {
       var _this5 = this;
@@ -23130,15 +23072,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
-              // Create an instance of the Agora Engine
               agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
                 mode: "rtc",
                 codec: "vp8"
-              }); // Dynamically create a container in the form of a DIV element to play the remote video track.
-              remotePlayerContainer = document.createElement("div"); // Dynamically create a container in the form of a DIV element to play the local video track.
-              localPlayerContainer = document.createElement("div"); // Specify the ID of the DIV container. You can use the uid of the local user.
+              });
+              remotePlayerContainer = document.createElement("div");
+              localPlayerContainer = document.createElement("div");
               localPlayerContainer.id = _this5.options.uid;
-              // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
               self = _this5;
               agoraEngine.on("user-published", /*#__PURE__*/function () {
                 var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(user, mediaType) {
@@ -23148,39 +23088,29 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                         _context3.next = 2;
                         return agoraEngine.subscribe(user, mediaType);
                       case 2:
-                        console.log("subscribe success");
-                        // Subscribe and play the remote video in the container If the remote user publishes a video track.
                         if (mediaType == "video") {
-                          console.log("remote");
-                          // Retrieve the remote video track.
                           self.channelParameters.remoteVideoTrack = user.videoTrack;
-                          // Retrieve the remote audio track.
                           self.channelParameters.remoteAudioTrack = user.audioTrack;
-                          // Save the remote user id for reuse.
                           self.channelParameters.remoteUid = user.uid.toString();
-                          // Specify the ID of the DIV container. You can use the uid of the remote user.
                           remotePlayerContainer.id = user.uid.toString();
                           self.channelParameters.remoteUid = user.uid.toString();
-                          /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
-                          // Append the remote container to the page body.
                           self.$refs.ringingPhone.pause();
                           document.body.append(remotePlayerContainer);
                           $(".remotePlayerDiv").html(remotePlayerContainer);
                           $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
                           $(remotePlayerContainer).addClass("remotePlayerLayer");
-                          // Play the remote video track.
                           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                         }
-                        // Subscribe and play the remote audio track If the remote user publishes the audio track only.
                         if (mediaType == "audio") {
-                          // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
                           self.channelParameters.remoteAudioTrack = user.audioTrack;
-                          // Play the remote audio track. No need to pass any DOM element.
                           self.channelParameters.remoteAudioTrack.play();
                         }
-                        // Listen for the "user-unpublished" event.
+                        // Start timer only when remote user joins
+                        if (!self.callTimer) {
+                          _this5.startCallTimer();
+                        }
                         agoraEngine.on("user-unpublished", function (user) {
-                          console.log(user.uid + "has left the channel");
+                          // Handle user leaving
                         });
                       case 6:
                       case "end":
@@ -23192,9 +23122,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   return _ref.apply(this, arguments);
                 };
               }());
-              window.onload = function () {
-                self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
-              };
+              self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
             case 7:
             case "end":
               return _context4.stop();
@@ -23203,12 +23131,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     getUrlVars: function getUrlVars() {
-      var vars = [],
+      var vars = {},
         hash;
       var hashes = window.location.href.slice(window.location.href.indexOf("?") + 1).split("&");
       for (var i = 0; i < hashes.length; i++) {
         hash = hashes[i].split("=");
-        vars.push(hash[0]);
         vars[hash[0]] = hash[1];
       }
       return vars;
@@ -23218,31 +23145,25 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _regeneratorRuntime().wrap(function _callee5$(_context5) {
           while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              console.log("local");
-              // Join a channel.
-              _context5.next = 3;
+              _context5.next = 2;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
-            case 3:
-              _context5.next = 5;
+            case 2:
+              _context5.next = 4;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
-            case 5:
+            case 4:
               channelParameters.localAudioTrack = _context5.sent;
-              _context5.next = 8;
+              _context5.next = 7;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
-            case 8:
+            case 7:
               channelParameters.localVideoTrack = _context5.sent;
-              // Append the local video container to the page body.
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
               $(localPlayerContainer).addClass("localPlayerLayer");
-              // Publish the local audio and video tracks in the channel.
-              _context5.next = 14;
+              _context5.next = 13;
               return agoraEngine.publish([channelParameters.localAudioTrack, channelParameters.localVideoTrack]);
-            case 14:
-              // Play the local video track.
+            case 13:
               channelParameters.localVideoTrack.play(localPlayerContainer);
-              console.log("publish success!");
-            case 16:
+            case 14:
             case "end":
               return _context5.stop();
           }
@@ -23262,15 +23183,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               }
               return _context6.abrupt("return");
             case 2:
-              // Prevent duplicate sends
               _this6.isLeavingChannel = true;
               if (!(_this6.callMinutes > 0)) {
-                _context6.next = 18;
+                _context6.next = 16;
                 break;
               }
               _context6.prev = 4;
-              // Calculate final duration before sending
-              finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
+              finalDuration = Math.floor((Date.now() - localStorage.getItem("callStartTime")) / 60000);
               _context6.next = 8;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this6.baseUrl, "/save-call-duration"), {
                 call_duration: finalDuration,
@@ -23279,21 +23198,19 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               });
             case 8:
               response = _context6.sent;
-              console.log("Call duration saved:", response.data);
-              localStorage.removeItem('callStartTime'); // Clean up
+              localStorage.removeItem("callStartTime");
               return _context6.abrupt("return", true);
-            case 14:
-              _context6.prev = 14;
+            case 13:
+              _context6.prev = 13;
               _context6.t0 = _context6["catch"](4);
-              console.error("Error saving call duration:", _context6.t0);
               return _context6.abrupt("return", false);
-            case 18:
+            case 16:
               return _context6.abrupt("return", false);
-            case 19:
+            case 17:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, null, [[4, 14]]);
+        }, _callee6, null, [[4, 13]]);
       }))();
     },
     leaveChannel: function leaveChannel() {
@@ -23306,20 +23223,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 _context7.next = 9;
                 break;
               }
-              // Stop screen recording and save the file
               if (_this7.screenRecorder && _this7.screenRecorder.state !== "inactive") {
                 _this7.screenRecorder.stop();
                 _this7.screenRecorder.onstop = function () {
                   _this7.saveScreenRecording(true);
                 };
               }
-
-              // Wait for duration to be sent before closing
               if (!(_this7.referring_md === "yes")) {
                 _context7.next = 8;
                 break;
               }
-              clearInterval(_this7.callTimer); // Stop the timer
+              _this7.stopCallTimer();
               _context7.next = 6;
               return _this7.sendCallDuration();
             case 6:
@@ -23334,28 +23248,16 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee7);
       }))();
     },
-    stopCallTimer: function stopCallTimer() {
-      if (this.callTimer) {
-        clearInterval(this.callTimer);
-      }
-    },
     videoStreamingOnAndOff: function videoStreamingOnAndOff() {
-      this.videoStreaming = this.videoStreaming ? false : true;
+      this.videoStreaming = !this.videoStreaming;
       this.channelParameters.localVideoTrack.setEnabled(this.videoStreaming);
     },
     audioStreamingOnAnddOff: function audioStreamingOnAnddOff() {
-      this.audioStreaming = this.audioStreaming ? false : true;
+      this.audioStreaming = !this.audioStreaming;
       this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
     },
-    // hideDivAfterTimeout() {
-    //     setTimeout(() => {
-    //         $(".iconCall").removeClass("fade-in");
-    //         this.showDiv = false;
-    //     }, 10000);
-    // },
     showDivAgain: function showDivAgain() {
       this.showDiv = true;
-      //this.hideDivAfterTimeout();
     },
     clearTimeout: function (_clearTimeout) {
       function clearTimeout() {
@@ -23366,8 +23268,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       };
       return clearTimeout;
     }(function () {
-      // Clear the timeout if the component is about to be unmounted
-      // to prevent memory leaks
       clearTimeout(this.timeoutId);
     }),
     ringingPhoneFunc: function ringingPhoneFunc() {
@@ -23382,7 +23282,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 2:
               self = _this8;
               setTimeout(function () {
-                console.log("pause");
                 self.$refs.ringingPhone.pause();
               }, 60000);
             case 4:
@@ -23401,7 +23300,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           form_type: this.form_type
         };
         axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/update"), updatePrescription).then(function (response) {
-          console.log(response);
           if (response.data === "success") {
             _this9.prescriptionSubmitted = true;
             Lobibox.alert("success", {
@@ -23429,11 +23327,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
         if (response.data.status === "success") {
           var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
-
-          // Set the PDF URL
           _this10.PdfUrl = "".concat(_this10.baseUrl, "/doctor/print/prescription/").concat(_this10.tracking_id, "/").concat(prescribedActivityId);
-
-          // Show the modal using the ref method
           _this10.$nextTick(function () {
             _this10.$refs.pdfViewer.openModal();
           });
@@ -23442,9 +23336,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             msg: "No added prescription!"
           });
         }
-      })["catch"](function (error) {
-        console.error(error);
-      });
+      })["catch"](function (error) {});
     },
     generateLabrequest: function generateLabrequest() {
       var _this11 = this;
@@ -23455,11 +23347,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
         if (response.data.id) {
           var pdfUrl = "".concat(_this11.baseUrl, "/doctor/print/labresult/").concat(_this11.activity_id);
-
-          // Set the PDF URL for the modal
           _this11.PdfUrl = pdfUrl;
-
-          // Show the PDF in the custom modal
           _this11.$nextTick(function () {
             _this11.$refs.pdfViewer.openModal();
           });
@@ -23468,9 +23356,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             msg: "No lab request has been created by the referred doctor"
           });
         }
-      })["catch"](function (error) {
-        console.log(error);
-      });
+      })["catch"](function (error) {});
     },
     endorseUpward: function endorseUpward() {
       var self = this;
@@ -23483,7 +23369,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               form_type: self.form_type
             };
             axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
-              console.log(response.data);
               var successData = response.data.trim();
               if (successData === "success") {
                 Lobibox.alert("success", {
@@ -23498,6 +23383,49 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
         }
       });
+    },
+    // Tooltip handlers for better performance
+    handleMicMouseOver: function handleMicMouseOver() {
+      this.showMic = true;
+    },
+    handleMicMouseLeave: function handleMicMouseLeave() {
+      this.showMic = false;
+    },
+    handleVideoMouseOver: function handleVideoMouseOver() {
+      this.showVedio = true;
+    },
+    handleVideoMouseLeave: function handleVideoMouseLeave() {
+      this.showVedio = false;
+    },
+    handleEndCallMouseOver: function handleEndCallMouseOver() {
+      this.showEndcall = true;
+    },
+    handleEndCallMouseLeave: function handleEndCallMouseLeave() {
+      this.showEndcall = false;
+    },
+    handleUpwardMouseOver: function handleUpwardMouseOver() {
+      this.showUpward = true;
+    },
+    handleUpwardMouseLeave: function handleUpwardMouseLeave() {
+      this.showUpward = false;
+    },
+    handlePrescriptionMouseOver: function handlePrescriptionMouseOver() {
+      this.showPrescription = true;
+    },
+    handlePrescriptionMouseLeave: function handlePrescriptionMouseLeave() {
+      this.showPrescription = false;
+    },
+    handleLabMouseOver: function handleLabMouseOver() {
+      this.showTooltip = true;
+    },
+    handleLabMouseLeave: function handleLabMouseLeave() {
+      this.showTooltip = false;
+    },
+    handleFeedbackMouseOver: function handleFeedbackMouseOver() {
+      this.showTooltipFeedback = true;
+    },
+    handleFeedbackMouseLeave: function handleFeedbackMouseLeave() {
+      this.showTooltipFeedback = false;
     }
   }
 });
@@ -24424,11 +24352,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.audioStreamingOnAnddOff && $options.audioStreamingOnAnddOff.apply($options, arguments);
         }),
         type: "button",
-        onMouseover: _cache[1] || (_cache[1] = function ($event) {
-          return _ctx.showMic = true;
+        onMouseover: _cache[1] || (_cache[1] = function () {
+          return $options.handleMicMouseOver && $options.handleMicMouseOver.apply($options, arguments);
         }),
-        onMouseleave: _cache[2] || (_cache[2] = function ($event) {
-          return _ctx.showMic = false;
+        onMouseleave: _cache[2] || (_cache[2] = function () {
+          return $options.handleMicMouseLeave && $options.handleMicMouseLeave.apply($options, arguments);
         })
       }, _cache[24] || (_cache[24] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-mic-fill"
@@ -24440,25 +24368,25 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.videoStreamingOnAndOff && $options.videoStreamingOnAndOff.apply($options, arguments);
         }),
         type: "button",
-        onMouseover: _cache[4] || (_cache[4] = function ($event) {
-          return $data.showVedio = true;
+        onMouseover: _cache[4] || (_cache[4] = function () {
+          return $options.handleVideoMouseOver && $options.handleVideoMouseOver.apply($options, arguments);
         }),
-        onMouseleave: _cache[5] || (_cache[5] = function ($event) {
-          return $data.showVedio = false;
+        onMouseleave: _cache[5] || (_cache[5] = function () {
+          return $options.handleVideoMouseLeave && $options.handleVideoMouseLeave.apply($options, arguments);
         })
       }, _cache[25] || (_cache[25] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-camera-video-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [_ctx.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [$data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger btn-md decline-button",
         onClick: _cache[6] || (_cache[6] = function () {
           return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
         }),
         type: "button",
-        onMouseover: _cache[7] || (_cache[7] = function ($event) {
-          return _ctx.showEndcall = true;
+        onMouseover: _cache[7] || (_cache[7] = function () {
+          return $options.handleEndCallMouseOver && $options.handleEndCallMouseOver.apply($options, arguments);
         }),
-        onMouseleave: _cache[8] || (_cache[8] = function ($event) {
-          return _ctx.showEndcall = false;
+        onMouseleave: _cache[8] || (_cache[8] = function () {
+          return $options.handleEndCallMouseLeave && $options.handleEndCallMouseLeave.apply($options, arguments);
         }),
         disabled: $data.loading
       }, _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
@@ -24470,11 +24398,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $options.endorseUpward && $options.endorseUpward.apply($options, arguments);
         }),
         type: "button",
-        onMouseover: _cache[10] || (_cache[10] = function ($event) {
-          return $data.showUpward = true;
+        onMouseover: _cache[10] || (_cache[10] = function () {
+          return $options.handleUpwardMouseOver && $options.handleUpwardMouseOver.apply($options, arguments);
         }),
-        onMouseleave: _cache[11] || (_cache[11] = function ($event) {
-          return $data.showUpward = false;
+        onMouseleave: _cache[11] || (_cache[11] = function () {
+          return $options.handleUpwardMouseLeave && $options.handleUpwardMouseLeave.apply($options, arguments);
         })
       }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-hospital"
@@ -24484,39 +24412,39 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         "data-toggle": "modal",
         "data-target": "#prescriptionModal",
         type: "button",
-        onMouseover: _cache[12] || (_cache[12] = function ($event) {
-          return $data.showPrescription = true;
+        onMouseover: _cache[12] || (_cache[12] = function () {
+          return $options.handlePrescriptionMouseOver && $options.handlePrescriptionMouseOver.apply($options, arguments);
         }),
-        onMouseleave: _cache[13] || (_cache[13] = function ($event) {
-          return $data.showPrescription = false;
+        onMouseleave: _cache[13] || (_cache[13] = function () {
+          return $options.handlePrescriptionMouseLeave && $options.handlePrescriptionMouseLeave.apply($options, arguments);
         })
       }, _cache[28] || (_cache[28] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [_ctx.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [$data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-primary btn-md prescription-button",
         "data-toggle": "modal",
         "data-target": "#labRequestModal",
         type: "button",
-        onMouseover: _cache[14] || (_cache[14] = function ($event) {
-          return _ctx.showTooltip = true;
+        onMouseover: _cache[14] || (_cache[14] = function () {
+          return $options.handleLabMouseOver && $options.handleLabMouseOver.apply($options, arguments);
         }),
-        onMouseleave: _cache[15] || (_cache[15] = function ($event) {
-          return _ctx.showTooltip = false;
+        onMouseleave: _cache[15] || (_cache[15] = function () {
+          return $options.handleLabMouseLeave && $options.handleLabMouseLeave.apply($options, arguments);
         })
       }, _cache[29] || (_cache[29] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription2"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [_ctx.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [$data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-info btn-md reco-button",
         "data-toggle": "modal",
         "data-target": "#feedbackModal",
         "data-code": $data.referral_code,
         onclick: "viewReco($(this))",
-        onMouseover: _cache[16] || (_cache[16] = function ($event) {
-          return _ctx.showTooltipFeedback = true;
+        onMouseover: _cache[16] || (_cache[16] = function () {
+          return $options.handleFeedbackMouseOver && $options.handleFeedbackMouseOver.apply($options, arguments);
         }),
-        onMouseleave: _cache[17] || (_cache[17] = function ($event) {
-          return _ctx.showTooltipFeedback = false;
+        onMouseleave: _cache[17] || (_cache[17] = function () {
+          return $options.handleFeedbackMouseLeave && $options.handleFeedbackMouseLeave.apply($options, arguments);
         })
       }, _cache[30] || (_cache[30] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-chat-left-text"
@@ -24603,12 +24531,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     activity_id: parseInt($data.activity_id),
     requested_by: parseInt($props.user.id)
   }, null, 8 /* PROPS */, ["activity_id", "requested_by"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_FeedbackModal, {
-    isVisible: _ctx.feedbackModalVisible,
-    code: _ctx.currentCode,
+    isVisible: $data.feedbackModalVisible,
+    code: $data.currentCode,
     userId: $props.user.id,
-    fetchUrl: _ctx.feedbackUrl,
-    imageUrl: _ctx.baseUrlFeed,
-    postUrl: _ctx.doctorfeedback,
+    fetchUrl: $data.feedbackUrl,
+    imageUrl: $data.baseUrlFeed,
+    postUrl: $data.doctorfeedback,
     onCloseModal: _ctx.closeFeedbackModal
   }, null, 8 /* PROPS */, ["isVisible", "code", "userId", "fetchUrl", "imageUrl", "postUrl", "onCloseModal"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PDFViewerModal, {
     ref: "pdfViewer",
@@ -26768,7 +26696,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "/* feedback messages */\r\n.chat-avatar {\r\n  width: 40px; /* Set the desired width */\r\n  height: 40px; /* Set the desired height */\r\n  border-radius: 50%; /* Make it circular */\r\n  object-fit: cover; /* Ensure proper scaling */\r\n  margin-right: 8px; /* Add spacing from the text */\r\n}\r\n\r\n.chat-container {\r\n  max-height: 400px;\r\n  overflow-y: auto;\r\n  padding: 10px;\r\n  background-color: #f4f4f4;\r\n  border: 1px solid #ddd;\r\n  border-radius: 5px;\r\n}\r\n\r\n.chat-message {\r\n  display: flex;\r\n  align-items: flex-start;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.chat-sender {\r\n  flex-direction: row-reverse;\r\n}\r\n\r\n.chat-avatar img {\r\n  width: 40px;\r\n  height: 40px;\r\n  border-radius: 50%;\r\n  margin: 0 10px;\r\n}\r\n\r\n.chat-content {\r\n  display: flex;\r\n  flex-direction: column;\r\n  max-width: 70%;\r\n}\r\n\r\n.chat-meta {\r\n  margin-bottom: 5px;\r\n  font-size: 12px;\r\n  color: #777;\r\n}\r\n\r\n.facility {\r\n  display: block;\r\n  font-weight: bold;\r\n  color: #3c8dbc;\r\n}\r\n\r\n.name {\r\n  display: inline;\r\n  margin-right: 5px;\r\n}\r\n\r\n.timestamp {\r\n  display: inline;\r\n  font-style: italic;\r\n}\r\n\r\n.chat-bubble {\r\n  padding: 10px;\r\n  border-radius: 15px;\r\n  line-height: 1.5;\r\n  position: relative;\r\n  word-wrap: break-word;\r\n}\r\n\r\n.bubble-sender {\r\n  background-color: #3c8dbc;\r\n  color: white;\r\n  border-top-right-radius: 0;\r\n}\r\n\r\n.bubble-receiver {\r\n  background-color: #e9ecef;\r\n  color: #333;\r\n  border-top-left-radius: 0;\r\n}\r\n\r\n.chat-container::-webkit-scrollbar {\r\n  width: 6px;\r\n}\r\n\r\n.chat-container::-webkit-scrollbar-thumb {\r\n  background-color: #888;\r\n  border-radius: 3px;\r\n}\r\n\r\n.chat-container::-webkit-scrollbar-thumb:hover {\r\n  background-color: #555;\r\n}\r\n.chat-sender {\r\n  flex-direction: row-reverse;\r\n}\r\n\r\n\r\n/* End feedback messages */\r\n\r\n.PrescripBorder {\r\n  border: 1px solid lightgrey;\r\n  margin-bottom: 10px;\r\n  padding-bottom: 10px;\r\n  margin-right: 15px;\r\n  margin-top: 3px;\r\n}\r\n.ExampleAscorbic {\r\n  font-size: 13px;\r\n}\r\n.row .examplePriscribe {\r\n  margin-bottom: -10px;\r\n  background-color: rgb(250, 246, 246);\r\n}\r\n.fade-enter,\r\n.fade-leave-to {\r\n  animation: fadeOut 2s;\r\n}\r\n.fade-in {\r\n  animation: fadeIn 2s;\r\n}\r\n@keyframes fadeIn {\r\n  0% {\r\n    opacity: 0;\r\n  }\r\n  100% {\r\n    opacity: 1;\r\n  }\r\n}\r\n@keyframes fadeOut {\r\n  0% {\r\n    opacity: 1;\r\n  }\r\n  100% {\r\n    opacity: 0;\r\n  }\r\n}\r\n/*------------------------------------------*/\r\n\r\n.container-fluid {\r\n  /* border: 4px outset green; */\r\n   /* height: 978px; */\r\n  /* object-fit: cover; */\r\n  width: auto;\r\n  height: auto;\r\n}\r\n#calling {\r\n  display: flex;\r\n  position: absolute;\r\n  text-align: center;\r\n  align-items: center;\r\n  justify-content: center;\r\n  width: 100%;\r\n  height: 100%;\r\n}\r\n.mainPic {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: relative;\r\n  overflow: hidden;\r\n}\r\n.img-fluid {\r\n  border: 3px outset transparent;\r\n  width: 100%;\r\n}\r\n.img2 {\r\n  width: 100%;\r\n  height: 100%;\r\n  object-fit: cover;\r\n}\r\n.iconCall {\r\n  border: 1px outset transparent;\r\n  width: 100%;\r\n  bottom: 20px;\r\n  text-align: center;\r\n  opacity: 1;\r\n  transition: opacity 0.5s ease-in-out;\r\n}\r\n.iconCall.hidden {\r\n  display: none;\r\n  opacity: 0;\r\n}\r\n.mic-button {\r\n  border-radius: 50%;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.video-button {\r\n  border-radius: 50%;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.decline-button {\r\n  border-radius: 50%;\r\n  border: 0;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n\r\n.upward-button {\r\n  border-radius: 50%;\r\n  border: 0;\r\n  margin-right: 8px;\r\n  z-index: 11;\r\n  color: white;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n\r\n.prescription-button {\r\n  border-radius: 50%;\r\n  margin-right: 8px;\r\n  z-index: 11;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.reco-button{\r\n  border-radius: 50%;\r\n  margin-right: 8px;\r\n  z-index: 11;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.lab-button {\r\n  border-radius: 50%;\r\n  z-index: 11;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.telemedForm {\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: hidden;\r\n  display: flex;\r\n  flex-direction: column;\r\n  background-color: #f8f9fa;\r\n  border-left: 1px solid #dee2e6;\r\n}\r\n\r\n.tableForm {\r\n  width: 100%;\r\n}\r\n\r\n.dohLogo {\r\n  position: relative;\r\n  border: 1px outset transparent;\r\n  top: 55px;\r\n  z-index: 2;\r\n  height: 72px;\r\n  width: 76px;\r\n}\r\n\r\n.formHeader {\r\n  position: absolute;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  text-align: center;\r\n  padding: 0.5px;\r\n  position: relative;\r\n  line-height: 0.1px;\r\n  font-size: 13px;\r\n}\r\n\r\n/* .formHeader {  \r\n  position: absolute;\r\n  top: 15px;\r\n  left: 95px;\r\n  border: 1px outset transparent;\r\n  text-align: center;\r\n  line-height: 0.1px;\r\n  font-size: 13px;\r\n} */\r\n\r\n.clinical {  \r\n  position: relative;\r\n  text-align: center;\r\n  margin-top: 5px;\r\n  border: 1px outset transparent;\r\n  font-size: 18px;\r\n  font-family: Calibri;\r\n}\r\n\r\n.remotePlayerLayer {\r\n  display: block;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.remotePlayerDiv {\r\n  /* width: 100%;\r\n  height: 100%; */\r\n  margin: 8px;\r\n  position: absolute;\r\n  top: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  overflow: hidden;\r\n  border-radius: 12px;\r\n  color: white;\r\n  background-color: #000;\r\n}\r\n\r\n.localPlayerLayer {\r\n  height: 200px;\r\n  width: 150px;\r\n}\r\n\r\n.localPlayerLayer div {\r\n  border-radius: 10px;\r\n}\r\n\r\n.localPlayerDiv {\r\n  position: absolute;\r\n  min-height: 200px;\r\n  min-width: 150px;\r\n  max-height: 30vh; /* Responsive height based on viewport */\r\n  max-width: 25vw; /* Responsive width based on viewport */\r\n  bottom: 2%;\r\n  right: 2%;\r\n  border: 2px solid white;\r\n  border-radius: 5px;\r\n  overflow: hidden;\r\n  z-index: 10;\r\n  cursor: move;\r\n  background-color: #333;\r\n  /* Add transition for smooth resizing */\r\n  transition: width 0.3s, height 0.3s;\r\n}\r\n\r\n#local-image {\r\n  height: 200px;\r\n  width: 150px;\r\n}\r\n/*------------------------------------------*/\r\n\r\n.prescription {\r\n  position: relative;\r\n  border: 2px outset transparent;\r\n  margin-top: 5px;\r\n  font-family: Calibri;\r\n}\r\n.textArea {\r\n  border: 1px outset black;\r\n}\r\n.btn {\r\n  position: relative;\r\n  margin-top: 5px;\r\n  margin-bottom: 5px;\r\n  /*margin-right: 5px;*/\r\n}\r\n.forDetails {\r\n  color: #e18e0b;\r\n}\r\n.caseforDetails {\r\n  color: #e18e0b;\r\n  line-height: 1.2;\r\n  white-space: pre-line;\r\n}\r\n.dateReferred {\r\n  color: #e18e0b;\r\n}\r\n.recoSummary {\r\n  color: #e18e0b;\r\n  line-height: 1.2;\r\n  white-space: pre-wrap;\r\n}\r\n.mdHcw {\r\n  color: #e18e0b;\r\n  line-height: 1.2;\r\n}\r\ntr:nth-child(odd) {\r\n  background-color: #f2f2f2;\r\n  border: 1px outset transparent;\r\n}\r\ntr:nth-child(even) {\r\n  background-color: white;\r\n  border: 1px outset transparent;\r\n}\r\n.mic-button-slash:before,\r\n.mic-button-slash:after {\r\n  content: \"\";\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 0;\r\n  right: 0;\r\n  transform: translateY(-50%);\r\n  height: 2px;\r\n  background-color: #ff0000;\r\n}\r\n.mic-button-slash:before {\r\n  transform: rotate(-45deg);\r\n  padding: 2px;\r\n}\r\n.mic-button-slash:after {\r\n  transform: rotate(-45deg);\r\n}\r\n.video-button-slash:before,\r\n.video-button-slash:after {\r\n  content: \"\";\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 0;\r\n  right: 0;\r\n  transform: translateY(-50%);\r\n  height: 2px;\r\n  background-color: #ff0000;\r\n}\r\n.video-button-slash:before {\r\n  transform: rotate(-45deg);\r\n  padding: 2px;\r\n}\r\n.video-button-slash:after {\r\n  transform: rotate(-45deg);\r\n}\r\n.video-button:hover,\r\n.mic-button:hover,\r\n.decline-button:hover,\r\n.prescription-button:hover,\r\n.reco-button:hover,\r\n.lab-button:hover {\r\n  background-color: rgba(17, 17, 17, 0.637);\r\n  color: white;\r\n  box-shadow: 0 0.5rem 1rem transparent;\r\n  border-color: transparent;\r\n}\r\n.decline-button:hover{\r\n  background-color: red;\r\n  box-shadow: 0 0.5rem 1rem transparent;\r\n  border-color: transparent;\r\n}\r\n\r\n.tooltip-text {\r\n  visibility: visible;\r\n  color: #fff;\r\n  text-align: center;\r\n  padding: 5px 10px;\r\n  border-radius: 5px;\r\n  position: absolute;\r\n  z-index: 0;\r\n  bottom: 100%;\r\n  left: 50%;\r\n  transform: translateX(-50%);\r\n  white-space: nowrap;\r\n}\r\n\r\n/* I am adding this  */\r\n.tooltip-text::after {\r\n  content: \"\";\r\n  position: absolute;\r\n  top: 100%; /* Arrow position just below the tooltip */\r\n  left: 50%;\r\n  transform: translateX(-50%);\r\n  border-width: 5px;\r\n  border-style: solid;\r\n  border-color: rgba(0, 0, 0, 0.75) transparent transparent transparent; /* Arrow color matching the tooltip background */\r\n}\r\n\r\n.tooltip-container:hover .tooltip-text {\r\n  visibility: visible;\r\n  z-index: 10;\r\n}\r\n\r\n.button-container {\r\n  display: inline-block;\r\n  background-color: transparent;\r\n  position:relative;\r\n}\r\n\r\nbody.modal-open .fullscreen-div {\r\n  position: absolute;\r\n  overflow: visible;\r\n}", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "/* feedback messages */\r\n.chat-avatar {\r\n  width: 40px; /* Set the desired width */\r\n  height: 40px; /* Set the desired height */\r\n  border-radius: 50%; /* Make it circular */\r\n  object-fit: cover; /* Ensure proper scaling */\r\n  margin-right: 8px; /* Add spacing from the text */\r\n}\r\n\r\n.chat-container {\r\n  max-height: 400px;\r\n  overflow-y: auto;\r\n  padding: 10px;\r\n  background-color: #f4f4f4;\r\n  border: 1px solid #ddd;\r\n  border-radius: 5px;\r\n}\r\n\r\n.chat-message {\r\n  display: flex;\r\n  align-items: flex-start;\r\n  margin-bottom: 15px;\r\n}\r\n\r\n.chat-sender {\r\n  flex-direction: row-reverse;\r\n}\r\n\r\n.chat-avatar img {\r\n  width: 40px;\r\n  height: 40px;\r\n  border-radius: 50%;\r\n  margin: 0 10px;\r\n}\r\n\r\n.chat-content {\r\n  display: flex;\r\n  flex-direction: column;\r\n  max-width: 70%;\r\n}\r\n\r\n.chat-meta {\r\n  margin-bottom: 5px;\r\n  font-size: 12px;\r\n  color: #777;\r\n}\r\n\r\n.facility {\r\n  display: block;\r\n  font-weight: bold;\r\n  color: #3c8dbc;\r\n}\r\n\r\n.name {\r\n  display: inline;\r\n  margin-right: 5px;\r\n}\r\n\r\n.timestamp {\r\n  display: inline;\r\n  font-style: italic;\r\n}\r\n\r\n.chat-bubble {\r\n  padding: 10px;\r\n  border-radius: 15px;\r\n  line-height: 1.5;\r\n  position: relative;\r\n  word-wrap: break-word;\r\n}\r\n\r\n.bubble-sender {\r\n  background-color: #3c8dbc;\r\n  color: white;\r\n  border-top-right-radius: 0;\r\n}\r\n\r\n.bubble-receiver {\r\n  background-color: #e9ecef;\r\n  color: #333;\r\n  border-top-left-radius: 0;\r\n}\r\n\r\n.chat-container::-webkit-scrollbar {\r\n  width: 6px;\r\n}\r\n\r\n.chat-container::-webkit-scrollbar-thumb {\r\n  background-color: #888;\r\n  border-radius: 3px;\r\n}\r\n\r\n.chat-container::-webkit-scrollbar-thumb:hover {\r\n  background-color: #555;\r\n}\r\n.chat-sender {\r\n  flex-direction: row-reverse;\r\n}\r\n\r\n\r\n/* End feedback messages */\r\n\r\n.PrescripBorder {\r\n  border: 1px solid lightgrey;\r\n  margin-bottom: 10px;\r\n  padding-bottom: 10px;\r\n  margin-right: 15px;\r\n  margin-top: 3px;\r\n}\r\n.ExampleAscorbic {\r\n  font-size: 13px;\r\n}\r\n.row .examplePriscribe {\r\n  margin-bottom: -10px;\r\n  background-color: rgb(250, 246, 246);\r\n}\r\n.fade-enter,\r\n.fade-leave-to {\r\n  animation: fadeOut 2s;\r\n}\r\n.fade-in {\r\n  animation: fadeIn 2s;\r\n}\r\n@keyframes fadeIn {\r\n  0% {\r\n    opacity: 0;\r\n  }\r\n  100% {\r\n    opacity: 1;\r\n  }\r\n}\r\n@keyframes fadeOut {\r\n  0% {\r\n    opacity: 1;\r\n  }\r\n  100% {\r\n    opacity: 0;\r\n  }\r\n}\r\n/*------------------------------------------*/\r\n\r\n.container-fluid {\r\n  /* border: 4px outset green; */\r\n   /* height: 978px; */\r\n  /* object-fit: cover; */\r\n  width: auto;\r\n  height: auto;\r\n}\r\n#calling {\r\n  display: flex;\r\n  position: absolute;\r\n  text-align: center;\r\n  align-items: center;\r\n  justify-content: center;\r\n  width: 100%;\r\n  height: 100%;\r\n}\r\n.mainPic {\r\n  width: 100%;\r\n  height: 100%;\r\n  position: relative;\r\n  overflow: hidden;\r\n}\r\n.img-fluid {\r\n  border: 3px outset transparent;\r\n  width: 100%;\r\n}\r\n.img2 {\r\n  width: 100%;\r\n  height: 100%;\r\n  object-fit: cover;\r\n}\r\n.iconCall {\r\n  border: 1px outset transparent;\r\n  width: 100%;\r\n  bottom: 20px;\r\n  text-align: center;\r\n  opacity: 1;\r\n  transition: opacity 0.5s ease-in-out;\r\n}\r\n.iconCall.hidden {\r\n  display: none;\r\n  opacity: 0;\r\n}\r\n.mic-button {\r\n  border-radius: 50%;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.video-button {\r\n  border-radius: 50%;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.decline-button {\r\n  border-radius: 50%;\r\n  border: 0;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n\r\n.upward-button {\r\n  border-radius: 50%;\r\n  border: 0;\r\n  margin-right: 8px;\r\n  z-index: 11;\r\n  color: white;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n\r\n.prescription-button {\r\n  border-radius: 50%;\r\n  margin-right: 8px;\r\n  z-index: 11;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.reco-button{\r\n  border-radius: 50%;\r\n  margin-right: 8px;\r\n  z-index: 11;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.lab-button {\r\n  border-radius: 50%;\r\n  z-index: 11;\r\n  background-color: rgba(81, 83, 85, 0.596);\r\n  border-color: transparent;\r\n}\r\n.telemedForm {\r\n  width: 100%;\r\n  height: 100%;\r\n  overflow: hidden;\r\n  display: flex;\r\n  flex-direction: column;\r\n  background-color: #f8f9fa;\r\n  border-left: 1px solid #dee2e6;\r\n}\r\n\r\n.tableForm {\r\n  width: 100%;\r\n}\r\n\r\n.dohLogo {\r\n  position: relative;\r\n  border: 1px outset transparent;\r\n  top: 55px;\r\n  z-index: 2;\r\n  height: 72px;\r\n  width: 76px;\r\n}\r\n\r\n.formHeader {\r\n  position: absolute;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  text-align: center;\r\n  padding: 0.5px;\r\n  position: relative;\r\n  line-height: 0.1px;\r\n  font-size: 13px;\r\n}\r\n\r\n/* .formHeader {  \r\n  position: absolute;\r\n  top: 15px;\r\n  left: 95px;\r\n  border: 1px outset transparent;\r\n  text-align: center;\r\n  line-height: 0.1px;\r\n  font-size: 13px;\r\n} */\r\n\r\n.clinical {  \r\n  position: relative;\r\n  text-align: center;\r\n  margin-top: 5px;\r\n  border: 1px outset transparent;\r\n  font-size: 18px;\r\n  font-family: Calibri;\r\n}\r\n\r\n.remotePlayerLayer {\r\n  display: block;\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n\r\n.remotePlayerDiv {\r\n  /* width: 100%;\r\n  height: 100%; */\r\n  margin: 8px;\r\n  position: absolute;\r\n  top: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  left: 0;\r\n  overflow: hidden;\r\n  border-radius: 12px;\r\n  color: white;\r\n  background-color: #000;\r\n}\r\n\r\n.localPlayerLayer {\r\n  height: 200px;\r\n  width: 150px;\r\n}\r\n\r\n.localPlayerLayer div {\r\n  border-radius: 10px;\r\n}\r\n\r\n.localPlayerDiv {\r\n  position: absolute;\r\n  min-height: 200px;\r\n  min-width: 150px;\r\n  max-height: 30vh; /* Responsive height based on viewport */\r\n  max-width: 25vw; /* Responsive width based on viewport */\r\n  bottom: 2%;\r\n  right: 2%;\r\n  border: 2px solid white;\r\n  border-radius: 5px;\r\n  overflow: hidden;\r\n  z-index: 10;\r\n  cursor: move;\r\n  background-color: #333;\r\n  /* Add transition for smooth resizing */\r\n  transition: width 0.3s, height 0.3s;\r\n  resize: none; /* We'll handle resize manually */\r\n}\r\n\r\n#local-image {\r\n  height: 200px;\r\n  width: 150px;\r\n}\r\n/*------------------------------------------*/\r\n\r\n.prescription {\r\n  position: relative;\r\n  border: 2px outset transparent;\r\n  margin-top: 5px;\r\n  font-family: Calibri;\r\n}\r\n.textArea {\r\n  border: 1px outset black;\r\n}\r\n.btn {\r\n  position: relative;\r\n  margin-top: 5px;\r\n  margin-bottom: 5px;\r\n  /*margin-right: 5px;*/\r\n}\r\n.forDetails {\r\n  color: #e18e0b;\r\n}\r\n.caseforDetails {\r\n  color: #e18e0b;\r\n  line-height: 1.2;\r\n  white-space: pre-line;\r\n}\r\n.dateReferred {\r\n  color: #e18e0b;\r\n}\r\n.recoSummary {\r\n  color: #e18e0b;\r\n  line-height: 1.2;\r\n  white-space: pre-wrap;\r\n}\r\n.mdHcw {\r\n  color: #e18e0b;\r\n  line-height: 1.2;\r\n}\r\ntr:nth-child(odd) {\r\n  background-color: #f2f2f2;\r\n  border: 1px outset transparent;\r\n}\r\ntr:nth-child(even) {\r\n  background-color: white;\r\n  border: 1px outset transparent;\r\n}\r\n.mic-button-slash:before,\r\n.mic-button-slash:after {\r\n  content: \"\";\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 0;\r\n  right: 0;\r\n  transform: translateY(-50%);\r\n  height: 2px;\r\n  background-color: #ff0000;\r\n}\r\n.mic-button-slash:before {\r\n  transform: rotate(-45deg);\r\n  padding: 2px;\r\n}\r\n.mic-button-slash:after {\r\n  transform: rotate(-45deg);\r\n}\r\n.video-button-slash:before,\r\n.video-button-slash:after {\r\n  content: \"\";\r\n  position: absolute;\r\n  top: 50%;\r\n  left: 0;\r\n  right: 0;\r\n  transform: translateY(-50%);\r\n  height: 2px;\r\n  background-color: #ff0000;\r\n}\r\n.video-button-slash:before {\r\n  transform: rotate(-45deg);\r\n  padding: 2px;\r\n}\r\n.video-button-slash:after {\r\n  transform: rotate(-45deg);\r\n}\r\n.video-button:hover,\r\n.mic-button:hover,\r\n.decline-button:hover,\r\n.prescription-button:hover,\r\n.reco-button:hover,\r\n.lab-button:hover {\r\n  background-color: rgba(17, 17, 17, 0.637);\r\n  color: white;\r\n  box-shadow: 0 0.5rem 1rem transparent;\r\n  border-color: transparent;\r\n}\r\n.decline-button:hover{\r\n  background-color: red;\r\n  box-shadow: 0 0.5rem 1rem transparent;\r\n  border-color: transparent;\r\n}\r\n\r\n.tooltip-text {\r\n  visibility: visible;\r\n  color: #fff;\r\n  text-align: center;\r\n  padding: 5px 10px;\r\n  border-radius: 5px;\r\n  position: absolute;\r\n  z-index: 0;\r\n  bottom: 100%;\r\n  left: 50%;\r\n  transform: translateX(-50%);\r\n  white-space: nowrap;\r\n}\r\n\r\n/* I am adding this  */\r\n.tooltip-text::after {\r\n  content: \"\";\r\n  position: absolute;\r\n  top: 100%; /* Arrow position just below the tooltip */\r\n  left: 50%;\r\n  transform: translateX(-50%);\r\n  border-width: 5px;\r\n  border-style: solid;\r\n  border-color: rgba(0, 0, 0, 0.75) transparent transparent transparent; /* Arrow color matching the tooltip background */\r\n}\r\n\r\n.tooltip-container:hover .tooltip-text {\r\n  visibility: visible;\r\n  z-index: 10;\r\n}\r\n\r\n.button-container {\r\n  display: inline-block;\r\n  background-color: transparent;\r\n  position:relative;\r\n}\r\n\r\nbody.modal-open .fullscreen-div {\r\n  position: absolute;\r\n  overflow: visible;\r\n}", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -329,6 +329,7 @@
   background-color: #333;
   /* Add transition for smooth resizing */
   transition: width 0.3s, height 0.3s;
+  resize: none; /* We'll handle resize manually */
 }
 
 #local-image {
