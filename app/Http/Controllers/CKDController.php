@@ -13,30 +13,25 @@ use App\Login;
 
 class CKDController extends Controller
 {
-     public function referFromCKD(Request $request, $patient_id = null)
+    public function referFromCKD(Request $request,$patient_id = null)
     {
-        $defaultToken = 'p4a6jgZJGP96GHhknTn2mKK6HSYT1clRqI1pHPBL8xhglULPY1xVPSfdi5w2';
-        $bearerToken = $request->bearerToken();
+        // $defaultToken = 'p4a6jgZJGP96GHhknTn2mKK6HSYT1clRqI1pHPBL8xhglULPY1xVPSfdi5w2';
+        // $bearerToken = $request->bearerToken();
 
-        if ($bearerToken !== $defaultToken) {
-            return response()
-                ->json(['error' => 'Invalid token', 'request_bearerToken' => $bearerToken], 401)
-                ->header('Authorization', 'Bearer ' . $defaultToken);
-        }
-     
-        // Authenticate hardcoded user
+        // if ($bearerToken !== $defaultToken) {
+        //     return response()->json(['error' => 'Invalid token'], 401);
+        // }
+
+        // Instead of redirecting through validateLogin, let's handle this directly
+        // Authenticate hardcoded user (you already have this logic)
         $user = User::where('username', 'rhu1-vicente')->first();
         
         if (!$user || !Hash::check('123', $user->password)) {
-            return response()
-                ->json(['error' => 'User not found or invalid credentials'], 401)
-                ->header('Authorization', 'Bearer ' . $defaultToken);
+            return response()->json(['error' => 'User not found or invalid credentials'], 401);
         }       
 
         if ($user->status === 'inactive') {
-            return response()
-                ->json(['error' => 'Your account was deactivated by the administrator, please call 711 DOH health line.'], 403)
-                ->header('Authorization', 'Bearer ' . $defaultToken);
+            return response()->json(['error' => 'Your account was deactivated by the administrator, please call 711 DOH health line.'], 403);
         }
 
         // Set session and login tracking
@@ -71,9 +66,7 @@ class CKDController extends Controller
         if ($patient_id) {
             $filtered = $patients->where('id', (int)$patient_id)->values();
             if ($filtered->isEmpty()) {
-                return response()
-                    ->json(['message' => 'Data not found'], 404)
-                    ->header('Authorization', 'Bearer ' . $defaultToken);
+                   return response()->json(['message' => 'Data not found'], 404);
             }
         } else {
             $filtered = $patients;
@@ -92,9 +85,7 @@ class CKDController extends Controller
             ['path' => request()->url(), 'query' => request()->query()]
         );
 
-        $response = response()->view('opcen.ckd_incoming', ['data' => $data, 'trigger_ckd_info' => true]);
-        $response->headers->set('Authorization', 'Bearer ' . $defaultToken);
-        return $response;
+        return view('opcen.ckd_incoming', ['data' => $data,'trigger_ckd_info' => true]);
     }
 
     public function CKDIncoming(){
