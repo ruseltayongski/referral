@@ -318,7 +318,7 @@ export default {
           testFormData.append("totalChunks", 1);
 
           const startTime = performance.now();
-          await axios.post("https://telemedapi.cvchd.com/api/save-screen-record", testFormData, {
+          await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
           const endTime = performance.now();
@@ -355,7 +355,7 @@ export default {
           formData.append("totalChunks", totalChunks);
 
           try {
-            await axios.post("https://telemedapi.cvchd.com/api/save-screen-record", formData, {
+            await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
               headers: { "Content-Type": "multipart/form-data" },
             });
             // Update progress after each chunk
