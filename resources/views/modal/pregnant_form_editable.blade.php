@@ -1,7 +1,10 @@
 <?php
 
     // $appointmentParam = $_GET['appointment']; // I add this
+    $department = \App\Department::all();
+    $department_id = $appoitment_sched[0]->department_id;
     $appointmentParam = isset($_GET['appointment']) ? $_GET['appointment'] : session('telemed');
+    $selected_department = $department->find($department_id);
     
     $facility_id_telemed = json_decode(json_decode($appointmentParam, true), true)[0]['facility_id'] ?? json_decode($appointmentParam, true)[0]['facility_id'];
     $telemedicine_appointment_id = json_decode(json_decode($appointmentParam, true),true)[0]['appointmentId'] ?? json_decode($appointmentParam, true)[0]['appointmentId'];
@@ -39,12 +42,10 @@
     }   
         
     $reason_for_referral = \App\ReasonForReferral::get();
-    $department = \App\Department::all();
-    
     $appoitment_sched = \App\AppointmentSchedule::select('id', 'department_id')
                         ->where('id', $telemedicine_appointment_id)->get();
 
-    $department_id = $appoitment_sched[0]->department_id;
+   
     
 ?>
 <div class="modal fade" role="dialog" id="pregnantFormModal">
@@ -127,11 +128,11 @@
                             <small class="text-success"><b>REFERRED TO: </b></small>
                         </div>
                         <div class="col-md-6">
-                            @if($appointmentParam)
-                            <input type="hidden" name="referred_facility" value="{{ $facilities->find($facility_id_telemed)->id }}">
-                            <select class="form-control-select select2 select_facility" style="width: 100%" required disabled>
-                                <option>{{$facilities->find($facility_id_telemed)->name }}</option>                               
-                            </select>
+                            @if($appointmentParam && $facilities)
+                                <input type="hidden" name="referred_facility" value="{{ $facilities->id }}">
+                                <select class="form-control-select select2 select_facility" style="width: 100%" required disabled>
+                                    <option>{{ $facilities->name }}</option>                               
+                                </select>
                             @else
                             <select name="referred_facility" class="form-control-select modal-select2 select_facility" style="width: 100%" required>
                                 <option value="">Select Facility...</option>
@@ -143,11 +144,11 @@
                            
                         </div><br class="mobile-view">
                         <div class="col-md-4">
-                            @if($appointmentParam)
-                            <input type="hidden" name="referred_department" value="{{ $department->find($department_id)->id }}">
-                            <select class="form-control-select select_department select_department_pregnant" required disabled>
-                                <option>{{$department->find($department_id)->description}}</option>
-                            </select>
+                            @if($appointmentParam && $selected_department)
+                                <input type="hidden" name="referred_department" value="{{ $selected_department->id }}">
+                                <select class="form-control-select select_department select_department_pregnant" required disabled>
+                                    <option>{{ $selected_department->description }}</option>
+                                </select>
                             @else
                             <select name="referred_department" class="form-control-select select_department select_department_pregnant" required>
                                 <option value="">Select Department...</option>
