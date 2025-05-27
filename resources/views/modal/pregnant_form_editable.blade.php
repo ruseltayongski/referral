@@ -164,11 +164,15 @@
                             <small class="text-success"><b>ADDRESS: </b></small>
                         </div>
                         <div class="col-md-9">
-                        @if($appointmentParam)
-                        <span class="text-primary facility_address">{{$facilities->find($facility_id_telemed)->address}}</span>
-                        @else
-                        <span class="text-primary facility_address"></span>
-                        @endif
+                            @if($appointmentParam)
+                                @if($facilities)
+                                    <span class="text-primary facility_address">{{$facilities->address}}</span>
+                                @else
+                                    <span class="text-danger">No address found.</span>
+                                @endif
+                            @else
+                                <span class="text-primary facility_address"></span>
+                            @endif
                         </div>
                     </div><br>
 
