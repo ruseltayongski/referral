@@ -621,7 +621,7 @@ $counter = 0;
                                             <i class="fa fa-ambulance"></i>
                                             Refer
                                         </a>
-                                        <a href="#normalFormModal" data-patient_id="{{ $row->id }}" data-backdrop="static" data-toggle="modal" data-type="normal" onclick="handleTelemedicine()" style="width:100%;margin-bottom:5px;" class="btn btn-success btn-xs profile_info patient-consultation hidden">
+                                        <a href="#" data-patient_id="{{ $row->id }}" data-toggle="modal" data-type="pregnant" data-telemedicine="1" onclick="showPrivacyNotice('#normalFormModal')" class="btn btn-success btn-xs profile_info hide patient-consultation hidden" style="width:100%;margin-bottom:5px;">
                                             <i class="fa fa-stethoscope"></i>
                                             Consultation
                                         </a><br>
