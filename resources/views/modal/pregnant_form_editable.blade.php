@@ -29,7 +29,7 @@
         ->where('id', $facility_id_telemed) // I am adding this to get the specific facility name
         // ->where('status',1)
         ->where('referral_used','yes')
-        ->orderBy('name','asc')->first();
+        ->orderBy('name','asc')->get();
     }else{
         $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
