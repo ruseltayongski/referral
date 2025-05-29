@@ -94,8 +94,8 @@ export default {
        
       loading: false,
       uploadProgress: 0,
-      netSpeedMbps: null,
-      netSpeedStatus: '', // 'fast' or 'slow'
+      // netSpeedMbps: null,
+      // netSpeedStatus: '', // 'fast' or 'slow'
     };
   },
   mounted() {
@@ -342,38 +342,38 @@ export default {
 
         // --- Detect upload speed and set chunk size ---
         let chunkSize = 5 * 1024 * 1024; // Default to 5MB
-        try {
-          // Create a 1MB test blob
-          const testBlob = blob.slice(0, 1 * 1024 * 1024);
-          const testFormData = new FormData();
-          testFormData.append("video", testBlob, "test.webm");
-          testFormData.append("fileName", "test.webm");
-          testFormData.append("chunkIndex", 0);
-          testFormData.append("totalChunks", 1);
+        // try {
+        //   // Create a 1MB test blob
+        //   const testBlob = blob.slice(0, 1 * 1024 * 1024);
+        //   const testFormData = new FormData();
+        //   testFormData.append("video", testBlob, "test.webm");
+        //   testFormData.append("fileName", "test.webm");
+        //   testFormData.append("chunkIndex", 0);
+        //   testFormData.append("totalChunks", 1);
 
-          const startTime = performance.now();
-          await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          const endTime = performance.now();
-          const durationSeconds = (endTime - startTime) / 1000;
-          const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
+        //   const startTime = performance.now();
+        //   await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
+        //     headers: { "Content-Type": "multipart/form-data" },
+        //   });
+        //   const endTime = performance.now();
+        //   const durationSeconds = (endTime - startTime) / 1000;
+        //   const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
 
-          this.netSpeedMbps = speedMbps.toFixed(2);
-          this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
-          // Set chunk size based on speed
-          if (speedMbps > 8) { // ~8Mbps or higher is fast
-            chunkSize = 10 * 1024 * 1024; // 10MB
-          } else {
-            chunkSize = 5 * 1024 * 1024; // 5MB
-          }
-          // Optionally, delete the test chunk on the server if needed
-        } catch (e) {
-          // If test fails, fallback to 5MB
-          chunkSize = 5 * 1024 * 1024;
-          this.netSpeedMbps = null;
-          this.netSpeedStatus = 'slow';
-        }
+        //   this.netSpeedMbps = speedMbps.toFixed(2);
+        //   this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
+        //   // Set chunk size based on speed
+        //   if (speedMbps > 8) { // ~8Mbps or higher is fast
+        //     chunkSize = 10 * 1024 * 1024; // 10MB
+        //   } else {
+        //     chunkSize = 5 * 1024 * 1024; // 5MB
+        //   }
+        //   // Optionally, delete the test chunk on the server if needed
+        // } catch (e) {
+        //   // If test fails, fallback to 5MB
+        //   chunkSize = 5 * 1024 * 1024;
+        //   this.netSpeedMbps = null;
+        //   this.netSpeedStatus = 'slow';
+        // }
 
         const totalChunks = Math.ceil(blob.size / chunkSize);
 
@@ -1446,7 +1446,7 @@ document.addEventListener("DOMContentLoaded", function () {
       </p>
     </div>
   </div> 
-    <div
+    <!-- <div
       v-if="netSpeedMbps"
       class="net-speed-indicator"
       :class="netSpeedStatus"
@@ -1456,7 +1456,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <span v-if="netSpeedStatus === 'fast'">(Fast)</span>
         <span v-else>(Slow)</span>
       </span>
-    </div>
+    </div> -->
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="fullscreen-div">
     <div class="main-container">
