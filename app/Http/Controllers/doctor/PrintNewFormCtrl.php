@@ -114,8 +114,8 @@ class PrintNewFormCtrl extends Controller
     public function printNewFormPDF($pdf,$patient_id,$data,$comor_dataArray, $allergies_dataArray, $heredo_dataArray,$patients_name,$form_type){
         
         // DIAGNOSIS
-      
-          if (!empty($data->other_diagnoses) || !empty($data->other_reason_referral) || !empty($data->diagnosis)) {
+       
+          if (!empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->other_diagnoses) || !empty($data->form['form']->diagnosis)) {
             $this->titleHeader($pdf, "DIAGNOSIS");
             if (isset($data->icd[0])) {
                 $pdf->SetTextColor(102, 56, 0);
@@ -134,22 +134,28 @@ class PrintNewFormCtrl extends Controller
                         $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->notes_diagnoses)), 1, 'L');}
                     $pdf->Ln();
                 }
-            }else if($form_type == 'normal'){
-                if (isset($data->diagnosis)) {
+                if (isset($data->other_diagnoses)) {
                     $pdf->SetTextColor(102, 56, 0);
                     $pdf->SetFont('Arial', 'I', 10);
-                    if(!empty($data->diagnosis)){
-                        $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->diagnosis)), 1, 'L');}
-                    $pdf->Ln();
-                }
-            }
-    
-            if (isset($data->other_diagnoses)) {
-                $pdf->SetTextColor(102, 56, 0);
-                $pdf->SetFont('Arial', 'I', 10);
                 if(!empty($data->other_diagnoses)){
                     $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_diagnoses)), 1, 'L');}
-                $pdf->Ln();
+                    $pdf->Ln();
+                }
+            }else if($form_type == 'normal'){
+                if (isset($data->form['form']->diagnosis)) {
+                    $pdf->SetTextColor(102, 56, 0);
+                    $pdf->SetFont('Arial', 'I', 10);
+                    if(!empty($data->form['form']->diagnosis)){
+                        $pdf->MultiCell(0, 7, self::black($pdf, "Diagnosis/Impression: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->form['form']->diagnosis)), 1, 'L');}
+                    $pdf->Ln();
+                }
+                if (isset($data->form['form']->other_diagnoses)) {
+                    $pdf->SetTextColor(102, 56, 0);
+                    $pdf->SetFont('Arial', 'I', 10);
+                if(!empty($data->form['form']->other_diagnoses)){
+                    $pdf->MultiCell(0, 7, self::black($pdf, "Other diagnosis: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->form['form']->other_diagnoses)), 1, 'L');}
+                    $pdf->Ln();
+                }
             }
         } 
 
@@ -473,7 +479,7 @@ class PrintNewFormCtrl extends Controller
         // REASON FOR REFERRAL
         if (!empty($data->reason['reason']) || !empty($data->other_reason_referral)) {
             $this->titleHeader($pdf, "REASON FOR REFERRAL");
-            if(!empty($data->reason['reason'])){$pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->reason['reason'])), 1, 'L');}
+            if(!empty($data->reason['reason'])){$pdf->MultiCell(0, 7, self::black($pdf, "Reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->form['form']->reason)), 1, 'L');}
             else if(!empty($data->other_reason_referral)){$pdf->MultiCell(0, 7, self::black($pdf, "Other reason for referral: ") . "\n" . self::staticGreen($pdf, utf8_decode($data->other_reason_referral)), 1, 'L');}
         } 
 
@@ -730,14 +736,15 @@ class PrintNewFormCtrl extends Controller
             $pdf->MultiCell(0, 7, self::black($pdf, "Case Summary (pertinent Hx/PE, including meds, labs, course etc.): "), 0, 'L');
             $pdf->SetTextColor(102, 56, 0);
             $pdf->SetFont('Arial', 'I', 10);
-            $pdf->MultiCell(0, 5, utf8_decode($data->case_summary), 0, 'L');
+            
+            $pdf->MultiCell(0, 5, utf8_decode($data->form['form']->case_summary), 0, 'L');
             $pdf->Ln();
     
     
             $pdf->MultiCell(0, 7, self::black($pdf, "Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), 0, 'L');
             $pdf->SetTextColor(102, 56, 0);
             $pdf->SetFont('Arial', 'I', 10);
-            $pdf->MultiCell(0, 5, utf8_decode($data->reco_summary), 0, 'L');
+            $pdf->MultiCell(0, 5, utf8_decode($data->form['form']->reco_summary), 0, 'L');
             $pdf->Ln();
  
             $data_md_referring = []; 
