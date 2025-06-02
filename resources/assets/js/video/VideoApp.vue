@@ -22,6 +22,8 @@ export default {
       //start video in minutes
       callMinutes: 0,
       callTimer: null,
+      callDuration: "00:00:000", // New variable for formatted time
+      startTime: null, // Store the exact start time
       isLeavingChannel: false,
       //feedback
       feedbackUrl: baseUrlfeedback,
@@ -88,16 +90,22 @@ export default {
       form_type: "normal",
       reco_count : $("#reco_count_val").val(),
 
-       PdfUrl: '',
-
+      PdfUrl: '',
+       
+      loading: false,
+      uploadProgress: 0,
+      // netSpeedMbps: null,
+      // netSpeedStatus: '', // 'fast' or 'slow'
     };
   },
   mounted() {
     // Automatically start screen recording when the component is mounted
-    this.startScreenRecording();
+      if (this.referring_md === "yes") {
+        this.startScreenRecording();
+      }
+    
 
-    //for minutes timer
-    this.startCallTimer();
+     window.addEventListener('beforeunload', this.preventCloseWhileUploading);
     window.addEventListener('beforeunload', this.stopCallTimer);
     axios
       .get(
@@ -132,11 +140,14 @@ export default {
      window.addEventListener('resize', this.handleResize);
     // Call once to set initial sizing
     this.handleResize();
+    
 
   },
 
   beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
+    window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
+    this.stopCallTimer();
      // Remove event listener when component is destroyed
      window.removeEventListener('resize', this.handleResize);
   },
@@ -170,85 +181,268 @@ export default {
   },
   methods: {
     async startScreenRecording() {
-        try {
-            // Request screen capture of the current window
-            const stream = await navigator.mediaDevices.getDisplayMedia({
-                video: true,
-                audio: true,
-            });
 
-            // Initialize MediaRecorder
-            this.screenRecorder = new MediaRecorder(stream, {
-                mimeType: "video/webm; codecs=vp8", // WebM format
-            });
-            this.recordedChunks = [];
+      try {
+        // Check for browser compatibility
+        const isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
+        if (!isSupported) {
+          Lobibox.alert("error", {
+            msg: "Your browser does not support screen recording with microphone audio. Please use the latest version of Chrome, Edge, or Firefox.",
+            closeButton: false,
+          });
+          return;
+        }
 
-            // Collect recorded data
-            this.screenRecorder.ondataavailable = (event) => {
-                if (event.data.size > 0) {
-                    this.recordedChunks.push(event.data);
-                }
-            };
+        // Inform the user about permissions
+        console.log("Requesting permissions for screen and microphone...");
 
-            // Start recording
-            this.screenRecorder.start();
-            console.log("Screen recording started.");
-        } catch (error) {
-            console.error("Error starting screen recording:", error);
-              // Show an error message
-            Lobibox.alert("error", {
-                msg: "Failed to start screen recording. Please check browser permissions.",
-                callback: function () {
-                window.top.close(); // Close the window when "OK" is clicked
+        // Request screen capture with system audio
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: true, // Request system audio
+        });
+
+        console.log("Screen stream obtained:", screenStream);
+
+        // Request microphone access
+        const micStream = await navigator.mediaDevices.getUserMedia({
+          audio: {
+            echoCancellation: true, // Reduce echo
+            noiseSuppression: true, // Reduce background noise
+            sampleRate: 44100,      // Set sample rate for better quality
+          },
+        });
+
+        console.log("Microphone stream obtained:", micStream);
+
+        // Debugging: Log audio tracks from microphone
+        micStream.getAudioTracks().forEach((track) => {
+          console.log("Microphone track:", track);
+        });
+
+        // Create an AudioContext for mixing audio
+        const audioContext = new AudioContext();
+        const destination = audioContext.createMediaStreamDestination();
+
+        // Connect system audio to the AudioContext
+        if (screenStream.getAudioTracks().length > 0) {
+          const systemAudioSource = audioContext.createMediaStreamSource(screenStream);
+          systemAudioSource.connect(destination);
+        } else {
+          console.warn("No system audio track found in screen stream.");
+        }
+
+        // Connect microphone audio to the AudioContext
+        if (micStream.getAudioTracks().length > 0) {
+          const micAudioSource = audioContext.createMediaStreamSource(micStream);
+          micAudioSource.connect(destination);
+        } else {
+          console.warn("No microphone audio track found.");
+        }
+
+        // Combine video from screenStream and mixed audio
+        const combinedStream = new MediaStream([
+          ...screenStream.getVideoTracks(),  // Desktop video
+          ...destination.stream.getAudioTracks(), // Mixed audio (system + microphone)
+        ]);
+
+        console.log("Combined stream created:", combinedStream);
+
+        // Initialize MediaRecorder with the combined stream
+        this.screenRecorder = new MediaRecorder(combinedStream, {
+          mimeType: "video/webm; codecs=vp8", // WebM format
+        });
+        this.recordedChunks = [];
+
+        // Collect recorded data
+        this.screenRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            this.recordedChunks.push(event.data);
+          }
+        };
+
+        // Debugging: Monitor video and audio tracks for lag
+        combinedStream.getTracks().forEach((track) => {
+          console.log(`Track kind: ${track.kind}, readyState: ${track.readyState}`);
+          track.onended = () => console.log(`Track ended: ${track.kind}`);
+        });
+
+        // Start recording
+        this.screenRecorder.start();
+        //for minutes timer
+        this.startCallTimer();
+        console.log("Screen recording started with desktop and microphone audio.");
+      } catch (error) {
+        console.error("Error starting screen recording:", error);
+
+        // Handle permission denial or other errors
+        if (error.name === "NotAllowedError") {
+          Lobibox.alert("error", {
+            msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
+            closeButton: false,
+            callback: function () {
+              window.top.close();
             },
+          });
+        } else if (error.name === "NotFoundError") {
+          Lobibox.alert("error", {
+            msg: "No screen or microphone devices found. Please ensure your devices are connected and try again.",
+            closeButton: false,
+            callback: function () {
+              window.top.close();
+            },
+          });
+        } else {
+          Lobibox.alert("error", {
+            msg: "An unexpected error occurred while starting screen recording. Please try again.",
+            closeButton: false,
+            callback: function () {
+              window.top.close();
+            },
+          });
+        }
+      }
+    },
+    preventCloseWhileUploading(event) {
+        if (this.loading) {
+          event.preventDefault();
+          event.returnValue = "File upload in progress. Please wait until it finishes.";
+          return event.returnValue;
+        }
+      },
+    async saveScreenRecording(closeAfterUpload = false) {
+      if (this.recordedChunks.length > 0) {
+        this.loading = true; // Show loader
+
+        // Convert recorded chunks to a Blob
+        const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+
+        // --- Max file size check (2GB) ---
+        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+        if (blob.size > maxSize) {
+          this.loading = false;
+          Lobibox.alert("error", {
+            msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
+          });
+          return;
+        }
+
+        // Generate the filename
+        const patientCode = this.form.code || "Unknown_Patient";
+        const activityId = this.activity_id;
+        const referring_md = this.form.referring_md;
+        const referred = this.form.action_md;
+        // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+        const currentDate = new Date();
+        const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+        const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+
+        const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
+
+        // --- Detect upload speed and set chunk size ---
+        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
+        // try {
+        //   // Create a 1MB test blob
+        //   const testBlob = blob.slice(0, 1 * 1024 * 1024);
+        //   const testFormData = new FormData();
+        //   testFormData.append("video", testBlob, "test.webm");
+        //   testFormData.append("fileName", "test.webm");
+        //   testFormData.append("chunkIndex", 0);
+        //   testFormData.append("totalChunks", 1);
+
+        //   const startTime = performance.now();
+        //   await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
+        //     headers: { "Content-Type": "multipart/form-data" },
+        //   });
+        //   const endTime = performance.now();
+        //   const durationSeconds = (endTime - startTime) / 1000;
+        //   const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
+
+        //   this.netSpeedMbps = speedMbps.toFixed(2);
+        //   this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
+        //   // Set chunk size based on speed
+        //   if (speedMbps > 8) { // ~8Mbps or higher is fast
+        //     chunkSize = 10 * 1024 * 1024; // 10MB
+        //   } else {
+        //     chunkSize = 5 * 1024 * 1024; // 5MB
+        //   }
+        //   // Optionally, delete the test chunk on the server if needed
+        // } catch (e) {
+        //   // If test fails, fallback to 5MB
+        //   chunkSize = 5 * 1024 * 1024;
+        //   this.netSpeedMbps = null;
+        //   this.netSpeedStatus = 'slow';
+        // }
+
+        const totalChunks = Math.ceil(blob.size / chunkSize);
+
+        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+          const start = chunkIndex * chunkSize;
+          const end = Math.min(blob.size, start + chunkSize);
+          const chunk = blob.slice(start, end);
+
+          const formData = new FormData();
+          formData.append("video", chunk, fileName);
+          formData.append("fileName", fileName);
+          formData.append("chunkIndex", chunkIndex);
+          formData.append("totalChunks", totalChunks);
+
+          try {
+            await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
+              headers: { "Content-Type": "multipart/form-data" },
             });
-             // Close the window if permission is denied
-            // setTimeout(() => {
-            //     window.top.close();
-            // }, 2000); // Add a slight delay to allow the alert to display
-        }
-    },
-
-    saveScreenRecording() {
-        if (this.recordedChunks.length > 0) {
-            // Convert recorded chunks to a Blob
-            const blob = new Blob(this.recordedChunks, { type: "video/webm" });
-
-            // Convert WebM to MP4 using a third-party library (optional)
-            // For simplicity, we'll save it as WebM with an .mp4 extension
-            const url = URL.createObjectURL(blob);
-
-            // Automatically save the file
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `screen_recording_${Date.now()}.mp4`; // Save as .mp4
-            a.click();
-
-            // Clean up
-            URL.revokeObjectURL(url);
-            this.recordedChunks = [];
-
-            console.log("Screen recording saved successfully.");
-        } else {
-            console.error("No recorded data available to save.");
-        }
-    },
-    startCallTimer() {
-      let startTime = localStorage.getItem('callStartTime');
-    
-        if (startTime) {
-          this.callMinutes = Math.floor((Date.now() - startTime) / 60000);
-        } else {
-          // Store the start time if not already set
-          localStorage.setItem('callStartTime', Date.now());
+            // Update progress after each chunk
+            this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+          } catch (error) {
+            this.loading = false;
+            this.uploadProgress = 0; // Reset on error
+            Lobibox.alert("error", {
+              msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
+                (error.response?.data?.message || error.message),
+            });
+            return;
+          }
         }
 
-      this.callTimer = setInterval(() => {
-        this.callMinutes++;
-          console.log("Current call duration:", this.callMinutes);
-      }, 60000);
-      console.log("referring call duration:", this.referring_md);
+        this.uploadProgress = 100; // Ensure it's 100% at the end
+        this.recordedChunks = []; // Clear recorded chunks to free memory
+        this.loading = false; // Hide loader
+        this.uploadProgress = 0; // Reset progress
+
+        if (closeAfterUpload) {
+          window.top.close();
+        }
+      } else {
+        console.error("No recorded data available to save.");
+      }
     },
+  closeFeedbackModal() {
+    this.feedbackModalVisible = false; // Hide the feedback modal
+  },
+  startCallTimer() {
+    // Store the start time in milliseconds
+    this.startTime = Date.now();
+
+    // Update the timer every 10 milliseconds
+    this.callTimer = setInterval(() => {
+      const elapsedTime = Date.now() - this.startTime;
+
+      // Calculate minutes, seconds, and milliseconds
+      const hours = Math.floor(elapsedTime / 3600000);
+      const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+      const seconds = Math.floor((elapsedTime % 60000) / 1000);
+
+
+      // Format the time as mm:ss:ms
+      this.callDuration = `${String(hours).padStart(2, "0")} hours ${String(minutes).padStart(2, "0")} minutes ${String(seconds).padStart(2, "0")} seconds`;
+    }, 10);
+  },
+  stopCallTimer() {
+    if (this.callTimer) {
+      clearInterval(this.callTimer);
+    }
+  },
     notifyReco(code, feedback_count, redirect_track) {
         let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
             '                               data-target=\'#feedbackModal\'\n' +
@@ -286,122 +480,104 @@ export default {
     async startBasicCall() {
       // Create an instance of the Agora Engine
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-      
+
       // Setup channel parameters with user count tracking
       if (!this.channelParameters) {
         this.channelParameters = {};
       }
-      this.channelParameters.userCount = 1; // Count ourselves as the first user
+      this.channelParameters.userCount = 0; // Initialize user count
       this.channelParameters.maxUsers = 2; // Maximum 2 users allowed
-      
-      // Dynamically create containers for video elements
+
       const remotePlayerContainer = document.createElement("div");
       const localPlayerContainer = document.createElement("div");
       localPlayerContainer.id = this.options.uid;
-      
+
       let self = this;
-      
+
       // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
-        
+
         // Check if channel already has maximum users
         if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
           console.log("Channel is full! Maximum users reached.");
-          // Optionally notify the user that the channel is full
           self.showChannelFullMessage();
           // Disconnect this user since the channel is full
           await agoraEngine.leave();
+          self.channelParameters.userCount--; // Decrement user count after leaving
           return;
         }
       });
-      
+
       // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
       agoraEngine.on("user-published", async (user, mediaType) => {
-        // If we already have maximum users and a new one tries to connect
         if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
           console.log("Ignoring new user, channel is full");
           return;
         }
-      
-        // Subscribe to the remote user when the SDK triggers the "user-published" event
+
         await agoraEngine.subscribe(user, mediaType);
         console.log("subscribe success");
-        
-        // Handle video track
-        if (mediaType == "video") {
-          console.log("remote video connected");
-          // Retrieve the remote video track
+
+        if (mediaType === "video") {
           self.channelParameters.remoteVideoTrack = user.videoTrack;
-          // Retrieve the remote audio track
           self.channelParameters.remoteAudioTrack = user.audioTrack;
-          // Save the remote user id for reuse
           self.channelParameters.remoteUid = user.uid.toString();
-          // Specify the ID of the DIV container using remote user's uid
           remotePlayerContainer.id = user.uid.toString();
-          
-          // Stop any ringing sounds
-          if (self.$refs.ringingPhone) {
-            self.$refs.ringingPhone.pause();
-          }
-          
-          // Add remote video container to the page
+
           document.body.append(remotePlayerContainer);
           $(".remotePlayerDiv").html(remotePlayerContainer);
           $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
           $(remotePlayerContainer).addClass("remotePlayerLayer");
-          
-          // Play the remote video track
+
           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
         }
-        
-        // Handle audio track
-        if (mediaType == "audio") {
+
+        if (mediaType === "audio") {
           self.channelParameters.remoteAudioTrack = user.audioTrack;
           self.channelParameters.remoteAudioTrack.play();
         }
-      });
-      
-      // Listen for users leaving the channel
-      agoraEngine.on("user-unpublished", (user) => {
-        console.log(user.uid + " has left the channel");
-        self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
-      });
-      
-      // Handle user leaving completely
-      agoraEngine.on("user-left", (user) => {
-        console.log(user.uid + " has left the channel completely");
-        self.channelParameters.userCount = Math.max(1, self.channelParameters.userCount - 1);
         
-        // Optional: Clean up the remote user container
-        if (remotePlayerContainer && remotePlayerContainer.id === user.uid.toString()) {
-          remotePlayerContainer.remove();
+        // Start the timer only if not already started
+        if (!self.callTimer) {
+          self.startCallTimer();
         }
       });
 
-      // Handle client-role-changed event (if using live broadcasting mode)
-      agoraEngine.on("client-role-changed", (oldRole, newRole) => {
-        console.log("Client role changed from " + oldRole + " to " + newRole);
+      // Listen for users leaving the channel
+      agoraEngine.on("user-left", (user) => {
+        console.log(user.uid + " has left the channel");
+        self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
       });
-      
-      // Initialize the connection when window loads
-      if (document.readyState === "complete") {
-        self.joinVideo(
-          agoraEngine,
-          self.channelParameters,
-          localPlayerContainer,
-          self
+
+      try {
+        console.log("Attempting to join channel...", self.options.channel);
+        await agoraEngine.join(
+          self.options.appId,
+          self.options.channel,
+          self.options.token,
+          self.options.uid
         );
-      } else {
-        window.onload = function () {
-          self.joinVideo(
-            agoraEngine,
-            self.channelParameters,
-            localPlayerContainer,
-            self
-          );
-        };
+
+        console.log("Successfully joined channel");
+
+        self.channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        self.channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+
+        document.body.append(localPlayerContainer);
+        $(".localPlayerDiv").html(localPlayerContainer);
+        $(localPlayerContainer).addClass("localPlayerLayer");
+
+        await agoraEngine.publish([
+          self.channelParameters.localAudioTrack,
+          self.channelParameters.localVideoTrack,
+        ]);
+
+        self.channelParameters.localVideoTrack.play(localPlayerContainer);
+        console.log("publish success!");
+      } catch (error) {
+        console.error("Error joining channel:", error);
       }
     },
     // Method to show channel full message to user
@@ -481,6 +657,7 @@ export default {
         // Play the local video track
         channelParameters.localVideoTrack.play(localPlayerContainer);
         console.log("publish success!");
+        // Start the call timer when the user joins and publishes
       } catch (error) {
         console.error("Error joining channel:", error);
       }
@@ -533,7 +710,7 @@ export default {
             if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
                 this.screenRecorder.stop();
                 this.screenRecorder.onstop = () => {
-                    this.saveScreenRecording();
+                    this.saveScreenRecording(true);
                 };
             }
 
@@ -542,24 +719,14 @@ export default {
                 clearInterval(this.callTimer); // Stop the timer
                 await this.sendCallDuration();
 
-                // Give more time for the request to complete
-                setTimeout(() => {
-                    window.top.close();
-                }, 2000);
+                // // Give more time for the request to complete
+                // setTimeout(() => {
+                //     window.top.close();
+                // }, 10000);
             } else {
                 window.top.close();
             }
         }
-    },
-    stopCallTimer() {
-      if(this.referring_md == 'yes'){
-        if (this.callTimer) {
-            clearInterval(this.callTimer);
-        }
-
-        this.sendCallDuration();
-        localStorage.removeItem('callStartTime');
-      }
     },
     beforeDestroy() {
       clearInterval(this.callTimer);
@@ -1168,242 +1335,127 @@ export default {
   }
 
 };
-
 document.addEventListener("DOMContentLoaded", function () {
     const draggableDiv = document.getElementById("draggable-div");
-    const telemedForm = document.querySelector(".telemedForm");
     const mainPic = document.querySelector(".mainPic");
-    
-    if (!draggableDiv || !telemedForm) {
-        console.error("❌ Error: Elements not found!");
+
+    if (!draggableDiv) {
+        console.error("❌ Error: Draggable element not found!");
         return;
     }
-    
-    // Override any existing styling with our fixed dimensions
-    draggableDiv.style.width = "150px";      // Fixed width instead of percentage
-    draggableDiv.style.minWidth = "150px";   // Ensure minimum width
-    draggableDiv.style.maxWidth = "none";    // Remove any maxWidth constraint
-    draggableDiv.style.height = "200px";     // Fixed height
-    draggableDiv.style.minHeight = "200px";  // Ensure minimum height
-    
-    // Clear any existing transforms that might be repositioning the element
-    draggableDiv.style.transform = "none";
-    
+
     let isDragging = false;
-    let offsetX, offsetY;
-    
-    // Position in bottom right corner initially
+    let offsetX = 0, offsetY = 0;
+
+    // Position the draggable div in the bottom-right corner initially
     positionInBottomRight();
-    
+
     // Mouse events for desktop
     draggableDiv.addEventListener("mousedown", startDrag);
     document.addEventListener("mousemove", drag);
     document.addEventListener("mouseup", endDrag);
-    
+
     // Touch events for mobile
     draggableDiv.addEventListener("touchstart", startDragTouch);
     document.addEventListener("touchmove", dragTouch);
     document.addEventListener("touchend", endDrag);
-    
+
     function positionInBottomRight() {
-        // Set absolute positioning
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const padding = 20;
+
         draggableDiv.style.position = "absolute";
-        
-        // Get container dimensions - use mainPic if available, otherwise use viewport
-        let containerWidth, containerHeight, containerLeft, containerTop;
-        
-        if (mainPic) {
-            const mainPicBounds = mainPic.getBoundingClientRect();
-            containerWidth = mainPicBounds.width;
-            containerHeight = mainPicBounds.height;
-            containerLeft = mainPicBounds.left;
-            containerTop = mainPicBounds.top;
-        } else {
-            containerWidth = window.innerWidth;
-            containerHeight = window.innerHeight;
-            containerLeft = 0; 
-            containerTop = 0;
-        }
-        
-        // Calculate position (20px padding from edges)
-        let newX = containerLeft + containerWidth - 150 - 20;  // Using fixed width of 150px
-        let newY = containerTop + containerHeight - 200 - 20;  // Using fixed height of 200px
-        
-        // Get the telemedForm bounds to avoid overlapping
-        const telemedBounds = telemedForm.getBoundingClientRect();
-        
-        // Ensure it doesn't overlap with telemedForm
-        if (newX + 150 > telemedBounds.left && 
-            newX < telemedBounds.right && 
-            newY + 200 > telemedBounds.top && 
-            newY < telemedBounds.bottom) {
-            // If it would overlap, move it above the form
-            newY = telemedBounds.top - 200 - 20;
-        }
-        
-        // Convert to relative position if needed
-        if (draggableDiv.offsetParent) {
-            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-            newX -= parentRect.left;
-            newY -= parentRect.top;
-        }
-        
-        // Apply the position
-        draggableDiv.style.left = `${newX}px`;
-        draggableDiv.style.top = `${newY}px`;
+        draggableDiv.style.left = `${containerBounds.right - draggableDiv.offsetWidth - padding}px`;
+        draggableDiv.style.top = `${containerBounds.bottom - draggableDiv.offsetHeight - padding}px`;
     }
-    
+
     function startDrag(event) {
-        event.preventDefault();
         isDragging = true;
-        
         const rect = draggableDiv.getBoundingClientRect();
         offsetX = event.clientX - rect.left;
         offsetY = event.clientY - rect.top;
-        
-        // Use box-shadow instead of transform for visual feedback
-        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
         draggableDiv.style.cursor = "grabbing";
     }
-    
+
     function startDragTouch(event) {
         if (event.touches.length !== 1) return;
-        
-        event.preventDefault();
         isDragging = true;
-        
         const touch = event.touches[0];
         const rect = draggableDiv.getBoundingClientRect();
         offsetX = touch.clientX - rect.left;
         offsetY = touch.clientY - rect.top;
-        
-        // Use box-shadow instead of transform for visual feedback
-        draggableDiv.style.boxShadow = "0 0 10px rgba(0,0,0,0.3)";
     }
-    
+
     function drag(event) {
         if (!isDragging) return;
-        
         event.preventDefault();
         moveElement(event.clientX, event.clientY);
     }
-    
+
     function dragTouch(event) {
         if (!isDragging || event.touches.length !== 1) return;
-        
         event.preventDefault();
         const touch = event.touches[0];
         moveElement(touch.clientX, touch.clientY);
     }
-    
+
     function moveElement(clientX, clientY) {
-        // Calculate new position
-        let newX = clientX - offsetX;
-        let newY = clientY - offsetY;
-        
-        // Get necessary bounding rectangles
-        const telemedBounds = telemedForm.getBoundingClientRect();
-        
-        // Check if the draggable div would enter the telemedForm
-        const wouldOverlapTelemedForm = 
-            newX + 150 > telemedBounds.left &&
-            newX < telemedBounds.right &&
-            newY + 200 > telemedBounds.top &&
-            newY < telemedBounds.bottom;
-        
-        if (wouldOverlapTelemedForm) {
-            // Don't update position if it would overlap with telemedForm
-            return;
-        }
-        
-        // Keep within mainPic boundaries if mainPic exists
-        if (mainPic) {
-            const mainPicBounds = mainPic.getBoundingClientRect();
-            // Calculate boundaries
-            const minX = mainPicBounds.left;
-            const maxX = mainPicBounds.right - 150;  // Using fixed width
-            const minY = mainPicBounds.top;
-            const maxY = mainPicBounds.bottom - 200; // Using fixed height
-            
-            // Apply constraints
-            newX = Math.max(minX, Math.min(maxX, newX));
-            newY = Math.max(minY, Math.min(maxY, newY));
-        }
-        
-        // Convert to relative position within parent element if needed
-        if (draggableDiv.offsetParent) {
-            const parentRect = draggableDiv.offsetParent.getBoundingClientRect();
-            newX -= parentRect.left;
-            newY -= parentRect.top;
-        }
-        
-        // Apply the position
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const newX = Math.min(
+            Math.max(clientX - offsetX, containerBounds.left),
+            containerBounds.right - draggableDiv.offsetWidth
+        );
+        const newY = Math.min(
+            Math.max(clientY - offsetY, containerBounds.top),
+            containerBounds.bottom - draggableDiv.offsetHeight
+        );
+
         draggableDiv.style.left = `${newX}px`;
         draggableDiv.style.top = `${newY}px`;
     }
-    
+
     function endDrag() {
         if (!isDragging) return;
-        
         isDragging = false;
-        // Reset the visual feedback
-        draggableDiv.style.boxShadow = "none";
         draggableDiv.style.cursor = "grab";
     }
-    
-    // Add cursor style to indicate draggability
-    draggableDiv.style.cursor = "grab";
-    
-    // Ensure our settings take precedence by applying them again after a short delay
-    setTimeout(function() {
-        draggableDiv.style.width = "150px"; 
-        draggableDiv.style.height = "200px";
-        draggableDiv.style.minWidth = "150px";
-        draggableDiv.style.minHeight = "200px";
-        draggableDiv.style.maxWidth = "none";
-    }, 100);
-    
-    // Override any external changes that might be made by other scripts
-    const observer = new MutationObserver(function(mutations) {
-        mutations.forEach(function(mutation) {
-            if (mutation.attributeName === "style") {
-                // Check if width or transform has been changed externally
-                const currentWidth = draggableDiv.style.width;
-                const currentTransform = draggableDiv.style.transform;
-                
-                if (currentWidth !== "150px" || 
-                    (currentTransform && currentTransform !== "none" && !currentTransform.startsWith("scale"))) {
-                    // Re-apply our fixed dimensions
-                    draggableDiv.style.width = "150px";
-                    draggableDiv.style.height = "200px";
-                    draggableDiv.style.minWidth = "150px";
-                    draggableDiv.style.minHeight = "200px";
-                    draggableDiv.style.maxWidth = "none";
-                    
-                    // Only clear transform if it's not our scaling effect
-                    if (currentTransform && !currentTransform.startsWith("scale")) {
-                        draggableDiv.style.transform = "none";
-                    }
-                }
-            }
-        });
-    });
-    
-    // Start observing the element for style changes
-    observer.observe(draggableDiv, { attributes: true });
-    
-    // Update position on window resize to maintain proper boundaries
-    window.addEventListener("resize", function() {
-        if (isDragging) return; // Don't interfere with active dragging
-        
-        // Reposition in bottom right on resize
-        positionInBottomRight();
-    });
-});
 
+    // Ensure the draggable div stays within bounds on window resize
+    window.addEventListener("resize", positionInBottomRight);
+});
 </script>
 
 <template>
+  <div v-if="loading" class="loader-overlay">
+    <div class="loader" style="margin-right: 20px"></div>
+    <div style="width: 300px; margin-top: 20px;">
+      <div style="background: #444; border-radius: 8px; overflow: hidden;">
+        <div
+          :style="{
+            width: uploadProgress + '%',
+            background: '#4caf50',
+            height: '18px',
+            transition: 'width 0.3s'
+          }"
+        >
+      </div>
+      </div>
+      <p style="color: white; text-align: center; margin: 5px 0 0 0;">
+        Please wait until upload is complete.<br>Do not close this window. {{ uploadProgress }}%
+      </p>
+    </div>
+  </div> 
+    <!-- <div
+      v-if="netSpeedMbps"
+      class="net-speed-indicator"
+      :class="netSpeedStatus"
+    >
+      <span>
+        {{ netSpeedMbps }} Mbps
+        <span v-if="netSpeedStatus === 'fast'">(Fast)</span>
+        <span v-else>(Slow)</span>
+      </span>
+    </div> -->
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="fullscreen-div">
     <div class="main-container">
@@ -1414,6 +1466,9 @@ document.addEventListener("DOMContentLoaded", function () {
               <h3>Calling...</h3>
             </div>
             <img :src="doctorUrl" class="remote-img" alt="Image1" />
+          </div>
+          <div class="call-duration">
+            <p>Call Duration: {{ callDuration }}</p>
           </div>
           <Transition name="fade">
             <div class="tooltip-container">
@@ -1472,6 +1527,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     type="button"
                     @mouseover="showEndcall = true"
                     @mouseleave="showEndcall = false"
+                    :disabled="loading"
                   >
                     <i class="bi-telephone-x-fill"></i>
                   </button>
@@ -1571,7 +1627,7 @@ document.addEventListener("DOMContentLoaded", function () {
             <div class="form-header-container">
               <img :src="dohLogoUrl" alt="Image3" class="dohLogo" />
               <div class="formHeader">
-                <div>
+                  <div>
                   <p>Republic of the Philippines</p>
                   <p>DEPARTMENT OF HEALTH</p>
                   <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
@@ -1790,7 +1846,7 @@ document.addEventListener("DOMContentLoaded", function () {
                       onmouseout="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';">
                       <i class="bi bi-clipboard2-pulse"></i> Generate Lab Request
                   </button>
-              </div>
+                </div>
             </div>
             </div>
           </div>
@@ -1815,11 +1871,9 @@ document.addEventListener("DOMContentLoaded", function () {
       :fetchUrl="feedbackUrl"
       :imageUrl="baseUrlFeed"
       :postUrl="doctorfeedback"
-      @refresh="refreshMessages"
       @close-modal="closeFeedbackModal"
     />
     <PDFViewerModal ref="pdfViewer" :pdfUrl="PdfUrl" />
-
   </div>
 </template>
 
@@ -1936,5 +1990,81 @@ td {
 
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
+}
+
+#draggable-div {
+    width: 195px;
+    height: 200px;
+    min-width: 150px;
+    min-height: 200px;
+    max-width: 150px;
+    max-height: 200px;
+}
+
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader {
+  border: 8px solid #f3f3f3;
+  border-top: 8px solid #3498db;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.call-duration {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: rgba(0, 0, 0, 0.404);
+  color: white;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  font-size: 1rem;
+  z-index: 10;
+}
+
+.net-speed-indicator {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10000;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+  background: rgba(15, 15, 15, 0.103);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  pointer-events: none;
+}
+.net-speed-indicator.fast {
+  border: 2px solid #4caf50;
+  color: #4caf50;
+}
+.net-speed-indicator.slow {
+  border: 2px solid #e53935;
+  color: #e53935;
 }
 </style>

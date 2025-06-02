@@ -25,11 +25,9 @@
 
     if($facility_id_telemed){
         $facilities = \App\Facility::select('id','name', 'address')
-        ->where('id','!=',$user->facility_id)
-        ->where('id', $facility_id_telemed) // I am adding this to get the specific facility name
-        // ->where('status',1)
+        ->where('id', $facility_id_telemed)
         ->where('referral_used','yes')
-        ->orderBy('name','asc')->first();
+        ->first();
     }else{
         $facilities = \App\Facility::select('id','name')
         ->where('id','!=',$user->facility_id)
@@ -128,10 +126,14 @@
                         </div>
                         <div class="col-md-6">
                             @if($appointmentParam)
-                            <input type="hidden" name="referred_facility" value="{{ $facilities->find($facility_id_telemed)->id }}">
-                            <select class="form-control-select select2 select_facility" style="width: 100%" required disabled>
-                                <option>{{$facilities->find($facility_id_telemed)->name }}</option>                               
-                            </select>
+                                 @if($facilities)
+                                    <input type="hidden" name="referred_facility" value="{{ $facilities->id }}">
+                                    <select class="form-control-select select2 select_facility" style="width: 100%" required disabled>
+                                        <option>{{ $facilities->name }}</option>                               
+                                    </select>
+                                @else
+                                    <span class="text-danger">No referred facility found.</span>
+                                @endif
                             @else
                             <select name="referred_facility" class="form-control-select modal-select2 select_facility" style="width: 100%" required>
                                 <option value="">Select Facility...</option>
@@ -162,11 +164,15 @@
                             <small class="text-success"><b>ADDRESS: </b></small>
                         </div>
                         <div class="col-md-9">
-                        @if($appointmentParam)
-                        <span class="text-primary facility_address">{{$facilities->find($facility_id_telemed)->address}}</span>
-                        @else
-                        <span class="text-primary facility_address"></span>
-                        @endif
+                            @if($appointmentParam)
+                                @if($facilities)
+                                    <span class="text-primary facility_address">{{$facilities->address}}</span>
+                                @else
+                                    <span class="text-danger">No address found.</span>
+                                @endif
+                            @else
+                                <span class="text-primary facility_address"></span>
+                            @endif
                         </div>
                     </div><br>
 
