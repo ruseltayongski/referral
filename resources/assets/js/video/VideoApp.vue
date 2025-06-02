@@ -404,7 +404,6 @@ export default {
         };
       }
     },
-
     // Method to show channel full message to user
     showChannelFullMessage() {
       // Create an alert or message to inform user

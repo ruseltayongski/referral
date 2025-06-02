@@ -1523,13 +1523,22 @@ class PatientCtrl extends Controller
         $barangay = $patient->brgy;
 
         $Emr_patient = DB::table('patients')
+        ->leftJoin('province', 'province.id', '=', 'patients.province')
+        ->leftJoin('muncity', 'muncity.id', '=', 'patients.muncity')
+        ->leftJoin('barangay', 'barangay.id', '=', 'patients.brgy')
+
         ->leftJoin('patient_form', 'patient_form.patient_id', '=', 'patients.id')
         ->leftJoin('icd as icd_pf', 'icd_pf.code', '=', 'patient_form.code')
         ->leftJoin('icd10 as icd10_pf', 'icd10_pf.id', '=', 'icd_pf.icd_id')
-    
+        ->leftJoin('tracking as track_pf', 'track_pf.code', '=', 'patient_form.code')
+        
+        ->leftJoin('department as depart','depart.id','=','patient_form.department_id')
+
         ->leftJoin('pregnant_form', 'pregnant_form.patient_woman_id', '=', 'patients.id')
         ->leftJoin('icd as icd_pg', 'icd_pg.code', '=', 'pregnant_form.code')
         ->leftJoin('icd10 as icd10_pg', 'icd10_pg.id', '=', 'icd_pg.icd_id')
+        ->leftJoin('tracking as track_pg', 'track_pg.code', '=', 'pregnant_form.code')
+        ->leftJoin('department as Pregdepart','depart.id','=','pregnant_form.department_id')
     
         ->where('patients.fname', $firstname)
         ->where('patients.mname', $mname)
@@ -1541,11 +1550,19 @@ class PatientCtrl extends Controller
     
         ->select(
             'patients.*',
-    
+            DB::raw("if(
+                patients.brgy,
+                concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),
+                concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
+            ) as patient_address"),
             // All patient_form fields
             'patient_form.id as patient_form_id',
             'patient_form.code as patientCode',
-            'patient_form.referring_facility as patient_refer_facility',
+            'patient_form.covid_number',
+            'track_pf.date_referred as patient_referred_date',
+            'track_pf.date_transferred as patient_transferred',
+            'depart.description as department',
+            'patient_form.referring_facility as patient_refer_from',
             'patient_form.referred_to as patient_refer_to',
             'patient_form.refer_clinical_status as patient_clinical_status',
             'patient_form.refer_sur_category as patient_sur_category',
@@ -1555,6 +1572,7 @@ class PatientCtrl extends Controller
             'patient_form.case_summary as patient_case_summary',
             'patient_form.reco_summary as patient_reco_summary',
             'patient_form.diagnosis as patient_diagnosis',
+            'patient_form.other_diagnoses as other_patient_diagnosis',
             'patient_form.referring_md as patient_referring_md',
             'patient_form.referred_md as patient_reffered_md',
             'patient_form.other_reason_referral as patient_other_reason_referral',
@@ -1568,7 +1586,9 @@ class PatientCtrl extends Controller
             'pregnant_form.referring_facility as pregnant_refer_facility',
             'pregnant_form.referred_by as pregnant_refer_facility',
             'pregnant_form.record_no as pregnant_record_no',
-            'pregnant_form.referred_date as pregnant_referred_date',
+            'track_pg.date_referred as pregnant_referred_date',
+            'track_pg.date_transferred as preg_transferred_date',
+            'Pregdepart.description as pregDepartment',
             'pregnant_form.referred_to as pregnant_referred_to',
             'pregnant_form.refer_clinical_status as pregnant_refer_clinical_status',
             'pregnant_form.refer_sur_category as pregnant_refer_sur_category',
@@ -1610,14 +1630,15 @@ class PatientCtrl extends Controller
         )
     
         ->orderByRaw('GREATEST(COALESCE(patient_form.id, 0), COALESCE(pregnant_form.id, 0)) DESC')
-    
-        ->get();
-    
-        dd($Emr_patient);
-
+        ->paginate(2);
+        $emr_history = $Emr_patient->slice(1)->values();
+        
+        // dd(get_class($emr_history));
+          
         $arr = [
             "form" => 'normal data',
-            "patient" => $patientId
+            "patient" => $patientId,
+            "emr_data" => $emr_history
         ];
 
         return view('doctor.emr_body', $arr);
