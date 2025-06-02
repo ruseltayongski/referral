@@ -300,8 +300,8 @@ $user = Session::get('auth');
                                @endif
                             @endif
                       
-                            @if($row->telemedicine == 1)
-
+                            <!-- @if($row->telemedicine == 1)
+                                
                             <a data-toggle="modal" href="#EmrForm" 
                                data-patient="{{ $row->patient_id }}"
                                data-emr="10"
@@ -309,7 +309,7 @@ $user = Session::get('auth');
                                 <i class="fa fa-folder"></i> EMR 
                             </a>
 
-                            @endif
+                            @endif -->
                         </div>
                     </div>
                 @endforeach
