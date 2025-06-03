@@ -477,7 +477,7 @@ class PrintCtrl extends Controller
 
         $activity = Activity::with([
             'patient.municipal',
-            'referredTo',
+            'referredFrom',
             'labRequest' => function ($query) {
                 $query->select('activity_id', 'laboratory_code','others','requested_by','created_at')
                     ->with(['requestedBy' => function ($query) {
@@ -514,7 +514,7 @@ class PrintCtrl extends Controller
 
         $header = 'Dr. ' . $requested_by->fname . ' ' . $requested_by->lname;
         $department = 'OPD';
-        $facility = $activity->referredTo;
+        $facility = $activity->referredFrom;
         $facility_address = $facility->address;
         $facility_contact = $facility->contact;
         $facility_email = $facility->email;

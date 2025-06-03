@@ -18,8 +18,8 @@ class Activity extends Model
     //     return $this->belongsTo(Muncity::class, 'muncity', 'id');
     // }
 
-    public function referredTo() {
-        return $this->belongsTo(Facility::class, 'referred_to', 'id');
+    public function referredFrom() {
+        return $this->belongsTo(Facility::class, 'referred_from', 'id');
     }
 
     public function labRequest() {

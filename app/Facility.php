@@ -27,7 +27,7 @@ class Facility extends Model
 
     public function activities()
     {
-        return $this->hasMany(Activity::class, 'referred_to');
+        return $this->hasMany(Activity::class, 'referred_from');
     }
 
 }

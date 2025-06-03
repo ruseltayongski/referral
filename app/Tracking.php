@@ -9,6 +9,7 @@ class Tracking extends Model
     protected $table = 'tracking';
     protected $fillable = [
         'patient_id',
+        'ckd_id',
         'code',
         'date_referred',
         'date_transferred',

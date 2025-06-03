@@ -76,6 +76,7 @@ $user = Session::get('auth');
                                 <td>
                                     <a href="#"
                                         class="btn btn-primary btn-xs ckd_info"
+                                        data-ckd_id="{{ $patient['id'] }}"
                                         data-first="{{ $patient['first_name'] }}"
                                         data-middle="{{ $patient['middle_name'] }}"
                                         data-last="{{ $patient['last_name'] }}"
@@ -567,6 +568,7 @@ document.querySelectorAll('.ckd_info').forEach(button => {
 
         // Extract patient data from the button's data attributes
         currentPatientData = {
+            ckd_id: this.dataset.ckd_id,
             first_name: this.dataset.first,
             middle_name: this.dataset.middle,
             last_name: this.dataset.last,
@@ -578,6 +580,7 @@ document.querySelectorAll('.ckd_info').forEach(button => {
         };
 
         let processedPatientData = {
+            ckd_id:null,
             first_name: null,
             middle_name: null,
             last_name: null,
@@ -589,6 +592,7 @@ document.querySelectorAll('.ckd_info').forEach(button => {
         };
 
         const payload = new URLSearchParams({
+            ckd_id: currentPatientData.ckd_id,
             first_name: currentPatientData.first_name,
             middle_name: currentPatientData.middle_name,
             last_name: currentPatientData.last_name,
@@ -653,26 +657,31 @@ document.querySelectorAll('.ckd_info').forEach(button => {
 
 // Function to populate the form with patient data
 function populateFormWithPatientData(patientData) {
-    // Set values in form fields
     setTimeout(() => {
-        // Populate normal form fields
+        // Select all relevant form modals
         const formElements = document.querySelectorAll('#normalFormModal, #revisednormalFormModal, #normal_form_editable');
         PatientBody(patientData.patient_id);
         formElements.forEach(form => {
             if (!form) return;
-            
-            // Set basic patient info
+
+            // Set patient name
             const nameFields = form.querySelectorAll('.patient_name');
             nameFields.forEach(field => {
                 field.textContent = `${patientData.first_name} ${patientData.middle_name} ${patientData.last_name}`;
             });
-            
+
             // Set patient ID if there's a hidden input for it
             const patientIdFields = form.querySelectorAll('input[name="patient_id"]');
             patientIdFields.forEach(field => {
                 if (field) field.value = patientData.patient_id || '';
             });
-            
+
+            // Set CKD ID if present
+            const ckdIdFields = form.querySelectorAll('input[name="ckd_id"]');
+            ckdIdFields.forEach(field => {
+                if (field) field.value = currentPatientData && currentPatientData.ckd_id ? currentPatientData.ckd_id : '';
+            });
+
             // Set sex
             const sexFields = form.querySelectorAll('.patient_sex, select[name="sex"]');
             sexFields.forEach(field => {
@@ -683,7 +692,7 @@ function populateFormWithPatientData(patientData) {
                     field.value = patientData.sex;
                 }
             });
-            
+
             // Set civil status
             const civilStatusFields = form.querySelectorAll('.civil_status, select[name="civil_status"]');
             civilStatusFields.forEach(field => {
@@ -694,14 +703,14 @@ function populateFormWithPatientData(patientData) {
                     field.value = patientData.civil_status;
                 }
             });
-            
+
             // Calculate and set age
             let age = calculateAge(patientData.birth_date);
             const ageFields = form.querySelectorAll('.patient_age');
             ageFields.forEach(field => {
                 field.textContent = `${age} ${age === 1 ? 'year old' : 'years old'}`;
             });
-            
+
             // Show/hide age-specific elements
             if (age > 18) {
                 const pedFields = form.querySelectorAll('#pedia_show_normal');
@@ -710,11 +719,11 @@ function populateFormWithPatientData(patientData) {
                 const pedFields = form.querySelectorAll('#pedia_show_normal');
                 pedFields.forEach(field => { field.style.display = 'block'; });
             }
-            
+
             if (age > 9 && patientData.sex === 'Female') {
                 const menarche = form.querySelectorAll('#menarche_show, #menarche_show_normal, #menarche_show_pregnant');
                 menarche.forEach(field => { field.style.display = 'block'; });
-                
+
                 const menarcheField = form.querySelector('#menarche');
                 if (menarcheField) menarcheField.setAttribute('min', '9');
             } else {

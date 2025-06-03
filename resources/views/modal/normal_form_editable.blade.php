@@ -101,6 +101,7 @@ $department_id = $appoitment_sched[0]->department_id;
                         <input type="hidden" name="configTimeFrom" value="{{$timeFrom}}">
                         <input type="hidden" name="configtimeto" value="{{$timeTo}}">
                         <input type="hidden" name="opdSubId" value="{{$telemed_subOpdId}}">
+                        <input type="hidden" name="ckd_id" id="ckd_id" value="">
                         <br>
                         <div class="row">
                             <div class="col-md-4">
@@ -518,6 +519,9 @@ $department_id = $appoitment_sched[0]->department_id;
 </script>
 
 <script>
+    $('.normal_form').on('submit', function(e) {
+    console.log('Submitting CKD ID:', $('#ckd_id').val());
+    });
     var upload_pos = 2;
     var upload_count = 0;
     let fileInfoArray = [];
