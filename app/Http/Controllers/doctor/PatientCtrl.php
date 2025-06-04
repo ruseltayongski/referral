@@ -396,12 +396,14 @@ class PatientCtrl extends Controller
 
     public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '', $telemed_assign_id)
     {
+      
         $subOPD_Id = (int) $req->opdSubId;
         $match = array(
             'code' => $code
         );
         $track = array(
             'patient_id' => $patient_id,
+            'ckd_id'=> $req->ckd_id ?? null,
             'date_referred' => date('Y-m-d H:i:s'),
             'referred_from' => ($status == 'walkin') ? $req->referring_facility_walkin : $user->facility_id,
             'referred_to' => ($status == 'walkin') ? $user->facility_id : $req->referred_facility,
