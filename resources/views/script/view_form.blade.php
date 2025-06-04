@@ -17,7 +17,7 @@
        if(patient_emr == 10){
             console.log("Patient Data", patient_id);
             $.ajax({
-                url:"{{ url('doctor/emr-form/data')}}/" + patient_id,
+                url:"{{ url('doctor/emr-form/data')}}/" + patient_id + "/" + code,
                 type: "GET",
                 success: function(response){
                   

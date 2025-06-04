@@ -340,6 +340,7 @@ class ReferralCtrl extends Controller
             ->where('patient_form.code', $track->code)->first();
 
         $form = self::normalFormData($id);
+   
         $arr = [
             "form" => $form['form'],
             "id" => $id,

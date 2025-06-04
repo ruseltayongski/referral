@@ -39,6 +39,7 @@
 use App\Facility;
 use App\Icd;
 use App\ReasonForReferral;
+use App\Models\PregnantForm;
 
 ?>
   @include('include.header_form', ['optionHeader' => 'referred'])<br>
@@ -187,23 +188,41 @@ use App\ReasonForReferral;
                         </td>
                     </tr>
                     @endif   
-                    @if(isset($file_path))
-                        <tr>
-                            <td colspan="6">
-                                @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif
-                                @for($i = 0; $i < count($file_path); $i++)
-                                    <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
-                                    @if($i + 1 != count($file_path))
-                                        ,&nbsp
+
+                      @if(isset($file_path) && count($file_path))
+                            @foreach($file_path as $file)
+                                @php
+                                    $paths = $file['paths'] ?? [];
+                                    $filenames = $file['filenames'] ?? [];
+                                    $code = $file['code'] ?? null;
+                                @endphp
+
+                                @if($code == $emr->patientCode)
+                                    @if(count($paths))
+                                        <tr>
+                                            <td colspan="6">
+                                                {{ count($paths) > 1 ? 'File Attachments:' : 'File Attachment:' }} <br>
+                                                @for($i = 0; $i < count($paths); $i++)
+                                                    @php
+                                                        $cleanPath = explode('|', $paths[$i])[0];
+                                                        $cleanFilename = explode('|', $filenames[$i])[0];
+                                                    @endphp
+                                                    <a href="{{ $cleanPath }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>
+                                                        {{ $cleanFilename }}
+                                                    </a>
+                                                    @if($i + 1 != count($paths))
+                                                        ,&nbsp;
+                                                    @endif
+                                                @endfor
+                                            </td>
+                                        </tr>
                                     @endif
-                                @endfor
-                                {{--<a href="{{ asset($file_path) }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name }}</a>--}}
-                            </td>
-                        </tr>
-                    @endif                     
+                                @endif
+                            @endforeach
+                        @endif
                 <tr>
                     <td colspan="6">
-                        Name of referring MD/HCW: <span class="referring_md form-details"></span>
+                        Name of referring MD/HCW: <span class="referring_md form-details">{{$emr->md_referring}}</span>
                     </td>
                 </tr>
                 <tr>
@@ -225,37 +244,37 @@ use App\ReasonForReferral;
                 </tr>
                 <tr>
                     <td>Who is Referring</td>
-                    <td>Record Number: <span class="record_no form-details">{{ $form['pregnant']->record_no }}</span></td>
-                    <td colspan="2">Referred Date: <span class="referred_date form-details">{{ $form['pregnant']->referred_date }}</span></td>
+                    <td>Record Number: <span class="record_no form-details">{{ $emr->pregnant_record_no }}</span></td>
+                    <td colspan="2">Referred Date: <span class="referred_date form-details">{{ $emr->pregnant_referred_date }}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="2">Referring Name: <span class="md_referring form-details">{{ $form['pregnant']->md_referring }}</span></td>
+                    <td colspan="2">Referring Name: <span class="md_referring form-details">{{ $emr->pregnant_md_referring }}</span></td>
                     <td colspan="2">Arrival Date: </td>
                 </tr>
                 <tr>
-                    <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact form-details">{{ $form['pregnant']->referring_md_contact }}</span></td>
+                    <td colspan="4">Contact # of referring MD/HCW: <span class="referring_md_contact form-details">{{$emr->pgmd_referring_contact}}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="4">Referring Facility: <span class="referring_facility form-details">{{ $form['pregnant']->referring_facility }}</span></td>
+                    <td colspan="4">Referring Facility: <span class="referring_facility form-details">{{ Facility::find($emr->pregnant_refer)->name ?? 'Unknown' }}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="4">Facility Contact #: <span class="referring_contact form-details">{{ $form['pregnant']->referring_contact }}</span></td>
+                    <td colspan="4">Facility Contact #: <span class="referring_contact form-details">{{ Facility::find($emr->pregnant_refer)->contact ?? 'Unknown' }}</span></td>
                 </tr>
                 <tr>
                     <td colspan="4">Accompanied by the Health Worker: <span class="health_worker form-details">{{ $form['pregnant']->health_worker }}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="2">Referred To: <span class="referred_name form-details">{{ $form['pregnant']->referred_facility }}</span></td>
-                    <td colspan="2">Department: <span class="department_name form-details">{{ $form['pregnant']->department }}</span></td>
+                    <td colspan="2">Referred To: <span class="referred_name form-details">{{ Facility::find($emr->pregnant_referred_to)->name ?? 'Unknown' }}</span></td>
+                    <td colspan="2">Department: <span class="department_name form-details">{{ $emr->pregDepartment }}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="4">Covid Number: <span class="covid_number form-details">{{ $form['pregnant']->covid_number }}</span></td>
+                    <td colspan="4">Covid Number: <span class="covid_number form-details">{{ $emr->preg_covid }}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="4">Clinical Status: <span class="clinical_status form-details" style="text-transform: capitalize;">{{ $form['pregnant']->refer_clinical_status }}</span></td>
+                    <td colspan="4">Clinical Status: <span class="clinical_status form-details" style="text-transform: capitalize;">{{ $emr->pregnant_refer_clinical_status }}</span></td>
                 </tr>
                 <tr>
-                    <td colspan="4">Surveillance Category: <span class="surveillance_category form-details" style="text-transform: capitalize;">{{ $form['pregnant']->refer_sur_category }}</span></td>
+                    <td colspan="4">Surveillance Category: <span class="surveillance_category form-details" style="text-transform: capitalize;">{{ $emr->pregnant_refer_sur_category }}</span></td>
                 </tr>
             </table>
 
@@ -266,21 +285,30 @@ use App\ReasonForReferral;
                             <th colspan="4">WOMAN</th>
                         </tr>
                         <tr>
-                            <td colspan="3">Name: <span class="woman_name form-details">{{ $form['pregnant']->woman_name }}</span></td>
-                            <td>Age: <span class="patient_age form-details"> {{ $form['pregnant']->woman_age }}</span><br><small><i>(at time of referral)</i></small></td>
+                            <td colspan="3">Name: <span class="woman_name form-details">{{$emr->fname}} {{$emr->mname}} {{$emr->lname}}</span></td>
+                            <td>Age: <span class="patient_age form-details"> 
+                                <?php
+
+                                    $patient_age = \App\Http\Controllers\ParamCtrl::getAge($emr->dob);
+
+                                ?>
+
+                                {{ $patient_age }}</span><br><small><i>(at time of referral)</i></small>
+                            
+                            </td>
                         </tr>
                         <tr>
-                            <td colspan="4">Address: <span class="woman_address form-details">{{ $form['pregnant']->patient_address }}</span></td>
+                            <td colspan="4">Address: <span class="woman_address form-details">{{ $emr->patient_address }}</span></td>
                         </tr>
                         <tr>
                             <td colspan="4">
-                                Main Reason for Referral: <span class="woman_reason form-details">{!! nl2br($form['pregnant']->woman_reason) !!}</span>
+                                Main Reason for Referral: <span class="woman_reason form-details">{!! nl2br($emr->woman_reason) !!}</span>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="4">Major Findings (Clinica and BP,Temp,Lab)
                                 <br />
-                                <span class="woman_major_findings form-details">{!! nl2br($form['pregnant']->woman_major_findings) !!}</span>
+                                <span class="woman_major_findings form-details">{!! nl2br($emr->woman_major_findings) !!}</span>
                             </td>
                         </tr>
                         <tr>
@@ -290,17 +318,24 @@ use App\ReasonForReferral;
                             <td colspan="4">Treatments Give Time</td>
                         </tr>
                         <tr>
-                            <td colspan="4">Before Referral: <span class="woman_before_treatment form-details">{{ $form['pregnant']->woman_before_treatment }}</span> - <span class="woman_before_given_time form-details">{{ $form['pregnant']->woman_before_given_time }}</span></td>
+                            <td colspan="4">Before Referral: <span class="woman_before_treatment form-details">{{ $emr->woman_before_treatment }}</span> - <span class="woman_before_given_time form-details">{{ $form['pregnant']->woman_before_given_time }}</span></td>
                         </tr>
                         <tr>
-                            <td colspan="4">During Transport: <span class="woman_during_transport form-details">{{ $form['pregnant']->woman_during_transport }}</span> - <span class="woman_transport_given_time form-details">{{ $form['pregnant']->woman_transport_given_time }}</span></td>
+                            <td colspan="4">During Transport: <span class="woman_during_transport form-details">{{ $emr->woman_during_transport }}</span> - <span class="woman_transport_given_time form-details">{{ $form['pregnant']->woman_transport_given_time }}</span></td>
                         </tr>
                         <tr>
                             <td colspan="4">Information Given to the Woman and Companion About the Reason for Referral
                                 <br />
-                                <span class="woman_information_given form-details">{!! nl2br($form['pregnant']->woman_information_given) !!}</span>
+                                <span class="woman_information_given form-details">{!! nl2br($emr->woman_information_given) !!}</span>
                             </td>
                         </tr>
+                        <?php 
+
+                            $icd = Icd::select('icd10.code', 'icd10.description')
+                            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+                            ->where('icd.code',$emr->pregnantCode)->get();
+
+                        ?>
                         @if(isset($icd[0]))
                             <tr>
                                 <td colspan="4">
@@ -312,24 +347,32 @@ use App\ReasonForReferral;
                                 </td>
                             </tr>
                         @endif
-                        @if(isset($form['pregnant']->notes_diagnoses))
+
+                        @if(isset($emr->notes_diagnoses))
                             <tr>
                                 <td colspan="4">
                                     Diagnosis/Impression:
                                     <br />
-                                    <span class="diagnosis form-details">{!! nl2br($form['pregnant']->notes_diagnoses) !!}</span>
+                                    <span class="diagnosis form-details">{!! nl2br($emr->notes_diagnoses) !!}</span>
                                 </td>
                             </tr>
                         @endif
-                        @if(isset($form['pregnant']->other_diagnoses))
+                        @if(isset($emr->other_diagnoses))
                             <tr>
                                 <td colspan="4">
                                     Other Diagnoses:
                                     <br />
-                                    <span class="reason form-details">{{ $form['pregnant']->other_diagnoses }}</span>
+                                    <span class="reason form-details">{{ $emr->other_diagnoses }}</span>
                                 </td>
                             </tr>
                         @endif
+
+                         <?php
+                        $reason = ReasonForReferral::select("reason_referral.reason","reason_referral.id")
+                            ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
+                            ->where('pregnant_form.code', $emr->pregnantCode)->first();
+                        ?>
+                  
                         @if(isset($reason))
                             <tr>
                                 <td colspan="4">
@@ -339,28 +382,46 @@ use App\ReasonForReferral;
                                 </td>
                             </tr>
                         @endif
-                        @if(isset($form['pregnant']->other_reason_referral))
+                        @if(isset($emr->other_reason_referral))
                             <tr>
                                 <td colspan="4">
                                     Reason for referral:
                                     <br />
-                                    <span class="reason form-details">{{ $form['pregnant']->other_reason_referral }}</span>
+                                    <span class="reason form-details">{{ $emr->other_reason_referral }}</span>
                                 </td>
                             </tr>
                         @endif
 
-                        @if(isset($file_path))
-                            <tr>
-                                <td colspan="6">
-                                    @if(count($file_path) > 1) File Attachments: @else File Attachment: @endif <br>
-                                    @for($i = 0; $i < count($file_path); $i++)
-                                        <a href="{{ $file_path[$i] }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>{{ $file_name[$i] }}</a>
-                                        @if($i + 1 != count($file_path))
-                                            ,&nbsp;
-                                        @endif
-                                    @endfor
-                                </td>
-                            </tr>
+                      @if(isset($file_path) && count($file_path))
+                            @foreach($file_path as $file)
+                                @php
+                                    $paths = $file['paths'] ?? [];
+                                    $filenames = $file['filenames'] ?? [];
+                                    $code = $file['code'] ?? null;
+                                @endphp
+
+                                @if($code == $emr->pregnantCode)
+                                    @if(count($paths))
+                                        <tr>
+                                            <td colspan="6">
+                                                {{ count($paths) > 1 ? 'File Attachments:' : 'File Attachment:' }} <br>
+                                                @for($i = 0; $i < count($paths); $i++)
+                                                    @php
+                                                        $cleanPath = explode('|', $paths[$i])[0];
+                                                        $cleanFilename = explode('|', $filenames[$i])[0];
+                                                    @endphp
+                                                    <a href="{{ $cleanPath }}" id="file_download" class="reason" target="_blank" style="font-size: 12pt;" download>
+                                                        {{ $cleanFilename }}
+                                                    </a>
+                                                    @if($i + 1 != count($paths))
+                                                        ,&nbsp;
+                                                    @endif
+                                                @endfor
+                                            </td>
+                                        </tr>
+                                    @endif
+                                @endif
+                            @endforeach
                         @endif
                         {{--@if(isset($file_path))--}}
                             {{--<tr>--}}
@@ -423,49 +484,74 @@ use App\ReasonForReferral;
             <div class="clearfix"></div>
             <hr />
         @endif
-    @endforeach
+    @endforeach    
     <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
 
-    <!-- <div class="d-flex justify-content-center">
-      {{ $emr_data->links() }}
-    </div> -->
+    {{-- <div class="d-flex justify-content-center">
+    <div id="pagination-container">
+        {{ $emr_data->appends(request()->query())->links() }}
+    </div>
+</div> --}}
+
 <script>
-    function getParameterByName(name) {
-        url = window.location.href;
-        name = name.replace(/[\[\]]/g, '\\$&');
-        var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, ' '));
-    }
-    if(getParameterByName('referredCode')) {
-        $("#telemedicine").addClass('hide');
-        $(".edit_form_btn").addClass('hide');
-    }
 
-    function openTelemedicine(tracking_id, code, action_md, referring_md) {
-        console.log("mao");
-        var url = "<?php echo asset('api/video/call'); ?>";
-        var json = {
-            "_token" : "<?php echo csrf_token(); ?>",
-            "tracking_id" : tracking_id,
-            "code" : code,
-            "action_md" : action_md,
-            "referring_md" : referring_md,
-            "trigger_by" : "{{ $user->id }}",
-            "form_type" : "normal"
-        };
-        $.post(url,json,function(){
+// $(document).ready(function() {
+//     // Handle pagination clicks
+//     $(document).on('click', '#pagination-container .pagination a', function(e) {
+//         e.preventDefault();
+//         var url = $(this).attr('href');
+        
+//         // Show loading indicator
+//         $('#pagination-container').html('<div class="text-center"><i class="fa fa-spinner fa-spin"></i> Loading...</div>');
+        
+//         // Make AJAX request
+//         $.get(url, function(data) {
+//             // Replace the modal content with new data
+//             $('.modal-body').html(data);
+//         }).fail(function() {
+//             alert('Error loading data. Please try again.');
+//             // Restore pagination on error
+//             location.reload();
+//         });
+//     });
+// });
 
-        });
-        var windowName = 'NewWindow'; // Name of the new window
-        var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-        var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=normal&referring_md=yes", windowName, windowFeatures);
-        if (newWindow && newWindow.outerWidth) {
-            // If the window was successfully opened, attempt to maximize it
-            newWindow.moveTo(0, 0);
-            newWindow.resizeTo(screen.availWidth, screen.availHeight);
-        }
-    }
+    // function getParameterByName(name) {
+    //     url = window.location.href;
+    //     name = name.replace(/[\[\]]/g, '\\$&');
+    //     var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+    //         results = regex.exec(url);
+    //     if (!results) return null;
+    //     if (!results[2]) return '';
+    //     return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    // }
+    // if(getParameterByName('referredCode')) {
+    //     $("#telemedicine").addClass('hide');
+    //     $(".edit_form_btn").addClass('hide');
+    // }
+
+    // function openTelemedicine(tracking_id, code, action_md, referring_md) {
+    //     console.log("mao");
+    //     var url = "<?php echo asset('api/video/call'); ?>";
+    //     var json = {
+    //         "_token" : "<?php echo csrf_token(); ?>",
+    //         "tracking_id" : tracking_id,
+    //         "code" : code,
+    //         "action_md" : action_md,
+    //         "referring_md" : referring_md,
+    //         "trigger_by" : "{{ $user->id }}",
+    //         "form_type" : "normal"
+    //     };
+    //     $.post(url,json,function(){
+
+    //     });
+    //     var windowName = 'NewWindow'; // Name of the new window
+    //     var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+    //     var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type=normal&referring_md=yes", windowName, windowFeatures);
+    //     if (newWindow && newWindow.outerWidth) {
+    //         // If the window was successfully opened, attempt to maximize it
+    //         newWindow.moveTo(0, 0);
+    //         newWindow.resizeTo(screen.availWidth, screen.availHeight);
+    //     }
+    // }
 </script>

@@ -34,6 +34,7 @@ use App\Http\Controllers\ApiController;
 use App\AppointmentSchedule;
 use App\TelemedAssignDoctor;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\doctor\ReferralCtrl;
 
 class PatientCtrl extends Controller
 {
@@ -1510,7 +1511,7 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function loadEmrForm($patientId){
+    public function loadEmrForm($patientId,$code){
 
         $patient = Patients::find($patientId);
 
@@ -1531,6 +1532,8 @@ class PatientCtrl extends Controller
         ->leftJoin('icd as icd_pf', 'icd_pf.code', '=', 'patient_form.code')
         ->leftJoin('icd10 as icd10_pf', 'icd10_pf.id', '=', 'icd_pf.icd_id')
         ->leftJoin('tracking as track_pf', 'track_pf.code', '=', 'patient_form.code')
+
+        ->leftJoin('users as users_pf', 'users_pf.id', '=', 'patient_form.referring_md')
         
         ->leftJoin('department as depart','depart.id','=','patient_form.department_id')
 
@@ -1538,7 +1541,8 @@ class PatientCtrl extends Controller
         ->leftJoin('icd as icd_pg', 'icd_pg.code', '=', 'pregnant_form.code')
         ->leftJoin('icd10 as icd10_pg', 'icd10_pg.id', '=', 'icd_pg.icd_id')
         ->leftJoin('tracking as track_pg', 'track_pg.code', '=', 'pregnant_form.code')
-        ->leftJoin('department as Pregdepart','depart.id','=','pregnant_form.department_id')
+        ->leftJoin('department as Pregdepart','Pregdepart.id','=','track_pg.department_id')
+        ->leftJoin('users as users_pg', 'users_pg.id', '=', 'pregnant_form.referred_by')
     
         ->where('patients.fname', $firstname)
         ->where('patients.mname', $mname)
@@ -1581,6 +1585,7 @@ class PatientCtrl extends Controller
             'patient_form.notes_diagnoses as patient_notes_diag',
             
             // All pregnant_form fields
+            'pregnant_form.covid_number as preg_covid',
             'pregnant_form.id as pregnant_form_id',
             'pregnant_form.code as pregnantCode',
             'pregnant_form.referring_facility as pregnant_refer_facility',
@@ -1588,8 +1593,10 @@ class PatientCtrl extends Controller
             'pregnant_form.record_no as pregnant_record_no',
             'track_pg.date_referred as pregnant_referred_date',
             'track_pg.date_transferred as preg_transferred_date',
+            'track_pg.code as trackcode',
             'Pregdepart.description as pregDepartment',
             'pregnant_form.referred_to as pregnant_referred_to',
+            'pregnant_form.referring_facility as pregnant_refer',
             'pregnant_form.refer_clinical_status as pregnant_refer_clinical_status',
             'pregnant_form.refer_sur_category as pregnant_refer_sur_category',
             'pregnant_form.dis_clinical_status as pregnant_dis_clinical_status',
@@ -1615,9 +1622,19 @@ class PatientCtrl extends Controller
             'pregnant_form.baby_during_transport',
             'pregnant_form.baby_transport_given_time',
             'pregnant_form.baby_information_given',
+            'users_pf.id as md_referring_id',
+            'users_pg.id as pregnant_md_referring_id',
+            'users_pg.contact as pgmd_referring_contact',
+           DB::raw('CONCAT(
+                IF(users_pf.level = "doctor", "Dr. ", ""),
+                users_pf.fname, " ", users_pf.mname, " ", users_pf.lname
+            ) as md_referring'),
 
-
-    
+            DB::raw('CONCAT(
+                IF(users_pg.level = "doctor", "Dr. ", ""),
+                users_pg.fname, " ", users_pg.mname, " ", users_pg.lname
+            ) as pregnant_md_referring'),
+                
             // Grouped ICD10 descriptions
             DB::raw('JSON_ARRAYAGG(DISTINCT icd10_pf.description) as patient_icd10_desc'),
             DB::raw('JSON_ARRAYAGG(DISTINCT icd10_pg.description) as pregnant_icd10_desc')
@@ -1630,16 +1647,66 @@ class PatientCtrl extends Controller
         )
     
         ->orderByRaw('GREATEST(COALESCE(patient_form.id, 0), COALESCE(pregnant_form.id, 0)) DESC')
-        ->paginate(2);
-        $emr_history = $Emr_patient->slice(1)->values();
+        ->get();
+            
+        // $emr_history = $Emr_patient->slice(1)->values();
         
-        // dd(get_class($emr_history));
+        //dd($emr_history);
+        // Manual pagination
+        // $perPage = 1;
+        // $currentPage = request()->get('page', 1);
+        // $emr_paginated = new \Illuminate\Pagination\LengthAwarePaginator(
+        //     $emr_history->forPage($currentPage, $perPage),
+        //     $emr_history->count(),
+        //     $perPage,
+        //     $currentPage,
+        //     ['path' => request()->url(), 'pageName' => 'page']
+        // );
+
+            $all_files = [];
+
+            foreach ($Emr_patient as $record) {
+                $file_link = null;
+
+                if ($record->patient_file_path) {
+                    $file_link = $record->patient_file_path;
+                    $code = $record->patientCode;
+                } elseif ($record->pregnant_file_path) {
+                    $file_link = $record->pregnant_file_path;
+                     $code = $record->pregnantCode;
+                }
+
+                if (!empty($file_link)) {
+                    $exploded = explode("|", $file_link);
+                    $paths = [];
+                    $filenames = [];
+
+                    foreach ($exploded as $link) {
+                        $secured = ReferralCtrl::securedFile($link); // Use $link here
+                        if (!empty($secured)) {
+                            $paths[] = $secured;
+                            $filenames[] = basename($secured);
+                        }
+                    }
+
+                    if (!empty($paths)) {
+                        $all_files[] = [
+                            'record_id' => $record->pregnant_form_id, // You may adjust key if needed
+                            'code' => $code, 
+                            'paths' => $paths,
+                            'filenames' => $filenames,
+                        ];
+                    }
+                }
+            }
           
         $arr = [
             "form" => 'normal data',
+            "file_path" => $all_files,
             "patient" => $patientId,
-            "emr_data" => $emr_history
+            "emr_data" => $Emr_patient
         ];
+
 
         return view('doctor.emr_body', $arr);
     }
