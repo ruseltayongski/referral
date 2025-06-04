@@ -243,7 +243,7 @@ export default {
         // Start recording
         this.screenRecorder.start();
         //for minutes timer
-        this.startCallTimer();
+        // this.startCallTimer();
         console.log("Screen recording started with desktop and microphone audio.");
       } catch (error) {
         console.error("Error starting screen recording:", error);
@@ -444,6 +444,10 @@ export default {
           $(remotePlayerContainer).addClass("remotePlayerLayer");
           // Play the remote video track.
           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
+        }
+        // Add this block to start the call timer only once
+        if (!self.callTimer) {
+          self.startCallTimer();
         }
         // Subscribe and play the remote audio track If the remote user publishes the audio track only.
         if (mediaType == "audio") {

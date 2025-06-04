@@ -22933,12 +22933,12 @@ var doctorFeedback = "referral/doctor/feedback";
               // Start recording
               _this3.screenRecorder.start();
               //for minutes timer
-              _this3.startCallTimer();
+              // this.startCallTimer();
               console.log("Screen recording started with desktop and microphone audio.");
-              _context.next = 34;
+              _context.next = 33;
               break;
-            case 30:
-              _context.prev = 30;
+            case 29:
+              _context.prev = 29;
               _context.t0 = _context["catch"](0);
               console.error("Error starting screen recording:", _context.t0);
 
@@ -22968,11 +22968,11 @@ var doctorFeedback = "referral/doctor/feedback";
                   }
                 });
               }
-            case 34:
+            case 33:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 30]]);
+        }, _callee, null, [[0, 29]]);
       }))();
     },
     preventCloseWhileUploading: function preventCloseWhileUploading(event) {

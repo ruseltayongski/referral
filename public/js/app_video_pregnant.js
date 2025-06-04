@@ -22912,12 +22912,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               // Start recording
               _this2.screenRecorder.start();
               //for minutes timer
-              _this2.startCallTimer();
+              // this.startCallTimer();
               console.log("Screen recording started with desktop and microphone audio.");
-              _context.next = 34;
+              _context.next = 33;
               break;
-            case 30:
-              _context.prev = 30;
+            case 29:
+              _context.prev = 29;
               _context.t0 = _context["catch"](0);
               console.error("Error starting screen recording:", _context.t0);
 
@@ -22947,11 +22947,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   }
                 });
               }
-            case 34:
+            case 33:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 30]]);
+        }, _callee, null, [[0, 29]]);
       }))();
     },
     saveScreenRecording: function saveScreenRecording() {
@@ -23162,6 +23162,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                           // Play the remote video track.
                           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
                         }
+                        // Add this block to start the call timer only once
+                        if (!self.callTimer) {
+                          self.startCallTimer();
+                        }
                         // Subscribe and play the remote audio track If the remote user publishes the audio track only.
                         if (mediaType == "audio") {
                           // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
@@ -23173,7 +23177,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                         agoraEngine.on("user-unpublished", function (user) {
                           console.log(user.uid + "has left the channel");
                         });
-                      case 6:
+                      case 7:
                       case "end":
                         return _context3.stop();
                     }
