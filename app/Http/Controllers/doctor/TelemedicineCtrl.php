@@ -887,11 +887,11 @@ class TelemedicineCtrl extends Controller
     public function countconsultation(){
         $user = Session::get('auth');
 
-        $countSubOpd = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+        $countSubOpd = Tracking::join('subOpd', 'tracking.subopd_id', '=', 'subOpd.id')
             ->where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
-            ->distinct('subopd.description')
-            ->count('subopd.description');
+            ->distinct('subOpd.description')
+            ->count('subOpd.description');
         
         $totalPatient = Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
@@ -923,11 +923,11 @@ class TelemedicineCtrl extends Controller
             ->distinct('id')
             ->count('id');
         
-        $totalConsulPerDepartment = Tracking::join('subopd', 'tracking.subopd_id', '=', 'subopd.id')
+        $totalConsulPerDepartment = Tracking::join('subOpd', 'tracking.subopd_id', '=', 'subOpd.id')
             ->where('tracking.telemedicine', 1)
             ->where('tracking.referred_from', $user->facility_id)
-            ->selectRaw('subopd.description, COUNT(tracking.id) as total_consultations')
-            ->groupBy('subopd.id', 'subopd.description')
+            ->selectRaw('subOpd.description, COUNT(tracking.id) as total_consultations')
+            ->groupBy('subOpd.id', 'subOpd.description')
             ->get();
         
         $totalPatientDemographicPerAge = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
