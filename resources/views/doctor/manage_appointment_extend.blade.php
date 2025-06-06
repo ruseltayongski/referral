@@ -842,6 +842,16 @@ $(document).ready(function () {
         $("#please_select_categ").hide(); // Ensure it's hidden when modal closes
     });
 
+    $('#defaultCategorySelect').prop('disabled', true);
+
+    $('#effective_date').on('input change', function () {
+        if($(this).val()){
+            $('#defaultCategorySelect').prop('disabled', false);
+        }else{
+            $('#defaultCategorySelect').prop('disabled', true);
+        }
+    });
+
 });
 
 const deleteConfigUrl = "{{ url('delete-Config') }}";

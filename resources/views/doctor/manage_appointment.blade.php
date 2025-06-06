@@ -445,7 +445,160 @@
         });
         <?php Session::put('appointment_delete',false); ?>
         @endif
+
         //---------------- for Config-Appointment ---------------//
+        const checkConfigSLot = "{{ url('check-config-existSlot') }}";
+        // function checkSlotExistence(date, slot, $inputGroup, days, category){
+        //     console.log("Date and multiple slot: ", date, slot);
+        //     $.ajax({
+        //         url: checkConfigSLot,
+        //         method: "POST", 
+        //         data: {
+        //             _token:  $('meta[name="csrf-token"]').attr('content'),
+        //             date: date,
+        //             slots: slot,
+        //             days: days,
+        //             category: category,
+        //         },
+        //         success: function (response) {
+        //             console.log("responses", response);
+
+        //         }
+        //     });
+
+        // }
+        let conflictShown = false;
+        let lastCheckedStartDate = null;
+
+        function checkSlotExistence(startDate, slots, $inputGroup, days, category) {
+            
+             if (lastCheckedStartDate !== startDate) {
+                conflictShown = false;
+                lastCheckedStartDate = startDate;
+             }else{
+                conflictShown = false;
+             }
+            
+            // Generate all appointment dates based on category and selected days
+            const appointmentDates = generateAppointmentDates(startDate, days, category);
+            console.log("Generated appointment dates: ", appointmentDates, slots);
+            
+            // Create appointment slots array with all dates and their slots
+            const appointmentSlots = [];
+            appointmentDates.forEach(date => {
+                slots.forEach(slot => {
+                    appointmentSlots.push({
+                        date: date,
+                        time_from: slot.time_from,
+                        time_to: slot.time_to
+                    });
+                });
+            });
+            
+            console.log("All appointment slots to check: ", appointmentSlots);
+            
+            $.ajax({
+                url: checkConfigSLot,
+                method: "POST", 
+                  contentType: "application/json",
+                 data: JSON.stringify({
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                    appointment_slots: appointmentSlots,
+                    days: days,
+                    category: category,
+                    start_date: startDate
+                }),
+                success: function (response) {
+                    
+                    if (response.status === 'error' && !conflictShown) {
+
+                        let skipAlertCLose = false; 
+                        
+                        Lobibox.alert("error",
+                        {
+                            msg: response.message,
+                            closeButton: false,
+                            closable: false,
+                            callback: function () {
+
+                                $('#addAppointmentModal').modal('hide');
+
+                                skipAlertCLose = true;
+                                // $(this).find('.time-input-group').remove();
+                                $('#addAppointmentForm_add')[0].reset();
+                                $('.select2').val(null).trigger('change'); 
+                                $('#additionalTimeContainer').empty();
+                                $(".appointment_count").val(1);
+                                
+                                const effectiveDate = $('#effective_date').val();
+                                if (effectiveDate) {
+                                    $('#defaultCategorySelect').prop('disabled', false);
+                                } else {
+                                    $('#defaultCategorySelect').prop('disabled', true);
+                                }
+
+                                setTimeout(() => {
+                                    skipAlertCLose = false;
+                                }, 200);
+                            }
+                        });
+
+                        conflictShown = true; 
+                       
+                        return;
+
+                    } else {
+                        console.log('No conflicts.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Ajax error: ", error);
+                }
+            });
+        }
+
+        function generateAppointmentDates(startDate, selectedDays, category) {
+            console.log('generate date days:', startDate, selectedDays, category);
+            const dates = [];
+            const start = new Date(startDate);
+            
+            // Determine end date based on category
+            const endDate = new Date(start);
+            if (category === "1 Week") {
+                endDate.setDate(start.getDate() + 6); // 7 days total (including start date)
+            } else if (category === "1 Month") {
+                endDate.setMonth(start.getMonth() + 1);
+                endDate.setDate(start.getDate() - 1); // End on the day before next month's same date
+            }
+            
+            // Convert day names to numbers (Sunday = 0, Monday = 1, etc.)
+            const dayMap = {
+                'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
+                'Thursday': 4, 'Friday': 5, 'Saturday': 6
+            };
+            
+            const selectedDayNumbers = selectedDays.map(day => dayMap[day]);
+            
+            // Generate all dates within the range that match selected days
+            const currentDate = new Date(start);
+            while (currentDate <= endDate) {
+                if (selectedDayNumbers.includes(currentDate.getDay())) {
+                    dates.push(formatDateAppointment(currentDate));
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            return dates;
+        }
+
+        function formatDateAppointment(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+
         var userData = @json($user);
         $(document).ready(function () {
 
@@ -463,11 +616,16 @@
                 const effectiveDateValue = $effectiveDate.val();
                 const selectedConfig = configData.find(config => config.id == selectedConfigId);
                 
+                // let effective_Date = $(".Effective_date").val();
+                // console.log("efective:", effective_Date, "selectedConfig:::", selectedConfig);
+
+                console.log("selectedConfigselectedConfig::", selectedConfig);
+
                 if(selectedConfig){
                    
                     const days = selectedConfig.days.split('|');
                     const timeSlots = selectedConfig.time.split('|');
-                    
+                    const category = selectedConfig.category;
                     $('.day-checkbox').prop("checked", false);
                     $('.time-slots').hide().find(".time-slot").remove();
                     $("#week_time_slot").css("display", "block");
@@ -486,7 +644,9 @@
                             dayTimeMap[currentDay].push(slot);
                         }
                     });
-                    console.log("days", days);
+
+                   const allCollectedSlots = [];
+
                     days.forEach(day => {
                         $(`.day-checkbox[value="${day}"]`).prop("checked", true);
                         const $timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
@@ -494,9 +654,14 @@
                         $timeSlotsDiv.show();
 
                         if(dayTimeMap[day]) {
-
                             dayTimeMap[day].forEach(range => {
                                 const [timeFrom, timeTo] = range.split('-');
+                                allCollectedSlots.push({
+                                    day: day,
+                                    time_from: timeFrom.trim(),
+                                    time_to: timeTo.trim()
+                                });
+
                                 const timeSlotHtml = `
                                     <div class="row time-slots" id="append_timeslot">
                                     <div class="col-md-5">
@@ -513,9 +678,13 @@
                                         </button>
                                     </div>
                                 </div`;
-                                $timeSlotsDiv.append(timeSlotHtml);
-                            });
+                                 $timeSlotsDiv.append(timeSlotHtml);
+                                // const $timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
+                                // const $newSlot = $(timeSlotHtml);
+                                // $timeSlotsDiv.append($newSlot);
 
+                                 checkSlotExistence(effectiveDateValue,allCollectedSlots, $timeSlotsDiv, days,category);
+                            });
                         }
                    });
                     var OneweekToOneMonth = selectedConfig.category;
@@ -1063,6 +1232,10 @@
             timeInputGroup.find('.delete-time-input').on('click', function () {
                 deleteCount++;
                 timeInputGroup.remove();
+
+                let updatedCount = $(`.time-input-group`).length;
+                $(".appointment_count").val(updatedCount);
+
                 slotFormFields(); 
                 // $('#add_slots').prop('disabled', false);
             });

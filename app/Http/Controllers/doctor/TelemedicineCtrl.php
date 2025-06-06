@@ -393,6 +393,104 @@ class TelemedicineCtrl extends Controller
         return redirect::back();
     }
 
+    public function CheckAppointExists(Request $request){
+
+        // $user = Session::get('auth');
+
+        // $date = $request->date;
+        // $slots = $request->slots;
+
+        // $exists = false;
+
+        // foreach ($slots as $slot) {
+        //     if (empty($slot['time_from']) || empty($slot['time_to'])) {
+        //         continue; 
+        //     }
+
+        //     try {
+        //         $timeFrom = date("H:i:s", strtotime($slot['time_from']));
+        //         $timeTo = date("H:i:s", strtotime($slot['time_to']));
+
+        //         if (!$timeFrom || !$timeTo) {
+        //             continue; 
+        //         }
+
+        //         $conflict = AppointmentSchedule::where('created_by', $user->id)
+        //             ->where('facility_id', $user->facility_id)
+        //             ->where('appointed_date', $date)
+        //             ->where(function ($query) use ($timeFrom, $timeTo) {
+        //                 $query->where('appointed_time', '<', $timeTo)
+        //                     ->where('appointedTime_to', '>', $timeFrom);
+        //             })
+        //             ->exists();
+
+        //         if ($conflict) {
+        //             $exists = true;
+        //             break;
+        //         }
+        //     } catch (\Exception $e) {
+
+        //         continue;
+        //     }
+        // }
+
+        // return  response()->json(['exists' => $request->all()]);
+
+        $user = Session::get('auth');
+        $slots = $request->appointment_slots ?? [];
+
+        $conflictDates = [];
+
+        foreach ($slots as $slot) {
+            if (empty($slot['time_from']) || empty($slot['time_to']) || empty($slot['date'])) {
+                continue; // Skip invalid entries
+            }
+
+            try {
+                $date = $slot['date'];
+                $timeFrom = date("H:i:s", strtotime($slot['time_from']));
+                $timeTo = date("H:i:s", strtotime($slot['time_to']));
+
+                $conflict = AppointmentSchedule::where('created_by', $user->id)
+                    ->where('facility_id', $user->facility_id)
+                    ->where('appointed_date', $date)
+                    ->where(function ($query) use ($timeFrom, $timeTo) {
+                        $query->where('appointed_time', '<', $timeTo)
+                            ->where('appointedTime_to', '>', $timeFrom);
+                    })
+                    ->exists();
+
+                if ($conflict) {
+                    $conflictDates[] = $date;
+                }
+            } catch (\Exception $e) {
+                // Optionally log exception
+                continue;
+            }
+        }
+
+        if (!empty($conflictDates)) {
+
+              $formattedDates = array_map(function($date) {
+                    return date("F j, Y", strtotime($date));
+                }, array_unique($conflictDates));
+
+            $formattedDates = implode(', ', array_unique($conflictDates));
+            
+            return response()->json([
+                'status' => 'error',
+                'message' => "You have a conflict schedule on these dates: {$formattedDates}. Please check your manual config.",
+                'conflict_dates' => array_unique($conflictDates),
+            ]);
+        }
+
+        return response()->json([
+            'status' => 'ok',
+            'message' => 'No conflicting schedules found.',
+        ]);
+
+    }
+
     public function removeconfigSched(Request $req){
         $config_sched = Cofig_schedule::where('id', $req->configId)->first();
         $config_sched->delete();
@@ -425,7 +523,7 @@ class TelemedicineCtrl extends Controller
     public function createAppointment(Request $request)
     {
         $user = Session::get('auth');
-       
+
         if($request->config_id){
 
             $startDate = DateTime::createFromFormat('m-d-Y', $request->startDate);

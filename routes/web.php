@@ -680,6 +680,7 @@ Route::get('manage/appointment', 'doctor\TelemedicineCtrl@manageAppointment')->n
 
 Route::post('create-appointment', 'doctor\TelemedicineCtrl@createAppointment')->name('create-appointment');
 Route::post('update-doctor-config', 'doctor\TelemedicineCtrl@updateDoctorConfig')->name('update-doctor-config');
+Route::post('check-config-existSlot', 'doctor\TelemedicineCtrl@CheckAppointExists')->name('checkconfig.existSlot');
 
 Route::post('save-call-duration', 'doctor\TelemedicineCtrl@saveCallDuration');
 
