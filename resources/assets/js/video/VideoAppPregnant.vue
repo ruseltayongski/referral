@@ -391,7 +391,7 @@ export default {
         }
     },
     startCallTimer() {
-    // Store the start time in milliseconds
+   // Store the start time in milliseconds
     this.startTime = Date.now();
 
     // Update the timer every 10 milliseconds
@@ -405,7 +405,13 @@ export default {
 
 
       // Format the time as mm:ss:ms
-      this.callDuration = `${String(hours).padStart(2, "0")} hours ${String(minutes).padStart(2, "0")} minutes ${String(seconds).padStart(2, "0")} seconds`;
+    
+      if(hours == 0){
+        this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(seconds).padStart(2, "0")} `;
+      }else {
+        this.callDuration = `${String(hours).padStart(1, "0")} : ${String(minutes).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
+      }
+      
     }, 10);
     },
     async startBasicCall() {
@@ -782,7 +788,7 @@ export default {
             <img :src="doctorUrl" class="remote-img" alt="Image1" />
           </div>
           <div class="call-duration">
-            <p>Call Duration: {{ callDuration }}</p>
+            <span id="call-timer">{{ callDuration }}</span>
           </div>
           <Transition name="fade">
             <div class="iconCall position-absolute fade-in" v-if="showDiv">
@@ -1057,8 +1063,10 @@ export default {
                 <div class="col">
                   <table>
                     <tbody>
-                      <tr>
-                        <th colspan="6" class="padded-header">WOMAN</th>
+                      <tr class="bg-gray">
+                        <td colspan="6" class="padded-header">
+                          <strong>WOMAN</strong>
+                        </td>
                       </tr>
                       <tr class="padded-row">
                         <td colspan="3">
@@ -1530,16 +1538,19 @@ td {
   }
 }
 
+#call-timer {
+    font-size: 16px;
+    background: rgba(0, 0, 0, 0.425);
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 5px;
+    letter-spacing: 2px;
+}
+
 .call-duration {
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background-color: rgba(0, 0, 0, 0.404);
-  color: white;
-  padding: 5px 10px;
-  margin: 5px;
-  border-radius: 5px;
-  font-size: 1rem;
+  top: 20px;
+  left: 20px;
   z-index: 10;
 }
 

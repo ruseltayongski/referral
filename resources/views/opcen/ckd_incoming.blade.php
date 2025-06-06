@@ -1188,35 +1188,31 @@ function selectFormTitle(initialTitle) {
         });
     }
 
-    $('.normal_form').on('submit', function(e) {
-        e.preventDefault();
-        $('.loading').show();
-        $('.btn-submit').attr('disabled', true);
-     
-        // const formData = new FormData(this);
+ $('.normal_form').on('submit', function(e) {
+    e.preventDefault();
+    $('.loading').show();
+    $('.btn-submit').attr('disabled', true);
 
-        // const activFiles =  fileInfoArray.filter(file => file && !file.removed);
+    form_type = '#normalFormModal';
+    department_id = $('.select_department_normal').val();
+    department_name = $('.select_department_normal option:selected').html();
+    telemed = $('.telemedicine').val(0);
 
-        // formData.delete('file_upload[]');
+    // Get ckd_id from hidden input as fallback
+    let ckd_id = $('input[name="ckd_id"]').val();
+    // Debug: Show both currentPatientData and ckd_id from form
+    console.log('currentPatientData:', currentPatientData);
+    console.log('ckd_id from currentPatientData:', currentPatientData ? currentPatientData.ckd_id : undefined);
+    console.log('ckd_id from hidden input:', ckd_id);
 
-        // activFiles.forEach(fileInfo => {
-        //     if(fileInfo.file){
-        //         formData.append('file_upload[]', fileInfo.file);
-        //     }
-        // });
-        // console.log("remaining file to upload", formData);
-        form_type = '#normalFormModal';
-        department_id = $('.select_department_normal').val();
-        department_name = $('.select_department_normal option:selected').html();
-        telemed = $('.telemedicine').val(0);
+    // Prefer currentPatientData.ckd_id if available, else use hidden input
+    let patchCkdId = (currentPatientData && currentPatientData.ckd_id) ? currentPatientData.ckd_id : ckd_id;
 
-        $(this).ajaxSubmit({
+    $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/normal') }}",
             type: 'POST',
             success: function(data) {
-                console.log(data);
-                
-                if (data.trim() === 'consultation_rejected') {
+                if (typeof data === 'string' && data.trim() === 'consultation_rejected') {
                     $('.loading').hide();
                     $('#pregnantModal').modal('hide');
                     $('#normalFormModal').modal('hide');
@@ -1225,37 +1221,74 @@ function selectFormTitle(initialTitle) {
                     });
                     return;
                 }
-                //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
-                if (data.referred_to == 790 || data.referred_to == 23) {
-                    var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
-                    data.age = parseInt(data.age);
-                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
-                    $('.loading').hide();
-                    $('#pregnantModal').modal('hide');
-                    $('#normalFormModal').modal('hide');
-                    $('.btn-submit').attr('disabled', false);
-                    Lobibox.alert("success", {
-                        msg: "Successfully referred the patient!"
+
+                // Debug: Show what will be sent in PATCH
+                console.log('PATCH ckd_id to be sent:', patchCkdId);
+
+                // PATCH request, then handle redirect/modal after PATCH completes
+                fetch('https://ckd.cvchd7.com/api/tracker', {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "id": patchCkdId,
+                        "referred": 1,
+                        "token": "9mG6W5MlHE6JmkVVHTzrQL3ximxpSWbWJx0AhpdO7MJvVKHEuJY1Uc68wjcIUQDa"
+                    })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    console.log('PATCH result:', result);
+                    if (result && result.message === "Success!") {
+                        Lobibox.alert("success", {
+                            msg: "CKD tracker updated successfully!"
+                        });
+                    } else {
+                        Lobibox.alert("error", {
+                            msg: "CKD tracker update failed. Please check the details or try again."
+                        });
+                    }
+
+                    // Only redirect or close modals after PATCH completes
+                    if (data.referred_to == 790 || data.referred_to == 23) {
+                        var push_diagnosis = typeof push_notification_diagnosis_ccmc !== 'undefined' && push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                        data.age = parseInt(data.age);
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#normalFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled', false);
+                        Lobibox.alert("success", {
+                            msg: "Successfully referred the patient!"
+                        });
+                    } else {
+                        $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+                    }
+                })
+                .catch(error => {
+                    console.error('PATCH error:', error);
+                    Lobibox.alert("error", {
+                        msg: "An error occurred while updating CKD tracker. Please try again."
                     });
-                } //push notification for CCMD
-                else {
-                    $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
-                }
-            }
-            /*,
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest);
-                console.log(textStatus);
-                console.log(errorThrown);
-                $('.loading').hide();
-                $('#pregnantModal').modal('hide');
-                $('#normalFormModal').modal('hide');
-                $('.btn-submit').attr('disabled',false);
-                Lobibox.notify('error', {
-                    title: "Error",
-                    msg: "Status: " + textStatus+" Error: " + errorThrown
+                    // Still handle redirect/modal even if PATCH fails
+                    if (data.referred_to == 790 || data.referred_to == 23) {
+                        var push_diagnosis = typeof push_notification_diagnosis_ccmc !== 'undefined' && push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                        data.age = parseInt(data.age);
+                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#normalFormModal').modal('hide');
+                        $('.btn-submit').attr('disabled', false);
+                        Lobibox.alert("success", {
+                            msg: "Successfully referred the patient!"
+                        });
+                    } else {
+                        $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+                    }
                 });
-            }*/
+            }
+            // You can add error handling here if needed
         });
     });
 
