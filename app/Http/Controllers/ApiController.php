@@ -661,7 +661,7 @@ class ApiController extends Controller
 
     public function patientFollowUp(Request $request) {
         $user = Session::get('auth');
-        // dd($request->all());
+        //dd($request->all());
         $patient_form = null;
         $patient_id = 0;
         
@@ -710,7 +710,7 @@ class ApiController extends Controller
                 'department_id' => $tracking->department_id,
                 'referring_md' => $tracking->referring_md,
                 'action_md' => $user->id,
-                'remarks' => 'patient follow up',
+                'remarks' => $request->filled('followremarks') ? $request->followremarks : 'patient follow up',
                 'status' => 'followup'
             );
             Activity::create($activity);
@@ -776,6 +776,7 @@ class ApiController extends Controller
             "status" => "followup",
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
+            'telemedicine' => $request->telemedicine,
             "redirect_track" => $redirect_track,
             "position" => $position
         ];
