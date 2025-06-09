@@ -522,30 +522,42 @@ export default {
       channelParameters.localVideoTrack.play(localPlayerContainer);
       console.log("publish success!");
     },
-    async sendCallDuration() {
+   async sendCallDuration() {
       if (this.isLeavingChannel) return; // Prevent duplicate sends
       this.isLeavingChannel = true;
 
-      if (this.callMinutes > 0) {
-        try {
-          // Calculate final duration before sending
-          const finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
-          
-          const response = await axios.post(`${this.baseUrl}/save-call-duration`, {
-            call_duration: finalDuration,
-            tracking_id: this.tracking_id,
-            referral_code: this.referral_code
-          });
-          
-          console.log("Call duration saved:", response.data);
-          localStorage.removeItem('callStartTime'); // Clean up
-          return true;
-        } catch (error) {
-          console.error("Error saving call duration:", error);
-          return false;
-        }
+      // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
+      let duration = this.callDuration.replace(/\s/g, ''); // Remove spaces
+      let parts = duration.split(':').map(Number);
+      let totalMinutes = 0;
+
+      if (parts.length === 2) {
+        // Format: mm:ss
+        totalMinutes = parts[0];
+        if (parts[1] >= 30) totalMinutes += 1; // round up if 30+ seconds
+      } else if (parts.length === 3) {
+        // Format: hh:mm:ss
+        totalMinutes = (parts[0] * 60) + parts[1];
+        if (parts[2] >= 30) totalMinutes += 1; // round up if 30+ seconds
       }
-      return false;
+
+      // Ensure integer and at least 1 minute if any call happened
+      totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
+
+      try {
+        const response = await axios.post(`${this.baseUrl}/save-call-duration`, {
+          call_duration: totalMinutes, // send as int(11)
+          tracking_id: this.tracking_id,
+          referral_code: this.referral_code
+        });
+
+        console.log("Call duration saved (minutes):", totalMinutes, response.data);
+        localStorage.removeItem('callStartTime'); // Clean up
+        return true;
+      } catch (error) {
+        console.error("Error saving call duration:", error);
+        return false;
+      }
     },
     async leaveChannel() {
       // if (confirm("Are you sure you want to leave this channel?")) {
