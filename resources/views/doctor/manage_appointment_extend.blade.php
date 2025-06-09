@@ -852,7 +852,13 @@ $(document).ready(function () {
         }
     });
 
+
+      const todayAppointment = new Date().toISOString().split('T')[0];
+  document.getElementById("appointment_date").setAttribute('min', todayAppointment);
+    document.getElementById("effective_date").setAttribute('min', todayAppointment);
+
 });
+
 
 const deleteConfigUrl = "{{ url('delete-Config') }}";
 const editConfigUrl = "{{ url('get-config-data-sched') }}"
