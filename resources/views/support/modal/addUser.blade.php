@@ -40,7 +40,7 @@
                     </div>
                     <div class="form-group">
                         <label>Department:</label>
-                        <select class="form-control" name="department_id" id="department_select" required>
+                        <select class="form-control select2" name="department_id" id="department_select" required>
                             <option value="">Select Department...</option>
                             @foreach($departments as $dept)
                                 $depatment_id = $dept->id;
@@ -59,7 +59,7 @@
                     </div>
                     <div class="form-group">
                         <label>Other Department:</label>
-                        <select class="form-control" name="other_department_id[]" id="other_department_select" multiple>
+                        <select class="form-control select2" name="other_department_id[]" id="other_department_select" multiple>
                             @foreach($departments as $dept)
                                 <option value="{{ $dept->id }}">{{ $dept->description }}</option>
                             @endforeach
