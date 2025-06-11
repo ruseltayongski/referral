@@ -605,9 +605,8 @@
             const $defaultCategorySelect = $("#defaultCategorySelect");
             const $effectiveDate = $("#effective_date");
             const $weekTimeSlot = $("#week_time_slot");
-    
             const configData = @json($config_sched_data);
-           
+
             function categslot(){
 
                 $('.time-slots').hide().find('.time-slots').remove();
@@ -661,7 +660,9 @@
                                     time_from: timeFrom.trim(),
                                     time_to: timeTo.trim()
                                 });
-
+                                
+                                ConfigvalidateAllDays(allCollectedSlots);
+                                
                                 const timeSlotHtml = `
                                     <div class="row time-slots" id="append_timeslot">
                                     <div class="col-md-5">
@@ -733,6 +734,93 @@
                 const day = date.getDate().toString().padStart(2, '0');
                 return `${month}-${day}-${year}`;
             }
+
+            let slotExistDefined = {};
+           $(document).on('change', 'input[name^="time_from"], input[name^="time_to"]', function () {
+                ConfigvalidateAllDays(slotExistDefined);
+            });
+
+            function ConfigvalidateAllDays(existingSlotDays){
+                
+                slotExistDefined = existingSlotDays;
+
+                let now = new Date();
+                let today = now.toISOString().split('T')[0]; 
+                let allSelectedTimes = {} ;
+
+                $('.day-checkbox:checked').each(function () {
+
+                    let day = $(this).val(); // Get the selected day
+                    let timeSlots = $(this).closest('.checkbox').find('.time-slot');
+
+                    allSelectedTimes[day] = [];
+
+                    timeSlots.each(function () {
+                        let timeFrom = $(this).find('input[name^="time_from"]').val();
+                        let timeTo = $(this).find('input[name^="time_to"]').val();
+                    
+                        if(timeFrom && timeTo){
+                            let startTime = new Date(`${today}T${timeFrom}`);
+                            let endTime = new Date(`${today}T${timeTo}`);
+
+                            if (startTime >= endTime) {
+                                Lobibox.alert("error",
+                                {
+                                    msg: `End time for ${day} must be after start time!`
+                                });
+
+                                $(this).find('input[name^="time_to"]').val("");
+                                return;
+                            }
+
+                        for ( let prevSlot of allSelectedTimes[day]){
+                            let prevStart = prevSlot.start;
+                            let prevEnd =  prevSlot.end;
+
+                            if (
+                                    (startTime >= prevStart && startTime < prevEnd) ||  
+                                    (endTime > prevStart && endTime <= prevEnd) || 
+                                    (startTime <= prevStart && endTime >= prevEnd)  
+                                ) {
+                                    Lobibox.alert("error",
+                                    {
+                                        msg: `Time slot conflicts with an existing slot on ${day}!`
+                                    });
+
+                                    $(this).find('input[name^="time_from"]').val("");
+                                    $(this).find('input[name^="time_to"]').val("");
+                                    return;
+                                }
+                        }
+
+                        for (let existing of existingSlotDays){
+                            if(existing.day === day){
+                                let existingStart = new Date(`${today}T${existing.time_from}`);
+                                let existingEnd = new Date(`${today}T${existing.time_to}`);
+            
+                                if (
+                                    (startTime >= existingStart && startTime < existingEnd) ||
+                                    (endTime > existingStart && endTime <= existingEnd) ||
+                                    (startTime <= existingStart && endTime >= existingEnd)
+                                ) {
+                                    Lobibox.alert("error", {
+                                        msg: `Time slot conflicts with an existing slot on ${day}!`
+                                    });
+
+                                    $(this).find('input[name^="time_from"]').val("");
+                                    $(this).find('input[name^="time_to"]').val("");
+                                    return;
+                                }
+                            }
+                        }
+
+                        allSelectedTimes[day].push({ start: startTime, end: endTime});
+                        
+                        }
+                    });
+                });
+            }
+
         });
 
         document.addEventListener('DOMContentLoaded', function () {
