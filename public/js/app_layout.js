@@ -22444,7 +22444,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     });
     this.increment_referral = this.count_referral;
     Echo.join('new_referral').listen('NewReferral', function (event) {
-      console.log("newly incoming Telemed::", event, event.payload.telemedicine == 1, _this3.user.subopd_id == event.payload.subOpdId);
+      console.log("newly incoming Telemed::", event, event.payload.telemedicine);
       if (_this3.user.facility_id === event.payload.referred_to || _this3.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred') {
         _this3.playAudio(event.payload.telemedicine);
         _this3.increment_referral++;

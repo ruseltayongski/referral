@@ -23033,13 +23033,13 @@ var doctorFeedback = "referral/doctor/feedback";
       var _arguments = arguments,
         _this4 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
+        var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, facilityName, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               closeAfterUpload = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
               if (!(_this4.recordedChunks.length > 0)) {
-                _context2.next = 52;
+                _context2.next = 54;
                 break;
               }
               _this4.loading = true; // Show loader
@@ -23063,7 +23063,7 @@ var doctorFeedback = "referral/doctor/feedback";
               patientCode = _this4.form.code || "Unknown_Patient";
               activityId = _this4.activity_id;
               referring_md = _this4.form.referring_md;
-              referred = _this4.form.action_md; // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+              referred = _this4.form.action_md;
               currentDate = new Date();
               dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
               timeStart = new Date(_this4.startTime).toLocaleTimeString("en-US", {
@@ -23072,43 +23072,14 @@ var doctorFeedback = "referral/doctor/feedback";
               timeEnd = currentDate.toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
-              fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // --- Detect upload speed and set chunk size ---
-              chunkSize = 5 * 1024 * 1024; // Default to 5MB
-              // try {
-              //   // Create a 1MB test blob
-              //   const testBlob = blob.slice(0, 1 * 1024 * 1024);
-              //   const testFormData = new FormData();
-              //   testFormData.append("video", testBlob, "test.webm");
-              //   testFormData.append("fileName", "test.webm");
-              //   testFormData.append("chunkIndex", 0);
-              //   testFormData.append("totalChunks", 1);
-              //   const startTime = performance.now();
-              //   await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
-              //     headers: { "Content-Type": "multipart/form-data" },
-              //   });
-              //   const endTime = performance.now();
-              //   const durationSeconds = (endTime - startTime) / 1000;
-              //   const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
-              //   this.netSpeedMbps = speedMbps.toFixed(2);
-              //   this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
-              //   // Set chunk size based on speed
-              //   if (speedMbps > 8) { // ~8Mbps or higher is fast
-              //     chunkSize = 10 * 1024 * 1024; // 10MB
-              //   } else {
-              //     chunkSize = 5 * 1024 * 1024; // 5MB
-              //   }
-              //   // Optionally, delete the test chunk on the server if needed
-              // } catch (e) {
-              //   // If test fails, fallback to 5MB
-              //   chunkSize = 5 * 1024 * 1024;
-              //   this.netSpeedMbps = null;
-              //   this.netSpeedStatus = 'slow';
-              // }
+              fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // Get facility name for folder (sanitize on server)
+              facilityName = _this4.form.referring_name || "UnknownFacility";
+              chunkSize = 10 * 1024 * 1024; // Default to 10MB
               totalChunks = Math.ceil(blob.size / chunkSize);
               chunkIndex = 0;
-            case 21:
+            case 22:
               if (!(chunkIndex < totalChunks)) {
-                _context2.next = 45;
+                _context2.next = 47;
                 break;
               }
               start = chunkIndex * chunkSize;
@@ -23119,32 +23090,33 @@ var doctorFeedback = "referral/doctor/feedback";
               formData.append("fileName", fileName);
               formData.append("chunkIndex", chunkIndex);
               formData.append("totalChunks", totalChunks);
-              _context2.prev = 30;
-              _context2.next = 33;
+              formData.append("facilityName", facilityName); // <-- Add facility name
+              _context2.prev = 32;
+              _context2.next = 35;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
                 headers: {
                   "Content-Type": "multipart/form-data"
                 }
               });
-            case 33:
+            case 35:
               // Update progress after each chunk
               _this4.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
-              _context2.next = 42;
+              _context2.next = 44;
               break;
-            case 36:
-              _context2.prev = 36;
-              _context2.t0 = _context2["catch"](30);
+            case 38:
+              _context2.prev = 38;
+              _context2.t0 = _context2["catch"](32);
               _this4.loading = false;
               _this4.uploadProgress = 0; // Reset on error
               Lobibox.alert("error", {
                 msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context2.t0.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context2.t0.message)
               });
               return _context2.abrupt("return");
-            case 42:
+            case 44:
               chunkIndex++;
-              _context2.next = 21;
+              _context2.next = 22;
               break;
-            case 45:
+            case 47:
               _this4.uploadProgress = 100; // Ensure it's 100% at the end
               _this4.recordedChunks = []; // Clear recorded chunks to free memory
               _this4.loading = false; // Hide loader
@@ -23153,15 +23125,15 @@ var doctorFeedback = "referral/doctor/feedback";
               if (closeAfterUpload) {
                 window.top.close();
               }
-              _context2.next = 53;
+              _context2.next = 55;
               break;
-            case 52:
+            case 54:
               console.error("No recorded data available to save.");
-            case 53:
+            case 55:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[30, 36]]);
+        }, _callee2, null, [[32, 38]]);
       }))();
     },
     closeFeedbackModal: function closeFeedbackModal() {
@@ -23437,7 +23409,7 @@ var doctorFeedback = "referral/doctor/feedback";
     sendCallDuration: function sendCallDuration() {
       var _this7 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
-        var finalDuration, response;
+        var duration, parts, totalMinutes, response;
         return _regeneratorRuntime().wrap(function _callee7$(_context7) {
           while (1) switch (_context7.prev = _context7.next) {
             case 0:
@@ -23449,36 +23421,46 @@ var doctorFeedback = "referral/doctor/feedback";
             case 2:
               // Prevent duplicate sends
               _this7.isLeavingChannel = true;
-              if (!(_this7.callMinutes > 0)) {
-                _context7.next = 18;
-                break;
+
+              // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
+              duration = _this7.callDuration.replace(/\s/g, ''); // Remove spaces
+              parts = duration.split(':').map(Number);
+              totalMinutes = 0;
+              if (parts.length === 2) {
+                // Format: mm:ss
+                totalMinutes = parts[0];
+                if (parts[1] >= 30) totalMinutes += 1; // round up if 30+ seconds
+              } else if (parts.length === 3) {
+                // Format: hh:mm:ss
+                totalMinutes = parts[0] * 60 + parts[1];
+                if (parts[2] >= 30) totalMinutes += 1; // round up if 30+ seconds
               }
-              _context7.prev = 4;
-              // Calculate final duration before sending
-              finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
-              _context7.next = 8;
+
+              // Ensure integer and at least 1 minute if any call happened
+              totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
+              _context7.prev = 8;
+              _context7.next = 11;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this7.baseUrl, "/save-call-duration"), {
-                call_duration: finalDuration,
+                call_duration: totalMinutes,
+                // send as int(11)
                 tracking_id: _this7.tracking_id,
                 referral_code: _this7.referral_code
               });
-            case 8:
+            case 11:
               response = _context7.sent;
-              console.log("Call duration saved:", response.data);
+              console.log("Call duration saved (minutes):", totalMinutes, response.data);
               localStorage.removeItem('callStartTime'); // Clean up
               return _context7.abrupt("return", true);
-            case 14:
-              _context7.prev = 14;
-              _context7.t0 = _context7["catch"](4);
+            case 17:
+              _context7.prev = 17;
+              _context7.t0 = _context7["catch"](8);
               console.error("Error saving call duration:", _context7.t0);
               return _context7.abrupt("return", false);
-            case 18:
-              return _context7.abrupt("return", false);
-            case 19:
+            case 21:
             case "end":
               return _context7.stop();
           }
-        }, _callee7, null, [[4, 14]]);
+        }, _callee7, null, [[8, 17]]);
       }))();
     },
     leaveChannel: function leaveChannel() {

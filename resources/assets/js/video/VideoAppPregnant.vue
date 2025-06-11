@@ -298,7 +298,6 @@ export default {
         const activityId = this.activity_id;
         const referring_md = this.form.referring_md;
         const referred = this.form.action_md;
-        // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
         const currentDate = new Date();
         const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
         const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
@@ -306,41 +305,10 @@ export default {
 
         const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
 
-        // --- Detect upload speed and set chunk size ---
-        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
-        // try {
-        //   // Create a 1MB test blob
-        //   const testBlob = blob.slice(0, 1 * 1024 * 1024);
-        //   const testFormData = new FormData();
-        //   testFormData.append("video", testBlob, "test.webm");
-        //   testFormData.append("fileName", "test.webm");
-        //   testFormData.append("chunkIndex", 0);
-        //   testFormData.append("totalChunks", 1);
+        // Get facility name for folder (sanitize on server)
+        const facilityName = this.form.referring_name || "UnknownFacility";
 
-        //   const startTime = performance.now();
-        //   // await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
-        //   //   headers: { "Content-Type": "multipart/form-data" },
-        //   // });
-        //   const endTime = performance.now();
-        //   const durationSeconds = (endTime - startTime) / 1000;
-        //   const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
-
-        //   this.netSpeedMbps = speedMbps.toFixed(2);
-        //   this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
-        //   // Set chunk size based on speed
-        //   if (speedMbps > 8) { // ~8Mbps or higher is fast
-        //     chunkSize = 10 * 1024 * 1024; // 10MB
-        //   } else {
-        //     chunkSize = 5 * 1024 * 1024; // 5MB
-        //   }
-        //   // Optionally, delete the test chunk on the server if needed
-        // } catch (e) {
-        //   // If test fails, fallback to 5MB
-        //   chunkSize = 5 * 1024 * 1024;
-        //   this.netSpeedMbps = null;
-        //   this.netSpeedStatus = 'slow';
-        // }
-
+        let chunkSize = 10 * 1024 * 1024; // Default to 10MB
         const totalChunks = Math.ceil(blob.size / chunkSize);
 
         for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
@@ -353,6 +321,7 @@ export default {
           formData.append("fileName", fileName);
           formData.append("chunkIndex", chunkIndex);
           formData.append("totalChunks", totalChunks);
+          formData.append("facilityName", facilityName); // <-- Add facility name
 
           try {
             await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
@@ -522,30 +491,42 @@ export default {
       channelParameters.localVideoTrack.play(localPlayerContainer);
       console.log("publish success!");
     },
-    async sendCallDuration() {
+   async sendCallDuration() {
       if (this.isLeavingChannel) return; // Prevent duplicate sends
       this.isLeavingChannel = true;
 
-      if (this.callMinutes > 0) {
-        try {
-          // Calculate final duration before sending
-          const finalDuration = Math.floor((Date.now() - localStorage.getItem('callStartTime')) / 60000);
-          
-          const response = await axios.post(`${this.baseUrl}/save-call-duration`, {
-            call_duration: finalDuration,
-            tracking_id: this.tracking_id,
-            referral_code: this.referral_code
-          });
-          
-          console.log("Call duration saved:", response.data);
-          localStorage.removeItem('callStartTime'); // Clean up
-          return true;
-        } catch (error) {
-          console.error("Error saving call duration:", error);
-          return false;
-        }
+      // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
+      let duration = this.callDuration.replace(/\s/g, ''); // Remove spaces
+      let parts = duration.split(':').map(Number);
+      let totalMinutes = 0;
+
+      if (parts.length === 2) {
+        // Format: mm:ss
+        totalMinutes = parts[0];
+        if (parts[1] >= 30) totalMinutes += 1; // round up if 30+ seconds
+      } else if (parts.length === 3) {
+        // Format: hh:mm:ss
+        totalMinutes = (parts[0] * 60) + parts[1];
+        if (parts[2] >= 30) totalMinutes += 1; // round up if 30+ seconds
       }
-      return false;
+
+      // Ensure integer and at least 1 minute if any call happened
+      totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
+
+      try {
+        const response = await axios.post(`${this.baseUrl}/save-call-duration`, {
+          call_duration: totalMinutes, // send as int(11)
+          tracking_id: this.tracking_id,
+          referral_code: this.referral_code
+        });
+
+        console.log("Call duration saved (minutes):", totalMinutes, response.data);
+        localStorage.removeItem('callStartTime'); // Clean up
+        return true;
+      } catch (error) {
+        console.error("Error saving call duration:", error);
+        return false;
+      }
     },
     async leaveChannel() {
       // if (confirm("Are you sure you want to leave this channel?")) {

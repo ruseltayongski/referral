@@ -607,22 +607,38 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         </div>
 
                         <div class="form-group">
-                            <!-- <label style="padding: 0px">Note:</label> -->
-                            <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                            <label for="inputTypeSelector">Choose Input Type:</label>
+                            <select id="inputTypeSelector" class="form-control" required>
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="remarks">Remarks</option>
+                                <option value="file">File Upload</option>
+                            </select>
                         </div>
 
-                        <div class="form-group">
-                            <label id="file-label" for="file-input" class="btn btn-primary custom-file form-control">Select Files</label>
-                            <input type="file" id="file-input" name="files[]" multiple class="d-none">
-                            <!-- <label for="file-label" class="btn btn-primary  form-control">Select Files</label> -->
-                          
-                        </div>  
-                        <div class="row">
-                            <div class="card">
-                                <div class="card-body preview-item">
-                                    <p id="err-msgpdf" class="text-center"></p>
-                                    <div class="preview-container" id="preview-container"></div>
-                                
+                        <div class="form-group" id="remarksGroup" style="display:none;">
+                            <label style="padding: 0px">Remarks:</label>
+                            <input type="text" class="form-control" name="followremarks" id="remarks">
+                        </div>
+                        
+                        <div id="fileUploadGroup" style="display:none;">
+                            <div class="form-group">
+                                <!-- <label style="padding: 0px">Note:</label> -->
+                                <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label id="file-label" for="file-input" class="btn btn-primary custom-file form-control">Select Files</label>
+                                <input type="file" id="file-input" name="files[]" multiple class="d-none">
+                                <!-- <label for="file-label" class="btn btn-primary  form-control">Select Files</label> -->
+                            </div>  
+
+                            <div class="row">
+                                <div class="card">
+                                    <div class="card-body preview-item">
+                                        <p id="err-msgpdf" class="text-center"></p>
+                                        <div class="preview-container" id="preview-container"></div>
+                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -827,6 +843,46 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 </div><!-- /.modal -->  
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
 <script>// jondy changes
+
+
+ const selector = document.getElementById("inputTypeSelector");
+    const remarksGroup = document.getElementById("remarksGroup");
+    const fileUploadGroup = document.getElementById("fileUploadGroup");
+    const remarksInput = document.getElementById("remarks");
+    const fileInput = document.getElementById("file-input");
+    const form = document.getElementById("telemedicineFollowupForm");
+
+    selector.addEventListener("change", function () {
+        const value = this.value;
+
+        if (value === "remarks") {
+            remarksGroup.style.display = "block";
+            remarksInput.setAttribute("required", "required");
+            fileUploadGroup.style.display = "none";
+            fileInput.removeAttribute("required");
+        } else if (value === "file") {
+            remarksGroup.style.display = "none";
+            remarksInput.removeAttribute("required");
+            fileUploadGroup.style.display = "block";
+            fileInput.setAttribute("required", "required");
+        }
+    });
+
+    // Fallback validation on submit
+    form.addEventListener("submit", function (e) {
+        const selected = selector.value;
+
+        if (selected === "remarks" && !remarksInput.value.trim()) {
+            alert("Please enter remarks.");
+            e.preventDefault();
+        }
+
+        if (selected === "file" && fileInput.files.length === 0) {
+            alert("Please upload at least one file.");
+            e.preventDefault();
+        }
+    });
+
 
 let firebase_key = "";
 function sendNotifierData(key_firebase,age, chiefComplaint, department, diagnosis, patient, sex, referring_hospital, date_referred, patient_code) {

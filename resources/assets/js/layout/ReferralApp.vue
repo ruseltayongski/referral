@@ -554,7 +554,7 @@
             this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    console.log("newly incoming Telemed::", event, event.payload.telemedicine == 1, this.user.subopd_id == event.payload.subOpdId);
+                    console.log("newly incoming Telemed::", event, event.payload.telemedicine);
                     if(this.user.facility_id === event.payload.referred_to || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred')) {
                         this.playAudio(event.payload.telemedicine);
                         this.increment_referral++;

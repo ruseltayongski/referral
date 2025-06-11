@@ -7,6 +7,19 @@
     <h1 class="text-center">Telemedicine Consolidated Report</h1>
     <hr>
 
+        <!-- Date Filter Form -->
+    <form method="GET" action="{{ url('/count/Consultation') }}" class="form-inline text-left" style="margin-bottom: 20px;">
+        <label for="from_date">From:</label>
+        <input type="date" name="from_date" id="from_date" value="{{ request('from_date') }}" class="form-control" required>
+        <label for="to_date" style="margin-left:10px;">To:</label>
+        <input type="date" name="to_date" id="to_date" value="{{ request('to_date') }}" class="form-control" required>
+        <button type="submit" class="btn btn-success" style="margin-left:10px;">Filter</button>
+        @if(request('from_date') && request('to_date'))
+            <a href="{{ url('/count/Consultation') }}" class="btn btn-default" style="margin-left:10px;">Clear</a>
+        @endif
+    </form>
+
+
     <!-- Overall Statistics -->
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -28,7 +41,7 @@
                 </div>
                 <div class="col-md-3">
                     <h4>Average Consultation Duration</h4>
-                    <p>{{$totalConsultationMinutes}}</p>
+                    <p>{{$averageConsultationDuration}}</p>
                 </div>
             </div>
         </div>
