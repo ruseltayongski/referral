@@ -308,7 +308,7 @@ export default {
         // Get facility name for folder (sanitize on server)
         const facilityName = this.form.referring_name || "UnknownFacility";
 
-        let chunkSize = 10 * 1024 * 1024; // Default to 10MB
+        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
         const totalChunks = Math.ceil(blob.size / chunkSize);
 
         for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
