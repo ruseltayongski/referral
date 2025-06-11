@@ -310,113 +310,82 @@ export default {
           return event.returnValue;
         }
       },
-    async saveScreenRecording(closeAfterUpload = false) {
-      if (this.recordedChunks.length > 0) {
-        this.loading = true; // Show loader
+   async saveScreenRecording(closeAfterUpload = false) {
+    if (this.recordedChunks.length > 0) {
+      this.loading = true; // Show loader
 
-        // Convert recorded chunks to a Blob
-        const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+      // Convert recorded chunks to a Blob
+      const blob = new Blob(this.recordedChunks, { type: "video/webm" });
 
-        // --- Max file size check (2GB) ---
-        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
-        if (blob.size > maxSize) {
+      // --- Max file size check (2GB) ---
+      const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+      if (blob.size > maxSize) {
+        this.loading = false;
+        Lobibox.alert("error", {
+          msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
+        });
+        return;
+      }
+
+      // Generate the filename
+      const patientCode = this.form.code || "Unknown_Patient";
+      const activityId = this.activity_id;
+      const referring_md = this.form.referring_md;
+      const referred = this.form.action_md;
+      const currentDate = new Date();
+      const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+      const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+      const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+
+      const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
+
+      // Get facility name for folder (sanitize on server)
+      const facilityName = this.form.referring_name || "UnknownFacility";
+
+      let chunkSize = 10 * 1024 * 1024; // Default to 10MB
+      const totalChunks = Math.ceil(blob.size / chunkSize);
+
+      for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+        const start = chunkIndex * chunkSize;
+        const end = Math.min(blob.size, start + chunkSize);
+        const chunk = blob.slice(start, end);
+
+        const formData = new FormData();
+        formData.append("video", chunk, fileName);
+        formData.append("fileName", fileName);
+        formData.append("chunkIndex", chunkIndex);
+        formData.append("totalChunks", totalChunks);
+        formData.append("facilityName", facilityName); // <-- Add facility name
+
+        try {
+          await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+          // Update progress after each chunk
+          this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+        } catch (error) {
           this.loading = false;
+          this.uploadProgress = 0; // Reset on error
           Lobibox.alert("error", {
-            msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
+            msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
+              (error.response?.data?.message || error.message),
           });
           return;
         }
-
-        // Generate the filename
-        const patientCode = this.form.code || "Unknown_Patient";
-        const activityId = this.activity_id;
-        const referring_md = this.form.referring_md;
-        const referred = this.form.action_md;
-        // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
-        const currentDate = new Date();
-        const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-        const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
-        const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
-
-        const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
-
-        // --- Detect upload speed and set chunk size ---
-        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
-        // try {
-        //   // Create a 1MB test blob
-        //   const testBlob = blob.slice(0, 1 * 1024 * 1024);
-        //   const testFormData = new FormData();
-        //   testFormData.append("video", testBlob, "test.webm");
-        //   testFormData.append("fileName", "test.webm");
-        //   testFormData.append("chunkIndex", 0);
-        //   testFormData.append("totalChunks", 1);
-
-        //   const startTime = performance.now();
-        //   await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
-        //     headers: { "Content-Type": "multipart/form-data" },
-        //   });
-        //   const endTime = performance.now();
-        //   const durationSeconds = (endTime - startTime) / 1000;
-        //   const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
-
-        //   this.netSpeedMbps = speedMbps.toFixed(2);
-        //   this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
-        //   // Set chunk size based on speed
-        //   if (speedMbps > 8) { // ~8Mbps or higher is fast
-        //     chunkSize = 10 * 1024 * 1024; // 10MB
-        //   } else {
-        //     chunkSize = 5 * 1024 * 1024; // 5MB
-        //   }
-        //   // Optionally, delete the test chunk on the server if needed
-        // } catch (e) {
-        //   // If test fails, fallback to 5MB
-        //   chunkSize = 5 * 1024 * 1024;
-        //   this.netSpeedMbps = null;
-        //   this.netSpeedStatus = 'slow';
-        // }
-
-        const totalChunks = Math.ceil(blob.size / chunkSize);
-
-        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-          const start = chunkIndex * chunkSize;
-          const end = Math.min(blob.size, start + chunkSize);
-          const chunk = blob.slice(start, end);
-
-          const formData = new FormData();
-          formData.append("video", chunk, fileName);
-          formData.append("fileName", fileName);
-          formData.append("chunkIndex", chunkIndex);
-          formData.append("totalChunks", totalChunks);
-
-          try {
-            await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
-              headers: { "Content-Type": "multipart/form-data" },
-            });
-            // Update progress after each chunk
-            this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
-          } catch (error) {
-            this.loading = false;
-            this.uploadProgress = 0; // Reset on error
-            Lobibox.alert("error", {
-              msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
-                (error.response?.data?.message || error.message),
-            });
-            return;
-          }
-        }
-
-        this.uploadProgress = 100; // Ensure it's 100% at the end
-        this.recordedChunks = []; // Clear recorded chunks to free memory
-        this.loading = false; // Hide loader
-        this.uploadProgress = 0; // Reset progress
-
-        if (closeAfterUpload) {
-          window.top.close();
-        }
-      } else {
-        console.error("No recorded data available to save.");
       }
-    },
+
+      this.uploadProgress = 100; // Ensure it's 100% at the end
+      this.recordedChunks = []; // Clear recorded chunks to free memory
+      this.loading = false; // Hide loader
+      this.uploadProgress = 0; // Reset progress
+
+      if (closeAfterUpload) {
+        window.top.close();
+      }
+    } else {
+      console.error("No recorded data available to save.");
+    }
+  },
   closeFeedbackModal() {
     this.feedbackModalVisible = false; // Hide the feedback modal
   },
