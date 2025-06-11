@@ -153,6 +153,126 @@ export default {
     this.startBasicCall();
   },
   methods: {
+    handleResize() {
+    // Get current window dimensions
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+      const isLandscape = windowWidth > windowHeight;
+      
+      // Detect device type for more specific adjustments
+      const isMobile = windowWidth < 768;
+      const isTablet = windowWidth >= 768 && windowWidth < 1024;
+      const isDesktop = windowWidth >= 1024;
+      
+      // Log resize information for debugging
+      console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
+      
+      // Apply layout adjustments based on screen size
+      if (isMobile) {
+        // Mobile specific adjustments
+        this.applyMobileLayout(isLandscape);
+      } else if (isTablet) {
+        // Tablet specific adjustments
+        this.applyTabletLayout(isLandscape);
+      } else {
+        // Desktop specific adjustments
+        this.applyDesktopLayout();
+      }
+      
+      // Adjust video and container sizes
+      this.adjustVideoSize();
+      
+      // Ensure draggable element stays within bounds after resize
+      this.enforceContainerBounds();
+      
+      // Recalculate any dynamic UI elements
+      this.updateUIElementsPositions();
+    },
+  enforceContainerBounds() {
+    // Ensure draggable element stays within bounds after resize
+    if (this.draggableDiv) {
+      const containerRect = document.querySelector('.mainPic').getBoundingClientRect();
+      const draggableRect = this.draggableDiv.getBoundingClientRect();
+      
+      // Check if draggable element is outside bounds
+      if (this.xOffset > containerRect.width - draggableRect.width) {
+        this.xOffset = containerRect.width - draggableRect.width;
+      }
+      
+      if (this.yOffset > containerRect.height - draggableRect.height) {
+        this.yOffset = containerRect.height - draggableRect.height;
+      }
+      
+      // Apply corrected position
+      this.setTranslate(this.xOffset, this.yOffset, this.draggableDiv);
+    }
+  },
+    adjustVideoSize() {
+      // Example: Get window dimensions and adjust component sizes
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+      
+      // You can use these dimensions to dynamically set sizes
+      // This is an example - adjust based on your specific needs
+      const remoteVideo = document.querySelector('.remotePlayerDiv');
+      if (remoteVideo) {
+        // Example adjustment - customize as needed
+        const isLandscape = windowWidth > windowHeight;
+        if (isLandscape && windowWidth < 1200) {
+          // Adjust remote video container
+          if (remoteVideo) {
+            remoteVideo.style.height = 'auto';
+            remoteVideo.style.maxHeight = '60vh';
+          }
+          
+          // Adjust the tooltip container positioning
+          const tooltipContainer = document.querySelector('.tooltip-container');
+          if (tooltipContainer) {
+            tooltipContainer.style.bottom = '5px';
+            tooltipContainer.style.left = '50%';
+            tooltipContainer.style.transform = 'translateX(-50%)';
+          }
+          
+          // Make buttons in the control panel smaller
+          const buttons = document.querySelectorAll('.iconCall button');
+          buttons.forEach(button => {
+            button.classList.remove('btn-md');
+            button.classList.add('btn-sm');
+          });
+          
+          // Adjust local video position and size
+          const localVideo = document.getElementById('draggable-div');
+          if (localVideo) {
+            localVideo.style.width = '20%'; // Smaller width
+            localVideo.style.maxWidth = '120px';
+            
+            // Reposition to a good default spot
+            this.xOffset = windowWidth * 0.75;
+            this.yOffset = windowHeight * 0.15;
+            this.setTranslate(this.xOffset, this.yOffset, localVideo);
+          }
+          
+          // Adjust form layout
+          const formContainer = document.querySelector('.form-container');
+          if (formContainer) {
+            formContainer.style.width = '100%';
+            formContainer.style.maxHeight = '50vh';
+          }
+          
+          // Make the main container flex direction change for better display
+          const mainContainer = document.querySelector('.main-container');
+          if (mainContainer) {
+            mainContainer.style.flexDirection = 'column';
+          }
+          
+          // Adjust form text to be more readable on small screens
+          const formDetails = document.querySelectorAll('.forDetails, .caseforDetails, .recoSummary, .mdHcw');
+          formDetails.forEach(element => {
+            element.style.fontSize = '0.9rem';
+          });
+        }
+      }
+    },
     async startScreenRecording() {
 
       try {
@@ -725,6 +845,95 @@ export default {
     },
   },
 };
+
+document.addEventListener("DOMContentLoaded", function () {
+    const draggableDiv = document.getElementById("draggable-div");
+    const mainPic = document.querySelector(".mainPic");
+
+    if (!draggableDiv) {
+        console.error("❌ Error: Draggable element not found!");
+        return;
+    }
+
+    let isDragging = false;
+    let offsetX = 0, offsetY = 0;
+
+    // Position the draggable div in the bottom-right corner initially
+    positionInBottomRight();
+
+    // Mouse events for desktop
+    draggableDiv.addEventListener("mousedown", startDrag);
+    document.addEventListener("mousemove", drag);
+    document.addEventListener("mouseup", endDrag);
+
+    // Touch events for mobile
+    draggableDiv.addEventListener("touchstart", startDragTouch);
+    document.addEventListener("touchmove", dragTouch);
+    document.addEventListener("touchend", endDrag);
+
+    function positionInBottomRight() {
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const padding = 20;
+
+        draggableDiv.style.position = "absolute";
+        draggableDiv.style.left = `${containerBounds.right - draggableDiv.offsetWidth - padding}px`;
+        draggableDiv.style.top = `${containerBounds.bottom - draggableDiv.offsetHeight - padding}px`;
+    }
+
+    function startDrag(event) {
+        isDragging = true;
+        const rect = draggableDiv.getBoundingClientRect();
+        offsetX = event.clientX - rect.left;
+        offsetY = event.clientY - rect.top;
+        draggableDiv.style.cursor = "grabbing";
+    }
+
+    function startDragTouch(event) {
+        if (event.touches.length !== 1) return;
+        isDragging = true;
+        const touch = event.touches[0];
+        const rect = draggableDiv.getBoundingClientRect();
+        offsetX = touch.clientX - rect.left;
+        offsetY = touch.clientY - rect.top;
+    }
+
+    function drag(event) {
+        if (!isDragging) return;
+        event.preventDefault();
+        moveElement(event.clientX, event.clientY);
+    }
+
+    function dragTouch(event) {
+        if (!isDragging || event.touches.length !== 1) return;
+        event.preventDefault();
+        const touch = event.touches[0];
+        moveElement(touch.clientX, touch.clientY);
+    }
+
+    function moveElement(clientX, clientY) {
+        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const newX = Math.min(
+            Math.max(clientX - offsetX, containerBounds.left),
+            containerBounds.right - draggableDiv.offsetWidth
+        );
+        const newY = Math.min(
+            Math.max(clientY - offsetY, containerBounds.top),
+            containerBounds.bottom - draggableDiv.offsetHeight
+        );
+
+        draggableDiv.style.left = `${newX}px`;
+        draggableDiv.style.top = `${newY}px`;
+    }
+
+    function endDrag() {
+        if (!isDragging) return;
+        isDragging = false;
+        draggableDiv.style.cursor = "grab";
+    }
+
+    // Ensure the draggable div stays within bounds on window resize
+    window.addEventListener("resize", positionInBottomRight);
+});
 </script>
 <template>
     <div v-if="loading" class="loader-overlay">

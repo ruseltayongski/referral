@@ -137,9 +137,9 @@ export default {
     
     //******************************************** start here */
      // Add window resize event listener
-     window.addEventListener('resize', this.handleResize);
+    //  window.addEventListener('resize', this.handleResize);
     // Call once to set initial sizing
-    this.handleResize();
+    // this.handleResize();
     
 
   },
@@ -149,7 +149,7 @@ export default {
     window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
     this.stopCallTimer();
      // Remove event listener when component is destroyed
-     window.removeEventListener('resize', this.handleResize);
+    //  window.removeEventListener('resize', this.handleResize);
   },
   props: ["user"],
   created() {
@@ -846,41 +846,41 @@ export default {
     },
   },
  // ************************************************************************************* start here
-  handleResize() {
-    // Get current window dimensions
-      const windowHeight = window.innerHeight;
-      const windowWidth = window.innerWidth;
-      const isLandscape = windowWidth > windowHeight;
+  // handleResize() {
+  //   // Get current window dimensions
+  //     const windowHeight = window.innerHeight;
+  //     const windowWidth = window.innerWidth;
+  //     const isLandscape = windowWidth > windowHeight;
       
-      // Detect device type for more specific adjustments
-      const isMobile = windowWidth < 768;
-      const isTablet = windowWidth >= 768 && windowWidth < 1024;
-      const isDesktop = windowWidth >= 1024;
+  //     // Detect device type for more specific adjustments
+  //     const isMobile = windowWidth < 768;
+  //     const isTablet = windowWidth >= 768 && windowWidth < 1024;
+  //     const isDesktop = windowWidth >= 1024;
       
-      // Log resize information for debugging
-      console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
+  //     // Log resize information for debugging
+  //     console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
       
-      // Apply layout adjustments based on screen size
-      if (isMobile) {
-        // Mobile specific adjustments
-        this.applyMobileLayout(isLandscape);
-      } else if (isTablet) {
-        // Tablet specific adjustments
-        this.applyTabletLayout(isLandscape);
-      } else {
-        // Desktop specific adjustments
-        this.applyDesktopLayout();
-      }
+  //     // Apply layout adjustments based on screen size
+  //     if (isMobile) {
+  //       // Mobile specific adjustments
+  //       this.applyMobileLayout(isLandscape);
+  //     } else if (isTablet) {
+  //       // Tablet specific adjustments
+  //       this.applyTabletLayout(isLandscape);
+  //     } else {
+  //       // Desktop specific adjustments
+  //       this.applyDesktopLayout();
+  //     }
       
-      // Adjust video and container sizes
-      this.adjustVideoSize();
+  //     // Adjust video and container sizes
+  //     this.adjustVideoSize();
       
-      // Ensure draggable element stays within bounds after resize
-      this.enforceContainerBounds();
+  //     // Ensure draggable element stays within bounds after resize
+  //     this.enforceContainerBounds();
       
-      // Recalculate any dynamic UI elements
-      this.updateUIElementsPositions();
-    },
+  //     // Recalculate any dynamic UI elements
+  //     this.updateUIElementsPositions();
+  //   },
     adjustVideoSize() {
       // Example: Get window dimensions and adjust component sizes
       const windowHeight = window.innerHeight;
@@ -1233,44 +1233,44 @@ export default {
   },
 
   // Modify the existing handleResize function to call our new telemedForm functions
-  handleResize() {
-    // Get current window dimensions
-    const windowHeight = window.innerHeight;
-    const windowWidth = window.innerWidth;
-    const isLandscape = windowWidth > windowHeight;
+  // handleResize() {
+  //   // Get current window dimensions
+  //   const windowHeight = window.innerHeight;
+  //   const windowWidth = window.innerWidth;
+  //   const isLandscape = windowWidth > windowHeight;
     
-    // Detect device type for more specific adjustments
-    const isMobile = windowWidth < 768;
-    const isTablet = windowWidth >= 768 && windowWidth < 1024;
-    const isDesktop = windowWidth >= 1024;
+  //   // Detect device type for more specific adjustments
+  //   const isMobile = windowWidth < 768;
+  //   const isTablet = windowWidth >= 768 && windowWidth < 1024;
+  //   const isDesktop = windowWidth >= 1024;
     
-    // Log resize information for debugging
-    console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
+  //   // Log resize information for debugging
+  //   console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
     
-    // Apply layout adjustments based on screen size
-    if (isMobile) {
-      // Mobile specific adjustments
-      this.applyMobileLayout(isLandscape);
-    } else if (isTablet) {
-      // Tablet specific adjustments
-      this.applyTabletLayout(isLandscape);
-    } else {
-      // Desktop specific adjustments
-      this.applyDesktopLayout();
-    }
+  //   // Apply layout adjustments based on screen size
+  //   if (isMobile) {
+  //     // Mobile specific adjustments
+  //     this.applyMobileLayout(isLandscape);
+  //   } else if (isTablet) {
+  //     // Tablet specific adjustments
+  //     this.applyTabletLayout(isLandscape);
+  //   } else {
+  //     // Desktop specific adjustments
+  //     this.applyDesktopLayout();
+  //   }
     
-    // Adjust video and container sizes
-    this.adjustVideoSize();
+  //   // Adjust video and container sizes
+  //   this.adjustVideoSize();
     
-    // Update telemedForm responsiveness
-    this.updateTelemedFormResponsiveness();
+  //   // Update telemedForm responsiveness
+  //   this.updateTelemedFormResponsiveness();
     
-    // Ensure draggable element stays within bounds after resize
-    this.enforceContainerBounds();
+  //   // Ensure draggable element stays within bounds after resize
+  //   this.enforceContainerBounds();
     
-    // Recalculate any dynamic UI elements
-    this.updateUIElementsPositions();
-  },
+  //   // Recalculate any dynamic UI elements
+  //   this.updateUIElementsPositions();
+  // },
 
   // Modify the existing applyMobileLayout function to better handle the form
   applyMobileLayout(isLandscape) {

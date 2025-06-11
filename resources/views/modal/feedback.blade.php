@@ -103,11 +103,11 @@
 
 <script>
 
-    $(document).ready(function () {
-        $("#feedbackModal .modal-dialog").draggable({
-            handle: ".box-header",
-            containment: "window"
-        });
-    });
+    // $(document).ready(function () {
+    //     $("#feedbackModal .modal-dialog").draggable({
+    //         handle: ".box-header",
+    //         containment: "window"
+    //     });
+    // });
 
 </script>
