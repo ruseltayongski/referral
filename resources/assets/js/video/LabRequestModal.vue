@@ -25,6 +25,20 @@
             console.log(this.activity_id)
             this.__getLaboratories()
         },
+        watch: {
+                 laboratories: {
+                handler(newVal, oldVal) {
+                    // Reset checked laboratories when laboratories data changes
+                    // This prevents stale references from causing issues
+                    if (JSON.stringify(newVal) !== JSON.stringify(oldVal)) {
+                        this.checkedLaboratories = [];
+                        this.isOtherSelected = false;
+                        this.otherLabRequest = '';
+                    }
+                },
+                deep: true
+            }
+        },
         methods: {
             searchLaboratories() {
                 const searchTermLower = this.searchTerm.toLowerCase();
@@ -50,7 +64,6 @@
             submitForm() {
 
                  let selectedLabs = [...this.checkedLaboratories];
-                
                 if(this.isOtherSelected && this.otherLabRequest.trim() !== ''){
                      selectedLabs.push(this.otherLabRequest.trim());
                 }
@@ -78,14 +91,42 @@
                 });
             },
             async __getLaboratories() {
-                const response = await getLaboratories()
-                this.laboratories = response.data;
-                this.laboratoriesHolder = response.data;            
+                try{
+
+                    const response = await getLaboratories()
+                    // Ensure we have clean object references
+                    this.laboratoriesHolder = { ...response.data };
+                    this.laboratories = { ...response.data };
+                    
+                    // Reset checkbox state to prevent any lingering issues
+                    this.checkedLaboratories = [];
+                    this.isOtherSelected = false;
+                    this.otherLabRequest = '';
+                    
+                    // Force Vue to re-render the checkboxes
+                    this.$nextTick(() => {
+                        this.$forceUpdate();
+                    });
+
+                } catch (error){
+                    console.error('Error loading laboratories:', error);
+                }
+                // const response = await getLaboratories()
+                // this.laboratories = response.data;
+                // this.laboratoriesHolder = response.data;            
             },
             async __saveLaboratories(params) {
-                const response = await saveLabRequest(params)
-                console.log(response.data)          
+                try{
+                    const response = await saveLabRequest(params)
+                    console.log(response.data)  
+                }catch (error){
+                     console.error('Error saving laboratories:', error);
+                }
+                      
             },
+            getCheckboxKey(laboratoryCode) {
+                return `checkbox_${this.activity_id}_${laboratoryCode}`;
+            }
         }
     };
 </script>
@@ -106,10 +147,24 @@
                         <!-- <button class="btn btn-secondary" type="button" id="laboratorySearch" @click="searchLaboratories">Search</button> -->
                     </div>
                     <div id="modal-body-scroll">
-                        <div class="form-check laboratory-check" v-for="(laboratoryDescription, laboratoryCode) in laboratories" :key="laboratoryCode" >
+                        <!-- <div class="form-check laboratory-check" v-for="(laboratoryDescription, laboratoryCode) in laboratories" :key="getCheckboxKey(laboratoryCode)" >
                             <input class="form-check-input" type="checkbox" v-model="checkedLaboratories" :value="laboratoryCode">
-                            <label class="form-check-label" for="checkbox1">
+                            <label class="form-check-label" :for="getCheckboxKey(laboratoryCode)"  :name="`lab_${activity_id}_${laboratoryCode}`">
                                 {{ `${laboratoryDescription}` }}
+                            </label>
+                        </div> -->
+
+                        <div class="form-check laboratory-check" 
+                             v-for="(laboratoryDescription, laboratoryCode) in laboratories" 
+                             :key="getCheckboxKey(laboratoryCode)">
+                            <input class="form-check-input" 
+                                   type="checkbox" 
+                                   v-model="checkedLaboratories" 
+                                   :value="laboratoryCode" 
+                                   :id="getCheckboxKey(laboratoryCode)"
+                                   :name="`lab_${activity_id}_${laboratoryCode}`">
+                            <label class="form-check-label" :for="getCheckboxKey(laboratoryCode)">
+                                {{ laboratoryDescription }}
                             </label>
                         </div>
 
