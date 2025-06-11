@@ -22986,7 +22986,7 @@ var doctorFeedback = "referral/doctor/feedback";
       var _arguments = arguments,
         _this4 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, facilityName, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
+        var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, username, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
@@ -23026,8 +23026,8 @@ var doctorFeedback = "referral/doctor/feedback";
                 hour12: false
               }).replace(/:/g, "-");
               fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // Get facility name for folder (sanitize on server)
-              facilityName = _this4.form.referring_name || "UnknownFacility";
-              chunkSize = 10 * 1024 * 1024; // Default to 10MB
+              username = _this4.user.username || "UnknownUser";
+              chunkSize = 5 * 1024 * 1024; // Default to 5MB
               totalChunks = Math.ceil(blob.size / chunkSize);
               chunkIndex = 0;
             case 22:
@@ -23043,7 +23043,7 @@ var doctorFeedback = "referral/doctor/feedback";
               formData.append("fileName", fileName);
               formData.append("chunkIndex", chunkIndex);
               formData.append("totalChunks", totalChunks);
-              formData.append("facilityName", facilityName); // <-- Add facility name
+              formData.append("username", username); // <-- Add facility name
               _context2.prev = 32;
               _context2.next = 35;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {

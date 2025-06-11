@@ -22999,7 +22999,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               }).replace(/:/g, "-");
               fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // Get facility name for folder (sanitize on server)
               facilityName = _this3.form.referring_name || "UnknownFacility";
-              chunkSize = 10 * 1024 * 1024; // Default to 10MB
+              chunkSize = 5 * 1024 * 1024; // Default to 5MB
               totalChunks = Math.ceil(blob.size / chunkSize);
               chunkIndex = 0;
             case 22:
