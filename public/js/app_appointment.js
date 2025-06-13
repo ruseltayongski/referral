@@ -23048,7 +23048,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       return appointmentDateTime < now;
     },
     proceedAppointment: function proceedAppointment(configtime, configDate, appointmentId, configId, opdSubcateg) {
-      console.log("selectedCategory::", this.selectedCategory);
       if (!configId && !this.selectedAppointmentTime || configId && !configtime) {
         Lobibox.alert("error", {
           msg: "Please Select Time"
@@ -23059,20 +23058,24 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           msg: "Please Select Opd Sub category"
         });
         return;
+      } else if (this.followUpReferredId && !this.selectedCategory) {
+        Lobibox.alert("error", {
+          msg: "Configuration ID is required for follow-up appointments."
+        });
+        return;
       }
       if (this.followUpReferredId) {
         var _String$split = String(configtime || "00:00-23:59").split('-'),
           _String$split2 = _slicedToArray(_String$split, 2),
           timeFrom = _String$split2[0],
           timeTo = _String$split2[1];
-        console.log("appointedTimes::::", this.followUpReferredId);
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
         $("#AppointmentId").val(this.selectedAppointmentTime);
         $("#DoctorId").val(this.selectedAppointmentDoctor);
         $("#followup_facility_id").val(this.facilitySelectedId);
-        $("#configId").val(configId);
+        $("#configId").val(this.selectedCategory);
         $("#configAppointmentId").val(appointmentId);
         $("#configDate").val(configDate);
         $("#configTimefrom").val(timeFrom);

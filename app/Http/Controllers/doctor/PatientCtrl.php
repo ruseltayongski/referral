@@ -443,6 +443,7 @@ class PatientCtrl extends Controller
             'date_seen' => ($status == 'walkin') ? date('Y-m-d H:i:s') : '',
             'referred_from' => ($status == 'walkin') ? $req->referring_facility_walkin : $user->facility_id,
             'referred_to' => ($status == 'walkin') ? $user->facility_id : $req->referred_facility,
+            'sub_opdId' => $subOPD_Id,
             'department_id' => $req->referred_department,
             'referring_md' => ($status == 'walkin') ? 0 : $user->id,
             'action_md' => '',

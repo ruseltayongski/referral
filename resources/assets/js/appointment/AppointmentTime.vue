@@ -229,7 +229,7 @@ export default {
         return appointmentDateTime < now;
     },
     proceedAppointment(configtime,configDate,appointmentId,configId,opdSubcateg) { 
-      console.log("selectedCategory::",this.selectedCategory);
+   
       if ((!configId && !this.selectedAppointmentTime) || (configId && !configtime)) {
         Lobibox.alert("error", {
           msg: "Please Select Time",
@@ -240,11 +240,15 @@ export default {
           msg: "Please Select Opd Sub category",
         });
         return;
+      }else if (this.followUpReferredId && !this.selectedCategory) {
+        Lobibox.alert("error", {
+          msg: "Configuration ID is required for follow-up appointments.",
+        });
+        return;
       }
      
       if (this.followUpReferredId) {
         const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');
-        console.log("appointedTimes::::", this.followUpReferredId);
         
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
@@ -253,7 +257,7 @@ export default {
         $("#DoctorId").val(this.selectedAppointmentDoctor);
         $("#followup_facility_id").val(this.facilitySelectedId);
 
-        $("#configId").val(configId);
+        $("#configId").val(this.selectedCategory);
         $("#configAppointmentId").val(appointmentId);
         $("#configDate").val(configDate);
         $("#configTimefrom").val(timeFrom);
