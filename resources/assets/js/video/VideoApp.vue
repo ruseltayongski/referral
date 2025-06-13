@@ -137,9 +137,9 @@ export default {
     
     //******************************************** start here */
      // Add window resize event listener
-    //  window.addEventListener('resize', this.handleResize);
+     window.addEventListener('resize', this.handleResize);
     // Call once to set initial sizing
-    // this.handleResize();
+    this.handleResize();
     
 
   },
@@ -149,7 +149,7 @@ export default {
     window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
     this.stopCallTimer();
      // Remove event listener when component is destroyed
-    //  window.removeEventListener('resize', this.handleResize);
+     window.removeEventListener('resize', this.handleResize);
   },
   props: ["user"],
   created() {
@@ -310,82 +310,113 @@ export default {
           return event.returnValue;
         }
       },
-   async saveScreenRecording(closeAfterUpload = false) {
-    if (this.recordedChunks.length > 0) {
-      this.loading = true; // Show loader
+    async saveScreenRecording(closeAfterUpload = false) {
+      if (this.recordedChunks.length > 0) {
+        this.loading = true; // Show loader
 
-      // Convert recorded chunks to a Blob
-      const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+        // Convert recorded chunks to a Blob
+        const blob = new Blob(this.recordedChunks, { type: "video/webm" });
 
-      // --- Max file size check (2GB) ---
-      const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
-      if (blob.size > maxSize) {
-        this.loading = false;
-        Lobibox.alert("error", {
-          msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
-        });
-        return;
-      }
-
-      // Generate the filename
-      const patientCode = this.form.code || "Unknown_Patient";
-      const activityId = this.activity_id;
-      const referring_md = this.form.referring_md;
-      const referred = this.form.action_md;
-      const currentDate = new Date();
-      const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-      const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
-      const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
-
-      const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
-
-      // Get facility name for folder (sanitize on server)
-      const username = this.user.username || "UnknownUser";
-
-      let chunkSize = 5 * 1024 * 1024; // Default to 5MB
-      const totalChunks = Math.ceil(blob.size / chunkSize);
-
-      for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-        const start = chunkIndex * chunkSize;
-        const end = Math.min(blob.size, start + chunkSize);
-        const chunk = blob.slice(start, end);
-
-        const formData = new FormData();
-        formData.append("video", chunk, fileName);
-        formData.append("fileName", fileName);
-        formData.append("chunkIndex", chunkIndex);
-        formData.append("totalChunks", totalChunks);
-        formData.append("username", username); // <-- Add facility name
-
-        try {
-          await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-          // Update progress after each chunk
-          this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
-        } catch (error) {
+        // --- Max file size check (2GB) ---
+        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+        if (blob.size > maxSize) {
           this.loading = false;
-          this.uploadProgress = 0; // Reset on error
           Lobibox.alert("error", {
-            msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
-              (error.response?.data?.message || error.message),
+            msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
           });
           return;
         }
-      }
 
-      this.uploadProgress = 100; // Ensure it's 100% at the end
-      this.recordedChunks = []; // Clear recorded chunks to free memory
-      this.loading = false; // Hide loader
-      this.uploadProgress = 0; // Reset progress
+        // Generate the filename
+        const patientCode = this.form.code || "Unknown_Patient";
+        const activityId = this.activity_id;
+        const referring_md = this.form.referring_md;
+        const referred = this.form.action_md;
+        // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+        const currentDate = new Date();
+        const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+        const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
 
-      if (closeAfterUpload) {
-        window.top.close();
+        const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
+
+        // --- Detect upload speed and set chunk size ---
+        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
+        // try {
+        //   // Create a 1MB test blob
+        //   const testBlob = blob.slice(0, 1 * 1024 * 1024);
+        //   const testFormData = new FormData();
+        //   testFormData.append("video", testBlob, "test.webm");
+        //   testFormData.append("fileName", "test.webm");
+        //   testFormData.append("chunkIndex", 0);
+        //   testFormData.append("totalChunks", 1);
+
+        //   const startTime = performance.now();
+        //   await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", testFormData, {
+        //     headers: { "Content-Type": "multipart/form-data" },
+        //   });
+        //   const endTime = performance.now();
+        //   const durationSeconds = (endTime - startTime) / 1000;
+        //   const speedMbps = (1 / durationSeconds) * 8; // 1MB in MBps to Mbps
+
+        //   this.netSpeedMbps = speedMbps.toFixed(2);
+        //   this.netSpeedStatus = speedMbps > 8 ? 'fast' : 'slow';
+        //   // Set chunk size based on speed
+        //   if (speedMbps > 8) { // ~8Mbps or higher is fast
+        //     chunkSize = 10 * 1024 * 1024; // 10MB
+        //   } else {
+        //     chunkSize = 5 * 1024 * 1024; // 5MB
+        //   }
+        //   // Optionally, delete the test chunk on the server if needed
+        // } catch (e) {
+        //   // If test fails, fallback to 5MB
+        //   chunkSize = 5 * 1024 * 1024;
+        //   this.netSpeedMbps = null;
+        //   this.netSpeedStatus = 'slow';
+        // }
+
+        const totalChunks = Math.ceil(blob.size / chunkSize);
+
+        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
+          const start = chunkIndex * chunkSize;
+          const end = Math.min(blob.size, start + chunkSize);
+          const chunk = blob.slice(start, end);
+
+          const formData = new FormData();
+          formData.append("video", chunk, fileName);
+          formData.append("fileName", fileName);
+          formData.append("chunkIndex", chunkIndex);
+          formData.append("totalChunks", totalChunks);
+
+          try {
+            await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
+              headers: { "Content-Type": "multipart/form-data" },
+            });
+            // Update progress after each chunk
+            this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+          } catch (error) {
+            this.loading = false;
+            this.uploadProgress = 0; // Reset on error
+            Lobibox.alert("error", {
+              msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
+                (error.response?.data?.message || error.message),
+            });
+            return;
+          }
+        }
+
+        this.uploadProgress = 100; // Ensure it's 100% at the end
+        this.recordedChunks = []; // Clear recorded chunks to free memory
+        this.loading = false; // Hide loader
+        this.uploadProgress = 0; // Reset progress
+
+        if (closeAfterUpload) {
+          window.top.close();
+        }
+      } else {
+        console.error("No recorded data available to save.");
       }
-    } else {
-      console.error("No recorded data available to save.");
-    }
-  },
+    },
   closeFeedbackModal() {
     this.feedbackModalVisible = false; // Hide the feedback modal
   },
@@ -496,6 +527,10 @@ export default {
         console.log("subscribe success");
 
         if (mediaType === "video") {
+          // Pause ringing audio when remote video is received
+          if (self.$refs && self.$refs.ringingPhone) {
+            self.$refs.ringingPhone.pause();
+          }
           self.channelParameters.remoteVideoTrack = user.videoTrack;
           self.channelParameters.remoteAudioTrack = user.audioTrack;
           self.channelParameters.remoteUid = user.uid.toString();
@@ -551,6 +586,16 @@ export default {
 
         self.channelParameters.localVideoTrack.play(localPlayerContainer);
         console.log("publish success!");
+
+        window.onload = function () {
+          self.joinVideo(
+            agoraEngine,
+            self.channelParameters,
+            localPlayerContainer,
+            self
+          );
+        };
+
       } catch (error) {
         console.error("Error joining channel:", error);
       }
@@ -593,49 +638,38 @@ export default {
       return vars;
     },
 
-    async joinVideo(
+       async joinVideo(
       agoraEngine,
       channelParameters,
       localPlayerContainer,
       self
     ) {
-      try {
-        console.log("Attempting to join channel...", self.options.channel);
-        // Join the channel without checking member count first
-        // (we'll handle the check after joining)
-        await agoraEngine.join(
-          self.options.appId,
-          self.options.channel,
-          self.options.token,
-          self.options.uid
-        );
-        
-        console.log("Successfully joined channel");
-        
-        // Create a local audio track from the microphone
-        channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-        
-        // Create a local video track from the camera
-        channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-        
-        // Append the local video container to the page
-        document.body.append(localPlayerContainer);
-        $(".localPlayerDiv").html(localPlayerContainer);
-        $(localPlayerContainer).addClass("localPlayerLayer");
-        
-        // Publish the local audio and video tracks in the channel
-        await agoraEngine.publish([
-          channelParameters.localAudioTrack,
-          channelParameters.localVideoTrack,
-        ]);
-        
-        // Play the local video track
-        channelParameters.localVideoTrack.play(localPlayerContainer);
-        console.log("publish success!");
-        // Start the call timer when the user joins and publishes
-      } catch (error) {
-        console.error("Error joining channel:", error);
-      }
+      console.log("local");
+      // Join a channel.
+      await agoraEngine.join(
+        self.options.appId,
+        self.options.channel,
+        self.options.token,
+        self.options.uid
+      );
+      // Create a local audio track from the audio sampled by a microphone.
+      channelParameters.localAudioTrack =
+        await AgoraRTC.createMicrophoneAudioTrack();
+      // Create a local video track from the video captured by a camera.
+      channelParameters.localVideoTrack =
+        await AgoraRTC.createCameraVideoTrack();
+      // Append the local video container to the page body.
+      document.body.append(localPlayerContainer);
+      $(".localPlayerDiv").html(localPlayerContainer);
+      $(localPlayerContainer).addClass("localPlayerLayer");
+      // Publish the local audio and video tracks in the channel.
+      await agoraEngine.publish([
+        channelParameters.localAudioTrack,
+        channelParameters.localVideoTrack,
+      ]);
+      // Play the local video track.
+      channelParameters.localVideoTrack.play(localPlayerContainer);
+      console.log("publish success!");
     },
     async sendCallDuration() {
       if (this.isLeavingChannel) return; // Prevent duplicate sends
@@ -846,41 +880,41 @@ export default {
     },
   },
  // ************************************************************************************* start here
-  // handleResize() {
-  //   // Get current window dimensions
-  //     const windowHeight = window.innerHeight;
-  //     const windowWidth = window.innerWidth;
-  //     const isLandscape = windowWidth > windowHeight;
+  handleResize() {
+    // Get current window dimensions
+      const windowHeight = window.innerHeight;
+      const windowWidth = window.innerWidth;
+      const isLandscape = windowWidth > windowHeight;
       
-  //     // Detect device type for more specific adjustments
-  //     const isMobile = windowWidth < 768;
-  //     const isTablet = windowWidth >= 768 && windowWidth < 1024;
-  //     const isDesktop = windowWidth >= 1024;
+      // Detect device type for more specific adjustments
+      const isMobile = windowWidth < 768;
+      const isTablet = windowWidth >= 768 && windowWidth < 1024;
+      const isDesktop = windowWidth >= 1024;
       
-  //     // Log resize information for debugging
-  //     console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
+      // Log resize information for debugging
+      console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
       
-  //     // Apply layout adjustments based on screen size
-  //     if (isMobile) {
-  //       // Mobile specific adjustments
-  //       this.applyMobileLayout(isLandscape);
-  //     } else if (isTablet) {
-  //       // Tablet specific adjustments
-  //       this.applyTabletLayout(isLandscape);
-  //     } else {
-  //       // Desktop specific adjustments
-  //       this.applyDesktopLayout();
-  //     }
+      // Apply layout adjustments based on screen size
+      if (isMobile) {
+        // Mobile specific adjustments
+        this.applyMobileLayout(isLandscape);
+      } else if (isTablet) {
+        // Tablet specific adjustments
+        this.applyTabletLayout(isLandscape);
+      } else {
+        // Desktop specific adjustments
+        this.applyDesktopLayout();
+      }
       
-  //     // Adjust video and container sizes
-  //     this.adjustVideoSize();
+      // Adjust video and container sizes
+      this.adjustVideoSize();
       
-  //     // Ensure draggable element stays within bounds after resize
-  //     this.enforceContainerBounds();
+      // Ensure draggable element stays within bounds after resize
+      this.enforceContainerBounds();
       
-  //     // Recalculate any dynamic UI elements
-  //     this.updateUIElementsPositions();
-  //   },
+      // Recalculate any dynamic UI elements
+      this.updateUIElementsPositions();
+    },
     adjustVideoSize() {
       // Example: Get window dimensions and adjust component sizes
       const windowHeight = window.innerHeight;
@@ -1233,44 +1267,44 @@ export default {
   },
 
   // Modify the existing handleResize function to call our new telemedForm functions
-  // handleResize() {
-  //   // Get current window dimensions
-  //   const windowHeight = window.innerHeight;
-  //   const windowWidth = window.innerWidth;
-  //   const isLandscape = windowWidth > windowHeight;
+  handleResize() {
+    // Get current window dimensions
+    const windowHeight = window.innerHeight;
+    const windowWidth = window.innerWidth;
+    const isLandscape = windowWidth > windowHeight;
     
-  //   // Detect device type for more specific adjustments
-  //   const isMobile = windowWidth < 768;
-  //   const isTablet = windowWidth >= 768 && windowWidth < 1024;
-  //   const isDesktop = windowWidth >= 1024;
+    // Detect device type for more specific adjustments
+    const isMobile = windowWidth < 768;
+    const isTablet = windowWidth >= 768 && windowWidth < 1024;
+    const isDesktop = windowWidth >= 1024;
     
-  //   // Log resize information for debugging
-  //   console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
+    // Log resize information for debugging
+    console.log(`Window resized: ${windowWidth}x${windowHeight}, ${isLandscape ? 'landscape' : 'portrait'}`);
     
-  //   // Apply layout adjustments based on screen size
-  //   if (isMobile) {
-  //     // Mobile specific adjustments
-  //     this.applyMobileLayout(isLandscape);
-  //   } else if (isTablet) {
-  //     // Tablet specific adjustments
-  //     this.applyTabletLayout(isLandscape);
-  //   } else {
-  //     // Desktop specific adjustments
-  //     this.applyDesktopLayout();
-  //   }
+    // Apply layout adjustments based on screen size
+    if (isMobile) {
+      // Mobile specific adjustments
+      this.applyMobileLayout(isLandscape);
+    } else if (isTablet) {
+      // Tablet specific adjustments
+      this.applyTabletLayout(isLandscape);
+    } else {
+      // Desktop specific adjustments
+      this.applyDesktopLayout();
+    }
     
-  //   // Adjust video and container sizes
-  //   this.adjustVideoSize();
+    // Adjust video and container sizes
+    this.adjustVideoSize();
     
-  //   // Update telemedForm responsiveness
-  //   this.updateTelemedFormResponsiveness();
+    // Update telemedForm responsiveness
+    this.updateTelemedFormResponsiveness();
     
-  //   // Ensure draggable element stays within bounds after resize
-  //   this.enforceContainerBounds();
+    // Ensure draggable element stays within bounds after resize
+    this.enforceContainerBounds();
     
-  //   // Recalculate any dynamic UI elements
-  //   this.updateUIElementsPositions();
-  // },
+    // Recalculate any dynamic UI elements
+    this.updateUIElementsPositions();
+  },
 
   // Modify the existing applyMobileLayout function to better handle the form
   applyMobileLayout(isLandscape) {
