@@ -617,9 +617,9 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 
                         <div class="form-group" id="remarksGroup" style="display:none;">
                             <label style="padding: 0px">Remarks:</label>
-                            <input type="text" class="form-control" name="followremarks" id="remarks">
+                            <textarea class="form-control" name="followremarks" id="remarks" rows="3"></textarea>
                         </div>
-                        
+
                         <div id="fileUploadGroup" style="display:none;">
                             <div class="form-group">
                                 <!-- <label style="padding: 0px">Note:</label> -->

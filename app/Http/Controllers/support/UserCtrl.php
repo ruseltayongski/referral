@@ -85,7 +85,7 @@ class UserCtrl extends Controller
 
     public function store(Request $req)
     {
-
+    
         $otherDepartments = implode(',', $req->input('other_department_id', []));
         $user = Session::get('auth');
         $match = array(
@@ -105,7 +105,7 @@ class UserCtrl extends Controller
             'designation' => $req->designation,
             'department_id' => $req->department_id,
             'other_department_telemed' => $otherDepartments,
-            'subopd_id' => $req->opdSub_id,
+            'subopd_id' => $req->opdSub_id ?? $req->AddopdSub_id,
             'username' => $req->username,
             'password' => bcrypt($req->password),
             'muncity' => $facility->muncity,
@@ -118,6 +118,7 @@ class UserCtrl extends Controller
 
     public function add(Request $req)
     {
+
         $user = Session::get('auth');
         $match = array(
             'fname' => $req->fname,
@@ -139,6 +140,7 @@ class UserCtrl extends Controller
             'email' => $email,
             'designation' => $req->designation,
             'department_id' => $req->department_id,
+            'subopd_id' => $req->opdSub_id ?? $req->AddopdSub_id ?? '',
             'username' => $req->username,
             'password' => bcrypt($req->password),
             'muncity' => $facility->muncity,
@@ -152,8 +154,17 @@ class UserCtrl extends Controller
     public function update(Request $req)
     {
         $edit_other_departments = $req->input('edit_other_department_id');
-    
+        // Log::info('Showing the user profile for user: update', ['users' => $req->all()]);
+
         $other_department_telemed = implode(',', $edit_other_departments);
+
+        $subopd_id = '';
+
+        if ($req->filled('AddeditopdSub_id')) {
+            $subopd_id = $req->AddeditopdSub_id;
+        } elseif ($req->filled('editopdSub_id')) {
+            $subopd_id = $req->editopdSub_id;
+        }
 
         $user = Session::get('auth');
         $facility = Facility::find($user->facility_id);
@@ -167,7 +178,7 @@ class UserCtrl extends Controller
             'designation' => $req->designation,
             'department_id' => $req->department_id,
             'other_department_telemed' => $other_department_telemed, 
-            'subopd_id' => $req->editopdSub_id,
+            'subopd_id' => $subopd_id,
             'username' => $req->username,
             'status' => $req->status,
             'muncity' => $facility->muncity,

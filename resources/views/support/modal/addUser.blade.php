@@ -50,7 +50,7 @@
                     </div>
                     <div class="form-group" id="subOpdSection" style="display: none;">
                         <label>Sub Opd:</label>
-                        <select class="form-control select2" name="opdSub_id">
+                        <select class="form-control select2" name="AddopdSub_id">
                             <option value="">Select Sub Opd...</option>
                             @forEach($opdSub as $opd)
                                     <option value="{{ $opd->id }}">{{ $opd->description }}</option>
@@ -167,7 +167,7 @@
                     <input type="hidden" id="opd_id">
                     <div class="form-group" id="editsubOpdSection" style="display: none;">
                         <label>Sub Opd:</label>
-                        <select class="form-control subOpdCateg" name="editopdSub_id" id="editsubOpdSelect">
+                        <select class="form-control subOpdCateg" name="AddeditopdSub_id" id="editsubOpdSelect">
                             <option value="">Select Sub Opd...</option>
                             @forEach($opdSub as $opd)
                                     <option value="{{ $opd->id }}">{{ $opd->description }}</option>
