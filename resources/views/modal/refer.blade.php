@@ -606,21 +606,12 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                             <input type="text" class="form-control" name="department" id="department_Opd" value="OPD" readonly>
                         </div>
 
-                        <div class="form-group">
-                            <label for="inputTypeSelector">Choose Input Type:</label>
-                            <select id="inputTypeSelector" class="form-control" required>
-                                <option value="" disabled selected>Select an option</option>
-                                <option value="remarks">Remarks</option>
-                                <option value="file">File Upload</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group" id="remarksGroup" style="display:none;">
+                        <div class="form-group" id="remarksGroup">
                             <label style="padding: 0px">Remarks:</label>
                             <textarea class="form-control" name="followremarks" id="remarks" rows="3"></textarea>
                         </div>
 
-                        <div id="fileUploadGroup" style="display:none;">
+                        <div id="fileUploadGroup">
                             <div class="form-group">
                                 <!-- <label style="padding: 0px">Note:</label> -->
                                 <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
@@ -845,43 +836,43 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
 <script>// jondy changes
 
 
- const selector = document.getElementById("inputTypeSelector");
-    const remarksGroup = document.getElementById("remarksGroup");
-    const fileUploadGroup = document.getElementById("fileUploadGroup");
-    const remarksInput = document.getElementById("remarks");
-    const fileInput = document.getElementById("file-input");
-    const form = document.getElementById("telemedicineFollowupForm");
+//  const selector = document.getElementById("inputTypeSelector");
+//     const remarksGroup = document.getElementById("remarksGroup");
+//     const fileUploadGroup = document.getElementById("fileUploadGroup");
+//     const remarksInput = document.getElementById("remarks");
+//     const fileInput = document.getElementById("file-input");
+//     const form = document.getElementById("telemedicineFollowupForm");
 
-    selector.addEventListener("change", function () {
-        const value = this.value;
+//     selector.addEventListener("change", function () {
+//         const value = this.value;
 
-        if (value === "remarks") {
-            remarksGroup.style.display = "block";
-            remarksInput.setAttribute("required", "required");
-            fileUploadGroup.style.display = "none";
-            fileInput.removeAttribute("required");
-        } else if (value === "file") {
-            remarksGroup.style.display = "none";
-            remarksInput.removeAttribute("required");
-            fileUploadGroup.style.display = "block";
-            fileInput.setAttribute("required", "required");
-        }
-    });
+//         if (value === "remarks") {
+//             remarksGroup.style.display = "block";
+//             remarksInput.setAttribute("required", "required");
+//             fileUploadGroup.style.display = "none";
+//             fileInput.removeAttribute("required");
+//         } else if (value === "file") {
+//             remarksGroup.style.display = "none";
+//             remarksInput.removeAttribute("required");
+//             fileUploadGroup.style.display = "block";
+//             fileInput.setAttribute("required", "required");
+//         }
+//     });
 
-    // Fallback validation on submit
-    form.addEventListener("submit", function (e) {
-        const selected = selector.value;
+//     // Fallback validation on submit
+//     form.addEventListener("submit", function (e) {
+//         const selected = selector.value;
 
-        if (selected === "remarks" && !remarksInput.value.trim()) {
-            alert("Please enter remarks.");
-            e.preventDefault();
-        }
+//         if (selected === "remarks" && !remarksInput.value.trim()) {
+//             alert("Please enter remarks.");
+//             e.preventDefault();
+//         }
 
-        if (selected === "file" && fileInput.files.length === 0) {
-            alert("Please upload at least one file.");
-            e.preventDefault();
-        }
-    });
+//         if (selected === "file" && fileInput.files.length === 0) {
+//             alert("Please upload at least one file.");
+//             e.preventDefault();
+//         }
+//     });
 
 
 let firebase_key = "";

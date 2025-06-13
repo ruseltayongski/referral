@@ -710,7 +710,7 @@ class ApiController extends Controller
                 'department_id' => $tracking->department_id,
                 'referring_md' => $tracking->referring_md,
                 'action_md' => $user->id,
-                'remarks' => $request->filled('followremarks') ? $request->followremarks : 'patient follow up',
+                'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks  : 'patient follow up',
                 'status' => 'followup'
             );
             Activity::create($activity);
