@@ -594,6 +594,7 @@ class TelemedicineCtrl extends Controller
         // $bookDates = AppointmentSchedule::where('facility_id', $user->facility_id)->pluck('appointed_date')->toArray();
         $bookDates = AppointmentSchedule::with(['telemedAssignedDoctor'])
                     ->where('created_by', $user->id)
+                    ->where('opdCategory', $user->subopd_id)
                     ->where('facility_id', $user->facility_id)->get();
         return response()->json($bookDates);
     }
