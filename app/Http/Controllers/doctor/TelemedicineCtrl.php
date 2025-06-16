@@ -955,19 +955,21 @@ class TelemedicineCtrl extends Controller
             $appointedDates = [];
             $currentDate = $dateStart->copy();
 
-            while ($currentDate->lte($dateEnd)) {
+                while ($currentDate->lte($dateEnd)) {
                 $currentDayName = $currentDate->format('l'); // Get the day name (e.g., "Monday")
 
                 if (array_key_exists($currentDayName, $timeSchedule)) {
-                    $appointedDates[] = [
-                        'appointment_id' =>$timeSlot->id,
-                        'configId' => $config_id,
-                        'date' => $currentDate->format('Y-m-d'),
-                        'timeSlots' => $timeSchedule[$currentDayName], // Assign time slots for this day
-                        'department_id' => $department_id,
-                        'Opdcategory' => $subopd->description,
-                        'opdSubId' =>   $subopd->id,
-                    ];
+                    foreach ($timeSchedule[$currentDayName] as $slot) {
+                        $appointedDates[] = [
+                            'appointment_id' => $slot['id'], // Use the slot's id
+                            'configId' => $config_id,
+                            'date' => $currentDate->format('Y-m-d'),
+                            'timeSlot' => $slot, // Assign the individual time slot
+                            'department_id' => $department_id,
+                            'Opdcategory' => $subopd->description,
+                            'opdSubId' => $subopd->id,
+                        ];
+                    }
                 }
 
                 $currentDate->addDay(); // Move to the next day
