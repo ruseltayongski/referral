@@ -13,12 +13,14 @@
 
     $telemed_subOpdId = json_decode(json_decode($appointmentParam, true), true)[0]['subOpdId'] ?? json_decode($appointmentParam, true)[0]['subOpdId'];
     
+    $telemed_departmentId = json_decode(json_decode($appointmentParam, true), true)[0]['departmentId'] ?? json_decode($appointmentParam, true)[0]['departmentId'];
+
     if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== false){
         [$timeFrom, $timeTo] = explode('-', $telemed_config_time);
     }else{
         $timeFrom = null;
         $timeTo = null;
-    }    
+    }   
 
     $user = Session::get('auth');
     $myfacility = \App\Facility::find($user->facility_id);
@@ -146,9 +148,10 @@
                         </div><br class="mobile-view">
                         <div class="col-md-4">
                             @if($appointmentParam)
-                            <input type="hidden" name="referred_department" value="{{ $department->find($department_id)->id }}">
+                            <label for="">Department:</label>
+                            <input type="hidden" name="referred_department" value="{{ $department->find($telemed_departmentId)->id }}">
                             <select class="form-control-select select_department select_department_pregnant" required disabled>
-                                <option>{{$department->find($department_id)->description}}</option>
+                                <option>{{$department->find($telemed_departmentId)->description}}</option>
                             </select>
                             @else
                             <select name="referred_department" class="form-control-select select_department select_department_pregnant" required>

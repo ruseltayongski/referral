@@ -661,7 +661,8 @@ class ApiController extends Controller
 
     public function patientFollowUp(Request $request) {
         $user = Session::get('auth');
-        //dd($request->all());
+      
+       
         $patient_form = null;
         $patient_id = 0;
         
@@ -674,11 +675,9 @@ class ApiController extends Controller
             if($request->configId){
 
                 $telemedAssigned = new TelemedAssignDoctor();
-    
-                $telemedAssigned->appointed_date = $request->configDate;
-                $telemedAssigned->start_time = $request->configtimefrom;
-                $telemedAssigned->end_time = $request->configtimeto;
-                $telemedAssigned->appointment_id = $request->configAppointmentId;
+                $telemedAssigned->subopd_id = $request->configId;
+                $telemedAssigned->appointment_id = $request->Appointment_id;
+                $telemedAssigned->doctor_id = $user->id;
                 $telemedAssigned->save();
     
             }else{
@@ -707,6 +706,7 @@ class ApiController extends Controller
                 'date_seen' => "0000-00-00 00:00:00",
                 'referred_from' => $tracking->referred_from,
                 'referred_to' => $tracking->referred_to,
+                'sub_opdId' => $request->configId ?? null,
                 'department_id' => $tracking->department_id,
                 'referring_md' => $tracking->referring_md,
                 'action_md' => $user->id,

@@ -1500,9 +1500,7 @@
                                                     {{csrf_field()}}
                                                         <label for="appointed_time">
                                                         Appointed Time: </label>  
-                                                           <span style="float: right;"> 
-                                                                ${assignedDoc ? '<i class="fa fa-user" aria-hidden="true"></i> Assigned ': ''}
-                                                            </span><br>
+                                                        <br>
                                                         <input type="hidden" name="appointment_id${currentCount}" class="appointment_id" value="${appointment.id}">
                                                         <div class="col-md-6">
                                                             <span>From:</span>
@@ -2100,7 +2098,10 @@ function deleteTimeInput(appointment){
                                 {
                                     msg: "This slot has already been created!"
                                 });
-
+                                
+                                fromInput.val('');
+                                toInput.val('');
+                                
                                 return;
                             }
                         

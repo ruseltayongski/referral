@@ -97,7 +97,7 @@ class ReferralCtrl extends Controller
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as action','action.id','=','tracking.action_md')
             ->where('referred_to',$user->facility_id);
-           
+        
         if ($telemedOrReferral) {
             $data = $data->where('tracking.telemedicine', $telemedOrReferral)
                         ->where('tracking.subopd_id', $user->subopd_id);
@@ -740,22 +740,21 @@ class ReferralCtrl extends Controller
 
             if ($telemedOrReferral !== null) {
                 if($telemedOrReferral == 1){
-
+                   
                     $currentDoctorSubopdId = $user->subopd_id;
 
                     $doctorIds = DB::table('users')
                         ->where('subopd_id', $currentDoctorSubopdId)
                         ->pluck('id');
-            
+                 
                     $trackingIds = DB::table('telemed_assign_doctor')
                         ->whereIn('doctor_id', $doctorIds)
                         ->pluck('tracking_id')
                         ->unique()
                         ->toArray();
-
+                    
                     $data = $data->where('tracking.telemedicine', $telemedOrReferral)
                                  ->whereIn('tracking.id', $trackingIds);        
-                    
                 }else{
                     $data = $data->where('tracking.telemedicine', $telemedOrReferral);
                 }

@@ -13,6 +13,8 @@ $telemed_appointed_date = json_decode(json_decode($appointmentParam, true), true
 $telemed_config_time = json_decode(json_decode($appointmentParam, true), true)[0]['configtime'] ?? json_decode($appointmentParam, true)[0]['configtime'];
 $telemed_subOpdId = json_decode(json_decode($appointmentParam, true), true)[0]['subOpdId'] ?? json_decode($appointmentParam, true)[0]['subOpdId'];
 
+$telemed_departmentId = json_decode(json_decode($appointmentParam, true), true)[0]['departmentId'] ?? json_decode($appointmentParam, true)[0]['departmentId'];
+
 if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== false){
     [$timeFrom, $timeTo] = explode('-', $telemed_config_time);
 }else{
@@ -162,10 +164,16 @@ $department_id = $appoitment_sched[0]->department_id;
                             <div class="col-md-4">
                                 <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
                                 @if($appointmentParam)
-                                <input type="hidden" name="referred_department" value="{{$department->find($department_id)->id}}">
-                                <select class="form-control select_department select_department_normal" style="width: 100%;" disabled>
-                                    <option>{{$department->find($department_id)->description}}</option>
-                                </select>
+                                 
+                                      <input type="hidden" name="referred_department" value="{{$telemed_departmentId}}">
+                                    <select class="form-control select_department select_department_normal" style="width: 100%;" disabled>
+                                        <option>{{$department->find($telemed_departmentId)->description}}</option>
+                                    </select>
+
+                                    {{--<input type="hidden" name="referred_department" value="{{$department->find($department_id)->id}}">
+                                    <select class="form-control select_department select_department_normal" style="width: 100%;" disabled>
+                                        <option>{{$department->find($department_id)->description}}</option>
+                                    </select> --}}
                                 @else
                                 <select name="referred_department" class="form-control select_department select_department_normal" style="width: 100%;" required>
                                     <option value="">Select Department...</option>
