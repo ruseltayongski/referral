@@ -106,6 +106,9 @@ export default {
     },
   },
   computed: {
+     selectedDepartmentId() {
+      return this.appointedTimes.find(app => app.id === this.selectedAppointmentTime);
+    },
     currentConfig() {
       if(Array.isArray(this.configTimeSlot)){
         return this.configTimeSlot[0] || {};
@@ -249,7 +252,7 @@ export default {
      
       if (this.followUpReferredId) {
         const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');
-        
+        console.log("follow upd opdId:", this.selectedCategory, this.selectedAppointmentTime);
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
@@ -267,15 +270,16 @@ export default {
         $("#telemedicineFollowupFormModal").modal("show");
       } else {
         let appointment = null;
-
-        if(configId){
+       
+        if(this.selectedCategory){
             appointment = {
               facility_id: this.facilitySelectedId,
               appointmentId: appointmentId,
-              config_id: configId,
+              config_id: this.selectedCategory,
               configDate: configDate,
               configtime: configtime,
               subOpdId: opdSubcateg,
+              departmentId: this.selectedDepartmentId.department_id
             };
             this.$emit("proceed-appointment", appointment);
         } else {
@@ -441,48 +445,6 @@ export default {
                               </small>
                             </li>
                           </ul>
-
-                          <!-- <span
-                            :class="{
-                              'text-green': !areAllDoctorsNotAvailable(
-                                appointment.telemed_assigned_doctor
-                              ),
-                              'text-red': areAllDoctorsNotAvailable(
-                                appointment.telemed_assigned_doctor
-                              ),
-                            }"
-                            >{{ appointment.appointed_time }} to
-                            {{ appointment.appointedTime_to }}</span
-                          > -->
-                          <!-- <ul
-                            v-if="appointment.id == selectedAppointmentTime"
-                            class="doctor-list"
-                            v-for="assignedDoctor in appointment.telemed_assigned_doctor"
-                            :key="assignedDoctor.id"
-                          >
-                            <li>
-                              <input
-                                type="radio"
-                                class="hours_radio"
-                                v-model="selectedAppointmentDoctor"
-                                :value="assignedDoctor.doctor.id"
-                                @change="
-                                  handleDoctorChange(assignedDoctor.doctor.id, appointment.id)
-                                "
-                                :disabled="assignedDoctor.appointment_by"
-                              />&nbsp;&nbsp;
-                              <small
-                                :class="{
-                                  'text-green': !assignedDoctor.appointment_by,
-                                  'text-red': assignedDoctor.appointment_by,
-                                }"
-                              >
-                                {{
-                                  `Dr. ${assignedDoctor.doctor.fname} ${assignedDoctor.doctor.lname}`
-                                }}
-                              </small>
-                            </li>
-                          </ul> -->
                         </div>
                         <button
                           v-if="!areAllAppointmentFull"

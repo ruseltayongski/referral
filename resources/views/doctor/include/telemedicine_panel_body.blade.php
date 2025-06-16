@@ -70,9 +70,11 @@
                 ->orWhere("status","transferred");
         })
         ->get();
+    
     $followup_track = \App\Activity::where("code",$row->code)
         ->where("status","followup")
         ->get();
+
     $lab_request = \App\LabRequest::where("activity_id",$referred_track->id)
         ->first(); // I am adding this condition for error messages of lab result icon
 
