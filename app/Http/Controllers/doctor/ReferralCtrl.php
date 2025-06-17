@@ -78,7 +78,30 @@ class ReferralCtrl extends Controller
  
         $allowedDepartments = explode(',', $settings->other_department_telemed);
         $telemedOrReferral = $request->filterRef;
-       
+
+
+
+        // $latestActivitySub = \DB::table(
+        //         DB::raw("(SELECT *,
+        //                         ROW_NUMBER() OVER (PARTITION BY code ORDER BY created_at DESC, id DESC) as rn
+        //                 FROM activity
+        //                 WHERE status IN ('followup', 'referred')) as a1")
+        //     )
+        //     ->select('a1.code', 'a1.sub_opdId','a1.referred_to')
+        //     ->where('a1.rn', 1);
+
+        $latestActivitySub = DB::table(DB::raw("
+            (
+                SELECT 
+                    code, sub_opdId, referred_to,
+                    ROW_NUMBER() OVER (PARTITION BY code ORDER BY created_at DESC, id DESC) as rn
+                FROM activity
+                WHERE status IN ('followup', 'referred')
+            ) as a1
+        "))
+        ->select('code', 'sub_opdId', 'referred_to')
+        ->where('rn', 1);
+     
         $data = Tracking::select(
             'tracking.*',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -96,14 +119,19 @@ class ReferralCtrl extends Controller
             ->join('facility','facility.id','=','tracking.referred_from')
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as action','action.id','=','tracking.action_md')
-            ->where('referred_to',$user->facility_id);
+            ->leftJoinSub($latestActivitySub, 'latest_activity', function($join) {
+                $join->on('latest_activity.code', '=', 'tracking.code');
+            });
+            
         
         if ($telemedOrReferral) {
             $data = $data->where('tracking.telemedicine', $telemedOrReferral)
-                        ->where('tracking.subopd_id', $user->subopd_id);
+                ->where('latest_activity.sub_opdId', $user->subopd_id)
+                ->where('latest_activity.referred_to', $user->facility_id);
         }
         else {
-            $data = $data->where('tracking.telemedicine', '!=', 1);
+            $data = $data->where('tracking.telemedicine', '!=', 1)
+             ->where('tracking.referred_to',$user->facility_id);
         }
 
         if($request->search)

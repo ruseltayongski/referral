@@ -149,7 +149,7 @@ $user = Session::get('auth');
                     @if($filterFef == '0')
                      {{$title}} <!-- Incoming Patients  {{$option}} -->
                     @else
-                        Incoming Consultation
+                        Incoming Consultation   
                     @endif
                   
                 </h3>
