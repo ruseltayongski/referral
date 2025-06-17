@@ -561,11 +561,12 @@ $counter = 0;
                                 <small class="text-success">{{ $brgy }}</small>
                             </td>
                             <td>
-                                @if($row->sex=='Female' && ($age >= 10 && $age <= 49)) <a href="#pregnantModal" data-patient_id="{{ $row->id }}" data-toggle="modal" data-type="pregnant" class="btn btn-primary btn-xs profile_info hide patient-emergency hidden" onclick="handleRefer()" style="width:100%;margin-bottom:5px;">
+                                @if($row->sex=='Female' && ($age >= 10 && $age <= 49)) 
+                                <a href="#pregnantModal" data-patient_id="{{ $row->id }}" data-toggle="modal" data-type="pregnant" class="btn btn-primary btn-xs profile_info hide patient-emergency hidden" onclick="handleRefer()" style="width:100%;margin-bottom:5px;">
                                     <i class="fa fa-ambulance"></i>
                                     Refer
                                     </a>
-                                    <a href="#" data-patient_id="{{ $row->id }}" data-toggle="modal" data-type="pregnant" data-telemedicine="1" onclick="showPrivacyNotice('pregnantModal')" class="btn btn-success btn-xs profile_info hide patient-consultation hidden" style="width:100%;margin-bottom:5px;">
+                                    <a href="#" data-patient_id="{{ $row->id }}" data-toggle="modal" data-type="pregnant" data-telemedicine="1" onclick="showPrivacyNotice('#pregnantModalTelemed')" class="btn btn-success btn-xs profile_info hide patient-consultation hidden" style="width:100%;margin-bottom:5px;">
                                         <i class="fa fa-stethoscope"></i>
                                         Consultation
                                     </a><br>
