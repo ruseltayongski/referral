@@ -614,7 +614,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         <div id="fileUploadGroup">
                             <div class="form-group">
                                 <!-- <label style="padding: 0px">Note:</label> -->
-                                <p style="color:red;">Note: &nbsp;Do you Have any lab request for upload</p>
+                                <p style="color:red;">Note: &nbsp;Do you have any lab request for upload?</p>
                             </div>
 
                             <div class="form-group">

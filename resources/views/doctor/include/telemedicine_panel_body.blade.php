@@ -5,6 +5,10 @@
     $position = ["1st","2nd","3rd","4th","5th","6th","7th","8th","9th","10th","11th","12th"];
     $position_count = 0;
     $referred_track = \App\Activity::where("code",$row->code)->where("status","referred")->first();
+
+    $referred_trackFollowSubOpdId = \App\Activity::where("code",$row->code)->where("status","referred")->first();
+    
+
     $queue_referred = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
     $referred_seen_track = \App\Seen::where("code",$referred_track->code)
         ->where("facility_id",$referred_track->referred_to)
@@ -100,7 +104,9 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
-    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
+    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }} <br><br> ({{ ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) }})</small> <br>
+    
+    <br>
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
             <div class="step-counter"><i class="fa fa-calendar" aria-hidden="true"></i></div>
@@ -226,6 +232,9 @@
     @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
             <?php
+            $subOpd_follow = \App\Activity::where('code',$follow_track->code)->where('status','followup') ->where("referred_from",$follow_track->referred_from)
+                ->where("created_at",">=",$follow_track->created_at)->get();
+         
             $queue_follow = \App\Activity::where('code',$follow_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
             $position_count++;
             $follow_seen_track = \App\Seen::where("code",$follow_track->code)
@@ -289,7 +298,12 @@
                 ->first(); // I am adding this condition for error messages of lab result icon
                 
             ?>
-            <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }}</small><br>
+            @php
+                $index = (int) $position_count;
+            @endphp
+            <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }} <br><br> ({{ ucwords(strtoupper(\App\SubOpd::find($subOpd_follow[0]->sub_opdId)->description)) }})</small> <br>
+    
+            <br>
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                     <div class="step-counter"><i class="fa fa-calendar" aria-hidden="true"></i></div>

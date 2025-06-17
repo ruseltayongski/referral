@@ -171,11 +171,11 @@ $user = Session::get('auth');
                                   @endif
                             </div>
                             
-                            @if($row->telemedicine == 1)
+                            <!-- @if($row->telemedicine == 1)
                                 <div class="telemedicine-stamp">
                                    <strong>{{ $subOPD->description }}</strong>
                                 </div>
-                            @endif
+                            @endif -->
                         </div>
                       
                         @if($row->telemedicine)
