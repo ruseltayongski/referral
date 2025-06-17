@@ -270,11 +270,11 @@ export default {
         $("#telemedicineFollowupFormModal").modal("show");
       } else {
         let appointment = null;
-       
+        console.log("appointmentID:", appointmentId);
         if(this.selectedCategory){
             appointment = {
               facility_id: this.facilitySelectedId,
-              appointmentId: appointmentId,
+              appointmentId: this.selectedAppointmentTime,
               config_id: this.selectedCategory,
               configDate: configDate,
               configtime: configtime,
