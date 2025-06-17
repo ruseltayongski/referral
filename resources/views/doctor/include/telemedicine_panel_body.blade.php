@@ -104,7 +104,7 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
-    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }} <br><br> ({{ ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) }})</small> <br>
+    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }} <br><br> {{ $referred_trackFollowSubOpdId->count() > 0 && isset($referred_trackFollowSubOpdId->sub_opdId) ? '(' . ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) . ')' : '' }}</small> <br>
     
     <br>
     <div class="stepper-wrapper">
@@ -234,7 +234,7 @@
             <?php
             $subOpd_follow = \App\Activity::where('code',$follow_track->code)->where('status','followup') ->where("referred_from",$follow_track->referred_from)
                 ->where("created_at",">=",$follow_track->created_at)->get();
-         
+           
             $queue_follow = \App\Activity::where('code',$follow_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
             $position_count++;
             $follow_seen_track = \App\Seen::where("code",$follow_track->code)
@@ -298,10 +298,8 @@
                 ->first(); // I am adding this condition for error messages of lab result icon
                 
             ?>
-            @php
-                $index = (int) $position_count;
-            @endphp
-            <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }} <br><br> ({{ ucwords(strtoupper(\App\SubOpd::find($subOpd_follow[0]->sub_opdId)->description)) }})</small> <br>
+    
+            <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }} <br><br>  {{ $subOpd_follow->count() > 0 && isset($subOpd_follow[0]->sub_opdId) && $subOpd_follow[0]->sub_opdId ? '(' . ucwords(strtoupper(\App\SubOpd::find($subOpd_follow[0]->sub_opdId)->description)) . ')' : '' }}</small> <br>
     
             <br>
             <div class="stepper-wrapper">
