@@ -555,15 +555,26 @@
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
                     console.log("newly incoming Telemed::", event, event.payload.telemedicine);
+                    
+                    const subOpdIdInt = parseInt(event.payload.subOpdId, 10);
+
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const filterRef = urlParams.get('filterRef');
+                    console.log("filterRef:", filterRef, "Telemed:", event.payload.telemedicine, "User subOpdId:", this.user.subopd_id, "realtimeSUbOpdId:", subOpdIdInt);
+                           // Check if this event should be displayed on current page
+                    const shouldDisplay = (filterRef === '1' && event.payload.telemedicine == 1 && this.user.subopd_id === subOpdIdInt) || 
+                             (filterRef === '0' && event.payload.telemedicine == 0);
+
+                    if (!shouldDisplay) {
+                        return; // Exit early if this event doesn't match current filter
+                    }
+
                     if(this.user.facility_id === event.payload.referred_to || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred')) {
                         this.playAudio(event.payload.telemedicine);
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {
                             console.log("append the refer patient");
                             $('.count_referral').html(this.increment_referral);
-
-                                let isTelemedForThisUser = (event.payload.telemedicine == 1 && this.user.subopd_id == event.payload.subOpdId);
-                                let isRegularReferral = (event.payload.telemedicine == 0);
                                 
                                 let position = event.payload.position;
                                 let position_bracket = ['','1st','2nd','3rd', '4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th'];

@@ -191,28 +191,6 @@
                         @foreach($appointment_schedule as $row)
 
                                 @php $monthweeks =  Cofig_schedule::where('id', $row->configId)->first()->category;@endphp
-                                <!-- <tr style="font-size: 12px">
-                                    <td>{{  \Carbon\Carbon::parse($row->appointed_date)->format('F d, Y')  }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($row->date_end)->format('F d, Y')}}</td>
-                                    <td>{{  $monthweeks }}</td>
-                                    <td>
-
-                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#scheduleModal{{$row->id}}">
-                                        <i class="fa fa-eye"></i>
-                                    </button>
-
-                                    </td>
-                                    <td>{{ $row->facility->name }}</td>
-                                    <td>{{ $row->createdBy->username }}</td>
-                                    <td class="text-center">
-                                        <button class="btn btn-primary btn-sm" onclick="UpdateConfig({{ $row->id }}, {{ $row->configId}})">
-                                            <i class="fa fa-pencil"></i>
-                                        </button>
-                                        <button class="btn btn-danger btn-sm" onclick="DeleteConfig({{ $row->id }},  {{ $row->configId}}))">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr> -->
                            
                             <tr style="font-size: 12px">
                                 <td>{{  \Carbon\Carbon::parse($row->appointed_date)->format('F d, Y')  }}</td>
@@ -227,7 +205,7 @@
                                 <!-- <td> {{ count($row->telemedAssignedDoctor) }} </td> -->
                                 <td class="text-center">
                                     <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
-                                    <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button>
+                                {{-- <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button> --}}
                                     @if($row->configId)
                                         <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#scheduleModal{{$row->id}}">
                                                 <i class="fa fa-eye"></i>
