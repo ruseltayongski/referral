@@ -22448,9 +22448,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var subOpdIdInt = parseInt(event.payload.subOpdId, 10);
       var urlParams = new URLSearchParams(window.location.search);
       var filterRef = urlParams.get('filterRef');
-      console.log("filterRef:", filterRef, "Telemed:", event.payload.telemedicine, "User subOpdId:", _this3.user.subopd_id, "realtimeSUbOpdId:", subOpdIdInt);
-      // Check if this event should be displayed on current page
-      var shouldDisplay = filterRef === '1' && event.payload.telemedicine == 1 && _this3.user.subopd_id === subOpdIdInt || filterRef === '0' && event.payload.telemedicine == 0;
+      // console.log("filterRef:", filterRef, "Telemed:", event.payload.telemedicine, "User subOpdId:", this.user.subopd_id, "realtimeSUbOpdId:", subOpdIdInt);
+      //        // Check if this event should be displayed on current page
+      // const shouldDisplay = (filterRef === '1' && event.payload.telemedicine == 1 && this.user.subopd_id === subOpdIdInt) || 
+      //          (filterRef === '0' && event.payload.telemedicine == 0);
+
+      // if (!shouldDisplay) {
+      //     return; // Exit early if this event doesn't match current filter
+      // }
+
+      var shouldDisplay = false;
+      if (filterRef === null || filterRef === undefined) {
+        shouldDisplay = true;
+        console.log("Public access: showing all notifications");
+      } else {
+        shouldDisplay = filterRef === '1' && event.payload.telemedicine == 1 && _this3.user.subopd_id === subOpdIdInt || filterRef === '0' && event.payload.telemedicine == 0;
+      }
       if (!shouldDisplay) {
         return; // Exit early if this event doesn't match current filter
       }
