@@ -671,7 +671,7 @@ class ApiController extends Controller
         $tracking->save();
 
         if($request->telemedicine){
-
+            
             if($request->configId){
 
                 $telemedAssigned = new TelemedAssignDoctor();
@@ -679,7 +679,7 @@ class ApiController extends Controller
                 $telemedAssigned->appointment_id = $request->Appointment_id;
                 $telemedAssigned->doctor_id = $user->id;
                 $telemedAssigned->save();
-    
+                
             }else{
                 
                 $telemedAssignDoctor = new TelemedAssignDoctor();
@@ -777,6 +777,8 @@ class ApiController extends Controller
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             'telemedicine' => $request->telemedicine,
+            'subOpdId' => $request->configId,
+            'SampleIDs' => '1233',
             "redirect_track" => $redirect_track,
             "position" => $position
         ];

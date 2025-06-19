@@ -79,29 +79,6 @@ class ReferralCtrl extends Controller
         $allowedDepartments = explode(',', $settings->other_department_telemed);
         $telemedOrReferral = $request->filterRef;
 
-
-
-        // $latestActivitySub = \DB::table(
-        //         DB::raw("(SELECT *,
-        //                         ROW_NUMBER() OVER (PARTITION BY code ORDER BY created_at DESC, id DESC) as rn
-        //                 FROM activity
-        //                 WHERE status IN ('followup', 'referred')) as a1")
-        //     )
-        //     ->select('a1.code', 'a1.sub_opdId','a1.referred_to')
-        //     ->where('a1.rn', 1);
-
-        $latestActivitySub = DB::table(DB::raw("
-            (
-                SELECT 
-                    code, sub_opdId, referred_to,
-                    ROW_NUMBER() OVER (PARTITION BY code ORDER BY created_at DESC, id DESC) as rn
-                FROM activity
-                WHERE status IN ('followup', 'referred')
-            ) as a1
-        "))
-        ->select('code', 'sub_opdId', 'referred_to')
-        ->where('rn', 1);
-     
         $data = Tracking::select(
             'tracking.*',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
@@ -118,16 +95,31 @@ class ReferralCtrl extends Controller
             ->join('patients','patients.id','=','tracking.patient_id')
             ->join('facility','facility.id','=','tracking.referred_from')
             ->leftJoin('users','users.id','=','tracking.referring_md')
-            ->leftJoin('users as action','action.id','=','tracking.action_md')
-            ->leftJoinSub($latestActivitySub, 'latest_activity', function($join) {
-                $join->on('latest_activity.code', '=', 'tracking.code');
-            });
+            ->leftJoin('users as action','action.id','=','tracking.action_md');
             
         
         if ($telemedOrReferral) {
+
+            $latestActivitySub = DB::table(DB::raw("
+                (
+                    SELECT 
+                        code, sub_opdId, referred_to,
+                        ROW_NUMBER() OVER (PARTITION BY code ORDER BY created_at DESC, id DESC) as rn
+                    FROM activity
+                    WHERE status IN ('followup', 'referred')
+                ) as a1
+            "))
+            ->select('code', 'sub_opdId', 'referred_to')
+            ->where('rn', 1)
+            ->where('sub_opdId', $user->subopd_id)
+            ->where('referred_to', $user->facility_id);
+
+            $matchingSubOpdCodes = $latestActivitySub->pluck('code');
+
             $data = $data->where('tracking.telemedicine', $telemedOrReferral)
-                ->where('latest_activity.sub_opdId', $user->subopd_id)
-                ->where('latest_activity.referred_to', $user->facility_id);
+                    ->whereIn('tracking.code', $matchingSubOpdCodes);
+                // ->where('latest_activity.sub_opdId', $user->subopd_id)
+                // ->where('latest_activity.referred_to', $user->facility_id);
         }
         else {
             $data = $data->where('tracking.telemedicine', '!=', 1)

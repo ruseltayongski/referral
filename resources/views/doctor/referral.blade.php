@@ -178,7 +178,7 @@ $user = Session::get('auth');
                                 // if($row->subopd_id){
                                 //     $subdepartment = $check_subdeOpd;
                                 // }
-                                
+                               
                                 if($check_dept)
                                 {
                                     $department = $check_dept->description;
@@ -189,6 +189,7 @@ $user = Session::get('auth');
                                 $position_bracket = ['','1st','2nd','3rd','4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th'];
                                 $queue = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first();
                                 ?>
+                                <div id="page-data" data-filter-ref="{{ request('filterRef') }}" style="display: none;"></div>
                                 <li id="referral_incoming{{ $row->code }}">
                                     @if($row->position > 0)
                                         <div class='badge-overlay'>
@@ -355,6 +356,8 @@ $user = Session::get('auth');
     </script>
     <script>
         $(".select2").select2({ width: '100%' });
+
+        window.currentFilter = '{{ request("filterRef") }}';
 
         function clearFieldsSidebar(){
             <?php
