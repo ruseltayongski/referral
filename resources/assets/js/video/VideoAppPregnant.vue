@@ -105,6 +105,18 @@ export default {
     };
   },
   mounted() {
+    document.title = "TELEMEDICINE";
+      // Change favicon
+      const link = document.querySelector("link[rel~='icon']");
+      if (link) {
+        link.href = this.dohLogoUrl; // Make sure logo.png is in your public folder
+      } else {
+        const newLink = document.createElement('link');
+        newLink.rel = 'icon';
+        newLink.href = this.dohLogoUrl;
+        document.head.appendChild(newLink);
+      }
+
      // Automatically start screen recording when the component is mounted
      if (this.referring_md === "yes") {
         this.startScreenRecording();
