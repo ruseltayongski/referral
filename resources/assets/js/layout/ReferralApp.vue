@@ -50,11 +50,16 @@
         },
         methods: {
             playAudio(telemedicine, subOpdId) {
-                if(parseInt(telemedicine) == 1 && this.user.subopd_id === subOpdId){
-                    audioTelemed.play();
-                    setTimeout(function(){
-                        audioTelemed.pause();
-                    },16000);
+                console.log("subOpdAndTelemed:", parseInt(telemedicine) == 1, "Sub)pd COndition::", parseInt(this.user.subopd_id) === parseInt(subOpdId), telemedicine,this.user.subopd_id,subOpdId)
+                if(parseInt(telemedicine) == 1){
+                    console.log("It is work inside here!?");
+                    if(parseInt(this.user.subopd_id) === parseInt(subOpdId)){
+                        audioTelemed.play();
+                        setTimeout(function(){
+                            audioTelemed.pause();
+                        },16000);
+                    }
+                  
                 }else{
                     audioElement.play();
                     setTimeout(function(){
@@ -573,7 +578,7 @@
 
                     if(filterRef === null || filterRef === undefined){
                         shouldDisplay = true;
-                        console.log("Public access: showing all notifications");
+
                     } else{
                          shouldDisplay = (filterRef === '1' && event.payload.telemedicine == 1  && this.user.subopd_id === subOpdIdInt) || 
                            (filterRef === '0' && event.payload.telemedicine == 0);
@@ -911,7 +916,8 @@
                                 this.notifyReferralUpdateFormFaciChanged(msg);
                             }
                             if(event.payload.referred_to === this.user.facility_id) {
-                                this.playAudio(event.payload.telemedicine);
+                                console.log("lahe payload;", event, )
+                                this.playAudio(event.payload.telemedicine, null);
                                 this.increment_referral++;
                                 if($("#referral_page_check").val()) {
                                     console.log("append the refer patient");
