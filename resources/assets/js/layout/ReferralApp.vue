@@ -50,10 +50,11 @@
         },
         methods: {
             playAudio(telemedicine, subOpdId) {
-                console.log("subOpdAndTelemed:", parseInt(telemedicine) == 1, "Sub)pd COndition::", parseInt(this.user.subopd_id) === parseInt(subOpdId), telemedicine,this.user.subopd_id,subOpdId)
+                console.log("playVid:",parseInt(telemedicine) == 1,"Telemed", parseInt(telemedicine));
                 if(parseInt(telemedicine) == 1){
-                    console.log("It is work inside here!?");
+                    console.log("Inside playVid", parseInt(this.user.subopd_id) === parseInt(subOpdId),"subOPD", parseInt(subOpdId), "User Opd:", parseInt(this.user.subopd_id));
                     if(parseInt(this.user.subopd_id) === parseInt(subOpdId)){
+                        console.log("play Audio working correctly");
                         audioTelemed.play();
                         setTimeout(function(){
                             audioTelemed.pause();
@@ -109,18 +110,35 @@
                     '                    </div>\n' +
                     '                    </div>')
             },
-            notifyReferral(patient_name, referring_md, referring_name, redirect_track) {
+            notifyReferral(patient_name, referring_md, referring_name, redirect_track, subOpdId, Telemedicine) {
+
                 let content = patient_name+' was referred by Dr. '+referring_md+' of '+referring_name + '<br><br>\n' +
                     '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
                     '           <i class=\'fa fa-stethoscope\'></i> Track\n' +
                     '       </a>';
-                Lobibox.notify('success', {
-                    delay: false,
-                    title: 'New Referral',
-                    msg: content,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
-                    sound: false
-                });
+                const isTelemed = parseInt(Telemedicine) === 1;
+                const isForUser = parseInt(subOpdId) === parseInt(this.user.subopd_id);
+                console.log("notifyRef:", parseInt(Telemedicine) === 1, parseInt(subOpdId) === parseInt(this.user.subopd_id),"Telemed:", parseInt(Telemedicine),"Facility SubOpd:",parseInt(subOpdId),'UserSubOpd:', parseInt(this.user.subopd_id))
+                
+                  if (isTelemed) {
+                    if (!isForUser) return;
+                    Lobibox.notify('success', {
+                        delay: false,
+                        title: 'New Telemedicine',
+                        msg: content,
+                        img: $("#broadcasting_url").val() + "/resources/img/ro7.png",
+                        sound: false
+                    });
+                } else {
+                    // Referral — always notify regardless of subOpdId
+                    Lobibox.notify('success', {
+                        delay: false,
+                        title: 'New Referral',
+                        msg: content,
+                        img: $("#broadcasting_url").val() + "/resources/img/ro7.png",
+                        sound: false
+                    });
+                }
             },
             notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
                 $("#seen_progress"+patient_code+activity_id).addClass("completed");
@@ -580,7 +598,7 @@
                         shouldDisplay = true;
 
                     } else{
-                         shouldDisplay = (filterRef === '1' && event.payload.telemedicine == 1  && this.user.subopd_id === subOpdIdInt) || 
+                         shouldDisplay = (filterRef === '1' && parseInt(event.payload.telemedicine) == 1  && parseInt(this.user.subopd_id) === parseInt(subOpdIdInt)) || 
                            (filterRef === '0' && event.payload.telemedicine == 0);
                     }
 
@@ -650,7 +668,7 @@
                                 $('.timeline').prepend(content);
                             
                         }
-                        this.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track)
+                        this.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track,event.payload.subOpdId,event.payload.telemedicine)
                     }
                 });
 
