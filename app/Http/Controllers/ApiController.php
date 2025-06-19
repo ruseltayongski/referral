@@ -203,7 +203,7 @@ class ApiController extends Controller
         $user = Session::get('auth');
 
         $latest_subOpd_id = Activity::where('code',$request->code)
-                            ->where('status', 'followup')
+                            ->whereIn('status', ['followup','referred'])
                             ->orderBy('created_at', 'desc')
                             ->first();
 
