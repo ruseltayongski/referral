@@ -49,8 +49,8 @@
             }
         },
         methods: {
-            playAudio(telemedicine) {
-                if(parseInt(telemedicine) == 1){
+            playAudio(telemedicine, subOpdId) {
+                if(parseInt(telemedicine) == 1 && this.user.subopd_id === subOpdId){
                     audioTelemed.play();
                     setTimeout(function(){
                         audioTelemed.pause();
@@ -477,7 +477,7 @@
                     '                                            </a>';
             },
             callADoctor(tracking_id,code,subopd_id) {
-                
+                console.log("follow Up sobOpd_id", subopd_id);
                 if(this.user.subopd_id == subopd_id){
                     this.tracking_id = tracking_id
                     this.referral_code = code
@@ -584,7 +584,7 @@
                     }
 
                     if(this.user.facility_id === event.payload.referred_to || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred')) {
-                        this.playAudio(event.payload.telemedicine);
+                        this.playAudio(event.payload.telemedicine, subOpdIdInt);
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {
                             console.log("append the refer patient");

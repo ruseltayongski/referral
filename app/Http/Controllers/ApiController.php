@@ -202,7 +202,12 @@ class ApiController extends Controller
     public function callADoctor(Request $request) {
         $user = Session::get('auth');
 
-        $subOpd_id = Tracking::find($request->tracking_id)->subopd_id;
+        $latest_subOpd_id = Activity::where('code',$request->code)
+                            ->where('status', 'followup')
+                            ->orderBy('created_at', 'desc')
+                            ->first();
+
+        $subOpd_id = $latest_subOpd_id->sub_opdId;
 
         $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
         $call = [
@@ -216,7 +221,7 @@ class ApiController extends Controller
             "form_type" => $request->form_type,
             "activity_id" => $request->activity_id,
             "referred_to" => (int)$request->referred_to,
-            "subopd_id" => $subOpd_id
+            "subopd_id" => $subOpd_id 
         ];
         broadcast(new SocketReferralDischarged($call));
     }
