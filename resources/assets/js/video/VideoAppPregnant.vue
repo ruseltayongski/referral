@@ -12,6 +12,7 @@ export default {
     PrescriptionModal,
     LabRequestModal,
     PDFViewerModal,
+    FeedbackModal,
   },
   data() {
     return {
@@ -22,6 +23,10 @@ export default {
       startTime: null, // Store the exact start time
       showAudio: false,
       showVedio: false,
+      showEndcall: false,
+      showMic: false,
+      showTooltip: false,
+      showTooltipFeedback: false,
       Endcall: false,
       showUpward: false,
       showPrescription: false,
@@ -90,6 +95,11 @@ export default {
 
       loading: false,
       uploadProgress: 0,
+      feedbackModalVisible: false,
+      currentCode: "",
+      feedbackUrl: "",
+      baseUrlFeed: "",
+      doctorfeedback: "",
       // netSpeedMbps: null,
       // netSpeedStatus: '', // 'fast' or 'slow'
     };
@@ -153,6 +163,9 @@ export default {
     this.startBasicCall();
   },
   methods: {
+    closeFeedbackModal() {
+      this.feedbackModalVisible = false;
+    },
     handleResize() {
     // Get current window dimensions
       const windowHeight = window.innerHeight;
@@ -503,67 +516,106 @@ export default {
       
     }, 10);
     },
-    async startBasicCall() {
-      // Create an instance of the Agora Engine
+  async startBasicCall() {
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-      // Dynamically create a container in the form of a DIV element to play the remote video track.
+
+      if (!this.channelParameters) {
+        this.channelParameters = {};
+      }
+      this.channelParameters.userCount = 0;
+      this.channelParameters.maxUsers = 2;
+
       const remotePlayerContainer = document.createElement("div");
-      // Dynamically create a container in the form of a DIV element to play the local video track.
       const localPlayerContainer = document.createElement("div");
-      // Specify the ID of the DIV container. You can use the uid of the local user.
       localPlayerContainer.id = this.options.uid;
-      // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object.
+
       let self = this;
+
+      agoraEngine.on("user-joined", async (user) => {
+        self.channelParameters.userCount++;
+        if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
+          self.showChannelFullMessage && self.showChannelFullMessage();
+          await agoraEngine.leave();
+          self.channelParameters.userCount--;
+          return;
+        }
+      });
+
       agoraEngine.on("user-published", async (user, mediaType) => {
-        // Subscribe to the remote user when the SDK triggers the "user-published" event.
+        if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
+          return;
+        }
         await agoraEngine.subscribe(user, mediaType);
-        console.log("subscribe success");
-        // Subscribe and play the remote video in the container If the remote user publishes a video track.
-        if (mediaType == "video") {
-          console.log("remote");
-          // Retrieve the remote video track.
+
+        if (mediaType === "video") {
+          if (self.$refs && self.$refs.ringingPhone) {
+            self.$refs.ringingPhone.pause();
+          }
           self.channelParameters.remoteVideoTrack = user.videoTrack;
-          // Retrieve the remote audio track.
           self.channelParameters.remoteAudioTrack = user.audioTrack;
-          // Save the remote user id for reuse.
           self.channelParameters.remoteUid = user.uid.toString();
-          // Specify the ID of the DIV container. You can use the uid of the remote user.
           remotePlayerContainer.id = user.uid.toString();
-          self.channelParameters.remoteUid = user.uid.toString();
-          /*remotePlayerContainer.textContent = "Remote user " + user.uid.toString();*/
-          // Append the remote container to the page body.
-          self.$refs.ringingPhone.pause();
+
           document.body.append(remotePlayerContainer);
-          $(".remotePlayerDiv").html(remotePlayerContainer);
-          $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
-          $(remotePlayerContainer).addClass("remotePlayerLayer");
-          // Play the remote video track.
+          document.querySelector(".remotePlayerDiv").innerHTML = "";
+          document.querySelector(".remotePlayerDiv").append(remotePlayerContainer);
+          remotePlayerContainer.classList.add("remotePlayerLayer");
+
           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
         }
-        // Add this block to start the call timer only once
-        if (!self.callTimer) {
-          self.startCallTimer();
-        }
-        // Subscribe and play the remote audio track If the remote user publishes the audio track only.
-        if (mediaType == "audio") {
-          // Get the RemoteAudioTrack object in the AgoraRTCRemoteUser object.
+
+        if (mediaType === "audio") {
           self.channelParameters.remoteAudioTrack = user.audioTrack;
-          // Play the remote audio track. No need to pass any DOM element.
           self.channelParameters.remoteAudioTrack.play();
         }
-        // Listen for the "user-unpublished" event.
-        agoraEngine.on("user-unpublished", (user) => {
-          console.log(user.uid + "has left the channel");
-        });
+
+        if (!self.callTimer) {
+          self.startCallTimer && self.startCallTimer();
+        }
       });
-      window.onload = function () {
-        self.joinVideo(
-          agoraEngine,
-          self.channelParameters,
-          localPlayerContainer,
-          self
+
+      agoraEngine.on("user-left", (user) => {
+        self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
+      });
+
+      try {
+        await agoraEngine.join(
+          self.options.appId,
+          self.options.channel,
+          self.options.token,
+          self.options.uid
         );
-      };
+
+        self.channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        self.channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+
+        document.body.append(localPlayerContainer);
+        document.querySelector(".localPlayerDiv").innerHTML = "";
+        document.querySelector(".localPlayerDiv").append(localPlayerContainer);
+        localPlayerContainer.classList.add("localPlayerLayer");
+
+        await agoraEngine.publish([
+          self.channelParameters.localAudioTrack,
+          self.channelParameters.localVideoTrack,
+        ]);
+
+        self.channelParameters.localVideoTrack.play(localPlayerContainer);
+
+        window.onload = function () {
+          self.joinVideo &&
+            self.joinVideo(
+              agoraEngine,
+              self.channelParameters,
+              localPlayerContainer,
+              self
+            );
+        };
+      } catch (error) {
+        console.error("Error joining channel:", error);
+      }
+    },
+    showChannelFullMessage() {
+      alert("Channel is full! Maximum users reached.");
     },
     getUrlVars() {
       var vars = [],
