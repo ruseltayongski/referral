@@ -20,7 +20,7 @@
                     <br />
                     Version 1
                 </button>
-                <button data-target="#revisedpregnantFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6">
+                <button data-target="#revisedpregnantFormModal" data-backdrop="static" data-toggle="modal" type="button" class="btn btn-info col-sm-6" onclick="openNewForms('pregnant')">
                 <img src="{{ url('resources/img/forms_ver2_icon.png') }}" width="100" />
                     <br />
                     Version 2
