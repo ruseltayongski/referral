@@ -1137,8 +1137,7 @@ class NewFormCtrl extends Controller
 
     public function saveReferral(Request $request, $type)
     {
-        
-      
+  
         $user = Session::get('auth');
         if($request->telemedicine) {
             $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id',$request->appointmentId)->where('doctor_id',$request->doctorId)->first();
@@ -2011,6 +2010,7 @@ class NewFormCtrl extends Controller
             "status" => "referred",
             "count_reco" => 0,
             "redirect_track" => $redirect_track,
+            "telemedicine" => $req->telemedicine,
             "position" => 0 //default for first referred
         ];
     

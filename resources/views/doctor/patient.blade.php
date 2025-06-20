@@ -851,11 +851,13 @@ $counter = 0;
 
         function openNewForms(type){
                  // Get facility_id and pregnancy status from server-side
-                 var referred_facility = "{{ $user->facility_id }}";
+                var referred_facility = "{{ $user->facility_id }}";
+                let telemed = $(".telemedicine").val();
+                
+                console.log("Facility ID: ", referred_facility, telemed);
+    
+                $(".telemedicine").val(telemed);
 
-                console.log("Facility ID: ", referred_facility);
-        
-               
                 // if (referred_facility == 63) {
                     if (type == 'pregnant') {
                         $('#pregnantModal').modal('hide');
@@ -867,6 +869,7 @@ $counter = 0;
                         selectFormTitle("Clinical");
                         $('#baby_show').hide();
                     }
+                    
                 // } else {
                 //     if(type == "pregnant") {
                 //         selectFormTitle("BEmONC/ CEmONC ");
@@ -879,7 +882,6 @@ $counter = 0;
                 //     $('#pedia_show_normal').hide();
                 // }
         }
-
 
 
     function selectFormTitle(initialTitle) {
@@ -1246,6 +1248,7 @@ $counter = 0;
             $('.loading').show();
             $('.btn-submit').attr('disabled',true);
             form_type = '#revisednormalFormModal';
+            telemed = $('.telemedicine').val();
             department_id = $('.select_department_normal').val();
             department_name = $('.select_department_normal option:selected').html();
             $(this).ajaxSubmit({
@@ -1290,6 +1293,8 @@ $counter = 0;
             $('.loading').show();
             form_type = '#revisedpregnantFormModal';
             sex = 'Female';
+            telemed = $('.telemedicine').val();
+            console.log("revised Telemed", telemed);
             reason = $('.woman_information_given').val();
             department_id = $('.select_department_pregnant').val();
             department_name = $('.select_department_pregnant :selected').text();
