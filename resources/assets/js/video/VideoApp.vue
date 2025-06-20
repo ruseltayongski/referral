@@ -353,6 +353,9 @@ export default {
 
         const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
 
+         // Get facility name for folder (sanitize on server)
+        const facilityName = this.form.referring_name || "UnknownFacility";
+
         // --- Detect upload speed and set chunk size ---
         let chunkSize = 5 * 1024 * 1024; // Default to 5MB
         // try {
@@ -400,6 +403,7 @@ export default {
           formData.append("fileName", fileName);
           formData.append("chunkIndex", chunkIndex);
           formData.append("totalChunks", totalChunks);
+          formData.append("facilityName", facilityName); // <-- Add facility name
 
           try {
             await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
