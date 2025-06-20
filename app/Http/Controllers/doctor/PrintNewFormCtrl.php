@@ -386,14 +386,17 @@ class PrintNewFormCtrl extends Controller
         // CURRENT MEDICATION
         if (!empty($data->current_medications)){
             $this->titleHeader($pdf, "CURRENT MEDICATION");
-            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Current Medications: ") . "\n" . self::staticGreen($pdf, NewFormCtrl::explodeString($data->current_medications)), 1, 'L');
+            $pdf->MultiCell(0, 7, self::staticBlack($pdf, "") . self::staticGreen($pdf, NewFormCtrl::explodeString($data->current_medications)), 1, 'L');
         }
 
         // PERTINENT LABORATORY AND OTHER ANCILLARY PROCEDURES
         if (!empty($data->pertinent_laboratory_and_procedures)){
             $this->titleHeader($pdf, "PERTINENT LABORATORY AND OTHER ANCILLARY PROCEDURES");
             $pdf->MultiCell(0, 7, "Pertinent Laboratory:" . self::green($pdf, $data->pertinent_laboratory_and_procedures, 'Pertinent Laboratory'), 1, 'L');
-            if(!empty($data->lab_procedure_other)){$pdf->MultiCell(0, 7, "Other Procedures:" . self::green($pdf, $data->lab_procedure_other, 'Other Procedures'), 1, 'L');}
+            if(!empty($data->lab_procedure_other)){
+                 $pdf->MultiCell(0, 7, self::staticBlack($pdf, "Other Procedures:") . "\n" . self::staticGreen($pdf, $data->lab_procedure_other), 1, 'L');
+                // $pdf->MultiCell(0, 7, "Other Procedures:" . self::green($pdf, $data->lab_procedure_other, 'Other Procedures'), 1, 'L');
+                }
         }
         
         // REVIEW OF SYSTEM
@@ -476,6 +479,7 @@ class PrintNewFormCtrl extends Controller
                 $pdf->MultiCell(0, 7, "GSC Score:" . self::green($pdf, $data->gsc_score, 'GSC Score'), 1, 'L');
             }
         }
+        
         // REASON FOR REFERRAL
         if (!empty($data->reason['reason']) || !empty($data->other_reason_referral)) {
             $this->titleHeader($pdf, "REASON FOR REFERRAL");
