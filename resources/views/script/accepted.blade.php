@@ -118,6 +118,7 @@
 
     $('body').on('click','.btn-transfer',function() {
         $("#transfer_tracking_id").val($(this).data("track_id"));
+        $("#transfer_code").val($(this).data("code"));
     });
 
     $('body').on('submit','#referAcceptForm',function(e) {

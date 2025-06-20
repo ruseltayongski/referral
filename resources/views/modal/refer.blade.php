@@ -802,6 +802,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                 <form method="post" id="referAcceptForm" action="{{ asset("doctor/referral/transfer") }}">
                     {{ csrf_field() }}
                     <input type="hidden" id="transfer_tracking_id" name="transfer_tracking_id">
+                    <input type="hidden" name="code" id="transfer_code">
                     <div class="form-group">
                         <label style="padding:0px;">REMARKS:</label>
                         <textarea class="form-control reject_reason" rows="5" style="resize: none;" name="remarks" required></textarea>

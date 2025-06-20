@@ -106,6 +106,26 @@ export default {
     },
   },
   computed: {
+     groupedAppointments() {
+    const grouped = {};
+    
+    this.appointedTimes.forEach(appointment => {
+      const categoryId = appointment.sub_opd.id;
+      const categoryDescription = appointment.sub_opd.description;
+      
+      if (!grouped[categoryId]) {
+        grouped[categoryId] = {
+          description: categoryDescription,
+          appointments: []
+        };
+      }
+      
+      grouped[categoryId].appointments.push(appointment);
+    });
+    
+    return grouped;
+  },
+
      selectedDepartmentId() {
       return this.appointedTimes.find(app => app.id === this.selectedAppointmentTime);
     },
@@ -147,14 +167,10 @@ export default {
 }
   },
   methods: {
+    handleCategoryChange(){
+      this.selectedAppointmentTime = '';
+    },
      emitCurrentData() {
-      // Emit the necessary data whenever a change occurs
-      // this.$emit("data-changed-config", {
-      //   selectedTime: this.currentConfig.timeSlots,
-      //   date: this.currentConfig.date,
-      //   appointmentId: this.currentConfig.appointment_id,
-      // });
-
        const appointment = {
           selectedTime: this.currentConfig.timeSlots,
           date: this.currentConfig.date,
@@ -208,6 +224,15 @@ export default {
       }
       
       return isSlotFull; // Return true if slot is full (to disable it)
+  },
+  isCategoryFullyBooked(appointments){
+    return appointments.every(appointment => 
+      this.areAllSlotAvailable(
+        appointment.telemed_assigned_doctor,
+        appointment.appointed_date,
+        appointment.appointed_time
+      ) || this.isPastDatetime(appointment.appointed_date, appointment.appointed_time)
+    );
   },
     getSlotCapacity(appoinmentId){
        if (!appoinmentId) {
@@ -365,7 +390,7 @@ export default {
                     class="external-event"
                     style="background-color: #dd4b39; color: #ffff"  
                   >
-                    Not Available 
+                    Full SLot
                   </div>
                 </div>
                 <div class="box box-solid">
@@ -377,8 +402,9 @@ export default {
                    
                     <div id="date-selected"></div>
                   </div>
-                  <!-- :disabled="areAllAppointmentNotAvailable()" -->
-                      <div
+                 
+
+                      <!-- <div
                         class="box-body"
                         v-if="appointedTimes.length > 0 && showAppointmentTime && manualDate"
                       >
@@ -387,20 +413,6 @@ export default {
                           v-for="appointment in appointedTimes"
                           :key="appointment.id"
                         >
-                          <!-- <input
-                            type="radio"
-                            class="hours_radio"
-                            v-model="selectedAppointmentTime"
-                            :value="appointment.id"
-                            @change="handleAppointmentTimeChange"
-                            :disabled="
-                              areAllDoctorsNotAvailable(
-                                appointment.telemed_assigned_doctor,
-                                appointment.appointed_date,
-                                appointment.appointed_time
-                              ) || isPastDatetime(appointment.appointed_date,appointment.appointed_time)
-                            "
-                          />&nbsp;&nbsp; -->
                           <input
                             type="radio"
                             class="hours_radio"
@@ -425,10 +437,10 @@ export default {
                               ),
                             }"
                             >{{ appointment.appointed_time }} to
-                            {{ appointment.appointedTime_to }}</span
-                          >
+                            {{ appointment.appointedTime_to }}
+                          </span>
 
-                           <ul class="doctor-list" v-if="selectedAppointmentTime === appointment.id">
+                          <ul class="doctor-list" v-if="selectedAppointmentTime === appointment.id">
                             <li>
                               <input
                                 type="radio"
@@ -446,6 +458,8 @@ export default {
                             </li>
                           </ul>
                         </div>
+
+
                         <button
                           v-if="!areAllAppointmentFull"
                           type="button"
@@ -465,7 +479,101 @@ export default {
                           <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments
                           are full
                         </button>
+                      </div> -->
+
+                  <div
+                    class="box-body"
+                    v-if="appointedTimes.length > 0 && showAppointmentTime && manualDate"
+                  >
+                    <div
+                      class="appointment-category-list"
+                      v-for="(categoryGroup, categoryId) in groupedAppointments"
+                      :key="categoryId"
+                    >
+                      <!-- Sub OPD Category Selection -->
+                      <div class="category-header">
+                        <input
+                          type="radio"
+                          class="category_radio"
+                          v-model="selectedCategory"
+                          :value="categoryId"
+                          @change="handleCategoryChange"
+                          :disabled="isCategoryFullyBooked(categoryGroup.appointments)"
+                        />&nbsp;&nbsp;
+                        <span 
+                           :class="{
+                              'text-success': !isCategoryFullyBooked(categoryGroup.appointments),
+                              'text-danger': isCategoryFullyBooked(categoryGroup.appointments)
+                            }"                     
+                         style="font-size: 16px;">
+                          {{ categoryGroup.description }}
+                          <span v-if="isCategoryFullyBooked(categoryGroup.appointments)">
+                          </span>
+                        </span>
                       </div>
+
+                      <!-- Timeslot Dropdown for Selected Category -->
+                      <div 
+                        class="timeslot-dropdown-container" 
+                        v-if="selectedCategory === categoryId"
+                        style="margin-left: 25px; margin-top: 10px;"
+                      >
+                        <label for="timeslot-select" class="form-label text-success">Select Time Slot:</label>
+                        <select
+                          id="timeslot-select"
+                          class="form-control"
+                          v-model="selectedAppointmentTime"
+                          @change="handleAppointmentTimeChange"
+                          style="width: 100%; max-width: 300px;"
+                        >
+                          <option value="" disabled>Choose a time slot</option>
+                          <option
+                            v-for="appointment in categoryGroup.appointments"
+                            :key="appointment.id"
+                            :value="appointment.id"
+                            :disabled="
+                              areAllSlotAvailable(
+                                appointment.telemed_assigned_doctor,
+                                appointment.appointed_date,
+                                appointment.appointed_time
+                              ) || isPastDatetime(appointment.appointed_date, appointment.appointed_time)
+                            "
+                            :class="{
+                              'text-success': !areAllSlotAvailable(appointment.telemed_assigned_doctor),
+                              'text-danger': areAllSlotAvailable(appointment.telemed_assigned_doctor) || isPastDatetime(appointment.appointed_date, appointment.appointed_time)
+                            }"
+                          >
+                            {{ appointment.appointed_time }} to {{ appointment.appointedTime_to }}
+                            <span v-if="areAllSlotAvailable(appointment.telemed_assigned_doctor) || isPastDatetime(appointment.appointed_date, appointment.appointed_time)">
+                              (Unavailable)
+                            </span>
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <button
+                      v-if="!areAllAppointmentFull"
+                      type="button"
+                      id="consultation"
+                      class="btn btn-success bt-md btn-block"
+                      @click="proceedAppointment"
+                      style="margin-top: 20px;"
+                    >
+                      <i class="fa fa-calendar"></i>&nbsp;&nbsp;Appointment
+                    </button>
+                      <label
+                        v-else
+                        id="consultation"
+                        class="btn bt-md btn-block"
+                        style="background-color: #dd4b39; font-weight: bold; color: rgb(255, 255, 255); margin-top: 20px; pointer-events: none; cursor: default;"
+                        aria-readonly="true"
+                      >
+                        <i class="fa fa-calendar"></i>&nbsp;&nbsp;All appointments are full
+                      </label>
+                  </div>
+                  
+
                 </div>
               </div>
             </div>
@@ -512,4 +620,5 @@ export default {
   margin: 10px 0 0 0;
   font-size: 22px;
 }
+
 </style>
