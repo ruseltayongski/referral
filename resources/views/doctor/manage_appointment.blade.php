@@ -1870,15 +1870,18 @@
                     document.getElementById('appointed_date').disabled = true;
                     if(appointmentDate <= currentDate){
                         document.getElementById('update_appointed_time' + currentCount).disabled = true;
+                        document.getElementById('update_slot' + currentCount).disabled = true;
                         document.getElementById('update_appointedTime_to' + currentCount).disabled = true;
                         document.getElementById('update_opdCategory' + currentCount).disabled = true;
                         document.getElementById('Update_available_doctor' + currentCount).disabled = true;
                     }
+            
                     document.getElementById('update_appointed_time' + currentCount).disabled = true;
                     document.getElementById('update_appointedTime_to' + currentCount).disabled = true;
                     document.getElementById('update_opdCategory' + currentCount).disabled = true;
                     document.getElementById('Update_available_doctor' + currentCount).disabled = true;
-          
+                    document.getElementById('update_slot' + currentCount).disabled = true;
+
                 }else{
                     update_slots.style.display = 'block';
                 
