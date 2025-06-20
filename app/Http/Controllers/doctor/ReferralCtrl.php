@@ -1453,6 +1453,7 @@ class ReferralCtrl extends Controller
     }
 
     public function transfer(Request $req) {
+      
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
@@ -1507,6 +1508,7 @@ class ReferralCtrl extends Controller
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
             "status" => "transferred",
+            'telemedicine' => $track->telemedicine,
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track
@@ -1608,6 +1610,7 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
+            "telemedicine" => $track->telemedicine,
             "push_diagnosis" => $finalDiagnosis,
             "chiefComplaint" => $chiefComplain,
         ];

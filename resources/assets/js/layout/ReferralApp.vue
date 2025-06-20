@@ -119,7 +119,7 @@
                 const isTelemed = parseInt(Telemedicine) === 1;
                 const isForUser = parseInt(subOpdId) === parseInt(this.user.subopd_id);
                 console.log("notifyRef:", parseInt(Telemedicine) === 1, parseInt(subOpdId) === parseInt(this.user.subopd_id),"Telemed:", parseInt(Telemedicine),"Facility SubOpd:",parseInt(subOpdId),'UserSubOpd:', parseInt(this.user.subopd_id))
-                
+                console.log("isTelemed:", isTelemed);
                   if (isTelemed) {
                     if (!isForUser) return;
                     Lobibox.notify('success', {
