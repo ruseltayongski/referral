@@ -592,7 +592,7 @@
         <td colspan="6">Current Medications </td>
     </tr>
     <tr>
-        <td colspan="6">Current Medication:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
+        <td colspan="6"><span class="woman_prenatal form-details">{{$personal_and_social_history->current_medications}}</span></td> 
     </tr>
     @endif
     
@@ -605,6 +605,11 @@
     <tr>   
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
+    @if (!empty($pertinent_laboratory->lab_procedure_other))
+    <tr>
+        <td colspan="6">Others: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pertinent_laboratory->lab_procedure_other}}</span></td> 
+    </tr>
+    @endif
  
     @if(isset($file_path))
         <tr>
