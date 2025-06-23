@@ -62,7 +62,9 @@ export default {
         'Orthopedics',
         'Cardiology',
       ],
-      sub_opd_id: null
+      sub_opd_id: null,
+      highlightedCategory: null, 
+      pulseCategory: null, 
     };
   },
   mounted() {
@@ -90,6 +92,8 @@ export default {
       this.selectedAppointmentTime = null;
       this.selectedAppointmentDoctor = null;
       this.selectedCategory = null;
+
+       this.highlightFirstAvailableCategory();
     },
     facilitySelectedId: async function (newValue, oldValue) {
       this.showAppointmentTime = false;
@@ -167,6 +171,40 @@ export default {
 }
   },
   methods: {
+    shouldHighlightCategory(categoryId) {
+      return this.highlightedCategory === categoryId;
+    },
+    shouldPulseCategory(categoryId) {
+      return this.pulseCategory === categoryId;
+    },
+    highlightFirstAvailableCategory() {
+      // Find the first available category
+      const availableCategories = Object.keys(this.groupedAppointments).filter(categoryId => {
+        const categoryGroup = this.groupedAppointments[categoryId];
+        return !this.isCategoryFullyBooked(categoryGroup.appointments);
+      });
+      
+      if (availableCategories.length > 0) {
+        // Option 1: Just highlight without auto-selecting
+        this.highlightedCategory = availableCategories[0];
+        this.pulseCategory = availableCategories[0];
+        
+        // Option 2: Auto-select the first available category (uncomment if desired)
+        // this.selectedCategory = availableCategories[0];
+        
+        // Remove pulse after 3 seconds
+        setTimeout(() => {
+          this.pulseCategory = null;
+        }, 3000);
+        
+        // Remove highlight after 10 seconds or when user selects a category
+        setTimeout(() => {
+          if (this.highlightedCategory === availableCategories[0]) {
+            this.highlightedCategory = null;
+          }
+        }, 10000);
+      }
+    },
     handleCategoryChange(){
       this.selectedAppointmentTime = '';
     },
@@ -408,7 +446,13 @@ export default {
                       :key="categoryId"
                     >
                       <!-- Sub OPD Category Selection -->
-                      <div class="category-header">
+                      <div class="category-header"
+                        :class="{
+                        'category-highlight': shouldHighlightCategory(categoryId),
+                        'category-pulse': shouldPulseCategory(categoryId)
+                      }"
+                      
+                      >
                         <input
                           type="radio"
                           class="category_radio"
@@ -501,6 +545,33 @@ export default {
   </div>
 </template>
 <style scoped>
+.category-highlight {
+  background: linear-gradient(90deg, rgba(0, 166, 90, 0.1) 0%, rgba(0, 166, 90, 0.05) 100%);
+  border-left: 4px solid #00a65a;
+  padding: 8px;
+  margin: 2px 0;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+.category-pulse {
+  animation: category-pulse 2s ease-in-out 3;
+}
+
+@keyframes category-pulse {
+  0% { 
+    box-shadow: 0 0 0 0 rgba(0, 166, 90, 0.4);
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 0 10px rgba(0, 166, 90, 0.1);
+    transform: scale(1.02);
+  }
+  100% { 
+    box-shadow: 0 0 0 0 rgba(0, 166, 90, 0);
+    transform: scale(1);
+  }
+}
+
 .appointment-time-list {
   /* display: flex;  */
   padding: 10px;
