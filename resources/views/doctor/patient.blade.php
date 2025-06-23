@@ -853,8 +853,6 @@ $counter = 0;
                  // Get facility_id and pregnancy status from server-side
                 var referred_facility = "{{ $user->facility_id }}";
                 let telemed = $(".telemedicine").val();
-                
-                console.log("Facility ID: ", referred_facility, telemed);
     
                 $(".telemedicine").val(telemed);
 

@@ -169,45 +169,13 @@ export default {
 
       // console.log(`All slots in past for ${targetDate}: ${allSlotsInPast}`);
       if (allSlotsFullyBooked || allSlotsInPast) {
-        console.log(`Setting background to RED for date ${targetDate}`);
         targetTd.css("background-color", "#dd4b39"); // not available color red
         // targetTd.css("border-color", "#dd4b39");
       } else {
-        console.log(`Setting background to GREEN for date ${targetDate}`);
+      
         targetTd.css("background-color", "#00a65a"); // available color green
         targetdrag.css("border-color", "#00a65a");
       }
-        // Manual Appointment
-        // const isfullyBooked = this.appointmentSlot.some((appointment) => {
-
-        //   if (appointment.appointment_schedules.length > 0) {
-        //     const slotOndate = appointment.appointment_schedules.filter(
-        //       (slot) => slot.appointed_date === dateString
-        //     );
-        
-        //     return slotOndate.some((slot) => {
-        //       timeslot = slot.appointed_time;
-        //       console.log("all slot:", slot);
-        //       const assignedCount = slot.telemed_assigned_doctor.filter(
-        //         (doctor) => doctor.appointment_id == slot.id
-        //       ).length;
-           
-        //       return assignedCount >= slot.slot
-        //     });
-        //   }
-        //   return false;
-        // });
-         
-        // let dateTimeAppointed =  new Date(`${dateString}T${timeslot}`);
-
-        // if (isfullyBooked || dateTimeAppointed <= currentDateTime) {
-        //   targetTd.css("background-color", "rgb(255 214 214)"); //not available color red
-        //   targetTd.css("border-color", "rgb(230 193 193)");
-        // } else {
-        //   targetTd.css("background-color", "#00a65a"); //available color green'
-        //   targetdrag.css("border-color", "#00a65a");
-        // }
-
         targetGrid.remove();
         targetTd.addClass("add-cursor-pointer");
         $(".fc-content").remove();
@@ -215,7 +183,6 @@ export default {
       });
     },
     async dayClickFunction(date, allDay, jsEvent, view) {
-      //console.log("appointment:: ", this.appointmentSlot[0].appointment_schedules);
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
@@ -275,10 +242,7 @@ export default {
 
         const response = await this.__appointmentScheduleHours(responseBody);
         this.$emit("appointedTime", response.data);
-        //console.log("manual appoint response", response.data);
         PassconfigId = null;
-        //console.log("PassconfigId::", PassconfigId);
-        //console.log("date selected condition ",  params.start, dateselect, "configId:", PassconfigId);
         
         if(params.start === dateselect){
           parameterDate = params.start;
@@ -371,7 +335,6 @@ export default {
 
       } else {
         const mapedData = response.data.facility_data.map((item) => {
-          //console.log("response mapedData", mapedData);
           return {
             title: "Appointment",
             configId: null,
@@ -386,11 +349,9 @@ export default {
       }
     },
     async __appointmentScheduleHours(params) {
-      //console.log("parama:", params);
       return await appointmentScheduleHours(params);
     },
     async __appointmentConfigHours(params) {
-      //console.log("parama config hrs:", params);
       return await appointmentConfigHours(params);
     },
   },

@@ -33,10 +33,12 @@
           @manual-click-date="manualClickDate"
         ></appointment-calendar>
         <appointment-time
+          ref="appointmentTimeRef"
           :facilitySelectedId="facilitySelectedId"
           :appointedTimes="appointedTimes"
           :configTimeSlot ="configTimeSlot"
           :appointmentclickDate ="appointmentclickDate"
+          :selected-date="selectedDate"
           :manualDate ="manualDate"
           :user="user"
         ></appointment-time>
@@ -70,25 +72,74 @@ export default {
   },
   mounted() {},
   methods: {
+    focusAppointmentTimeSidebar() {
+    // Method 1: Using Vue $refs
+      try {
+        if (this.$refs.appointmentTimeRef && this.$refs.appointmentTimeRef.$el) {
+          // Scroll to the sidebar with smooth animation
+          this.$refs.appointmentTimeRef.$el.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start',
+            inline: 'nearest'
+          });
+          
+          // Add visual highlight
+          this.highlightSidebar();
+        } else {
+          console.warn('AppointmentTime ref not found');
+        }
+      } catch (error) {
+        console.error('Error focusing sidebar:', error);
+      }
+  },
+  highlightSidebar() {
+    const sidebarElement = this.$refs.appointmentTimeRef?.$el;
+    if (sidebarElement) {
+      // Add temporary highlight class
+      sidebarElement.classList.add('highlight-sidebar');
+      
+      // Remove highlight after animation
+      setTimeout(() => {
+        sidebarElement.classList.remove('highlight-sidebar');
+      }, 2000);
+    }
+  },
     manualClickDate(date){
       this.manualDate = date;
-      //console.log("this.manualDate", this.manualDate);
+
+      if(date){
+        this.$nextTick(() => {
+          this.focusAppointmentTimeSidebar();
+        });
+      }
     },
     handleDayClickdate(payload){
         this.appointmentclickDate = payload;
        
+       if(payload && payload.length > 0){
+         this.$nextTick(() => {
+            this.focusAppointmentTimeSidebar();
+          });
+       }
     },
     facilitySelected(payload) {
       this.facilitySelectedId = payload;
     },
     appointedTime(payload) {
       this.appointedTimes = payload;
+
+        if (payload && payload.length > 0) {
+          this.$nextTick(() => {
+          this.focusAppointmentTimeSidebar();
+        });
+      }
     },
     config_appointedTime(payload){
       //console.log("config_appointedTime::", payload);
       this.configTimeSlot = payload;
     },
   },
+
 };
 </script>
 <style>
