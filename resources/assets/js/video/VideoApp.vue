@@ -96,6 +96,11 @@ export default {
       uploadProgress: 0,
       // netSpeedMbps: null,
       // netSpeedStatus: '', // 'fast' or 'slow'
+
+      afkTimeout: null,
+      afkDialogVisible: false,
+      afkCountdown: 10,
+      afkCountdownInterval: null,
     };
   },
   mounted() {
@@ -103,6 +108,7 @@ export default {
     document.title = "TELEMEDICINE";
     // Change favicon
     const link = document.querySelector("link[rel~='icon']");
+    this.initAfkDetection();
     if (link) {
       link.href = this.dohLogoUrl; // Make sure logo.png is in your public folder
     } else {
@@ -160,6 +166,7 @@ export default {
   beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
     window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
+    this.clearAfkTimers();
     this.stopCallTimer();
      // Remove event listener when component is destroyed
      window.removeEventListener('resize', this.handleResize);
@@ -193,6 +200,75 @@ export default {
       });
   },
   methods: {
+
+     // AFK Detection Methods
+    initAfkDetection() {
+      // Listen for user activity
+      const reset = this.resetAfkTimer;
+      window.addEventListener('mousemove', reset);
+      window.addEventListener('keydown', reset);
+      window.addEventListener('mousedown', reset);
+      window.addEventListener('touchstart', reset);
+      this.resetAfkTimer();
+    },
+    resetAfkTimer() {
+      // If dialog is open, close it and reset countdown
+      if (this.afkDialogVisible) {
+        this.closeAfkDialog();
+      }
+      clearTimeout(this.afkTimeout);
+      this.afkTimeout = setTimeout(this.showAfkDialog, 2 * 60 * 1000); // 2 minutes
+    },
+    showAfkDialog() {
+      this.afkDialogVisible = true;
+      this.afkCountdown = 30;
+      this.afkCountdownInterval = setInterval(() => {
+        this.afkCountdown--;
+        if (this.afkCountdown <= 0) {
+          this.endCallAfk();
+        }
+      }, 1000);
+    },
+    closeAfkDialog() {
+      this.afkDialogVisible = false;
+      clearInterval(this.afkCountdownInterval);
+      this.afkCountdown = 30;
+      this.resetAfkTimer();
+    },
+    endCallAfk() {
+      clearInterval(this.afkCountdownInterval);
+      this.afkDialogVisible = false;
+      // End the call (reuse your leaveChannel method)
+         // Stop screen recording and save the file
+            if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+                this.screenRecorder.stop();
+                this.screenRecorder.onstop = () => {
+                    this.saveScreenRecording(true);
+                };
+            }
+
+            // Wait for duration to be sent before closing
+            if (this.referring_md === "yes") {
+                clearInterval(this.callTimer); // Stop the timer
+                this.sendCallDuration();
+
+                // // Give more time for the request to complete
+                // setTimeout(() => {
+                //     window.top.close();
+                // }, 10000);
+            } else {
+                window.top.close();
+            }
+    },
+    clearAfkTimers() {
+      clearTimeout(this.afkTimeout);
+      clearInterval(this.afkCountdownInterval);
+      window.removeEventListener('mousemove', this.resetAfkTimer);
+      window.removeEventListener('keydown', this.resetAfkTimer);
+      window.removeEventListener('mousedown', this.resetAfkTimer);
+      window.removeEventListener('touchstart', this.resetAfkTimer);
+    },
+
     async startScreenRecording() {
 
       try {
@@ -417,6 +493,9 @@ export default {
             Lobibox.alert("error", {
               msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
                 (error.response?.data?.message || error.message),
+              callback: function () {
+                  window.top.close();
+                },
             });
             return;
           }
@@ -1911,6 +1990,13 @@ document.addEventListener("DOMContentLoaded", function () {
       @close-modal="closeFeedbackModal"
     />
     <PDFViewerModal ref="pdfViewer" :pdfUrl="PdfUrl" />
+    <!-- Place AFK dialog here, before closing fullscreen-div -->
+    <div v-if="afkDialogVisible" class="afk-overlay">
+      <div class="afk-dialog">
+        <p>You have been inactive for some time.</p>
+        <p>Ending call in <b>{{ afkCountdown }}</b> seconds...</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -2106,5 +2192,23 @@ td {
 .net-speed-indicator.slow {
   border: 2px solid #e53935;
   color: #e53935;
+}
+
+/* AFK Dialog Styles */
+.afk-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.afk-dialog {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2);
 }
 </style>
