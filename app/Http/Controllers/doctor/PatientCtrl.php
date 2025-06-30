@@ -34,7 +34,8 @@ use App\Http\Controllers\ApiController;
 use App\AppointmentSchedule;
 use App\TelemedAssignDoctor;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\doctor\ReferralCtrl;
+use App\Http\Controllers\doctor\ReferralCtrl;  
+use App\Http\Controllers\doctor\NewFormCtrl;
 
 class PatientCtrl extends Controller
 {
@@ -1503,203 +1504,108 @@ class PatientCtrl extends Controller
         ]);
     }
 
-    public function loadEmrForm($patientId,$code){
+    public function loadEmrForm($patientId, $existcode){
 
         $patient = Patients::find($patientId);
-
-        $firstname = $patient->fname;
-        $mname = $patient->mname;
-        $lname = $patient->lname;
-        $dob = $patient->dob; 
-        $province = $patient->province;
-        $municipal = $patient->muncity;
-        $barangay = $patient->brgy;
-
-        $Emr_patient = DB::table('patients')
-        ->leftJoin('province', 'province.id', '=', 'patients.province')
-        ->leftJoin('muncity', 'muncity.id', '=', 'patients.muncity')
-        ->leftJoin('barangay', 'barangay.id', '=', 'patients.brgy')
-
-        ->leftJoin('patient_form', 'patient_form.patient_id', '=', 'patients.id')
-        ->leftJoin('icd as icd_pf', 'icd_pf.code', '=', 'patient_form.code')
-        ->leftJoin('icd10 as icd10_pf', 'icd10_pf.id', '=', 'icd_pf.icd_id')
-        ->leftJoin('tracking as track_pf', 'track_pf.code', '=', 'patient_form.code')
-
-        ->leftJoin('users as users_pf', 'users_pf.id', '=', 'patient_form.referring_md')
         
-        ->leftJoin('department as depart','depart.id','=','patient_form.department_id')
+        if (!$patient) {
+            return response()->json(['error' => 'Patient not found'], 404);
+        }
 
-        ->leftJoin('pregnant_form', 'pregnant_form.patient_woman_id', '=', 'patients.id')
-        ->leftJoin('icd as icd_pg', 'icd_pg.code', '=', 'pregnant_form.code')
-        ->leftJoin('icd10 as icd10_pg', 'icd10_pg.id', '=', 'icd_pg.icd_id')
-        ->leftJoin('tracking as track_pg', 'track_pg.code', '=', 'pregnant_form.code')
-        ->leftJoin('department as Pregdepart','Pregdepart.id','=','track_pg.department_id')
-        ->leftJoin('users as users_pg', 'users_pg.id', '=', 'pregnant_form.referred_by')
-    
-        ->where('patients.fname', $firstname)
-        ->where('patients.mname', $mname)
-        ->where('patients.lname', $lname)
-        ->where('patients.dob', $dob)
-        ->where('patients.province', $province)
-        ->where('patients.muncity', $municipal)
-        ->where('patients.brgy', $barangay)
-    
-        ->select(
-            'patients.*',
-            DB::raw("if(
-                patients.brgy,
-                concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),
-                concat(patients.region,', ',patients.province_others,', ',patients.muncity_others,', ',patients.brgy_others)
-            ) as patient_address"),
-            // All patient_form fields
-            'patient_form.id as patient_form_id',
-            'patient_form.code as patientCode',
-            'patient_form.covid_number',
-            'track_pf.date_referred as patient_referred_date',
-            'track_pf.date_transferred as patient_transferred',
-            'depart.description as department',
-            'patient_form.referring_facility as patient_refer_from',
-            'patient_form.referred_to as patient_refer_to',
-            'patient_form.refer_clinical_status as patient_clinical_status',
-            'patient_form.refer_sur_category as patient_sur_category',
-            'patient_form.dis_clinical_status as patient_dis_clinical_status',
-            'patient_form.dis_sur_category as patient_dis_sur_category',
-            'patient_form.time_referred as patient_time_referred',
-            'patient_form.case_summary as patient_case_summary',
-            'patient_form.reco_summary as patient_reco_summary',
-            'patient_form.diagnosis as patient_diagnosis',
-            'patient_form.other_diagnoses as other_patient_diagnosis',
-            'patient_form.referring_md as patient_referring_md',
-            'patient_form.referred_md as patient_reffered_md',
-            'patient_form.other_reason_referral as patient_other_reason_referral',
-            'patient_form.file_path as patient_file_path',
-            'patient_form.other_diagnoses as patient_other_diag',
-            'patient_form.notes_diagnoses as patient_notes_diag',
+        $Emr_patient_alt = collect([
+            // Normal form codes with tracking info
+            DB::table('patient_form')
+                ->join('tracking', 'tracking.code', '=', 'patient_form.code')
+                ->leftJoin('activity', function ($join) {
+                    $join->on('activity.code', '=', 'patient_form.code')
+                        ->whereIn('activity.status', ['treated', 'discharged']);
+                })
+                ->where('patient_form.patient_id', $patient->id)
+                ->where('patient_form.code', '!=', $existcode)
+                ->select([
+                    'patient_form.code',
+                    'tracking.type',
+                    'tracking.form_id as normalFormId',
+                    'tracking.form_type',
+                    'patient_form.patient_id',
+                    'tracking.id as normalTrackId', // Add tracking ID to get the form data
+                    'activity.created_at as normal_discharged'
+                ])
+                ->get(),
             
-            // All pregnant_form fields
-            'pregnant_form.covid_number as preg_covid',
-            'pregnant_form.id as pregnant_form_id',
-            'pregnant_form.code as pregnantCode',
-            'pregnant_form.referring_facility as pregnant_refer_facility',
-            'pregnant_form.referred_by as pregnant_refer_facility',
-            'pregnant_form.record_no as pregnant_record_no',
-            'track_pg.date_referred as pregnant_referred_date',
-            'track_pg.date_transferred as preg_transferred_date',
-            'track_pg.code as trackcode',
-            'Pregdepart.description as pregDepartment',
-            'pregnant_form.referred_to as pregnant_referred_to',
-            'pregnant_form.referring_facility as pregnant_refer',
-            'pregnant_form.refer_clinical_status as pregnant_refer_clinical_status',
-            'pregnant_form.refer_sur_category as pregnant_refer_sur_category',
-            'pregnant_form.dis_clinical_status as pregnant_dis_clinical_status',
-            'pregnant_form.dis_sur_category as pregnant_dis_sur_category',
-            'pregnant_form.health_worker as pregnant_health_worker',
-            'pregnant_form.woman_reason',
-            'pregnant_form.woman_major_findings',
-            'pregnant_form.woman_before_treatment',
-            'pregnant_form.woman_before_given_time',
-            'pregnant_form.woman_during_transport',
-            'pregnant_form.woman_transport_given_time',
-            'pregnant_form.woman_information_given',
-            'pregnant_form.notes_diagnoses as pregnant_notes_diagnosis',
-            'pregnant_form.other_diagnoses as pregnant_other_diagnoses',
-            'pregnant_form.reason_referral as pregnant_reason_referral',
-            'pregnant_form.other_reason_referral as pregnant_other_reason_referral',
-            'pregnant_form.file_path as pregnant_file_path',
-            'pregnant_form.baby_reason',
-            'pregnant_form.baby_major_findings',
-            'pregnant_form.baby_last_feed',
-            'pregnant_form.baby_before_treatment',
-            'pregnant_form.baby_before_given_time',
-            'pregnant_form.baby_during_transport',
-            'pregnant_form.baby_transport_given_time',
-            'pregnant_form.baby_information_given',
-            'users_pf.id as md_referring_id',
-            'users_pg.id as pregnant_md_referring_id',
-            'users_pg.contact as pgmd_referring_contact',
-           DB::raw('CONCAT(
-                IF(users_pf.level = "doctor", "Dr. ", ""),
-                users_pf.fname, " ", users_pf.mname, " ", users_pf.lname
-            ) as md_referring'),
+            // Pregnant form codes with tracking info
+            DB::table('pregnant_form')
+                ->join('tracking', 'tracking.code', '=', 'pregnant_form.code')
+                ->leftJoin('activity', function ($join) {
+                    $join->on('activity.code', '=', 'pregnant_form.code')
+                       ->whereIn('activity.status', ['treated', 'discharged']);
+                })
+                ->where('pregnant_form.patient_woman_id', $patient->id)
+                ->where('pregnant_form.code', '!=', $existcode)
+                ->select([
+                    'pregnant_form.code',
+                    'tracking.type',
+                    'tracking.form_id as pregnantFormId',
+                    'tracking.form_type',
+                    'pregnant_form.patient_woman_id as patient_id',
+                    'tracking.id as pregnantTrackId', // Add tracking ID to get the form data
+                    'activity.created_at as preg_discharged_at'
+                ])
+                ->get()
+        ])->flatten()->unique('code')->values()->toArray();
+    
+        // Alternative: Get form data using normalFormTelemed method
+        $emr_forms_data = array_map(function($emr_record) {
+            $normaltrack_id = $emr_record->normalTrackId;
+            $pregnant_track_id = $emr_record->pregnantTrackId;
 
-            DB::raw('CONCAT(
-                IF(users_pg.level = "doctor", "Dr. ", ""),
-                users_pg.fname, " ", users_pg.mname, " ", users_pg.lname
-            ) as pregnant_md_referring'),
-                
-            // Grouped ICD10 descriptions
-            DB::raw('JSON_ARRAYAGG(DISTINCT icd10_pf.description) as patient_icd10_desc'),
-            DB::raw('JSON_ARRAYAGG(DISTINCT icd10_pg.description) as pregnant_icd10_desc')
-        )
-    
-        ->groupBy(
-            'patients.id',
-            'patient_form.id',
-            'pregnant_form.id'
-        )
-    
-        ->orderByRaw('GREATEST(COALESCE(patient_form.id, 0), COALESCE(pregnant_form.id, 0)) DESC')
-        ->get();
+            $formtype = $emr_record->form_type;
+            $type = $emr_record->type;
+
+            $normal = null;
+            $pregnant = null;
+            $newNormal = null;
+            $newPregnant = null;
+
+            // Set telemed session before calling methods
+            Session::put('telemed', true);
             
-        // $emr_history = $Emr_patient->slice(1)->values();
-        
-        //dd($emr_history);
-        // Manual pagination
-        // $perPage = 1;
-        // $currentPage = request()->get('page', 1);
-        // $emr_paginated = new \Illuminate\Pagination\LengthAwarePaginator(
-        //     $emr_history->forPage($currentPage, $perPage),
-        //     $emr_history->count(),
-        //     $perPage,
-        //     $currentPage,
-        //     ['path' => request()->url(), 'pageName' => 'page']
-        // );
+            $newformCtrl = new NewFormCtrl();
+            $referralCtrl = new ReferralCtrl();
 
-            $all_files = [];
-
-            foreach ($Emr_patient as $record) {
-                $file_link = null;
-
-                if ($record->patient_file_path) {
-                    $file_link = $record->patient_file_path;
-                    $code = $record->patientCode;
-                } elseif ($record->pregnant_file_path) {
-                    $file_link = $record->pregnant_file_path;
-                     $code = $record->pregnantCode;
-                }
-
-                if (!empty($file_link)) {
-                    $exploded = explode("|", $file_link);
-                    $paths = [];
-                    $filenames = [];
-
-                    foreach ($exploded as $link) {
-                        $secured = ReferralCtrl::securedFile($link); // Use $link here
-                        if (!empty($secured)) {
-                            $paths[] = $secured;
-                            $filenames[] = basename($secured);
-                        }
-                    }
-
-                    if (!empty($paths)) {
-                        $all_files[] = [
-                            'record_id' => $record->pregnant_form_id, // You may adjust key if needed
-                            'code' => $code, 
-                            'paths' => $paths,
-                            'filenames' => $filenames,
-                        ];
-                    }
-                }
+            // FIXED: Call correct methods with correct tracking IDs
+            if($formtype == 'version2' && $type == 'normal' && $normaltrack_id){
+                $newNormal = $newformCtrl->getViewForm_normal($normaltrack_id, null, null);
+            } else if($formtype == 'version2' && $type == 'pregnant' && $pregnant_track_id){
+                $newPregnant = $newformCtrl->getViewForm_pregnant($pregnant_track_id, null, null);
+            } else if($formtype == "version1" && $type == "pregnant" && $pregnant_track_id){
+                $pregnant = $referralCtrl->pregnantFormTelemed($pregnant_track_id);
+            } else if($formtype == "version1" && $type == "normal" && $normaltrack_id){
+                $normal = $referralCtrl->normalFormTelemed($normaltrack_id);
             }
-          
+
+            // Reset telemed session
+            Session::put('telemed', false);
+
+            return [
+                'date_discharged' => $emr_record->normal_discharged ?? $emr_record->preg_discharged_at ?? null,
+                'type' => $emr_record->type,
+                'formtype' => $emr_record->form_type,
+                'formId' => $normaltrack_id ?? $pregnant_track_id,
+                'normal' => $normal,
+                'pregnant' => $pregnant,
+                'newNormal' => $newNormal,
+                'newPregnant' => $newPregnant
+            ];
+        }, $Emr_patient_alt);
+    
         $arr = [
             "form" => 'normal data',
-            "file_path" => $all_files,
+            "file_path" => [], // You might want to populate this
             "patient" => $patientId,
-            "emr_data" => $Emr_patient
+            "emr_forms_data" => $emr_forms_data // New array with all form data
         ];
-
-
-        return view('doctor.emr_body', $arr);
-    }
+    
+    return view('doctor.emr_body', $arr);
+}
 }

@@ -12,6 +12,11 @@
     #pregnantFormModal span {
         color: #1e8a2a;
     }
+
+    .modal-extraLarge {
+        width: 90%;
+        max-width: 1200px;
+    }
 </style>
 
 <div class="modal fade" id="EmrForm">
@@ -22,7 +27,7 @@
             </div>
             <div class="jim-content referral_body">
 
-            <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close</button>
+            <button class="btn-sm btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form->code}}"><i class="fa fa-times"></i> Close </button>
                 <div class="clearfix"></div>
             </div>
         </div><!-- /.modal-content -->

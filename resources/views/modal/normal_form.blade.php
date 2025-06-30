@@ -38,7 +38,7 @@
                     </tr>
                     <tr>
                         <td colspan="6">
-                            Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
+                            Case Summary (pertinent Hx/PE, including meds, labs, course etc.):  dfdf
                             <br />
                             <br />
                             <br />

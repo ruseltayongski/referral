@@ -1390,8 +1390,7 @@ class NewFormCtrl extends Controller
         $obstetetric_parity_date = ObstetricAndGynecologicHistory::select( DB::raw("DATE_FORMAT(parity_lnmp, '%M %d, %Y %h:%i %p') as parity_lnmp"),
         DB::raw("DATE_FORMAT(parity_edc, '%M %d, %Y %h:%i %p') as parity_edc"),
         )->where('patient_id', $patient_id)->first();
-
-
+              
         $arr = [
             "form" => self::pregnantFormData($id),
             "id" => $id,
@@ -1421,7 +1420,7 @@ class NewFormCtrl extends Controller
             "pregnancy"=>$pregnancy_data,
             "status"=>$status
         ];
-        
+     
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
@@ -1461,6 +1460,7 @@ class NewFormCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as woman_name'),
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
             'patients.sex',
+            'patients.civil_status',
             DB::raw("if(
                 patients.brgy,
                 concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),
@@ -1504,7 +1504,7 @@ class NewFormCtrl extends Controller
             ->leftJoin('department','department.id','=','pregnant_form.department_id')
             ->where('tracking.id',$id)
             ->first();
-
+        
         $baby = array();
         if(isset($form->patient_baby_id) && $form->patient_baby_id > 0)
         {
@@ -1544,7 +1544,7 @@ class NewFormCtrl extends Controller
 
         Session::put('date_referral', $form['date_referral']);
         $form['woman_age'] = ParamCtrl::getAge($form['dob']);
-
+        
         return array(
             'pregnant' => $form,
             'baby' => $baby

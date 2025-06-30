@@ -302,14 +302,14 @@ $user = Session::get('auth');
                       
                             @if($row->telemedicine == 1)
 
-                            <!-- <a data-toggle="modal" href="#EmrForm" 
+                            <a data-toggle="modal" href="#EmrForm" 
                                data-patient="{{ $row->patient_id }}"
                                data-code="{{ $row->code }}"
                                data-emr="10"
                                class="view_form btn btn-warning btn-xs">
-                                <i class="fa fa-folder"></i> EMR 
-                            </a> -->
-
+                                <i class="fa fa-folder"></i> PMR 
+                            </a>
+                               
                             @endif
                         </div>
                     </div>
@@ -342,6 +342,7 @@ $user = Session::get('auth');
     @include('script.referred')
     {{--@include('script.firebase')--}}
     <script>
+
         @if(Session::get('redirected_patient'))
             Lobibox.notify('success', {
                 title: "Success",
