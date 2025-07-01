@@ -29,15 +29,15 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-3">
-                    <h4>Total Consultations</h4>
+                    <h4>Consultations</h4>
                     <p class="">{{$totalConsult}} consultations</p>
                 </div>
                 <div class="col-md-3">
-                    <h4>Total Departments</h4>
+                    <h4>Departments</h4>
                     <p>{{ $countDepartment }}</p>
                 </div>
                 <div class="col-md-3">
-                    <h4>Total Patients</h4>
+                    <h4>Patients</h4>
                     <p>{{ $numberPatient }} patients</p>
                 </div>
                 <div class="col-md-3">
@@ -48,41 +48,63 @@
         </div>
     </div>
 
-    <!-- Consultation by Doctor -->
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Consultations by Department</h3>
-        </div>
-        <div class="panel-body">
-            <canvas id="doctorChart" width="400" height="200"></canvas>
-        </div>
-    </div>
-    <!-- Patient Demographics -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Patient Demographics</h3>
+        <div class="panel-heading" style="background: #60ac94; color: #fff; border-radius: 6px 6px 0 0; box-shadow: 0 2px 8px rgba(78,115,223,0.08); padding: 18px 24px;">
+            <h3 class="panel-title" style="font-size: 1.5em; font-weight: bold; letter-spacing: 1px; margin: 0; display: flex; align-items: center;">
+                <i class="fa fa-bar-chart" style="margin-right: 12px;"></i>
+                Consultations Monitoring &amp; By Department
+            </h3>
         </div>
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
-                    <h4>Age Distribution</h4>
-                    <canvas id="ageDistributionChart" width="400" height="200"></canvas>
+                    <canvas id="consultationTrackingData" width="400" height="200"></canvas>
                 </div>
                 <div class="col-md-6">
-                    <h4>Gender Distribution</h4>
-                    <canvas id="genderDistributionChart" width="400" height="200"></canvas>
+                    <div style="background: #f8fafc; border-radius: 18px; box-shadow: 0 4px 18px rgba(44,62,80,0.08); padding: 32px 18px 24px 18px;">
+                        <h4 style="font-size: 1.3em; font-weight: bold; color: #4e73df; text-align: center; margin-bottom: 18px; letter-spacing: 1px;">
+                            <i class="fa fa-hospital-o" style="margin-right: 8px; color: #36b9cc;"></i>Consultations by Department
+                        </h4>
+                        <canvas id="doctorChart" width="420" height="240"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-  
-    <!-- Diagnosis Statistics -->
+    
+    <!-- Patient Demographics & Diagnosis Statistics -->
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Diagnosis Statistics</h3>
+        <div class="panel-heading" style="background: linear-gradient(90deg, #1cc88a 0%, #36b9cc 100%); color: #fff; border-radius: 6px 6px 0 0; box-shadow: 0 2px 8px rgba(28,200,138,0.08); padding: 18px 24px;">
+            <h3 class="panel-title" style="font-size: 1.5em; font-weight: bold; letter-spacing: 1px; margin: 0; display: flex; align-items: center;">
+                <i class="fa fa-users" style="margin-right: 12px;"></i>
+                Patient Demographics &amp; Diagnosis Statistics
+            </h3>
         </div>
         <div class="panel-body">
-            <canvas id="diagnosisChart" style="width: 529px; height: 529px; margin: 0 auto;"></canvas>
+            <div class="row">
+                <div class="col-md-6">
+                    <div style="background: #f8fafc; border-radius: 18px; box-shadow: 0 4px 18px rgba(44,62,80,0.08); padding: 32px 18px 24px 18px; margin-bottom: 18px;">
+                        <h4 style="font-size: 1.3em; font-weight: bold; color: #1cc88a; text-align: center; margin-bottom: 18px; letter-spacing: 1px;">
+                            <i class="fa fa-birthday-cake" style="margin-right: 8px; color: #36b9cc;"></i>Age Distribution
+                        </h4>
+                        <canvas id="ageDistributionChart" width="420" height="220"></canvas>
+                    </div>
+                    <div style="background: #f8fafc; border-radius: 18px; box-shadow: 0 4px 18px rgba(44,62,80,0.08); padding: 32px 18px 24px 18px;">
+                        <h4 style="font-size: 1.3em; font-weight: bold; color: #4e73df; text-align: center; margin-bottom: 18px; letter-spacing: 1px;">
+                            <i class="fa fa-venus-mars" style="margin-right: 8px; color: #f6c23e;"></i>Gender Distribution
+                        </h4>
+                        <canvas id="genderDistributionChart" width="420" height="220"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div style="background: #f8fafc; border-radius: 18px; box-shadow: 0 4px 18px rgba(44,62,80,0.08); padding: 32px 18px 24px 18px;">
+                        <h4 style="font-size: 1.3em; font-weight: bold; color: #e74a3b; text-align: center; margin-bottom: 18px; letter-spacing: 1px;">
+                            <i class="fa fa-stethoscope" style="margin-right: 8px; color: #36b9cc;"></i>Diagnosis Statistics
+                        </h4>
+                        <canvas id="diagnosisChart" width="420" height="320" style="margin: 0 auto;"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -100,6 +122,7 @@
         let totalPatientDemographicPerAge = @json($totalPatientDemographicPerAge);
         let totalPatientPerGender = @json($totalPatientPerGender);
         let totalDiagnosticStat = @json($totalDiagnosticStat);
+        
         
         let PerDepartment = consultPerDepartment.map(item => item.description);
         let PerConsultation = consultPerDepartment.map(item => item.total_consultations);
@@ -132,9 +155,25 @@
             datasets: [{
                 label: 'Age Distribution',
                 data: [below_18, age_18_30, age_31_45, age_46_60, above_60],
-                backgroundColor: ['#FF9933', '#33FF99', '#3399FF', '#FF3399', '#FFFF33'],
-                borderColor: ['#FF9933', '#33FF99', '#3399FF', '#FF3399', '#FFFF33'],
-                borderWidth: 1
+                backgroundColor: [
+                    'rgba(255, 153, 51, 0.85)',   // Orange
+                    'rgba(51, 255, 153, 0.85)',   // Green
+                    'rgba(51, 153, 255, 0.85)',   // Blue
+                    'rgba(255, 51, 153, 0.85)',   // Pink
+                    'rgba(255, 255, 51, 0.85)'    // Yellow
+                ],
+                borderColor: [
+                    '#FF9933', '#33FF99', '#3399FF', '#FF3399', '#FFFF33'
+                ],
+                borderWidth: 2,
+                borderRadius: 8,
+                hoverBackgroundColor: [
+                    'rgba(255, 153, 51, 1)',
+                    'rgba(51, 255, 153, 1)',
+                    'rgba(51, 153, 255, 1)',
+                    'rgba(255, 51, 153, 1)',
+                    'rgba(255, 255, 51, 1)'
+                ]
             }]
         };
 
@@ -143,9 +182,17 @@
             datasets: [{
                 label: 'Gender Distribution',
                 data: [total_male, total_female],
-                backgroundColor: ['#66B3FF', '#FF66B3'],
+                backgroundColor: [
+                    'rgba(102, 179, 255, 0.85)', // Blue
+                    'rgba(255, 102, 179, 0.85)'  // Pink
+                ],
                 borderColor: ['#66B3FF', '#FF66B3'],
-                borderWidth: 1
+                borderWidth: 2,
+                borderRadius: 8,
+                hoverBackgroundColor: [
+                    'rgba(102, 179, 255, 1)',
+                    'rgba(255, 102, 179, 1)'
+                ]
             }]
         };
 
@@ -160,16 +207,37 @@
             }]
         };
 
-        // var adherenceData = {
-        //     labels: ['Followed Treatment', 'Did Not Follow Treatment'],
-        //     datasets: [{
-        //         label: 'Treatment Adherence',
-        //         data: [850, 150],
-        //         backgroundColor: ['#66FF66', '#FF6666'],
-        //         borderColor: ['#66FF66', '#FF6666'],
-        //         borderWidth: 1
-        //     }]
-        // };
+        let numberPatient = {{$numberPatient}};
+        let totalConsult = {{$totalConsult}};
+        let avgConsultPerPatient = numberPatient > 0 ? (totalConsult / numberPatient).toFixed(2) : 0;
+        
+        var consultationTrackerData = {
+            labels: ['Referred', 'Seen', 'Accepted', 'Follow Up'],
+            datasets: [{
+                label: 'Consultation Tracking Data',
+                data: [{{$totalReferred}}, {{$totalSeen}}, {{$totalAccepted}}, {{$totalFollowUp}}],
+                backgroundColor: [
+                    '#FF5733', // same as Consultations by Department
+                    '#33FF57',
+                    '#3357FF',
+                    '#FF33A1'
+                ],
+                borderColor: [
+                    '#FF5733',
+                    '#33FF57',
+                    '#3357FF',
+                    '#FF33A1'
+                ],
+                borderWidth: 1,
+                borderRadius: 8,
+                hoverBackgroundColor: [
+                    'rgba(255, 87, 51, 0.85)',
+                    'rgba(51, 255, 87, 0.85)',
+                    'rgba(51, 87, 255, 0.85)',
+                    'rgba(255, 51, 161, 0.85)'
+                ]
+            }]
+        };
 
         // Create the charts
         new Chart(document.getElementById('doctorChart'), {
@@ -179,6 +247,9 @@
                 responsive: true,
                 plugins: {
                     legend: { display: false },
+                    title: {
+                        display: false
+                    },
                     tooltip: {
                         enabled: true,
                         callbacks: {
@@ -193,21 +264,18 @@
                         backgroundColor: '#fff',
                         titleColor: '#222',
                         bodyColor: '#222',
-                        borderColor: '#888',
-                        borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8
+                        borderColor: '#4e73df',
+                        borderWidth: 2,
+                        padding: 14,
+                        cornerRadius: 12,
+                        bodyFont: { size: 12, weight: 'bold' },
+                        titleFont: { size: 12, weight: 'bold' }
                     },
                     datalabels: {
                         color: '#fff',
-                        // backgroundColor: function(context) {
-                        //     let data = context.dataset.data;
-                        //     let max = Math.max(...data.map(v => parseFloat(v) || 0));
-                        //     return (parseFloat(data[context.dataIndex]) === max) ? '#FF5733' : '#888';
-                        // },
-                        borderRadius: 6,
-                        font: { weight: 'bold', size: 16 },
-                        padding: 2,
+                        borderRadius: 8,
+                        font: { weight: 'bold', size: 12 },
+                        padding: 8,
                         anchor: 'end',
                         align: 'start',
                         formatter: function(value, context) {
@@ -225,17 +293,21 @@
                 },
                 scales: {
                     x: {
+                        grid: { color: '#eee', borderColor: '#ccc', borderWidth: 2 },
                         ticks: {
-                            font: { size: 14, weight: 'bold' },
-                            color: '#333'
+                            font: { size: 16, weight: 'bold' },
+                            color: '#333',
+                            padding: 8
                         }
                     },
                     y: {
                         beginAtZero: true,
+                        grid: { color: '#f5f5f5', borderColor: '#ccc', borderWidth: 2 },
                         ticks: {
-                            font: { size: 14, weight: 'bold' },
+                            font: { size: 16, weight: 'bold' },
                             color: '#333',
-                            stepSize: 1
+                            stepSize: 1,
+                            padding: 8
                         }
                     }
                 }
@@ -244,19 +316,26 @@
         });
 
         new Chart(document.getElementById('ageDistributionChart'), {
-            type: 'pie',
+            type: 'doughnut',
             data: ageDistributionData,
             options: {
                 responsive: true,
+                cutout: '65%',
                 plugins: {
                     legend: {
                         display: true,
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
-                            font: { size: 16, weight: 'bold' },
+                            font: { size: 18, weight: 'bold' },
                             color: '#333',
-                            padding: 20
+                            padding: 24,
+                            boxWidth: 28,
+                            boxHeight: 18,
+                            borderRadius: 8
                         }
+                    },
+                    title: {
+                        display: false
                     },
                     tooltip: {
                         enabled: true,
@@ -272,23 +351,28 @@
                         backgroundColor: '#fff',
                         titleColor: '#222',
                         bodyColor: '#222',
-                        borderColor: '#888',
-                        borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8
+                        borderColor: '#36b9cc',
+                        borderWidth: 2,
+                        padding: 14,
+                        cornerRadius: 12,
+                        bodyFont: { size: 18, weight: 'bold' },
+                        titleFont: { size: 18, weight: 'bold' }
                     },
                     datalabels: {
                         color: '#fff',
-                        borderRadius: 6,
-                        font: { weight: 'bold', size: 16 },
-                        padding: 8,
-                        anchor: 'end',
-                        align: 'start',
+                        borderRadius: 8,
+                        font: { weight: 'bold', size: 18 },
+                        padding: 10,
+                        anchor: 'center',
+                        align: 'center',
+                        // backgroundColor: function(context) {
+                        //     return context.dataset.backgroundColor[context.dataIndex];
+                        // },
                         formatter: function(value, context) {
                             if (!value || value === 0 || value === '0') return '';
                             let total = context.dataset.data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
                             let percent = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '';
-                            return value + ' (' + percent + ')';
+                            return value + '\n' + percent;
                         },
                         display: function(context) {
                             var v = context.dataset.data[context.dataIndex];
@@ -301,19 +385,26 @@
         });
 
         new Chart(document.getElementById('genderDistributionChart'), {
-            type: 'pie',
+            type: 'doughnut',
             data: genderDistributionData,
             options: {
                 responsive: true,
+                cutout: '65%',
                 plugins: {
                     legend: {
                         display: true,
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
-                            font: { size: 16, weight: 'bold' },
+                            font: { size: 18, weight: 'bold' },
                             color: '#333',
-                            padding: 20
+                            padding: 24,
+                            boxWidth: 28,
+                            boxHeight: 18,
+                            borderRadius: 8
                         }
+                    },
+                    title: {
+                        display: false
                     },
                     tooltip: {
                         enabled: true,
@@ -329,23 +420,28 @@
                         backgroundColor: '#fff',
                         titleColor: '#222',
                         bodyColor: '#222',
-                        borderColor: '#888',
-                        borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8
+                        borderColor: '#4e73df',
+                        borderWidth: 2,
+                        padding: 14,
+                        cornerRadius: 12,
+                        bodyFont: { size: 18, weight: 'bold' },
+                        titleFont: { size: 18, weight: 'bold' }
                     },
                     datalabels: {
                         color: '#fff',
-                        borderRadius: 6,
-                        font: { weight: 'bold', size: 16 },
-                        padding: 8,
-                        anchor: 'end',
-                        align: 'start',
+                        borderRadius: 8,
+                        font: { weight: 'bold', size: 18 },
+                        padding: 10,
+                        anchor: 'center',
+                        align: 'center',
+                        // backgroundColor: function(context) {
+                        //     return context.dataset.backgroundColor[context.dataIndex];
+                        // },
                         formatter: function(value, context) {
                             if (!value || value === 0 || value === '0') return '';
                             let total = context.dataset.data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
                             let percent = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '';
-                            return value + ' (' + percent + ')';
+                            return value + '\n' + percent;
                         },
                         display: function(context) {
                             var v = context.dataset.data[context.dataIndex];
@@ -358,19 +454,26 @@
         });
 
         new Chart(document.getElementById('diagnosisChart'), {
-            type: 'pie',
+            type: 'doughnut',
             data: diagnosisData,
             options: {
                 responsive: true,
+                cutout: '65%',
                 plugins: {
                     legend: {
                         display: true,
-                        position: 'right',
+                        position: 'bottom',
                         labels: {
-                            font: { size: 16, weight: 'bold' },
+                            font: { size: 18, weight: 'bold' },
                             color: '#333',
-                            padding: 20
+                            padding: 24,
+                            boxWidth: 28,
+                            boxHeight: 18,
+                            borderRadius: 8
                         }
+                    },
+                    title: {
+                        display: false
                     },
                     tooltip: {
                         enabled: true,
@@ -386,23 +489,28 @@
                         backgroundColor: '#fff',
                         titleColor: '#222',
                         bodyColor: '#222',
-                        borderColor: '#888',
-                        borderWidth: 1,
-                        padding: 12,
-                        cornerRadius: 8
+                        borderColor: '#e74a3b',
+                        borderWidth: 2,
+                        padding: 14,
+                        cornerRadius: 12,
+                        bodyFont: { size: 18, weight: 'bold' },
+                        titleFont: { size: 18, weight: 'bold' }
                     },
                     datalabels: {
                         color: '#fff',
-                        borderRadius: 6,
-                        font: { weight: 'bold', size: 16 },
-                        padding: 8,
-                        anchor: 'end',
-                        align: 'start',
+                        borderRadius: 8,
+                        font: { weight: 'bold', size: 18 },
+                        padding: 10,
+                        anchor: 'center',
+                        align: 'center',
+                        // backgroundColor: function(context) {
+                        //     return context.dataset.backgroundColor[context.dataIndex];
+                        // },
                         formatter: function(value, context) {
                             if (!value || value === 0 || value === '0') return '';
                             let total = context.dataset.data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
                             let percent = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '';
-                            return value + ' (' + percent + ')';
+                            return value + '\n' + percent;
                         },
                         display: function(context) {
                             var v = context.dataset.data[context.dataIndex];
@@ -413,6 +521,89 @@
             },
             plugins: [ChartDataLabels]
         });
+
+        const ctxConsult = document.getElementById('consultationTrackingData');
+        if (ctxConsult) {
+            new Chart(ctxConsult, {
+                type: 'bar',
+                data: consultationTrackerData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Consultation Tracking Overview',
+                            font: { size: 22, weight: 'bold' },
+                            color: '#333',
+                            padding: { top: 10, bottom: 30 }
+                        },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    let value = context.parsed.y || context.parsed || 0;
+                                    let total = context.dataset.data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
+                                    let percent = total > 0 ? ' (' + ((value / total) * 100).toFixed(1) + '%)' : '';
+                                    return label + ': ' + value + percent;
+                                }
+                            },
+                            backgroundColor: '#fff',
+                            titleColor: '#222',
+                            bodyColor: '#222',
+                            borderColor: '#888',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            borderRadius: 8,
+                            font: { weight: 'bold', size: 16 },
+                            padding: 6,
+                            anchor: 'end',
+                            align: 'start',
+                            formatter: function(value, context) {
+                                if (!value || value === 0 || value === '0') return '';
+                                let data = context.dataset.data;
+                                let total = data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
+                                let percent = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '';
+                                return value + ' (' + percent + ')';
+                            },
+                            display: function(context) {
+                                var v = context.dataset.data[context.dataIndex];
+                                return v !== 0 && v !== '0' && !!v;
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#eee', borderColor: '#ccc', borderWidth: 2 },
+                            ticks: {
+                                font: { size: 15, weight: 'bold' },
+                                color: '#333',
+                                padding: 8
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#f5f5f5', borderColor: '#ccc', borderWidth: 2 },
+                            ticks: {
+                                font: { size: 15, weight: 'bold' },
+                                color: '#333',
+                                stepSize: 1,
+                                padding: 8
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        } else {
+            console.error('Element #consultationTrackingData not found!');
+        }
+        
 
         // new Chart(document.getElementById('adherenceChart'), {
         //     type: 'pie',

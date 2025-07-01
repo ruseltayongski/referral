@@ -1097,6 +1097,26 @@ class TelemedicineCtrl extends Controller
             )
             ->first();
 
+            $totalSeen = Tracking::where('date_seen', '!=', '0000-00-00 00:00:00')
+                ->where('telemedicine', 1)
+                ->where('referred_from', $user->facility_id)
+                ->count();
+
+            $totalFollowUp = Tracking::where('status', 'followup')
+                ->where('telemedicine', 1)
+                ->where('referred_from', $user->facility_id)
+                ->count();
+            
+            $totalAccepted = Tracking::where('status', 'accepted')
+                ->where('telemedicine', 1)
+                ->where('referred_from', $user->facility_id)
+                ->count();
+            
+            $totalReferred = Tracking::where('status', 'referred')
+                ->where('telemedicine', 1)
+                ->where('referred_from', $user->facility_id)
+                ->count();
+
         return view('doctor.reportConsultation', [
             'countDepartment' => $countSubOpd,
             'numberPatient' => $totalPatient,
@@ -1106,6 +1126,10 @@ class TelemedicineCtrl extends Controller
             'totalPatientDemographicPerAge' => $totalPatientDemographicPerAge,
             'totalPatientPerGender' => $totalPatientPerGender,
             'totalDiagnosticStat' => $totalDiagnosticStat,
+            'totalSeen' => $totalSeen,
+            'totalFollowUp' => $totalFollowUp,
+            'totalAccepted' => $totalAccepted,
+            'totalReferred' => $totalReferred,
         ]);
     }
 
