@@ -331,6 +331,7 @@ class ReferralCtrl extends Controller
     }
 
     public static function normalForm($id,$referral_status,$form_type) {
+       
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
@@ -868,7 +869,7 @@ class ReferralCtrl extends Controller
         //  $new_referral = $request->query();
 
         Session::put('totalReffered_for_Dashboard', $data->total());
-
+        
         return view('doctor.referred2',[
             'title' => 'Referred Patients',
             'data' => $data,
