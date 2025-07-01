@@ -22,27 +22,42 @@
 
 
     <!-- Overall Statistics -->
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Overall Telemedicine Statistics</h3>
+    <div class="panel panel-default" style="box-shadow: 0 4px 18px rgba(44,62,80,0.10); border-radius: 18px; border: none; margin-bottom: 32px;">
+        <div class="panel-heading" style="background: linear-gradient(90deg, #1cc88a 0%, #36b9cc 100%); color: #fff; border-radius: 18px 18px 0 0; padding: 24px 32px; box-shadow: 0 2px 8px rgba(78,115,223,0.10);">
+            <h3 class="panel-title" style="font-size: 1.5em; font-weight: bold; letter-spacing: 1px; margin: 0; display: flex; align-items: center;">
+                <i class="fa fa-pie-chart" style="margin-right: 12px; font-size: 1.2em;"></i>
+                Overall Telemedicine Statistics
+            </h3>
         </div>
-        <div class="panel-body">
-            <div class="row">
+        <div class="panel-body" style="background: #f8fafc; border-radius: 0 0 18px 18px; padding: 32px 24px;">
+            <div class="row text-center">
                 <div class="col-md-3">
-                    <h4>Consultations</h4>
-                    <p class="">{{$totalConsult}} consultations</p>
+                    <div style="background: #4e73df; color: #fff; border-radius: 12px; padding: 24px 10px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(78,115,223,0.10);">
+                        <div style="font-size: 2.2em; font-weight: bold; margin-bottom: 6px;"><i class="fa fa-comments"></i></div>
+                        <div style="font-size: 1.5em; font-weight: bold;">{{$totalConsult}}</div>
+                        <div style="font-size: 1.1em;">Consultations</div>
+                    </div>
                 </div>
                 <div class="col-md-3">
-                    <h4>Departments</h4>
-                    <p>{{ $countDepartment }}</p>
+                    <div style="background: #36b9cc; color: #fff; border-radius: 12px; padding: 24px 10px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(54,185,204,0.10);">
+                        <div style="font-size: 2.2em; font-weight: bold; margin-bottom: 6px;"><i class="fa fa-building"></i></div>
+                        <div style="font-size: 1.5em; font-weight: bold;">{{ $countDepartment }}</div>
+                        <div style="font-size: 1.1em;">Departments</div>
+                    </div>
                 </div>
                 <div class="col-md-3">
-                    <h4>Patients</h4>
-                    <p>{{ $numberPatient }} patients</p>
+                    <div style="background: #1cc88a; color: #fff; border-radius: 12px; padding: 24px 10px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(28,200,138,0.10);">
+                        <div style="font-size: 2.2em; font-weight: bold; margin-bottom: 6px;"><i class="fa fa-user"></i></div>
+                        <div style="font-size: 1.5em; font-weight: bold;">{{ $numberPatient }}</div>
+                        <div style="font-size: 1.1em;">Patients</div>
+                    </div>
                 </div>
                 <div class="col-md-3">
-                    <h4>Average Consultation Duration</h4>
-                    <p>{{$averageConsultationDuration}}</p>
+                    <div style="background: #f6c23e; color: #fff; border-radius: 12px; padding: 24px 10px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(246,194,62,0.10);">
+                        <div style="font-size: 2.2em; font-weight: bold; margin-bottom: 6px;"><i class="fa fa-clock-o"></i></div>
+                        <div style="font-size: 1.5em; font-weight: bold;">{{$averageConsultationDuration}}</div>
+                        <div style="font-size: 1.1em;">Avg. Consultation Duration</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -212,19 +227,17 @@
         let avgConsultPerPatient = numberPatient > 0 ? (totalConsult / numberPatient).toFixed(2) : 0;
         
         var consultationTrackerData = {
-            labels: ['Referred', 'Seen', 'Accepted', 'Follow Up'],
+            labels: ['Referred', 'Accepted', 'Follow Up'],
             datasets: [{
                 label: 'Consultation Tracking Data',
-                data: [{{$totalReferred}}, {{$totalSeen}}, {{$totalAccepted}}, {{$totalFollowUp}}],
+                data: [{{$totalReferred}}, {{$totalAccepted}}, {{$totalFollowUp}}],
                 backgroundColor: [
                     '#FF5733', // same as Consultations by Department
-                    '#33FF57',
                     '#3357FF',
                     '#FF33A1'
                 ],
                 borderColor: [
                     '#FF5733',
-                    '#33FF57',
                     '#3357FF',
                     '#FF33A1'
                 ],
@@ -232,7 +245,6 @@
                 borderRadius: 8,
                 hoverBackgroundColor: [
                     'rgba(255, 87, 51, 0.85)',
-                    'rgba(51, 255, 87, 0.85)',
                     'rgba(51, 87, 255, 0.85)',
                     'rgba(255, 51, 161, 0.85)'
                 ]
@@ -525,12 +537,24 @@
         const ctxConsult = document.getElementById('consultationTrackingData');
         if (ctxConsult) {
             new Chart(ctxConsult, {
-                type: 'bar',
+                type: 'pie',
                 data: consultationTrackerData,
                 options: {
                     responsive: true,
+                    cutout: '65%',
                     plugins: {
-                        legend: { display: false },
+                        legend: {
+                            display: true,
+                            position: 'bottom',
+                            labels: {
+                                font: { size: 18, weight: 'bold' },
+                                color: '#333',
+                                padding: 24,
+                                boxWidth: 28,
+                                boxHeight: 18,
+                                borderRadius: 8
+                            }
+                        },
                         title: {
                             display: true,
                             text: 'Consultation Tracking Overview',
@@ -542,8 +566,8 @@
                             enabled: true,
                             callbacks: {
                                 label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    let value = context.parsed.y || context.parsed || 0;
+                                    let label = context.label || '';
+                                    let value = context.parsed || 0;
                                     let total = context.dataset.data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
                                     let percent = total > 0 ? ' (' + ((value / total) * 100).toFixed(1) + '%)' : '';
                                     return label + ': ' + value + percent;
@@ -552,48 +576,32 @@
                             backgroundColor: '#fff',
                             titleColor: '#222',
                             bodyColor: '#222',
-                            borderColor: '#888',
-                            borderWidth: 1,
-                            padding: 12,
-                            cornerRadius: 8
+                            borderColor: '#4e73df',
+                            borderWidth: 2,
+                            padding: 14,
+                            cornerRadius: 12,
+                            bodyFont: { size: 18, weight: 'bold' },
+                            titleFont: { size: 18, weight: 'bold' }
                         },
                         datalabels: {
                             color: '#fff',
                             borderRadius: 8,
-                            font: { weight: 'bold', size: 16 },
-                            padding: 6,
-                            anchor: 'end',
-                            align: 'start',
+                            font: { weight: 'bold', size: 18 },
+                            padding: 10,
+                            anchor: 'center',
+                            align: 'center',
+                            // backgroundColor: function(context) {
+                            //     return context.dataset.backgroundColor[context.dataIndex];
+                            // },
                             formatter: function(value, context) {
                                 if (!value || value === 0 || value === '0') return '';
-                                let data = context.dataset.data;
-                                let total = data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
+                                let total = context.dataset.data.reduce((a, b) => a + (parseFloat(b) || 0), 0);
                                 let percent = total > 0 ? ((value / total) * 100).toFixed(1) + '%' : '';
-                                return value + ' (' + percent + ')';
+                                return value + '\n' + percent;
                             },
                             display: function(context) {
                                 var v = context.dataset.data[context.dataIndex];
                                 return v !== 0 && v !== '0' && !!v;
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: '#eee', borderColor: '#ccc', borderWidth: 2 },
-                            ticks: {
-                                font: { size: 15, weight: 'bold' },
-                                color: '#333',
-                                padding: 8
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#f5f5f5', borderColor: '#ccc', borderWidth: 2 },
-                            ticks: {
-                                font: { size: 15, weight: 'bold' },
-                                color: '#333',
-                                stepSize: 1,
-                                padding: 8
                             }
                         }
                     }
