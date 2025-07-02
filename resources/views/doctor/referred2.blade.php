@@ -299,8 +299,6 @@ $user = Session::get('auth');
                                     @endif
                                @endif
                             @endif
-                      
-                            @if($row->telemedicine == 1)
 
                             <a data-toggle="modal" href="#EmrForm" 
                                data-patient="{{ $row->patient_id }}"
@@ -310,7 +308,6 @@ $user = Session::get('auth');
                                 <i class="fa fa-folder"></i> PMR 
                             </a>
                                
-                            @endif
                         </div>
                     </div>
                 @endforeach
