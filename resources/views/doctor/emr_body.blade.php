@@ -382,7 +382,7 @@ if (!empty($emr_forms_data)) {
                             <form method="GET" action="{{ url('doctor/referred') }}">
                                 @csrf
                                 <input type="hidden" name="referredCode" value="{{ $formData->code }}">
-                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                <button type="submit" class="btn btn-outline-primary btn-sm" formtarget="_blank">
                                     <i class="bi bi-search"></i> Track Patient
                                 </button>
                             </form>
