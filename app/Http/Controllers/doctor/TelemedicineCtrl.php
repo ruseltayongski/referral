@@ -1004,6 +1004,14 @@ class TelemedicineCtrl extends Controller
             ->when($from && $to, $dateFilter)
             ->distinct('subOpd.description')
             ->count('subOpd.description');
+    
+         // Count unique departments Incoming
+        $countSubOpdIncoming = Tracking::join('subOpd', 'tracking.subopd_id', '=', 'subOpd.id')
+            ->where('telemedicine', 1)
+            ->where('referred_to', $user->facility_id)
+            ->when($from && $to, $dateFilter)
+            ->distinct('subOpd.description')
+            ->count('subOpd.description');
 
         // Count unique patients
         $totalPatient = Tracking::where('telemedicine', 1)
@@ -1012,6 +1020,16 @@ class TelemedicineCtrl extends Controller
             ->when($from && $to, $dateFilter)
             ->distinct('id')
             ->count('id');
+
+        // Count unique patients Incoming
+        $totalPatientIncoming = Tracking::where('telemedicine', 1)
+            ->where('referred_to', $user->facility_id)
+            ->where('subopd_id', '!=', '')
+            ->when($from && $to, $dateFilter)
+            ->distinct('id')
+            ->count('id');
+
+        
 
         // Average consultation duration in minutes
         $averageConsultationMinutes = Tracking::where('telemedicine', 1)
@@ -1034,9 +1052,39 @@ class TelemedicineCtrl extends Controller
             $formattedAvgDuration = "{$avgMinutes} minute" . ($avgMinutes > 1 ? 's' : '');
         }
 
+
+         // Average consultation duration in minutes Incoming
+        $averageConsultationMinutesIncoming = Tracking::where('telemedicine', 1)
+            ->where('referred_to', $user->facility_id)
+            ->where('subopd_id', '!=', '')
+            ->when($from && $to, $dateFilter)
+            ->avg('consultation_duration');
+
+        $averageConsultationMinutesIncoming = (int) round($averageConsultationMinutesIncoming);
+
+        $avgHoursIncoming = floor($averageConsultationMinutesIncoming / 60);
+        $avgMinutesIncoming = $averageConsultationMinutesIncoming % 60;
+
+        if ($avgHoursIncoming > 0) {
+            $formattedAvgDurationIncoming = "{$avgHoursIncoming} hr" . ($avgHoursIncoming > 1 ? 's' : '');
+            if ($avgMinutes > 0) {
+                $formattedAvgDurationIncoming .= " and {$avgMinutesIncoming} minute" . ($avgMinutesIncoming > 1 ? 's' : '');
+            }
+        } else {
+            $formattedAvgDurationIncoming = "{$avgMinutesIncoming} minute" . ($avgMinutesIncoming > 1 ? 's' : '');
+        }
+
         // Total consultations
         $totalConsultation =  Tracking::where('telemedicine', 1)
             ->where('referred_from', $user->facility_id)
+            ->where('subopd_id', '!=', '')
+            ->when($from && $to, $dateFilter)
+            ->distinct('id')
+            ->count('id');
+        
+        // Total consultations
+        $totalConsultationIncoming =  Tracking::where('telemedicine', 1)
+            ->where('referred_to', $user->facility_id)
             ->where('subopd_id', '!=', '')
             ->when($from && $to, $dateFilter)
             ->distinct('id')
@@ -1046,6 +1094,15 @@ class TelemedicineCtrl extends Controller
         $totalConsulPerDepartment = Tracking::join('subOpd', 'tracking.subopd_id', '=', 'subOpd.id')
             ->where('tracking.telemedicine', 1)
             ->where('tracking.referred_from', $user->facility_id)
+            ->when($from && $to, $dateFilter)
+            ->selectRaw('subOpd.description, COUNT(tracking.id) as total_consultations')
+            ->groupBy('subOpd.id', 'subOpd.description')
+            ->get();
+
+         // Consultations per department Incoming
+        $totalConsulPerDepartmentIncoming = Tracking::join('subOpd', 'tracking.subopd_id', '=', 'subOpd.id')
+            ->where('tracking.telemedicine', 1)
+            ->where('tracking.referred_to', $user->facility_id)
             ->when($from && $to, $dateFilter)
             ->selectRaw('subOpd.description, COUNT(tracking.id) as total_consultations')
             ->groupBy('subOpd.id', 'subOpd.description')
@@ -1065,10 +1122,35 @@ class TelemedicineCtrl extends Controller
             ")
             ->first();
 
+            // Patient demographics per age Incoming
+        $totalPatientDemographicPerAgeIncoming = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
+            ->where('tracking.telemedicine', 1)
+            ->where('tracking.referred_to', $user->facility_id)
+            ->when($from && $to, $dateFilter)
+            ->selectRaw("
+                COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) < 18 THEN 1 END) AS below_18,
+                COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) BETWEEN 18 AND 30 THEN 1 END) AS age_18_30,
+                COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) BETWEEN 31 AND 45 THEN 1 END) AS age_31_45,
+                COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) BETWEEN 46 AND 60 THEN 1 END) AS age_46_60,
+                COUNT(CASE WHEN TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) > 60 THEN 1 END) AS above_60
+            ")
+            ->first();
+
         // Patient demographics per gender
         $totalPatientPerGender = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
             ->where('tracking.telemedicine', 1)
             ->where('tracking.referred_from', $user->facility_id)
+            ->when($from && $to, $dateFilter)
+            ->selectRaw("
+                COUNT(CASE WHEN patients.sex = 'Male' THEN 1 END) AS male_count,
+                COUNT(CASE WHEN patients.sex = 'Female' THEN 1 END) AS female_count
+            ")
+            ->first();
+
+        // Patient demographics per gender incoming
+        $totalPatientPerGenderIncoming = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
+            ->where('tracking.telemedicine', 1)
+            ->where('tracking.referred_to', $user->facility_id)
             ->when($from && $to, $dateFilter)
             ->selectRaw("
                 COUNT(CASE WHEN patients.sex = 'Male' THEN 1 END) AS male_count,
@@ -1097,39 +1179,92 @@ class TelemedicineCtrl extends Controller
             )
             ->first();
 
+             // Diagnostic statistics
+            $totalDiagnosticStatIncoming = Tracking::join('patients', 'tracking.patient_id', '=', 'patients.id')
+                ->join('icd', 'icd.code', '=', 'tracking.code')
+                ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+                ->where('tracking.telemedicine', 1)
+                ->where('tracking.referred_to', $user->facility_id)
+                ->when($from && $to, $dateFilter)
+                ->select(
+                    DB::raw("SUM(CASE WHEN icd10.description LIKE '%Hypertension%' THEN 1 ELSE 0 END) as hypertension_count"),
+                    DB::raw("SUM(CASE WHEN icd10.description LIKE '%Diabetes%' THEN 1 ELSE 0 END) as diabetes_count"),
+                    DB::raw("SUM(CASE WHEN icd10.description LIKE '%Respiratory%' THEN 1 ELSE 0 END) as respiratory_count"),
+                    DB::raw("SUM(CASE WHEN icd10.description LIKE '%Cancer%' THEN 1 ELSE 0 END) as cancer_count"),
+                    DB::raw("SUM(CASE WHEN 
+                        icd10.description NOT LIKE '%Hypertension%' AND
+                        icd10.description NOT LIKE '%Diabetes%' AND
+                        icd10.description NOT LIKE '%Respiratory%' AND
+                        icd10.description NOT LIKE '%Cancer%'
+                        THEN 1 ELSE 0 END) as others_count")
+                )
+                ->first();
+
             $totalSeen = Tracking::where('date_seen', '!=', '0000-00-00 00:00:00')
                 ->where('telemedicine', 1)
                 ->where('referred_from', $user->facility_id)
                 ->count();
-
+            
+            // Count total seen patients
             $totalFollowUp = Tracking::where('status', 'followup')
                 ->where('telemedicine', 1)
                 ->where('referred_from', $user->facility_id)
                 ->count();
             
+             // Count total seen patients Incoming
+            $totalFollowUpIncoming = Tracking::where('status', 'followup')
+                ->where('telemedicine', 1)
+                ->where('referred_to', $user->facility_id)
+                ->count();
+
+            // Count total accepted patients
             $totalAccepted = Tracking::where('status', 'accepted')
                 ->where('telemedicine', 1)
                 ->where('referred_from', $user->facility_id)
                 ->count();
             
+             // Count total accepted patients Incoming
+            $totalAcceptedIncoming = Tracking::where('status', 'accepted')
+                ->where('telemedicine', 1)
+                ->where('referred_to', $user->facility_id)
+                ->count();
+
+            // Count total referred patients
             $totalReferred = Tracking::where('status', 'referred')
                 ->where('telemedicine', 1)
                 ->where('referred_from', $user->facility_id)
                 ->count();
+            
+            // Count total referred patients Incoming
+            $totalReferredIncoming = Tracking::where('status', 'referred')
+                ->where('telemedicine', 1)
+                ->where('referred_to', $user->facility_id)
+                ->count();
 
         return view('doctor.reportConsultation', [
             'countDepartment' => $countSubOpd,
+            'countDepartmentIncoming' => $countSubOpdIncoming,
             'numberPatient' => $totalPatient,
+            'numberPatientIncoming' => $totalPatientIncoming,
             'totalConsult' => $totalConsultation,
+            'totalConsultIncoming' => $totalConsultationIncoming,
             'totalperDepartment' => $totalConsulPerDepartment,
+            'totalperDepartmentIncoming' => $totalConsulPerDepartmentIncoming,
             'averageConsultationDuration' => $formattedAvgDuration,
+            'averageConsultationDurationIncoming' => $formattedAvgDurationIncoming,
             'totalPatientDemographicPerAge' => $totalPatientDemographicPerAge,
+            'totalPatientDemographicPerAgeIncoming' => $totalPatientDemographicPerAgeIncoming,
             'totalPatientPerGender' => $totalPatientPerGender,
+            'totalPatientPerGenderIncoming' => $totalPatientPerGenderIncoming,
             'totalDiagnosticStat' => $totalDiagnosticStat,
+            'totalDiagnosticStatIncoming' => $totalDiagnosticStatIncoming,
             'totalSeen' => $totalSeen,
             'totalFollowUp' => $totalFollowUp,
+            'totalFollowUpIncoming' => $totalFollowUpIncoming,
             'totalAccepted' => $totalAccepted,
+            'totalAcceptedIncoming' => $totalAcceptedIncoming,
             'totalReferred' => $totalReferred,
+            'totalReferredIncoming' => $totalReferredIncoming,
         ]);
     }
 
