@@ -19,8 +19,7 @@
             <option value="incoming">Incoming</option>
         </select>
     </form>
-
-
+   
     <!-- Overall Statistics -->
     <div class="panel panel-default" style="box-shadow: 0 4px 18px rgba(44,62,80,0.10); border-radius: 18px; border: none; margin-bottom: 32px;">
         <div class="panel-heading" style="background: linear-gradient(90deg, #1cc88a 0%, #36b9cc 100%); color: #fff; border-radius: 18px 18px 0 0; padding: 24px 32px; box-shadow: 0 2px 8px rgba(78,115,223,0.10);">
@@ -196,11 +195,11 @@
             </div>
         </div>
     </div>
-
-
-    <div class="text-center" style="margin: 32px 0 0 0;">
-        <button class="btn btn-primary" style="padding: 12px 32px; font-size: 1.2em; border-radius: 8px; box-shadow: 0 2px 8px rgba(44,62,80,0.10);">Download Report</button>
-    </div>
+    <a href="{{ route('export.consultation.report', ['from_date' => request('from_date'), 'to_date' => request('to_date')]) }}" 
+        class="btn btn-primary" 
+        style="padding: 12px 32px; font-size: 1.2em; border-radius: 8px; box-shadow: 0 2px 8px rgba(44,62,80,0.10);">
+        Download Report
+    </a>
 </div>
 
 @endsection

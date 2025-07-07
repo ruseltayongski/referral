@@ -21,6 +21,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Prophecy\Exception\Doubler\ReturnByReferenceException;
 use DateTime;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\ConsultationReportExport;
 
 class TelemedicineCtrl extends Controller
 {
@@ -984,9 +986,8 @@ class TelemedicineCtrl extends Controller
 
         return $appointedDates;
     }
-    public function countconsultation(Request $request) // <-- add Request $request
-    {
-        $user = Session::get('auth');
+    private function getConsultationReportData(Request $request){
+          $user = Session::get('auth');
         $from = $request->input('from_date');
         $to = $request->input('to_date');
 
@@ -1241,7 +1242,7 @@ class TelemedicineCtrl extends Controller
                 ->where('referred_to', $user->facility_id)
                 ->count();
 
-        return view('doctor.reportConsultation', [
+        return [
             'countDepartment' => $countSubOpd,
             'countDepartmentIncoming' => $countSubOpdIncoming,
             'numberPatient' => $totalPatient,
@@ -1265,9 +1266,120 @@ class TelemedicineCtrl extends Controller
             'totalAcceptedIncoming' => $totalAcceptedIncoming,
             'totalReferred' => $totalReferred,
             'totalReferredIncoming' => $totalReferredIncoming,
-        ]);
+        ];
+    }
+    public function countconsultation(Request $request) // <-- add Request $request
+    {
+      $data = $this->getConsultationReportData($request);
+      return view('doctor.reportConsultation', $data);
     }
 
+    public function exportConsultationReport(Request $request){
+        $data = $this->getConsultationReportData($request);
+
+        // Build the export table: Main stats, then per-department breakdowns
+        $export = [];
+
+        // Main statistics (outgoing)
+        $export[] = ['Telemedicine Consultation Report'];
+        $export[] = ['Date Range', $request->input('from_date') . ' to ' . $request->input('to_date')];
+        $export[] = [''];
+        $export[] = [''];
+        $export[] = ['Outgoing Consultations'];
+        $export[] = ['Total Consultations','Total Unique Patients', 'Average Consultation Duration', 'Total Seen', 'Total Follow Up', 'Total Accepted','Total Referred'];
+        $export[] = [$data['totalConsult'], $data['numberPatient'], $data['averageConsultationDuration'], $data['totalSeen'], $data['totalFollowUp'], $data['totalAccepted'], $data['totalReferred']];
+        $export[] = [''];
+        $export[] = [''];
+
+        // Per Department (outgoing)
+        $export[] = ['Consultations by Department (Outgoing)'];
+        $export[] = ['Department', 'Total Consultations'];
+        foreach ($data['totalperDepartment'] as $row) {
+            $export[] = [$row['description'], $row['total_consultations']];
+        }
+        $export[] = [''];
+        $export[] = [''];
+        $export[] = ['Age Distribution (Outgoing)'];
+        $export[] = ['Below 18', '18-30', '31-45', '46-60', 'Above 60'];
+        $export[] = [
+            $data['totalPatientDemographicPerAge']->below_18,
+            $data['totalPatientDemographicPerAge']->age_18_30,
+            $data['totalPatientDemographicPerAge']->age_31_45,
+            $data['totalPatientDemographicPerAge']->age_46_60,
+            $data['totalPatientDemographicPerAge']->above_60
+        ];
+        $export[] = [''];
+        $export[] = [''];
+        $export[] = ['Diagnosis Statistics (Outgoing)'];
+        $export[] = ['Hypertension', 'Diabetes', 'Respiratory', 'Cancer', 'Others'];
+        $export[] = [
+            $data['totalDiagnosticStat']->hypertension_count,
+            $data['totalDiagnosticStat']->diabetes_count,
+            $data['totalDiagnosticStat']->respiratory_count,
+            $data['totalDiagnosticStat']->cancer_count,
+            $data['totalDiagnosticStat']->others_count
+        ];
+        $export[] = [''];
+        $export[] = [''];
+        $export[] = ['Gender Distribution (Outgoing)'];
+        $export[] = ['Male', 'Female'];
+        $export[] = [
+            $data['totalPatientPerGender']->male_count,
+            $data['totalPatientPerGender']->female_count
+        ];
+        $export[] = [''];
+        $export[] = [''];
+        // Main statistics (incoming)
+        $export[] = ['Incoming Consultations'];
+        $export[] = ['Total Consultations', 'Total Unique Patients', 'Average Consultation Duration', 'Total Follow Up', 'Total Accepted', 'Total Referred',];
+        $export[] = [$data['totalConsultIncoming'], $data['numberPatientIncoming'], $data['averageConsultationDurationIncoming'], $data['totalFollowUpIncoming'],  $data['totalAcceptedIncoming'], $data['totalReferredIncoming']];
+        $export[] = [''];
+        $export[] = [''];
+        // Per Department (incoming)
+        $export[] = ['Consultations by Department (Incoming)'];
+        $export[] = ['Department', 'Total Consultations'];
+        foreach ($data['totalperDepartmentIncoming'] as $row) {
+            $export[] = [$row['description'], $row['total_consultations']];
+        }
+        $export[] = [''];
+        $export[] = [''];
+        $export[] = ['Age Distribution (Incoming)'];
+        $export[] = ['Below 18', '18-30', '31-45', '46-60', 'Above 60'];
+        $export[] = [
+            $data['totalPatientDemographicPerAgeIncoming']->below_18,
+            $data['totalPatientDemographicPerAgeIncoming']->age_18_30,
+            $data['totalPatientDemographicPerAgeIncoming']->age_31_45,
+            $data['totalPatientDemographicPerAgeIncoming']->age_46_60,
+            $data['totalPatientDemographicPerAgeIncoming']->above_60
+        ];
+        $export[] = [''];
+        $export[] = [''];
+        $export[] = ['Diagnosis Statistics (Incoming)'];
+        $export[] = ['Hypertension', 'Diabetes', 'Respiratory', 'Cancer', 'Others'];
+        $export[] = [
+            $data['totalDiagnosticStatIncoming']->hypertension_count,
+            $data['totalDiagnosticStatIncoming']->diabetes_count,
+            $data['totalDiagnosticStatIncoming']->respiratory_count,
+            $data['totalDiagnosticStatIncoming']->cancer_count,
+            $data['totalDiagnosticStatIncoming']->others_count
+        ];
+        $export[] = [''];
+        $export[] = [''];
+        $export[] = ['Gender Distribution (Incoming)'];
+        $export[] = ['Male', 'Female'];
+        $export[] = [
+            $data['totalPatientPerGenderIncoming']->male_count,
+            $data['totalPatientPerGenderIncoming']->female_count
+        ];
+        $export[] = [''];
+        $export[] = [''];
+        // You can add more sections for demographics/diagnosis if needed
+
+        return Excel::download(
+            new ConsultationReportExport($export, []),
+            'consultation_report_' . date('Y-m-d_H-i-s') . '.xlsx'
+        );
+    }
 
     public function saveCallDuration(Request $req){
         
