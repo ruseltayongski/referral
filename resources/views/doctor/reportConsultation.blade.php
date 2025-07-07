@@ -9,16 +9,29 @@
 
         <!-- Date Filter Form -->
 
-    <form method="GET" action="{{ url('/count/Consultation') }}" class="form-inline text-left" style="margin-bottom: 20px; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <label for="from_date">From:</label>
-        <input type="date" name="from_date" id="from_date" value="{{ request('from_date') }}" class="form-control filter-input" required>
-        <label for="to_date" style="margin-left:10px;">To:</label>
-        <input type="date" name="to_date" id="to_date" value="{{ request('to_date') }}" class="form-control filter-input" required>
-        <select id="consultationType" class="form-control filter-input" style="margin-left:10px; min-width: 140px;">
-            <option value="outgoing">Outgoing</option>
-            <option value="incoming">Incoming</option>
-        </select>
-    </form>
+    <div class="row mb-3" style="margin-bottom: 20px;">
+        <div class="col-lg-10 col-md-9 col-sm-12 d-flex flex-wrap align-items-center" style="gap: 10px;">
+            <form method="GET" action="{{ url('/count/Consultation') }}" class="form-inline d-flex flex-wrap align-items-center w-100" style="gap: 10px; margin-bottom: 0;">
+                <label for="from_date">From:</label>
+                <input type="date" name="from_date" id="from_date" value="{{ request('from_date') }}" class="form-control filter-input" required>
+                <label for="to_date" style="margin-left:10px;">To:</label>
+                <input type="date" name="to_date" id="to_date" value="{{ request('to_date') }}" class="form-control filter-input" required>
+                <select id="consultationType" class="form-control filter-input" style="margin-left:10px; min-width: 140px;">
+                    <option value="outgoing">Outgoing</option>
+                    <option value="incoming">Incoming</option>
+                </select>
+            </form>
+        </div>
+        <div class="col-lg-2 col-md-3 col-sm-12 d-flex align-items-center justify-content-end" style="min-width: 180px; margin-top: 8px; margin-bottom: 8px;">
+            <a href="{{ route('export.consultation.report', ['from_date' => request('from_date'), 'to_date' => request('to_date')]) }}" 
+                class="btn btn-primary export-btn w-100"
+                style="padding: 10px 24px; font-size: 1.08em; border-radius: 8px; box-shadow: 0 2px 8px rgba(44,62,80,0.10); font-weight: 600; display: flex; align-items: center; gap: 8px; background: linear-gradient(90deg, #4e73df 0%, #36b9cc 100%); border: none;"
+                title="Download Excel Report">
+                <i class="fa fa-download" style="font-size: 1.1em;"></i>
+                <span style="font-size: 0.75em;">Download Report</span>
+            </a>
+        </div>
+    </div>
    
     <!-- Overall Statistics -->
     <div class="panel panel-default" style="box-shadow: 0 4px 18px rgba(44,62,80,0.10); border-radius: 18px; border: none; margin-bottom: 32px;">
@@ -195,11 +208,7 @@
             </div>
         </div>
     </div>
-    <a href="{{ route('export.consultation.report', ['from_date' => request('from_date'), 'to_date' => request('to_date')]) }}" 
-        class="btn btn-primary" 
-        style="padding: 12px 32px; font-size: 1.2em; border-radius: 8px; box-shadow: 0 2px 8px rgba(44,62,80,0.10);">
-        Download Report
-    </a>
+    <!-- Download button moved to beside filter form above -->
 </div>
 
 @endsection
@@ -219,6 +228,26 @@
     }
     .filter-input:focus {
         border-color: #3357FF;
+    }
+    .export-btn {
+        background: linear-gradient(90deg, #4e73df 0%, #36b9cc 100%) !important;
+        color: #fff !important;
+        border: none !important;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(44,62,80,0.10);
+        padding: 10px 24px;
+        font-size: 1.08em;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background 0.2s, box-shadow 0.2s;
+    }
+    .export-btn:hover, .export-btn:focus {
+        background: linear-gradient(90deg, #36b9cc 0%, #4e73df 100%) !important;
+        color: #fff !important;
+        box-shadow: 0 4px 16px rgba(44,62,80,0.16);
+        text-decoration: none;
     }
 </style>
 <script>
