@@ -52,6 +52,8 @@ class ConsultationReportExport implements FromArray, WithHeadings, WithStyles
         // Section titles and table headers to match (first cell)
         $sectionTitles = [
             'Telemedicine Consultation Report',
+            'Date Range',
+            'To',
             'Outgoing Consultations',
             'Incoming Consultations',
             'Consultations by Department (Outgoing)',
@@ -148,34 +150,44 @@ class ConsultationReportExport implements FromArray, WithHeadings, WithStyles
             $fontColor = $blackText;
 
             // Section header color
+            // Only color if the row is a single-cell title row (merged), not for multi-cell rows like 'Date Range' and 'to' on the same row
             if ($isTitleRow && in_array(trim((string)$row[0]), $sectionTitles)) {
-                $fillColor = $sectionHeaderColor;
-                $fontColor = $whiteText;
+                // Do not color if this is the row with both 'Date Range' and 'to' (i.e., more than one non-empty cell)
+                $nonEmptyCells = array_filter($row, function($cell) { return trim((string)$cell) !== ''; });
+                if (count($nonEmptyCells) == 1) {
+                    // Single-cell title row: color as section header
+                    $fillColor = $sectionHeaderColor;
+                    $fontColor = $blackText;
+                } else {
+                    // Multi-cell (e.g., 'Date Range' and 'to' on same row): no color
+                    $fillColor = null;
+                    $fontColor = $blackText;
+                }
             }
             // Diagnosis Statistics section header
             if ($isTitleRow && in_array(trim((string)$row[0]), $diagnosisHeaderTitles)) {
                 $fillColor = $diagnosisHeaderColor;
-                $fontColor = $whiteText;
+                $fontColor = $blackText;
             }
             // Gender Distribution section header
             if ($isTitleRow && in_array(trim((string)$row[0]), $genderHeaderTitles)) {
                 $fillColor = $genderHeaderColor;
-                $fontColor = $whiteText;
+                $fontColor = $blackText;
             }
             // Department table header (always apply, even if previous if matched)
             if ($row === $departmentTableHeader) {
                 $fillColor = $departmentHeaderColor;
-                $fontColor = $whiteText;
+                $fontColor = $blackText;
             }
             // Statistics table header
             if (in_array($row, $statisticsTableHeader)) {
                 $fillColor = $statisticsHeaderColor;
-                $fontColor = $whiteText;
+                $fontColor = $blackText;
             }
             // Age distribution header
             if ($row === $ageHeader) {
                 $fillColor = $ageHeaderColor;
-                $fontColor = $whiteText;
+                $fontColor = $blackText;
             }
             // Main statistics card headers (row with 4 columns, each cell is a stat header)
             elseif ($colCount === 4 && isset($row[0], $row[1], $row[2], $row[3])) {
@@ -198,7 +210,7 @@ class ConsultationReportExport implements FromArray, WithHeadings, WithStyles
                                 'startColor' => ['argb' => $mainStatsHeaderColors[trim((string)$cell)]],
                             ],
                             'font' => [
-                                'color' => ['argb' => $whiteText],
+                                'color' => ['argb' => $blackText],
                             ],
                         ]);
                     }
@@ -213,7 +225,6 @@ class ConsultationReportExport implements FromArray, WithHeadings, WithStyles
                         $cellRef = $colLetter . $excelRow;
                         $sheet->getStyle($cellRef)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
                         $sheet->getStyle($cellRef)->getFill()->getStartColor()->setARGB($diagnosisStatsColors[$cellText]);
-                        $sheet->getStyle($cellRef)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color($whiteText));
                     }
                 }
             }
@@ -226,7 +237,6 @@ class ConsultationReportExport implements FromArray, WithHeadings, WithStyles
                         $cellRef = $colLetter . $excelRow;
                         $sheet->getStyle($cellRef)->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID);
                         $sheet->getStyle($cellRef)->getFill()->getStartColor()->setARGB($genderStatsColors[$cellText]);
-                        $sheet->getStyle($cellRef)->getFont()->setColor(new \PhpOffice\PhpSpreadsheet\Style\Color($whiteText));
                     }
                 }
             }
