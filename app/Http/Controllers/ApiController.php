@@ -1878,6 +1878,30 @@ class ApiController extends Controller
         return 'http://180.232.110.32/';
     }
 
+    public static function fileUploadManual($tempPath, $type, $fileName, $username)
+    {
+        $data = [
+            'file_upload' => curl_file_create($tempPath, $type, $fileName),
+            'username'    => $username,
+        ];
+
+        $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            throw new \Exception(curl_error($ch));
+        }
+
+        curl_close($ch);
+    }
+
     public static function fileUpload(Request $request) {
         $username = Session::get('auth')->username;
         for($i = 0; $i < count(array_filter($_FILES["file_upload"]["tmp_name"])); $i++) {

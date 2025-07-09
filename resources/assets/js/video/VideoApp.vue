@@ -185,7 +185,7 @@ export default {
               if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
                   this.reco_count++
                   $("#reco_count").html(this.reco_count)
-                  this.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message)
+                  this.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message,event.payload.filepath)
                   try {
                       let objDiv = document.getElementById(event.payload.code);
                       objDiv.scrollTop = objDiv.scrollHeight;
@@ -564,20 +564,85 @@ export default {
         });
         
     },
-    appendReco(code, name_sender, facility_sender, date_now, msg) {
-        let picture_sender = $("#broadcasting_url").val()+"/resources/img/receiver.png";
-        let message = msg.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-        $(".reco-body"+code).append('<div class=\'direct-chat-msg left\'>\n' +
-            '                    <div class=\'direct-chat-info clearfix\'>\n' +
-            '                    <span class="direct-chat-name text-info pull-left">'+facility_sender+'</span><br>'+
-            '                    <span class=\'direct-chat-name pull-left\'>'+name_sender+'</span>\n' +
-            '                    <span class=\'direct-chat-timestamp pull-right\'>'+date_now+'</span>\n' +
-            '                    </div>\n' +
-            '                    <img class=\'direct-chat-img\' title=\'\' src="'+picture_sender+'" alt=\'Message User Image\'>\n' +
-            '                    <div class=\'direct-chat-text\'>\n' +
-            '                    '+message+'\n' +
-            '                    </div>\n' +
-            '                    </div>')
+    // appendReco(code, name_sender, facility_sender, date_now, msg) {
+    //     let picture_sender = $("#broadcasting_url").val()+"/resources/img/receiver.png";
+    //     let message = msg.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
+    //     $(".reco-body"+code).append('<div class=\'direct-chat-msg left\'>\n' +
+    //         '                    <div class=\'direct-chat-info clearfix\'>\n' +
+    //         '                    <span class="direct-chat-name text-info pull-left">'+facility_sender+'</span><br>'+
+    //         '                    <span class=\'direct-chat-name pull-left\'>'+name_sender+'</span>\n' +
+    //         '                    <span class=\'direct-chat-timestamp pull-right\'>'+date_now+'</span>\n' +
+    //         '                    </div>\n' +
+    //         '                    <img class=\'direct-chat-img\' title=\'\' src="'+picture_sender+'" alt=\'Message User Image\'>\n' +
+    //         '                    <div class=\'direct-chat-text\'>\n' +
+    //         '                    '+message+'\n' +
+    //         '                    </div>\n' +
+    //         '                    </div>')
+    // },
+    appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
+      console.log("inside the recos append:", filepath);
+      let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
+      let message = msg && msg.trim() !== ""
+          ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
+          : '';
+
+      let fileHtml = '';
+      const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+      const pdfExtensions = ['pdf'];
+
+      if (filepath && filepath.length > 0) {
+          fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
+
+          filepath.forEach(file => {
+              if (file.trim() !== '') {
+                  const url = new URL(file);
+                  const fileName = url.pathname.split('/').pop();
+                  const extension = fileName.split('.').pop().toLowerCase();
+                  const displayName = fileName.length > 10 ? fileName.substring(0, 7) + '...' : fileName;
+
+                  const isPDF = pdfExtensions.includes(extension);
+                  const icon = isPDF 
+                      ? $("#broadcasting_url").val() + '/public/fileupload/pdffile.png'
+                      : $("#broadcasting_url").val() + '/public/fileupload/imageFile.png';
+
+                  fileHtml += `
+                      <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
+                          <a href="${file}" target="_blank" rel="noopener">
+                              <img class="attachment-thumb file-preview-trigger"
+                                  src="${icon}"
+                                  alt="${extension.toUpperCase()} file"
+                                  data-file-type="${extension}"
+                                  data-file-url="${file}"
+                                  data-file-name="${fileName}"
+                                  style="width: 50px; height: 50px; object-fit: contain; border:1px solid green;">
+                          </a>
+                          <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
+                              ${displayName}
+                          </div>
+                      </div>`;
+              }
+          });
+
+          fileHtml += '</div>';
+      }
+
+      let messageColor = 'style="margin-top: 5px;"';
+      let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
+
+      $(".reco-body" + code).append(`
+          <div class='direct-chat-msgs left'>
+              <div class='direct-chat-info clearfix'>
+                  <span class="direct-chat-name text-info pull-left">${facility_sender}</span><br>
+                  <span class='direct-chat-name pull-left'>${name_sender}</span>
+                  <span class='direct-chat-timestamp pull-right'>${date_now}</span>
+              </div>
+              <img class='direct-chat-img' title='' src="${picture_sender}" alt='Message User Image'>
+              <div class='direct-chat-text'>
+                  ${fileHtml}
+                  ${messageText}
+              </div>
+          </div>
+      `);
     },
     async startBasicCall() {
       // Create an instance of the Agora Engine

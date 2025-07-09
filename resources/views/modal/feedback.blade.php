@@ -42,6 +42,94 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<!-- File Preview Modal - Bootstrap 3 Style -->
+<div class="modal fade" id="filePreviewModalReco" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button> -->
+                <h4 class="modal-title" id="filePreviewModalLabel">
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                    File Preview
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="file-preview-container" id="filePreviewContainer">
+                    <!-- File preview content will be inserted here -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    Cancel
+                </button>
+                <!-- <button type="button" class="btn btn-primary" id="confirmUpload">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    Insert File
+                </button> -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- File Preview Modal dynamic files -->
+<div class="modal fade modal-front" id="filePreviewContentReco" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="filePreviewModalLabel">
+                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                    File Preview
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="file-preview-container" id="filePreviewContainer" style="position: relative; min-height: 400px;">
+                    {{-- Navigation Controls --}}
+                    <div class="navigation-controls" style="position: absolute; top: 50%; left: 10px; transform: translateY(-50%); z-index: 10;">
+                        <button class="nav-btn" id="prevBtn" title="Previous File" 
+                                style="background: rgba(0,0,0,0.7); color: white; border: none; padding: 15px 20px; border-radius: 50%; cursor: pointer; font-size: 18px;">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </button>
+                    </div>
+                    
+                    <div class="navigation-controls" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); z-index: 10;">
+                        <button class="nav-btn" id="nextBtn" title="Next File"
+                                style="background: rgba(0,0,0,0.7); color: white; border: none; padding: 15px 20px; border-radius: 50%; cursor: pointer; font-size: 18px;">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+                    </div>
+                    
+                    {{-- File Counter --}}
+                    <div id="fileCounter" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; padding: 5px 10px; border-radius: 15px; font-size: 12px; z-index: 10;">
+                        1 of 1
+                    </div>
+                    
+                    {{-- File Info --}}
+                    <div id="fileInfo" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; z-index: 10;">
+                        Loading...
+                    </div>
+                    
+                    {{-- File Preview Content --}}
+                    <div class="file-preview-content" id="filePreviewContent" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 400px;">
+                        <!-- File preview content will be inserted here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    Close
+                </button>
+                <button type="button" class="btn btn-primary" id="downloadBtn">
+                    <span class="glyphicon glyphicon-download-alt" aria-hidden="true"></span>
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" role="dialog" id="feedbackDOH">
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">

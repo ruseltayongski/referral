@@ -85,21 +85,200 @@
         });
     });
 
+    // $('#feedbackForm').submit(function (e) {
+    //     e.preventDefault();
+    //     e.stopImmediatePropagation();
+    //     tinyMCE.triggerSave();
+    //     var str = $(".mytextarea1").val();
+    //     str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
+    //     const temp = $("<div>").html(str);
+        
+    //     const fileElements = temp.find("div[contenteditable='false'] img[data-file-id]");
+    //     const fileIds = [];
+    //     fileElements.each(function() {
+    //         const fileId = $(this).attr('data-file-id');
+    //         if (fileId) {
+    //             fileIds.push(fileId);
+    //         }
+    //     });
+
+    //     temp.find("div[contenteditable='false']").remove(); // remove uploaded file previews
+    //     str = temp.text().trim(); // get plain text content
+
+    //     console.log("feedback_sendsd", str);
+    //     console.log("fileIds", fileIds);
+
+    //     if(str) {
+    //         tinyMCE.activeEditor.setContent('');
+    //         const senderImager = "{{ asset("/resources/img/sender.png") }}";
+    //         const senderMessage = str;
+    //         const senderCurrentTime = moment().format('D MMM LT');
+    //         const senderFacility = "{{ \App\Facility::find($user->facility_id)->name }}";
+    //         const senderName = "{{ $user->fname.' '.$user->lname }}";
+    //         const recoAppend = '<div class="direct-chat-msg right">\n' +
+    //             '    <div class="direct-chat-info clearfix">\n' +
+    //             '        <span class="direct-chat-name text-info pull-right">'+senderFacility+'</span><br>\n' +
+    //             '        <span class="direct-chat-name pull-right">'+senderName+'</span>\n' +
+    //             '        <span class="direct-chat-timestamp pull-left">'+senderCurrentTime+'</span>\n' +
+    //             '    </div>\n' +
+    //             '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
+    //             '    <div class="direct-chat-text">\n' +
+    //             '        '+senderMessage+
+    //             '    </div>\n' +
+    //             '</div>';
+    //         $(".reco-body"+code).append(recoAppend);
+    //         var objDiv = document.getElementById(code);
+    //         objDiv.scrollTop = objDiv.scrollHeight;
+    //         $("#message").val('').attr('placeholder','Type Message...');
+    //         $.ajax({
+    //             url: "{{ url('doctor/feedback') }}",
+    //             type: 'post',
+    //             data: {
+    //                 _token : "{{ csrf_token() }}",
+    //                 message: str,
+    //                 code : code
+    //             },
+    //             success: function(data) {}
+    //         });
+    //     }
+    //     else {
+    //         Lobibox.alert("error",
+    //         {
+    //             msg: "ReCo message was empty!"
+    //         });
+    //     }
+    // });
+
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
-        tinyMCE.triggerSave();
+        
+        // Make sure TinyMCE content is saved
+        if (typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor) {
+            tinyMCE.triggerSave();
+        }
+        
         var str = $(".mytextarea1").val();
         str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-        console.log("feedback_sendsd");
-        if(str) {
-            tinyMCE.activeEditor.setContent('');
-            const senderImager = "{{ asset("/resources/img/sender.png") }}";
+        const temp = $("<div>").html(str);
+        
+        // Extract file IDs from the content
+        const fileElements = temp.find("span[contenteditable='false'] img[data-file-id]");
+        const fileIds = [];
+        fileElements.each(function() {
+            const fileId = $(this).attr('data-file-id');
+            if (fileId) {
+                fileIds.push(fileId);
+            }
+        });
+
+        temp.find("span[contenteditable='false']").remove();
+        str = temp.text().trim(); // get plain text content
+
+        console.log("feedback_message", str);
+        console.log("fileIds", fileIds);
+        console.log("uploadedFiles Map:", window.uploadedFiles);
+
+        if(str || fileIds.length > 0) { // Allow submission if there's text OR files
+            // Clear TinyMCE content
+            if (typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor) {
+                tinyMCE.activeEditor.setContent('');
+            }
+            
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content') || "{{ csrf_token() }}");
+            formData.append('message', str);
+            formData.append('code', typeof code !== 'undefined' ? code : '');
+           
+            // Add files to FormData - FIXED: forEach with capital E
+            fileIds.forEach((fileId, index) => {
+                const file = window.uploadedFiles.get(fileId);
+                console.log("Adding file to FormData:", file);
+                if (file) {
+                    // Use array notation for multiple files
+                    formData.append('file_upload[]', file);
+                }
+            });
+            
+            const senderImager = "{{ asset('/resources/img/sender.png') }}";
             const senderMessage = str;
-            const senderCurrentTime = moment().format('D MMM LT');
-            const senderFacility = "{{ \App\Facility::find($user->facility_id)->name }}";
-            const senderName = "{{ $user->fname.' '.$user->lname }}";
-            const recoAppend = '<div class="direct-chat-msg right">\n' +
+            const senderCurrentTime = typeof moment !== 'undefined' ? moment().format('D MMM LT') : new Date().toLocaleString();
+            const senderFacility = "{{ \App\Facility::find($user->facility_id)->name ?? '' }}";
+            const senderName = "{{ ($user->fname ?? '') . ' ' . ($user->lname ?? '') }}";
+            
+            let filePreviewHtml = '';
+            if (fileIds.length > 0) {
+                filePreviewHtml = '<div style="margin-top: 5px;">';
+                fileIds.forEach(fileId => {
+                    const file = window.uploadedFiles.get(fileId);
+            
+                    if (file) {
+                        const fileURL = URL.createObjectURL(file); // Generate a temporary URL for preview
+                        const fileId = Math.random().toString(36).substr(2, 9); // Optional: use actual ID if needed
+
+                        // Initialize container if not already
+                        if (!filePreviewHtml.includes('file-preview-row')) {
+                            filePreviewHtml += `<div class="file-preview-row" style="display: flex; flex-wrap: wrap; gap: 4px;">`;
+                        }
+
+                        // if (file.type.startsWith('image')) {
+                        //     filePreviewHtml += `
+                        //         <div contenteditable="false" style="display:inline-flex; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
+                        //             <a href="${fileURL}" target="_blank"> 
+                        //                 <img src="{{ asset('public/fileupload/imageFile.png') }}" class="attachment-thumb" alt="${file.name}" style="width:60px;" data-file-id="${fileId}" />
+                        //             </a>
+                        //             <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
+                        //                 ${file.name}
+                        //             </div>
+                        //         </div>
+                        //     `;
+                        // } else if (file.type === 'application/pdf') {
+                        //     filePreviewHtml += `
+                        //         <div contenteditable="false" style="display:inline-flex; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
+                        //             <a href="${fileURL}" target="_blank">
+                        //                 <img src="{{ asset('public/fileupload/pdffile.png') }}" class="attachment-thumb" alt="PDF File" style="width:60px;" data-file-id="${fileId}"/>
+                        //             </a>
+                        //             <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
+                        //                 ${file.name}
+                        //             </div>
+                        //         </div>
+                        //     `;
+                        // }
+
+                        if (file.type.startsWith('image')) {
+                            filePreviewHtml += `
+                                <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
+                                    <a href="${fileURL}" target="_blank"> 
+                                        <img src="{{ asset('public/fileupload/imageFile.png') }}" class="attachment-thumb" 
+                                            alt="${file.name}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
+                                            data-file-id="${fileId}" />
+                                    </a>
+                                    <div title="${file.name}" style="font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;">
+                                        ${file.name}
+                                    </div>
+                                </div>
+                            `;
+                        } else if (file.type === 'application/pdf') {
+                            filePreviewHtml += `
+                                <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
+                                    <a href="${fileURL}" target="_blank">
+                                        <img src="{{ asset('public/fileupload/pdffile.png') }}" class="attachment-thumb" 
+                                            alt="PDF File" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
+                                            data-file-id="${fileId}"/>
+                                    </a>
+                                    <div title="${file.name}" style="font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;">
+                                        ${file.name}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                });
+                filePreviewHtml += '</div>';
+            }
+            
+            const recoAppend = '<div class="direct-chat-msgs right">\n' +
                 '    <div class="direct-chat-info clearfix">\n' +
                 '        <span class="direct-chat-name text-info pull-right">'+senderFacility+'</span><br>\n' +
                 '        <span class="direct-chat-name pull-right">'+senderName+'</span>\n' +
@@ -107,31 +286,81 @@
                 '    </div>\n' +
                 '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
                 '    <div class="direct-chat-text">\n' +
-                '        '+senderMessage+
+                '        '+senderMessage+filePreviewHtml+
                 '    </div>\n' +
                 '</div>';
-            $(".reco-body"+code).append(recoAppend);
-            var objDiv = document.getElementById(code);
-            objDiv.scrollTop = objDiv.scrollHeight;
+            
+            // Append to chat if elements exist
+            if ($(".reco-body" + (typeof code !== 'undefined' ? code : '')).length > 0) {
+                $(".reco-body" + (typeof code !== 'undefined' ? code : '')).append(recoAppend);
+            }
+            
+            // Scroll to bottom if element exists
+            if (typeof code !== 'undefined' && document.getElementById(code)) {
+                var objDiv = document.getElementById(code);
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+            
+            // Clear message input
             $("#message").val('').attr('placeholder','Type Message...');
+            
+            // Clear uploaded files from memory for this message
+            fileIds.forEach(fileId => {
+                window.uploadedFiles.delete(fileId);
+            });
+
+             console.log("near ajax formData", formData);
+        
+            // Send to server with files
             $.ajax({
                 url: "{{ url('doctor/feedback') }}",
                 type: 'post',
-                data: {
-                    _token : "{{ csrf_token() }}",
-                    message: str,
-                    code : code
+                data: formData,
+                processData: false, // Important for file upload
+                contentType: false, // Important for file upload
+                success: function(data) {
+                    console.log("Message and files sent successfully:", data);
                 },
-                success: function(data) {}
+                error: function(xhr, status, error) {
+                    console.error("Error sending message:", error);
+                    console.log("XHR:", xhr);
+                    console.log("Status:", status);
+                    
+                    // Show error message if Lobibox is available
+                    if (typeof Lobibox !== 'undefined') {
+                        Lobibox.alert("error", {
+                            msg: "Failed to send message. Please try again."
+                        });
+                    } else {
+                        alert("Failed to send message. Please try again.");
+                    }
+                }
             });
         }
         else {
-            Lobibox.alert("error",
-            {
-                msg: "ReCo message was empty!"
-            });
+            // Show error message if no content
+            if (typeof Lobibox !== 'undefined') {
+                Lobibox.alert("error", {
+                    msg: "Please enter a message or select files to upload!"
+                });
+            } else {
+                alert("Please enter a message or select files to upload!");
+            }
         }
     });
+
+    // Optional: Function to check if files are still in memory
+    function checkUploadedFiles() {
+        console.log("Current uploaded files:", window.uploadedFiles);
+        console.log("Number of files in memory:", window.uploadedFiles.size);
+    }
+
+    // Optional: Function to clear all uploaded files
+    function clearAllUploadedFiles() {
+        window.uploadedFiles.clear();
+        console.log("All uploaded files cleared from memory");
+    }
+
 
     $('body').on('click','.btn-issue-referred',function(){
         var code = $(this).data('code');
