@@ -577,7 +577,7 @@
             this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    console.log("newly incoming Telemed::", event, event.payload.telemedicine);
+                    // console.log("newly incoming Telemed::", event, event.payload.telemedicine);
                     
                     const subOpdIdInt = parseInt(event.payload.subOpdId, 10);
 
