@@ -217,7 +217,7 @@
 
 <style>
     .filter-input {
-        font-size: 1rem;
+        font-size: 13.75px;
         padding: 8px 16px;
         border-radius: 8px;
         border: 1px solid #4e73df;
@@ -236,7 +236,7 @@
         font-weight: 600;
         box-shadow: 0 2px 8px rgba(44,62,80,0.10);
         padding: 10px 24px;
-        font-size: 1.08em;
+        font-size: 1.3em;
         border-radius: 8px;
         display: flex;
         align-items: center;
