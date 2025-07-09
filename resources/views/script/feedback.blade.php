@@ -250,7 +250,7 @@
                             filePreviewHtml += `
                                 <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
                                     <a href="${fileURL}" target="_blank"> 
-                                        <img src="{{ asset('public/fileupload/imageFile.png') }}" class="attachment-thumb" 
+                                        <img src="{{ asset('public/fileupload/imageFile2.png') }}" class="attachment-thumb" 
                                             alt="${file.name}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}" />
                                     </a>

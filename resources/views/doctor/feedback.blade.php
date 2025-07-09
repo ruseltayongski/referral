@@ -80,7 +80,7 @@
                                 <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
                                     <a href="{{ $file }}" target="_blank" rel="noopener">
                                         <img class="attachment-thumb file-preview-trigger"
-                                            src="{{ in_array($extension, $pdfExtensions) ? asset('public/fileupload/pdffile.png') : asset('public/fileupload/imageFile.png') }}"
+                                            src="{{ in_array($extension, $pdfExtensions) ? asset('public/fileupload/pdffile.png') : asset('public/fileupload/imageFile2.png') }}"
                                             alt="{{ strtoupper($extension) }} file"
                                             data-file-type="{{ $extension }}"
                                             data-file-url="{{ $file }}"

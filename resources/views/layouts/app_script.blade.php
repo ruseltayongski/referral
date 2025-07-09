@@ -399,7 +399,7 @@
             console.log("fileId:", fileId);
             editor.insertContent(`<span contenteditable="false" style="display:inline-block; vertical-align:top; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px; margin:2px;">
                     <a href="${fileURL}" target="_blank">
-                        <img src="{{ asset('public/fileupload/imageFile.png') }}" alt="${file.name}" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}" />
+                        <img src="{{ asset('public/fileupload/imageFile2.png') }}" alt="${file.name}" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}" />
                     </a>
                     <div title="${file.name}" style="font-size:0.6em; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
                         ${truncatedFilename}

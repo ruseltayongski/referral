@@ -4,6 +4,9 @@
 /public/storage
 /storage/*.key
 /public/fileupload/*
+
+!public/fileupload/imageFile2.png
+
 /public/signatures/*
 /vendor
 /.idea

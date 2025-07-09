@@ -572,23 +572,23 @@ export default {
                   const isPDF = pdfExtensions.includes(extension);
                   const icon = isPDF 
                       ? $("#broadcasting_url").val() + '/public/fileupload/pdffile.png'
-                      : $("#broadcasting_url").val() + '/public/fileupload/imageFile.png';
+                      : $("#broadcasting_url").val() + '/public/fileupload/imageFile2.png';
 
                   fileHtml += `
-                      <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                          <a href="${file}" target="_blank" rel="noopener">
-                              <img class="attachment-thumb file-preview-trigger"
-                                  src="${icon}"
-                                  alt="${extension.toUpperCase()} file"
-                                  data-file-type="${extension}"
-                                  data-file-url="${file}"
-                                  data-file-name="${fileName}"
-                                  style="width: 50px; height: 50px; object-fit: contain; border:1px solid green;">
-                          </a>
-                          <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
-                              ${displayName}
-                          </div>
-                      </div>`;
+                   <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
+                    <a href="${file}" download="${fileName}">
+                        <img class="attachment-thumb file-preview-trigger"
+                            src="${icon}"
+                            alt="${extension.toUpperCase()} file"
+                            data-file-type="${extension}"
+                            data-file-url="${file}"
+                            data-file-name="${fileName}"
+                            style="width: 50px; height: 50px; object-fit: contain; border:1px solid green;">
+                    </a>
+                    <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
+                        ${displayName}
+                    </div>
+                </div>`;
               }
           });
 
