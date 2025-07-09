@@ -74,139 +74,6 @@
     //     }
     // });
 
-    // let currentFile = null;
-    // let currentEditor = null;
-    // let uploadedFiles = new Map();
-
-    // tinymce.init({
-    //     selector: ".mytextarea1",
-    //     plugins: "emoticons autoresize",
-    //     toolbar: "emoticons uploadfile",
-    //     toolbar_location: "bottom",
-    //     menubar: false,
-    //     statusbar: false,
-    //     automatic_uploads: true,
-    //     setup: function (editor) {
-    //         // Add custom upload button
-    //         editor.ui.registry.addButton('uploadfile', {
-    //             icon: 'upload',
-    //             tooltip: 'Upload Image or PDF',
-    //             onAction: function() {
-    //                 // Trigger file picker
-    //                 currentEditor = editor;
-    //                 var input = document.createElement('input');
-    //                 input.setAttribute('type', 'file');
-    //                 input.setAttribute('accept', 'image/*,.pdf');
-    //                 input.setAttribute('multiple', true);
-                    
-    //                 input.onchange = function() {
-    //                     var file = this.files;
-                        
-    //                     if (file) {
-    //                         var allowedTypes = [
-    //                             'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
-    //                             'image/bmp', 'image/webp', 'image/svg+xml', 'application/pdf'
-    //                         ];
-
-    //                         if (!allowedTypes.includes(file.type)) {
-    //                             alert('Only image files and PDF files are allowed');
-    //                             return;
-    //                         }
-
-    //                         if (files.length > 0) {
-    //                             // Process each selected file
-    //                             for (let i = 0; i < files.length; i++) {
-    //                                 processFile(files[i], editor);
-    //                             }
-    //                         }
-
-    //                         const fileId = 'file-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
-
-    //                         // uploadedFiles.set(fileId, file);
-
-    //                         currentFile = file;
-    //                         showFilePreview(file);
-    //                         // Create local URL for the file (no server upload)
-    //                         var fileURL = URL.createObjectURL(file);
-
-    //                         // Set a fixed size for consistency
-    //                         var previewWidth = '80px';
-    //                         var previewHeight = '80px';
-    //                         var commonStyle = `style="width: 80px; cursor:pointer; height: 80px; object-fit: contain; display:inline-block; margin: 0; padding: 0; border:1px solid green;"`;
-
-    //                         editor.insertContent(`<div style="display:flex; flex-wrap:wrap; gap:6px;">`);
-    //                         console.log("file pdf image", file);
-    //                         // For each file inside your loop or upload handler
-    //                         if (file.type.startsWith('image')) {
-    //                             editor.insertContent(`
-    //                                 <div contenteditable="false" style="display:flex; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
-    //                                     <img src="${fileURL}" alt="${file.name}" style="width:100%; height:auto; max-height:60px;" data-file-id="${fileId}" />
-    //                                     <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-    //                                         ${file.name}
-    //                                     </div>
-    //                                 </div>
-    //                             `);
-    //                         } else if (file.type === 'application/pdf') {
-    //                           console.log("file.name", file.name);
-    //                             editor.insertContent(`
-    //                                 <div contenteditable="false" style="display:flex; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
-    //                                     <a href="${fileURL}" target="_blank">
-    //                                         <img src="{{ asset('public/fileupload/pdffile.png') }}" alt="PDF File" style="width:100%; height:auto; max-height:60px;" data-file-id="${fileId}"/>
-    //                                     </a>
-    //                                     <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-    //                                         ${file.name}
-    //                                     </div>
-    //                                 </div>
-    //                             `);
-    //                         }
-
-    //                         // End of container
-    //                         editor.insertContent(`</div>`);
-
-    //                     }
-    //                 };
-                    
-    //                 input.click();
-    //             }
-    //         });
-            
-    //         editor.ui.registry.addIcon('custom-upload', '<i class="fa fa-upload"></i>');
-    //            // Add click handler for inserted files
-    //             editor.on('click', function(e) {
-    //                 const target = e.target;
-                    
-    //                  console.log("sample file click:", target);
-
-    //                 if (target.tagName === 'IMG' && target.getAttribute('data-file-id')) {
-    //                     const fileId = target.getAttribute('data-file-id');
-    //                     const storedFile = uploadedFiles.get(fileId);
-                        
-    //                      if (storedFile) {
-    //                         // Show preview modal for the clicked file
-    //                         showFilePreview(storedFile, true); 
-    //                     }
-    //                 }
-    //             });
-                
-    //             // Add double-click handler as alternative
-    //             editor.on('dblclick', function(e) {
-    //                 const target = e.target;
-    //                 if (target.tagName === 'IMG' && target.getAttribute('data-file-id')) {
-    //                     const fileId = target.getAttribute('data-file-id');
-    //                     const storedFile = uploadedFiles.get(fileId);
-                        
-    //                     if (storedFile) {
-    //                         showFilePreview(storedFile, true);
-    //                     }
-    //                 }
-    //             });
-            
-    //         editor.on('init', function () {
-    //             editor.getContainer().style.width = "100%";
-    //         });
-    //     }
-    // });
-
     window.uploadedFiles = window.uploadedFiles || new Map();
     let currentEditor = null;
     let currentFile = null;
@@ -287,64 +154,7 @@
         }
     });
 
-    //Function to process individual files
-    // function processFile(file, editor) {
-    //     var allowedTypes = [
-    //         'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
-    //         'image/bmp', 'image/webp', 'image/svg+xml', 'application/pdf'
-    //     ];
-
-    //     if (!allowedTypes.includes(file.type)) {
-    //         alert('Only image files and PDF files are allowed');
-    //         return;
-    //     }
-
-    //     const fileId = 'file-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
-
-    //     // Store the file in the Map
-    //     window.uploadedFiles.set(fileId, file);
-        
-    //     // Show file preview
-    //     showFilePreview(file);
-        
-    //     // Create local URL for the file (no server upload)
-    //     var fileURL = URL.createObjectURL(file);
-
-    //     console.log("file pdf image", file);
-
-    //     // editor.insertContent(`<div style="display:flex; flex-wrap:wrap; gap:6px;">`);
-    //     console.log("file pdf image", file);
-    //     // For each file inside your loop or upload handler
-    //     if (file.type.startsWith('image')) {
-    //         console.log("fileId:", fileId);
-    //         editor.insertContent(`
-    //             <div contenteditable="false" style="display:inline-block; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
-    //                 <img src="${fileURL}" alt="${file.name}" style="width:100%; height:auto; max-height:60px;" data-file-id="${fileId}" />
-    //                 <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-    //                     ${file.name}
-    //                 </div>
-    //             </div>
-    //         `);
-    //     } else if (file.type === 'application/pdf') {
-    //         console.log("file.name", file.name);
-    //         editor.insertContent(`
-    //             <div contenteditable="false" style="display:inline-block; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
-    //                 <a href="${fileURL}" target="_blank">
-    //                     <img src="{{ asset('public/fileupload/pdffile.png') }}" alt="PDF File" style="width:100%; height:auto; max-height:60px;" data-file-id="${fileId}"/>
-    //                 </a>
-    //                 <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-    //                     ${file.name}
-    //                 </div>
-    //             </div>
-    //         `);
-    //     }
-    //     // End of container
-    //     // editor.insertContent(`</div>`);
-        
-    //     editor.insertContent(`<br>`); 
-    // }
-
-     let fileUploadBatch = false;
+    let fileUploadBatch = false;
     let fileUploadTimeout = null;
 
     //Function to process individual files
@@ -552,6 +362,15 @@
         
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
+
+     $('#feedbackModal').on('hidden.bs.modal', function () {
+        tinymce.get($('.mytextarea1').attr('id')).setContent('');
+
+        window.uploadedFiles.clear();
+        $('#filePreviewModalReco').modal('hide');
+        $('.direct-chat-messages').html('Loading...');
+        $('#feedbackForm')[0].reset();
+    });
 
     $(".select2").select2({ 
         width: '100%',
