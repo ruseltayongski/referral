@@ -354,15 +354,15 @@ if (!empty($emr_forms_data)) {
                     <!-- Category -->
                     <td>
                         @if(isset($formData->telemedicine) && $formData->telemedicine == 1)
-                            <span class="label label-info">Telemedicine</span>
+                            <span class="label label-info" style="padding: 5px;">Telemedicine</span>
                         @else
-                            <span class="label label-success">Referral</span>
+                            <span class="label label-success" style="padding: 5px;">Referral</span>
                         @endif
                     </td>
                     
                     <!-- Type -->
                     <td>
-                        <span class="badge badge-secondary">{{ ucfirst($emr_record['type']) }}</span>
+                        <span class="badge badge-secondary" style="padding: 5px;">{{ ucfirst($emr_record['type']) }}</span>
                         <br><small class="text-muted">{{ $emr_record['formtype'] }}</small>
                     </td>
                     
@@ -382,7 +382,7 @@ if (!empty($emr_forms_data)) {
                             <form method="GET" action="{{ url('doctor/referred') }}">
                                 @csrf
                                 <input type="hidden" name="referredCode" value="{{ $formData->code }}">
-                                <button type="submit" class="btn btn-outline-primary btn-sm">
+                                <button type="submit" class="btn btn-outline-primary btn-sm" formtarget="_blank">
                                     <i class="bi bi-search"></i> Track Patient
                                 </button>
                             </form>
@@ -390,7 +390,8 @@ if (!empty($emr_forms_data)) {
                                 data-type="{{ $emr_record['type'] ?? '' }}"
                                 data-formtype="{{ $emr_record['formtype'] ?? '' }}"
                                 data-formid="{{ $emr_record['formId'] ?? '' }}"
-                                onclick="openPMRModal(this)">
+                                onclick="openPMRModal(this)"
+                                style="padding: 5px;">
                                 <i class="bi bi-eye"></i> View PMR
                             </button>
                         </div>
