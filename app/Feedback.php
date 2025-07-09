@@ -10,6 +10,7 @@ class Feedback extends Model
         'code',
         'sender',
         'receiver',
+        'filename',
         'message'
     ];
 }

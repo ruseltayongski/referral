@@ -264,7 +264,7 @@ class ParamCtrl extends Controller
     }
 
 
-    public static function feedbackContent($code,$sender,$msg){
+    public static function feedbackContent($code,$sender,$msg,$files_path){
         $sender = User::find($sender);
         $user = Session::get("auth");
 
@@ -281,6 +281,7 @@ class ParamCtrl extends Controller
             "sender_facility" => $sender->facility_id,
             "user_facility" => $user->facility_id,
             "message" => $msg,
+            "filepath" => $files_path,
             "userid_sender" => $sender->id,
             "name_sender" => $name_sender,
             "facility_sender" => Facility::find($sender->facility_id)->name,
