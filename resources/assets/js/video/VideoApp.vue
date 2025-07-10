@@ -576,7 +576,7 @@ export default {
 
                   fileHtml += `
                    <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                    <a href="${file}" download="${fileName}">
+                    <a href="${file}" target="_blank" rel="noopener noreferrer">
                         <img class="attachment-thumb file-preview-trigger"
                             src="${icon}"
                             alt="${extension.toUpperCase()} file"
@@ -1749,7 +1749,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     class="tooltip-text"
                     style="background-color: #17a2b8;"
                   >
-                    Chat  
+                    Chat
                   </div>
                   <button
                     class="btn btn-info btn-md reco-button"

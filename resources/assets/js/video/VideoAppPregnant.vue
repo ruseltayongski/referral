@@ -349,42 +349,41 @@ export default {
       const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
       const pdfExtensions = ['pdf'];
 
-      if(filepath && filepath.length > 0){
-        fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
+     if (filepath && filepath.length > 0) {
+        fileHtml += '<div class="attachment-wrapper" style="white-space: nowrap; overflow-x: auto;">';
 
         filepath.forEach(file => {
-          if(file.trim() !== ''){
-             const url = new URL(file);
+            if (file.trim() !== '') {
+                const url = new URL(file);
                 const fileName = url.pathname.split('/').pop();
                 const extension = fileName.split('.').pop().toLowerCase();
                 const displayName = fileName.length > 10 ? fileName.substring(0, 7) + '...' : fileName;
 
                 const isPDF = pdfExtensions.includes(extension);
                 const icon = isPDF
-                  ? $('#broadcasting_url').val() + '/public/fileupload/pdffile.png'
-                  : $('#broadcasting_url').val() + '/public/fileupload/imageFile2.png';
+                    ? $('#broadcasting_url').val() + '/public/fileupload/pdffile.png'
+                    : $('#broadcasting_url').val() + '/public/fileupload/imageFile2.png';
 
                 fileHtml += `
                     <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                    <a href="${file}" download="${fileName}">
-                        <img class="attachment-thumb file-preview-trigger"
-                            src="${icon}"
-                            alt="${extension.toUpperCase()} file"
-                            data-file-type="${extension}"
-                            data-file-url="${file}"
-                            data-file-name="${fileName}"
-                            style="width: 50px; height: 50px; object-fit: contain; border:1px solid green;">
-                    </a>
-                    <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
-                        ${displayName}
-                    </div>
-                </div>`
-          }
-
+                        <a href="${file}" target="_blank" rel="noopener noreferrer">
+                            <img class="attachment-thumb file-preview-trigger"
+                                src="${icon}"
+                                alt="${extension.toUpperCase()} file"
+                                data-file-type="${extension}"
+                                data-file-url="${file}"
+                                data-file-name="${fileName}"
+                                style="width: 50px; height: 50px; object-fit: contain; border:1px solid green;">
+                        </a>
+                        <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
+                            ${displayName}
+                        </div>
+                    </div>`;
+            }
         });
-           fileHtml += '</div>';
-      }
 
+        fileHtml += '</div>';
+    }
       let messageColor = 'style="margin-top: 5px;"';
       let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
 

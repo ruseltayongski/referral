@@ -23042,7 +23042,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
       var pdfExtensions = ['pdf'];
       if (filepath && filepath.length > 0) {
-        fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
+        fileHtml += '<div class="attachment-wrapper" style="white-space: nowrap; overflow-x: auto;">';
         filepath.forEach(function (file) {
           if (file.trim() !== '') {
             var url = new URL(file);
@@ -23051,7 +23051,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             var displayName = fileName.length > 10 ? fileName.substring(0, 7) + '...' : fileName;
             var isPDF = pdfExtensions.includes(extension);
             var icon = isPDF ? $('#broadcasting_url').val() + '/public/fileupload/pdffile.png' : $('#broadcasting_url').val() + '/public/fileupload/imageFile2.png';
-            fileHtml += "\n                    <div style=\"display: inline-block; text-align: center; width: 60px; margin-right: 5px;\">\n                    <a href=\"".concat(file, "\" download=\"").concat(fileName, "\">\n                        <img class=\"attachment-thumb file-preview-trigger\"\n                            src=\"").concat(icon, "\"\n                            alt=\"").concat(extension.toUpperCase(), " file\"\n                            data-file-type=\"").concat(extension, "\"\n                            data-file-url=\"").concat(file, "\"\n                            data-file-name=\"").concat(fileName, "\"\n                            style=\"width: 50px; height: 50px; object-fit: contain; border:1px solid green;\">\n                    </a>\n                    <div style=\"font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;\" title=\"").concat(fileName, "\">\n                        ").concat(displayName, "\n                    </div>\n                </div>");
+            fileHtml += "\n                    <div style=\"display: inline-block; text-align: center; width: 60px; margin-right: 5px;\">\n                        <a href=\"".concat(file, "\" target=\"_blank\" rel=\"noopener noreferrer\">\n                            <img class=\"attachment-thumb file-preview-trigger\"\n                                src=\"").concat(icon, "\"\n                                alt=\"").concat(extension.toUpperCase(), " file\"\n                                data-file-type=\"").concat(extension, "\"\n                                data-file-url=\"").concat(file, "\"\n                                data-file-name=\"").concat(fileName, "\"\n                                style=\"width: 50px; height: 50px; object-fit: contain; border:1px solid green;\">\n                        </a>\n                        <div style=\"font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;\" title=\"").concat(fileName, "\">\n                            ").concat(displayName, "\n                        </div>\n                    </div>");
           }
         });
         fileHtml += '</div>';
