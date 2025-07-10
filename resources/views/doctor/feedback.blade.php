@@ -100,11 +100,11 @@
                 @if(!empty($row->message))
                     @if($row->sender == $user->id)
                         <div class="caption-text" style="margin-top: 5px; color: white;">
-                            {!! nl2br(e($row->message)) !!}
+                            {!! nl2br($row->message) !!} 
                         </div>
                     @else
                         <div class="caption-text" style="margin-top: 5px;">
-                            {!! nl2br(e($row->message)) !!}
+                            {!! nl2br($row->message) !!} 
                         </div>
                     @endif
                 @endif
