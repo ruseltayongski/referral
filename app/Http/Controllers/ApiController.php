@@ -1880,10 +1880,10 @@ class ApiController extends Controller
 
     public static function fileUploadManual($tempPath, $type, $fileName, $username)
     {
-        $data = [
+        $data = array(
             'file_upload' => curl_file_create($tempPath, $type, $fileName),
             'username'    => $username,
-        ];
+        );
 
         $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
 
