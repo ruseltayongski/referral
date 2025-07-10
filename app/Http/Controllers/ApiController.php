@@ -1878,10 +1878,38 @@ class ApiController extends Controller
         return 'http://180.232.110.32/';
     }
 
-    public static function fileUploadManual($tempPath, $type, $fileName, $username)
+    // public static function fileUploadManual($tempPath, $type, $fileName, $username)
+    // {
+    //     $data = array(
+    //         'file_upload' => curl_file_create($tempPath, $type, $fileName),
+    //         'username'    => $username,
+    //     );
+
+    //     $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
+
+    //     $ch = curl_init($url);
+    //     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
+    //     curl_setopt($ch, CURLOPT_POST, 1);
+    //     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    //     curl_exec($ch);
+
+    //     if (curl_errno($ch)) {
+    //         throw new \Exception(curl_error($ch));
+    //     }
+
+    //     curl_close($ch);
+    // }
+
+    public static function fileUploadManual($fileContent, $type, $fileName, $username)
     {
+        // Create a temporary file
+        $tempFile = tempnam(sys_get_temp_dir(), 'upload_');
+        file_put_contents($tempFile, $fileContent);
+
         $data = array(
-            'file_upload' => curl_file_create($tempPath, $type, $fileName),
+            'file_upload' => curl_file_create($tempFile, $type, $fileName),
             'username'    => $username,
         );
 
@@ -1893,13 +1921,21 @@ class ApiController extends Controller
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_exec($ch);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            throw new \Exception(curl_error($ch));
+            $error = curl_error($ch);
+            curl_close($ch);
+            unlink($tempFile); // Clean up
+            throw new \Exception($error);
         }
 
         curl_close($ch);
+        unlink($tempFile); // Clean up
+        
+        return $response;
     }
 
     public static function fileUpload(Request $request) {
