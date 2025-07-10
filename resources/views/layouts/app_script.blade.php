@@ -78,6 +78,9 @@
     let currentEditor = null;
     let currentFile = null;
 
+   let uploadTextareas = $(".mytextarea1[data-upload='true']"); // Use data attribute to identify upload textareas
+   let regularTextareas = $(".mytextarea1:not([data-upload='true'])");
+    console.log("regularTextareas:", regularTextareas.length > 0);
     // TinyMCE initialization for selecting files (pdf, images) and input text 
     tinymce.init({
         selector: ".mytextarea1",
@@ -96,6 +99,7 @@
                 onAction: function() {
                     // Trigger file picker
                     currentEditor = editor;
+                    
                     var input = document.createElement('input');
                     input.setAttribute('type', 'file');
                     input.setAttribute('accept', 'image/*,.pdf');
@@ -107,7 +111,7 @@
                              console.log("editor:", editor);
                             // Process each selected file
                             for (let i = 0; i < files.length; i++) {
-                                processFile(files[i], editor);
+                                processFileReco(files[i], editor);
                             }
                         }
                     };
@@ -158,11 +162,16 @@
     let fileUploadTimeout = null;
 
     //Function to process individual files
-    function processFile(file, editor) {
+    function processFileReco(file, editor) {
         var allowedTypes = [
             'image/jpeg', 'image/jpg', 'image/png', 'image/gif',
             'image/bmp', 'image/webp', 'image/svg+xml', 'application/pdf'
         ];
+
+        if (!editor || typeof editor.insertContent !== 'function') {
+            alert('Invalid editor instance or insertContent method not available');
+            return;
+        }
 
         if (!allowedTypes.includes(file.type)) {
             alert('Only image files and PDF files are allowed');
@@ -363,7 +372,8 @@
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-     $('#feedbackModal').on('hidden.bs.modal', function () {
+    
+   $('#feedbackModal').on('hidden.bs.modal', function () {
         tinymce.get($('.mytextarea1').attr('id')).setContent('');
 
         window.uploadedFiles.clear();
@@ -371,6 +381,7 @@
         $('.direct-chat-messages').html('Loading...');
         $('#feedbackForm')[0].reset();
     });
+    
 
     $(".select2").select2({ 
         width: '100%',
