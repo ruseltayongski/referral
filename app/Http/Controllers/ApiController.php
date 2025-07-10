@@ -1893,6 +1893,8 @@ class ApiController extends Controller
     //     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
     //     curl_setopt($ch, CURLOPT_POST, 1);
     //     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+    //     curl_setopt($ch, CURLOPT_VERBOSE, true);
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     //     curl_exec($ch);
 
     //     if (curl_errno($ch)) {
@@ -1902,38 +1904,42 @@ class ApiController extends Controller
     //     curl_close($ch);
     // }
 
-    public static function fileUploadManual($fileContent, $type, $fileName, $username)
-    {
-        // Create a temporary file
-        $tempFile = tempnam(sys_get_temp_dir(), 'upload_');
-        file_put_contents($tempFile, $fileContent);
-
+    public static function fileUploadManual($tempPath, $type, $fileName, $username) {
         $data = array(
-            'file_upload' => curl_file_create($tempFile, $type, $fileName),
-            'username'    => $username,
+            'file_upload' => curl_file_create($tempPath, $type, $fileName),
+            'username' => $username,
         );
-
+        
         $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
-
         $ch = curl_init($url);
+        
+        // Set cURL options to match the working function
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data')); // Use array() like the working function
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Add this to capture response
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Add timeout
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // Add connection timeout
         
         $response = curl_exec($ch);
-
+        
+        // Enhanced error checking
         if (curl_errno($ch)) {
             $error = curl_error($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
-            unlink($tempFile); // Clean up
-            throw new \Exception($error);
+            throw new \Exception("cURL Error: " . $error . " (HTTP Code: " . $httpCode . ")");
         }
-
+        
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        unlink($tempFile); // Clean up
+        
+        // Check HTTP response code
+        if ($httpCode !== 200) {
+            throw new \Exception("HTTP Error: " . $httpCode . " - " . $response);
+        }
         
         return $response;
     }

@@ -2017,45 +2017,21 @@ class ReferralCtrl extends Controller
         $file_paths = [];
         $files = $req->file('file_upload');
 
-        // if ($files && is_array($files)) {
-        //     foreach ($files as $file) {
-        //         if ($file->isValid()) {
-        //             $username = $user->username;
-        //             $originalName = $file->getClientOriginalName();
-        //             $tempPath = $file->getPathname();
-        //             $mimeType = $file->getMimeType();
-
-        //             // Call fileUpload helper
-        //             ApiController::fileUploadManual($tempPath, $mimeType, $originalName, $username);
-
-        //             $file_paths[] = ApiController::fileUploadUrl() . $username . "/" . $originalName;
-        //         }
-        //     }
-        // }
-
         if ($files && is_array($files)) {
             foreach ($files as $file) {
                 if ($file->isValid()) {
                     $username = $user->username;
                     $originalName = $file->getClientOriginalName();
+                    $tempPath = $file->getPathname();
                     $mimeType = $file->getMimeType();
 
-                    // Store file temporarily with a unique name
-                    $tempPath = $file->store('temp');
-                    $fullTempPath = storage_path('app/' . $tempPath);
-
                     // Call fileUpload helper
-                    ApiController::fileUploadManual($fullTempPath, $mimeType, $originalName, $username);
+                    ApiController::fileUploadManual($tempPath, $mimeType, $originalName, $username);
 
                     $file_paths[] = ApiController::fileUploadUrl() . $username . "/" . $originalName;
-
-                    // Clean up temporary file
-                    unlink($fullTempPath);
                 }
             }
         }
-
-
         $files_pathname = implode('|', $file_paths);
 
         $data = [
