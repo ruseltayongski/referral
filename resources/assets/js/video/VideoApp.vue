@@ -1749,7 +1749,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     class="tooltip-text"
                     style="background-color: #17a2b8;"
                   >
-                    Chat
+                    Chat  
                   </div>
                   <button
                     class="btn btn-info btn-md reco-button"

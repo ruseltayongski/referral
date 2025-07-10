@@ -1,4 +1,4 @@
-/*require('./bootstrap');*/
+require('./bootstrap');
 
 import { createApp } from 'vue'
 import VideoAppPregnant from './video/AppPregnant.vue'
