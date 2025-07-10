@@ -222,30 +222,6 @@
                             filePreviewHtml += `<div class="file-preview-row" style="display: flex; flex-wrap: wrap; gap: 4px;">`;
                         }
 
-                        // if (file.type.startsWith('image')) {
-                        //     filePreviewHtml += `
-                        //         <div contenteditable="false" style="display:inline-flex; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
-                        //             <a href="${fileURL}" target="_blank"> 
-                        //                 <img src="{{ asset('public/fileupload/imageFile.png') }}" class="attachment-thumb" alt="${file.name}" style="width:60px;" data-file-id="${fileId}" />
-                        //             </a>
-                        //             <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-                        //                 ${file.name}
-                        //             </div>
-                        //         </div>
-                        //     `;
-                        // } else if (file.type === 'application/pdf') {
-                        //     filePreviewHtml += `
-                        //         <div contenteditable="false" style="display:inline-flex; flex-direction:column; align-items:center; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px;">
-                        //             <a href="${fileURL}" target="_blank">
-                        //                 <img src="{{ asset('public/fileupload/pdffile.png') }}" class="attachment-thumb" alt="PDF File" style="width:60px;" data-file-id="${fileId}"/>
-                        //             </a>
-                        //             <div title="${file.name}" style="font-size:10px; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-                        //                 ${file.name}
-                        //             </div>
-                        //         </div>
-                        //     `;
-                        // }
-
                         if (file.type.startsWith('image')) {
                             filePreviewHtml += `
                                 <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">

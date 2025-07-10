@@ -40,6 +40,7 @@ use Matrix\Exception;
 use App\Events\SocketReco;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use GuzzleHttp\Client;
 
 class ApiController extends Controller
 {
@@ -1904,44 +1905,42 @@ class ApiController extends Controller
     //     curl_close($ch);
     // }
 
-    public static function fileUploadManual($tempPath, $type, $fileName, $username) {
+    public static function fileUploadManual($file, $username)
+    {
+        $originalName = $file->getClientOriginalName();
+        $mimeType = $file->getMimeType();
+        $tempName = uniqid() . '_' . $originalName;
+
+        // Save the uploaded file to a temporary path (manually)
+        $tempPath = storage_path('app/temp/' . $tempName);
+        $file->move(storage_path('app/temp'), $tempName);
+
+        // Recreate a CURLFile using the new path
         $data = array(
-            'file_upload' => curl_file_create($tempPath, $type, $fileName),
-            'username' => $username,
+            'file_upload' => curl_file_create($tempPath, $mimeType, $originalName),
+            'username'    => $username,
         );
-        
+
         $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
+
         $ch = curl_init($url);
-        
-        // Set cURL options to match the working function
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: multipart/form-data')); // Use array() like the working function
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Add this to capture response
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30); // Add timeout
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10); // Add connection timeout
-        
-        $response = curl_exec($ch);
-        
-        // Enhanced error checking
+        curl_exec($ch);
+
         if (curl_errno($ch)) {
-            $error = curl_error($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            throw new \Exception("cURL Error: " . $error . " (HTTP Code: " . $httpCode . ")");
+            throw new \Exception(curl_error($ch));
         }
-        
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
         curl_close($ch);
-        
-        // Check HTTP response code
-        if ($httpCode !== 200) {
-            throw new \Exception("HTTP Error: " . $httpCode . " - " . $response);
+
+        // Clean up temp file
+        if (file_exists($tempPath)) {
+            unlink($tempPath);
         }
-        
-        return $response;
     }
 
     public static function fileUpload(Request $request) {

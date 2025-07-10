@@ -2021,14 +2021,11 @@ class ReferralCtrl extends Controller
             foreach ($files as $file) {
                 if ($file->isValid()) {
                     $username = $user->username;
-                    $originalName = $file->getClientOriginalName();
-                    $tempPath = $file->getPathname();
-                    $mimeType = $file->getMimeType();
-
-                    // Call fileUpload helper
-                    ApiController::fileUploadManual($tempPath, $mimeType, $originalName, $username);
-
-                    $file_paths[] = ApiController::fileUploadUrl() . $username . "/" . $originalName;
+                    
+                    // Call fileUpload helper - pass the file object directly
+                    ApiController::fileUploadManual($file, $username);
+                    
+                    $file_paths[] = ApiController::fileUploadUrl() . $username . "/" . $file->getClientOriginalName();
                 }
             }
         }
