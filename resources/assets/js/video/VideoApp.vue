@@ -433,7 +433,6 @@ export default {
 
         // --- Detect upload speed and set chunk size ---
         let chunkSize = 5 * 1024 * 1024; // Default to 5MB
-       
 
         const totalChunks = Math.ceil(blob.size / chunkSize);
 
@@ -448,24 +447,65 @@ export default {
           formData.append("chunkIndex", chunkIndex);
           formData.append("totalChunks", totalChunks);
           formData.append("username", username); // <-- Add facility name
-          
 
-          try {
-            await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
-              headers: { "Content-Type": "multipart/form-data" },
-            });
-            // Update progress after each chunk
-            this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
-          } catch (error) {
+          let success = false;
+          let lastError = null;
+          for (let attempt = 1; attempt <= 3; attempt++) {
+            try {
+              await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+              });
+              // Update progress after each chunk
+              this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+              success = true;
+              break;
+            } catch (error) {
+              lastError = error;
+              // Detect CORS/network error (no response at all)
+              let isCorsOrNetwork = !error.response && (error.message === 'Network Error' || error.message.includes('CORS'));
+              let errorMsg = isCorsOrNetwork
+                ? `Network or CORS error while uploading chunk ${chunkIndex + 1}/${totalChunks}. The server may be unresponsive. Retrying in 3 seconds... (Attempt ${attempt} of 3)`
+                : `Network error while uploading chunk ${chunkIndex + 1}/${totalChunks}. Retrying in 3 seconds... (Attempt ${attempt} of 3)`;
+              if (attempt < 3) {
+                if (window && window.Lobibox) {
+                  Lobibox.notify("error", {
+                    title: "Network Error",
+                    msg: errorMsg
+                  });
+                } else {
+                  console.error(errorMsg);
+                }
+                await new Promise((resolve) => setTimeout(resolve, 3000));
+              }
+            }
+          }
+          if (!success) {
             this.loading = false;
             this.uploadProgress = 0; // Reset on error
-            Lobibox.alert("error", {
-              msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
-                (error.response?.data?.message || error.message),
-              callback: function () {
-                  window.top.close();
-                },
-            });
+            // Show a custom dialog box instructing the user to contact IT Administrator
+            const dialog = document.createElement('div');
+            dialog.style.position = 'fixed';
+            dialog.style.top = '0';
+            dialog.style.left = '0';
+            dialog.style.width = '100vw';
+            dialog.style.height = '100vh';
+            dialog.style.background = 'rgba(0,0,0,0.5)';
+            dialog.style.display = 'flex';
+            dialog.style.alignItems = 'center';
+            dialog.style.justifyContent = 'center';
+            dialog.style.zIndex = '99999';
+            dialog.innerHTML = `
+              <div style="background: #fff; padding: 32px 24px; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.2); max-width: 400px; text-align: center;">
+                <div style="font-size: 1.2em; font-weight: bold; color: #b71c1c; margin-bottom: 12px;">System Error</div>
+                <div style="margin-bottom: 18px; color: #333;">There is something wrong with the system.<br>Please contact the IT Administrator for assistance.</div>
+                <button id="closeDialogBtn" style="background: #b71c1c; color: #fff; border: none; border-radius: 4px; padding: 8px 20px; font-size: 1em; cursor: pointer;">Close</button>
+              </div>
+            `;
+            document.body.appendChild(dialog);
+            document.getElementById('closeDialogBtn').onclick = function() {
+              document.body.removeChild(dialog);
+              window.top.close();
+            };
             return;
           }
         }
