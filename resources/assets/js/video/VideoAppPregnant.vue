@@ -622,7 +622,7 @@ export default {
             dialog.innerHTML = `
               <div style="background: #fff; padding: 32px 24px; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,0.2); max-width: 400px; text-align: center;">
                 <div style="font-size: 1.2em; font-weight: bold; color: #b71c1c; margin-bottom: 12px;">System Error</div>
-                <div style="margin-bottom: 18px; color: #333;">There is something wrong with the system.<br>Please contact the IT Administrator for assistance.</div>
+                <div style="margin-bottom: 18px; color: #333;">There is something wrong during uploading the screen recording.<br>Please contact the IT Administrator for assistance.</div>
                 <button id="closeDialogBtn" style="background: #b71c1c; color: #fff; border: none; border-radius: 4px; padding: 8px 20px; font-size: 1em; cursor: pointer;">Close</button>
               </div>
             `;
