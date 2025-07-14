@@ -120,13 +120,29 @@
                 let fileHtml = '';
                 const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
                 const pdfExtensions = ['pdf'];
+                let filePaths = [];
 
-                if (filepath && filepath.length > 0) {
+                if (filepath) {
+                    if (typeof filepath === 'string') {
+                        // Split by pipe and filter out empty strings
+                        filePaths = filepath.split('|').filter(path => path.trim() !== '');
+                    } else if (Array.isArray(filepath)) {
+                        filePaths = filepath.filter(path => path.trim() !== '');
+                    }
+                }
+                if (filePaths.length > 0) {
                     fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
-
-                    filepath.forEach(file => {
+                    const baseUrl = $("#broadcasting_url").val();
+                     filePaths.forEach((file, index) => {
                         if (file.trim() !== '') {
-                            const url = new URL(file);
+                            let url;
+                            try {
+                                url = new URL(file, baseUrl);  // Use base in case it's a relative URL
+                            } catch (err) {
+                                console.error('Invalid file URL:', file, err);
+                                return; // skip this file
+                            }
+
                             const fileName = url.pathname.split('/').pop();
                             const extension = fileName.split('.').pop().toLowerCase();
                             const displayName = fileName.length > 10 ? fileName.substring(0, 7) + '...' : fileName;
@@ -136,16 +152,19 @@
                                 ? $("#broadcasting_url").val() + '/public/fileupload/pdffile.png'
                                 : $("#broadcasting_url").val() + '/public/fileupload/imageFile2.png';
 
-                            fileHtml += `
+                             fileHtml += `
                                 <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                                    <a href="${file}" target="_blank" rel="noopener">
-                                        <img class="attachment-thumb file-preview-trigger"
+                                    <a href="javascript:void(0)" class="file-preview-trigger realtime-file-preview" 
+                                        data-file-type="${extension}"
+                                        data-file-url="${file}"
+                                        data-file-name="${fileName}"
+                                        data-feedback-code="${code}"
+                                        data-file-paths="${filePaths.join('|')}"
+                                        data-current-index="${index}">
+                                        <img class="attachment-thumb"
                                             src="${icon}"
                                             alt="${extension.toUpperCase()} file"
-                                            data-file-type="${extension}"
-                                            data-file-url="${file}"
-                                            data-file-name="${fileName}"
-                                            style="width: 50px; height: 50px; object-fit: contain; border:1px solid green;">
+                                            style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
                                     </a>
                                     <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
                                         ${displayName}
@@ -175,6 +194,25 @@
                         </div>
                     </div>
                 `);
+
+                this.FeedbackFilePreviewListeners();
+            },
+            FeedbackFilePreviewListeners() {
+                $(document).off('click', '.realtime-file-preview').on('click', '.realtime-file-preview', function(e) {
+                    e.preventDefault();
+                    const baseUrl = $("#broadcasting_url").val();
+                    const filePaths = $(this).data('file-paths');
+                    const fullfilePaths = baseUrl + filePaths;
+
+                    const currentIndex = parseInt($(this).data('current-index'));
+                    const feedbackCode = $(this).data('feedback-code');
+
+                    // const filesArray = fullfilePaths.split('|').filter(p => p.trim() !== '');
+
+                    window.setupfeedbackFilePreview(fullfilePaths,currentIndex, feedbackCode);
+
+                    $('#filePreviewContentReco').modal('show');
+                });
             },
             notifyReferral(patient_name, referring_md, referring_name, redirect_track, subOpdId, Telemedicine) {
 

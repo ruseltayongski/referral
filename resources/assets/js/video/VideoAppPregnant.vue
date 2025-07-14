@@ -337,71 +337,107 @@ export default {
         }
       }
     },
-    appendReco(code,name_sender,facility_sender,date_now,msg, filepath){
+     appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
+        console.log("inside the recos append:", filepath);
+        let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
+        let message = msg && msg.trim() !== ""
+            ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
+            : '';
 
-      console.log("inside the recos append:", filepath);
-      let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
-      let message = msg && msg.trim() !== ""
-          ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
-          : '';
+        let fileHtml = '';
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        const pdfExtensions = ['pdf'];
+        let filePaths = [];
 
-      let fileHtml = '';
-      const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-      const pdfExtensions = ['pdf'];
+        if (filepath) {
+            if (typeof filepath === 'string') {
+                // Split by pipe and filter out empty strings
+                filePaths = filepath.split('|').filter(path => path.trim() !== '');
+            } else if (Array.isArray(filepath)) {
+                filePaths = filepath.filter(path => path.trim() !== '');
+            }
+        }
+        if (filePaths.length > 0) {
+            fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
+            const baseUrl = $("#broadcasting_url").val();
+              filePaths.forEach((file, index) => {
+                if (file.trim() !== '') {
+                    let url;
+                    try {
+                        url = new URL(file, baseUrl);  // Use base in case it's a relative URL
+                    } catch (err) {
+                        console.error('Invalid file URL:', file, err);
+                        return; // skip this file
+                    }
 
-     if (filepath && filepath.length > 0) {
-        fileHtml += '<div class="attachment-wrapper" style="white-space: nowrap; overflow-x: auto;">';
+                    const fileName = url.pathname.split('/').pop();
+                    const extension = fileName.split('.').pop().toLowerCase();
+                    const displayName = fileName.length > 10 ? fileName.substring(0, 7) + '...' : fileName;
 
-        filepath.forEach(file => {
-            if (file.trim() !== '') {
-                const url = new URL(file);
-                const fileName = url.pathname.split('/').pop();
-                const extension = fileName.split('.').pop().toLowerCase();
-                const displayName = fileName.length > 10 ? fileName.substring(0, 7) + '...' : fileName;
+                    const isPDF = pdfExtensions.includes(extension);
+                    const icon = isPDF 
+                        ? $("#broadcasting_url").val() + '/public/fileupload/pdffile.png'
+                        : $("#broadcasting_url").val() + '/public/fileupload/imageFile2.png';
 
-                const isPDF = pdfExtensions.includes(extension);
-                const icon = isPDF
-                    ? $('#broadcasting_url').val() + '/public/fileupload/pdffile.png'
-                    : $('#broadcasting_url').val() + '/public/fileupload/imageFile2.png';
-
-                fileHtml += `
-                    <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                        <a href="${file}" target="_blank" rel="noopener noreferrer">
-                            <img class="attachment-thumb file-preview-trigger"
-                                src="${icon}"
-                                alt="${extension.toUpperCase()} file"
+                      fileHtml += `
+                        <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
+                            <a href="javascript:void(0)" class="file-preview-trigger realtime-file-preview" 
                                 data-file-type="${extension}"
                                 data-file-url="${file}"
                                 data-file-name="${fileName}"
-                                style="width: 50px; height: 50px; object-fit: contain; border:1px solid green;">
-                        </a>
-                        <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
-                            ${displayName}
+                                data-feedback-code="${code}"
+                                data-file-paths="${filePaths.join('|')}"
+                                data-current-index="${index}">
+                                <img class="attachment-thumb"
+                                    src="${icon}"
+                                    alt="${extension.toUpperCase()} file"
+                                    style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
+                            </a>
+                            <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
+                                ${displayName}
+                            </div>
                         </div>
-                    </div>`;
-            }
-        });
+                    `;
+                }
+            });
 
-        fileHtml += '</div>';
-    }
-      let messageColor = 'style="margin-top: 5px;"';
-      let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
+            fileHtml += '</div>';
+        }
 
-       $(".reco-body" + code).append(`
-          <div class='direct-chat-msgs left'>
-              <div class='direct-chat-info clearfix'>
-                  <span class="direct-chat-name text-info pull-left">${facility_sender}</span><br>
-                  <span class='direct-chat-name pull-left'>${name_sender}</span>
-                  <span class='direct-chat-timestamp pull-right'>${date_now}</span>
-              </div>
-              <img class='direct-chat-img' title='' src="${picture_sender}" alt='Message User Image'>
-              <div class='direct-chat-text'>
-                  ${fileHtml}
-                  ${messageText}
-              </div>
-          </div>
-      `);
+        let messageColor = 'style="margin-top: 5px;"';
+        let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
 
+        $(".reco-body" + code).append(`
+            <div class='direct-chat-msgs left'>
+                <div class='direct-chat-info clearfix'>
+                    <span class="direct-chat-name text-info pull-left">${facility_sender}</span><br>
+                    <span class='direct-chat-name pull-left'>${name_sender}</span>
+                    <span class='direct-chat-timestamp pull-right'>${date_now}</span>
+                </div>
+                <img class='direct-chat-img' title='' src="${picture_sender}" alt='Message User Image'>
+                <div class='direct-chat-text'>
+                    ${fileHtml}
+                    ${messageText}
+                </div>
+            </div>
+        `);
+         this.FeedbackFilePreviewListeners();
+    },
+    FeedbackFilePreviewListeners(){
+      $(document).off('click', '.realtime-file-preview').on('click', '.realtime-file-preview', function(e) {
+        e.preventDefault();
+
+        const baseUrl = $("#broadcasting_url").val();
+        const filePaths = $(this).data('file-paths');
+        const fullfilePaths = baseUrl + filePaths;
+
+        const currentIndex = parseInt($(this).data('current-index'));
+        const feedbackCode = $(this).data('feedback-code');
+
+        window.setupfeedbackFilePreview(fullfilePaths,currentIndex,feedbackCode);
+
+         $('#filePreviewContentReco').modal('show');
+      });
     },
     async startScreenRecording() {
 

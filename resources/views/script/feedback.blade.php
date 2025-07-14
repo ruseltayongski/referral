@@ -84,71 +84,7 @@
             },500);
         });
     });
-
-    // $('#feedbackForm').submit(function (e) {
-    //     e.preventDefault();
-    //     e.stopImmediatePropagation();
-    //     tinyMCE.triggerSave();
-    //     var str = $(".mytextarea1").val();
-    //     str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-    //     const temp = $("<div>").html(str);
-        
-    //     const fileElements = temp.find("div[contenteditable='false'] img[data-file-id]");
-    //     const fileIds = [];
-    //     fileElements.each(function() {
-    //         const fileId = $(this).attr('data-file-id');
-    //         if (fileId) {
-    //             fileIds.push(fileId);
-    //         }
-    //     });
-
-    //     temp.find("div[contenteditable='false']").remove(); // remove uploaded file previews
-    //     str = temp.text().trim(); // get plain text content
-
-    //     console.log("feedback_sendsd", str);
-    //     console.log("fileIds", fileIds);
-
-    //     if(str) {
-    //         tinyMCE.activeEditor.setContent('');
-    //         const senderImager = "{{ asset("/resources/img/sender.png") }}";
-    //         const senderMessage = str;
-    //         const senderCurrentTime = moment().format('D MMM LT');
-    //         const senderFacility = "{{ \App\Facility::find($user->facility_id)->name }}";
-    //         const senderName = "{{ $user->fname.' '.$user->lname }}";
-    //         const recoAppend = '<div class="direct-chat-msg right">\n' +
-    //             '    <div class="direct-chat-info clearfix">\n' +
-    //             '        <span class="direct-chat-name text-info pull-right">'+senderFacility+'</span><br>\n' +
-    //             '        <span class="direct-chat-name pull-right">'+senderName+'</span>\n' +
-    //             '        <span class="direct-chat-timestamp pull-left">'+senderCurrentTime+'</span>\n' +
-    //             '    </div>\n' +
-    //             '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
-    //             '    <div class="direct-chat-text">\n' +
-    //             '        '+senderMessage+
-    //             '    </div>\n' +
-    //             '</div>';
-    //         $(".reco-body"+code).append(recoAppend);
-    //         var objDiv = document.getElementById(code);
-    //         objDiv.scrollTop = objDiv.scrollHeight;
-    //         $("#message").val('').attr('placeholder','Type Message...');
-    //         $.ajax({
-    //             url: "{{ url('doctor/feedback') }}",
-    //             type: 'post',
-    //             data: {
-    //                 _token : "{{ csrf_token() }}",
-    //                 message: str,
-    //                 code : code
-    //             },
-    //             success: function(data) {}
-    //         });
-    //     }
-    //     else {
-    //         Lobibox.alert("error",
-    //         {
-    //             msg: "ReCo message was empty!"
-    //         });
-    //     }
-    // });
-
+    
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -216,7 +152,8 @@
                     if (file) {
                         const fileURL = URL.createObjectURL(file); // Generate a temporary URL for preview
                         const fileId = Math.random().toString(36).substr(2, 9); // Optional: use actual ID if needed
-
+                        
+                        // window.setupfeedbackFilePreview(fileURL,null, code);
                         // Initialize container if not already
                         if (!filePreviewHtml.includes('file-preview-row')) {
                             filePreviewHtml += `<div class="file-preview-row" style="display: flex; flex-wrap: wrap; gap: 4px;">`;
