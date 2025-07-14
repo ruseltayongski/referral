@@ -52,72 +52,72 @@
                 ?>
                 
                 <img class="direct-chat-img" title="{{ $row->facility }}" src="{{ url('resources/img/'.$icon) }}" alt="Message User Image"><!-- /.direct-chat-img -->
-             @php
-                $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-                $pdfExtensions = ['pdf'];
-            @endphp
+                @php
+                    $imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+                    $pdfExtensions = ['pdf'];
+                @endphp
+                <div class="direct-chat-text">
+                    {{-- File Preview --}}
+                    @if(count($filePaths) > 0)
+                        <div class="attachment-wrapper" style="margin-bottom: 10px; white-space: nowrap; overflow-x: auto;">
+                            @foreach($filePaths as $index => $file)
+                                @if(trim($file) !== '')
+                                    @php
+                                        $extension = strtolower(pathinfo(parse_url($file, PHP_URL_PATH), PATHINFO_EXTENSION));
+                                        $fileName = basename($file);
+                                        $displayName = strlen($fileName) > 10 ? substr($fileName, 0, 7) . '...' : $fileName;
 
-            <div class="direct-chat-text">
-                {{-- File Preview --}}
-                @if(count($filePaths) > 0)
-                    <div class="attachment-wrapper" style="margin-bottom: 10px; white-space: nowrap; overflow-x: auto;">
-                        @foreach($filePaths as $index => $file)
-                            @if(trim($file) !== '')
-                                @php
-                                    $extension = strtolower(pathinfo(parse_url($file, PHP_URL_PATH), PATHINFO_EXTENSION));
-                                    $fileName = basename($file);
-                                    $displayName = strlen($fileName) > 10 ? substr($fileName, 0, 7) . '...' : $fileName;
+                                        $fileUrl = asset($file);
+                                    @endphp
 
-                                    $fileUrl = asset($file);
-                                @endphp
-
-                                <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                                <a href="javascript:void(0)" class="file-preview-trigger" 
-                                    data-file-type="{{ $extension }}"
-                                    data-file-url="{{ $fileUrl }}"
-                                    data-file-name="{{ $fileName }}"
-                                    data-feedback-code="{{ $row->code }}"
-                                    data-file-paths="{{ implode('|', array_map(function($path) { return url($path); }, $filePaths)) }}"
-                                    data-current-index="{{ $index }}">
-                                    @if(in_array($extension, $imageExtensions))
-                                        <img class="attachment-thumb"
-                                            src="{{ asset('public/fileupload/imageFile2.png') }}"
-                                            alt="{{ strtoupper($extension) }} file"
-                                            style="width: 50px; height: 50px; object-fit: cover; border:1px solid green; border-radius: 4px;">
-                                    @elseif(in_array($extension, $pdfExtensions))
-                                        <img class="attachment-thumb"
-                                            src="{{ asset('public/fileupload/pdffile.png') }}"
-                                            alt="PDF file"
-                                            style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
-                                    @else
-                                        <img class="attachment-thumb"
-                                            src="{{ asset('public/fileupload/imageFile2.png') }}"
-                                            alt="File"
-                                            style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
-                                    @endif
-                                </a>
-                                <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $fileName }}">
-                                    {{ $displayName }}
+                                    <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
+                                    <a href="javascript:void(0)" class="file-preview-trigger" 
+                                        data-file-type="{{ $extension }}"
+                                        data-file-url="{{ $fileUrl }}"
+                                        data-file-name="{{ $fileName }}"
+                                        data-feedback-code="{{ $row->code }}"
+                                        data-file-paths="{{ implode('|', array_map(function($path) { return url($path); }, $filePaths)) }}"
+                                        data-current-index="{{ $index }}">
+                                        @if(in_array($extension, $imageExtensions))
+                                            <img class="attachment-thumb"
+                                                src="{{ asset('public/fileupload/imageFile2.png') }}"
+                                                alt="{{ strtoupper($extension) }} file"
+                                                style="width: 50px; height: 50px; object-fit: cover; border:1px solid green; border-radius: 4px;">
+                                        @elseif(in_array($extension, $pdfExtensions))
+                                            <img class="attachment-thumb"
+                                                src="{{ asset('public/fileupload/pdffile.png') }}"
+                                                alt="PDF file"
+                                                style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
+                                        @else
+                                            <img class="attachment-thumb"
+                                                src="{{ asset('public/fileupload/imageFile2.png') }}"
+                                                alt="File"
+                                                style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
+                                        @endif
+                                    </a>
+                                    <!-- <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ $fileName }}">
+                                        {{ $displayName }}
+                                    </div> -->
                                 </div>
-                            </div>
 
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
-
-                {{-- Message Text --}}
-                @if(!empty($row->message))
-                    @if($row->sender == $user->id)
-                        <div class="caption-text" style="margin-top: 5px; color: white;">
-                            {!! nl2br($row->message) !!} 
-                        </div>
-                    @else
-                        <div class="caption-text" style="margin-top: 5px;">
-                            {!! nl2br($row->message) !!} 
+                                @endif
+                            @endforeach
                         </div>
                     @endif
-                @endif
+
+                    {{-- Message Text --}}
+                    @if(!empty($row->message))
+                        @if($row->sender == $user->id)
+                            <div class="caption-text" style="margin-top: 5px; color: white;">
+                                {!! nl2br($row->message) !!}
+                            </div>
+                        @else
+                            <div class="caption-text" style="margin-top: 5px;">
+                                {!! nl2br($row->message) !!}
+                            </div>
+                        @endif
+                    @endif
+                </div>
             </div>
         @endforeach
     @endif
