@@ -171,7 +171,7 @@ $status = session::get('status');
     var telemedicineAppointment = JSON.parse(getCookie('telemedicineAppointment'));
     var telemedAppointment = @json(telemedicineAppointment);
     // console.log("teleme-add-patient",telemedAppointment);
-    if (telemedicineAppointment.length > 0) {
+    if (telemedAppointment && telemedicineAppointment.length > 0) {
         console.log('from-Add',telemedicineAppointment);
         $("#from-consultation").val(JSON.stringify(telemedicineAppointment));
     }

@@ -26,6 +26,11 @@
                 <div class="box-footer">
                     <form action="{{ url('doctor/feedback') }}" method="post" id="feedbackForm">
                         {{ csrf_field() }}
+                        <div class="file-display-bar" id="fileDisplayBar">
+                            <div class="upload-prompt" id="uploadPrompt">
+                            </div>
+                        </div>
+
                         <input type="hidden" id="current_code" name="code" />
                         <div class="input-group">
                             <textarea placeholder="Type Message ..." class="mytextarea1"></textarea>

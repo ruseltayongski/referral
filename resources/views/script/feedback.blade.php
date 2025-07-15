@@ -99,9 +99,17 @@
         const temp = $("<div>").html(str);
         
         // Extract file IDs from the content
-        const fileElements = temp.find("span[contenteditable='false'] img[data-file-id]");
+        // const fileElements = temp.find("span[contenteditable='false'] img[data-file-id]");
+        // const fileIds = [];
+        // fileElements.each(function() {
+        //     const fileId = $(this).attr('data-file-id');
+        //     if (fileId) {
+        //         fileIds.push(fileId);
+        //     }
+        // });
+
         const fileIds = [];
-        fileElements.each(function() {
+        $('#fileDisplayBar img[data-file-id]').each(function() {
             const fileId = $(this).attr('data-file-id');
             if (fileId) {
                 fileIds.push(fileId);
@@ -163,7 +171,7 @@
                             filePreviewHtml += `
                                 <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
                                     <a href="${fileURL}" target="_blank"> 
-                                        <img src="{{ asset('public/fileupload/imageFile2.png') }}" class="attachment-thumb" 
+                                        <img src="${fileURL}" class="attachment-thumb" 
                                             alt="${file.name}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}" />
                                     </a>
@@ -199,7 +207,7 @@
                 '    </div>\n' +
                 '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
                 '    <div class="direct-chat-text">\n' +
-                '        '+senderMessage+filePreviewHtml+
+                '        '+filePreviewHtml+senderMessage+
                 '    </div>\n' +
                 '</div>';
             
@@ -217,6 +225,7 @@
             // Clear message input
             $("#message").val('').attr('placeholder','Type Message...');
             
+            $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt"></div>');
             // Clear uploaded files from memory for this message
             fileIds.forEach(fileId => {
                 window.uploadedFiles.delete(fileId);

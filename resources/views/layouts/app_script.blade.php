@@ -57,30 +57,38 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+ .file-display-bar::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .file-display-bar::-webkit-scrollbar-track {
+        background: #2d2d2d;
+    }
+
+    .file-display-bar::-webkit-scrollbar-thumb {
+        background: #555;
+        border-radius: 3px;
+    }
+ .upload-prompt {
+            color: #888;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .upload-prompt.hidden {
+            display: none;
+        }
+
 </style>
 
 <script>
-    // tinymce.init({
-    //     selector: ".mytextarea1",
-    //     plugins: "emoticons autoresize",
-    //     toolbar: "emoticons",
-    //     toolbar_location: "bottom",
-    //     menubar: false,
-    //     statusbar: false,
-    //     setup: function (editor) {
-    //         editor.on('init', function () {
-    //             editor.getContainer().style.width = "100%";
-    //         });
-    //     }
-    // });
-
     window.uploadedFiles = window.uploadedFiles || new Map();
     let currentEditor = null;
     let currentFile = null;
 
-   let uploadTextareas = $(".mytextarea1[data-upload='true']"); // Use data attribute to identify upload textareas
-   let regularTextareas = $(".mytextarea1:not([data-upload='true'])");
-    console.log("regularTextareas:", regularTextareas.length > 0);
     // TinyMCE initialization for selecting files (pdf, images) and input text 
     tinymce.init({
         selector: ".mytextarea1",
@@ -191,7 +199,7 @@
 
         console.log("file pdf image", file);
 
-          function truncateFileName(fileName, maxLength = 12) {
+        function truncateFileName(fileName, maxLength = 12) {
             if (fileName.length <= maxLength) {
                 return fileName;
             }
@@ -212,46 +220,101 @@
         }
 
         const truncatedFilename = truncateFileName(file.name, 15);
+        let content = '';
+        const removeIconStyle = 'position:absolute;top:-8px;right:-8px;background:#f44336;color:#fff;border-radius:50%;padding:0 5px;font-size:12px;cursor:pointer;line-height:1;'
+
+        const fileDisplayBar = document.getElementById('fileDisplayBar');
+        const uploadPrompt = document.getElementById('uploadPrompt');
+        uploadPrompt.style.display = 'none'; // Hide prompt once files are added
 
         // For each file inside your loop or upload handler
+        // if (file.type.startsWith('image')) {
+        //     console.log("fileId:", fileId);
+        //     content = `<span class="file-attachment" contenteditable="false" style="display:inline-block; vertical-align:top; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px; margin:2px;">
+        //             <a href="${fileURL}" target="_blank">
+        //                 <img src="${fileURL}" alt="${file.name}" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}" />
+        //             </a>
+        //             <div title="${file.name}" style="font-size:0.6em; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
+        //                 ${truncatedFilename}
+        //             </div>
+        //         </span><span>&nbsp;</span>`;
+        // } else if (file.type === 'application/pdf') {
+        //     console.log("file.name", file.name);
+        //     content = `<span class="file-attachment" contenteditable="false" style="display:inline-block; vertical-align:top; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px; margin:2px;">
+        //             <a href="${fileURL}" target="_blank">
+        //                 <img src="{{ asset('public/fileupload/pdffile.png') }}" alt="PDF File" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}"/>
+        //             </a>
+        //             <div title="${file.name}" style="font-size:0.6em; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
+        //                 ${truncatedFilename}
+        //             </div>
+        //         </span><span>&nbsp;</span>`;
+        // }
+
         if (file.type.startsWith('image')) {
-            console.log("fileId:", fileId);
-            editor.insertContent(`<span contenteditable="false" style="display:inline-block; vertical-align:top; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px; margin:2px;">
-                    <a href="${fileURL}" target="_blank">
-                        <img src="{{ asset('public/fileupload/imageFile2.png') }}" alt="${file.name}" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}" />
-                    </a>
-                    <div title="${file.name}" style="font-size:0.6em; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-                        ${truncatedFilename}
-                    </div>
-                </span>`);
+            content = `
+            <div class="file-preview-wrapper" data-file-id="${fileId}" style="position:relative; display:inline-block; margin:2px;">
+                <span class="remove-file-feedback" style="${removeIconStyle}" title="Remove">&times;</span>
+                <a href="${fileURL}" target="_blank">
+                    <img src="${fileURL}" alt="${file.name}" style="width:80px; height:60px; object-fit:contain; border:1px solid #ccc;" data-file-id="${fileId}" />
+                </a>
+                <div title="${file.name}" style="font-size:0.6em; width:80px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
+                    ${truncatedFilename}
+                </div>
+            </div>`;
         } else if (file.type === 'application/pdf') {
-            console.log("file.name", file.name);
-            editor.insertContent(`<span contenteditable="false" style="display:inline-block; vertical-align:top; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px; margin:2px;">
-                    <a href="${fileURL}" target="_blank">
-                        <img src="{{ asset('public/fileupload/pdffile.png') }}" alt="PDF File" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}"/>
-                    </a>
-                    <div title="${file.name}" style="font-size:0.6em; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-                        ${truncatedFilename}
-                    </div>
-                </span>`);
+            content = `
+            <div class="file-preview-wrapper" data-file-id="${fileId}" style="position:relative; display:inline-block; margin:2px;">
+                <span class="remove-file-feedback" style="${removeIconStyle}" title="Remove">&times;</span>
+                <a href="${fileURL}" target="_blank">
+                    <img src="{{ asset('public/fileupload/pdffile.png') }}" alt="PDF File" style="width:80px; height:60px; object-fit:contain; border:1px solid #ccc;" data-file-id="${fileId}" />
+                </a>
+                <div title="${file.name}" style="font-size:0.6em; width:80px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
+                    ${truncatedFilename}
+                </div>
+            </div>`;
         }
         
-        // Set batch flag
+        // editor.insertContent(content);
+
+        const fileWrapper = document.createElement('span');
+        fileWrapper.innerHTML = content;
+        fileDisplayBar.appendChild(fileWrapper);
+
         fileUploadBatch = true;
-        
+
         // Clear existing timeout
         if (fileUploadTimeout) {
             clearTimeout(fileUploadTimeout);
         }
+
+        // fileUploadTimeout = setTimeout(() => {
+        //     if(fileUploadBatch) {
+        //         editor.insertContent('<br><br>');
+
+        //         setTimeout(() => {
+        //             editor.selection.collapse(false);
+        //             editor.fucos();
+        //         }, 100);
+
+        //         fileUploadBatch = false;
+        //     }
+        // }, 100);
         
-        // Add line break only after all files are processed (500ms delay)
-        fileUploadTimeout = setTimeout(() => {
-            if (fileUploadBatch) {
-                editor.insertContent('<br>');
-                fileUploadBatch = false;
-            }
-        }, 500);
     }
+
+    $(document).on('click', '.remove-file-feedback', function () {
+        const fileWrapper = $(this).closest('.file-preview-wrapper');
+        const fileId = fileWrapper.attr('data-file-id');
+
+        if(fileId && window.uploadedFiles.has(fileId)){
+            window.uploadedFiles.delete(fileId);
+            fileWrapper.remove();
+
+            if($('#fileDisplayBar .file-preview-wrapper').length === 0) {
+                $('#uploadPrompt').show();
+            }
+        }
+    });
 
     function showFilePreview(file) {
         console.log('file uplaod::', file);
@@ -292,33 +355,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="file-info">
-                                <div class="info-row">
-                                    <span class="info-label">
-                                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                        File Name:
-                                    </span>
-                                    <span class="info-value">${file.name}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">
-                                        <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
-                                        File Type:
-                                    </span>
-                                    <span class="info-value">${file.type}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">
-                                        <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
-                                        File Size:
-                                    </span>
-                                    <span class="info-value">${formatFileSize(file.size)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 `;
             } else if (file.type === 'application/pdf') {
                 // PDF preview with Bootstrap 3 styling
@@ -330,57 +366,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="margin-top: 20px;">
-                        <div class="col-md-12">
-                            <div class="file-info">
-                                <div class="info-row">
-                                    <span class="info-label">
-                                        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-                                        File Name:
-                                    </span>
-                                    <span class="info-value">${file.name}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">
-                                        <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
-                                        File Type:
-                                    </span>
-                                    <span class="info-value">${file.type}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">
-                                        <span class="glyphicon glyphicon-hdd" aria-hidden="true"></span>
-                                        File Size:
-                                    </span>
-                                    <span class="info-value">${formatFileSize(file.size)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                 `;
             }
         }, 300);
     }
-
-    function formatFileSize(bytes) {
-        if (bytes === 0) return '0 Bytes';
-        
-        const k = 1024;
-        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
     
-   $('#feedbackModal').on('hidden.bs.modal', function () {
+    $('#feedbackModal').on('hidden.bs.modal', function () {
         tinymce.get($('.mytextarea1').attr('id')).setContent('');
-
         window.uploadedFiles.clear();
         $('#filePreviewModalReco').modal('hide');
         $('.direct-chat-messages').html('Loading...');
         $('#feedbackForm')[0].reset();
+        $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt">Select files to display here</div>');
     });
+
     
 
     $(".select2").select2({ 

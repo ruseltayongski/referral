@@ -80,7 +80,7 @@
                                         data-current-index="{{ $index }}">
                                         @if(in_array($extension, $imageExtensions))
                                             <img class="attachment-thumb"
-                                                src="{{ asset('public/fileupload/imageFile2.png') }}"
+                                                src="{{ $fileUrl }}"
                                                 alt="{{ strtoupper($extension) }} file"
                                                 style="width: 50px; height: 50px; object-fit: cover; border:1px solid green; border-radius: 4px;">
                                         @elseif(in_array($extension, $pdfExtensions))

@@ -150,7 +150,7 @@
                             const isPDF = pdfExtensions.includes(extension);
                             const icon = isPDF 
                                 ? $("#broadcasting_url").val() + '/public/fileupload/pdffile.png'
-                                : $("#broadcasting_url").val() + '/public/fileupload/imageFile2.png';
+                                : $("#broadcasting_url").val() + `${file}`;
 
                              fileHtml += `
                                 <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
