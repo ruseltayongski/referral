@@ -55,7 +55,8 @@ use Illuminate\Support\Facades\Redirect;
 use Matrix\Exception;
 use Illuminate\Support\Facades\Log;
 use GuzzleHttp\Client;
-
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ReferralCtrl extends Controller
 {
@@ -2018,17 +2019,26 @@ class ReferralCtrl extends Controller
         $files = $req->file('file_upload');
 
         if ($files && is_array($files)) {
+
             foreach ($files as $file) {
                 if ($file->isValid()) {
                     $username = $user->username;
+
+                    // Generate a unique name for storing
+                    $extension = $file->getClientOriginalExtension();
+                    $uniqueName = $username . '_' . Str::random(10) . '_' . time() . '.' . $extension;
+
+                    // Create directory path
+                    $storagePath = "RecoChat/{$username}";
+
+                    $path = $file->storeAs($storagePath, $uniqueName, 'public');
+
+                    $file_paths[] = '/public' . Storage::url($path);
                     
-                    // Call fileUpload helper - pass the file object directly
-                    ApiController::fileUploadManual($file, $username);
-                    
-                    $file_paths[] = ApiController::fileUploadUrl() . $username . "/" . $file->getClientOriginalName();
                 }
             }
         }
+
         $files_pathname = implode('|', $file_paths);
 
         $data = [
@@ -2041,28 +2051,8 @@ class ReferralCtrl extends Controller
 
         $feedback = Feedback::create($data);
 
-
-        $file_link = (Feedback::select('filename')->where('id', $feedback->id)->first())->filename;
-
-            //        $path = self::securedFile($file_link);
-            //        $file_name = basename($path);
-            
-            $path = [];
-            $file_name = [];
-
-            if($file_link != null && $file_link != "") {
-                $explode = explode("|",$file_link);
-                foreach($explode as $link) {
-                    $path_tmp = self::securedFile($link);
-                    if($path_tmp != '') {
-                        array_push($path, $path_tmp);
-                        array_push($file_name, basename($path_tmp));
-                    }
-                }
-            }
-
         // reco websocket
-        $reco_json = ParamCtrl::feedbackContent($req->code, $user->id, $req->message, $path);
+        $reco_json = ParamCtrl::feedbackContent($req->code, $user->id, $req->message, $files_pathname);
         broadcast(new SocketReco($reco_json));
 
         // return view
@@ -2076,153 +2066,56 @@ class ReferralCtrl extends Controller
         ]);
     }
 
+    public function getFeedbackFiles(Request $req){
 
-    // Alternative method if you prefer to keep your existing structure
-//    public function saveFeedback(Request $req)
-//     {
-//         // Add debug logging
-//         \Log::info('saveFeedback called', [
-//             'request_data' => $req->all(),
-//             'files' => $req->allFiles(),
-//             'has_file_upload' => $req->hasFile('file_upload'),
-//             'input_names' => array_keys($req->all())
-//         ]);
-        
-//         $user = Session::get('auth');
-//         $file_paths = "";
-        
-//         // Check if files were uploaded
-//         if ($req->hasFile('file_upload')) {
-//             \Log::info('Files detected in request');
-//             $files = $req->file('file_upload');
-//             $uploadedPaths = [];
-            
-//             // Handle both single file and array of files
-//             if (!is_array($files)) {
-//                 $files = [$files];
-//             }
-            
-//             foreach ($files as $index => $file) {
-//                 if ($file && $file->isValid()) {
-//                     \Log::info("Processing file {$index}", [
-//                         'name' => $file->getClientOriginalName(),
-//                         'type' => $file->getClientMimeType(),
-//                         'size' => $file->getSize()
-//                     ]);
-                    
-//                     // Get original filename
-//                     $originalName = $file->getClientOriginalName();
-                    
-//                     // Create username directory if it doesn't exist
-//                     $username = $user->username;
-//                     $uploadPath = public_path('fileupload/' . $username);
-                    
-//                     if (!file_exists($uploadPath)) {
-//                         mkdir($uploadPath, 0755, true);
-//                         \Log::info("Created directory: {$uploadPath}");
-//                     }
-                    
-//                     try {
-//                         // Move file to destination
-//                         $file->move($uploadPath, $originalName);
-//                         \Log::info("File moved successfully: {$originalName}");
-                        
-//                         // Build file URL
-//                         $fileUrl = asset('fileupload/' . $username . '/' . $originalName);
-//                         $uploadedPaths[] = $fileUrl;
-                        
-//                     } catch (\Exception $e) {
-//                         \Log::error("Error moving file: " . $e->getMessage());
-//                     }
-//                 } else {
-//                     \Log::warning("Invalid file at index {$index}");
-//                 }
-//             }
-            
-//             // Join file paths with separator
-//             $file_paths = implode('|', $uploadedPaths);
-//             \Log::info("Final file paths: {$file_paths}");
-//         } else {
-//             \Log::info('No files detected in request');
-            
-//             // Check for alternative file upload methods
-//             if ($req->has('files')) {
-//                 \Log::info('Alternative files method detected', ['files' => $req->input('files')]);
-//                 // Handle base64 encoded files if using alternative method
-//                 $filesData = $req->input('files');
-//                 if (is_array($filesData)) {
-//                     $uploadedPaths = [];
-//                     foreach ($filesData as $index => $fileData) {
-//                         if (isset($fileData['data']) && isset($fileData['name'])) {
-//                             $base64Data = $fileData['data'];
-//                             $fileName = $fileData['name'];
-                            
-//                             // Remove data:image/jpeg;base64, or similar prefix
-//                             if (strpos($base64Data, ',') !== false) {
-//                                 $base64Data = explode(',', $base64Data)[1];
-//                             }
-                            
-//                             $fileContent = base64_decode($base64Data);
-                            
-//                             $username = $user->username;
-//                             $uploadPath = public_path('fileupload/' . $username);
-                            
-//                             if (!file_exists($uploadPath)) {
-//                                 mkdir($uploadPath, 0755, true);
-//                             }
-                            
-//                             $filePath = $uploadPath . '/' . $fileName;
-//                             if (file_put_contents($filePath, $fileContent)) {
-//                                 $fileUrl = asset('fileupload/' . $username . '/' . $fileName);
-//                                 $uploadedPaths[] = $fileUrl;
-//                                 \Log::info("Base64 file saved: {$fileName}");
-//                             }
-//                         }
-//                     }
-//                     $file_paths = implode('|', $uploadedPaths);
-//                 }
-//             }
-//         }
-        
-//         $data = array(
-//             'code' => $req->input('code'),
-//             'sender' => $user->id,
-//             'receiver' => 0,
-//             'filename' => $file_paths,
-//             'message' => $req->input('message'),
-//         );
-        
-//         \Log::info('Creating feedback record', $data);
-        
-//         try {
-//             Feedback::create($data);
-//             \Log::info('Feedback created successfully');
-//         } catch (\Exception $e) {
-//             \Log::error('Error creating feedback: ' . $e->getMessage());
-//             return response()->json(['error' => 'Failed to save feedback'], 500);
-//         }
-        
-//         // reco websocket
-//         $reco_json = ParamCtrl::feedbackContent($req->input('code'), $user->id, $req->input('message'));
-//         broadcast(new SocketReco($reco_json));
-//         // end reco websocket
+        try{
+            $code = $req->get('code');
+            $desc = $req->get('desc');
 
-//         $doc = User::find($user->id);
-//         $name = ucwords(mb_strtolower($doc->fname)) . " " . ucwords(mb_strtolower($doc->lname));
-        
-//         return response()->json([
-//             'success' => true,
-//             'message' => 'Feedback saved successfully',
-//             'files' => $file_paths ? explode('|', $file_paths) : [],
-//             'file_count' => count($file_paths ? explode('|', $file_paths) : []),
-//             'data' => [
-//                 'name' => $name,
-//                 'facility' => Facility::find($user->facility_id)->name,
-//                 'message' => $req->input('message')
-//             ]
-//         ]);
-//     }
+            if(!$code){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Code parameter is required'
+                ]);
+            }
 
+            $getfeedbackPath = Feedback::select('id','filename')->where('code', $code)
+                ->whereNotNull('filename')
+                ->where('filename', '!=', '')
+                ->orderBy('id', $desc)
+                ->get();
+
+            $allFiles = [];
+
+            foreach ($getfeedbackPath as $pathloc){
+                if(!empty($pathloc->filename)) {
+                    $filePaths = explode('|', $pathloc->filename);
+                    $filePaths = array_filter($filePaths, function($path) {
+                        return !empty(trim($path));
+                    });
+
+                    foreach ($filePaths as $path){
+                         $allFiles[] = url($path);
+                    }
+                }
+            }
+
+            $allfiles = array_unique($allFiles);
+
+            return response()->json([
+                'success' => true,
+                'files' => array_values($allfiles),
+                'total' => count($allFiles)
+            ]);
+
+        }catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching files: ' . $e->getMessage()
+            ]);
+        }
+
+    }
 
     public function receiverFeedback($user_id,$msg)
     {

@@ -84,71 +84,7 @@
             },500);
         });
     });
-
-    // $('#feedbackForm').submit(function (e) {
-    //     e.preventDefault();
-    //     e.stopImmediatePropagation();
-    //     tinyMCE.triggerSave();
-    //     var str = $(".mytextarea1").val();
-    //     str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-    //     const temp = $("<div>").html(str);
-        
-    //     const fileElements = temp.find("div[contenteditable='false'] img[data-file-id]");
-    //     const fileIds = [];
-    //     fileElements.each(function() {
-    //         const fileId = $(this).attr('data-file-id');
-    //         if (fileId) {
-    //             fileIds.push(fileId);
-    //         }
-    //     });
-
-    //     temp.find("div[contenteditable='false']").remove(); // remove uploaded file previews
-    //     str = temp.text().trim(); // get plain text content
-
-    //     console.log("feedback_sendsd", str);
-    //     console.log("fileIds", fileIds);
-
-    //     if(str) {
-    //         tinyMCE.activeEditor.setContent('');
-    //         const senderImager = "{{ asset("/resources/img/sender.png") }}";
-    //         const senderMessage = str;
-    //         const senderCurrentTime = moment().format('D MMM LT');
-    //         const senderFacility = "{{ \App\Facility::find($user->facility_id)->name }}";
-    //         const senderName = "{{ $user->fname.' '.$user->lname }}";
-    //         const recoAppend = '<div class="direct-chat-msg right">\n' +
-    //             '    <div class="direct-chat-info clearfix">\n' +
-    //             '        <span class="direct-chat-name text-info pull-right">'+senderFacility+'</span><br>\n' +
-    //             '        <span class="direct-chat-name pull-right">'+senderName+'</span>\n' +
-    //             '        <span class="direct-chat-timestamp pull-left">'+senderCurrentTime+'</span>\n' +
-    //             '    </div>\n' +
-    //             '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
-    //             '    <div class="direct-chat-text">\n' +
-    //             '        '+senderMessage+
-    //             '    </div>\n' +
-    //             '</div>';
-    //         $(".reco-body"+code).append(recoAppend);
-    //         var objDiv = document.getElementById(code);
-    //         objDiv.scrollTop = objDiv.scrollHeight;
-    //         $("#message").val('').attr('placeholder','Type Message...');
-    //         $.ajax({
-    //             url: "{{ url('doctor/feedback') }}",
-    //             type: 'post',
-    //             data: {
-    //                 _token : "{{ csrf_token() }}",
-    //                 message: str,
-    //                 code : code
-    //             },
-    //             success: function(data) {}
-    //         });
-    //     }
-    //     else {
-    //         Lobibox.alert("error",
-    //         {
-    //             msg: "ReCo message was empty!"
-    //         });
-    //     }
-    // });
-
+    
     $('#feedbackForm').submit(function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -162,10 +98,8 @@
         str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
         const temp = $("<div>").html(str);
         
-        // Extract file IDs from the content
-        const fileElements = temp.find("span[contenteditable='false'] img[data-file-id]");
         const fileIds = [];
-        fileElements.each(function() {
+        $('#fileDisplayBar img[data-file-id]').each(function() {
             const fileId = $(this).attr('data-file-id');
             if (fileId) {
                 fileIds.push(fileId);
@@ -208,15 +142,17 @@
             const senderName = "{{ ($user->fname ?? '') . ' ' . ($user->lname ?? '') }}";
             
             let filePreviewHtml = '';
+            
             if (fileIds.length > 0) {
                 filePreviewHtml = '<div style="margin-top: 5px;">';
-                fileIds.forEach(fileId => {
+                fileIds.forEach((fileId, index) => {
                     const file = window.uploadedFiles.get(fileId);
             
                     if (file) {
                         const fileURL = URL.createObjectURL(file); // Generate a temporary URL for preview
                         const fileId = Math.random().toString(36).substr(2, 9); // Optional: use actual ID if needed
-
+                        
+                        // window.setupfeedbackFilePreview(fileURL,null, code);
                         // Initialize container if not already
                         if (!filePreviewHtml.includes('file-preview-row')) {
                             filePreviewHtml += `<div class="file-preview-row" style="display: flex; flex-wrap: wrap; gap: 4px;">`;
@@ -225,27 +161,22 @@
                         if (file.type.startsWith('image')) {
                             filePreviewHtml += `
                                 <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
-                                    <a href="${fileURL}" target="_blank"> 
-                                        <img src="{{ asset('public/fileupload/imageFile2.png') }}" class="attachment-thumb" 
+                                    <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${fileURL}" data-code="${code}" data-current-index="${index}"> 
+                                        <img src="${fileURL}" class="attachment-thumb" 
                                             alt="${file.name}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}" />
                                     </a>
-                                    <div title="${file.name}" style="font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;">
-                                        ${file.name}
-                                    </div>
                                 </div>
                             `;
+        
                         } else if (file.type === 'application/pdf') {
                             filePreviewHtml += `
                                 <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
-                                    <a href="${fileURL}" target="_blank">
+                                    <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${fileURL}" data-code="${code}" data-current-index="${index}">
                                         <img src="{{ asset('public/fileupload/pdffile.png') }}" class="attachment-thumb" 
                                             alt="PDF File" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}"/>
                                     </a>
-                                    <div title="${file.name}" style="font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;">
-                                        ${file.name}
-                                    </div>
                                 </div>
                             `;
                         }
@@ -262,15 +193,27 @@
                 '    </div>\n' +
                 '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
                 '    <div class="direct-chat-text">\n' +
-                '        '+senderMessage+filePreviewHtml+
+                '        '+filePreviewHtml+senderMessage+
                 '    </div>\n' +
                 '</div>';
-            
+
+
             // Append to chat if elements exist
             if ($(".reco-body" + (typeof code !== 'undefined' ? code : '')).length > 0) {
                 $(".reco-body" + (typeof code !== 'undefined' ? code : '')).append(recoAppend);
             }
-            
+
+            $(document).off('click', '.file-preview-trigger').on('click', '.file-preview-trigger', function(e) {
+                const fileUrls = $(this).data('file-url');
+                const code = $(this).data('code');
+                const currentIndex = parseInt($(this).data('current-index'));
+                var descend = 'desc';
+                if(fileUrls) {
+                    window.setupfeedbackFilePreview(fileUrls, currentIndex, code, descend);
+                    $('#filePreviewContentReco').modal('show');
+                }
+            });
+
             // Scroll to bottom if element exists
             if (typeof code !== 'undefined' && document.getElementById(code)) {
                 var objDiv = document.getElementById(code);
@@ -280,13 +223,12 @@
             // Clear message input
             $("#message").val('').attr('placeholder','Type Message...');
             
+            $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt"></div>');
             // Clear uploaded files from memory for this message
             fileIds.forEach(fileId => {
                 window.uploadedFiles.delete(fileId);
             });
 
-             console.log("near ajax formData", formData);
-        
             // Send to server with files
             $.ajax({
                 url: "{{ url('doctor/feedback') }}",
@@ -296,6 +238,10 @@
                 contentType: false, // Important for file upload
                 success: function(data) {
                     console.log("Message and files sent successfully:", data);
+
+                    //     window.setupfeedbackFilePreview(fileURL,null,code);
+                    //    $('#filePreviewContentReco').modal('show');
+
                 },
                 error: function(xhr, status, error) {
                     console.error("Error sending message:", error);
@@ -324,6 +270,19 @@
             }
         }
     });
+
+    // function FeedbackFilePreviewSubmit(){
+    //     $(document).off('click', '.file-preview-submit').on('click', '.realtime-file-preview', function(e) {
+    //         e.preventDefault();
+    //         const filepaths = $(this).data('file-paths');
+    //         const feedbackCode = $(this).data('feedback-code');
+    //         console.log("file paths", filepaths);
+    //         console.log("code path", feedbackCode);
+    //         window.setupfeedbackFilePreview(filepaths,null,feedbackCode);
+
+    //         $('#filePreviewContentReco').modal('show');
+    //     });
+    // }
 
     // Optional: Function to check if files are still in memory
     function checkUploadedFiles() {

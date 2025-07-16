@@ -26,6 +26,11 @@
                 <div class="box-footer">
                     <form action="{{ url('doctor/feedback') }}" method="post" id="feedbackForm">
                         {{ csrf_field() }}
+                        <div class="file-display-bar" id="fileDisplayBar">
+                            <div class="upload-prompt" id="uploadPrompt">
+                            </div>
+                        </div>
+
                         <input type="hidden" id="current_code" name="code" />
                         <div class="input-group">
                             <textarea placeholder="Type Message ..." class="mytextarea1"></textarea>
@@ -78,10 +83,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="filePreviewModalLabel">
+                <!-- <h4 class="modal-title" id="filePreviewModalLabel">
                     <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
                     File Preview
-                </h4>
+                </h4> -->
             </div>
             <div class="modal-body">
                 <div class="file-preview-container" id="filePreviewContainer" style="position: relative; min-height: 400px;">
@@ -106,9 +111,9 @@
                     </div>
                     
                     {{-- File Info --}}
-                    <div id="fileInfo" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; z-index: 10;">
+                    <!-- <div id="fileInfo" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; z-index: 10;">
                         Loading...
-                    </div>
+                    </div> -->
                     
                     {{-- File Preview Content --}}
                     <div class="file-preview-content" id="filePreviewContent" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 400px;">
