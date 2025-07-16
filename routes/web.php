@@ -763,3 +763,4 @@ Route::get('opcen/ckd', 'CKDController@CKDIncoming');
 Route::get('opcen/ckd/crossmatch', array('uses' => 'CKDController@crossmatch'));
 Route::get('ckd-referral/{id}', [\App\Http\Controllers\CKDController::class, 'referFromCKD']);
 Route::get('/export/consultation-report', 'doctor\TelemedicineCtrl@exportConsultationReport')->name('export.consultation.report');
+Route::get('get-patient-code/{id}', [\App\Http\Controllers\CKDController::class, 'getPatientCode']);

@@ -560,6 +560,31 @@ document.getElementById('searchInput').addEventListener('keyup', function () {
 
 // Store patient data globally to be accessed by the form after successful crossmatch
 let currentPatientData = null;
+let processedPatientData = {
+            ckd_id:null,
+            first_name: null,
+            middle_name: null,
+            last_name: null,
+            birth_date: null,
+            contact_no: null,
+            sex: null,
+            civil_status: null,
+            barangay_id: null,
+    };
+let patientCode = null;
+
+function fetchDataFromDb(patient_id){
+    fetch("/referral/get-patient-code/" + patient_id)
+    .then(response => response.json())
+    .then(data => {
+        if (data.patient_code) {
+            patientCode = data.patient_code;
+        } else {
+            console.error('Error fetching data:', data.message);
+        }
+    })
+}
+
 
 // Updated event listener for the ckd_info buttons
 document.querySelectorAll('.ckd_info').forEach(button => {
@@ -579,17 +604,17 @@ document.querySelectorAll('.ckd_info').forEach(button => {
             barangay_id: this.dataset.barangay_id
         };
 
-        let processedPatientData = {
-            ckd_id:null,
-            first_name: null,
-            middle_name: null,
-            last_name: null,
-            birth_date: null,
-            contact_no: null,
-            sex: null,
-            civil_status: null,
-            barangay_id: null,
-        };
+        // let processedPatientData = {
+        //     ckd_id:null,
+        //     first_name: null,
+        //     middle_name: null,
+        //     last_name: null,
+        //     birth_date: null,
+        //     contact_no: null,
+        //     sex: null,
+        //     civil_status: null,
+        //     barangay_id: null,
+        // };
 
         const payload = new URLSearchParams({
             ckd_id: currentPatientData.ckd_id,
@@ -633,6 +658,7 @@ document.querySelectorAll('.ckd_info').forEach(button => {
                 civil_status: fetch.data.civil_status,
                 barangay_id: fetch.data.brgy,
             }
+            fetchDataFromDb(fetch.data.id);
             // Set the form fields before opening the form
             populateFormWithPatientData(processedPatientData);
             processedPatientData_func(fetch.data.id);
@@ -794,7 +820,6 @@ function selectFormTitle(initialTitle) {
 }
 
 </script>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -1222,19 +1247,18 @@ function selectFormTitle(initialTitle) {
                     return;
                 }
 
-                // Debug: Show what will be sent in PATCH
-                console.log('PATCH ckd_id to be sent:', patchCkdId);
-
+                let url = "https://ckd.cvchd7.com/api/tracker";
                 // PATCH request, then handle redirect/modal after PATCH completes
-                fetch('https://ckd.cvchd7.com/api/tracker', {
+                fetch(url, {
                     method: 'PATCH',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
                         "id": patchCkdId,
-                        "referred": 1,
-                        "token": "9mG6W5MlHE6JmkVVHTzrQL3ximxpSWbWJx0AhpdO7MJvVKHEuJY1Uc68wjcIUQDa"
+                        "referred": patientCode,
+                        // "patientCode": patientCode || '',
+                        "CKD_REFERRAL": '9mG6W5MlHE6JmkVVHTzrQL3ximxpSWbWJx0AhpdO7MJvVKHEuJY1Uc68wjcIUQDa',
                     })
                 })
                 .then(response => response.json())

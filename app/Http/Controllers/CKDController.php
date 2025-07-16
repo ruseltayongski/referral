@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Patients;
+use App\Tracking;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -86,6 +87,11 @@ class CKDController extends Controller
         );
 
         return view('opcen.ckd_incoming', ['data' => $data,'trigger_ckd_info' => true]);
+    }
+
+    public function getPatientCode($patient_id){
+        $PatientCode = Tracking::select('code')->where('patient_id', $patient_id)->first()->code;
+        return response()->json(['patient_code' => $PatientCode]);
     }
 
     public function CKDIncoming(){
