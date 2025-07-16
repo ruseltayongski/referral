@@ -2070,6 +2070,7 @@ class ReferralCtrl extends Controller
 
         try{
             $code = $req->get('code');
+            $desc = $req->get('desc');
 
             if(!$code){
                 return response()->json([
@@ -2078,9 +2079,10 @@ class ReferralCtrl extends Controller
                 ]);
             }
 
-            $getfeedbackPath = Feedback::select('filename')->where('code', $code)
+            $getfeedbackPath = Feedback::select('id','filename')->where('code', $code)
                 ->whereNotNull('filename')
                 ->where('filename', '!=', '')
+                ->orderBy('id', $desc)
                 ->get();
 
             $allFiles = [];

@@ -377,7 +377,7 @@
         $('#filePreviewModalReco').modal('hide');
         $('.direct-chat-messages').html('Loading...');
         $('#feedbackForm')[0].reset();
-        $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt">Select files to display here</div>');
+        $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt"></div>');
     });
 
     

@@ -141,29 +141,30 @@ $(document).ready(function() {
         $('#filePreviewContentReco').modal('show');
     });
 
-    window.setupfeedbackFilePreview = function(filesArray, startIndex, feedbackCode){
+    window.setupfeedbackFilePreview = function(filesArray, startIndex, feedbackCode,desc){
         currentFiles = filesArray;
         currentIndex = startIndex;
         isfeedbackview = true;
-
+        console.log("desc:::", desc);
          console.log('Setting up realtime preview:', {
             files: currentFiles,
             index: currentIndex,
             code: feedbackCode
         });
 
-        getAllFilesFromFeedback(feedbackCode, filesArray);
+        getAllFilesFromFeedback(feedbackCode, filesArray, desc);
 
         RecoshowFilePreview();
     }
    
-    function getAllFilesFromFeedback(feedbackcode, clickedFileUrl){
+    function getAllFilesFromFeedback(feedbackcode, clickedFileUrl, desc){
         console.log("clickedFileUrl blade:", clickedFileUrl);
         $.ajax({
             url: url, 
             method: 'GET',
             data: {
-                 code: feedbackcode
+                 code: feedbackcode,
+                 desc: desc
             },
             success: function(response) {
                 if(response.success && response.files){
@@ -219,7 +220,8 @@ $(document).ready(function() {
         if(currentFiles === 0) return;
 
         const fileUrl = currentFiles[currentIndex];
-        const filename = fileUrl.split('/').pop();
+        // const filename = fileUrl.split('/').pop();
+        const filename = (fileUrl || '').split('/').pop();
         const extension = filename.split('.').pop().toLowerCase();
 
         $('#fileCounter').text(`${currentIndex + 1} of ${currentFiles.length}`);

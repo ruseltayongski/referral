@@ -98,16 +98,6 @@
         str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
         const temp = $("<div>").html(str);
         
-        // Extract file IDs from the content
-        // const fileElements = temp.find("span[contenteditable='false'] img[data-file-id]");
-        // const fileIds = [];
-        // fileElements.each(function() {
-        //     const fileId = $(this).attr('data-file-id');
-        //     if (fileId) {
-        //         fileIds.push(fileId);
-        //     }
-        // });
-
         const fileIds = [];
         $('#fileDisplayBar img[data-file-id]').each(function() {
             const fileId = $(this).attr('data-file-id');
@@ -152,9 +142,10 @@
             const senderName = "{{ ($user->fname ?? '') . ' ' . ($user->lname ?? '') }}";
             
             let filePreviewHtml = '';
+            
             if (fileIds.length > 0) {
                 filePreviewHtml = '<div style="margin-top: 5px;">';
-                fileIds.forEach(fileId => {
+                fileIds.forEach((fileId, index) => {
                     const file = window.uploadedFiles.get(fileId);
             
                     if (file) {
@@ -170,20 +161,21 @@
                         if (file.type.startsWith('image')) {
                             filePreviewHtml += `
                                 <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
-                                    <a href="${fileURL}" target="_blank"> 
+                                    <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${fileURL}" data-code="${code}" data-current-index="${index}"> 
                                         <img src="${fileURL}" class="attachment-thumb" 
                                             alt="${file.name}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}" />
                                     </a>
                                     <div title="${file.name}" style="font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;">
-                                        ${file.name}
+                                        ${file.name} 
                                     </div>
                                 </div>
                             `;
+        
                         } else if (file.type === 'application/pdf') {
                             filePreviewHtml += `
                                 <div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
-                                    <a href="${fileURL}" target="_blank">
+                                    <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${fileURL}" data-code="${code}" data-current-index="${index}">
                                         <img src="{{ asset('public/fileupload/pdffile.png') }}" class="attachment-thumb" 
                                             alt="PDF File" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}"/>
@@ -210,12 +202,24 @@
                 '        '+filePreviewHtml+senderMessage+
                 '    </div>\n' +
                 '</div>';
-            
+
+
             // Append to chat if elements exist
             if ($(".reco-body" + (typeof code !== 'undefined' ? code : '')).length > 0) {
                 $(".reco-body" + (typeof code !== 'undefined' ? code : '')).append(recoAppend);
             }
-            
+
+            $(document).off('click', '.file-preview-trigger').on('click', '.file-preview-trigger', function(e) {
+                const fileUrls = $(this).data('file-url');
+                const code = $(this).data('code');
+                const currentIndex = parseInt($(this).data('current-index'));
+                var descend = 'desc';
+                if(fileUrls) {
+                    window.setupfeedbackFilePreview(fileUrls, currentIndex, code, descend);
+                    $('#filePreviewContentReco').modal('show');
+                }
+            });
+
             // Scroll to bottom if element exists
             if (typeof code !== 'undefined' && document.getElementById(code)) {
                 var objDiv = document.getElementById(code);
@@ -231,8 +235,6 @@
                 window.uploadedFiles.delete(fileId);
             });
 
-             console.log("near ajax formData", formData);
-        
             // Send to server with files
             $.ajax({
                 url: "{{ url('doctor/feedback') }}",
@@ -242,6 +244,10 @@
                 contentType: false, // Important for file upload
                 success: function(data) {
                     console.log("Message and files sent successfully:", data);
+
+                    //     window.setupfeedbackFilePreview(fileURL,null,code);
+                    //    $('#filePreviewContentReco').modal('show');
+
                 },
                 error: function(xhr, status, error) {
                     console.error("Error sending message:", error);
@@ -270,6 +276,19 @@
             }
         }
     });
+
+    // function FeedbackFilePreviewSubmit(){
+    //     $(document).off('click', '.file-preview-submit').on('click', '.realtime-file-preview', function(e) {
+    //         e.preventDefault();
+    //         const filepaths = $(this).data('file-paths');
+    //         const feedbackCode = $(this).data('feedback-code');
+    //         console.log("file paths", filepaths);
+    //         console.log("code path", feedbackCode);
+    //         window.setupfeedbackFilePreview(filepaths,null,feedbackCode);
+
+    //         $('#filePreviewContentReco').modal('show');
+    //     });
+    // }
 
     // Optional: Function to check if files are still in memory
     function checkUploadedFiles() {

@@ -789,7 +789,7 @@
                                 let objDiv = document.getElementById(event.payload.code);
                                 objDiv.scrollTop = objDiv.scrollHeight;
                                 if (!objDiv.scrollTop)
-                                    this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
+                                    this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_trck)
                             } catch(err){
                                 console.log("modal not open");
                                 this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
