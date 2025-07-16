@@ -574,7 +574,7 @@ let processedPatientData = {
 let patientCode = null;
 
 function fetchDataFromDb(patient_id){
-    fetch("/referral/get-patient-code/" + patient_id)
+    fetch("get-patient-code/" + patient_id)
     .then(response => response.json())
     .then(data => {
         console.log('Raw fetch response:', data);
