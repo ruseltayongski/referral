@@ -762,6 +762,6 @@ Route::get('/test_push',  'ApiController@notifierPushNotification');
 Route::post('/api/video/prescriptions/version2', 'ApiController@savePrescription_version2');
 Route::get('opcen/ckd', 'CKDController@CKDIncoming');
 Route::get('opcen/ckd/crossmatch', array('uses' => 'CKDController@crossmatch'));
-Route::get('ckd-referral/{id}', [\App\Http\Controllers\CKDController::class, 'referFromCKD']);
+Route::get('ckd-referral/{id}', 'CKDController@referFromCKD');
 Route::get('/export/consultation-report', 'doctor\TelemedicineCtrl@exportConsultationReport')->name('export.consultation.report');
-Route::get('get-patient-code/{id}', [\App\Http\Controllers\CKDController::class, 'getPatientCode']);
+Route::get('get-patient-code/{id}', 'CKDController@getPatientCode');

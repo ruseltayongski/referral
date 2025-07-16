@@ -577,8 +577,10 @@ function fetchDataFromDb(patient_id){
     fetch("/referral/get-patient-code/" + patient_id)
     .then(response => response.json())
     .then(data => {
+        console.log('Raw fetch response:', data);
         if (data.patient_code) {
             patientCode = data.patient_code;
+            console.log('Patient Saved:', patientCode);
         } else {
             console.error('Error fetching data:', data.message);
         }
@@ -658,17 +660,20 @@ document.querySelectorAll('.ckd_info').forEach(button => {
                 civil_status: fetch.data.civil_status,
                 barangay_id: fetch.data.brgy,
             }
-            fetchDataFromDb(fetch.data.id);
             // Set the form fields before opening the form
             populateFormWithPatientData(processedPatientData);
             processedPatientData_func(fetch.data.id);
+            console.log('Patient ID:', fetch.data.id);
+            fetchDataFromDb(fetch.data.id);
             // Open the appropriate form
             if (fetch.data.sex == 'Male'){
+                
                 openNewForms('normal');
             }else if (fetch.data.sex == 'Female'){
+                // fetchDataFromDb(fetch.data.id);
                 openNewForms('pregnant');
             }
-            console.log(fetch);
+            // console.log(fetch);
            
         })
         .catch(err => {
@@ -825,6 +830,7 @@ function selectFormTitle(initialTitle) {
     document.addEventListener('DOMContentLoaded', function() {
         @if($trigger_ckd_info == true)
             console.log('Triggering CKD Info link...');
+            
             const ckdInfoLink = document.querySelector('.ckd_info'); // gets the first element
             if (ckdInfoLink) {
                 ckdInfoLink.click();
