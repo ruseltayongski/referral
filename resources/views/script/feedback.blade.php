@@ -166,9 +166,6 @@
                                             alt="${file.name}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}" />
                                     </a>
-                                    <div title="${file.name}" style="font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;">
-                                        ${file.name} 
-                                    </div>
                                 </div>
                             `;
         
@@ -180,9 +177,6 @@
                                             alt="PDF File" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
                                             data-file-id="${fileId}"/>
                                     </a>
-                                    <div title="${file.name}" style="font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:center;">
-                                        ${file.name}
-                                    </div>
                                 </div>
                             `;
                         }

@@ -2,10 +2,11 @@
 /node_modules
 /public/hot
 /public/storage
+/storage/
 /storage/*.key
 /public/fileupload/*
 
-!public/fileupload/imageFile2.png
+/public/fileupload/imageFile2.png
 
 /public/signatures/*
 /vendor
