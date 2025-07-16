@@ -580,9 +580,9 @@ function fetchDataFromDb(patient_id){
         console.log('Raw fetch response:', data);
         if (data.patient_code) {
             patientCode = data.patient_code;
-            console.log('Patient Saved:', patientCode);
+            console.log('Patient code found:', patientCode);
         } else {
-            console.error('Error fetching data:', data.message);
+            console.log('Patient code not found');
         }
     })
 }
