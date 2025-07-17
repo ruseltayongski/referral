@@ -270,7 +270,7 @@
     }
 
     function deleteICD(id) {
-        console.log("icd id: " + id);
+        // console.log("icd id: " + id);
         $(".icd_del").val(id);
     }
 </script>

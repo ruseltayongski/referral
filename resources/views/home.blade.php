@@ -21,7 +21,7 @@
         url: "<?php echo asset('report/home'); ?>",
         type: "GET",
         success: function(data){
-            console.log(data.bohol);
+            // console.log(data.bohol);
             var randomScalingFactor = function() {
                 return Math.round(Math.random() * 100);
             };

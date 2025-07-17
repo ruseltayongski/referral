@@ -603,7 +603,7 @@ $(document).ready(function() {
     
     //Add Time Slot Validation
     let usertype = @json($userInfo);
-    console.log("usertype", usertype);
+    // console.log("usertype", usertype);
     $("#add-appointment").click(function (e) {
         if(usertype.level === "doctor"){
             $("#addconfigModal").modal("show");
@@ -843,7 +843,7 @@ $(document).ready(function() {
             url: `get-config/${configId}`,
             method: 'GET',
             success: function(res) {
-                console.log("res.deparment_subcategory::", res.subOpdId);
+                // console.log("res.deparment_subcategory::", res.subOpdId);
                 const days = res.days;
                 const times = res.times;
                 const category = res.category.trim();
@@ -872,7 +872,7 @@ $(document).ready(function() {
                         const dayTimes = times[day] || [];
                         dayTimes.forEach(slot => {
                             const [timeFrom, timeTo] = slot.split('-');
-                            console.log("dayTimes", timeTo);
+                            // console.log("dayTimes", timeTo);
                             const timeSlotHtml = `
                                 <div class="row Update-time-slots" data-day="${day}"> 
                                     <div class="col-md-5">
@@ -915,7 +915,7 @@ $(document).ready(function() {
         let timeTo = $slotRow.find('input[name^="update_time_to"]').val();
         let configId = $("#update-config_id").val();
 
-        console.log("my day::", day);
+        // console.log("my day::", day);
 
         var urlSlot = "<?php echo asset('/remove-time-slot') ?>";
 
@@ -939,7 +939,7 @@ $(document).ready(function() {
                         },
                         success: function (response){
 
-                            console.log("my TimeSlot Price", response.message);
+                            // console.log("my TimeSlot Price", response.message);
                             if(response.message){
                                 $slotRow.remove();
                                 Lobibox.alert("success", {

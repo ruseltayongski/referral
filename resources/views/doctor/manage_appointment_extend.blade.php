@@ -862,13 +862,13 @@ $(document).ready(function () {
 
 const deleteConfigUrl = "{{ url('delete-Config') }}";
 const editConfigUrl = "{{ url('get-config-data-sched') }}"
-function DeleteConfig(scheduleId, configId){
-    console.log(`Requesting URL: delete-Config/${scheduleId}/${configId}`);
+// function DeleteConfig(scheduleId, configId){
+//     console.log(`Requesting URL: delete-Config/${scheduleId}/${configId}`);
     $.ajax({
         url:`${deleteConfigUrl}/${scheduleId}`,
         method: 'GET',
         success: function(res) {
-           
+
             console.log("res Id:", res.schedId, res.configId);
         },
         error: function(error){
@@ -887,31 +887,31 @@ function UpdateConfig(config_appointment_id, config_id) {
 
     const configData = @json($config_sched_data);
     const appointmentConfig = @json($appointmentSconfig);
-    console.log("appointmentConfig", appointmentConfig);
+    // console.log("appointmentConfig", appointmentConfig);
     let selectedConfig = configData.find(config => config.id === config_id);
     let days = selectedConfig.days.split('|');
     let timeSlots = selectedConfig.time.split('|');
     let category =  selectedConfig.category;
 
     const $defaulCategory = $("#editdefaultCateg");
-    console.log("Select Config::", selectedConfig);
+    // console.log("Select Config::", selectedConfig);
     $defaulCategory.val(config_id).trigger('change');
 
     $('#Appointment_schedule_id').val(config_appointment_id);
 
     const Appointment_Config = appointmentConfig.find(ap => ap.id === config_appointment_id);
-    console.log("data of appointmenr", Appointment_Config);
+    // console.log("data of appointmenr", Appointment_Config);
     $('#opddepartment_config').val(Appointment_Config.opdCategory).trigger('change');
     $defaulCategory.on('change', function () {
         const update_config_id = Number($(this).val());
         selectedConfig = configData.find(config => config.id === update_config_id);
-        console.log("selectedConfig inside handler:", selectedConfig.id);
+        // console.log("selectedConfig inside handler:", selectedConfig.id);
         $('#Config_schedule_id').val(selectedConfig.id);
         if (selectedConfig) {
             days = selectedConfig.days.split('|');
             timeSlots = selectedConfig.time.split('|');
             category = selectedConfig.category;
-            console.log("Days:", days, "Time Slots:", timeSlots);
+            // console.log("Days:", days, "Time Slots:", timeSlots);
             
             // Reset and update UI elements
             $('.edit-time-slots').hide().find(".edit_time-slot").remove();
@@ -952,7 +952,7 @@ function UpdateConfig(config_appointment_id, config_id) {
             if(dayTimemap[day]){
                 dayTimemap[day].forEach(sched => {
                     const [timeFrom, timeTo] = sched.split('-');
-                    console.log("config time", timeFrom);
+                    // console.log("config time", timeFrom);
                     const timeSlotHtml = `
                         <div class="row edit_time-slot"> 
                             <div class="col-md-5">
@@ -1020,14 +1020,14 @@ function UpdateConfig(config_appointment_id, config_id) {
         const day = $dayCheckbox.val();
 
         // Log the values
-        console.log(`Day: ${day}, Time From: ${timeFrom}, Time To: ${timeTo}`);
+        // console.log(`Day: ${day}, Time From: ${timeFrom}, Time To: ${timeTo}`);
 
         // Remove the time slot row
         $timeSlotRow.remove();
     });
 
     function updateScheduleDisplay(dateValue, WeekToMonth) {
-        console.log("WeekToMonth", WeekToMonth);
+        // console.log("WeekToMonth", WeekToMonth);
         if(dateValue){
             const startDate = new Date(dateValue);
             let endDate;

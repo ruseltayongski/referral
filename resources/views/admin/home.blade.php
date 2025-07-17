@@ -102,7 +102,7 @@ $user = Session::get('auth');
             url: link,
             type: "GET",
             success: function(data){
-                console.log(data)
+                // console.log(data)
                 var chartdata = {
                     type: 'bar',
                     data: {

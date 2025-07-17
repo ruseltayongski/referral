@@ -28,14 +28,14 @@
 
             var dataPoints = [];
             $.each(<?php echo json_encode($data)?>, function( index, value ) {
-                console.log(value.date);
+                // console.log(value.date);
                 dataPoints.push({
                     x: new Date(value.date),
                     y: parseInt(value.value)
                 });
             });
 
-            console.log(dataPoints);
+            // console.log(dataPoints);
 
             var options = {
                 animationEnabled: true,

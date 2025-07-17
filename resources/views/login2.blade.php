@@ -1427,10 +1427,9 @@
 <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
 
 <script>
-    console.log('path: ' + window.location.origin);
+    // console.log('path: ' + window.location.origin);
     $('#warning_date').hide();
     $('.btn-submit').on('click',function() {
-        console.log("asdasdasd");
         $(this).html('<i class="fa fa-spinner fa-spin"></i> Validating...');
     });
 
@@ -1463,8 +1462,8 @@
             url: "{{ asset('appointment/create') }}",
             type: 'POST',
             success: function(result){
-                console.log(result);
-                console.log("created appointment successfully!");
+                // console.log(result);
+                // console.log("created appointment successfully!");
                 $('#pointment_name').val('');
                 $('#pointment_email').val('');
                 $('#pointment_phone').val('');
@@ -1493,7 +1492,7 @@
             url: "{{ asset('user_feedback/create') }}",
             type: 'POST',
             success: function(){
-                console.log("sent feedback successfully!");
+                // console.log("sent feedback successfully!");
                 $('#feedback_name').val('');
                 $('#feedback_email').val('');
                 $('#feedback_subject').val('');

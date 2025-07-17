@@ -459,7 +459,7 @@
             
             // Generate all appointment dates based on category and selected days
             const appointmentDates = generateAppointmentDates(startDate, days, category);
-            console.log("Generated appointment dates: ", appointmentDates, slots);
+            // console.log("Generated appointment dates: ", appointmentDates, slots);
             
             // Create appointment slots array with all dates and their slots
             const appointmentSlots = [];
@@ -473,7 +473,7 @@
                 });
             });
             
-            console.log("All appointment slots to check: ", appointmentSlots);
+            // console.log("All appointment slots to check: ", appointmentSlots);
             
             $.ajax({
                 url: checkConfigSLot,
@@ -536,7 +536,7 @@
         }
 
         function generateAppointmentDates(startDate, selectedDays, category) {
-            console.log('generate date days:', startDate, selectedDays, category);
+            // console.log('generate date days:', startDate, selectedDays, category);
             const dates = [];
             const start = new Date(startDate);
             
@@ -596,7 +596,7 @@
                 // let effective_Date = $(".Effective_date").val();
                 // console.log("efective:", effective_Date, "selectedConfig:::", selectedConfig);
 
-                console.log("selectedConfigselectedConfig::", selectedConfig);
+                // console.log("selectedConfigselectedConfig::", selectedConfig);
 
                 if(selectedConfig){
                    
@@ -668,7 +668,7 @@
                    });
                     var OneweekToOneMonth = selectedConfig.category;
                    
-                    console.log("effectiveDate::", effectiveDateValue);
+                    // console.log("effectiveDate::", effectiveDateValue);
 
                     if(effectiveDateValue){
                         const startDate = new Date(effectiveDateValue);
@@ -878,7 +878,7 @@
                 const effectiveDate = $('#effective_date').val();
                 const defaultCategory  = $('#defaultCategorySelect').val();
                 const number_slot = $("#number_slot").val();
-                console.log("number_slot", number_slot, 'l', defaultCategory);
+                // console.log("number_slot", number_slot, 'l', defaultCategory);
                 if(effectiveDate === "" || defaultCategory === "" || number_slot === ""){
                     $("#Addappointment").prop('disabled', true);
                 }else{
@@ -1041,7 +1041,7 @@
 
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
-            console.log('sfdfssd',appointmentId);
+            // console.log('sfdfssd',appointmentId);
             var url = "{{ url('display/appointment').'/'}}"+appointmentId;
            // url = url.replace(':id', appointmentId);
 
