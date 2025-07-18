@@ -21,7 +21,7 @@
             type: 'GET',
             success: function(response) {
                 let form_type = response.form_type;
-                console.log('Form Type:', form_type);
+                // console.log('Form Type:', form_type);
 
                 if (form_type === 'version2') {
                     if (type === 'normal') {
@@ -58,13 +58,13 @@
                     if(type === 'normal') {
                         form_type = '#referralForm';
                         var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
-                        console.log("form Url::", form_url);
+                        // console.log("form Url::", form_url);
                         // $(".referral_body").html(loading);
                         $.ajax({
                             url: form_url,
                             type: "GET",
                             success: function(data) {
-                                console.log("normal", data);
+                                // console.log("normal", data);
                                 setTimeout(function(){
                                     $(".referral_body").html(data);
                                 },300);
@@ -77,7 +77,7 @@
                     else if(type === 'pregnant') {
                         form_type = '#referralForm';
                         // $(".referral_body").html(loading);
-                        console.log("pregnant");
+                        // console.log("pregnant");
                         $.ajax({
                             url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id+"/"+referral_status+"/"+type,
                             type: "GET",
@@ -112,7 +112,7 @@
 
        //EMR patient
        if(patient_emr == 10){
-            console.log("Patient Data", patient_id, code);
+            // console.log("Patient Data", patient_id, code);
             $(".referral_body").html(loading);
             $.ajax({
                 url:"{{ url('doctor/emr-form/data')}}/" + patient_id + "/" + code,
@@ -135,7 +135,7 @@
         type: 'GET',
         success: function(response) {
             let form_type = response.form_type;
-            console.log('Form Type:', form_type, referral_status);
+            // console.log('Form Type:', form_type, referral_status);
 
             if (form_type === 'version2') {
                 if (type === 'normal') {
@@ -178,7 +178,7 @@
                         url: form_url,
                         type: "GET",
                         success: function(data) {
-                            console.log("normal");
+                            // console.log("normal");
                             setTimeout(function(){
                                 $(".referral_body").html(data);
                             },300);
@@ -191,7 +191,7 @@
                 else if(type === 'pregnant') {
                     form_type = '#referralForm';
                     $(".referral_body").html(loading);
-                    console.log("pregnant");
+                    // console.log("pregnant");
                     $.ajax({
                         url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id+"/"+referral_status+"/"+type,
                         type: "GET",
@@ -285,7 +285,7 @@
             type: 'POST',
             success: function(tracking_id) {
                 window.location.reload(false);
-                console.log('hellllloooo',tracking_id);
+                // console.log('hellllloooo',tracking_id);
                 /*if(tracking_id=='denied')
                 {
                     window.location.reload(false);
@@ -335,7 +335,7 @@ $('body').on('click','.edit_form_btn',function(e) {
             url: form_url,
             type: "GET",
             success: function(data) {
-                console.log("form url: " + form_url);
+                // console.log("form url: " + form_url);
                 setTimeout(function(){
                     $('.edit_referral_body').html(data);
                 },300);
@@ -358,7 +358,7 @@ $('body').on('click','.edit_form_revised_btn',function(e) {
             url: form_url,
             type: "GET",
             success: function(data) {
-                console.log("form url: " + form_url);
+                // console.log("form url: " + form_url);
                 setTimeout(function(){
                     $('.edit_referral_body').html(data);
                 },300);
@@ -385,7 +385,7 @@ $('body').on('click','.edit_form_revised_btn',function(e) {
             url: "{{ url('doctor/referral/queuePatient/') }}",
             type: 'POST',
             success: function (data) {
-                console.log(data);
+                // console.log(data);
                 window.location.reload(false);
             }
         });
