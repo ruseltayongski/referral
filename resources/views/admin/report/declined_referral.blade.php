@@ -252,7 +252,7 @@
             date_range = date_range.replace(/\//ig, "%2F");
             date_range = date_range.replace(/ /g, "+");
 
-            console.log('datrange', date_range);
+            // console.log('datrange', date_range);
 
             var statistics_title = "";
             if(status === 'denied') {

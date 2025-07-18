@@ -365,7 +365,7 @@
             url: url+'/'+province_id,
             type: 'GET',
             success: function(data){
-                console.log(data);
+                // console.log(data);
                 $('.loading').hide();
                 $('.select_muncity').empty()
                     .append($('<option>', {

@@ -109,7 +109,7 @@
                 "referring_facility" : referring_facility,
                 "referred_to" : referred_to
             };
-            console.log(json);
+            // console.log(json);
             var url = "<?php echo asset('monitoring/remark') ?>";
             $.post(url,json,function(result){
                 setTimeout(function(){

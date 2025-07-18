@@ -109,8 +109,8 @@ $faci_count = 0;
     }
 
     function disableRemoveBtn() {
-        console.log('counter: ' + counter);
-        console.log('faci_count: ' + faci_count);
+        // console.log('counter: ' + counter);
+        // console.log('faci_count: ' + faci_count);
         for(var i = 0; i <= counter; i++) {
             if(faci_count > 1)
                 $('#btn_remove'+i).show();

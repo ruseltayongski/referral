@@ -549,257 +549,288 @@ $user = Session::get('auth');
 
 <script>
     
-  // Keep the existing event listener for the search functionality
-document.getElementById('searchInput').addEventListener('keyup', function () {
-    const value = this.value.toLowerCase();
-    const rows = document.querySelectorAll("#ckdTableBody tr");
-    rows.forEach(row => {
-        row.style.display = row.innerText.toLowerCase().includes(value) ? '' : 'none';
+    // Keep the existing event listener for the search functionality
+    document.getElementById('searchInput').addEventListener('keyup', function () {
+        const value = this.value.toLowerCase();
+        const rows = document.querySelectorAll("#ckdTableBody tr");
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(value) ? '' : 'none';
+        });
     });
-});
 
-// Store patient data globally to be accessed by the form after successful crossmatch
-let currentPatientData = null;
-
-// Updated event listener for the ckd_info buttons
-document.querySelectorAll('.ckd_info').forEach(button => {
-    button.addEventListener('click', function (e) {
-        e.preventDefault();
-
-        // Extract patient data from the button's data attributes
-        currentPatientData = {
-            ckd_id: this.dataset.ckd_id,
-            first_name: this.dataset.first,
-            middle_name: this.dataset.middle,
-            last_name: this.dataset.last,
-            birth_date: this.dataset.birth,
-            contact_no: this.dataset.contact,
-            sex: this.dataset.sex,
-            civil_status: this.dataset.civil_status,
-            barangay_id: this.dataset.barangay_id
+    // Store patient data globally to be accessed by the form after successful crossmatch
+    let currentPatientData = null;
+    let processedPatientData = {
+                ckd_id:null,
+                first_name: null,
+                middle_name: null,
+                last_name: null,
+                birth_date: null,
+                contact_no: null,
+                sex: null,
+                civil_status: null,
+                barangay_id: null,
         };
+    let patientCode = null;
 
-        let processedPatientData = {
-            ckd_id:null,
-            first_name: null,
-            middle_name: null,
-            last_name: null,
-            birth_date: null,
-            contact_no: null,
-            sex: null,
-            civil_status: null,
-            barangay_id: null,
-        };
+    function fetchDataFromDb(patient_id){
+        fetch("get-patient-code/" + patient_id)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Raw fetch response:', data);
+            if (data.patient_code) {
+                patientCode = data.patient_code;
+                console.log('Patient code found:', patientCode);
+            } else {
+                console.log('Patient code not found');
+            }
+        })
+    }
 
-        const payload = new URLSearchParams({
-            ckd_id: currentPatientData.ckd_id,
-            first_name: currentPatientData.first_name,
-            middle_name: currentPatientData.middle_name,
-            last_name: currentPatientData.last_name,
-            birth_date: currentPatientData.birth_date,
-            contact_no: currentPatientData.contact_no,
-            sex: currentPatientData.sex,
-            civil_status: currentPatientData.civil_status,
-            barangay_id: currentPatientData.barangay_id,
-            _token: document.querySelector('meta[name="csrf-token"]').content // More reliable CSRF token source
-        }).toString();
+
+    // Updated event listener for the ckd_info buttons
+    document.querySelectorAll('.ckd_info').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Extract patient data from the button's data attributes
+            currentPatientData = {
+                ckd_id: this.dataset.ckd_id,
+                first_name: this.dataset.first,
+                middle_name: this.dataset.middle,
+                last_name: this.dataset.last,
+                birth_date: this.dataset.birth,
+                contact_no: this.dataset.contact,
+                sex: this.dataset.sex,
+                civil_status: this.dataset.civil_status,
+                barangay_id: this.dataset.barangay_id
+            };
+
+            // let processedPatientData = {
+            //     ckd_id:null,
+            //     first_name: null,
+            //     middle_name: null,
+            //     last_name: null,
+            //     birth_date: null,
+            //     contact_no: null,
+            //     sex: null,
+            //     civil_status: null,
+            //     barangay_id: null,
+            // };
+
+            const payload = new URLSearchParams({
+                ckd_id: currentPatientData.ckd_id,
+                first_name: currentPatientData.first_name,
+                middle_name: currentPatientData.middle_name,
+                last_name: currentPatientData.last_name,
+                birth_date: currentPatientData.birth_date,
+                contact_no: currentPatientData.contact_no,
+                sex: currentPatientData.sex,
+                civil_status: currentPatientData.civil_status,
+                barangay_id: currentPatientData.barangay_id,
+                _token: document.querySelector('meta[name="csrf-token"]').content // More reliable CSRF token source
+            }).toString();
+            
+            fetch("{{ url('opcen/ckd/crossmatch') }}?" + payload, {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(fetch => {
+                if (fetch.match) {
+                    // Lobibox.notify('success', {
+                    //     title: 'Match found. Data updated!',
+                    // });
+                } else {
+                    // Lobibox.notify('success', {
+                    //     title: 'New patient created!',
+                    // });
+                }
+                processedPatientData = {
+                    patient_id: fetch.data.id,
+                    first_name: fetch.data.fname,
+                    middle_name: fetch.data.mname,
+                    last_name: fetch.data.lname,
+                    birth_date: fetch.data.dob,
+                    contact_no: fetch.data.contact,
+                    sex: fetch.data.sex,
+                    civil_status: fetch.data.civil_status,
+                    barangay_id: fetch.data.brgy,
+                }
+                // Set the form fields before opening the form
+                populateFormWithPatientData(processedPatientData);
+                processedPatientData_func(fetch.data.id);
+                console.log('Patient ID:', fetch.data.id);
+                fetchDataFromDb(fetch.data.id);
+                // Open the appropriate form
+                if (fetch.data.sex == 'Male'){
+                    
+                    openNewForms('normal');
+                }else if (fetch.data.sex == 'Female'){
+                    // fetchDataFromDb(fetch.data.id);
+                    openNewForms('pregnant');
+                }
+                // console.log(fetch);
+            
+            })
+            .catch(err => {
+                console.error(err);
+                Lobibox.notify('error', {
+                    title: 'Error',
+                    msg: 'Something went wrong processing the request.'
+                });
+            });
+        });
+    });
+
+    // Function to populate the form with patient data
+    function populateFormWithPatientData(patientData) {
+        setTimeout(() => {
+            // Select all relevant form modals
+            const formElements = document.querySelectorAll('#normalFormModal, #revisednormalFormModal, #normal_form_editable');
+            PatientBody(patientData.patient_id);
+            formElements.forEach(form => {
+                if (!form) return;
+
+                // Set patient name
+                const nameFields = form.querySelectorAll('.patient_name');
+                nameFields.forEach(field => {
+                    field.textContent = `${patientData.first_name} ${patientData.middle_name} ${patientData.last_name}`;
+                });
+
+                // Set patient ID if there's a hidden input for it
+                const patientIdFields = form.querySelectorAll('input[name="patient_id"]');
+                patientIdFields.forEach(field => {
+                    if (field) field.value = patientData.patient_id || '';
+                });
+
+                // Set CKD ID if present
+                const ckdIdFields = form.querySelectorAll('input[name="ckd_id"]');
+                ckdIdFields.forEach(field => {
+                    if (field) field.value = currentPatientData && currentPatientData.ckd_id ? currentPatientData.ckd_id : '';
+                });
+
+                // Set sex
+                const sexFields = form.querySelectorAll('.patient_sex, select[name="sex"]');
+                sexFields.forEach(field => {
+                    if (field.tagName === 'SELECT') {
+                        const option = Array.from(field.options).find(opt => opt.value === patientData.sex);
+                        if (option) field.value = patientData.sex;
+                    } else {
+                        field.value = patientData.sex;
+                    }
+                });
+
+                // Set civil status
+                const civilStatusFields = form.querySelectorAll('.civil_status, select[name="civil_status"]');
+                civilStatusFields.forEach(field => {
+                    if (field.tagName === 'SELECT') {
+                        const option = Array.from(field.options).find(opt => opt.value === patientData.civil_status);
+                        if (option) field.value = patientData.civil_status;
+                    } else {
+                        field.value = patientData.civil_status;
+                    }
+                });
+
+                // Calculate and set age
+                let age = calculateAge(patientData.birth_date);
+                const ageFields = form.querySelectorAll('.patient_age');
+                ageFields.forEach(field => {
+                    field.textContent = `${age} ${age === 1 ? 'year old' : 'years old'}`;
+                });
+
+                // Show/hide age-specific elements
+                if (age > 18) {
+                    const pedFields = form.querySelectorAll('#pedia_show_normal');
+                    pedFields.forEach(field => { field.style.display = 'none'; });
+                } else {
+                    const pedFields = form.querySelectorAll('#pedia_show_normal');
+                    pedFields.forEach(field => { field.style.display = 'block'; });
+                }
+
+                if (age > 9 && patientData.sex === 'Female') {
+                    const menarche = form.querySelectorAll('#menarche_show, #menarche_show_normal, #menarche_show_pregnant');
+                    menarche.forEach(field => { field.style.display = 'block'; });
+
+                    const menarcheField = form.querySelector('#menarche');
+                    if (menarcheField) menarcheField.setAttribute('min', '9');
+                } else {
+                    const menarche = form.querySelectorAll('#menarche_show, #menarche_show_normal, #menarche_show_pregnant');
+                    menarche.forEach(field => { field.style.display = 'none'; });
+                }
+            });
+        }, 1); // Small delay to ensure the DOM elements are ready
+    }
+
+    // Helper function to calculate age from birth date
+    function calculateAge(birthDateStr) {
+        const birthDate = new Date(birthDateStr);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
         
-        fetch("{{ url('opcen/ckd/crossmatch') }}?" + payload, {
-            method: 'GET',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Accept': 'application/json'
-            }
-        })
-        .then(res => res.json())
-        .then(fetch => {
-            if (fetch.match) {
-                // Lobibox.notify('success', {
-                //     title: 'Match found. Data updated!',
-                // });
-            } else {
-                // Lobibox.notify('success', {
-                //     title: 'New patient created!',
-                // });
-            }
-            processedPatientData = {
-                patient_id: fetch.data.id,
-                first_name: fetch.data.fname,
-                middle_name: fetch.data.mname,
-                last_name: fetch.data.lname,
-                birth_date: fetch.data.dob,
-                contact_no: fetch.data.contact,
-                sex: fetch.data.sex,
-                civil_status: fetch.data.civil_status,
-                barangay_id: fetch.data.brgy,
-            }
-            // Set the form fields before opening the form
-            populateFormWithPatientData(processedPatientData);
-            processedPatientData_func(fetch.data.id);
-            // Open the appropriate form
-            if (fetch.data.sex == 'Male'){
-                openNewForms('normal');
-            }else if (fetch.data.sex == 'Female'){
-                openNewForms('pregnant');
-            }
-            console.log(fetch);
-           
-        })
-        .catch(err => {
-            console.error(err);
-            Lobibox.notify('error', {
-                title: 'Error',
-                msg: 'Something went wrong processing the request.'
-            });
-        });
-    });
-});
-
-// Function to populate the form with patient data
-function populateFormWithPatientData(patientData) {
-    setTimeout(() => {
-        // Select all relevant form modals
-        const formElements = document.querySelectorAll('#normalFormModal, #revisednormalFormModal, #normal_form_editable');
-        PatientBody(patientData.patient_id);
-        formElements.forEach(form => {
-            if (!form) return;
-
-            // Set patient name
-            const nameFields = form.querySelectorAll('.patient_name');
-            nameFields.forEach(field => {
-                field.textContent = `${patientData.first_name} ${patientData.middle_name} ${patientData.last_name}`;
-            });
-
-            // Set patient ID if there's a hidden input for it
-            const patientIdFields = form.querySelectorAll('input[name="patient_id"]');
-            patientIdFields.forEach(field => {
-                if (field) field.value = patientData.patient_id || '';
-            });
-
-            // Set CKD ID if present
-            const ckdIdFields = form.querySelectorAll('input[name="ckd_id"]');
-            ckdIdFields.forEach(field => {
-                if (field) field.value = currentPatientData && currentPatientData.ckd_id ? currentPatientData.ckd_id : '';
-            });
-
-            // Set sex
-            const sexFields = form.querySelectorAll('.patient_sex, select[name="sex"]');
-            sexFields.forEach(field => {
-                if (field.tagName === 'SELECT') {
-                    const option = Array.from(field.options).find(opt => opt.value === patientData.sex);
-                    if (option) field.value = patientData.sex;
-                } else {
-                    field.value = patientData.sex;
-                }
-            });
-
-            // Set civil status
-            const civilStatusFields = form.querySelectorAll('.civil_status, select[name="civil_status"]');
-            civilStatusFields.forEach(field => {
-                if (field.tagName === 'SELECT') {
-                    const option = Array.from(field.options).find(opt => opt.value === patientData.civil_status);
-                    if (option) field.value = patientData.civil_status;
-                } else {
-                    field.value = patientData.civil_status;
-                }
-            });
-
-            // Calculate and set age
-            let age = calculateAge(patientData.birth_date);
-            const ageFields = form.querySelectorAll('.patient_age');
-            ageFields.forEach(field => {
-                field.textContent = `${age} ${age === 1 ? 'year old' : 'years old'}`;
-            });
-
-            // Show/hide age-specific elements
-            if (age > 18) {
-                const pedFields = form.querySelectorAll('#pedia_show_normal');
-                pedFields.forEach(field => { field.style.display = 'none'; });
-            } else {
-                const pedFields = form.querySelectorAll('#pedia_show_normal');
-                pedFields.forEach(field => { field.style.display = 'block'; });
-            }
-
-            if (age > 9 && patientData.sex === 'Female') {
-                const menarche = form.querySelectorAll('#menarche_show, #menarche_show_normal, #menarche_show_pregnant');
-                menarche.forEach(field => { field.style.display = 'block'; });
-
-                const menarcheField = form.querySelector('#menarche');
-                if (menarcheField) menarcheField.setAttribute('min', '9');
-            } else {
-                const menarche = form.querySelectorAll('#menarche_show, #menarche_show_normal, #menarche_show_pregnant');
-                menarche.forEach(field => { field.style.display = 'none'; });
-            }
-        });
-    }, 1); // Small delay to ensure the DOM elements are ready
-}
-
-// Helper function to calculate age from birth date
-function calculateAge(birthDateStr) {
-    const birthDate = new Date(birthDateStr);
-    const today = new Date();
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
-    
-    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        age--;
-    }
-    
-    return age;
-}
-
-// Updated openNewForms function
-function openNewForms(type) {
-    // Get facility_id from server-side
-    var referred_facility = "{{ $user->facility_id }}";
-    
-    console.log("Facility ID: ", type);
-    
-    if (type == 'pregnant') {
-        $('#pregnantModal').modal('show');
-        // $('#pregnantchooseVersionModal').modal('hide');
-        selectFormTitle("BEmONC/ CEmONC ");
-    } else if (type == 'normal') {
-        // $('#pregnantModal').modal('hide');
-        $('#nonPregnantChooseVersionModal').modal('show');
-        selectFormTitle("Clinical");
-        $('#baby_show').hide();
-    }
-    
-    handleRefer();
-}
-
-// Ensure the existing form functionality works
-function handleTelemedicine() {
-    document.querySelectorAll(".telemedicine").forEach(el => {
-        el.value = 1;
-    });
-    selectFormTitle("Clinical ");
-}
-
-function selectFormTitle(initialTitle) {
-    let telemedicine = 0;
-    const telemedicineEls = document.querySelectorAll(".telemedicine");
-    if (telemedicineEls.length > 0) {
-        telemedicine = parseInt(telemedicineEls[0].value);
-    }
-    
-    document.querySelectorAll(".clinical-form-title").forEach(el => {
-        if (telemedicine) {
-            el.innerHTML = `${initialTitle} Telemedicine Consultation`;
-        } else {
-            el.innerHTML = `${initialTitle} Referral Form`;
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
         }
-    });
-}
+        
+        return age;
+    }
+
+    // Updated openNewForms function
+    function openNewForms(type) {
+        // Get facility_id from server-side
+        var referred_facility = "{{ $user->facility_id }}";
+        
+        console.log("Facility ID: ", type);
+        
+        if (type == 'pregnant') {
+            $('#pregnantModal').modal('show');
+            // $('#pregnantchooseVersionModal').modal('hide');
+            selectFormTitle("BEmONC/ CEmONC ");
+        } else if (type == 'normal') {
+            // $('#pregnantModal').modal('hide');
+            $('#nonPregnantChooseVersionModal').modal('show');
+            selectFormTitle("Clinical");
+            $('#baby_show').hide();
+        }
+        
+        handleRefer();
+    }
+
+    // Ensure the existing form functionality works
+    function handleTelemedicine() {
+        document.querySelectorAll(".telemedicine").forEach(el => {
+            el.value = 1;
+        });
+        selectFormTitle("Clinical ");
+    }
+
+    function selectFormTitle(initialTitle) {
+        let telemedicine = 0;
+        const telemedicineEls = document.querySelectorAll(".telemedicine");
+        if (telemedicineEls.length > 0) {
+            telemedicine = parseInt(telemedicineEls[0].value);
+        }
+        
+        document.querySelectorAll(".clinical-form-title").forEach(el => {
+            if (telemedicine) {
+                el.innerHTML = `${initialTitle} Telemedicine Consultation`;
+            } else {
+                el.innerHTML = `${initialTitle} Referral Form`;
+            }
+        });
+    }
 
 </script>
-
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         @if($trigger_ckd_info == true)
             console.log('Triggering CKD Info link...');
+            
             const ckdInfoLink = document.querySelector('.ckd_info'); // gets the first element
             if (ckdInfoLink) {
                 ckdInfoLink.click();
@@ -1188,109 +1219,108 @@ function selectFormTitle(initialTitle) {
         });
     }
 
- $('.normal_form').on('submit', function(e) {
-    e.preventDefault();
-    $('.loading').show();
-    $('.btn-submit').attr('disabled', true);
+    $('.normal_form').on('submit', function(e) {
+        e.preventDefault();
+        $('.loading').show();
+        $('.btn-submit').attr('disabled', true);
 
-    form_type = '#normalFormModal';
-    department_id = $('.select_department_normal').val();
-    department_name = $('.select_department_normal option:selected').html();
-    telemed = $('.telemedicine').val(0);
+        form_type = '#normalFormModal';
+        department_id = $('.select_department_normal').val();
+        department_name = $('.select_department_normal option:selected').html();
+        telemed = $('.telemedicine').val(0);
 
-    // Get ckd_id from hidden input as fallback
-    let ckd_id = $('input[name="ckd_id"]').val();
-    // Debug: Show both currentPatientData and ckd_id from form
-    console.log('currentPatientData:', currentPatientData);
-    console.log('ckd_id from currentPatientData:', currentPatientData ? currentPatientData.ckd_id : undefined);
-    console.log('ckd_id from hidden input:', ckd_id);
+        // Get ckd_id from hidden input as fallback
+        let ckd_id = $('input[name="ckd_id"]').val();
+        // Debug: Show both currentPatientData and ckd_id from form
+        console.log('currentPatientData:', currentPatientData);
+        console.log('ckd_id from currentPatientData:', currentPatientData ? currentPatientData.ckd_id : undefined);
+        console.log('ckd_id from hidden input:', ckd_id);
 
-    // Prefer currentPatientData.ckd_id if available, else use hidden input
-    let patchCkdId = (currentPatientData && currentPatientData.ckd_id) ? currentPatientData.ckd_id : ckd_id;
+        // Prefer currentPatientData.ckd_id if available, else use hidden input
+        let patchCkdId = (currentPatientData && currentPatientData.ckd_id) ? currentPatientData.ckd_id : ckd_id;
 
-    $(this).ajaxSubmit({
-            url: "{{ url('doctor/patient/refer/normal') }}",
-            type: 'POST',
-            success: function(data) {
-                if (typeof data === 'string' && data.trim() === 'consultation_rejected') {
-                    $('.loading').hide();
-                    $('#pregnantModal').modal('hide');
-                    $('#normalFormModal').modal('hide');
-                    Lobibox.alert("error", {
-                        msg: "This appointment schedule is not available because it is fully booked. Please select another schedule from the calendar."
-                    });
-                    return;
-                }
-
-                // Debug: Show what will be sent in PATCH
-                console.log('PATCH ckd_id to be sent:', patchCkdId);
-
-                // PATCH request, then handle redirect/modal after PATCH completes
-                fetch('https://ckd.cvchd7.com/api/tracker', {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        "id": patchCkdId,
-                        "referred": 1,
-                        "token": "9mG6W5MlHE6JmkVVHTzrQL3ximxpSWbWJx0AhpdO7MJvVKHEuJY1Uc68wjcIUQDa"
-                    })
-                })
-                .then(response => response.json())
-                .then(result => {
-                    console.log('PATCH result:', result);
-                    if (result && result.message === "Success!") {
-                        Lobibox.alert("success", {
-                            msg: "CKD tracker updated successfully!"
-                        });
-                    } else {
+        $(this).ajaxSubmit({
+                url: "{{ url('doctor/patient/refer/normal') }}",
+                type: 'POST',
+                success: function(data) {
+                    if (typeof data === 'string' && data.trim() === 'consultation_rejected') {
+                        $('.loading').hide();
+                        $('#pregnantModal').modal('hide');
+                        $('#normalFormModal').modal('hide');
                         Lobibox.alert("error", {
-                            msg: "CKD tracker update failed. Please check the details or try again."
+                            msg: "This appointment schedule is not available because it is fully booked. Please select another schedule from the calendar."
                         });
+                        return;
                     }
 
-                    // Only redirect or close modals after PATCH completes
-                    if (data.referred_to == 790 || data.referred_to == 23) {
-                        var push_diagnosis = typeof push_notification_diagnosis_ccmc !== 'undefined' && push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
-                        data.age = parseInt(data.age);
-                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
-                        $('.loading').hide();
-                        $('#pregnantModal').modal('hide');
-                        $('#normalFormModal').modal('hide');
-                        $('.btn-submit').attr('disabled', false);
-                        Lobibox.alert("success", {
-                            msg: "Successfully referred the patient!"
+                    let url = "https://ckd.cvchd7.com/api/tracker";
+                    // PATCH request, then handle redirect/modal after PATCH completes
+                    fetch(url, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            "id": patchCkdId,
+                            "referred": patientCode,
+                            // "patientCode": patientCode || '',
+                            "CKD_REFERRAL": '9mG6W5MlHE6JmkVVHTzrQL3ximxpSWbWJx0AhpdO7MJvVKHEuJY1Uc68wjcIUQDa',
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        console.log('PATCH result:', result);
+                        if (result && result.message === "Success!") {
+                            Lobibox.alert("success", {
+                                msg: "CKD tracker updated successfully!"
+                            });
+                        } else {
+                            Lobibox.alert("error", {
+                                msg: "CKD tracker update failed. Please check the details or try again."
+                            });
+                        }
+
+                        // Only redirect or close modals after PATCH completes
+                        if (data.referred_to == 790 || data.referred_to == 23) {
+                            var push_diagnosis = typeof push_notification_diagnosis_ccmc !== 'undefined' && push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                            data.age = parseInt(data.age);
+                            sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                            $('.loading').hide();
+                            $('#pregnantModal').modal('hide');
+                            $('#normalFormModal').modal('hide');
+                            $('.btn-submit').attr('disabled', false);
+                            Lobibox.alert("success", {
+                                msg: "Successfully referred the patient!"
+                            });
+                        } else {
+                            $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('PATCH error:', error);
+                        Lobibox.alert("error", {
+                            msg: "An error occurred while updating CKD tracker. Please try again."
                         });
-                    } else {
-                        $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
-                    }
-                })
-                .catch(error => {
-                    console.error('PATCH error:', error);
-                    Lobibox.alert("error", {
-                        msg: "An error occurred while updating CKD tracker. Please try again."
+                        // Still handle redirect/modal even if PATCH fails
+                        if (data.referred_to == 790 || data.referred_to == 23) {
+                            var push_diagnosis = typeof push_notification_diagnosis_ccmc !== 'undefined' && push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+                            data.age = parseInt(data.age);
+                            sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                            $('.loading').hide();
+                            $('#pregnantModal').modal('hide');
+                            $('#normalFormModal').modal('hide');
+                            $('.btn-submit').attr('disabled', false);
+                            Lobibox.alert("success", {
+                                msg: "Successfully referred the patient!"
+                            });
+                        } else {
+                            $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+                        }
                     });
-                    // Still handle redirect/modal even if PATCH fails
-                    if (data.referred_to == 790 || data.referred_to == 23) {
-                        var push_diagnosis = typeof push_notification_diagnosis_ccmc !== 'undefined' && push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
-                        data.age = parseInt(data.age);
-                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
-                        $('.loading').hide();
-                        $('#pregnantModal').modal('hide');
-                        $('#normalFormModal').modal('hide');
-                        $('.btn-submit').attr('disabled', false);
-                        Lobibox.alert("success", {
-                            msg: "Successfully referred the patient!"
-                        });
-                    } else {
-                        $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
-                    }
-                });
-            }
-            // You can add error handling here if needed
+                }
+                // You can add error handling here if needed
+            });
         });
-    });
 
     $('.normal_form_walkin').on('submit',  function(e)  {
         e.preventDefault();

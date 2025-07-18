@@ -170,7 +170,7 @@
                 "_token" : "<?php echo csrf_token(); ?>",
                 "facility_id" : facility_id
             };
-            console.log(json);
+            // console.log(json);
             var url = "<?php echo asset('offline/facilities/remark') ?>";
             $.post(url,json,function(result){
                 setTimeout(function(){

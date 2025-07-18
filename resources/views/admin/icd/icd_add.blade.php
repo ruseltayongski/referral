@@ -46,7 +46,7 @@
             "_token" : "<?php echo csrf_token(); ?>"
         };
         $.post(url,json, function(checkIfExist){
-            console.log(checkIfExist);
+            // console.log(checkIfExist);
             if(checkIfExist['exist'] == 1) {
                 event.preventDefault();
                 $('#code_exist_warning').html("Code already exists!");

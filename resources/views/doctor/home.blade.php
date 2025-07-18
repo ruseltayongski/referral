@@ -118,7 +118,7 @@ $multi_faci = \App\FacilityAssign::where('user_id', $user->user_id)->where('stat
     @endif
 
     var doctor_monthly_report = <?php echo json_encode($doctor_monthly_report); ?>;
-    console.log(doctor_monthly_report);
+    // console.log(doctor_monthly_report);
 
     var chartdata = {
         type: 'bar',

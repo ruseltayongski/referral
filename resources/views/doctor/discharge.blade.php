@@ -215,7 +215,7 @@ $user = Session::get('auth');
                 type: "GET",
                 dataType: "json",
                 success: function(files) {
-                    console.log("Files received:", files);
+                    // console.log("Files received:", files);
 
                     const folderIcon = document.querySelector(`.discharged-file[data-code="${code}"]`);
 
