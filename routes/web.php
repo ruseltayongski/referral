@@ -238,29 +238,6 @@ Route::get('doctor/feedback/load/{code}', 'doctor\ReferralCtrl@loadFeedback');
 Route::get('doctor/feedback/notification/{code}/{user_id}', 'doctor\ReferralCtrl@notificationFeedback');
 Route::post('doctor/feedback', 'doctor\ReferralCtrl@saveFeedback');
 
-// Route::get('/file-proxy/{filename}', function ($filename) {
-//     $url = "https://fileupload.user.edgecloudph.com/" . $filename;
-    
-//     try {
-//         $contents = file_get_contents($url);
-//         $fileExtension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-        
-//         $mimeTypes = [
-//             'pdf' => 'application/pdf',
-//             'jpg' => 'image/jpeg',
-//             'jpeg' => 'image/jpeg',
-//             'png' => 'image/png',
-//             'gif' => 'image/gif',
-//             'webp' => 'image/webp',
-//         ];
-        
-//         $mimeType = $mimeTypes[$fileExtension] ?? 'application/octet-stream';
-        
-//         return response($contents)->header('Content-Type', $mimeType);
-//     } catch (Exception $e) {
-//         abort(404, 'File not found');
-//     }
-// })->name('file-proxy');
 Route::get('/get-feedback-files', 'doctor\ReferralCtrl@getFeedbackFiles');
 
 Route::get('doctor/history/{code}', 'doctor\PatientCtrl@history');

@@ -200,15 +200,20 @@
             FeedbackFilePreviewListeners() {
                 $(document).off('click', '.realtime-file-preview').on('click', '.realtime-file-preview', function(e) {
                     e.preventDefault();
+
                     const baseUrl = $("#broadcasting_url").val();
-                    const filePaths = $(this).data('file-paths');
-                    const fullfilePaths = baseUrl + filePaths;
+                    const filePathsString = $(this).data('file-paths');
+                    const filePaths = typeof filePathsString === 'string' ? filePathsString.split('|').filter(p => p.trim() !== '') : [];
+
+                    const fullfilePaths = filePaths.map(file =>
+                        file.startsWith('http') ? file : baseUrl + file
+                    );
 
                     const currentIndex = parseInt($(this).data('current-index'));
                     const feedbackCode = $(this).data('feedback-code');
 
                     // const filesArray = fullfilePaths.split('|').filter(p => p.trim() !== '');
-
+                    console.log("referral Index", currentIndex);
                     window.setupfeedbackFilePreview(fullfilePaths,currentIndex, feedbackCode);
 
                     $('#filePreviewContentReco').modal('show');

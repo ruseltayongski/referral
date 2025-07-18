@@ -142,7 +142,8 @@
             const senderName = "{{ ($user->fname ?? '') . ' ' . ($user->lname ?? '') }}";
             
             let filePreviewHtml = '';
-            
+            let fileUrlsArray = [];
+
             if (fileIds.length > 0) {
                 filePreviewHtml = '<div style="margin-top: 5px;">';
                 fileIds.forEach((fileId, index) => {
@@ -150,6 +151,13 @@
             
                     if (file) {
                         const fileURL = URL.createObjectURL(file); // Generate a temporary URL for preview
+                        // fileUrlsArray.push({
+                        //     url: fileURL,
+                        //     name: file.name,
+                        //     type: file.type
+                        // });
+
+                        fileUrlsArray.push(fileURL);
                         const fileId = Math.random().toString(36).substr(2, 9); // Optional: use actual ID if needed
                         
                         // window.setupfeedbackFilePreview(fileURL,null, code);
@@ -203,13 +211,19 @@
                 $(".reco-body" + (typeof code !== 'undefined' ? code : '')).append(recoAppend);
             }
 
+            window.feedbackPreviewFiles = fileUrlsArray;
+            
             $(document).off('click', '.file-preview-trigger').on('click', '.file-preview-trigger', function(e) {
                 const fileUrls = $(this).data('file-url');
                 const code = $(this).data('code');
                 const currentIndex = parseInt($(this).data('current-index'));
                 var descend = 'desc';
-                if(fileUrls) {
-                    window.setupfeedbackFilePreview(fileUrls, currentIndex, code, descend);
+                // if(fileUrls) {
+                //     window.setupfeedbackFilePreview(fileUrls, currentIndex, code, descend);
+                //     $('#filePreviewContentReco').modal('show');
+                // }
+                if (Array.isArray(window.feedbackPreviewFiles)) {
+                    window.setupfeedbackFilePreview(window.feedbackPreviewFiles, currentIndex, code, descend);
                     $('#filePreviewContentReco').modal('show');
                 }
             });
