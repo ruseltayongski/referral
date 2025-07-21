@@ -142,143 +142,58 @@ $(document).ready(function() {
         $('#filePreviewContentReco').modal('show');
     });
 
-    window.setupfeedbackFilePreview = function(filesArray, startIndex, feedbackCode,desc){
+    window.setupfeedbackFilePreview = function(filesArray, startIndex, feedbackCode){
         currentFiles = filesArray;
         currentIndex = startIndex;
         isfeedbackview = true;
-        console.log("desc:::", desc);
          console.log('Setting up realtime preview:', {
             files: currentFiles,
             index: currentIndex,
             code: feedbackCode
         });
 
-        getAllFilesFromFeedback(feedbackCode, filesArray, desc,startIndex);
-
-        // RecoshowFilePreview();
+        getAllFilesFromFeedback(feedbackCode, currentFiles, startIndex);
     }
-   
-    // function getAllFilesFromFeedback(feedbackcode, clickedFileUrl, desc,startIndex){
-    //     console.log("startIndex", startIndex);
-    //     // realtimeIndex = startIndex;
 
-    //      if (Array.isArray(clickedFileUrl)) {
-    //         currentFiles = clickedFileUrl;
-    //         currentIndex = startIndex ?? 0;
-    //         RecoshowFilePreview();
-    //         return;
-    //     }
-
-    //     // let singleUrl = Array.isArray(clickedFileUrl) ? clickedFileUrl[startIndex] : clickedFileUrl;
-    //     realtimeIndex = startIndex;
-    //     let singleUrl = clickedFileUrl;
-
-    //     $.ajax({
-    //         url: url, 
-    //         method: 'GET',
-    //         data: {
-    //              code: feedbackcode,
-    //              desc: desc
-    //         },
-    //         success: function(response) {
-    //             if(response.success && response.files){
-    //                 currentFiles = response.files;
-    //                 console.log("currentFiles:::", currentFiles);
-    //                 currentIndex = currentFiles.findIndex(file => file.includes(singleUrl.split('/').pop()));
-    //                 if(currentIndex == -1) currentIndex = 0;
-                 
-    //                 RecoshowFilePreview();
-    //             }
-    //         },
-    //         error: function(xhr, status, error){
-    //             console.error('Error fetching feedback files:', error);
-
-    //         }
-    //     })
-    // }
-
-
-    // function getAllFilesFromFeedback(feedbackcode, clickedFileUrl, desc, startIndex){
-    //     let singleUrl = Array.isArray(clickedFileUrl) ? clickedFileUrl[startIndex] : clickedFileUrl;
-    //     console.log("singleUrl::", singleUrl,'index file:',startIndex);
-        
-    //     $.ajax({
-    //         url: url, 
-    //         method: 'GET',
-    //         data: {
-    //             code: feedbackcode,
-    //             desc: desc
-    //         },
-    //         success: function(response) {
-    //             if(response.success && response.files){
-    //                 // Ensure the server returned files are in correct order
-    //                 currentFiles = response.files.map(f => decodeURIComponent(f));
-
-    //                 // Also decode clicked URL to match
-    //                 const decodedClickedFile = decodeURIComponent(singleUrl);
-    //                 console.log("passs index:", decodedClickedFile);
-    //                 // Find the exact match index
-    //                 currentIndex = currentFiles.findIndex(file => file === decodedClickedFile);
-    //             console.log("passs index currentIndex:", currentIndex);
-    //                 if(currentIndex === -1) {
-    //                     console.warn('Clicked file not found in refreshed list. Defaulting to index 0.');
-    //                     currentIndex = 0;
-    //                 }
-
-    //                 RecoshowFilePreview();
-    //             }
-    //         },
-    //         error: function(xhr, status, error){
-    //             console.error('Error fetching feedback files:', error);
-    //         }
-    //     });
-    // }
-
-    function getAllFilesFromFeedback(feedbackcode, clickedFileInfo, desc, startIndex) {
-    $.ajax({
-        url: url,
-        method: 'GET',
-        data: { code: feedbackcode, desc: desc },
-        success: function(response) {
-            if(response.success && response.files) {
-                currentFiles = response.files.map(f => decodeURIComponent(f));
-                
-                // Determine if we're dealing with blob URLs or server URLs
-                const isBlob = Array.isArray(clickedFileInfo) && 
-                              clickedFileInfo.some(url => url.startsWith('blob:'));
-                
-                if (isBlob) {
-                    // For blob URLs (file submission), use the original startIndex
-                    currentIndex = startIndex < currentFiles.length ? startIndex : 0;
-                    console.log("Using blob URL, index:", currentIndex);
-                } else {
-                    // For server URLs (real-time data), find matching URL
+    function getAllFilesFromFeedback(feedbackcode, clickedFileInfo, startIndex) {
+        // Only fetch from server if not dealing with newly submitted files
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: { code: feedbackcode},
+            success: function(response) {
+                console.log(url);
+                if(response.success && response.files) {
+                    currentFiles = response.files.map(f => decodeURIComponent(f));
+                    
+                    // For server URLs (existing files), find matching URL
                     const targetUrl = Array.isArray(clickedFileInfo) ? 
                                     clickedFileInfo[startIndex] : clickedFileInfo;
                     const decodedTargetUrl = decodeURIComponent(targetUrl);
-                    
+            
                     currentIndex = currentFiles.findIndex(file => file === decodedTargetUrl);
-                    
+
+                    console.log("my current Index::", currentIndex);
+                
                     if(currentIndex === -1) {
-                        console.warn('Real-time file not found in list. Using startIndex:', startIndex);
+                        console.warn('File not found in server list Using startIndex:', startIndex);
                         currentIndex = startIndex < currentFiles.length ? startIndex : 0;
                     }
-                    console.log("Using server URL, found index:", currentIndex);
+
+                    RecoshowFilePreview();
                 }
-                
-                RecoshowFilePreview();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error fetching feedback files:', error);
             }
-        },
-        error: function(xhr, status, error) {
-            console.error('Error fetching feedback files:', error);
-        }
-    });
-}
+        });
+    }
 
     $('#prevBtn').click(function() {
         if(currentIndex > 0) {
             currentIndex--;
             realtimeIndex= null;
+            console.log("currentIndex prev:", currentIndex);
             RecoshowFilePreview();
         }
     });
@@ -287,6 +202,7 @@ $(document).ready(function() {
         if(currentIndex < currentFiles.length - 1){
              currentIndex++;
               realtimeIndex= null;
+              console.log("currentIndex next:", currentIndex);
              RecoshowFilePreview();
         }
     })
@@ -305,50 +221,6 @@ $(document).ready(function() {
             document.body.removeChild(link);
         }
     })
-
-    // function RecoshowFilePreview() {
-    //     if(currentFiles === 0) return;
-    //     // console.log("realtimeIndex", realtimeIndex, "currentIndex::", currentIndex);
-    //     // const fileUrl = currentFiles[realtimeIndex] ??  currentFiles[currentIndex];
-    //     // const filename = fileUrl.split('/').pop();
-    //     console.log("currentFiles:::", currentFiles);
-
-    //     const fileUrl = currentFiles[currentIndex];
-    //     const filename = (fileUrl || '').split('/').pop();
-    //     const extension = filename.split('.').pop().toLowerCase();
-
-    //     $('#fileCounter').text(`${currentIndex + 1} of ${currentFiles.length}`);
-
-    //     // $('#fileInfo').text(filename);
-
-    //     $('#filePreviewContent').html('');
-
-    //     if(['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)){
-    //        $('#filePreviewContent').html(`
-    //             <img src="${fileUrl}" alt="${filename}" 
-    //                  style="max-width: 100%; max-height: 400px; object-fit: contain;">
-    //         `);
-    //     }else if(extension === 'pdf'){
-    //         $('#filePreviewContent').html(`
-    //             <embed src="${fileUrl}" type="application/pdf" 
-    //                    style="width: 100%; height: 400px;">
-    //         `);
-    //     }else{
-    //         $('#filePreviewContent').html(`
-    //             <div style="text-align: center; padding: 50px;">
-    //                 <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;">
-    //                     <span class="glyphicon glyphicon-file"></span>
-    //                 </div>
-    //                 <h4>${filename}</h4>
-    //                 <p>Preview not available for this file type.</p>
-    //                 <a href="${fileUrl}" target="_blank" class="btn btn-primary">
-    //                     <span class="glyphicon glyphicon-download-alt"></span>
-    //                     Download to View
-    //                 </a>
-    //             </div>
-    //         `);
-    //     }
-    // }
 
     function RecoshowFilePreview() {
         if (!currentFiles || currentFiles.length === 0) return;

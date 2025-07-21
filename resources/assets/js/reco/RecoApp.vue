@@ -46,9 +46,11 @@
         },
         methods: {
             async fetchMessages() {
-                await axios.get('reco/fetch').then(response => {
+                await axios.get('reco/fetch').then(response => {    
+                    console.log("total reco::",response.data);
                     const dataMap = response.data.map((item) => {
-                        const message = item.message.replace(/<\/?[^>]+(>|$)/g, "")
+                        // const message = item.message.replace(/<\/?[^>]+(>|$)/g, "") 
+                        const message = item.message ? item.message.replace(/<\/?[^>]+(>|$)/g, "") : '';
                         return {
                             ...item,
                             patient_name: item.patient_name.length >= 25 ? item.patient_name.substring(0,25)+".." : item.patient_name,
