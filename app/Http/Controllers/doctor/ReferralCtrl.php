@@ -1869,9 +1869,16 @@ class ReferralCtrl extends Controller
     }
 
      // Blade feedback view
-     public function feedback($code) {
+    public function feedback($code) {
         $data = $this->getfeedbackData($code); // Reuse the data logic
-       
+        // $html = view('doctor.feedback', [
+        //     'data' => $data,
+        //     'code' => $code
+        // ])->render();
+        // return response()->json([
+        //     'html' => $html,
+        //     'data' => $data
+        // ]);
         return view('doctor.feedback', [
             'data' => $data,
             'code' => $code
@@ -2040,7 +2047,7 @@ class ReferralCtrl extends Controller
         }
 
         $files_pathname = implode('|', $file_paths);
-
+       
         $data = [
             'code'     => $req->code,
             'sender'   => $user->id,
@@ -2059,10 +2066,16 @@ class ReferralCtrl extends Controller
         $doc = User::find($user->id);
         $name = ucwords(mb_strtolower($doc->fname)) . " " . ucwords(mb_strtolower($doc->lname));
         
-        return view('doctor.feedback_append', [
+       $html = view('doctor.feedback_append', [
             "name"     => $name,
             "facility" => Facility::find($user->facility_id)->name,
             "message"  => $req->message
+        ])->render();
+        
+
+        return response()->json([
+            'html' => $html,                       
+            'filename' => $files_pathname,    
         ]);
     }
 

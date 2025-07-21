@@ -130,6 +130,7 @@
                         filePaths = filepath.filter(path => path.trim() !== '');
                     }
                 }
+
                 if (filePaths.length > 0) {
                     fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
                     const baseUrl = $("#broadcasting_url").val();
@@ -204,7 +205,7 @@
                     const baseUrl = $("#broadcasting_url").val();
                     const filePathsString = $(this).data('file-paths');
                     const filePaths = typeof filePathsString === 'string' ? filePathsString.split('|').filter(p => p.trim() !== '') : [];
-
+                    // var desc = 'desc';
                     const fullfilePaths = filePaths.map(file =>
                         file.startsWith('http') ? file : baseUrl + file
                     );

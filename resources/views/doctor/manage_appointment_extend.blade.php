@@ -13,7 +13,7 @@
                     <form id="addAppointmentForm_add" action="{{ route('create-appointment') }}" method="POST">
                         {{ csrf_field() }}
                         <fieldset>
-                            <legend><i class="fa fa-calendar-plus-o"></i> Add Appointment
+                            <legend><i class="fa fa-calendar-plus-o"></i> Add Appointment 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="Add-close-apppoint">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -852,9 +852,9 @@ $(document).ready(function () {
         }
     });
 
+    const todayAppointment = new Date().toISOString().split('T')[0];
 
-      const todayAppointment = new Date().toISOString().split('T')[0];
-  document.getElementById("appointment_date").setAttribute('min', todayAppointment);
+    document.getElementById("appointment_date").setAttribute('min', todayAppointment);
     document.getElementById("effective_date").setAttribute('min', todayAppointment);
 
 });
@@ -881,7 +881,7 @@ const editConfigUrl = "{{ url('get-config-data-sched') }}"
     })
     
     $('#deleteConfigAppointment').modal('show');
-}
+//}
 
 function UpdateConfig(config_appointment_id, config_id) {
 
