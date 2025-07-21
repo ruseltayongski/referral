@@ -260,7 +260,9 @@ $multi_faci = Session::get('multiple_login');
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-wechat"></i> Reco Messages
                     </a>
-                    <ul class="dropdown-menu"><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></ul>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></li>
+                    </ul>
                 </li>
                 <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -268,7 +270,9 @@ $multi_faci = Session::get('multiple_login');
                     </a>
                 @endif
                 @if(!$multi_faci)
-                    <ul class="dropdown-menu"><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></ul>
+                    <ul class="dropdown-menu">
+                        <li><a href="{{ url('doctor/list') }}"><i class="fa fa-user-md"></i> Who's Online</a></li>
+                    </ul>
                 </li>
                 @endif
                 <li class="dropdown-submenu">
