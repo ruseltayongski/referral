@@ -99,267 +99,272 @@
         });
     });
 
-$('#feedbackForm').submit(function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    
-    // Make sure TinyMCE content is saved
-    if (typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor) {
-        tinyMCE.triggerSave();
-    }
-    
-    var str = $(".mytextarea1").val();
-    str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-    const temp = $("<div>").html(str); 
-    
-    const fileIds = [];
-    $('#fileDisplayBar img[data-file-id]').each(function() {
-        const fileId = $(this).attr('data-file-id');
-        if (fileId) {
-            fileIds.push(fileId);
-        }
-    });
+    $('#feedbackForm').submit(function (e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
 
-    temp.find("span[contenteditable='false']").remove();
-    str = temp.text().trim(); // get plain text content
-
-    if(str || fileIds.length > 0) { // Allow submission if there's text OR files
-        // Clear TinyMCE content
+        // Make sure TinyMCE content is saved
         if (typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor) {
-            tinyMCE.activeEditor.setContent('');
+            tinyMCE.triggerSave();
         }
         
-        // Create FormData for file upload
-        const formData = new FormData();
-        formData.append('_token', $('meta[name="csrf-token"]').attr('content') || "{{ csrf_token() }}");
-        formData.append('message', str);
-        formData.append('code', typeof code !== 'undefined' ? code : '');
-       
-        // Add files to FormData - FIXED: forEach with capital E
-        fileIds.forEach((fileId, index) => {
-            const file = window.uploadedFiles.get(fileId);
-            console.log("Adding file to FormData:", file);
-            if (file) {
-                // Use array notation for multiple files
-                formData.append('file_upload[]', file);
+        var str = $(".mytextarea1").val();
+        str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
+        const temp = $("<div>").html(str); 
+        
+        const fileIds = [];
+        $('#fileDisplayBar img[data-file-id]').each(function() {
+            const fileId = $(this).attr('data-file-id');
+            if (fileId) {
+                fileIds.push(fileId);
             }
         });
-        
-        const senderImager = "{{ asset('/resources/img/sender.png') }}";
-        const senderMessage = str;
-        const senderCurrentTime = typeof moment !== 'undefined' ? moment().format('D MMM LT') : new Date().toLocaleString();
-        const senderFacility = "{{ \App\Facility::find($user->facility_id)->name ?? '' }}";
-        const senderName = "{{ ($user->fname ?? '') . ' ' . ($user->lname ?? '') }}";
-        
-        // Send to server with files first
-        $.ajax({
-            url: "{{ url('doctor/feedback') }}",
-            type: 'post',
-            data: formData,
-            processData: false, // Important for file upload
-            contentType: false, // Important for file upload
-            success: function(data) {
-                
-                let filePreviewHtml = '';
-                let fileUrlsArray = [];
-                let newGlobalFiles = [];
-                let baseUrl = "{{ asset('') }}";
-                baseUrl = baseUrl.replace(/[\/|]$/, "");
-                const startingGlobalIndex = globalFiles ? globalFiles.length : 0;
-                // Use data.filename from server response instead of blob URLs
-                if (data.filename && data.filename.length > 0) {
-                    filePreviewHtml = '<div style="margin-top: 5px;">';
-                    filePreviewHtml += '<div class="file-preview-row" style="display: flex; flex-wrap: wrap; gap: 4px;">';
-                    
-                    // Handle both string and array formats
-                    let filenames = [];
-                    if (typeof data.filename === 'string') {
-                        // If it's a string, split by pipe separator
-                        filenames = data.filename.split('|').filter(f => f.trim());
-                    } else if (Array.isArray(data.filename)) {
-                        // If it's already an array, use as is
-                        filenames = data.filename;
-                    }
-                    
-                    filenames.forEach((filename, index) => {
 
-                         const globalFileIndex = startingGlobalIndex + index;
+        temp.find("span[contenteditable='false']").remove();
+        str = temp.text().trim(); // get plain text content
 
-                        // Create server file URL path (handle full paths)
-                        let serverFileUrl;
-                        if (filename.startsWith('/public/storage/')) {
-                            // If filename already contains the full path
-                            serverFileUrl = "{{ asset('') }}" + filename;
-                        } else {
-                            // If filename is just the filename
-                            serverFileUrl = "{{ asset('public/fileupload/') }}/" + filename;
-                        }
+        if(str || fileIds.length > 0) { // Allow submission if there's text OR files
 
-                        fileUrlsArray.push(serverFileUrl);
-
-                         let globalFileUrl;
-                        if (filename.startsWith('/')) {
-                            globalFileUrl = baseUrl + filename;
-                        } else {
-                            globalFileUrl = baseUrl + '/public/fileupload/' + filename;
-                        }
-                        newGlobalFiles.push(globalFileUrl);
-                        
-                        // Get file extension for type checking
-                        const fileExtension = filename.split('.').pop().toLowerCase();
-                        const baseFilename = filename.split('/').pop(); // Get just the filename for display
-                        const fileId = Math.random().toString(36).substr(2, 9);
-
-                        if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
-                            filePreviewHtml += 
-                                `<div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
-                                    <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${serverFileUrl}"
-                                     data-code="${code}" data-local-index="${index}"
-                                     data-current-index="${globalFileIndex}" 
-                                     data-files='${JSON.stringify(fileUrlsArray)}'
-                                     data-use-global="true"> 
-                                        <img src="${serverFileUrl}" class="attachment-thumb" 
-                                            alt="${baseFilename}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
-                                            data-file-id="${fileId}" />
-                                    </a>
-                                </div>`;
-        
-                        } else if (fileExtension === 'pdf') {
-                            filePreviewHtml += 
-                                `<div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
-                                    <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${serverFileUrl}"
-                                     data-code="${code}" data-local-index="${index}"
-                                     data-current-index="${globalFileIndex}" 
-                                     data-files='${JSON.stringify(fileUrlsArray)}'
-                                     data-use-global="true">
-                                        <img src="{{ asset('public/fileupload/pdffile.png') }}" class="attachment-thumb" 
-                                            alt="PDF File" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
-                                            data-file-id="${fileId}"/>
-                                    </a>
-                                </div>`;
-                        } 
-                    });
-                    filePreviewHtml += '</div></div>';
-                }
-
-                if (newGlobalFiles.length > 0) {
-                    // Option 1: Append new files to existing globalFiles array
-                    if (typeof globalFiles !== 'undefined') {
-                        globalFiles = globalFiles.concat(newGlobalFiles);
-                    } else {
-                        globalFiles = newGlobalFiles;
-                    }
-                }
-                
-                const recoAppend = '<div class="direct-chat-msgs right">\n' +
-                    '    <div class="direct-chat-info clearfix">\n' +
-                    '        <span class="direct-chat-name text-info pull-right">'+senderFacility+'</span><br>\n' +
-                    '        <span class="direct-chat-name pull-right">'+senderName+'</span>\n' +
-                    '        <span class="direct-chat-timestamp pull-left">'+senderCurrentTime+'</span>\n' +
-                    '    </div>\n' +
-                    '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
-                    '    <div class="direct-chat-text">\n' +
-                    '        '+filePreviewHtml+senderMessage+
-                    '    </div>\n' +
-                    '</div>';
-
-                // Append to chat if elements exist
-                if ($(".reco-body" + (typeof code !== 'undefined' ? code : '')).length > 0) {
-                    $(".reco-body" + (typeof code !== 'undefined' ? code : '')).append(recoAppend);
-                }
-
-                // Set the fileUrlsArray to window.feedbackPreviewFiles
-                // window.feedbackPreviewFiles = fileUrlsArray;
-                if (!window.feedbackPreviewFilesMap) window.feedbackPreviewFilesMap = {};
-                window.feedbackPreviewFilesMap[code] = fileUrlsArray;
-               
-                // Setup file preview click handlers
-                $(document).off('click', '.file-preview-trigger').on('click', '.file-preview-trigger', function(e) {
-                    const fileUrls = $(this).data('file-url');
-                    const code = $(this).data('code');
-                    const useGlobal = $(this).data('use-global');
-                    const globalIndex = parseInt($(this).data('current-index'));
-                    const localIndex = parseInt($(this).data('local-index'));
-                    // let files = window.feedbackPreviewFilesMap[code] || [];
-                    let filesAttr =  $(this).attr('data-files');
+            const $submitBtn = $('#feedbackForm button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Sending...');
+            // Clear TinyMCE content
+            if (typeof tinyMCE !== 'undefined' && tinyMCE.activeEditor) {
+                tinyMCE.activeEditor.setContent('');
+            }
             
-                    // var descend = 'desc';
-
-                    let files = [];
-                    let startIndex = 0;
+            // Create FormData for file upload
+            const formData = new FormData();
+            formData.append('_token', $('meta[name="csrf-token"]').attr('content') || "{{ csrf_token() }}");
+            formData.append('message', str);
+            formData.append('code', typeof code !== 'undefined' ? code : '');
+        
+            // Add files to FormData - FIXED: forEach with capital E
+            fileIds.forEach((fileId, index) => {
+                const file = window.uploadedFiles.get(fileId);
+                console.log("Adding file to FormData:", file);
+                if (file) {
+                    // Use array notation for multiple files
+                    formData.append('file_upload[]', file);
+                }
+            });
+            
+            const senderImager = "{{ asset('/resources/img/sender.png') }}";
+            const senderMessage = str;
+            const senderCurrentTime = typeof moment !== 'undefined' ? moment().format('D MMM LT') : new Date().toLocaleString();
+            const senderFacility = "{{ \App\Facility::find($user->facility_id)->name ?? '' }}";
+            const senderName = "{{ ($user->fname ?? '') . ' ' . ($user->lname ?? '') }}";
+            
+            // Send to server with files first
+            $.ajax({
+                url: "{{ url('doctor/feedback') }}",
+                type: 'post',
+                data: formData,
+                processData: false, // Important for file upload
+                contentType: false, // Important for file upload
+                success: function(data) {
                     
-                    if (useGlobal && globalFiles && globalFiles.length > 0) {
-                        // Use globalFiles array for navigation
-                        files = globalFiles.map(normalizeUrl);
-                        startIndex = globalIndex;
-                    } else {
-                        // Fallback to local files from data attribute
-                        let filesAttr = $(this).attr('data-files');
-                        try {
-                            if (filesAttr) {
-                                files = JSON.parse(filesAttr);
-                                files = files.map(normalizeUrl);
-                                startIndex = localIndex;
+                    let filePreviewHtml = '';
+                    let fileUrlsArray = [];
+                    let newGlobalFiles = [];
+                    let baseUrl = "{{ asset('') }}";
+                    baseUrl = baseUrl.replace(/[\/|]$/, "");
+                    const startingGlobalIndex = globalFiles ? globalFiles.length : 0;
+                    // Use data.filename from server response instead of blob URLs
+                    if (data.filename && data.filename.length > 0) {
+                        filePreviewHtml = '<div style="margin-top: 5px;">';
+                        filePreviewHtml += '<div class="file-preview-row" style="display: flex; flex-wrap: wrap; gap: 4px;">';
+                        
+                        // Handle both string and array formats
+                        let filenames = [];
+                        if (typeof data.filename === 'string') {
+                            // If it's a string, split by pipe separator
+                            filenames = data.filename.split('|').filter(f => f.trim());
+                        } else if (Array.isArray(data.filename)) {
+                            // If it's already an array, use as is
+                            filenames = data.filename;
+                        }
+                        
+                        filenames.forEach((filename, index) => {
+
+                            const globalFileIndex = startingGlobalIndex + index;
+
+                            // Create server file URL path (handle full paths)
+                            let serverFileUrl;
+                            if (filename.startsWith('/public/storage/')) {
+                                // If filename already contains the full path
+                                serverFileUrl = "{{ asset('') }}" + filename;
                             } else {
-                                console.warn("data-files attribute is missing or empty.");
+                                // If filename is just the filename
+                                serverFileUrl = "{{ asset('public/fileupload/') }}/" + filename;
+                            }
+
+                            fileUrlsArray.push(serverFileUrl);
+
+                            let globalFileUrl;
+                            if (filename.startsWith('/')) {
+                                globalFileUrl = baseUrl + filename;
+                            } else {
+                                globalFileUrl = baseUrl + '/public/fileupload/' + filename;
+                            }
+                            newGlobalFiles.push(globalFileUrl);
+                            
+                            // Get file extension for type checking
+                            const fileExtension = filename.split('.').pop().toLowerCase();
+                            const baseFilename = filename.split('/').pop(); // Get just the filename for display
+                            const fileId = Math.random().toString(36).substr(2, 9);
+
+                            if (['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'].includes(fileExtension)) {
+                                filePreviewHtml += 
+                                    `<div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
+                                        <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${serverFileUrl}"
+                                        data-code="${code}" data-local-index="${index}"
+                                        data-current-index="${globalFileIndex}" 
+                                        data-files='${JSON.stringify(fileUrlsArray)}'
+                                        data-use-global="true"> 
+                                            <img src="${serverFileUrl}" class="attachment-thumb" 
+                                                alt="${baseFilename}" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
+                                                data-file-id="${fileId}" />
+                                        </a>
+                                    </div>`;
+            
+                            } else if (fileExtension === 'pdf') {
+                                filePreviewHtml += 
+                                    `<div contenteditable="false" style="display:inline-block; text-align:center; width:60px; margin-right:5px;">
+                                        <a href="javascript:void(0);" class="file-preview-trigger" data-file-url="${serverFileUrl}"
+                                        data-code="${code}" data-local-index="${index}"
+                                        data-current-index="${globalFileIndex}" 
+                                        data-files='${JSON.stringify(fileUrlsArray)}'
+                                        data-use-global="true">
+                                            <img src="{{ asset('public/fileupload/pdffile.png') }}" class="attachment-thumb" 
+                                                alt="PDF File" style="width:50px; height:50px; object-fit:contain; border:1px solid green;" 
+                                                data-file-id="${fileId}"/>
+                                        </a>
+                                    </div>`;
+                            } 
+                        });
+                        filePreviewHtml += '</div></div>';
+                    }
+
+                    if (newGlobalFiles.length > 0) {
+                        // Option 1: Append new files to existing globalFiles array
+                        if (typeof globalFiles !== 'undefined') {
+                            globalFiles = globalFiles.concat(newGlobalFiles);
+                        } else {
+                            globalFiles = newGlobalFiles;
+                        }
+                    }
+                    
+                    const recoAppend = '<div class="direct-chat-msgs right">\n' +
+                        '    <div class="direct-chat-info clearfix">\n' +
+                        '        <span class="direct-chat-name text-info pull-right">'+senderFacility+'</span><br>\n' +
+                        '        <span class="direct-chat-name pull-right">'+senderName+'</span>\n' +
+                        '        <span class="direct-chat-timestamp pull-left">'+senderCurrentTime+'</span>\n' +
+                        '    </div>\n' +
+                        '    <img class="direct-chat-img" title="" src="'+senderImager+'" alt="Message User Image"><!-- /.direct-chat-img -->\n' +
+                        '    <div class="direct-chat-text">\n' +
+                        '        '+filePreviewHtml+senderMessage+
+                        '    </div>\n' +
+                        '</div>';
+
+                    // Append to chat if elements exist
+                    if ($(".reco-body" + (typeof code !== 'undefined' ? code : '')).length > 0) {
+                        $(".reco-body" + (typeof code !== 'undefined' ? code : '')).append(recoAppend);
+                    }
+
+                    // Set the fileUrlsArray to window.feedbackPreviewFiles
+                    // window.feedbackPreviewFiles = fileUrlsArray;
+                    if (!window.feedbackPreviewFilesMap) window.feedbackPreviewFilesMap = {};
+                    window.feedbackPreviewFilesMap[code] = fileUrlsArray;
+                
+                    // Setup file preview click handlers
+                    $(document).off('click', '.file-preview-trigger').on('click', '.file-preview-trigger', function(e) {
+                        const fileUrls = $(this).data('file-url');
+                        const code = $(this).data('code');
+                        const useGlobal = $(this).data('use-global');
+                        const globalIndex = parseInt($(this).data('current-index'));
+                        const localIndex = parseInt($(this).data('local-index'));
+                        // let files = window.feedbackPreviewFilesMap[code] || [];
+                        let filesAttr =  $(this).attr('data-files');
+                
+                        // var descend = 'desc';
+
+                        let files = [];
+                        let startIndex = 0;
+                        
+                        if (useGlobal && globalFiles && globalFiles.length > 0) {
+                            // Use globalFiles array for navigation
+                            files = globalFiles.map(normalizeUrl);
+                            startIndex = globalIndex;
+                        } else {
+                            // Fallback to local files from data attribute
+                            let filesAttr = $(this).attr('data-files');
+                            try {
+                                if (filesAttr) {
+                                    files = JSON.parse(filesAttr);
+                                    files = files.map(normalizeUrl);
+                                    startIndex = localIndex;
+                                } else {
+                                    console.warn("data-files attribute is missing or empty.");
+                                    return;
+                                }
+                            } catch (e) {
+                                console.error("Invalid JSON in data-files:", filesAttr, e);
                                 return;
                             }
-                        } catch (e) {
-                            console.error("Invalid JSON in data-files:", filesAttr, e);
-                            return;
                         }
+                        
+                        if (Array.isArray(files) && files.length > 0) {
+                            window.setupfeedbackFilePreview(files, startIndex, code);
+                            $('#filePreviewContentReco').modal('show');
+                        }
+                    });
+
+                    // Scroll to bottom if element exists
+                    if (typeof code !== 'undefined' && document.getElementById(code)) {
+                        var objDiv = document.getElementById(code);
+                        objDiv.scrollTop = objDiv.scrollHeight;
                     }
                     
-                    if (Array.isArray(files) && files.length > 0) {
-                        window.setupfeedbackFilePreview(files, startIndex, code);
-                        $('#filePreviewContentReco').modal('show');
-                    }
-                });
-
-                // Scroll to bottom if element exists
-                if (typeof code !== 'undefined' && document.getElementById(code)) {
-                    var objDiv = document.getElementById(code);
-                    objDiv.scrollTop = objDiv.scrollHeight;
-                }
-                
-                // Clear message input
-                $("#message").val('').attr('placeholder','Type Message...');
-                
-                $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt"></div>');
-                
-                // Clear uploaded files from memory for this message
-                fileIds.forEach(fileId => {
-                    window.uploadedFiles.delete(fileId);
-                });
-            },
-            error: function(xhr, status, error) {
-                console.error("Error sending message:", error);
-                console.log("XHR:", xhr);
-                console.log("Status:", status);
-                
-                // Show error message if Lobibox is available
-                if (typeof Lobibox !== 'undefined') {
-                    Lobibox.alert("error", {
-                        msg: "Failed to send message. Please try again."
+                    // Clear message input
+                    $("#message").val('').attr('placeholder','Type Message...');
+                    
+                    $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt"></div>');
+                    
+                    // Clear uploaded files from memory for this message
+                    fileIds.forEach(fileId => {
+                        window.uploadedFiles.delete(fileId);
                     });
-                } else {
-                    alert("Failed to send message. Please try again.");
-                }
-            }
-        });
 
-    }
-    else {
-        // Show error message if no content
-        if (typeof Lobibox !== 'undefined') {
-            Lobibox.alert("error", {
-                msg: "Please enter a message or select files to upload!"
+                    $submitBtn.prop('disabled', false).text('Send');
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error sending message:", error);
+                    console.log("XHR:", xhr);
+                    console.log("Status:", status);
+                    
+                    // Show error message if Lobibox is available
+                    if (typeof Lobibox !== 'undefined') {
+                        Lobibox.alert("error", {
+                            msg: "Failed to send message. Please try again."
+                        });
+                    } else {
+                        alert("Failed to send message. Please try again.");
+                    }
+                }
             });
-        } else {
-            alert("Please enter a message or select files to upload!");
+
         }
-    }
-});
+        else {
+            // Show error message if no content
+            if (typeof Lobibox !== 'undefined') {
+                Lobibox.alert("error", {
+                    msg: "Please enter a message or select files to upload!"
+                });
+            } else {
+                alert("Please enter a message or select files to upload!");
+            }
+        }
+    });
 
 
     // function FeedbackFilePreviewSubmit(){
