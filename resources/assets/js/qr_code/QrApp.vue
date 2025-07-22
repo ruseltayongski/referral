@@ -46,8 +46,8 @@
             QRCodeVue3
         },
         created() {
-            console.log(this.patient_code)
-            console.log(this.telemedicine)
+            // console.log(this.patient_code)
+            // console.log(this.telemedicine)
         }
     }
 </script>

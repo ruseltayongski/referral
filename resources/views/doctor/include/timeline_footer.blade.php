@@ -232,7 +232,7 @@
             selectedButtonData = $(this).data(); 
             let telemedValue = selectedButtonData.telemed; // Get telemedicine value
 
-            console.log("Telemedicine Value:", telemedValue); // Debugging
+            // console.log("Telemedicine Value:", telemedValue); // Debugging
 
             if (telemedValue == 1) {
                 $('#privacyNoticeModal').modal('show');

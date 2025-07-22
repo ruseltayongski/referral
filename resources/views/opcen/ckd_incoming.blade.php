@@ -1583,9 +1583,8 @@ $user = Session::get('auth');
                 },
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
+                    
                     setTimeout(function() {
-                        console.log("Force refresh!");
                         window.location.reload(false);
                     }, 15000);
                 },
@@ -1596,12 +1595,10 @@ $user = Session::get('auth');
             });
 
         } else {
-            console.log("error else");
             setTimeout(function() {
                 window.location.reload(false);
             }, 500);
         }
-        console.log("ni lahus sa last!");
     }
 
     @if(Session::get('patient_update_save'))
