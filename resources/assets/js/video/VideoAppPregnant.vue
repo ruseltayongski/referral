@@ -338,7 +338,6 @@ export default {
       }
     },
      appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
-        console.log("inside the recos append:", filepath);
         let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
         let message = msg && msg.trim() !== ""
             ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
@@ -348,6 +347,9 @@ export default {
         const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         const pdfExtensions = ['pdf'];
         let filePaths = [];
+        let newGlobalFiles = [];
+        
+        const startingGlobalIndex = globalFiles ? globalFiles.length : 0;
 
         if (filepath) {
             if (typeof filepath === 'string') {
@@ -357,12 +359,27 @@ export default {
                 filePaths = filepath.filter(path => path.trim() !== '');
             }
         }
+
         if (filePaths.length > 0) {
             fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
             const baseUrl = $("#broadcasting_url").val();
+
               filePaths.forEach((file, index) => {
                 if (file.trim() !== '') {
                     let url;
+
+                    const globalFileIndex = startingGlobalIndex + index;
+
+                    if (file.startsWith('http://') || file.startsWith('https://')) {
+                        // Already a full URL
+                        url = file;
+                    } else if (file.startsWith('/')) {
+                        // Absolute path
+                        url = baseUrl + file;
+                    } 
+
+                    newGlobalFiles.push(url);
+
                     try {
                         url = new URL(file, baseUrl);  // Use base in case it's a relative URL
                     } catch (err) {
@@ -387,7 +404,10 @@ export default {
                                 data-file-name="${fileName}"
                                 data-feedback-code="${code}"
                                 data-file-paths="${filePaths.join('|')}"
-                                data-current-index="${index}">
+                                data-current-index="${globalFileIndex}"
+                                data-local-index="${index}"
+                                data-use-global="true">
+                                
                                 <img class="attachment-thumb"
                                     src="${icon}"
                                     alt="${extension.toUpperCase()} file"
@@ -403,6 +423,35 @@ export default {
 
             fileHtml += '</div>';
         }
+
+        // UPDATE GLOBAL FILES ARRAY
+        if (newGlobalFiles.length > 0) {
+            // Initialize globalFiles if it doesn't exist
+            if (typeof window.globalFiles === 'undefined') {
+                window.globalFiles = [];
+            }
+            
+            // Add new files to global array
+            window.globalFiles = window.globalFiles.concat(newGlobalFiles);
+            
+            // Store per-code basis for better organization
+            if (!window.globalFilesByCode) {
+                window.globalFilesByCode = {};
+            }
+            if (!window.globalFilesByCode[code]) {
+                window.globalFilesByCode[code] = [];
+            }
+            window.globalFilesByCode[code] = window.globalFilesByCode[code].concat(newGlobalFiles);
+
+            // If you're using Vue's reactive data, you might want to update a Vue data property
+            if (this.$data && this.$data.globalFiles) {
+                this.globalFiles = [...this.globalFiles, ...newGlobalFiles];
+            }
+
+            console.log("Updated globalFiles in appendReco:", window.globalFiles);
+            console.log("Files for code " + code + ":", window.globalFilesByCode[code]);
+        }
+
 
         let messageColor = 'style="margin-top: 5px;"';
         let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
@@ -421,23 +470,58 @@ export default {
                 </div>
             </div>
         `);
-         this.FeedbackFilePreviewListeners();
+
+        this.FeedbackFilePreviewListeners();
     },
-    FeedbackFilePreviewListeners(){
-      $(document).off('click', '.realtime-file-preview').on('click', '.realtime-file-preview', function(e) {
-        e.preventDefault();
+     FeedbackFilePreviewListeners() {
+        $(document).off('click', '.realtime-file-preview').on('click', '.realtime-file-preview', function(e) {
+            e.preventDefault();
 
-        const baseUrl = $("#broadcasting_url").val();
-        const filePaths = $(this).data('file-paths');
-        const fullfilePaths = baseUrl + filePaths;
+            const baseUrl = $("#broadcasting_url").val();
+            const filePathsString = $(this).data('file-paths');
+            const filePaths = typeof filePathsString === 'string' ? filePathsString.split('|').filter(p => p.trim() !== '') : [];
+            // var desc = 'desc';
+            const fullfilePaths = filePaths.map(file =>
+                file.startsWith('http') ? file : baseUrl + file
+            );
+            const useGlobal = $(this).data('use-global');
+            const globalIndex = parseInt($(this).data('current-index'));
+            const localIndex = parseInt($(this).data('local-index'));
+            const feedbackCode = $(this).data('feedback-code');
 
-        const currentIndex = parseInt($(this).data('current-index'));
-        const feedbackCode = $(this).data('feedback-code');
-
-        window.setupfeedbackFilePreview(fullfilePaths,currentIndex,feedbackCode);
-
-         $('#filePreviewContentReco').modal('show');
-      });
+            let files = [];
+            let startIndex = 0;
+            
+            if (useGlobal && globalFiles && globalFiles.length > 0) {
+                // Use globalFiles array for navigation
+                files = globalFiles.map(normalizeUrl);
+                startIndex = globalIndex;
+            } else {
+                // Fallback to local files from data attribute
+                let filesAttr = $(this).attr('data-files');
+                try {
+                    if (filesAttr) {
+                        files = JSON.parse(filesAttr);
+                        files = files.map(normalizeUrl);
+                        startIndex = localIndex;
+                    } else {
+                        console.warn("data-files attribute is missing or empty.");
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Invalid JSON in data-files:", filesAttr, e);
+                    return;
+                }
+            }
+            
+            if (Array.isArray(files) && files.length > 0) {
+                console.log("Setting up file preview with files:", files);
+                console.log("Starting index:", startIndex);
+                window.setupfeedbackFilePreview(files, startIndex, code);
+                $('#filePreviewContentReco').modal('show');
+            }
+            $('#filePreviewContentReco').modal('show');
+        });
     },
     async startScreenRecording() {
 

@@ -1871,18 +1871,21 @@ class ReferralCtrl extends Controller
      // Blade feedback view
     public function feedback($code) {
         $data = $this->getfeedbackData($code); // Reuse the data logic
-        // $html = view('doctor.feedback', [
-        //     'data' => $data,
-        //     'code' => $code
-        // ])->render();
-        // return response()->json([
-        //     'html' => $html,
-        //     'data' => $data
-        // ]);
-        return view('doctor.feedback', [
+        
+        $html = view('doctor.feedback', [
             'data' => $data,
             'code' => $code
+        ])->render();
+        
+        return response()->json([
+            'html' => $html,
+            'data' => $data
         ]);
+
+        // return view('doctor.feedback', [
+        //     'data' => $data,
+        //     'code' => $code
+        // ]);
     }
 
     public function VueFeedback($code){

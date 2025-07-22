@@ -128,13 +128,13 @@
                         this.messages.push(this.new_message)
                         this.scrolldownFeedback(this.select_rec.code)
                         console.log("listen1")
-                        Lobibox.notify('success', {
-                            delay: false,
-                            closeOnClick: false,
-                            title: 'New Reco',
-                            msg: "<small>"+event.payload.message+"</small>",
-                            img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
-                        });
+                        // Lobibox.notify('success', {
+                        //     delay: false,
+                        //     closeOnClick: false,
+                        //     title: 'New Reco',
+                        //     msg: "<small>"+event.payload.message+"</small>",
+                        //     img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                        // });
                     }
 
                     event.payload.alreadyNotifyReco = true
