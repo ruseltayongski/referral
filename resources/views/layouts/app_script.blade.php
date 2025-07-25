@@ -141,7 +141,7 @@
                     if (storedFile) {
                          $('#filePreviewModalReco').modal('show');
                         // Show preview modal for the clicked file
-                        showFilePreview(storedFile, true); 
+                        // showFilePreview(storedFile, true); 
                     }
                 }
             });
@@ -155,7 +155,7 @@
                     
                     if (storedFile) {
                          $('#filePreviewModalReco').modal('show');
-                        showFilePreview(storedFile, true);
+                        // showFilePreview(storedFile, true);
                     }
                 }
             });
@@ -192,7 +192,7 @@
         window.uploadedFiles.set(fileId, file);
         
         // Show file preview
-        showFilePreview(file);
+        // showFilePreview(file);
         
         // Create local URL for the file (no server upload)
         var fileURL = URL.createObjectURL(file);
@@ -226,29 +226,6 @@
         const fileDisplayBar = document.getElementById('fileDisplayBar');
         const uploadPrompt = document.getElementById('uploadPrompt');
         uploadPrompt.style.display = 'none'; // Hide prompt once files are added
-
-        // For each file inside your loop or upload handler
-        // if (file.type.startsWith('image')) {
-        //     console.log("fileId:", fileId);
-        //     content = `<span class="file-attachment" contenteditable="false" style="display:inline-block; vertical-align:top; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px; margin:2px;">
-        //             <a href="${fileURL}" target="_blank">
-        //                 <img src="${fileURL}" alt="${file.name}" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}" />
-        //             </a>
-        //             <div title="${file.name}" style="font-size:0.6em; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-        //                 ${truncatedFilename}
-        //             </div>
-        //         </span><span>&nbsp;</span>`;
-        // } else if (file.type === 'application/pdf') {
-        //     console.log("file.name", file.name);
-        //     content = `<span class="file-attachment" contenteditable="false" style="display:inline-block; vertical-align:top; border:1px solid #ccc; border-radius:4px; width:80px; padding:4px; margin:2px;">
-        //             <a href="${fileURL}" target="_blank">
-        //                 <img src="{{ asset('public/fileupload/pdffile.png') }}" alt="PDF File" style="width:100%; height:auto; max-height:60px; display:block;" data-file-id="${fileId}"/>
-        //             </a>
-        //             <div title="${file.name}" style="font-size:0.6em; margin-top:2px; width:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; text-align:center;">
-        //                 ${truncatedFilename}
-        //             </div>
-        //         </span><span>&nbsp;</span>`;
-        // }
 
         if (file.type.startsWith('image')) {
             content = `
@@ -286,20 +263,6 @@
         if (fileUploadTimeout) {
             clearTimeout(fileUploadTimeout);
         }
-
-        // fileUploadTimeout = setTimeout(() => {
-        //     if(fileUploadBatch) {
-        //         editor.insertContent('<br><br>');
-
-        //         setTimeout(() => {
-        //             editor.selection.collapse(false);
-        //             editor.fucos();
-        //         }, 100);
-
-        //         fileUploadBatch = false;
-        //     }
-        // }, 100);
-        
     }
 
     $(document).on('click', '.remove-file-feedback', function () {
@@ -316,60 +279,60 @@
         }
     });
 
-    function showFilePreview(file) {
-        console.log('file uplaod::', file);
-        const previewContainer = document.getElementById('filePreviewContainer');
-        const modalTitle = document.getElementById('filePreviewModalLabel');
+    // function showFilePreview(file) {
+    //     console.log('file uplaod::', file);
+    //     const previewContainer = document.getElementById('filePreviewContainer');
+    //     const modalTitle = document.getElementById('filePreviewModalLabel');
         
-        // Clear previous content and show loading state
-        previewContainer.innerHTML = `
-            <div class="text-center">
-                <div class="loading-spinner"></div>
-                <p class="text-muted" style="margin-top: 10px;">Loading preview...</p>
-            </div>
-        `;
+    //     // Clear previous content and show loading state
+    //     previewContainer.innerHTML = `
+    //         <div class="text-center">
+    //             <div class="loading-spinner"></div>
+    //             <p class="text-muted" style="margin-top: 10px;">Loading preview...</p>
+    //         </div>
+    //     `;
         
-        // Create file URL
-        const fileURL = URL.createObjectURL(file);
+    //     // Create file URL
+    //     const fileURL = URL.createObjectURL(file);
         
-        // Determine file type badge
-        const fileTypeBadge = file.type.startsWith('image/') ? 
-            '<span class="file-type-badge image">Image</span>' : 
-            '<span class="file-type-badge pdf">PDF</span>';
+    //     // Determine file type badge
+    //     const fileTypeBadge = file.type.startsWith('image/') ? 
+    //         '<span class="file-type-badge image">Image</span>' : 
+    //         '<span class="file-type-badge pdf">PDF</span>';
         
-        // Set modal title with Bootstrap 3 styling
-        modalTitle.innerHTML = `
-            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-            File Preview ${fileTypeBadge}
-        `;
+    //     // Set modal title with Bootstrap 3 styling
+    //     modalTitle.innerHTML = `
+    //         <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+    //         File Preview ${fileTypeBadge}
+    //     `;
         
-        // Simulate slight delay for better UX (optional)
-        setTimeout(() => {
-            if (file.type.startsWith('image/')) {
-                // Image preview with Bootstrap 3 styling
-                previewContainer.innerHTML = `
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="thumbnail">
-                                <img src="${fileURL}" alt="${file.name}" class="file-preview-image text-center" style="max-height: 100%; max-width: 100%; object-fit: contain;">
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (file.type === 'application/pdf') {
-                // PDF preview with Bootstrap 3 styling
-                previewContainer.innerHTML = `
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="embed-responsive embed-responsive-4by3">
-                                <iframe src="${fileURL}" class="embed-responsive-item pdf-preview" type="application/pdf"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-        }, 300);
-    }
+    //     // Simulate slight delay for better UX (optional)
+    //     setTimeout(() => {
+    //         if (file.type.startsWith('image/')) {
+    //             // Image preview with Bootstrap 3 styling
+    //             previewContainer.innerHTML = `
+    //                 <div class="row">
+    //                     <div class="col-md-12">
+    //                         <div class="thumbnail">
+    //                             <img src="${fileURL}" alt="${file.name}" class="file-preview-image text-center" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             `;
+    //         } else if (file.type === 'application/pdf') {
+    //             // PDF preview with Bootstrap 3 styling
+    //             previewContainer.innerHTML = `
+    //                 <div class="row">
+    //                     <div class="col-md-12">
+    //                         <div class="embed-responsive embed-responsive-4by3">
+    //                             <iframe src="${fileURL}" class="embed-responsive-item pdf-preview" type="application/pdf"></iframe>
+    //                         </div>
+    //                     </div>
+    //                 </div>
+    //             `;
+    //         }
+    //     }, 300);
+    // }
     
     $('#feedbackModal').on('hidden.bs.modal', function () {
         tinymce.get($('.mytextarea1').attr('id')).setContent('');

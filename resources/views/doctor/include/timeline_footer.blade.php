@@ -227,8 +227,10 @@
    
    $(document).ready(function() {
         let selectedButtonData = null; 
-
+        
+        $(".referral_body").html(loading); 
         $(document).on('click', '.view_form', function () {
+           
             selectedButtonData = $(this).data(); 
             let telemedValue = selectedButtonData.telemed; // Get telemedicine value
 
