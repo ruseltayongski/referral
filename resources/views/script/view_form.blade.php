@@ -130,6 +130,8 @@
             return;
         }
 
+        $(".referral_body").html(loading);
+        
         $.ajax({
         url: "{{ url('get-form-type')}}/" + form_id,
         type: 'GET',
@@ -139,8 +141,8 @@
 
             if (form_type === 'version2') {
                 if (type === 'normal') {
+                    //  $(".referral_body").html(loading);
                     var form_url_v2 = "{{ url('doctor/revised/referral/data/normal')}}/" + form_id + "/" + referral_status + "/" + type;
-                    $(".referral_body").html(loading);
                     $.ajax({
                         url: form_url_v2,
                         type: "GET",
@@ -154,8 +156,8 @@
                         }
                     });
                 } else if (type === 'pregnant') {
+                    // $(".referral_body").html(loading);
                     var form_url_v2 = "{{ url('doctor/revised/referral/data/pregnant')}}/" + form_id + "/" + referral_status + "/" + type;
-                    $(".referral_body").html(loading);
                     $.ajax({
                         url: form_url_v2,
                         type: "GET",
@@ -171,9 +173,9 @@
                 }
             } else if (!form_type || form_type === 'version1') { 
                 if(type === 'normal') {
+                    // $(".referral_body").html(loading)
                     form_type = '#referralForm';
                     var form_url = "{{ url('doctor/referral/data/normal') }}/"+form_id+"/"+referral_status+"/"+type;
-                    $(".referral_body").html(loading);
                     $.ajax({
                         url: form_url,
                         type: "GET",
@@ -189,8 +191,8 @@
                     });
                 }
                 else if(type === 'pregnant') {
+                    //  $(".referral_body").html(loading);
                     form_type = '#referralForm';
-                    $(".referral_body").html(loading);
                     // console.log("pregnant");
                     $.ajax({
                         url: "{{ url('doctor/referral/data/pregnant') }}/"+form_id+"/"+referral_status+"/"+type,

@@ -141,14 +141,15 @@ $(document).ready(function() {
         getAllFilesFromFeedback(feedbackCode, clickedFileUrl);
         $('#filePreviewContentReco').modal('show');
     });
+
+    
     // var StoreArrayFiles = window.globalFiles || [];
     // window.globalFiles = StoreArrayFiles;
-    
     window.setupfeedbackFilePreview = function(filesArray, startIndex, feedbackCode){
         currentFiles = filesArray;
         currentIndex = startIndex;
         isfeedbackview = true;
-        
+   
         getAllFilesFromFeedback(feedbackCode, currentFiles, startIndex);
     }
 
@@ -254,231 +255,16 @@ $(document).ready(function() {
 
 });
 
-// $(document).ready(function() {
-//     var url = "{{ url('get-feedback-files') }}";
-//     let currentFiles = [];
-//     let currentIndex = 0;
-//     let realtimeIndex = 0;
-//     let isfeedbackview = false;
-
-//     // Use globalFiles as the master store, ensure it's initialized
-//     var StoreArrayFiles = window.globalFiles || [];
-    
-//     // Update the global reference
-//     window.globalFiles = StoreArrayFiles;
-
-//     $('.file-preview-trigger').not('.realtime-file-preview').click(function() {
-//         const clickedFileUrl = $(this).data('file-url');
-//         const feedbackCode = $(this).data('feedback-code');
-        
-//         isfeedbackview = false;
-//         getAllFilesFromFeedback(feedbackCode, clickedFileUrl);
-//         $('#filePreviewContentReco').modal('show');
-//     });
-
-//     // Setup function for feedback file preview with proper file management
-//     window.setupfeedbackFilePreview = function(filesArray, startIndex, feedbackCode) {
-//         currentIndex = startIndex || 0;
-//         isfeedbackview = true;
-        
-//         // Add new files to global store if they don't exist
-//         const newFilesAdded = addNewFilesToGlobalStore(filesArray);
-        
-//         // Set current files to work with
-//         currentFiles = [...StoreArrayFiles]; // Use all files from global store
-        
-//         // If we added new files, we might need to adjust the start index
-//         if (newFilesAdded.length > 0) {
-//             // Find the index of the first new file or use provided startIndex
-//             const firstNewFileIndex = StoreArrayFiles.findIndex(file => 
-//                 newFilesAdded.some(newFile => normalizeUrl(file) === normalizeUrl(newFile))
-//             );
-            
-//             if (firstNewFileIndex !== -1) {
-//                 currentIndex = firstNewFileIndex + (startIndex || 0);
-//             }
-//         }
-//           getAllFilesFromFeedback(feedbackCode, filesArray,startIndex);
-//         // Ensure currentIndex is within bounds
-//         currentIndex = Math.max(0, Math.min(currentIndex, currentFiles.length - 1));
-        
-//         console.log('Setup complete. Total files:', currentFiles.length, 'Starting at index:', currentIndex);
-//         RecoshowFilePreview();
-//         $('#filePreviewContentReco').modal('show');
-//     };
-
-//     // Function to add new files to global store
-//     function addNewFilesToGlobalStore(newFiles) {
-//         const addedFiles = [];
-        
-//         newFiles.forEach(file => {
-//             const fileUrl = typeof file === 'object' ? file.url : file;
-//             const normalizedNewFile = normalizeUrl(fileUrl);
-            
-//             // Check if file already exists in global store
-//             const exists = StoreArrayFiles.some(existingFile => 
-//                 normalizeUrl(existingFile) === normalizedNewFile
-//             );
-            
-//             if (!exists) {
-//                 StoreArrayFiles.push(fileUrl);
-//                 addedFiles.push(fileUrl);
-//                 console.log('Added new file to global store:', fileUrl);
-//             }
-//         });
-//         // console.log('total global store after addition:', StoreArrayFiles);
-//         console.log('Global files count after addition:', StoreArrayFiles.length);
-//         return addedFiles;
-//     }
-
-//     // Helper function to normalize URLs for comparison
-//     function normalizeUrl(url) {
-//         return decodeURIComponent(url).trim();
-//     }
-
-//     function getAllFilesFromFeedback(feedbackcode, clickedFileInfo, startIndex) {
-//         console.log("Clicked file info:", clickedFileInfo);
-
-//         const targetUrl = Array.isArray(clickedFileInfo) ? 
-//             clickedFileInfo[startIndex || 0] : clickedFileInfo;
-        
-//         console.log("Global files store:", StoreArrayFiles);
-        
-//         const normalizedTargetUrl = normalizeUrl(targetUrl);
-//         console.log("Normalized target URL:", normalizedTargetUrl);
-        
-//         // Find the index of the clicked file in global store
-//         currentIndex = StoreArrayFiles.findIndex(file => 
-//             normalizeUrl(file) === normalizedTargetUrl
-//         );
-
-//         console.log("Found file at index:", currentIndex);
-        
-//         if (currentIndex === -1) {
-//             console.warn('File not found in global store. Using startIndex:', startIndex);
-//             currentIndex = startIndex && startIndex < StoreArrayFiles.length ? startIndex : 0;
-//         }
-
-//         // Set current files to work with all global files
-//         currentFiles = [...StoreArrayFiles];
-        
-//         RecoshowFilePreview();
-//     }
-
-//     $('#prevBtn').click(function() {
-//         if (currentIndex > 0) {
-//             currentIndex--;
-//             realtimeIndex = null;
-//             console.log("Previous - currentIndex:", currentIndex);
-//             RecoshowFilePreview();
-//         }
-//     });
-
-//     $('#nextBtn').click(function() {
-//         if (currentIndex < currentFiles.length - 1) {
-//             currentIndex++;
-//             realtimeIndex = null;
-//             console.log("Next - currentIndex:", currentIndex);
-//             RecoshowFilePreview();
-//         }
-//     });
-
-//     $('#downloadBtn').click(function() {
-//         if (currentFiles.length > 0) {
-//             const fileUrl = currentFiles[currentIndex];
-//             const fileName = extractFileName(fileUrl);
-
-//             const link = document.createElement('a');
-//             link.href = fileUrl;
-//             link.download = fileName;
-//             link.target = '_blank';
-//             document.body.appendChild(link);
-//             link.click();
-//             document.body.removeChild(link);
-//         }
-//     });
-
-//     // Helper function to extract filename from URL
-//     function extractFileName(url) {
-//         try {
-//             return decodeURIComponent(url.split('/').pop() || 'download');
-//         } catch (e) {
-//             return url.split('/').pop() || 'download';
-//         }
-//     }
-
-//     function RecoshowFilePreview() {
-//         if (!currentFiles || currentFiles.length === 0) {
-//             console.warn('No files to preview');
-//             return;
-//         }
-
-//         const fileData = currentFiles[currentIndex];
-//         console.log("Current file data:", fileData);
-        
-//         let fileUrl = '';
-//         let filename = '';
-//         let extension = '';
-
-//         if (typeof fileData === 'object' && fileData.url) {
-//             // Blob-style file object
-//             fileUrl = fileData.url;
-//             filename = fileData.name || 'unknown';
-//             extension = (filename.split('.').pop() || '').toLowerCase();
-//         } else if (typeof fileData === 'string') {
-//             // Static file URL
-//             fileUrl = fileData;
-//             filename = extractFileName(fileUrl);
-//             extension = (filename.split('.').pop() || '').toLowerCase();
-//         }
-
-//         // Update UI elements
-//         $('#fileCounter').text(`${currentIndex + 1} of ${currentFiles.length}`);
-//         $('#filePreviewContent').html('');
-
-//         // Update navigation button states
-//         $('#prevBtn').prop('disabled', currentIndex <= 0);
-//         $('#nextBtn').prop('disabled', currentIndex >= currentFiles.length - 1);
-
-//         // Display file based on type
-//         if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
-//             $('#filePreviewContent').html(`
-//                 <div style="text-align: center;">
-//                     <img src="${fileUrl}" alt="${filename}" 
-//                         style="max-width: 100%; max-height: 400px; object-fit: contain;"
-//                         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-//                     <div style="display: none; padding: 50px; color: #999;">
-//                         <p>Failed to load image: ${filename}</p>
-//                         <a href="${fileUrl}" target="_blank" class="btn btn-primary">
-//                             Open in New Tab
-//                         </a>
-//                     </div>
-//                 </div>
-//             `);
-//         } else if (extension === 'pdf') {
-//             $('#filePreviewContent').html(`
-//                 <embed src="${fileUrl}" type="application/pdf" 
-//                     style="width: 100%; height: 400px;">
-//             `);
-//         }
-        
-//         console.log(`Displaying file ${currentIndex + 1}/${currentFiles.length}: ${filename}`);
-//     }
-
-//     // Debug function - you can call this in console to check current state
-//     window.debugFilePreview = function() {
-//         console.log('=== File Preview Debug Info ===');
-//         console.log('Global files count:', StoreArrayFiles.length);
-//         console.log('Current files count:', currentFiles.length);
-//         console.log('Current index:', currentIndex);
-//         console.log('Is feedback view:', isfeedbackview);
-//         console.log('Global files:', StoreArrayFiles);
-//     };
-// });
 
 </script>
 
 <style>
+.direct-chat-msgs.left {
+    margin-top: 10px;
+}
+.direct-chat-msgs.right {
+    margin-top: 10px;
+}
 
 .modal.modal-front {
     z-index: 1060;
