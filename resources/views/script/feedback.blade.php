@@ -71,7 +71,7 @@
         var url = "<?php echo asset('doctor/feedback').'/'; ?>"+code;
         $.get(url,function(response){
             setTimeout(function() {
-                let FilesArray = response.data.filter((item) =>  item.filename != '');
+                let FilesArray = response.data.filter((item) =>  item.filename);
                globalFiles = FilesArray.flatMap(file =>
                     file.filename.split('|').map(path => {
                         return `${baseUrl}${path}`;
