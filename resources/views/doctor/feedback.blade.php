@@ -259,6 +259,12 @@ $(document).ready(function() {
 </script>
 
 <style>
+.direct-chat-msgs.left {
+    margin-top: 10px;
+}
+.direct-chat-msgs.right {
+    margin-top: 10px;
+}
 
 .modal.modal-front {
     z-index: 1060;
