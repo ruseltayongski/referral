@@ -12,7 +12,7 @@
 
     <!-- Favicons -->
     <link href="{{ asset('resources/img/favicon1.png') }}" rel="icon" type="image/x-icon">
-    <link href="{{ asset('resources/medilab/assets/img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('resources/img/doh_logo_new2025.png') }}" rel="apple-touch-icon">
 
 </head>
 
