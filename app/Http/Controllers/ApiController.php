@@ -1250,7 +1250,8 @@ class ApiController extends Controller
                         "seen_only" => $inc->seen_only,
                         "request_call" => $inc->request_call,
                         "not_seen" => $inc->not_seen,
-                        "redirected_spam" => $inc->redirected_spam
+                        "redirected_spam" => $inc->redirected_spam,
+                        "reco_response_time" => $inc->reco_response_time,
                     ]
                 ];
 

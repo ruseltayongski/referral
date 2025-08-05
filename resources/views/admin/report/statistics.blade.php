@@ -177,6 +177,7 @@
                                 <th colspan="4" class="bg-info" style="text-align: center;border-right: 3px solid darkgray;">Referral Breakdown</th>
                                 <th colspan="5" class="bg-success" style="text-align: center;">Status Breakdown</th>
                                 <th class="bg-warning"></th>
+                                <th class="bg-warning"></th>
                             </tr>
                             <tr>
                                 <th></th>
@@ -219,6 +220,7 @@
                                 </th>
                                 <th style="text-align: center;font-size: 20pt;">Total</th>
                                 <th style="text-align: center;font-size: 15pt;" class="bg-warning">Cancelled</th>
+                                <th style="text-align: center;font-size: 15pt;" class="bg-warning">Reco <br> Response Time</th>
                                 <!--
                                 <th>Requesting a Call</th>
                                 <th>Redirected Spam</th>
@@ -323,6 +325,10 @@
                                     </td>
                                     <td width="10%">
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['cancelled'] }}</span>
+                                        <br><br>
+                                    </td>
+                                       <td width="10%">
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','cancelled','{{ $date_range }}')">{{ $row['data']['reco_response_time']}}</span>
                                         <br><br>
                                     </td>
                                     <!--
