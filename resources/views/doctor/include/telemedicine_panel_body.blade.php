@@ -1548,7 +1548,7 @@ function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,posi
 }
 
 .time-small {
-    font-size: 11px;
+    font-size: 8px;
 }
 
 .card-body-folder{

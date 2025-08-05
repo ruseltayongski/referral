@@ -369,14 +369,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                             <br />
@@ -398,14 +398,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             @if($act->referring_md_id!=0)
                             <?php
                             if ($old_facility_id == 63)
@@ -426,14 +426,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span> to <span class="txtHospital">{{ $new_facility }}.</span>
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                         </td>
@@ -442,14 +442,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span> is requesting a call from <span class="txtHospital">{{ $old_facility }}</span>.
                             @if($user->facility_id==$act->referred_from)
                             Please contact this number <span class="txtInfo">({{ $act->contact }})</span> .
@@ -460,14 +460,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was accepted by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                         </td>
@@ -476,14 +476,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->created_at)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->created_at)) }}
+                                ({{ date('h:i A', strtotime($act->created_at)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> arrived at <span class="txtHospital">{{ $new_facility }}</span>.
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                         </td>
@@ -492,14 +492,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->created_at)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->created_at)) }}
+                                ({{ date('h:i A', strtotime($act->created_at)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was admitted at <span class="txtHospital">{{ $new_facility }}</span>.
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                         </td>
@@ -508,14 +508,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->created_at)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->created_at)) }}
+                                ({{ date('h:i A', strtotime($act->created_at)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> was discharged from <span class="txtHospital">{{ $new_facility }}</span>.
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                             <?php
@@ -531,14 +531,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->created_at)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->created_at)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->created_at)) }}
+                                ({{ date('h:i A', strtotime($act->created_at)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> didn't arrive to <span class="txtHospital">{{ $new_facility }}</span>.
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                         </td>
@@ -550,14 +550,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             Referral was cancelled by
                             <span class="txtDoctor">
                                 <?php
@@ -575,14 +575,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> has departed by <span class="txtDoctor">{{ $act->remarks == 5 ? explode('-',$act->remarks)[1] : \App\ModeTransportation::find($act->remarks)->transportation }}</span>.
                         </td>
                     </tr>
@@ -590,14 +590,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> form was updated by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $old_facility }}</span>
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                         </td>
@@ -606,14 +606,14 @@
                     <tr @if($first==1) class="toggle toggle{{ $row->id }}" @endif>
                         <!-- <td>{{ date('M d, Y h:i A',strtotime($act->date_referred)) }}</td> -->
                         <td>
-                            <div class="date-large">
+                            <div class="date-large" style="width: 75px;">
                                 {{ date('M d, Y',strtotime($act->date_referred)) }}
                             </div>
                             <div class="time-small">
-                                {{ date('h:i A', strtotime($act->date_referred)) }}
+                                ({{ date('h:i A', strtotime($act->date_referred)) }})
                             </div>
                         </td>
-                        <td>
+                        <td style="width: 800px;">
                             <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}'s</span> was queued by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>
                             <span class="remarks">Remarks: Queued at <b>{{ $act->remarks }}</b></span>
                         </td>
@@ -636,7 +636,16 @@
 </div>
 
 <style>
+.toggle tr {
+    display: none;
+}
 
+.time-small {
+    font-size: 8px;
+}
+.date-large {
+    font-size: 12px
+}
 .step-counter-fileresult:hover {
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
