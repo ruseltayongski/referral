@@ -341,6 +341,11 @@
         $('.direct-chat-messages').html('Loading...');
         $('#feedbackForm')[0].reset();
         $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt"></div>');
+
+        // 🔥 RESET THESE
+        currentIndex = 0;
+        currentFiles = [];
+
     });
 
     

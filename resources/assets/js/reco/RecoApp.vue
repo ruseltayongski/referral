@@ -47,7 +47,7 @@
         methods: {
             async fetchMessages() {
                 await axios.get('reco/fetch').then(response => {    
-                    console.log("total reco::",response.data);
+                    // console.log("total reco::",response.data);
                     const dataMap = response.data.map((item) => {
                         // const message = item.message.replace(/<\/?[^>]+(>|$)/g, "") 
                         const message = item.message ? item.message.replace(/<\/?[^>]+(>|$)/g, "") : '';
@@ -59,6 +59,7 @@
                     })
                     this.reco = dataMap
                     this.reco_handler = dataMap
+                    console.log("reco handler:", this.reco_handler);
                 });
             },
             async selectRec(payload) {
@@ -88,53 +89,103 @@
                 else
                     this.reco = this.reco_handler
             },
-            newRecoNotification(message) {
-                console.log("listen2")
-                Lobibox.notify('success', {
-                    delay: false,
-                    closeOnClick: false,
-                    title: 'New Reco',
-                    msg: "<small>"+message+"</small>",
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
-                });
-            },
+            // newRecoNotification(message) {
+            //     console.log("listen2")
+            //     Lobibox.notify('success', {
+            //         delay: false,
+            //         closeOnClick: false,
+            //         title: 'New Reco',
+            //         msg: "<small>"+message+"</small>",
+            //         img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+            //     });
+            // },
             listenReco(payload) {
-                let filter = this.reco_handler.filter((rec) => rec.code === payload.code )
-                if(!filter.length) {
-                    axios.get('reco/new/'+payload.code).then(response => {
-                        if(response.data.code) {
-                            this.reco_handler.unshift(response.data)
-                            this.reco.unshift(response.data)
+                // let filter = this.reco_handler.filter((rec) => rec.code === payload.code )
+                const exists = this.reco.find((rec) => rec.code === payload.code)
+               
+                if (!exists) {
+                    axios.get('reco/new/' + payload.code).then(response => {
+                        if (response.data.code) {
+                            // Remove if already inserted mistakenly
+                            this.reco = this.reco.filter((rec) => rec.code !== response.data.code)
+                            this.reco_handler = this.reco_handler.filter((rec) => rec.code !== response.data.code)
+                            console.log("new data:", response.data);
+
+                            const cleanMessage = response.data.message
+                                ? response.data.message.replace(/<\/?[^>]+(>|$)/g, "")
+                                : '';
+                            const truncatedMessage = cleanMessage.length >= 20 ? cleanMessage.substring(0, 20) + '..' : cleanMessage;
+                            const truncatedName = response.data.patient_name.length >= 25 
+                                ? response.data.patient_name.substring(0, 25) + '..' 
+                                : response.data.patient_name;
+                            const newRecoData = {
+                                ...response.data,
+                                patient_name: truncatedName,
+                                message: truncatedMessage,
+                            }   
+                            // Insert clean
+                            this.reco_handler.unshift(newRecoData)
+                            this.reco.unshift(newRecoData)
                             this.newRecoNotification(response.data.message)
                         }
                     });
-                }
-                else if(filter.length) {
-                    console.log(payload)
-                    this.reco = this.reco.map((item) =>
-                        {
-                            const handlerMessage = payload.message.replace(/<\/?[^>]+(>|$)/g, "")
-                            if(item.code === payload.code) {
-                                return {
-                                    ...item,
-                                    message: handlerMessage.length >= 20 ? handlerMessage.substring(0,20)+'..' : handlerMessage,
-                                    reco_seen: null,
-                                    userid_sender: payload.userid_sender
-                                }
-                            }
-                            else {
-                                return {
-                                    ...item
-                                }
+                } else {
+                    // update the message if it already exists
+                    this.reco = this.reco.map((item) => {
+                        const cleanMessage = payload.message.replace(/<\/?[^>]+(>|$)/g, "")
+                        if (item.code === payload.code) {
+                            return {
+                                ...item,
+                                message: cleanMessage.length >= 20 ? cleanMessage.substring(0, 20) + '..' : cleanMessage,
+                                reco_seen: null,
+                                userid_sender: payload.userid_sender
                             }
                         }
-                    ) //para ma update reco list
-                    console.log(this.reco)
+                        return item
+                    })
+
                     this.orderRecoList(payload.code)
-                    if(this.user.id !== payload.userid_sender && !payload.alreadyNotifyReco) {
+
+                    if (this.user.id !== payload.userid_sender && !payload.alreadyNotifyReco) {
                         this.newRecoNotification(payload.message)
                     }
                 }
+               
+                // if(!filter.length) {
+                //     axios.get('reco/new/'+payload.code).then(response => {
+                //         if(response.data.code) {
+                //             this.reco_handler.unshift(response.data)
+                //             this.reco.unshift(response.data)
+                //             this.newRecoNotification(response.data.message)
+                //         }
+                //     });
+                // }
+                // else if(filter.length) {
+                //     console.log(payload)
+                //     this.reco = this.reco.map((item) =>
+                //         {
+                //             const handlerMessage = payload.message.replace(/<\/?[^>]+(>|$)/g, "")
+                //             if(item.code === payload.code) {
+                //                 return {
+                //                     ...item,
+                //                     message: handlerMessage.length >= 20 ? handlerMessage.substring(0,20)+'..' : handlerMessage,
+                //                     reco_seen: null,
+                //                     userid_sender: payload.userid_sender
+                //                 }
+                //             }
+                //             else {
+                //                 return {
+                //                     ...item
+                //                 }
+                //             }
+                //         }
+                //     ) //para ma update reco list
+                //     console.log(this.reco)
+                //     this.orderRecoList(payload.code)
+                //     if(this.user.id !== payload.userid_sender && !payload.alreadyNotifyReco) {
+                //         this.newRecoNotification(payload.message)
+                //     }
+                // }
             },
             recoSeen(data) {
                 axios.post('reco/seen', data).then(response => {

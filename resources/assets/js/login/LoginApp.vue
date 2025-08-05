@@ -431,7 +431,7 @@
                                         <a href=""><i class="ri-twitter-fill"></i></a>
                                         <a href=""><i class="ri-facebook-fill"></i></a>
                                         <a href=""><i class="ri-instagram-fill"></i></a>
-                                        <a href=""> <i class="ri-linkedin-box-fill"></i> </a>
+                                        <a href="https://www.linkedin.com/in/jondy-gonzales-592967249/" target="__blank"><i class="ri-linkedin-box-fill"></i></a>
                                     </div>
                                 </div>
                             </div>
@@ -442,7 +442,7 @@
                                 <div class="pic"><img :src="fmaningo" class="img-fluid" alt=""></div>
                                 <div class="member-info">
                                     <h4>Flora May Joy Maningo</h4>
-                                    <span>Computer Programmer I</span>
+                                    <span>Computer Programmer II</span>
                                     <p>09171562951</p>
                                     <div class="social">
                                         <a href=""><i class="ri-twitter-fill"></i></a>
@@ -453,6 +453,24 @@
                                 </div>
                             </div>
                         </div>
+
+                         <div class="col-lg-6 mt-4 mt-lg-0">
+                            <div class="member d-flex align-items-start">
+                                <div class="pic"><img :src="MLopez" class="img-fluid" alt=""></div>
+                                <div class="member-info">
+                                    <h4>Karl Micheal M. Lopez</h4>
+                                    <span>Computer Programmer I</span>
+                                    <p>09998901910</p>
+                                    <div class="social">
+                                        <a href=""><i class="ri-twitter-fill"></i></a>
+                                        <a href=""><i class="ri-facebook-fill"></i></a>
+                                        <a href=""><i class="ri-instagram-fill"></i></a>
+                                        <a href="https://www.linkedin.com/in/karl-michael-lopez-832133272/" target="__blank"> <i class="ri-linkedin-box-fill"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </section><!-- End System Development -->
@@ -1135,6 +1153,7 @@
                 rtayong: path + "/resources/medilab/assets/img/contact/tayong_rusel.JPG",
                 ccatubig: path + "/resources/medilab/assets/img/contact/catubig.png",
                 JGonzales: path + "/resources/medilab/assets/img/contact/JGonzales1.png",
+                MLopez: path + "/resources/medilab/assets/img/contact/Lopez_M.png",
                 fmaningo: path + "/resources/medilab/assets/img/contact/maningo_fmj.png",
                 ggorosin: path + "/resources/medilab/assets/img/contact/gorosin.g.jpg",
                 mmanayon: path + "/resources/medilab/assets/img/contact/mmanayon1.png",

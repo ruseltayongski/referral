@@ -104,7 +104,7 @@ export default {
     };
   },
   mounted() {
-
+    window.addEventListener("keydown", this.feedbackKeydown);
     document.title = "TELEMEDICINE";
     // Change favicon
     const link = document.querySelector("link[rel~='icon']");
@@ -166,6 +166,7 @@ export default {
   beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
     window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
+    window.removeEventListener("keydown", this.feedbackKeydown);
     this.clearAfkTimers();
     this.stopCallTimer();
      // Remove event listener when component is destroyed
@@ -199,8 +200,28 @@ export default {
           });
       });
   },
-  methods: {
+  methods: {  
+    feedbackKeydown(e){
+         // Check if the modal from Blade is visible
+        const previewModal = document.getElementById("filePreviewContentReco");
+   
+        if (previewModal && previewModal.classList.contains("show")) {
+          if (e.key === "ArrowLeft") {
+            const prev = document.getElementById("prevBtn");
+            if (prev) prev.click();   // Trigger the Blade button click
+          } 
+          
+          else if (e.key === "ArrowRight") {
+            const next = document.getElementById("nextBtn");
+            if (next) next.click();   // Trigger the Blade button click
+          } 
+          
+          else if (e.key === "Escape") {
+            $("#filePreviewContentReco").modal("hide");  // Close modal using jQuery
+          }
 
+        }
+    },
      // AFK Detection Methods
     initAfkDetection() {
       // Listen for user activity
@@ -2151,7 +2172,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 <style scoped>
 @import "./css/index.css";
-
 td {
  padding:5px; 
 }

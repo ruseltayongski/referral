@@ -105,6 +105,7 @@ export default {
     };
   },
   mounted() {
+    window.addEventListener("keydown", this.pregnantKeydown)
     document.title = "TELEMEDICINE";
       // Change favicon
       const link = document.querySelector("link[rel~='icon']");
@@ -161,6 +162,7 @@ export default {
     //this.clearTimeout();
     window.removeEventListener("click", this.showDivAgain);
     window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
+    window.removeEventListener("keydown", this.pregnantKeydown)
     this.stopCallTimer();
      // Remove event listener when component is destroyed
      window.removeEventListener('resize', this.handleResize);
@@ -195,6 +197,25 @@ export default {
       });
   },
   methods: {
+    pregnantKeydown(e){
+        const previewModal = document.getElementById("filePreviewContentReco");
+        console.log("previeModal", previewModal);
+         if (previewModal && previewModal.classList.contains("show")) {
+           console.log("work my vue");
+          if(e.key === "ArrowLeft"){
+            const prev = document.getElementById("prevBtn");
+            if (prev) prev.click();   // Trigger the Blade button click
+          }
+          else if(e.key === "ArrowRight"){
+            const next = document.getElementById("nextBtn");
+            if(next) next.click();
+          }
+
+           else if (e.key === "Escape") {
+            $("#filePreviewContentReco").modal("hide");  // Close modal using jQuery
+          }
+        }
+    },
     closeFeedbackModal() {
       this.feedbackModalVisible = false;
     },

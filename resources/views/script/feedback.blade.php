@@ -199,7 +199,7 @@
                             }
 
                             fileUrlsArray.push(serverFileUrl);
-
+                            console.log("File URL:", serverFileUrl);
                             let globalFileUrl;
                             if (filename.startsWith('/')) {
                                 globalFileUrl = baseUrl + filename;
