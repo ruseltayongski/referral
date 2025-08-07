@@ -30,10 +30,11 @@
         props: ["reco","user"],
         mounted() {
             this.logo = $("#doh_logo").val()
-            console.log(this.messagesInfo)
+            console.log(this.messagesInfo, "reco data:", this.reco);
         },
         methods: {
             selectReco(rec) {
+                window.globalFiles = [];
                 try {
                     this.reco.map((item) => item.reco_id === rec.reco_id ? item.reco_seen = 1 : item )
                     this.selected = rec.code

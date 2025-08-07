@@ -39,6 +39,7 @@ class FeedbackCtrl extends Controller
 
         $data = Activity::select(
             'feedback.message',
+            'feedback.filename',
             'feedback.code',
             'feedback.id as reco_id',
             'feedback.sender as userid_sender',
@@ -172,6 +173,7 @@ class FeedbackCtrl extends Controller
         $chat_image = asset("resources/img");
         $data = Activity::select( //TODO: possible changes for multiple facility log-in
             'feedback.id',
+            'feedback.filename',
             'feedback.message',
             \DB::raw("DATE_FORMAT(feedback.created_at, '%d %b %l:%i %p') as send_date"),
             \DB::raw("if(users.id = $userid, 'right','left') as position"),

@@ -78,15 +78,11 @@
 </div>
 
 <!-- File Preview Modal dynamic files -->
-<div class="modal fade modal-front" id="filePreviewContentReco" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true"> 
+<!-- <div class="modal fade modal-front" id="filePreviewContentReco" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true"> 
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <!-- <h4 class="modal-title" id="filePreviewModalLabel">
-                    <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
-                    File Preview
-                </h4> -->
             </div>
             <div class="modal-body">
                 <div class="file-preview-container" id="filePreviewContainer" style="position: relative; min-height: 400px;">
@@ -111,13 +107,13 @@
                     </div>
                     
                     {{-- File Info --}}
-                    <!-- <div id="fileInfo" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; z-index: 10;">
+                    <div id="fileInfo" style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.7); color: white; padding: 5px 15px; border-radius: 15px; font-size: 12px; z-index: 10;">
                         Loading...
                     </div> -->
                     
                     {{-- File Preview Content --}}
-                    <div class="file-preview-content" id="filePreviewContent" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 400px;">
-                        <!-- File preview content will be inserted here -->
+                    <!-- <div class="file-preview-content" id="filePreviewContent" style="text-align: center; display: flex; align-items: center; justify-content: center; min-height: 400px;">
+                      
                     </div>
                 </div>
             </div>
@@ -133,7 +129,52 @@
             </div>
         </div>
     </div>
+</div> -->
+ <div class="modal fade modal-front modal-fullscreen" id="filePreviewContentReco" tabindex="-1" role="dialog" aria-labelledby="filePreviewModalLabel" aria-hidden="true"> 
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close close-left-feedback" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  <button type="button"  id="downloadBtn">
+                    <i class="fa fa-download" aria-hidden="true"></i>
+                  </button>
+            </div>
+            <div class="modal-body">
+                <div class="file-preview-container" id="filePreviewContainer">
+                    <!-- Navigation Controls -->
+                    <div class="navigation-controls left">
+                        <button class="nav-btn" id="prevBtn" title="Previous File">
+                            <!-- <span class="glyphicon glyphicon-chevron-left"></span> -->
+                               <i class="fa fa-chevron-left"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="navigation-controls right">
+                        <button class="nav-btn" id="nextBtn" title="Next File">
+                            <!-- <span class="glyphicon glyphicon-chevron-right"></span> -->
+                               <i class="fa fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- File Counter -->
+                    <!-- <div class="file-counter" id="fileCounter">
+                        1 of 1
+                    </div> -->
+                    
+                    <!-- File Preview Content -->
+                    <div class="file-preview-content" id="filePreviewContent">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+                <!-- File Thumbnails Navigation -->
+                <div id="fileThumbnails" class="file-thumbnails-bar">
+                    <!-- Thumbnails will be appended dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 
 <div class="modal fade" role="dialog" id="feedbackDOH">
     <div class="modal-dialog modal-sm" role="document">

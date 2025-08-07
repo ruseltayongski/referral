@@ -1401,6 +1401,7 @@ function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,posi
     }
 
     $(document).ready(function() {
+        
         $('.carousel').carousel({
             interval: false,
         });
@@ -1413,8 +1414,12 @@ function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,posi
             var addmorebtn = document.getElementById("addmore");
             var updateBtn = document.getElementById("updateButton");
             var download = document.getElementById("download");
-
+            var isFolderModalOpen = $("#folderModal").hasClass("show") || $("#folderModal").css("display") === "block";
+    
             if(buttonDisabled){
+                return;
+            }
+            if(!isFolderModalOpen){
                 return;
             }
                 deletebtn.style.pointerEvents = "none";
@@ -1449,6 +1454,7 @@ function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,posi
             var isDeleteModalOpen = $("#telemedicineDeleteFileFollowupFormModal").hasClass("show") || $("#telemedicineDeleteFileFollowupFormModal").css("display") === "block";// when modal open the carousel won't slide
             var isUpdateModalOpen = $("#telemedicineUpateFileFormModal").hasClass("show") || $("#telemedicineUpateFileFormModal").css("display") === "block";
             var isAddModalOpen    = $("#FollowupAddEmptyFileFormModal").hasClass("show") || $("#FollowupAddEmptyFileFormModal").css("display") === "block";
+            
             if (isDeletingFile) {
                 return;
              }
@@ -1592,9 +1598,11 @@ function toggleFileSelection(file, event,baseUrl,code,activity_id,follow_id,posi
     display: block;
     text-decoration: none;
 }
-.modal-body {
+/* .modal-body {
     max-height: calc(100vh - 212px);
     overflow-y: auto;
-}
+} */
+
+
 /** ---------------My changes File Folder Modal -------------- */
 </style>

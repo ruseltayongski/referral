@@ -140,6 +140,7 @@ $(document).ready(function() {
         // Get all files from the same feedback record
         getAllFilesFromFeedback(feedbackCode, clickedFileUrl);
         $('#filePreviewContentReco').modal('show');
+         renderThumbnailsFeedback();
     });
 
     
@@ -172,7 +173,7 @@ $(document).ready(function() {
         RecoshowFilePreview();
     }
 
-    $('#prevBtn').click(function() {
+    $('#prevBtn').off('click').click(function() {
         if(currentIndex > 0) {
             currentIndex--;
             realtimeIndex= null;
@@ -180,7 +181,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#nextBtn').click(function() {
+    $('#nextBtn').off('click').click(function() {
         if(currentIndex < currentFiles.length - 1){
              currentIndex++;
               realtimeIndex= null;
@@ -203,62 +204,356 @@ $(document).ready(function() {
         }
     })
 
-    function RecoshowFilePreview() {
+    //  $(document).off('keydown').keydown(function(e) {
+    //     if ($('#filePreviewContentReco').hasClass('in')) {
+    //         if (e.key === 'ArrowLeft') {
+    //             $('#prevBtn').click();
+    //         } else if (e.key === 'ArrowRight') {
+    //             $('#nextBtn').click();
+    //         } else if (e.key === 'Escape') {
+    //             $('#filePreviewContentReco').modal('hide');
+    //         }
+    //     }
+    //     });
+
+    $(document).off('keydown.filePreview').on('keydown.filePreview', function(e) {
+        if ($('#filePreviewContentReco').hasClass('in')) {
+            if (e.key === 'ArrowLeft') {
+                $('#prevBtn').click();
+            } else if (e.key === 'ArrowRight') {
+                $('#nextBtn').click();
+            } else if (e.key === 'Escape') {
+                $('#filePreviewContentReco').modal('hide');
+            }
+        }
+    });
+
+    // function RecoshowFilePreview() {
+    //     if (!currentFiles || currentFiles.length === 0) return;
+    //     const fileData = currentFiles[currentIndex];
+    //     let fileUrl = '';
+    //     let filename = '';
+    //     let extension = '';
+
+    //     if (typeof fileData === 'object' && fileData.url) {
+    //         // Blob-style file object
+    //         fileUrl = fileData.url;
+    //         filename = fileData.name || 'unknown';
+    //         extension = (filename.split('.').pop() || '').toLowerCase();
+    //     } else if (typeof fileData === 'string') {
+    //         // Static file URL
+    //         fileUrl = fileData;
+    //         filename = fileUrl.split('/').pop() || 'unknown';
+    //         extension = (filename.split('.').pop() || '').toLowerCase();
+    //     }
+
+    //     $('#fileCounter').text(`${currentIndex + 1} of ${currentFiles.length}`);
+    //     $('#filePreviewContent').html('');
+
+    //     if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
+    //         $('#filePreviewContent').html(`
+    //             <img src="${fileUrl}" alt="${filename}" 
+    //                 style="max-width: 100%; max-height: 400px; object-fit: contain;">
+    //         `);
+    //     } else if (extension === 'pdf') {
+    //         $('#filePreviewContent').html(`
+    //             <embed src="${fileUrl}" type="application/pdf" 
+    //                 style="width: 100%; height: 400px;">
+    //         `);
+    //     } else {
+    //         $('#filePreviewContent').html(`
+    //             <div style="text-align: center; padding: 50px;">
+    //                 <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;">
+    //                     <span class="glyphicon glyphicon-file"></span>
+    //                 </div>
+    //                 <h4>${filename}</h4>
+    //                 <p>Preview not available for this file type.</p>
+    //                 <a href="${fileUrl}" target="_blank" class="btn btn-primary">
+    //                     <span class="glyphicon glyphicon-download-alt"></span>
+    //                     Download to View
+    //                 </a>
+    //             </div>
+    //         `);
+    //     }
+    // }
+
+     function RecoshowFilePreview() {
         if (!currentFiles || currentFiles.length === 0) return;
+        
         const fileData = currentFiles[currentIndex];
         let fileUrl = '';
         let filename = '';
         let extension = '';
 
         if (typeof fileData === 'object' && fileData.url) {
-            // Blob-style file object
             fileUrl = fileData.url;
             filename = fileData.name || 'unknown';
             extension = (filename.split('.').pop() || '').toLowerCase();
         } else if (typeof fileData === 'string') {
-            // Static file URL
             fileUrl = fileData;
             filename = fileUrl.split('/').pop() || 'unknown';
             extension = (filename.split('.').pop() || '').toLowerCase();
         }
 
+        // Update counter
         $('#fileCounter').text(`${currentIndex + 1} of ${currentFiles.length}`);
-        $('#filePreviewContent').html('');
+        
+        // Update navigation buttons
+        $('#prevBtn').prop('disabled', currentIndex === 0);
+        $('#nextBtn').prop('disabled', currentIndex === currentFiles.length - 1);
+        
+        // Show loading
+        $('#filePreviewContent').html('<div class="loading-spinner"></div>');
 
-        if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) {
-            $('#filePreviewContent').html(`
-                <img src="${fileUrl}" alt="${filename}" 
-                    style="max-width: 100%; max-height: 400px; object-fit: contain;">
-            `);
+            $('.file-preview-container').css({
+            'background-image': '',
+            'background-size': '',
+            'background-repeat': '',
+            'background-position': ''
+        });
+        
+        renderThumbnailsFeedback();
+        // Preview content based on file type
+        if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp'].includes(extension)) {
+            const img = new Image();
+            img.onload = function() {
+                
+                // FIXED: Apply background to the container and clear content
+                $('.file-preview-container').css({
+                    'background-image': `url("${fileUrl}")`,
+                    'background-size': 'cover',
+                    'background-repeat': 'no-repeat',
+                    'background-position': 'center',
+                    'background-color': 'rgba(0, 0, 0, 0.7)', 
+                    'backdrop-filter': 'blur(8px)', 
+                    '-webkit-backdrop-filter': 'blur(8px)'
+                });
+                
+                $('#filePreviewContent').html(`
+                    <img src="${fileUrl}" alt="${filename}" class="preview-image">
+                `);
+            };
+            img.onerror = function() {
+                showFileError(filename);
+            };
+            img.src = fileUrl;
         } else if (extension === 'pdf') {
+
             $('#filePreviewContent').html(`
-                <embed src="${fileUrl}" type="application/pdf" 
-                    style="width: 100%; height: 400px;">
+                <embed src="${fileUrl}" type="application/pdf" class="preview-pdf">
             `);
-        } else {
+        } else if (['mp4', 'webm', 'ogg'].includes(extension)) {
             $('#filePreviewContent').html(`
-                <div style="text-align: center; padding: 50px;">
-                    <div style="font-size: 48px; color: #ccc; margin-bottom: 20px;">
-                        <span class="glyphicon glyphicon-file"></span>
+                <video controls class="preview-image" style="max-width: calc(100vw - 40px); max-height: calc(100vh - 160px);">
+                    <source src="${fileUrl}" type="video/${extension}">
+                    Your browser does not support the video tag.
+                </video>
+            `);
+        } else if (['mp3', 'wav', 'ogg', 'flac'].includes(extension)) {
+            $('#filePreviewContent').html(`
+                <div class="file-icon-container">
+                    <div class="file-icon">
+                        <span class="glyphicon glyphicon-music"></span>
                     </div>
-                    <h4>${filename}</h4>
-                    <p>Preview not available for this file type.</p>
-                    <a href="${fileUrl}" target="_blank" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-download-alt"></span>
-                        Download to View
-                    </a>
+                    <div class="file-name">${filename}</div>
+                    <audio controls style="width: 100%; margin-top: 20px;">
+                        <source src="${fileUrl}" type="audio/${extension}">
+                        Your browser does not support the audio element.
+                    </audio>
                 </div>
             `);
+        } else {
+            showUnsupportedFile(filename, fileUrl);
         }
     }
 
+    function showFileError(filename) {
+        $('#filePreviewContent').html(`
+            <div class="file-icon-container">
+                <div class="file-icon">
+                    <span class="glyphicon glyphicon-warning-sign" style="color: #ff6666;"></span>
+                </div>
+                <div class="file-name">${filename}</div>
+                <div class="file-message">Failed to load file</div>
+                <button class="btn btn-primary" onclick="location.reload()">
+                    <span class="glyphicon glyphicon-refresh"></span>
+                    Retry
+                </button>
+            </div>
+        `);
+    }
 
+    function showUnsupportedFile(filename, fileUrl) {
+        $('#filePreviewContent').html(`
+            <div class="file-icon-container">
+                <div class="file-icon">
+                    <span class="glyphicon glyphicon-file"></span>
+                </div>
+                <div class="file-name">${filename}</div>
+                <div class="file-message">Preview not available for this file type</div>
+                <a href="${fileUrl}" target="_blank" class="btn btn-primary">
+                    <span class="glyphicon glyphicon-download-alt"></span>
+                    Download to View
+                </a>
+            </div>
+        `);
+    }
+
+    // function renderThumbnailsFeedback() {
+    //     const container = $('#fileThumbnails');
+    //     container.empty();
+    //     console.log("container", container);
+    //     const containerWidth = container.width();
+    //     const thumbWidth = 70; // Thumbnail + margin/padding
+    //     const maxVisibleThumbs = Math.floor(containerWidth / thumbWidth);
+
+    //     let start = Math.max(currentIndex - Math.floor(maxVisibleThumbs / 2), 0);
+    //     let end = Math.min(start + maxVisibleThumbs, currentFiles.length);
+    //     console.log("start:", start);
+    //     // Adjust start if near the end
+    //     if (end - start < maxVisibleThumbs) {
+    //         start = Math.max(0, end - maxVisibleThumbs);
+    //     }
+
+    //     for (let i = start; i < end; i++) {
+    //         const file = currentFiles[i];
+    //         let url = typeof file === 'object' ? file.url : file;
+    //         const extension = (url.split('.').pop() || '').toLowerCase();
+
+    //         let thumbHtml = '';
+    //         if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension)) {
+    //             thumbHtml = `<img src="${url}" alt="thumb">`;
+    //         } else if (extension === 'pdf') {
+    //             thumbHtml = `<embed src="${url}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" />`;
+    //         } else {
+    //             thumbHtml = `<div style="width:100%;height:100%;background:#555;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;">${extension.toUpperCase()}</div>`;
+    //         }
+    //         const isActive = (currentIndex !== null && i === currentIndex);
+    //         // const thumb = $(`<div class="file-thumbnail ${i === currentIndex ? 'active' : 'inactive-thumbnail'}" data-index="${i}">${thumbHtml}</div>`);
+    //         const thumb = $(`<div class="file-thumbnail ${isActive ? 'active' : 'inactive-thumbnail'}" data-index="${i}">${thumbHtml}</div>`);
+    //         thumb.off('click').on('click', function () {
+    //             currentIndex = parseInt($(this).attr('data-index'));
+    //             console.log("currentIndex:", currentIndex);
+    //             RecoshowFilePreview(); // show the selected file
+    //         });
+    //         container.append(thumb);
+    //     }
+    // }
+
+    let thumbPageStart = 0;
+    const thumbPageSize = 22; // ✅ Show 22 thumbs per batch (you can change to 10 if preferred)
+
+    function renderThumbnailsFeedback() {
+        const container = $('#fileThumbnails');
+        container.empty();
+        // ✅ Adjust thumbnail range to always include currentIndex
+        if (currentIndex < thumbPageStart) {
+            thumbPageStart = Math.max(currentIndex - thumbPageSize + 1, 0);
+        } else if (currentIndex >= thumbPageStart + thumbPageSize) {
+            thumbPageStart = currentIndex - thumbPageSize + 1;
+        }
+
+        let end = Math.min(thumbPageStart + thumbPageSize, currentFiles.length);
+        console.log("thumbPageStart", thumbPageStart);
+
+        // ✅ Render the current set of thumbnails
+        for (let i = thumbPageStart; i < end; i++) {
+            const file = currentFiles[i];
+            let url = typeof file === 'object' ? file.url : file;
+            const extension = (url.split('.').pop() || '').toLowerCase();
+
+            let thumbHtml = '';
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'].includes(extension)) {
+                thumbHtml = `<img src="${url}" alt="thumb">`;
+            } else if (extension === 'pdf') {
+                thumbHtml = `<embed src="${url}#toolbar=0&navpanes=0&scrollbar=0" type="application/pdf" />`;
+            } else {
+                thumbHtml = `<div style="width:100%;height:100%;background:#555;color:white;display:flex;align-items:center;justify-content:center;font-size:12px;">${extension.toUpperCase()}</div>`;
+            }
+
+            const isActive = (currentIndex === i);
+            const thumb = $(`<div class="file-thumbnail ${isActive ? 'active' : 'inactive-thumbnail'}" data-index="${i}">${thumbHtml}</div>`);
+
+            thumb.on('click', function () {
+                currentIndex = parseInt($(this).attr('data-index'));
+                RecoshowFilePreview();
+            });
+
+            container.append(thumb);
+        }
+    }
+
+    // Handle modal events
+    $('#filePreviewContentReco').on('shown.bs.modal', function() {
+        $('body').addClass('modal-open');
+    });
+
+    $('#filePreviewContentReco').on('hidden.bs.modal', function() {
+        $('body').removeClass('modal-open');
+    });
+
+    $('#feedbackModal').on('hidden.bs.modal', function () {
+         currentIndex = 0;        
+        currentFiles = [];       
+        $('#fileThumbnails').empty();
+        
+        // Clean up button handlers
+        $('#prevBtn').off('click');
+        $('#nextBtn').off('click');
+
+        $(document).off('keydown.filePreview'); 
+    });
 });
 
 
 </script>
 
 <style>
+    #fileThumbnails {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px;
+}
+
+.file-thumbnail {
+    width: 60px;
+    height: 60px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    flex: 0 0 auto;
+}
+.file-thumbnails-bar {
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;  
+     object-fit: contain;
+}
+
+.file-thumbnails-bar::-webkit-scrollbar {
+    display: none; 
+}
+
+
+.file-thumbnail.inactive-thumbnail {
+  position: relative;
+  opacity: 0.5;
+  filter: grayscale(30%);
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: opacity 0.3s ease;
+}
+
+.file-thumbnail.active {
+  opacity: 1;
+  filter: none;
+  background-color: transparent;
+}
+
+
 .direct-chat-msgs.left {
     margin-top: 10px;
 }
@@ -292,10 +587,11 @@ $(document).ready(function() {
     text-decoration: none;
 }
 
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-</style>
 
+</style

@@ -75,6 +75,7 @@ $user = Session::get('auth');
             width: 100px;
             height: 65px;
         }
+
     </style>
     <div class="row">
         <div class="col-md-3">

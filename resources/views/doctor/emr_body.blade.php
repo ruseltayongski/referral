@@ -107,7 +107,6 @@
     }
 
     .btn-view-pmr:hover {
-        background-color: #218838;
         color: white;
         text-decoration: none;
     }
@@ -354,18 +353,19 @@ if (!empty($emr_forms_data)) {
                     <!-- Category -->
                     <td>
                         @if(isset($formData->telemedicine) && $formData->telemedicine == 1)
-                            <span class="label label-info" style="padding: 5px;">Telemedicine</span>
+                            <!-- <span class="label label-info" style="padding: 5px;">Telemedicine</span> -->
+                              <span class="text-success" style="padding: 5px;">Telemedicine</span>
                         @else
-                            <span class="label label-success" style="padding: 5px;">Referral</span>
+                            <span class="text-success" style="padding: 5px;">Referral</span>
                         @endif
                     </td>
                     
                     <!-- Type -->
                     <td>
-                        <span class="badge badge-secondary" style="padding: 5px;">{{ ucfirst($emr_record['type']) }}</span>
-                        <br><small class="text-muted">{{ $emr_record['formtype'] }}</small>
+                        <span class="text-warning" style="padding: 5px;">{{ ucfirst($emr_record['type']) }}</span>
+                        <!-- <br><small class="text-muted">{{ $emr_record['formtype'] }}</small> -->
                     </td>
-                    
+                     
                     <!-- Date Discharged -->
                     <td>
                      @if(!empty($emr_record['date_discharged']))
@@ -382,17 +382,17 @@ if (!empty($emr_forms_data)) {
                             <form method="GET" action="{{ url('doctor/referred') }}">
                                 @csrf
                                 <input type="hidden" name="referredCode" value="{{ $formData->code }}">
-                                <button type="submit" class="btn btn-outline-primary btn-sm" formtarget="_blank">
-                                    <i class="bi bi-search"></i> Track Patient
+                                <button type="submit" class="btn btn-success btn-sm" formtarget="_blank">
+                                    <i class="bi bi-search"></i> Track
                                 </button>
                             </form>
-                            <button type="button" class="btn btn-outline-secondary btn-sm btn-view-pmr"
+                            <button type="button" class="btn btn-warning btn-sm btn-view-pmr"
                                 data-type="{{ $emr_record['type'] ?? '' }}"
                                 data-formtype="{{ $emr_record['formtype'] ?? '' }}"
                                 data-formid="{{ $emr_record['formId'] ?? '' }}"
                                 onclick="openPMRModal(this)"
                                 style="padding: 5px;">
-                                <i class="bi bi-eye"></i> View PMR
+                                <i class="bi bi-eye"></i> PMR
                             </button>
                         </div>
                     </td>
