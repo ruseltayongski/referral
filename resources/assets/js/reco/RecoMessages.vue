@@ -205,7 +205,7 @@ import axios from 'axios';
                     const Filepath = path.replace(/^\/reco/, '');
                     console.log("file path clean", Filepath);
                     if(Filepath.includes("/RecoChat/")){
-                        const fullPath = `${this.BaseUrlFile}/${path.replace(/^\/?(referral\/)?/, '')}`;
+                        const fullPath = `${this.BaseUrlFile}/${Filepath.replace(/^\/?(referral\/)?/, '')}`;
                         if(!window.globalFiles.includes(fullPath)){
                             window.globalFiles.push(fullPath);
                         }
