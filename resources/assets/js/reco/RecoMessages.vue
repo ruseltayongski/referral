@@ -193,7 +193,7 @@ import axios from 'axios';
             },
             getThumbnail(file) {
                 const ext = this.getFileExtension(file);
-                console.log("file :", file, "baseUrl", this.BaseUrlFile); 
+                // console.log("file :", cleanedFile, "baseUrl", this.BaseUrlFile); 
                 
                 // let baseUrl = $("#broadcasting_url").val().replace(/[\/|]$/, "");
                 // console.log("my patrhererre:", baseUrl);
@@ -201,7 +201,10 @@ import axios from 'axios';
                 // console.log("globalFiles update:", window.globalFiles);
                 const files = file.split('|');
                 files.forEach(path => {
-                    if(path.includes("/RecoChat/")){
+
+                    const Filepath = path.replace(/^\/reco/, '');
+                    console.log("file path clean", Filepath);
+                    if(Filepath.includes("/RecoChat/")){
                         const fullPath = `${this.BaseUrlFile}/${path.replace(/^\/?(referral\/)?/, '')}`;
                         if(!window.globalFiles.includes(fullPath)){
                             window.globalFiles.push(fullPath);
