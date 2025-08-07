@@ -56,7 +56,7 @@ $user = Session::get('auth');
         .badge-overlay {
             position: absolute;
             left: 0%;
-            top: 0px;
+            top: 10px;
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -104,16 +104,21 @@ $user = Session::get('auth');
         .badge2 .timeline-footer {
             position: relative; 
         }
-        .top-right {
+        .top-right-badge {
             position: absolute;
             top: 0;
             right: 0;
-            -ms-transform: translateX(30%) translateY(0%) rotate(45deg);
+            /* -ms-transform: translateX(30%) translateY(0%) rotate(45deg);
             -webkit-transform: translateX(30%) translateY(0%) rotate(45deg);
-            transform: translateX(30%) translateY(0%) rotate(45deg);
-            -ms-transform-origin: top left;
+            transform: translateX(30%) translateY(0%) rotate(45deg); */
+            /* -ms-transform-origin: top left;
             -webkit-transform-origin: top left;
-            transform-origin: top left;
+            transform-origin: top left; */
+        }
+        .pull-right-queue {
+            position: absolute;
+            top: 100;
+            right: 0;
         }
     </style>
     @php
@@ -193,7 +198,7 @@ $user = Session::get('auth');
                                 <li id="referral_incoming{{ $row->code }}">
                                     @if($row->position > 0)
                                         <div class='badge-overlay'>
-                                            <span class='top-right badge1 red'>{{ $position_bracket[$row->position+1] }} Position</span>
+                                            <span class='top-right-badge badge1 red'>{{ $position_bracket[$row->position+1] }} Position</span>
                                         </div>
                                     @endif
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status=='followup')
@@ -219,7 +224,7 @@ $user = Session::get('auth');
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
                                                 <span class="facility">{{ $row->facility_name }}</span>
                                                 @if(count($queue) > 0)
-                                                    <h5 class="text-red pull-right">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
+                                                    <h5 class="text-red pull-right-queue">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
                                                 @endif
                                             </h3> <!-- time line for #referred #seen #redirected -->
                                             @include('doctor.include.timeline_footer')
