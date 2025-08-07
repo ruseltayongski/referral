@@ -25,7 +25,7 @@
                             <a href="javascript:void(0)"
                             @click="triggerPreview(file, parseFiles(message.filename), index)">
                             <img class="attachment-thumb"
-                                :src="getThumbnail(file)"
+                                :src="getThumbnail(file.replace('/reco', ''))"
                                 :alt="getFileExtension(file).toUpperCase() + ' file'"
                                 style="width: 50px; height: 50px; object-fit: cover; border:1px solid green; border-radius: 4px;">
                             </a>
@@ -193,7 +193,7 @@ import axios from 'axios';
             },
             getThumbnail(file) {
                 const ext = this.getFileExtension(file);
-                // console.log("file :", cleanedFile, "baseUrl", this.BaseUrlFile); 
+                console.log("file :", file, "baseUrl", this.BaseUrlFile); 
                 
                 // let baseUrl = $("#broadcasting_url").val().replace(/[\/|]$/, "");
                 // console.log("my patrhererre:", baseUrl);
@@ -201,11 +201,8 @@ import axios from 'axios';
                 // console.log("globalFiles update:", window.globalFiles);
                 const files = file.split('|');
                 files.forEach(path => {
-
-                    const Filepath = path.replace(/^\/reco/, '');
-                    console.log("file path clean", Filepath);
-                    if(Filepath.includes("/RecoChat/")){
-                        const fullPath = `${this.BaseUrlFile}/${Filepath.replace(/^\/?(referral\/)?/, '')}`;
+                    if(path.includes("/RecoChat/")){
+                        const fullPath = `${this.BaseUrlFile}/${path.replace(/^\/?(referral\/)?/, '')}`;
                         if(!window.globalFiles.includes(fullPath)){
                             window.globalFiles.push(fullPath);
                         }
