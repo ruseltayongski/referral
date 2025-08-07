@@ -23,7 +23,7 @@
                             :key="index"
                             style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
                             <a href="javascript:void(0)"
-                            @click="triggerPreview(file, parseFiles(message.filename), index)">
+                            @click="triggerPreview(file.replace('/reco', ''), parseFiles(message.filename), index)">
                             <img class="attachment-thumb"
                                 :src="getThumbnail(file.replace('/reco', ''))"
                                 :alt="getFileExtension(file).toUpperCase() + ' file'"
