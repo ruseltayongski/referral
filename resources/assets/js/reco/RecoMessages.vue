@@ -57,7 +57,6 @@
                     style="position:absolute;top:-8px;right:-8px;background:#f44336;color:#fff;border-radius:50%;padding:0 5px;font-size:12px;cursor:pointer;line-height:1;"
                     title="Remove"
                     >&times;</span>
-                    
                     <a :href="file.url" target="_blank">
                     <img 
                         v-if="file.type.startsWith('image')"
@@ -68,7 +67,7 @@
                     />
                     <img 
                         v-else-if="file.type === 'application/pdf'"
-                        :src="BaseUrlFile + '/public/fileupload/pdffile.png'" 
+                        :src="this.BaseUrlFile + '/public/fileupload/pdffile.png'" 
                         alt="PDF File" 
                         style="width:80px; height:60px; object-fit:contain; border:1px solid #ccc;" 
                         :data-file-id="file.id" 
@@ -194,16 +193,16 @@ import axios from 'axios';
             },
             getThumbnail(file) {
                 const ext = this.getFileExtension(file);
-                // console.log("file :", file); 
+                console.log("file :", file, "baseUrl", this.BaseUrlFile); 
                 
-                let baseUrl = $("#broadcasting_url").val().replace(/[\/|]$/, "");
-
+                // let baseUrl = $("#broadcasting_url").val().replace(/[\/|]$/, "");
+                // console.log("my patrhererre:", baseUrl);
                 window.globalFiles = window.globalFiles || [];
                 // console.log("globalFiles update:", window.globalFiles);
                 const files = file.split('|');
                 files.forEach(path => {
                     if(path.includes("/RecoChat/")){
-                        const fullPath = `${baseUrl}/${path.replace(/^\/?(referral\/)?/, '')}`;
+                        const fullPath = `${this.BaseUrlFile}/${path.replace(/^\/?(referral\/)?/, '')}`;
                         if(!window.globalFiles.includes(fullPath)){
                             window.globalFiles.push(fullPath);
                         }
