@@ -118,13 +118,7 @@ export default {
       document.head.appendChild(newLink);
     }
 
-    // Automatically start screen recording when the component is mounted
-      if (this.referring_md === "yes") {
-        this.startScreenRecording();
-      }
-    
-
-     window.addEventListener('beforeunload', this.preventCloseWhileUploading);
+    window.addEventListener('beforeunload', this.preventCloseWhileUploading);
     window.addEventListener('beforeunload', this.stopCallTimer);
     axios
       .get(
@@ -402,15 +396,17 @@ export default {
               window.top.close();
             },
           });
-        } else {
-          Lobibox.alert("error", {
-            msg: "An unexpected error occurred while starting screen recording. Please try again.",
-            closeButton: false,
-            callback: function () {
-              window.top.close();
-            },
-          });
-        }
+        } 
+        
+        // else {
+        //   Lobibox.alert("error", {
+        //     msg: "An unexpected error occurred while starting screen recording. Please try again.",
+        //     closeButton: false,
+        //     callback: function () {
+        //       window.top.close();
+        //     },
+        //   });
+        // }
       }
     },
     preventCloseWhileUploading(event) {
@@ -770,15 +766,20 @@ export default {
       agoraEngine.on("user-joined", async (user) => {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
-
+        console.log("condition user count", self.channelParameters.userCount > self.channelParameters.maxUsers, 'user count:', self.channelParameters.userCount, 'MaxUsers: ', self.channelParameters.userCount);
         // Check if channel already has maximum users
-        if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
+        if (self.channelParameters.userCount == self.channelParameters.maxUsers) {
           console.log("Channel is full! Maximum users reached.");
           self.showChannelFullMessage();
           // Disconnect this user since the channel is full
           await agoraEngine.leave();
           self.channelParameters.userCount--; // Decrement user count after leaving
           return;
+        }else{
+            // Automatically start screen recording when the component is mounted
+          if (this.referring_md === "yes") {
+            this.startScreenRecording();
+          }
         }
       });
 
@@ -867,7 +868,7 @@ export default {
       }
     },
     // Method to show channel full message to user
-    showChannelFullMessage() {
+    async showChannelFullMessage() {
       // Create an alert or message to inform user
       const fullMessage = document.createElement("div");
       fullMessage.className = "channel-full-message";
@@ -886,7 +887,8 @@ export default {
       
       // Remove the message after a few seconds
       setTimeout(() => {
-        fullMessage.remove();
+          fullMessage.remove();
+          window.top.close(); // optional: close after message disappears
       }, 5000);
     },
 
