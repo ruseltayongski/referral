@@ -458,7 +458,7 @@
                             <div class="member d-flex align-items-start">
                                 <div class="pic"><img :src="MLopez" class="img-fluid" alt=""></div>
                                 <div class="member-info">
-                                    <h4>Karl Micheal M. Lopez</h4>
+                                    <h4>Karl Michael M. Lopez</h4>
                                     <span>Computer Programmer I</span>
                                     <p>09998901910</p>
                                     <div class="social">
