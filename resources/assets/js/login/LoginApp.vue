@@ -454,7 +454,7 @@
                             </div>
                         </div>
 
-                         <div class="col-lg-6 mt-4 mt-lg-0">
+                         <div class="col-lg-6 mt-4">
                             <div class="member d-flex align-items-start">
                                 <div class="pic"><img :src="MLopez" class="img-fluid" alt=""></div>
                                 <div class="member-info">
