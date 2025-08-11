@@ -1085,6 +1085,7 @@
                             <ul>
                                 <li><i class="bx bx-chevron-right"></i> <a :href="request_form">E-Referral Service Request</a></li>
                                 <li><i class="bx bx-chevron-right"></i> <a :href="ndca">NDCA CVeHRS Healthcare Facility</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a :href="telemed" target="_blank">Telemedicine User Manual</a></li>
                             </ul>
                         </div>
                     </div>
@@ -1191,6 +1192,7 @@
                 eref_management: path + '/public/manual/E-Referral-Management.docx',
                 request_form: path + '/public/manual/Service-Request-Form.docx',
                 ndca: path + '/public/manual/NDCA-CVeHRS-healthcare-facility.doc',
+                telemed: path + '/public/manual/telemedicine-manual-as-of-June-2025.pdf',
                 count_doctor: 0,
                 count_gov_hosp: 0,
                 count_private_hosp: 0,
