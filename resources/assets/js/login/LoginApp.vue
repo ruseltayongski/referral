@@ -454,11 +454,11 @@
                             </div>
                         </div>
 
-                         <div class="col-lg-6 mt-4 mt-lg-0">
+                         <div class="col-lg-6 mt-4">
                             <div class="member d-flex align-items-start">
                                 <div class="pic"><img :src="MLopez" class="img-fluid" alt=""></div>
                                 <div class="member-info">
-                                    <h4>Karl Micheal M. Lopez</h4>
+                                    <h4>Karl Michael M. Lopez</h4>
                                     <span>Computer Programmer I</span>
                                     <p>09998901910</p>
                                     <div class="social">
@@ -1085,6 +1085,7 @@
                             <ul>
                                 <li><i class="bx bx-chevron-right"></i> <a :href="request_form">E-Referral Service Request</a></li>
                                 <li><i class="bx bx-chevron-right"></i> <a :href="ndca">NDCA CVeHRS Healthcare Facility</a></li>
+                                <li><i class="bx bx-chevron-right"></i> <a :href="telemed" target="_blank">Telemedicine User Manual</a></li>
                             </ul>
                         </div>
                     </div>
@@ -1153,7 +1154,7 @@
                 rtayong: path + "/resources/medilab/assets/img/contact/tayong_rusel.JPG",
                 ccatubig: path + "/resources/medilab/assets/img/contact/catubig.png",
                 JGonzales: path + "/resources/medilab/assets/img/contact/JGonzales1.png",
-                MLopez: path + "/resources/medilab/assets/img/contact/Lopez_M.png",
+                MLopez: path + "/resources/medilab/assets/img/contact/Lopez_KM.png",
                 fmaningo: path + "/resources/medilab/assets/img/contact/maningo_fmj.png",
                 ggorosin: path + "/resources/medilab/assets/img/contact/gorosin.g.jpg",
                 mmanayon: path + "/resources/medilab/assets/img/contact/mmanayon1.png",
@@ -1191,6 +1192,7 @@
                 eref_management: path + '/public/manual/E-Referral-Management.docx',
                 request_form: path + '/public/manual/Service-Request-Form.docx',
                 ndca: path + '/public/manual/NDCA-CVeHRS-healthcare-facility.doc',
+                telemed: path + '/public/manual/telemedicine-manual-as-of-June-2025.pdf',
                 count_doctor: 0,
                 count_gov_hosp: 0,
                 count_private_hosp: 0,
