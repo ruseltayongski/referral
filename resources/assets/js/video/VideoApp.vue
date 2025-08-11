@@ -997,6 +997,7 @@ export default {
       self
     ) {
       console.log("local");
+
       // Join a channel.
       await agoraEngine.join(
         self.options.appId,
@@ -1004,25 +1005,50 @@ export default {
         self.options.token,
         self.options.uid
       );
-      // Create a local audio track from the audio sampled by a microphone.
+
+      // Always create audio track
       channelParameters.localAudioTrack =
         await AgoraRTC.createMicrophoneAudioTrack();
-      // Create a local video track from the video captured by a camera.
-      channelParameters.localVideoTrack =
-        await AgoraRTC.createCameraVideoTrack();
-      // Append the local video container to the page body.
+
+      // Check if camera exists before creating video track
+      const devices = await AgoraRTC.getDevices();
+      const hasCamera = devices.some((device) => device.kind === "videoinput");
+
+      if (hasCamera) {
+        console.log("Camera detected. Creating video track...");
+        channelParameters.localVideoTrack =
+          await AgoraRTC.createCameraVideoTrack();
+      } else {
+        Lobibox.alert("error", {
+          msg: "Camera is required!.",
+          closeButton: false,
+          callback: function () {
+            window.top.close();
+          },
+        });
+      }
+
+      // Append the local player container to the page
       document.body.append(localPlayerContainer);
       $(".localPlayerDiv").html(localPlayerContainer);
       $(localPlayerContainer).addClass("localPlayerLayer");
-      // Publish the local audio and video tracks in the channel.
-      await agoraEngine.publish([
-        channelParameters.localAudioTrack,
-        channelParameters.localVideoTrack,
-      ]);
-      // Play the local video track.
-      channelParameters.localVideoTrack.play(localPlayerContainer);
+
+      // Publish only available tracks
+      const publishTracks = [channelParameters.localAudioTrack];
+      if (channelParameters.localVideoTrack) {
+        publishTracks.push(channelParameters.localVideoTrack);
+      }
+
+      await agoraEngine.publish(publishTracks);
+
+      // Play local video if available
+      if (channelParameters.localVideoTrack) {
+        channelParameters.localVideoTrack.play(localPlayerContainer);
+      }
+
       console.log("publish success!");
     },
+
     async sendCallDuration() {
       if (this.isLeavingChannel) return; // Prevent duplicate sends
       this.isLeavingChannel = true;
