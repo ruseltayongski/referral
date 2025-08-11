@@ -1154,7 +1154,7 @@
                 rtayong: path + "/resources/medilab/assets/img/contact/tayong_rusel.JPG",
                 ccatubig: path + "/resources/medilab/assets/img/contact/catubig.png",
                 JGonzales: path + "/resources/medilab/assets/img/contact/JGonzales1.png",
-                MLopez: path + "/resources/medilab/assets/img/contact/Lopez_M.png",
+                MLopez: path + "/resources/medilab/assets/img/contact/Lopez_KM.png",
                 fmaningo: path + "/resources/medilab/assets/img/contact/maningo_fmj.png",
                 ggorosin: path + "/resources/medilab/assets/img/contact/gorosin.g.jpg",
                 mmanayon: path + "/resources/medilab/assets/img/contact/mmanayon1.png",
