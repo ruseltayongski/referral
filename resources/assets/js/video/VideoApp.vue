@@ -904,14 +904,19 @@ export default {
         // Check if camera exists before creating video track
         const devices = await AgoraRTC.getDevices();
         const hasCamera = devices.some(
-          (device) => device.kind === "videoinput"
+          (device) => device.kind === "videoinput"  &&
+          device.deviceId !== "" &&
+          !device.label.toLowerCase().includes("virtual")
         );
-
+        console.log("has devices", devices);
+        
         if (hasCamera) {
+           console.log("has camera:", hasCamera);
           self.channelParameters.localVideoTrack =
             await AgoraRTC.createCameraVideoTrack();
         } else {
-          Lobibox.alert("error", {
+           console.log("no camera:", hasCamera);
+           Lobibox.alert("error", {
             msg: "Camera is required!.",
             closeButton: false,
             callback: function () {
