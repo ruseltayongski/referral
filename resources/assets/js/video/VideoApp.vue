@@ -828,6 +828,7 @@ export default {
       });
 
       // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
+      //agora
       agoraEngine.on("user-published", async (user, mediaType) => {
         if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
           console.log("Ignoring new user, channel is full");
