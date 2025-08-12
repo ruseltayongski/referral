@@ -715,25 +715,43 @@
             acceptCall() {
                 this.$refs.audioVideo.pause();
                 $("#video-call-confirmation").modal('toggle');
-                    let windowName = 'NewWindow'; // Name of the new window
-                    let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-                    //const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
-                     const referring_md_status = 'no'
-                    console.log("referring_md_status", referring_md_status);
-                    let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
-                    let newWindow = window.open(url, windowName, windowFeatures);
-                    if (newWindow && newWindow.outerWidth) {
-                        // If the window was successfully opened, attempt to maximize it
-                        console.log("the open open of wendow");
-                        newWindow.moveTo(0, 0);
-                        newWindow.resizeTo(screen.availWidth, screen.availHeight);
-                    }
-                    
-                    localStorage.setItem('callStartTime', Date.now());
 
-                    this.telemedicineExamined();
-                    console.log("windowFeatures", windowFeatures);
-                    console.log("Video call started at:", new Date());
+                        // Check if a camera is available before accepting the call
+                    // navigator.mediaDevices.enumerateDevices()
+                    //     .then(devices => {
+                    //         const hasCamera = devices.some(device => device.kind === 'videoinput');
+
+                    //         if (!hasCamera) {
+                    //             // Show an alert and stop here if no camera is detected
+                    //             alert("No camera detected! You cannot accept the video call.");
+                    //             console.warn("No camera found on this device.");
+                    //             return; // Exit function without continuing
+                    //         }
+
+                            let windowName = 'NewWindow'; // Name of the new window
+                            let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+                            //const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
+                            const referring_md_status = 'no'
+                            console.log("referring_md_status", referring_md_status);
+                            let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
+                            let newWindow = window.open(url, windowName, windowFeatures);
+                            if (newWindow && newWindow.outerWidth) {
+                                // If the window was successfully opened, attempt to maximize it
+                                console.log("the open open of wendow");
+                                newWindow.moveTo(0, 0);
+                                newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                            }
+                            
+                            localStorage.setItem('callStartTime', Date.now());
+
+                            this.telemedicineExamined();
+                            console.log("windowFeatures", windowFeatures);
+                            console.log("Video call started at:", new Date());
+                    //  })
+                    // .catch(error => {
+                    //     console.error("Error checking devices:", error);
+                    //     alert("Unable to access media devices. Please check your browser permissions.");
+                    // });
             },
             examinedCompleted(patient_code, activity_id) {
                 $("#examined_progress"+patient_code+activity_id).addClass("completed");

@@ -766,6 +766,47 @@ export default {
 
       let self = this;
 
+         // Check if camera exists before creating video track
+        const devices = await AgoraRTC.getDevices();
+
+        const realCameras = devices.filter(device =>
+            device.kind === "videoinput" &&
+            device.deviceId &&
+            device.deviceId.trim() !== "" &&
+            !device.label.toLowerCase().includes("virtual")
+        );
+
+        const hasCamera = realCameras.length > 0;
+
+        console.log("All devices:", devices);
+        console.log("Detected real cameras:", realCameras);
+        console.log("Has real camera:", hasCamera);
+        
+        if (hasCamera) {
+           console.log("has camera:", hasCamera);
+          self.channelParameters.localVideoTrack =
+            await AgoraRTC.createCameraVideoTrack();
+        } else {
+          console.log("no camera", hasCamera);
+          // const vm = this;
+          // console.log("no camera:", hasCamera);
+          // // Emit with data
+          // vm.$emit("stopCall", { 
+          //   reason: "no_camera", 
+          //   hasCamera: false,
+          //   message: "Camera is required"
+          // });
+          //  console.log("stopCall event emitted");
+          Lobibox.alert("error", {
+            msg: "Camera is required!.",
+            closeButton: false,
+            callback: function () {
+              window.top.close();
+            },
+          });
+          return;
+        }
+
       // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
         console.log("User joined:", user.uid);
@@ -846,40 +887,6 @@ export default {
         self.channelParameters.localAudioTrack =
           await AgoraRTC.createMicrophoneAudioTrack();
 
-        // Check if camera exists before creating video track
-        const devices = await AgoraRTC.getDevices();
-        const hasCamera = devices.some(
-          (device) => device.kind === "videoinput"  &&
-          device.deviceId !== "" &&
-          !device.label.toLowerCase().includes("virtual")
-        );
-        console.log("hass", devices);
-        
-        if (hasCamera) {
-           console.log("has camera:", hasCamera);
-          self.channelParameters.localVideoTrack =
-            await AgoraRTC.createCameraVideoTrack();
-        } else {
-         
-          // const vm = this;
-          // console.log("no camera:", hasCamera);
-          // // Emit with data
-          // vm.$emit("stopCall", { 
-          //   reason: "no_camera", 
-          //   hasCamera: false,
-          //   message: "Camera is required"
-          // });
-          //  console.log("stopCall event emitted");
-          Lobibox.alert("error", {
-            msg: "Camera is required!.",
-            closeButton: false,
-            callback: function () {
-              window.top.close();
-            },
-          });
-
-        }
-
         self.channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
         self.channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
 
@@ -944,7 +951,7 @@ export default {
         vars.push(hash[0]);
         vars[hash[0]] = hash[1];
       }
-      console.log("varssss", vars);
+      
       return vars;
     },
 
