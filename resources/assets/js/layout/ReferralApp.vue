@@ -26,6 +26,7 @@
             </div>
         </div>
     </div>
+    <!-- <VideoApp @stopCall="stopAgoraCall" /> -->
 </template>
 <script>
     export default {
@@ -49,6 +50,19 @@
             }
         },
         methods: {
+        //   stopAgoraCall(eventData) {
+        //         console.log('=== stopAgoraCall method called ===');
+        //         console.log('Stop call data:', eventData);
+        //         console.log('Audio ref exists:', !!this.$refs.audioVideo);
+                
+        //         this.$refs.audioVideo.pause();
+        //         this.$refs.audioVideo.currentTime = 0;
+                
+        //         // You can now use the passed data
+        //         if (eventData && eventData.reason === 'no_camera') {
+        //             console.log('Call stopped due to no camera');
+        //         }
+        //     },   
             playAudio(telemedicine, subOpdId) {
                 console.log("playVid:",parseInt(telemedicine) == 1,"Telemed", parseInt(telemedicine));
                 if(parseInt(telemedicine) == 1){
@@ -703,7 +717,9 @@
                 $("#video-call-confirmation").modal('toggle');
                     let windowName = 'NewWindow'; // Name of the new window
                     let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-                    const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
+                    //const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
+                     const referring_md_status = 'no'
+                    console.log("referring_md_status", referring_md_status);
                     let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
                     let newWindow = window.open(url, windowName, windowFeatures);
                     if (newWindow && newWindow.outerWidth) {
