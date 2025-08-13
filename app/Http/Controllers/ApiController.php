@@ -365,7 +365,7 @@ class ApiController extends Controller
 
             return response()->json(['prescriptions' => $prescriptions], 200);
         } else {
-            return response()->json(['message' => 'Prescription activity not found'], 404);
+            return response()->json(['message' => 'Prescription activity not found']);
         }   
     }
 

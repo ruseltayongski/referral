@@ -386,53 +386,49 @@
     methods: {
         savePrescriptions() {
    
-        const prescriptionContent = CKEDITOR.instances.editor.getData();
-        const combinedPrescriptions = {
-            singlePrescription: {
-                prescription_v2: prescriptionContent,
-                code: this.code,
-                activity_id: this.activity_id,
-                form_type: this.form_type,
-                prescribed_activity_id: this.prescribed_activity_id,
-   
-            }       
-        };
+            const prescriptionContent = CKEDITOR.instances.editor.getData();
+            const combinedPrescriptions = {
+                singlePrescription: {
+                    prescription_v2: prescriptionContent,
+                    code: this.code,
+                    activity_id: this.activity_id,
+                    form_type: this.form_type,
+                    prescribed_activity_id: this.prescribed_activity_id,
+    
+                }       
+            };
 
-        if (prescriptionContent){
-            axios.post(`${this.baseUrl}/api/video/prescriptions/version2`, combinedPrescriptions)
-            .then(() => {
-                this.prescriptionSubmitted = true;
-                this.fetchPrescriptions(this.code);
+            if (prescriptionContent){
+                axios.post(`${this.baseUrl}/api/video/prescriptions/version2`, combinedPrescriptions)
+                .then(() => {
+                    this.prescriptionSubmitted = true;
+                    this.fetchPrescriptions(this.code);
 
-                console.log('Success data:', combinedPrescriptions);
-                Lobibox.alert("success", {
-                    msg: "Prescription Prescription successfully!",
+                    console.log('Success data:', combinedPrescriptions);
+                    Lobibox.alert("success", {
+                        msg: "Prescription Prescription successfully!",
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error message:', error);
+                    console.log('Error data:', combinedPrescriptions);
+                    Lobibox.alert("error", {
+                        msg: "Failed to save prescription.",
+                    });
                 });
-            })
-            .catch((error) => {
-                console.error('Error message:', error);
-                console.log('Error data:', combinedPrescriptions);
+            }else {
                 Lobibox.alert("error", {
-                    msg: "Failed to save prescription.",
-                });
-            });
-        }else {
-            Lobibox.alert("error", {
-                    msg: "Please input your prescription.",
-                });
-        }
- 
-       
+                        msg: "Please input your prescription.",
+                    });
+            }
         },
 
         async fetchPrescriptions(code) {
             try {
                 const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
-                
                 this.prescriptions = response.data.prescriptions;
-                const firstPrescription = this.prescriptions[0];
-                
-                if (firstPrescription) {
+                if (this.prescriptions) {
+                    const firstPrescription = this.prescriptions[0];
                     this.prescription_v2 = firstPrescription.prescription_v2 || '';
                     this.prescribed_activity_id = firstPrescription.prescribed_activity_id || '';
                     this.prescriptions = this.prescriptions.slice(1);
@@ -452,7 +448,7 @@
         }
 
     },
-    };
+};
 
 </script>
 

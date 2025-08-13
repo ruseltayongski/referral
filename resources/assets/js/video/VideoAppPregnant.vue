@@ -1049,6 +1049,8 @@ export default {
                 this.screenRecorder.onstop = () => {
                     this.saveScreenRecording(true);
                 };
+            }else {
+              window.top.close();
             }
 
             // Wait for duration to be sent before closing
