@@ -17,6 +17,7 @@ export default {
   data() {
     return {
       //start video in minutes
+      isUserJoined: false,
       callMinutes: 0,
       callTimer: null,
       callDuration: "00:00:000", // New variable for formatted time
@@ -119,9 +120,9 @@ export default {
       }
 
      // Automatically start screen recording when the component is mounted
-     if (this.referring_md === "yes") {
-        this.startScreenRecording();
-      }
+    //  if (this.referring_md === "yes") {
+    //     this.startScreenRecording();
+    //   }
     
     
     window.addEventListener('beforeunload', this.preventCloseWhileUploading);
@@ -195,6 +196,14 @@ export default {
               }
           });
       });
+  },
+  watch: {
+    isUserJoined() {
+      if(this.isUserJoined) {
+        this.$refs.ringingPhone.pause();
+        this.startCallTimer();
+      }
+    }
   },
   methods: {
     pregnantKeydown(e){
@@ -656,15 +665,16 @@ export default {
               window.top.close();
             },
           });
-        } else {
-          Lobibox.alert("error", {
-            msg: "An unexpected error occurred while starting screen recording. Please try again.",
-            closeButton: false,
-            callback: function () {
-              window.top.close();
-            },
-          });
         }
+        //  else {
+        //   Lobibox.alert("error", {
+        //     msg: "An unexpected error occurred while starting screen recording. Please try again.",
+        //     closeButton: false,
+        //     callback: function () {
+        //       window.top.close();
+        //     },
+        //   });
+        // }
       }
     },
     async saveScreenRecording(closeAfterUpload = false) {
@@ -751,30 +761,26 @@ export default {
         }
     },
     startCallTimer() {
-   // Store the start time in milliseconds
-    this.startTime = Date.now();
+      this.startTime = Date.now();
+      this.callTimer = setInterval(() => {
+        const elapsedTime = Date.now() - this.startTime;
 
-    // Update the timer every 10 milliseconds
-    this.callTimer = setInterval(() => {
-      const elapsedTime = Date.now() - this.startTime;
-
-      // Calculate minutes, seconds, and milliseconds
-      const hours = Math.floor(elapsedTime / 3600000);
-      const minutes = Math.floor((elapsedTime % 3600000) / 60000);
-      const seconds = Math.floor((elapsedTime % 60000) / 1000);
+        const hours = Math.floor(elapsedTime / 3600000);
+        const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+        const seconds = Math.floor((elapsedTime % 60000) / 1000);
 
 
-      // Format the time as mm:ss:ms
-    
-      if(hours == 0){
-        this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(seconds).padStart(2, "0")} `;
-      }else {
-        this.callDuration = `${String(hours).padStart(1, "0")} : ${String(minutes).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
-      }
+        // Format the time as mm:ss:ms
       
-    }, 10);
+        if(hours == 0){
+          this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(seconds).padStart(2, "0")} `;
+        }else {
+          this.callDuration = `${String(hours).padStart(1, "0")} : ${String(minutes).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
+        }
+        
+      }, 10);
     },
-  async startBasicCall() {
+    async startBasicCall() {
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
       if (!this.channelParameters) {
@@ -789,23 +795,63 @@ export default {
 
       let self = this;
 
+      // Check if camera exists before creating video track
+      // const devices = await AgoraRTC.getDevices();
+
+      // const realCameras = devices.filter(device =>
+      //     device.kind === "videoinput" &&
+      //     device.deviceId &&
+      //     device.deviceId.trim() !== "" &&
+      //     !device.label.toLowerCase().includes("virtual")
+      // );
+
+      // const hasCamera = realCameras.length > 0;
+
+      // console.log("All devices:", devices);
+      // console.log("Detected real cameras:", realCameras);
+      // console.log("Has real camera:", hasCamera);
+      
+      // if (hasCamera) {
+      //    console.log("has camera:", hasCamera);
+      //   self.channelParameters.localVideoTrack =
+      //     await AgoraRTC.createCameraVideoTrack();
+      // } else {
+      //   console.log("no camera", hasCamera);
+        
+      //   Lobibox.alert("error", {
+      //     msg: "Camera is required!.",
+      //     closeButton: false,
+      //     callback: function () {
+      //       window.top.close();
+      //     },
+      //   });
+      //   return;
+      // }
+
+     // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
         self.channelParameters.userCount++;
-        if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
-          self.showChannelFullMessage && self.showChannelFullMessage();
+        this.isUserJoined = true;
+        // Check if channel already has maximum users
+        if (self.channelParameters.userCount >= self.channelParameters.maxUsers) {
+          console.log("Channel is full! Maximum users reached.");
+          self.showChannelFullMessage();
+          // Disconnect this user since the channel is full
           await agoraEngine.leave();
-          self.channelParameters.userCount--;
+          self.channelParameters.userCount--; // Decrement user count after leaving
           return;
+        }else{
+          if(this.referring_md === "yes"){
+              this.startScreenRecording();
+          }
         }
       });
 
       agoraEngine.on("user-published", async (user, mediaType) => {
-        if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
-          return;
-        }
         await agoraEngine.subscribe(user, mediaType);
-
+        console.log("mediaType::", mediaType);
         if (mediaType === "video") {
+          console.log("hey it works for me");
           if (self.$refs && self.$refs.ringingPhone) {
             self.$refs.ringingPhone.pause();
           }
@@ -823,6 +869,7 @@ export default {
         }
 
         if (mediaType === "audio") {
+          console.log("helo Audio");
           self.channelParameters.remoteAudioTrack = user.audioTrack;
           self.channelParameters.remoteAudioTrack.play();
         }
@@ -859,21 +906,41 @@ export default {
 
         self.channelParameters.localVideoTrack.play(localPlayerContainer);
 
-        window.onload = function () {
-          self.joinVideo &&
-            self.joinVideo(
-              agoraEngine,
-              self.channelParameters,
-              localPlayerContainer,
-              self
-            );
-        };
+        // window.onload = function () {
+        //   self.joinVideo &&
+        //     self.joinVideo(
+        //       agoraEngine,
+        //       self.channelParameters,
+        //       localPlayerContainer,
+        //       self
+        //     );
+        // };
       } catch (error) {
         console.error("Error joining channel:", error);
       }
     },
     showChannelFullMessage() {
-      alert("Channel is full! Maximum users reached.");
+      // Create an alert or message to inform user
+      const fullMessage = document.createElement("div");
+      fullMessage.className = "channel-full-message";
+      fullMessage.textContent = "This channel is full. Maximum 2 users allowed.";
+      fullMessage.style.position = "fixed";
+      fullMessage.style.top = "50%";
+      fullMessage.style.left = "50%";
+      fullMessage.style.transform = "translate(-50%, -50%)";
+      fullMessage.style.padding = "20px";
+      fullMessage.style.backgroundColor = "rgba(0,0,0,0.8)";
+      fullMessage.style.color = "white";
+      fullMessage.style.borderRadius = "5px";
+      fullMessage.style.zIndex = "9999";
+      
+      document.body.appendChild(fullMessage);
+      
+      // Remove the message after a few seconds
+      setTimeout(() => {
+        fullMessage.remove();
+        window.top.close();
+      }, 5000);
     },
     getUrlVars() {
       var vars = [],
@@ -1283,7 +1350,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="mainPic">
           <div class="remotePlayerDiv">
             <div id="calling">
-              <h3>Calling...</h3>
+              <h3 v-if="!isUserJoined">Calling...</h3>
             </div>
             <img :src="doctorUrl" class="remote-img" alt="Image1" />
           </div>

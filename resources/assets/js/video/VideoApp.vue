@@ -25,6 +25,7 @@ export default {
       callDuration: "00:00:000", // New variable for formatted time
       startTime: null, // Store the exact start time
       isLeavingChannel: false,
+      isUserJoined: false,
       //feedback
       feedbackUrl: baseUrlfeedback,
       doctorfeedback: doctorFeedback,
@@ -199,6 +200,14 @@ export default {
               }
           });
       });
+  },
+  watch: {
+     isUserJoined() {
+      if(this.isUserJoined){
+        this.$refs.ringingPhone.pause();
+        this.startCallTimer();
+      }
+     }
   },
   methods: {  
     feedbackKeydown(e){
@@ -767,53 +776,45 @@ export default {
       let self = this;
 
          // Check if camera exists before creating video track
-        const devices = await AgoraRTC.getDevices();
+        // const devices = await AgoraRTC.getDevices();
 
-        const realCameras = devices.filter(device =>
-            device.kind === "videoinput" &&
-            device.deviceId &&
-            device.deviceId.trim() !== "" &&
-            !device.label.toLowerCase().includes("virtual")
-        );
+        // const realCameras = devices.filter(device =>
+        //     device.kind === "videoinput" &&
+        //     device.deviceId &&
+        //     device.deviceId.trim() !== "" &&
+        //     !device.label.toLowerCase().includes("virtual")
+        // );
 
-        const hasCamera = realCameras.length > 0;
+        // const hasCamera = realCameras.length > 0;
 
-        console.log("All devices:", devices);
-        console.log("Detected real cameras:", realCameras);
-        console.log("Has real camera:", hasCamera);
+        // console.log("All devices:", devices);
+        // console.log("Detected real cameras:", realCameras);
+        // console.log("Has real camera:", hasCamera);
         
-        if (hasCamera) {
-           console.log("has camera:", hasCamera);
-          self.channelParameters.localVideoTrack =
-            await AgoraRTC.createCameraVideoTrack();
-        } else {
-          console.log("no camera", hasCamera);
-          // const vm = this;
-          // console.log("no camera:", hasCamera);
-          // // Emit with data
-          // vm.$emit("stopCall", { 
-          //   reason: "no_camera", 
-          //   hasCamera: false,
-          //   message: "Camera is required"
-          // });
-          //  console.log("stopCall event emitted");
-          Lobibox.alert("error", {
-            msg: "Camera is required!.",
-            closeButton: false,
-            callback: function () {
-              window.top.close();
-            },
-          });
-          return;
-        }
+        // if (hasCamera) {
+        //    console.log("has camera:", hasCamera);
+        //   self.channelParameters.localVideoTrack =
+        //     await AgoraRTC.createCameraVideoTrack();
+        // } else {
+        //   console.log("no camera", hasCamera);
+          
+        //   Lobibox.alert("error", {
+        //     msg: "Camera is required!.",
+        //     closeButton: false,
+        //     callback: function () {
+        //       window.top.close();
+        //     },
+        //   });
+        //   return;
+        // }
 
       // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
-
+        this.isUserJoined = true;
         // Check if channel already has maximum users
-        if (self.channelParameters.userCount == self.channelParameters.maxUsers) {
+        if (self.channelParameters.userCount >= self.channelParameters.maxUsers) {
           console.log("Channel is full! Maximum users reached.");
           self.showChannelFullMessage();
           // Disconnect this user since the channel is full
@@ -830,14 +831,8 @@ export default {
       // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
       //agora
       agoraEngine.on("user-published", async (user, mediaType) => {
-        if (self.channelParameters.userCount > self.channelParameters.maxUsers) {
-          console.log("Ignoring new user, channel is full");
-          return;
-        }
-
         await agoraEngine.subscribe(user, mediaType);
         console.log("subscribe success");
-
         if (mediaType === "video") {
           // Pause ringing audio when remote video is received
           if (self.$refs && self.$refs.ringingPhone) {
@@ -884,7 +879,7 @@ export default {
 
         console.log("Successfully joined channel");
 
-                // Always create audio track
+        // Always create audio track
         self.channelParameters.localAudioTrack =
           await AgoraRTC.createMicrophoneAudioTrack();
 
@@ -1801,7 +1796,7 @@ document.addEventListener("DOMContentLoaded", function () {
         <div class="mainPic">
           <div class="remotePlayerDiv">
             <div id="calling">
-              <h3>Calling...</h3>
+              <h3 v-if="!isUserJoined">Calling...</h3>
             </div>
             <img :src="doctorUrl" class="remote-img" alt="Image1" />
           </div>
