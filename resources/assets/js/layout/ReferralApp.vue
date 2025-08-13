@@ -1,6 +1,6 @@
 <template>
     <audio ref="audioVideo" :src="audioVideoUrl" loop></audio>
-    <div class="modal fade callModal" role="dialog" id="video-call-confirmation" data-backdrop="static" data-keyboard="false">
+    <!-- <div class="modal fade callModal" role="dialog" id="video-call-confirmation" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog modal-sm" role="document">
             <div class="modal-content">
                 <div class="modal-body text-center">
@@ -20,6 +20,55 @@
                                 <button type="button" class="btn btn-default btn-sm ignoreButton" data-dismiss="modal" @click="cancelCall"><i class="fa fa-times"></i></button>
                             </div>
                             <div class="textDecline">Decline</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="modal fade callModal" role="dialog" id="video-call-confirmation" data-backdrop="static" data-keyboard="false" style="height: 100vh;">
+        <div class="modal-dialog" role="document" style="margin: 15vh auto; width: 320px;">
+            <div class="modal-content" style="border-radius: 15px; border: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3); overflow: hidden;">
+                <div class="modal-body text-center" style="padding: 30px 20px; overflow: hidden;">
+                    <!-- Doctor Avatar -->
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: #2c6e49; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative;">
+                        <i class="fa fa-user" style="color: white; font-size: 40px;"></i>
+                        <div style="position: absolute; bottom: -5px; right: 10px; background: white; border-radius: 50%; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center;">
+                            <i class="fa fa-plus" style="color: #2c6e49; font-size: 12px;"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Call Information -->
+                    <!-- <h4 style="font-size: 22px; font-weight: 600; color: #333; margin: 0 0 5px 0;">Rusel Tayong</h4> -->
+                    <h4 style="font-size: 22px; font-weight: 600; color: #333; margin: 0 0 5px 0;">{{ doctorCaller }}</h4>
+                    <p style="font-size: 16px; color: #666; margin: 0 0 10px 0;">is calling you</p>
+                    <p style="font-size: 14px; color: #888; margin: 0 0 25px 0; line-height: 1.4;">The call will start as soon as you accept</p>
+                    
+                    <!-- Call Action Buttons -->
+                    <div style="display: flex; justify-content: center; gap: 40px; margin-top: 25px;">
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <button type="button" 
+                                    class="btn" 
+                                    data-dismiss="modal" 
+                                    @click="acceptCall"
+                                    style="width: 60px; height: 60px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #4CAF50; color: white;"
+                                    onmouseover="this.style.background='#45a049'; this.style.transform='scale(1.05)'"
+                                    onmouseout="this.style.background='#4CAF50'; this.style.transform='scale(1)'">
+                                <i class="fa fa-check"></i>
+                            </button>
+                            <div style="font-size: 14px; font-weight: 500; color: #555;">Accept</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <button type="button" 
+                                    class="btn" 
+                                    data-dismiss="modal" 
+                                    @click="cancelCall"
+                                    style="width: 60px; height: 60px; border-radius: 50%; border: none; display: flex; align-items: center; justify-content: center; font-size: 24px; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); background: #f44336; color: white;"
+                                    onmouseover="this.style.background='#da190b'; this.style.transform='scale(1.05)'"
+                                    onmouseout="this.style.background='#f44336'; this.style.transform='scale(1)'">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <div style="font-size: 14px; font-weight: 500; color: #555;">Decline</div>
                         </div>
                     </div>
                 </div>
@@ -760,6 +809,9 @@
                 this.$refs.audioVideo.pause();
             }
         },
+        // mounted() {
+        //     $("#video-call-confirmation").modal('toggle');
+        // },
         created() {
             console.log("VUE.JS 3")
 
@@ -1268,7 +1320,7 @@
         position: fixed;
         left: 0;
         right: 0;
-        margin-top: 15%;
+        /* margin-top: 15%; */
         margin-bottom: 10%;
         background: rgba(0,0,0,0);
     }
