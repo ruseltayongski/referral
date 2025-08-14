@@ -56,7 +56,7 @@ $user = Session::get('auth');
         .badge-overlay {
             position: absolute;
             left: 0%;
-            top: 10px;
+            top: -10px;
             width: 100%;
             height: 100%;
             overflow: hidden;
@@ -106,14 +106,14 @@ $user = Session::get('auth');
         }
         .top-right-badge {
             position: absolute;
-            top: 0;
+            top: 10;
             right: 0;
-            /* -ms-transform: translateX(30%) translateY(0%) rotate(45deg);
-            -webkit-transform: translateX(30%) translateY(0%) rotate(45deg);
-            transform: translateX(30%) translateY(0%) rotate(45deg); */
-            /* -ms-transform-origin: top left;
+            -ms-transform: translateX(30%) translateY(0%) rotate(38deg);
+            -webkit-transform: translateX(30%) translateY(0%) rotate4(38deg);
+            transform: translateX(30%) translateY(0%) rotate(38deg); */
+            -ms-transform-origin: top left;
             -webkit-transform-origin: top left;
-            transform-origin: top left; */
+            transform-origin: top left;
         }
         .pull-right-queue {
             position: absolute;
