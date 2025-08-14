@@ -1377,41 +1377,6 @@ export default {
         }
       }
     },
-    applyMobileLayout(isLandscape) {
-      // Get elements
-      const mainContainer = document.querySelector(".main-container");
-      const videoContainer = document.querySelector(".video-container");
-      const formContainer = document.querySelector(".form-container");
-      const iconCalls = document.querySelector(".iconCall");
-
-      if (mainContainer) {
-        // Set direction based on orientation
-        mainContainer.style.flexDirection = isLandscape ? "row" : "column";
-      }
-
-      if (videoContainer) {
-        videoContainer.style.height = isLandscape ? "100vh" : "40vh";
-        videoContainer.style.width = isLandscape ? "50%" : "100%";
-      }
-
-      if (formContainer) {
-        formContainer.style.height = isLandscape ? "100vh" : "60vh";
-        formContainer.style.width = isLandscape ? "50%" : "100%";
-        formContainer.style.overflow = "auto";
-      }
-
-      if (iconCalls) {
-        // Make buttons smaller on mobile
-        const buttons = iconCalls.querySelectorAll("button");
-        buttons.forEach((button) => {
-          button.classList.remove("btn-md");
-          button.classList.add("btn-sm");
-          // Add some spacing between buttons on small screens
-          button.style.margin = "0 2px";
-        });
-      }
-    },
-
     applyTabletLayout(isLandscape) {
       // Get elements
       const mainContainer = document.querySelector(".main-container");
@@ -1520,7 +1485,7 @@ export default {
 
         // Adjust text sizes for mobile
         if (formTable) {
-          formTable.style.fontSize = "0.85rem";
+          formTable.style.fontSize = "0.8rem";
         }
 
         // Adjust form details text for better readability
@@ -1528,14 +1493,14 @@ export default {
           ".forDetails, .caseforDetails, .recoSummary, .mdHcw"
         );
         formDetails.forEach((element) => {
-          element.style.fontSize = "0.85rem";
+          element.style.fontSize = "0.8rem";
           element.style.lineHeight = "1.3";
         });
 
         // Make header smaller on mobile
         const formHeader = document.querySelector(".formHeader");
         if (formHeader) {
-          formHeader.style.fontSize = "0.8rem";
+          formHeader.style.fontSize = "0.4rem";
           formHeader.querySelectorAll("p").forEach((p) => {
             p.style.margin = "0 0 2px 0";
           });
@@ -1581,14 +1546,14 @@ export default {
 
         // Reset text sizes for desktop
         if (formTable) {
-          formTable.style.fontSize = "1rem";
+          formTable.style.fontSize = "0.85rem";
         }
 
         const formDetails = document.querySelectorAll(
           ".forDetails, .caseforDetails, .recoSummary, .mdHcw"
         );
         formDetails.forEach((element) => {
-          element.style.fontSize = "1rem";
+          element.style.fontSize = "0.85rem";
         });
       }
 
@@ -1649,7 +1614,7 @@ export default {
 
         const buttons = buttonRow.querySelectorAll("button");
         buttons.forEach((button) => {
-          button.style.fontSize = "0.85rem";
+          button.style.fontSize = "0.8rem";
           button.style.padding = "0.375rem 0.5rem";
         });
       } else {
@@ -1665,7 +1630,7 @@ export default {
 
         const buttons = buttonRow.querySelectorAll("button");
         buttons.forEach((button) => {
-          button.style.fontSize = "1rem";
+          button.style.fontSize = "0.85rem";
           button.style.padding = "0.375rem 0.75rem";
         });
       }

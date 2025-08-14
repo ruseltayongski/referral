@@ -247,6 +247,78 @@ export default {
         });
         
     },
+      // Handle table layout specifically
+       // Adjust form buttons to be more responsive
+    adjustFormButtons() {
+      const buttonRow = document.querySelector(".row.g-0");
+      const windowWidth = window.innerWidth;
+
+      if (!buttonRow) return;
+
+      if (windowWidth < 576) {
+        // Stack buttons on very small screens
+        buttonRow.style.flexDirection = "column";
+
+        const buttonCols = buttonRow.querySelectorAll(".col-6");
+        buttonCols.forEach((col) => {
+          col.classList.remove("col-6");
+          col.classList.add("col-12");
+          col.style.marginBottom = "10px";
+        });
+
+        const buttons = buttonRow.querySelectorAll("button");
+        buttons.forEach((button) => {
+          button.style.fontSize = "0.8rem";
+          button.style.padding = "0.375rem 0.5rem";
+        });
+      } else {
+        // Side by side buttons for larger screens
+        buttonRow.style.flexDirection = "row";
+
+        const buttonCols = buttonRow.querySelectorAll(".col-12");
+        buttonCols.forEach((col) => {
+          col.classList.remove("col-12");
+          col.classList.add("col-6");
+          col.style.marginBottom = "0";
+        });
+
+        const buttons = buttonRow.querySelectorAll("button");
+        buttons.forEach((button) => {
+          button.style.fontSize = "0.85rem";
+          button.style.padding = "0.375rem 0.75rem";
+        });
+      }
+    },
+    adjustTableLayout() {
+      const formTable = document.querySelector(".formTable");
+      const windowWidth = window.innerWidth;
+
+      if (!formTable) return;
+
+      if (windowWidth < 768) {
+        // Mobile table layout
+        formTable.style.width = "100%";
+        formTable.style.tableLayout = "fixed";
+
+        // Make sure long content wraps properly
+        const tableCells = formTable.querySelectorAll("td");
+        tableCells.forEach((cell) => {
+          cell.style.wordBreak = "break-word";
+          cell.style.overflowWrap = "break-word";
+          cell.style.padding = "8px 5px";
+        });
+      } else {
+        // Desktop/tablet table layout
+        formTable.style.width = "100%";
+        formTable.style.tableLayout = "fixed";
+
+        const tableCells = formTable.querySelectorAll("td");
+        tableCells.forEach((cell) => {
+          cell.style.padding = "10px 8px";
+          cell.style.wordBreak = "normal";
+        });
+      }
+    },
     handleResize() {
     // Get current window dimensions
       const windowHeight = window.innerHeight;
@@ -282,7 +354,115 @@ export default {
       // Recalculate any dynamic UI elements
       this.updateUIElementsPositions();
     },
-  enforceContainerBounds() {
+    applyDesktopLayout() {
+      // Get elements
+      const mainContainer = document.querySelector(".main-container");
+      const videoContainer = document.querySelector(".video-container");
+      const formContainer = document.querySelector(".form-container");
+
+      if (mainContainer) {
+        mainContainer.style.flexDirection = "row";
+      }
+
+      if (videoContainer) {
+        videoContainer.style.height = "100vh";
+        videoContainer.style.width = "50%";
+      }
+
+      if (formContainer) {
+        formContainer.style.height = "100vh";
+        formContainer.style.width = "50%";
+      }
+    },
+    applyTabletLayout(isLandscape) {
+      // Get elements
+      const mainContainer = document.querySelector(".main-container");
+      const videoContainer = document.querySelector(".video-container");
+      const formContainer = document.querySelector(".form-container");
+
+      if (mainContainer) {
+        mainContainer.style.flexDirection = isLandscape ? "row" : "column";
+      }
+
+      if (videoContainer) {
+        videoContainer.style.height = isLandscape ? "100vh" : "50vh";
+        videoContainer.style.width = isLandscape ? "50%" : "100%";
+      }
+
+      if (formContainer) {
+        formContainer.style.height = isLandscape ? "100vh" : "50vh";
+        formContainer.style.width = isLandscape ? "50%" : "100%";
+      }
+    },
+        // Modify the existing applyMobileLayout function to better handle the form
+    applyMobileLayout(isLandscape) {
+      // Get elements
+      const mainContainer = document.querySelector(".main-container");
+      const videoContainer = document.querySelector(".video-container");
+      const formContainer = document.querySelector(".form-container");
+      const iconCalls = document.querySelector(".iconCall");
+
+      if (mainContainer) {
+        // Set direction based on orientation
+        mainContainer.style.flexDirection = isLandscape ? "row" : "column";
+      }
+
+      if (videoContainer) {
+        videoContainer.style.height = isLandscape ? "100vh" : "40vh";
+        videoContainer.style.width = isLandscape ? "50%" : "100%";
+      }
+
+      if (formContainer) {
+        formContainer.style.height = isLandscape ? "100vh" : "60vh";
+        formContainer.style.width = isLandscape ? "50%" : "100%";
+        formContainer.style.overflow = "auto";
+        // Ensure the form is scrollable but not overflowing the screen
+        formContainer.style.maxHeight = isLandscape
+          ? "100vh"
+          : "calc(60vh - 10px)";
+        // Add some breathing room around the form
+        formContainer.style.padding = isLandscape ? "5px" : "5px 5px 65px 5px"; // Extra padding at bottom in portrait for controls
+      }
+
+      if (iconCalls) {
+        // Make buttons smaller on mobile
+        const buttons = iconCalls.querySelectorAll("button");
+        buttons.forEach((button) => {
+          button.classList.remove("btn-md");
+          button.classList.add("btn-sm");
+          // Add some spacing between buttons on small screens
+          button.style.margin = "0 2px";
+        });
+      }
+
+      // Handle form header in mobile mode
+      const formHeader = document.querySelector(".form-header-container");
+      if (formHeader) {
+        formHeader.style.flexDirection = "column";
+        formHeader.style.alignItems = "center";
+        formHeader.style.gap = "5px";
+      }
+    },
+     updateUIElementsPositions() {
+      // Update positions of dynamic UI elements like tooltips
+      const tooltipContainer = document.querySelector(".tooltip-container");
+      if (tooltipContainer) {
+        const windowWidth = window.innerWidth;
+
+        if (windowWidth < 768) {
+          // Center at bottom for mobile
+          tooltipContainer.style.bottom = "10px";
+          tooltipContainer.style.left = "50%";
+          tooltipContainer.style.transform = "translateX(-50%)";
+        } else {
+          // Default position for larger screens
+          tooltipContainer.style.bottom = "20px";
+          tooltipContainer.style.left = "20px";
+          tooltipContainer.style.transform = "none";
+        }
+      }
+    },
+    enforceContainerBounds() {
     // Ensure draggable element stays within bounds after resize
     if (this.draggableDiv) {
       const containerRect = document.querySelector('.mainPic').getBoundingClientRect();
@@ -300,7 +480,7 @@ export default {
       // Apply corrected position
       this.setTranslate(this.xOffset, this.yOffset, this.draggableDiv);
     }
-  },
+    },
     adjustVideoSize() {
       // Example: Get window dimensions and adjust component sizes
       const windowHeight = window.innerHeight;
@@ -552,6 +732,106 @@ export default {
             }
             $('#filePreviewContentReco').modal('show');
         });
+    },
+     updateTelemedFormResponsiveness() {
+      const telemedForm = document.querySelector(".telemedForm");
+      const formScrollable = document.querySelector(".form-scrollable");
+      const formTable = document.querySelector(".formTable");
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const isLandscape = windowWidth > windowHeight;
+
+      if (!telemedForm) return;
+
+      // Adjust the telemedForm container based on device size
+      if (windowWidth < 768) {
+        // Mobile
+        telemedForm.style.height = isLandscape ? "100%" : "100%";
+        telemedForm.style.maxHeight = isLandscape ? "100vh" : "60vh";
+        telemedForm.style.overflowY = "auto";
+        telemedForm.style.padding = "10px";
+
+        if (formScrollable) {
+          formScrollable.style.maxHeight = isLandscape ? "90vh" : "55vh";
+        }
+
+        // Adjust text sizes for mobile
+        if (formTable) {
+          formTable.style.fontSize = "0.8rem";
+        }
+
+        // Adjust form details text for better readability
+        const formDetails = document.querySelectorAll(
+          ".forDetails, .caseforDetails, .recoSummary, .mdHcw"
+        );
+        formDetails.forEach((element) => {
+          element.style.fontSize = "0.8rem";
+          element.style.lineHeight = "1.3";
+        });
+
+        // Make header smaller on mobile
+        const formHeader = document.querySelector(".formHeader");
+        if (formHeader) {
+          formHeader.style.fontSize = "0.4rem";
+          formHeader.querySelectorAll("p").forEach((p) => {
+            p.style.margin = "0 0 2px 0";
+          });
+        }
+
+        // Adjust logo size
+        const dohLogo = document.querySelector(".dohLogo");
+        if (dohLogo) {
+          dohLogo.style.maxWidth = "40px";
+        }
+      } else if (windowWidth < 1024) {
+        // Tablet
+        telemedForm.style.height = "100%";
+        telemedForm.style.maxHeight = "100vh";
+        telemedForm.style.overflowY = "auto";
+        telemedForm.style.padding = "5px";
+
+        if (formScrollable) {
+          formScrollable.style.maxHeight = "92vh";
+        }
+
+        // Adjust text sizes for tablet
+        if (formTable) {
+          formTable.style.fontSize = "0.9rem";
+        }
+
+        const formDetails = document.querySelectorAll(
+          ".forDetails, .caseforDetails, .recoSummary, .mdHcw"
+        );
+        formDetails.forEach((element) => {
+          element.style.fontSize = "0.9rem";
+        });
+      } else {
+        // Desktop
+        telemedForm.style.height = "100%";
+        telemedForm.style.maxHeight = "100vh";
+        telemedForm.style.overflowY = "auto";
+        telemedForm.style.padding = "10px";
+
+        if (formScrollable) {
+          formScrollable.style.maxHeight = "95vh";
+        }
+
+        // Reset text sizes for desktop
+        if (formTable) {
+          formTable.style.fontSize = "0.85rem";
+        }
+
+        const formDetails = document.querySelectorAll(
+          ".forDetails, .caseforDetails, .recoSummary, .mdHcw"
+        );
+        formDetails.forEach((element) => {
+          element.style.fontSize = "0.85rem";
+        });
+      }
+
+      // Apply specific adjustments for the table and buttons
+      this.adjustTableLayout();
+      this.adjustFormButtons();
     },
     async startScreenRecording() {
 
