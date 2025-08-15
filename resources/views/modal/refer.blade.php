@@ -482,6 +482,8 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                 <hr />
                 <form method="POST" action="{{ asset("doctor/referral/redirect") }}" id="telemedicineRedirectedForm">
                     <input type="hidden" name="code" id="telemedicine_redirected_code" value="">
+                    <input type="hidden" name="referral" value="0">
+                    <input type="hidden" name="statusUpward" value="upward">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label style="padding:0px;">SELECT FACILITY:</label>

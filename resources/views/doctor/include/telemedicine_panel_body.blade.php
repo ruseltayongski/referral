@@ -185,7 +185,7 @@
             <!-- jondy changes code -->
         <div class="stepper-item-upward @if($referred_upward_track && !$referred_treated_track && !$referred_followup_track) completed @endif" id="upward_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-caret-up" aria-hidden="true" style="font-size:25px"></i></div>
-            <div class="step-name">Transfer</div> <!--end of upward changes-->
+            <div class="step-name">Upward</div> <!--end of upward changes-->
 
                 <!--original code follow up--> {{-- <div class="stepper-item stepper-item-follow_new @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
                 <div class="step-counter-follow_new" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
@@ -384,7 +384,7 @@
                 <!-- jondy cahanges in upward -->
                 <div class="stepper-item-upward @if($follow_upward_track && !$follow_followup_track) completed @endif" id="upward_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter"><i class="fa fa-caret-up" aria-hidden="true" style="font-size:25px"></i></div>
-                    <div class="step-name">Transfer</div>
+                    <div class="step-name">Upward</div>
                 <!-- end of changes -->
                    
             <!--Original code--> {{--<div class="stepper-item stepper-item-follow_new @if($follow_followup_track && !$follow_rejected_track) completed @endif" id="departed_progress{{ $follow_track->code.$follow_track->id }}">

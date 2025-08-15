@@ -94,6 +94,7 @@ class ReferralCtrl extends Controller
             DB::raw("(SELECT count(act1.code) from activity act1 where act1.code = tracking.code and (act1.status = 'redirected' or act1.status = 'transferred')) as position")
         )
             ->join('patients','patients.id','=','tracking.patient_id')
+            // ->join('activity', 'activity.code', '=', 'tracking.code')
             ->join('facility','facility.id','=','tracking.referred_from')
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as action','action.id','=','tracking.action_md');
@@ -117,14 +118,27 @@ class ReferralCtrl extends Controller
 
             $matchingSubOpdCodes = $latestActivitySub->pluck('code');
 
-            $data = $data->where('tracking.telemedicine', $telemedOrReferral)
-                    ->whereIn('tracking.code', $matchingSubOpdCodes);
+                $data = $data->where('tracking.telemedicine', $telemedOrReferral)
+                        ->whereIn('tracking.code', $matchingSubOpdCodes);
                 // ->where('latest_activity.sub_opdId', $user->subopd_id)
                 // ->where('latest_activity.referred_to', $user->facility_id);
         }
         else {
-            $data = $data->where('tracking.telemedicine', '!=', 1)
-             ->where('tracking.referred_to',$user->facility_id);
+            // $data = $data->where('tracking.telemedicine', '!=', 1)
+            // // ->orwhere('activity.status', 'upward')
+            //  ->where('tracking.referred_to',$user->facility_id);
+
+             $data = $data
+            ->where(function ($query) {
+                $query->where('tracking.telemedicine', '!=', 1)
+                    ->orWhereExists(function ($sub) {
+                        $sub->select(DB::raw(1))
+                            ->from('activity')
+                            ->whereColumn('activity.code', 'tracking.code')
+                            ->where('activity.status', 'upward');
+                    });
+            })
+            ->where('tracking.referred_to', $user->facility_id);
         }
 
         if($request->search)
@@ -1526,7 +1540,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::where("code",$req->code)->first();
-
+    
         if(!$track) {
             Session::put('redirected_failed',true);
             return Redirect::back();
@@ -1540,7 +1554,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'referring_md' => $user->id,
             'remarks' => '',
-            'status' => 'redirected'
+            'status' => $req->statusUpward !== null ? 'transferred' : 'redirected'
         );
 
         Activity::create($data);
@@ -1553,7 +1567,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'remarks' => '',
             'referring_md' => $user->id,
-            'status' => 'redirected'
+            'status' => $req->statusUpward !== null ? 'transferred' : 'redirected'
         ]);
 
         Activity::where('code',$track->code)->where('status','queued')->delete();
@@ -1607,12 +1621,12 @@ class ReferralCtrl extends Controller
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
-            "status" => "redirected",
+            "status" =>  $req->statusUpward !== null ? 'transferred' : 'redirected',
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
-            "telemedicine" => $track->telemedicine,
+            "telemedicine" => $req->statusUpward !== null ? 0 : $track->telemedicine,
             "push_diagnosis" => $finalDiagnosis,
             "chiefComplaint" => $chiefComplain,
         ];

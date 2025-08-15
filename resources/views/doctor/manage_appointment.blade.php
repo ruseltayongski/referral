@@ -302,7 +302,7 @@
                                 <div class="col-md-4">
                                     <div class="label-border">
                                         <label for="appointed_date">Appointment Date:</label>
-                                        <input type="date" class="form-control appointment_date" id="appointed_date" name="appointed_date" required>
+                                        <input type="date" class="form-control appointment_date" id="appointed_date" name="update_appointment_date" required>
                                         <input type="hidden" name="appointment_count" class="appointment_count" value="1">
 
                                         <label for="facility_id">Facility:</label>

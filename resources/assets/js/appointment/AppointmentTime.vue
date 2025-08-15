@@ -497,15 +497,15 @@ export default {
                                 appointment.telemed_assigned_doctor,
                                 appointment.appointed_date,
                                 appointment.appointed_time
-                              ) || isPastDatetime(appointment.appointed_date, appointment.appointed_time)
+                              ) || !appointment.telemed_assigned_doctor || isPastDatetime(appointment.appointed_date, appointment.appointed_time)
                             "
                             :class="{
                               'text-success': !areAllSlotAvailable(appointment.telemed_assigned_doctor),
-                              'text-danger': areAllSlotAvailable(appointment.telemed_assigned_doctor) || isPastDatetime(appointment.appointed_date, appointment.appointed_time)
+                              'text-danger': areAllSlotAvailable(appointment.telemed_assigned_doctor) || !appointment.telemed_assigned_doctor || isPastDatetime(appointment.appointed_date, appointment.appointed_time)
                             }"
                           >
-                            {{ appointment.appointed_time }} to {{ appointment.appointedTime_to }}
-                            <span v-if="areAllSlotAvailable(appointment.telemed_assigned_doctor) || isPastDatetime(appointment.appointed_date, appointment.appointed_time)">
+                            {{ appointment.appointed_time }} to {{ appointment.appointedTime_to }} 
+                            <span v-if="areAllSlotAvailable(appointment.telemed_assigned_doctor) || !appointment.telemed_assigned_doctor || isPastDatetime(appointment.appointed_date, appointment.appointed_time)">
                               (Unavailable)
                             </span>
                           </option>

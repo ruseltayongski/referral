@@ -756,7 +756,7 @@ class TelemedicineCtrl extends Controller
                 
                 if($appointment){
 
-                    $appointment->appointed_date = $request->input('appointed_date'); 
+                    $appointment->appointed_date = $request->input('update_appointment_date'); 
                     $appointment->appointed_time =  $request->input('update_appointed_time' . $i);  
                     $appointment->appointedTime_to = $request->input('update_appointed_time_to' . $i);
                     $appointment->slot = $request->input('update_slot' . $i);
