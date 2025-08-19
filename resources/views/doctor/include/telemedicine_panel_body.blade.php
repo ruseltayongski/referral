@@ -159,8 +159,7 @@
             <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}','{{$referred_treated_track}}','{{$referred_redirected_track}}','{{$referred_upward_track}}','{{$referred_followup_track}}','{{$user->facility_id}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
             <div class="step-name">Consultation</div>
         </div>
-
-        <div class="stepper-item stepper-item-prescription @if($referred_prescription_track) completed @endif" id="prescribed_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item stepper-item-prescription @if($referred_examined_track || $referred_prescription_track) completed @endif" id="prescribed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-prescription popoverTelemedicine" 
                 data-toggle="popover" 
                 data-placement="top" 
@@ -218,6 +217,7 @@
         <div class="stepper-item stepper-item-referred @if($referred_redirected_track && $referred_upward_track && !$referred_treated_track && !$referred_followup_track ) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-referred" onclick="telemedicineReferPatient('{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}','{{$user->facility_id}}','{{ $referred_track->referred_to }}')"><i class="fa fa-share" aria-hidden="true"></i></div>
             <div class="step-name">Referred</div>
+
             {{-- <div class="stepper-item stepper-item-follow @if($referred_followup_track && !$referred_rejected_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
                 <div class="step-counter-follow" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_treated_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
                 <div class="step-name">Follow Up</div>
@@ -226,6 +226,7 @@
                 <div class="step-counter-end" onclick="telemedicineEndPatient('{{ $referred_treated_track }}','{{ $referred_redirected_track }}','{{ $referred_followup_track }}','{{ $referred_end_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}')">7</div>
                 <div class="step-name step-name-end">Ended</div>
             </div> --}}
+            
         </div>
        
     </div>
