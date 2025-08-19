@@ -1554,7 +1554,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'referring_md' => $user->id,
             'remarks' => '',
-            'status' => $req->statusUpward !== null ? 'transferred' : 'redirected'
+            'status' => 'redirected'
         );
 
         Activity::create($data);
@@ -1567,7 +1567,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'remarks' => '',
             'referring_md' => $user->id,
-            'status' => $req->statusUpward !== null ? 'transferred' : 'redirected'
+            'status' => 'redirected'
         ]);
 
         Activity::where('code',$track->code)->where('status','queued')->delete();
@@ -1621,7 +1621,7 @@ class ReferralCtrl extends Controller
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
-            "status" =>  $req->statusUpward !== null ? 'transferred' : 'redirected',
+            "status" => 'redirected',
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
