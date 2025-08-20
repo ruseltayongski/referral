@@ -104,13 +104,23 @@ export default {
       });
     },
     scrollToHighlightedDate(){
-      const highlightedCell = document.querySelector(
-        // ".fc-day[style*='background-color: rgb(221, 75, 57)'], " + // red slots
-        ".fc-day[style*='background-color: rgb(0, 166, 90)']"      // green slots
+      // const highlightedCell = document.querySelector(
+      //   ".fc-day[style*='background-color: rgb(221, 75, 57)'], " + // red slots
+      //   ".fc-day[style*='background-color: rgb(0, 166, 90)']"      // green slots
+      // );
+
+      const greenSlot = document.querySelector(
+        ".fc-day[style*='background-color: rgb(0, 166, 90)']" 
       );
 
-      if(highlightedCell) {
-        highlightedCell.scrollIntoView({
+      const redSlot = document.querySelector(
+        ".fc-day[style*='background-color: rgb(221, 75, 57)']" 
+      );
+
+      const targetCell = greenSlot || redSlot;
+
+      if(targetCell) {
+        targetCell.scrollIntoView({
           behavior: "smooth",
           block: "center",
           inline: "nearest"
