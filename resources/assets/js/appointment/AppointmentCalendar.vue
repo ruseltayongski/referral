@@ -1,9 +1,3 @@
-<style scoped>
-.page-header {
-  margin: 10px 0 0 0;
-  font-size: 22px;
-}
-</style>
 <template>
   <div class="col-md-9">
     <div class="jim-content">
@@ -29,6 +23,8 @@ export default {
   data() {
     return {
       calendar: null,
+      previouslyClickedDay: null,
+      dateSelected: null,
       selectedDate:null,
       appointedParams:{} ,
       header: {
@@ -110,7 +106,7 @@ export default {
       // );
 
       const greenSlot = document.querySelector(
-        ".fc-day[style*='background-color: rgb(0, 166, 90)']" 
+        ".fc-day[style*='background-color: rgb(50, 183, 122)']" 
       );
 
       const redSlot = document.querySelector(
@@ -208,7 +204,7 @@ export default {
         // targetTd.css("border-color", "#dd4b39");
       } else {
       
-        targetTd.css("background-color", "#00a65a"); // available color green
+        targetTd.css("background-color", "rgb(50, 183, 122)"); // available color green
         targetdrag.css("border-color", "#00a65a");
       }
         targetGrid.remove();
@@ -227,9 +223,26 @@ export default {
       let apointmentId = null;
       let ScheduleIds = [];
 
-      const clickedDate = moment(date._d).format("YYYY-MM-DD"); // Format clicked date
-      const clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', { weekday: 'long' });
+      const clickedDate = moment(date._d).format("YYYY-MM-DD");
+      const clickedDay = document.querySelector(`.fc-day[data-date='${clickedDate}']`);
 
+       // Check if it's a green slot (available date)
+      const isGreenSlot =
+        clickedDay &&
+        window.getComputedStyle(clickedDay).backgroundColor === "rgb(50, 183, 122)";
+
+      // Remove previously selected highlight (keep others intact)
+      if (this.previouslyClickedDay && this.previouslyClickedDay !== clickedDay) {
+        this.previouslyClickedDay.classList.remove("selected-date-indicator");
+      }
+
+      // If available slot, mark it as selected
+      if (isGreenSlot) {
+        clickedDay.classList.add("selected-date-indicator");
+        this.previouslyClickedDay = clickedDay;
+      }
+
+      const clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', { weekday: 'long' });
       this.appointmentSlot.forEach((appointment) => {
         appointment.appointment_schedules.forEach((sched) => {
           // Check if schedule matches the facility and has a valid configId
@@ -392,3 +405,43 @@ export default {
   },
 };
 </script>
+
+<style>
+/* .selected-green-slot{
+ box-shadow: inset 0 0 0 3px #007bff;
+  border-radius: 4px;
+} */
+
+/* Highlight the selected date professionally */
+.selected-date-indicator {
+  background-color: rgb(0, 166, 90) !important; 
+  box-shadow: inset 0 0 0 2px #007bff52, 0 2px 6px rgba(0, 123, 255, 0.048);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Add a small checkmark for visual confirmation */
+.selected-date-indicator::after {
+    content: "✔";
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 14px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 2px 4px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Smooth hover animation for better UX */
+.fc-day:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+}
+
+.page-header {
+  margin: 10px 0 0 0;
+  font-size: 22px;
+}
+</style>
