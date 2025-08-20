@@ -874,7 +874,7 @@
                                 let position_content = '';
                                 if(position > 0) {
                                     position_content = "<div class='badge-overlay'>\n" +
-                                        "                                            <span class='top-right badge1 red'>" + position_bracket[position + 1] + " Position</span>\n" +
+                                        "                                            <span class='top-right-badge badge1 red'>" + position_bracket[position + 1] + " Position</span>\n" +
                                         "                                        </div>";
                                 }
                                 let type = event.payload.form_type;
@@ -1386,5 +1386,41 @@
         font-size: 14px;
         margin-top: 15px;
         margin-right: 28px;
+    }
+    .badge-overlay {
+        position: absolute;
+        left: 0%;
+        top: -10px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        pointer-events: none;
+        z-index: 100;
+        -webkit-transition: width 1s ease, height 1s ease;
+        -moz-transition: width 1s ease, height 1s ease;
+        -o-transition: width 1s ease, height 1s ease;
+        transition: width 0.4s ease, height 0.4s ease
+    }
+    .badge1 {
+        margin: 0;
+        color: white;
+        padding: 5px 5px;
+        font-size: 10px;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+        line-height: normal;
+        text-transform: uppercase;
+        background: #ff405f;
+    }
+    .top-right-badge {
+        position: absolute;
+        top: 10;
+        right: 0;
+        -ms-transform: translateX(30%) translateY(0%) rotate(38deg);
+        -webkit-transform: translateX(30%) translateY(0%) rotate4(38deg);
+        transform: translateX(30%) translateY(0%) rotate(38deg); 
+        -ms-transform-origin: top left;
+        -webkit-transform-origin: top left;
+        transform-origin: top left;
     }
 </style>

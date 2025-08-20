@@ -1930,19 +1930,24 @@ td {
   .main-container {
     flex-direction: column;
   }
+  .fullscreen-div {
+    overflow: auto;
+    position: relative;
+  }
 
   .video-container,
   .form-container {
     width: 100%;
     flex: none;
+    overflow: hidden;
   }
 
   .video-container {
-    height: 50%;
+    height: 65%;
   }
 
   .form-container {
-    height: 50%;
+    height: 35%;
   }
 }
 
