@@ -102,6 +102,10 @@ export default {
       afkDialogVisible: false,
       afkCountdown: 10,
       afkCountdownInterval: null,
+      isMobileDevice: false,
+      showCameraSwitch: false,
+      currentCameraId: null,
+      availableCameras: [],
     };
   },
   mounted() {
@@ -158,6 +162,7 @@ export default {
     window.addEventListener("resize", this.handleResize);
     // Call once to set initial sizing
     this.handleResize();
+    this.detectMobileDevice();
   },
 
   beforeUnmount() {
@@ -168,6 +173,77 @@ export default {
     this.stopCallTimer();
     // Remove event listener when component is destroyed
     window.removeEventListener("resize", this.handleResize);
+  },
+
+  async detectMobileDevice() {
+    // Check if device is mobile
+    this.isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (this.isMobileDevice) {
+      await this.getCameraDevices();
+    }
+  },
+
+  async getCameraDevices() {
+    try {
+      // Get list of available video devices
+      const devices = await AgoraRTC.getCameras();
+      this.availableCameras = devices;
+      
+      // Set initial camera (usually front camera on mobile)
+      if (devices.length > 0) {
+        this.currentCameraId = devices[0].deviceId;
+      }
+    } catch (error) {
+      console.error('Error getting camera devices:', error);
+    }
+  },
+
+  async switchCamera() {
+    try {
+      if (!this.channelParameters.localVideoTrack || this.availableCameras.length < 2) {
+        return;
+      }
+
+      // Find next camera in the list
+      const currentIndex = this.availableCameras.findIndex(camera => camera.deviceId === this.currentCameraId);
+      const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+      const nextCamera = this.availableCameras[nextIndex];
+
+      // Create new video track with next camera
+      const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
+        cameraId: nextCamera.deviceId,
+        encoderConfig: {
+          width: 640,
+          height: 360,
+          frameRate: 15,
+          bitrateMin: 400,
+          bitrateMax: 1000,
+        },
+      });
+
+      // Stop and close current video track
+      await this.channelParameters.localVideoTrack.stop();
+      await this.channelParameters.localVideoTrack.close();
+
+      // Replace video track in the channel
+      await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
+      this.channelParameters.localVideoTrack = newVideoTrack;
+      await this.agoraEngine.publish([this.channelParameters.localVideoTrack]);
+
+      // Play new video track locally
+      this.channelParameters.localVideoTrack.play(this.options.uid);
+      
+      // Update current camera ID
+      this.currentCameraId = nextCamera.deviceId;
+
+    } catch (error) {
+      console.error('Error switching camera:', error);
+      Lobibox.alert("error", {
+        msg: "Failed to switch camera. Please try again.",
+        closeButton: false,
+      });
+    }
   },
   props: ["user"],
   created() {
@@ -1470,6 +1546,24 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
+                  <div class="button-container" v-if="isMobileDevice">
+                <div 
+                    v-if="showCameraSwitch" 
+                    class="tooltip-text" 
+                    style="background-color: #218838"
+                  >
+                    Switch Camera
+                  </div>
+                  <button
+                    class="btn btn-success btn-md camera-switch-button"
+                    @click="switchCamera"
+                    type="button"
+                    @mouseover="showCameraSwitch = true"
+                    @mouseleave="showCameraSwitch = false"
+                  >
+                    <i class="bi-camera"></i>
+                  </button>
+                </div>
                 &nbsp;
                 <div class="button-container">
                   <div
@@ -1925,8 +2019,27 @@ td {
   overflow: hidden;
 }
 
+.camera-switch-button {
+  padding: 8px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.camera-switch-button:hover {
+  transform: scale(1.1);
+}
 /* Responsive layout for smaller screens */
 @media (max-width: 992px) {
+  .camera-switch-button {
+    width: 35px;
+    height: 35px;
+    padding: 6px;
+  }
   .main-container {
     flex-direction: column;
   }
@@ -2094,5 +2207,28 @@ td {
   border-radius: 10px;
   text-align: center;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
+}
+
+.camera-switch-button {
+  padding: 8px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.camera-switch-button:hover {
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .camera-switch-button {
+    width: 35px;
+    height: 35px;
+    padding: 6px;
+  }
 }
 </style>
