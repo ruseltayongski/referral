@@ -56,8 +56,19 @@ export default {
   },
   watch: {
     facilitySelectedId: async function (payload, old) {
-      this.events = await this.__appointmentScheduleDate(payload);
-      this.updateCalendarEvents();
+       $('.loading').show();
+      try {
+        this.events = await this.__appointmentScheduleDate(payload);
+        this.updateCalendarEvents();
+
+        this.$nextTick(() => {
+          this.scrollToHighlightedDate();
+        });
+       } catch (error) {
+        console.error("Error fetching appointment schedule:", error);
+      } finally {
+        $('.loading').hide(); // always hide loader (success or error)
+      }
     },
   },
   mounted() {
@@ -91,6 +102,20 @@ export default {
         droppable: true,
         drop: this.handleDrop,
       });
+    },
+    scrollToHighlightedDate(){
+      const highlightedCell = document.querySelector(
+        // ".fc-day[style*='background-color: rgb(221, 75, 57)'], " + // red slots
+        ".fc-day[style*='background-color: rgb(0, 166, 90)']"      // green slots
+      );
+
+      if(highlightedCell) {
+        highlightedCell.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest"
+        });
+      }
     },
     dayRenderFunction(date, cell) {
      
