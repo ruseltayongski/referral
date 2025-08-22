@@ -19,6 +19,7 @@ export default {
   },
   data() {
     return {
+      agoraEngine: null,
       isMobileDevice: false,
       showCameraSwitch: true,
       currentCameraId: null,
@@ -159,9 +160,9 @@ export default {
 
     //******************************************** start here */
     // Add window resize event listener
-    window.addEventListener("resize", this.handleResize);
+    // window.addEventListener("resize", this.handleResize);
     // Call once to set initial sizing
-    this.handleResize();
+    // this.handleResize();
     // Initialize camera devices
     this.getCameraDevices();
   },
@@ -173,7 +174,7 @@ export default {
     this.clearAfkTimers();
     this.stopCallTimer();
     // Remove event listener when component is destroyed
-    window.removeEventListener("resize", this.handleResize);
+    // window.removeEventListener("resize", this.handleResize);
   },
   props: ["user"],
   created() {
@@ -242,38 +243,34 @@ export default {
 
       async getCameraDevices() {
         try {
-          // Request camera permissions first
-          await navigator.mediaDevices.getUserMedia({ video: true });
-          
           // Get list of available video devices
           const devices = await AgoraRTC.getCameras();
           this.availableCameras = devices;
+          console.log('Available cameras:', devices); // Debug log
           
           if (devices.length > 0) {
             this.currentCameraId = devices[0].deviceId;
-            console.log('Available cameras:', devices);
+            this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
+            console.log('Current camera ID:', this.currentCameraId);
           } else {
             console.warn('No cameras found');
+            this.showCameraSwitch = false;
           }
         } catch (error) {
-          console.error('Error accessing cameras:', error);
-          if (error.name === 'NotAllowedError') {
-            Lobibox.alert("error", {
-              msg: "Camera access denied. Please allow camera access in your browser settings.",
-              closeButton: false,
-            });
-          } else {
-            Lobibox.alert("error", {
-              msg: "Error accessing cameras. Please check your device settings.",
-              closeButton: false,
-            });
-          }
+          console.error('Error getting cameras:', error);
+          this.showCameraSwitch = false;
+          Lobibox.alert("error", {
+            msg: "Error accessing cameras. Please check your device settings.",
+            closeButton: false,
+          });
         }
       },
 
       async switchCamera() {
           try {
+            console.log('Attempting to switch camera...');
             if (!this.channelParameters.localVideoTrack || this.availableCameras.length < 2) {
+              console.log('Cannot switch camera: No video track or not enough cameras');
               return;
             }
 
@@ -281,6 +278,7 @@ export default {
             const currentIndex = this.availableCameras.findIndex(camera => camera.deviceId === this.currentCameraId);
             const nextIndex = (currentIndex + 1) % this.availableCameras.length;
             const nextCamera = this.availableCameras[nextIndex];
+            console.log('Switching to camera:', nextCamera);
 
             // Create new video track with next camera
             const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
@@ -305,10 +303,15 @@ export default {
               await this.agoraEngine.publish([this.channelParameters.localVideoTrack]);
 
               // Play new video track locally
-              this.channelParameters.localVideoTrack.play(this.options.uid);
+              const localPlayerContainer = document.getElementById(this.options.uid);
+              if (localPlayerContainer) {
+                this.channelParameters.localVideoTrack.play(localPlayerContainer);
+                console.log('New camera track playing');
+              }
               
               // Update current camera ID
               this.currentCameraId = nextCamera.deviceId;
+              console.log('Camera switch successful');
             } else {
               console.error('AgoraEngine not initialized');
               throw new Error('AgoraEngine not initialized');
