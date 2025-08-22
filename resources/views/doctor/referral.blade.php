@@ -344,7 +344,8 @@ $user = Session::get('auth');
             let windowName = 'NewWindow'; // Name of the new window
             let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
             let userid = '{{ $user->id }}';
-            const referring_md_status = userid == action_md ? 'no' : 'yes';
+            // const referring_md_status = userid == action_md ? 'no' : 'yes';
+            const referring_md_status = 'no';
             let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${tracking_id}&code=${referral_code}&form_type=${form_type}&referring_md=${referring_md_status}&activity_id=${activity_id}`;
             let newWindow = window.open(url, windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {

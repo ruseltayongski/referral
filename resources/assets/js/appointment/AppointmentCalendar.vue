@@ -413,15 +413,16 @@ export default {
 } */
 
 /* Highlight the selected date professionally */
-.selected-date-indicator {
+.fc-day.selected-date-indicator {
   background-color: rgb(0, 166, 90) !important; 
   box-shadow: inset 0 0 0 2px #007bff52, 0 2px 6px rgba(0, 123, 255, 0.048);
   position: relative;
   transition: all 0.3s ease;
+  transform: scale(1.02);
 }
 
 /* Add a small checkmark for visual confirmation */
-.selected-date-indicator::after {
+.fc-day.selected-date-indicator::after {
     content: "✔";
     position: absolute;
     top: 4px;
@@ -434,12 +435,11 @@ export default {
 }
 
 /* Smooth hover animation for better UX */
-.fc-day:hover {
-    cursor: pointer;
-    transform: scale(1.02);
-    transition: transform 0.2s ease;
+.fc-day.selected-date-indicator:hover {
+  cursor: pointer;
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
 }
-
 .page-header {
   margin: 10px 0 0 0;
   font-size: 22px;

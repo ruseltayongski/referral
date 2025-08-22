@@ -116,8 +116,9 @@ class TelemedicineCtrl extends Controller
                         ->with('creator:id,fname,mname,lname,level')
                         ->with('subOpdCateg:id,description')
                         ->where('facility_id', $user->facility_id)
+                        ->where('created_by', $user->id)
                         ->get();
-
+       
         $facility = Facility::select('id','name')->where('id', $user->facility_id)->get();
         
         return view('doctor.config_schedule',[

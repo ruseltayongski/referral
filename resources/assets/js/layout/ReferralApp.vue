@@ -95,7 +95,8 @@
                 imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
                 doctorCaller: String,
                 telemedicineFormType: String,
-                activity_id: Number
+                activity_id: Number,
+                activeCallWindows: new Map()
             }
         },
         methods: {
@@ -750,8 +751,24 @@
                     '                                            </a>';
             },
             callADoctor(tracking_id,code,subopd_id) {
+
                 console.log("follow Up sobOpd_id", subopd_id);
                 if(this.user.subopd_id == subopd_id){
+                    if(this.activeCallWindows.has(tracking_id)){
+                        const existingWindow = this.activeCallWindows.get(tracking_id);
+                
+                        // Check if the window is still open and valid
+                        if (existingWindow && !existingWindow.closed) {
+                            console.log("Call already active for tracking_id:", tracking_id);
+                            // Optionally focus the existing window
+                            existingWindow.focus();
+                            return; // Prevent opening a new call
+                        } else {
+                            // Window was closed, remove from tracking
+                            this.activeCallWindows.delete(tracking_id);
+                        }
+                    }
+
                     this.tracking_id = tracking_id
                     this.referral_code = code
                     this.playVideoCallAudio();
@@ -777,6 +794,17 @@
                         console.log("the open open of wendow");
                         newWindow.moveTo(0, 0);
                         newWindow.resizeTo(screen.availWidth, screen.availHeight);
+
+                         this.activeCallWindows.set(this.tracking_id, newWindow);
+
+                           // Listen for when the window closes
+                        const checkClosed = setInterval(() => {
+                            if (newWindow.closed) {
+                                this.activeCallWindows.delete(this.tracking_id);
+                                clearInterval(checkClosed);
+                                console.log("Video call window closed for tracking_id:", this.tracking_id);
+                            }
+                        }, 1000);
                     }
                     
                     localStorage.setItem('callStartTime', Date.now());
