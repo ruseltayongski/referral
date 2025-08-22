@@ -2097,4 +2097,53 @@ td {
   border: 2px solid #e53935;
   color: #e53935;
 }
+
+@media screen and (max-width: 768px) {
+  .localPlayerLayer {
+    height: 120px !important;
+    width: 90px !important;
+    object-fit: cover !important;
+  }
+  
+  .localPlayerDiv {
+    min-height: 120px !important;
+    min-width: 90px !important;
+    max-height: 25vh !important;
+    max-width: 30vw !important;
+    overflow: hidden !important;
+  }
+
+  .localPlayerDiv video,
+  .localPlayerDiv img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  
+}
+
+@media screen and (max-width: 480px) {
+  .localPlayerLayer {
+    height: 100px !important;
+    width: 75px !important;
+    object-fit: cover !important;
+  }
+  
+  .localPlayerDiv {
+    min-height: 100px !important;
+    min-width: 75px !important;
+    max-height: 20vh !important;
+    max-width: 25vw !important;
+    bottom: 60px !important;
+    right: 5px !important;
+    overflow: hidden !important;
+  }
+
+  .localPlayerDiv video,
+  .localPlayerDiv img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+}
 </style>
