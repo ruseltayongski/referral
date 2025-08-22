@@ -19,6 +19,10 @@ export default {
   },
   data() {
     return {
+      isMobileDevice: false,
+      showCameraSwitch: true,
+      currentCameraId: null,
+      availableCameras: [],
       //start video in minutes
       callMinutes: 0,
       callTimer: null,
@@ -102,10 +106,6 @@ export default {
       afkDialogVisible: false,
       afkCountdown: 10,
       afkCountdownInterval: null,
-      isMobileDevice: false,
-      showCameraSwitch: false,
-      currentCameraId: null,
-      availableCameras: [],
     };
   },
   mounted() {
@@ -162,7 +162,8 @@ export default {
     window.addEventListener("resize", this.handleResize);
     // Call once to set initial sizing
     this.handleResize();
-    this.detectMobileDevice();
+    // Initialize camera devices
+    this.getCameraDevices();
   },
 
   beforeUnmount() {
@@ -173,77 +174,6 @@ export default {
     this.stopCallTimer();
     // Remove event listener when component is destroyed
     window.removeEventListener("resize", this.handleResize);
-  },
-
-  async detectMobileDevice() {
-    // Check if device is mobile
-    this.isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    
-    if (this.isMobileDevice) {
-      await this.getCameraDevices();
-    }
-  },
-
-  async getCameraDevices() {
-    try {
-      // Get list of available video devices
-      const devices = await AgoraRTC.getCameras();
-      this.availableCameras = devices;
-      
-      // Set initial camera (usually front camera on mobile)
-      if (devices.length > 0) {
-        this.currentCameraId = devices[0].deviceId;
-      }
-    } catch (error) {
-      console.error('Error getting camera devices:', error);
-    }
-  },
-
-  async switchCamera() {
-    try {
-      if (!this.channelParameters.localVideoTrack || this.availableCameras.length < 2) {
-        return;
-      }
-
-      // Find next camera in the list
-      const currentIndex = this.availableCameras.findIndex(camera => camera.deviceId === this.currentCameraId);
-      const nextIndex = (currentIndex + 1) % this.availableCameras.length;
-      const nextCamera = this.availableCameras[nextIndex];
-
-      // Create new video track with next camera
-      const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
-        cameraId: nextCamera.deviceId,
-        encoderConfig: {
-          width: 640,
-          height: 360,
-          frameRate: 15,
-          bitrateMin: 400,
-          bitrateMax: 1000,
-        },
-      });
-
-      // Stop and close current video track
-      await this.channelParameters.localVideoTrack.stop();
-      await this.channelParameters.localVideoTrack.close();
-
-      // Replace video track in the channel
-      await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
-      this.channelParameters.localVideoTrack = newVideoTrack;
-      await this.agoraEngine.publish([this.channelParameters.localVideoTrack]);
-
-      // Play new video track locally
-      this.channelParameters.localVideoTrack.play(this.options.uid);
-      
-      // Update current camera ID
-      this.currentCameraId = nextCamera.deviceId;
-
-    } catch (error) {
-      console.error('Error switching camera:', error);
-      Lobibox.alert("error", {
-        msg: "Failed to switch camera. Please try again.",
-        closeButton: false,
-      });
-    }
   },
   props: ["user"],
   created() {
@@ -308,6 +238,90 @@ export default {
     },
   },
   methods: {
+      // Mobile device detection removed to always show camera switch functionality
+
+      async getCameraDevices() {
+        try {
+          // Request camera permissions first
+          await navigator.mediaDevices.getUserMedia({ video: true });
+          
+          // Get list of available video devices
+          const devices = await AgoraRTC.getCameras();
+          this.availableCameras = devices;
+          
+          if (devices.length > 0) {
+            this.currentCameraId = devices[0].deviceId;
+            console.log('Available cameras:', devices);
+          } else {
+            console.warn('No cameras found');
+          }
+        } catch (error) {
+          console.error('Error accessing cameras:', error);
+          if (error.name === 'NotAllowedError') {
+            Lobibox.alert("error", {
+              msg: "Camera access denied. Please allow camera access in your browser settings.",
+              closeButton: false,
+            });
+          } else {
+            Lobibox.alert("error", {
+              msg: "Error accessing cameras. Please check your device settings.",
+              closeButton: false,
+            });
+          }
+        }
+      },
+
+      async switchCamera() {
+          try {
+            if (!this.channelParameters.localVideoTrack || this.availableCameras.length < 2) {
+              return;
+            }
+
+            // Find next camera in the list
+            const currentIndex = this.availableCameras.findIndex(camera => camera.deviceId === this.currentCameraId);
+            const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+            const nextCamera = this.availableCameras[nextIndex];
+
+            // Create new video track with next camera
+            const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
+              cameraId: nextCamera.deviceId,
+              encoderConfig: {
+                width: 640,
+                height: 360,
+                frameRate: 15,
+                bitrateMin: 400,
+                bitrateMax: 1000,
+              },
+            });
+
+            // Stop and close current video track
+            await this.channelParameters.localVideoTrack.stop();
+            await this.channelParameters.localVideoTrack.close();
+
+            // Replace video track in the channel
+            if (this.agoraEngine) {
+              await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
+              this.channelParameters.localVideoTrack = newVideoTrack;
+              await this.agoraEngine.publish([this.channelParameters.localVideoTrack]);
+
+              // Play new video track locally
+              this.channelParameters.localVideoTrack.play(this.options.uid);
+              
+              // Update current camera ID
+              this.currentCameraId = nextCamera.deviceId;
+            } else {
+              console.error('AgoraEngine not initialized');
+              throw new Error('AgoraEngine not initialized');
+            }
+
+          } catch (error) {
+            console.error('Error switching camera:', error);
+            Lobibox.alert("error", {
+              msg: "Failed to switch camera. Please try again.",
+              closeButton: false,
+            });
+          }
+      },
       initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
       const mainPic = document.querySelector(".mainPic");
@@ -975,8 +989,9 @@ export default {
         });
     },
     async startBasicCall() {
-      // Create an instance of the Agora Engine
-      const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+       // Create an instance of the Agora Engine
+      this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+      const agoraEngine = this.agoraEngine; // Use this reference
 
       // Setup channel parameters with user count tracking
       if (!this.channelParameters) {
@@ -1546,8 +1561,8 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
-                  <div class="button-container" v-if="isMobileDevice">
-                <div 
+                <div class="button-container">
+                  <div 
                     v-if="showCameraSwitch" 
                     class="tooltip-text" 
                     style="background-color: #218838"
@@ -2019,27 +2034,8 @@ td {
   overflow: hidden;
 }
 
-.camera-switch-button {
-  padding: 8px;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.camera-switch-button:hover {
-  transform: scale(1.1);
-}
 /* Responsive layout for smaller screens */
 @media (max-width: 992px) {
-  .camera-switch-button {
-    width: 35px;
-    height: 35px;
-    padding: 6px;
-  }
   .main-container {
     flex-direction: column;
   }
@@ -2056,11 +2052,11 @@ td {
   }
 
   .video-container {
-    height: 65%;
+    height: 60%;
   }
 
   .form-container {
-    height: 35%;
+    height: 40%;
   }
 }
 
@@ -2209,26 +2205,52 @@ td {
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
 }
 
-.camera-switch-button {
-  padding: 8px;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
+@media screen and (max-width: 768px) {
+  .localPlayerLayer {
+    height: 120px !important;
+    width: 90px !important;
+    object-fit: cover !important;
+  }
+  
+  .localPlayerDiv {
+    min-height: 120px !important;
+    min-width: 90px !important;
+    max-height: 25vh !important;
+    max-width: 30vw !important;
+    overflow: hidden !important;
+  }
+
+  .localPlayerDiv video,
+  .localPlayerDiv img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  
 }
 
-.camera-switch-button:hover {
-  transform: scale(1.1);
-}
+@media screen and (max-width: 480px) {
+  .localPlayerLayer {
+    height: 100px !important;
+    width: 75px !important;
+    object-fit: cover !important;
+  }
+  
+  .localPlayerDiv {
+    min-height: 100px !important;
+    min-width: 75px !important;
+    max-height: 20vh !important;
+    max-width: 25vw !important;
+    bottom: 60px !important;
+    right: 5px !important;
+    overflow: hidden !important;
+  }
 
-@media (max-width: 768px) {
-  .camera-switch-button {
-    width: 35px;
-    height: 35px;
-    padding: 6px;
+  .localPlayerDiv video,
+  .localPlayerDiv img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
   }
 }
 </style>

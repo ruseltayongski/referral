@@ -407,6 +407,10 @@
                     console.log('Success data:', combinedPrescriptions);
                     Lobibox.alert("success", {
                         msg: "Prescription Prescription successfully!",
+                        callback: () => {
+                            $("#prescriptionModal").modal("hide");
+                            console.log("Prescription alert closed");
+                        }
                     });
                 })
                 .catch((error) => {

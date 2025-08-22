@@ -590,6 +590,11 @@
   background-color: rgba(81, 83, 85, 0.596);
   border-color: transparent;
 }
+.camera-switch-button {
+   border-radius: 50%;
+  background-color: rgba(81, 83, 85, 0.596);
+  border-color: transparent;
+}
 .video-button {
   border-radius: 50%;
   background-color: rgba(81, 83, 85, 0.596);
@@ -664,9 +669,13 @@
   padding: 0.5px;
   position: relative;
   line-height: 0.1px;
-  font-size: 13px;
+  font-size: 12px;
 }
-
+@media screen and (max-width: 768px) {
+  .formHeader {
+    font-size: 8px;
+  }
+}
 /* .formHeader {  
   position: absolute;
   top: 15px;
@@ -801,6 +810,8 @@ tr:nth-child(even) {
 .mic-button-slash:after {
   transform: rotate(-45deg);
 }
+.camera-switch-button-slash:before,
+.camera-switch-button-slash:after,
 .video-button-slash:before,
 .video-button-slash:after {
   content: "";
@@ -812,13 +823,16 @@ tr:nth-child(even) {
   height: 2px;
   background-color: #ff0000;
 }
+.camera-switch-button-slash:before,
 .video-button-slash:before {
   transform: rotate(-45deg);
   padding: 2px;
 }
+.camera-switch-button-slash:after,
 .video-button-slash:after {
   transform: rotate(-45deg);
 }
+.camera-switch-button,
 .video-button:hover,
 .mic-button:hover,
 .decline-button:hover,
