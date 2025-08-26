@@ -271,17 +271,16 @@ export default {
 
         const track = this.channelParameters?.localVideoTrack;
         if (!track || track.isClosed) {
-          console.log("No active local video track");
           Lobibox.alert("error", { msg: "Video track not initialized", closeButton: false });
           return;
         }
 
         if (!this.availableCameras || this.availableCameras.length < 2) {
-          console.log("Not enough cameras to switch");
           Lobibox.alert("error", { msg: "Not enough cameras available", closeButton: false });
           return;
         }
 
+        // Find the next camera
         const currentIndex = this.availableCameras.findIndex(
           (camera) => camera.deviceId === this.currentCameraId
         );
@@ -290,38 +289,11 @@ export default {
 
         console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
 
-        const client = this.agoraEngine;
-        if (!client) {
-          Lobibox.alert("error", { msg: "Agora client not initialized", closeButton: false });
-          return;
-        }
-
-        // Step 1: unpublish old track
-        client
-          .unpublish([track])
+        // 🔑 Switch device on the SAME track
+        track.setDevice(nextCamera.deviceId)
           .then(() => {
-            // Step 2: stop & close old track
-            track.stop();
-            track.close();
-            this.channelParameters.localVideoTrack = null;
-
-            // Step 3: create new track
-            return AgoraRTC.createCameraVideoTrack({
-              cameraId: nextCamera.deviceId
-            });
-          })
-          .then((newTrack) => {
-            // Step 4: publish new track
-            this.channelParameters.localVideoTrack = newTrack;
-            return client.publish([newTrack]).then(() => newTrack);
-          })
-          .then((newTrack) => {
-            // Step 5: play preview
-            const container = document.getElementById(this.options.uid);
-            if (container) newTrack.play(container);
-
             this.currentCameraId = nextCamera.deviceId;
-            console.log("Camera switch successful");
+            console.log("Camera switch successful (no republish needed)");
           })
           .catch((err) => {
             console.error("Camera switch failed:", err);

@@ -22966,7 +22966,6 @@ var doctorFeedback = "referral/doctor/feedback";
       console.log("Attempting to switch camera...");
       var track = (_this$channelParamete = this.channelParameters) === null || _this$channelParamete === void 0 ? void 0 : _this$channelParamete.localVideoTrack;
       if (!track || track.isClosed) {
-        console.log("No active local video track");
         Lobibox.alert("error", {
           msg: "Video track not initialized",
           closeButton: false
@@ -22974,51 +22973,25 @@ var doctorFeedback = "referral/doctor/feedback";
         return;
       }
       if (!this.availableCameras || this.availableCameras.length < 2) {
-        console.log("Not enough cameras to switch");
         Lobibox.alert("error", {
           msg: "Not enough cameras available",
           closeButton: false
         });
         return;
       }
+
+      // Find the next camera
       var currentIndex = this.availableCameras.findIndex(function (camera) {
         return camera.deviceId === _this4.currentCameraId;
       });
       var nextIndex = (currentIndex + 1) % this.availableCameras.length;
       var nextCamera = this.availableCameras[nextIndex];
       console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
-      var client = this.agoraEngine;
-      if (!client) {
-        Lobibox.alert("error", {
-          msg: "Agora client not initialized",
-          closeButton: false
-        });
-        return;
-      }
 
-      // Step 1: unpublish old track
-      client.unpublish([track]).then(function () {
-        // Step 2: stop & close old track
-        track.stop();
-        track.close();
-        _this4.channelParameters.localVideoTrack = null;
-
-        // Step 3: create new track
-        return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack({
-          cameraId: nextCamera.deviceId
-        });
-      }).then(function (newTrack) {
-        // Step 4: publish new track
-        _this4.channelParameters.localVideoTrack = newTrack;
-        return client.publish([newTrack]).then(function () {
-          return newTrack;
-        });
-      }).then(function (newTrack) {
-        // Step 5: play preview
-        var container = document.getElementById(_this4.options.uid);
-        if (container) newTrack.play(container);
+      // 🔑 Switch device on the SAME track
+      track.setDevice(nextCamera.deviceId).then(function () {
         _this4.currentCameraId = nextCamera.deviceId;
-        console.log("Camera switch successful");
+        console.log("Camera switch successful (no republish needed)");
       })["catch"](function (err) {
         console.error("Camera switch failed:", err);
         Lobibox.alert("error", {
