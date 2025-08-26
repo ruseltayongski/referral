@@ -333,10 +333,10 @@ export default {
       //     }
       // },
       
-      async switchCamera() {
+        async switchCamera() {
           try {
               console.log('Attempting to switch camera...');
-              
+
               // Check if video track exists and multiple cameras available
               if (!this.channelParameters?.localVideoTrack) {
                   console.log('No local video track found');
@@ -348,14 +348,27 @@ export default {
                   throw new Error('Not enough cameras available');
               }
 
+              // Get reference to current AgoraEngine instance
+              const agoraEngine = AgoraRTC.client || this.agoraEngine;
+              if (!agoraEngine) {
+                  throw new Error('AgoraEngine not initialized');
+              }
+
               // Find next camera in the list
-              const currentIndex = this.availableCameras.findIndex(camera => 
-                  camera.deviceId === this.currentCameraId
+              const currentIndex = this.availableCameras.findIndex(
+                  camera => camera.deviceId === this.currentCameraId
               );
               const nextIndex = (currentIndex + 1) % this.availableCameras.length;
               const nextCamera = this.availableCameras[nextIndex];
 
               console.log('Switching to camera:', nextCamera.label || nextCamera.deviceId);
+
+              // Stop and close old track FIRST
+              await this.channelParameters.localVideoTrack.stop();
+              await this.channelParameters.localVideoTrack.close();
+
+              // Unpublish old track
+              await agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
 
               // Create new video track with next camera
               const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
@@ -369,20 +382,6 @@ export default {
                   },
               });
 
-              // Get reference to current AgoraEngine instance
-              const agoraEngine = AgoraRTC.client || this.agoraEngine;
-              
-              if (!agoraEngine) {
-                  throw new Error('AgoraEngine not initialized');
-              }
-
-              // Stop and close old track
-              await this.channelParameters.localVideoTrack.stop();
-              await this.channelParameters.localVideoTrack.close();
-
-              // Unpublish old track
-              await agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
-              
               // Update track reference
               this.channelParameters.localVideoTrack = newVideoTrack;
 
@@ -398,7 +397,6 @@ export default {
               // Update current camera ID
               this.currentCameraId = nextCamera.deviceId;
               console.log('Camera switch successful');
-
           } catch (error) {
               console.error('Camera switch failed:', error);
               Lobibox.alert("error", {
@@ -1647,7 +1645,7 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
-                 <div class="button-container">
+                 <div class="button-container" v-if="availableCameras.length > 1">
                   <div 
                     v-if="showCameraSwitch" 
                     class="tooltip-text" 
