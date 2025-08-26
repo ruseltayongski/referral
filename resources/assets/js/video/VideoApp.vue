@@ -238,6 +238,11 @@ export default {
       }
     },
   },
+  computed: {
+    isMobile() {
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+  },
   methods: {
       // Mobile device detection removed to always show camera switch functionality
 
@@ -1543,7 +1548,8 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
-                 <div class="button-container" v-if="availableCameras.length > 1">
+                 <!-- <div class="button-container" v-if="availableCameras.length > 1"> -->
+                <div class="button-container" v-if="isMobile">
                   <div 
                     v-if="showCameraSwitch" 
                     class="tooltip-text" 
