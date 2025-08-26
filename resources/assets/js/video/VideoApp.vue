@@ -333,14 +333,13 @@ export default {
       //     }
       // },
       
-      async switchCamera() {
+       async switchCamera() {
           try {
               console.log('Attempting to switch camera...');
 
               if (!this.channelParameters?.localVideoTrack) {
                   throw new Error('Video track not initialized');
               }
-
               if (this.availableCameras.length < 2) {
                   throw new Error('Not enough cameras available');
               }
@@ -359,13 +358,17 @@ export default {
 
               console.log('Switching to:', nextCamera.label || nextCamera.deviceId);
 
-              // 🔹 Unpublish & close old track (VERY IMPORTANT to avoid multiple video tracks error)
+              // 🔹 Step 1: Unpublish old track and wait
               await agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
+
+              // 🔹 Step 2: Stop & close old track
               this.channelParameters.localVideoTrack.stop();
               this.channelParameters.localVideoTrack.close();
+
+              // 🔹 Step 3: Clear old track reference
               this.channelParameters.localVideoTrack = null;
 
-              // 🔹 Create new video track
+              // 🔹 Step 4: Create new track
               const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
                   cameraId: nextCamera.deviceId,
                   encoderConfig: {
@@ -377,19 +380,19 @@ export default {
                   },
               });
 
-              // 🔹 Publish new track
+              // 🔹 Step 5: Publish new track
               await agoraEngine.publish([newVideoTrack]);
 
-              // 🔹 Update track reference
+              // Update references
               this.channelParameters.localVideoTrack = newVideoTrack;
+              this.currentCameraId = nextCamera.deviceId;
 
-              // 🔹 Update local preview
+              // Update preview
               const localPlayerContainer = document.getElementById(this.options.uid);
               if (localPlayerContainer) {
                   newVideoTrack.play(localPlayerContainer);
               }
 
-              this.currentCameraId = nextCamera.deviceId;
               console.log('Camera switch successful');
           } catch (error) {
               console.error('Camera switch failed:', error);
