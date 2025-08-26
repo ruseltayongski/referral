@@ -266,7 +266,7 @@ export default {
         }
       },
       
-       async switchCamera() {
+      switchCamera() {
         try {
           console.log("Attempting to switch camera...");
 
@@ -299,13 +299,13 @@ export default {
             this.channelParameters.localVideoTrack &&
             !this.channelParameters.localVideoTrack.isClosed
           ) {
-            await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
+            this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
             this.channelParameters.localVideoTrack.stop();
             this.channelParameters.localVideoTrack.close();
           }
 
           // Create a new video track with the next camera
-          const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
+          const newVideoTrack = AgoraRTC.createCameraVideoTrack({
             cameraId: nextCamera.deviceId
             // encoderConfig can be left out for default settings
           });
@@ -314,7 +314,7 @@ export default {
           this.channelParameters.localVideoTrack = newVideoTrack;
 
           // Publish new track
-          await this.agoraEngine.publish([newVideoTrack]);
+          this.agoraEngine.publish([newVideoTrack]);
 
           // Update local preview
           const localPlayerContainer = document.getElementById(this.options.uid);

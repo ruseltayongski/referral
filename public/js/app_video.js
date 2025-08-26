@@ -22962,87 +22962,65 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     switchCamera: function switchCamera() {
       var _this4 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-        var _this4$channelParamet, currentIndex, nextIndex, nextCamera, newVideoTrack, localPlayerContainer;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              console.log("Attempting to switch camera...");
+      try {
+        var _this$channelParamete;
+        console.log("Attempting to switch camera...");
 
-              // Check if video track exists and is active
-              if (!(!((_this4$channelParamet = _this4.channelParameters) !== null && _this4$channelParamet !== void 0 && _this4$channelParamet.localVideoTrack) || _this4.channelParameters.localVideoTrack.isClosed)) {
-                _context2.next = 5;
-                break;
-              }
-              console.log("No active local video track found");
-              throw new Error("Video track not initialized or already closed");
-            case 5:
-              if (!(!_this4.availableCameras || _this4.availableCameras.length < 2)) {
-                _context2.next = 8;
-                break;
-              }
-              console.log("Not enough cameras to switch");
-              throw new Error("Not enough cameras available");
-            case 8:
-              // Find the next camera
-              currentIndex = _this4.availableCameras.findIndex(function (camera) {
-                return camera.deviceId === _this4.currentCameraId;
-              });
-              nextIndex = (currentIndex + 1) % _this4.availableCameras.length;
-              nextCamera = _this4.availableCameras[nextIndex];
-              console.log("Switching to camera:", nextCamera.label || nextCamera.deviceId);
+        // Check if video track exists and is active
+        if (!((_this$channelParamete = this.channelParameters) !== null && _this$channelParamete !== void 0 && _this$channelParamete.localVideoTrack) || this.channelParameters.localVideoTrack.isClosed) {
+          console.log("No active local video track found");
+          throw new Error("Video track not initialized or already closed");
+        }
 
-              // Unpublish the old track (only if it exists and not closed)
-              if (!(_this4.channelParameters.localVideoTrack && !_this4.channelParameters.localVideoTrack.isClosed)) {
-                _context2.next = 17;
-                break;
-              }
-              _context2.next = 15;
-              return _this4.agoraEngine.unpublish([_this4.channelParameters.localVideoTrack]);
-            case 15:
-              _this4.channelParameters.localVideoTrack.stop();
-              _this4.channelParameters.localVideoTrack.close();
-            case 17:
-              _context2.next = 19;
-              return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack({
-                cameraId: nextCamera.deviceId
-                // encoderConfig can be left out for default settings
-              });
-            case 19:
-              newVideoTrack = _context2.sent;
-              // Update track reference
-              _this4.channelParameters.localVideoTrack = newVideoTrack;
+        // Check if there are multiple cameras
+        if (!this.availableCameras || this.availableCameras.length < 2) {
+          console.log("Not enough cameras to switch");
+          throw new Error("Not enough cameras available");
+        }
 
-              // Publish new track
-              _context2.next = 23;
-              return _this4.agoraEngine.publish([newVideoTrack]);
-            case 23:
-              // Update local preview
-              localPlayerContainer = document.getElementById(_this4.options.uid);
-              if (localPlayerContainer) {
-                newVideoTrack.play(localPlayerContainer);
-              }
+        // Find the next camera
+        var currentIndex = this.availableCameras.findIndex(function (camera) {
+          return camera.deviceId === _this4.currentCameraId;
+        });
+        var nextIndex = (currentIndex + 1) % this.availableCameras.length;
+        var nextCamera = this.availableCameras[nextIndex];
+        console.log("Switching to camera:", nextCamera.label || nextCamera.deviceId);
 
-              // Save the current camera ID
-              _this4.currentCameraId = nextCamera.deviceId;
-              console.log("Camera switch successful");
-              _context2.next = 33;
-              break;
-            case 29:
-              _context2.prev = 29;
-              _context2.t0 = _context2["catch"](0);
-              console.error("Camera switch failed:", _context2.t0);
-              Lobibox.alert("error", {
-                msg: "Failed to switch camera: ".concat(_context2.t0.message),
-                closeButton: false
-              });
-            case 33:
-            case "end":
-              return _context2.stop();
-          }
-        }, _callee2, null, [[0, 29]]);
-      }))();
+        // Unpublish the old track (only if it exists and not closed)
+        if (this.channelParameters.localVideoTrack && !this.channelParameters.localVideoTrack.isClosed) {
+          this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
+          this.channelParameters.localVideoTrack.stop();
+          this.channelParameters.localVideoTrack.close();
+        }
+
+        // Create a new video track with the next camera
+        var newVideoTrack = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack({
+          cameraId: nextCamera.deviceId
+          // encoderConfig can be left out for default settings
+        });
+
+        // Update track reference
+        this.channelParameters.localVideoTrack = newVideoTrack;
+
+        // Publish new track
+        this.agoraEngine.publish([newVideoTrack]);
+
+        // Update local preview
+        var localPlayerContainer = document.getElementById(this.options.uid);
+        if (localPlayerContainer) {
+          newVideoTrack.play(localPlayerContainer);
+        }
+
+        // Save the current camera ID
+        this.currentCameraId = nextCamera.deviceId;
+        console.log("Camera switch successful");
+      } catch (error) {
+        console.error("Camera switch failed:", error);
+        Lobibox.alert("error", {
+          msg: "Failed to switch camera: ".concat(error.message),
+          closeButton: false
+        });
+      }
     },
     initDraggableDiv: function initDraggableDiv() {
       var draggableDiv = document.getElementById("draggable-div");
@@ -23202,39 +23180,39 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     startScreenRecording: function startScreenRecording() {
       var _this7 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var isSupported, screenStream, micStream, audioContext, destination, systemAudioSource, micAudioSource, combinedStream;
-        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              _context3.prev = 0;
+              _context2.prev = 0;
               // Check for browser compatibility
               isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
               if (isSupported) {
-                _context3.next = 5;
+                _context2.next = 5;
                 break;
               }
               Lobibox.alert("warning", {
                 msg: "Your browser does not support screen recording with microphone audio. Please use the latest version of Chrome, Edge, or Firefox.",
                 closeButton: false
               });
-              return _context3.abrupt("return");
+              return _context2.abrupt("return");
             case 5:
               // Inform the user about permissions
               console.log("Requesting permissions for screen and microphone...");
 
               // Request screen capture with system audio
-              _context3.next = 8;
+              _context2.next = 8;
               return navigator.mediaDevices.getDisplayMedia({
                 video: true,
                 audio: true // Request system audio
               });
             case 8:
-              screenStream = _context3.sent;
+              screenStream = _context2.sent;
               console.log("Screen stream obtained:", screenStream);
 
               // Request microphone access
-              _context3.next = 12;
+              _context2.next = 12;
               return navigator.mediaDevices.getUserMedia({
                 audio: {
                   echoCancellation: true,
@@ -23245,7 +23223,7 @@ var doctorFeedback = "referral/doctor/feedback";
                 }
               });
             case 12:
-              micStream = _context3.sent;
+              micStream = _context2.sent;
               console.log("Microphone stream obtained:", micStream);
 
               // Debugging: Log audio tracks from microphone
@@ -23301,20 +23279,20 @@ var doctorFeedback = "referral/doctor/feedback";
               //for minutes timer
               //this.startCallTimer();
               console.log("Screen recording started with desktop and microphone audio.");
-              _context3.next = 33;
+              _context2.next = 33;
               break;
             case 29:
-              _context3.prev = 29;
-              _context3.t0 = _context3["catch"](0);
-              console.error("Error starting screen recording:", _context3.t0);
+              _context2.prev = 29;
+              _context2.t0 = _context2["catch"](0);
+              console.error("Error starting screen recording:", _context2.t0);
 
               // Handle permission denial or other errors
-              if (_context3.t0.name === "NotAllowedError") {
+              if (_context2.t0.name === "NotAllowedError") {
                 Lobibox.alert("warning", {
                   msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
                   closeButton: false
                 });
-              } else if (_context3.t0.name === "NotFoundError") {
+              } else if (_context2.t0.name === "NotFoundError") {
                 Lobibox.alert("warning", {
                   msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
                   closeButton: false
@@ -23327,9 +23305,9 @@ var doctorFeedback = "referral/doctor/feedback";
               }
             case 33:
             case "end":
-              return _context3.stop();
+              return _context2.stop();
           }
-        }, _callee3, null, [[0, 29]]);
+        }, _callee2, null, [[0, 29]]);
       }))();
     },
     preventCloseWhileUploading: function preventCloseWhileUploading(event) {
@@ -23342,14 +23320,14 @@ var doctorFeedback = "referral/doctor/feedback";
     saveScreenRecording: function saveScreenRecording() {
       var _arguments = arguments,
         _this8 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, username, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
               closeAfterUpload = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
               if (!(_this8.recordedChunks.length > 0)) {
-                _context4.next = 54;
+                _context3.next = 54;
                 break;
               }
               _this8.loading = true; // Show loader
@@ -23360,14 +23338,14 @@ var doctorFeedback = "referral/doctor/feedback";
               }); // --- Max file size check (2GB) ---
               maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
               if (!(blob.size > maxSize)) {
-                _context4.next = 9;
+                _context3.next = 9;
                 break;
               }
               _this8.loading = false;
               Lobibox.alert("error", {
                 msg: "The recording is too large to upload (max 2GB). Please record a shorter session."
               });
-              return _context4.abrupt("return");
+              return _context3.abrupt("return");
             case 9:
               // Generate the filename
               patientCode = _this8.form.code || "Unknown_Patient";
@@ -23389,7 +23367,7 @@ var doctorFeedback = "referral/doctor/feedback";
               chunkIndex = 0;
             case 22:
               if (!(chunkIndex < totalChunks)) {
-                _context4.next = 47;
+                _context3.next = 47;
                 break;
               }
               start = chunkIndex * chunkSize;
@@ -23401,8 +23379,8 @@ var doctorFeedback = "referral/doctor/feedback";
               formData.append("chunkIndex", chunkIndex);
               formData.append("totalChunks", totalChunks);
               formData.append("username", username); // <-- Add facility name
-              _context4.prev = 32;
-              _context4.next = 35;
+              _context3.prev = 32;
+              _context3.next = 35;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
                 headers: {
                   "Content-Type": "multipart/form-data"
@@ -23411,23 +23389,23 @@ var doctorFeedback = "referral/doctor/feedback";
             case 35:
               // Update progress after each chunk
               _this8.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
-              _context4.next = 44;
+              _context3.next = 44;
               break;
             case 38:
-              _context4.prev = 38;
-              _context4.t0 = _context4["catch"](32);
+              _context3.prev = 38;
+              _context3.t0 = _context3["catch"](32);
               _this8.loading = false;
               _this8.uploadProgress = 0; // Reset on error
               Lobibox.alert("error", {
-                msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context4.t0.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context4.t0.message),
+                msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context3.t0.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context3.t0.message),
                 callback: function callback() {
                   window.top.close();
                 }
               });
-              return _context4.abrupt("return");
+              return _context3.abrupt("return");
             case 44:
               chunkIndex++;
-              _context4.next = 22;
+              _context3.next = 22;
               break;
             case 47:
               _this8.uploadProgress = 100; // Ensure it's 100% at the end
@@ -23443,15 +23421,15 @@ var doctorFeedback = "referral/doctor/feedback";
                   }
                 });
               }
-              _context4.next = 55;
+              _context3.next = 55;
               break;
             case 54:
               console.error("No recorded data available to save.");
             case 55:
             case "end":
-              return _context4.stop();
+              return _context3.stop();
           }
-        }, _callee4, null, [[32, 38]]);
+        }, _callee3, null, [[32, 38]]);
       }))();
     },
     closeFeedbackModal: function closeFeedbackModal() {
@@ -23643,10 +23621,10 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     startBasicCall: function startBasicCall() {
       var _this10 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
         var agoraEngine, remotePlayerContainer, localPlayerContainer, self, devices, tracksToPublish;
-        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-          while (1) switch (_context7.prev = _context7.next) {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
               // Create an instance of the Agora Engine
               _this10.agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
@@ -23665,35 +23643,35 @@ var doctorFeedback = "referral/doctor/feedback";
               localPlayerContainer.id = _this10.options.uid;
               self = _this10; // Listen for when a user joins the channel
               agoraEngine.on("user-joined", /*#__PURE__*/function () {
-                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(user) {
-                  return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-                    while (1) switch (_context5.prev = _context5.next) {
+                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(user) {
+                  return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+                    while (1) switch (_context4.prev = _context4.next) {
                       case 0:
                         console.log("User joined:", user.uid);
                         self.channelParameters.userCount++;
                         _this10.isUserJoined = true;
                         // Check if channel already has maximum users
                         if (!(self.channelParameters.userCount >= self.channelParameters.maxUsers)) {
-                          _context5.next = 12;
+                          _context4.next = 12;
                           break;
                         }
                         console.log("Channel is full! Maximum users reached.");
                         self.showChannelFullMessage();
                         // Disconnect this user since the channel is full
-                        _context5.next = 8;
+                        _context4.next = 8;
                         return agoraEngine.leave();
                       case 8:
                         self.channelParameters.userCount--; // Decrement user count after leaving
-                        return _context5.abrupt("return");
+                        return _context4.abrupt("return");
                       case 12:
                         if (_this10.referring_md === "yes") {
                           _this10.startScreenRecording();
                         }
                       case 13:
                       case "end":
-                        return _context5.stop();
+                        return _context4.stop();
                     }
-                  }, _callee5);
+                  }, _callee4);
                 }));
                 return function (_x) {
                   return _ref.apply(this, arguments);
@@ -23703,11 +23681,11 @@ var doctorFeedback = "referral/doctor/feedback";
               // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
               //agora
               agoraEngine.on("user-published", /*#__PURE__*/function () {
-                var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6(user, mediaType) {
-                  return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-                    while (1) switch (_context6.prev = _context6.next) {
+                var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(user, mediaType) {
+                  return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+                    while (1) switch (_context5.prev = _context5.next) {
                       case 0:
-                        _context6.next = 2;
+                        _context5.next = 2;
                         return agoraEngine.subscribe(user, mediaType);
                       case 2:
                         console.log("subscribe success");
@@ -23737,9 +23715,9 @@ var doctorFeedback = "referral/doctor/feedback";
                         }
                       case 6:
                       case "end":
-                        return _context6.stop();
+                        return _context5.stop();
                     }
-                  }, _callee6);
+                  }, _callee5);
                 }));
                 return function (_x2, _x3) {
                   return _ref2.apply(this, arguments);
@@ -23751,46 +23729,46 @@ var doctorFeedback = "referral/doctor/feedback";
                 console.log(user.uid + " has left the channel");
                 self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
               });
-              _context7.prev = 12;
+              _context6.prev = 12;
               console.log("Attempting to join channel...", self.options.channel);
-              _context7.next = 16;
+              _context6.next = 16;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
             case 16:
               console.log("Successfully joined channel");
 
               // Create audio track
-              _context7.next = 19;
+              _context6.next = 19;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
             case 19:
-              self.channelParameters.localAudioTrack = _context7.sent;
-              _context7.prev = 20;
-              _context7.next = 23;
+              self.channelParameters.localAudioTrack = _context6.sent;
+              _context6.prev = 20;
+              _context6.next = 23;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].getCameras();
             case 23:
-              devices = _context7.sent;
+              devices = _context6.sent;
               if (!(devices && devices.length > 0)) {
-                _context7.next = 34;
+                _context6.next = 34;
                 break;
               }
-              _context7.next = 27;
+              _context6.next = 27;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 27:
-              self.channelParameters.localVideoTrack = _context7.sent;
+              self.channelParameters.localVideoTrack = _context6.sent;
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
               $(localPlayerContainer).addClass("localPlayerLayer");
               self.channelParameters.localVideoTrack.play(localPlayerContainer);
-              _context7.next = 35;
+              _context6.next = 35;
               break;
             case 34:
               console.log("No camera detected");
             case 35:
-              _context7.next = 40;
+              _context6.next = 40;
               break;
             case 37:
-              _context7.prev = 37;
-              _context7.t0 = _context7["catch"](20);
-              console.warn("Error accessing camera:", _context7.t0);
+              _context6.prev = 37;
+              _context6.t0 = _context6["catch"](20);
+              console.warn("Error accessing camera:", _context6.t0);
             case 40:
               // Publish tracks based on availability
               tracksToPublish = [self.channelParameters.localAudioTrack];
@@ -23799,24 +23777,24 @@ var doctorFeedback = "referral/doctor/feedback";
                 // Only play video if we have a track
                 self.channelParameters.localVideoTrack.play(localPlayerContainer);
               }
-              _context7.next = 44;
+              _context6.next = 44;
               return agoraEngine.publish(tracksToPublish);
             case 44:
               console.log("publish success!");
               window.onload = function () {
                 self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
               };
-              _context7.next = 51;
+              _context6.next = 51;
               break;
             case 48:
-              _context7.prev = 48;
-              _context7.t1 = _context7["catch"](12);
-              console.error("Error joining channel:", _context7.t1);
+              _context6.prev = 48;
+              _context6.t1 = _context6["catch"](12);
+              console.error("Error joining channel:", _context6.t1);
             case 51:
             case "end":
-              return _context7.stop();
+              return _context6.stop();
           }
-        }, _callee7, null, [[12, 48], [20, 37]]);
+        }, _callee6, null, [[12, 48], [20, 37]]);
       }))();
     },
     // Method to show channel full message to user
@@ -23854,32 +23832,32 @@ var doctorFeedback = "referral/doctor/feedback";
       return vars;
     },
     joinVideo: function joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
         var devices, tracksToPublish;
-        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-          while (1) switch (_context8.prev = _context8.next) {
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
             case 0:
               console.log("local");
-              _context8.prev = 1;
-              _context8.next = 4;
+              _context7.prev = 1;
+              _context7.next = 4;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
             case 4:
-              _context8.next = 6;
+              _context7.next = 6;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
             case 6:
-              channelParameters.localAudioTrack = _context8.sent;
-              _context8.next = 9;
+              channelParameters.localAudioTrack = _context7.sent;
+              _context7.next = 9;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].getCameras();
             case 9:
-              devices = _context8.sent;
+              devices = _context7.sent;
               if (!(devices && devices.length > 0)) {
-                _context8.next = 18;
+                _context7.next = 18;
                 break;
               }
-              _context8.next = 13;
+              _context7.next = 13;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 13:
-              channelParameters.localVideoTrack = _context8.sent;
+              channelParameters.localVideoTrack = _context7.sent;
               // Append the local video container to the page body.
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
@@ -23895,35 +23873,35 @@ var doctorFeedback = "referral/doctor/feedback";
               }
 
               // Publish the local audio and video tracks in the channel.
-              _context8.next = 22;
+              _context7.next = 22;
               return agoraEngine.publish(tracksToPublish);
             case 22:
               console.log("publish success!");
-              _context8.next = 28;
+              _context7.next = 28;
               break;
             case 25:
-              _context8.prev = 25;
-              _context8.t0 = _context8["catch"](1);
-              console.error("Error in joinVideo:", _context8.t0);
+              _context7.prev = 25;
+              _context7.t0 = _context7["catch"](1);
+              console.error("Error in joinVideo:", _context7.t0);
             case 28:
             case "end":
-              return _context8.stop();
+              return _context7.stop();
           }
-        }, _callee8, null, [[1, 25]]);
+        }, _callee7, null, [[1, 25]]);
       }))();
     },
     sendCallDuration: function sendCallDuration() {
       var _this11 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
         var duration, parts, totalMinutes, response;
-        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-          while (1) switch (_context9.prev = _context9.next) {
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) switch (_context8.prev = _context8.next) {
             case 0:
               if (!_this11.isLeavingChannel) {
-                _context9.next = 2;
+                _context8.next = 2;
                 break;
               }
-              return _context9.abrupt("return");
+              return _context8.abrupt("return");
             case 2:
               // Prevent duplicate sends
               _this11.isLeavingChannel = true;
@@ -23944,8 +23922,8 @@ var doctorFeedback = "referral/doctor/feedback";
 
               // Ensure integer and at least 1 minute if any call happened
               totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
-              _context9.prev = 8;
-              _context9.next = 11;
+              _context8.prev = 8;
+              _context8.next = 11;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this11.baseUrl, "/save-call-duration"), {
                 call_duration: totalMinutes,
                 // send as int(11)
@@ -23953,30 +23931,30 @@ var doctorFeedback = "referral/doctor/feedback";
                 referral_code: _this11.referral_code
               });
             case 11:
-              response = _context9.sent;
+              response = _context8.sent;
               console.log("Call duration saved (minutes):", totalMinutes, response.data);
               localStorage.removeItem("callStartTime"); // Clean up
-              return _context9.abrupt("return", true);
+              return _context8.abrupt("return", true);
             case 17:
-              _context9.prev = 17;
-              _context9.t0 = _context9["catch"](8);
-              console.error("Error saving call duration:", _context9.t0);
-              return _context9.abrupt("return", false);
+              _context8.prev = 17;
+              _context8.t0 = _context8["catch"](8);
+              console.error("Error saving call duration:", _context8.t0);
+              return _context8.abrupt("return", false);
             case 21:
             case "end":
-              return _context9.stop();
+              return _context8.stop();
           }
-        }, _callee9, null, [[8, 17]]);
+        }, _callee8, null, [[8, 17]]);
       }))();
     },
     leaveChannel: function leaveChannel() {
       var _this12 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
-        return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-          while (1) switch (_context10.prev = _context10.next) {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+          while (1) switch (_context9.prev = _context9.next) {
             case 0:
               if (!confirm("Are you sure you want to leave this channel?")) {
-                _context10.next = 9;
+                _context9.next = 9;
                 break;
               }
               // Stop screen recording and save the file
@@ -23991,22 +23969,22 @@ var doctorFeedback = "referral/doctor/feedback";
 
               // Wait for duration to be sent before closing
               if (!(_this12.referring_md === "yes")) {
-                _context10.next = 8;
+                _context9.next = 8;
                 break;
               }
               clearInterval(_this12.callTimer); // Stop the timer
-              _context10.next = 6;
+              _context9.next = 6;
               return _this12.sendCallDuration();
             case 6:
-              _context10.next = 9;
+              _context9.next = 9;
               break;
             case 8:
               window.top.close();
             case 9:
             case "end":
-              return _context10.stop();
+              return _context9.stop();
           }
-        }, _callee10);
+        }, _callee9);
       }))();
     },
     beforeDestroy: function beforeDestroy() {
@@ -24015,33 +23993,33 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     videoStreamingOnAndOff: function videoStreamingOnAndOff() {
       var _this13 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
         var devices, localPlayerContainer, newContainer;
-        return _regeneratorRuntime().wrap(function _callee11$(_context11) {
-          while (1) switch (_context11.prev = _context11.next) {
+        return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+          while (1) switch (_context10.prev = _context10.next) {
             case 0:
               _this13.videoStreaming = !_this13.videoStreaming;
               if (!_this13.videoStreaming) {
-                _context11.next = 34;
+                _context10.next = 34;
                 break;
               }
               if (_this13.channelParameters.localVideoTrack) {
-                _context11.next = 31;
+                _context10.next = 31;
                 break;
               }
-              _context11.prev = 3;
-              _context11.next = 6;
+              _context10.prev = 3;
+              _context10.next = 6;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].getCameras();
             case 6:
-              devices = _context11.sent;
+              devices = _context10.sent;
               if (!(devices && devices.length > 0)) {
-                _context11.next = 19;
+                _context10.next = 19;
                 break;
               }
-              _context11.next = 10;
+              _context10.next = 10;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 10:
-              _this13.channelParameters.localVideoTrack = _context11.sent;
+              _this13.channelParameters.localVideoTrack = _context10.sent;
               localPlayerContainer = document.getElementById(_this13.options.uid);
               if (!localPlayerContainer) {
                 newContainer = document.createElement("div");
@@ -24054,35 +24032,35 @@ var doctorFeedback = "referral/doctor/feedback";
 
               // Publish the video track if we're connected
               if (!_this13.channelParameters.localAudioTrack) {
-                _context11.next = 17;
+                _context10.next = 17;
                 break;
               }
-              _context11.next = 17;
+              _context10.next = 17;
               return agoraEngine.publish([_this13.channelParameters.localVideoTrack]);
             case 17:
-              _context11.next = 22;
+              _context10.next = 22;
               break;
             case 19:
               console.log("No camera detected");
               _this13.videoStreaming = false;
-              return _context11.abrupt("return");
+              return _context10.abrupt("return");
             case 22:
-              _context11.next = 29;
+              _context10.next = 29;
               break;
             case 24:
-              _context11.prev = 24;
-              _context11.t0 = _context11["catch"](3);
-              console.warn("Error accessing camera:", _context11.t0);
+              _context10.prev = 24;
+              _context10.t0 = _context10["catch"](3);
+              console.warn("Error accessing camera:", _context10.t0);
               _this13.videoStreaming = false;
-              return _context11.abrupt("return");
+              return _context10.abrupt("return");
             case 29:
-              _context11.next = 32;
+              _context10.next = 32;
               break;
             case 31:
               // If we already have a video track, just enable it
               _this13.channelParameters.localVideoTrack.setEnabled(true);
             case 32:
-              _context11.next = 35;
+              _context10.next = 35;
               break;
             case 34:
               // Turning video off
@@ -24091,9 +24069,9 @@ var doctorFeedback = "referral/doctor/feedback";
               }
             case 35:
             case "end":
-              return _context11.stop();
+              return _context10.stop();
           }
-        }, _callee11, null, [[3, 24]]);
+        }, _callee10, null, [[3, 24]]);
       }))();
     },
     audioStreamingOnAnddOff: function audioStreamingOnAnddOff() {
@@ -24125,12 +24103,12 @@ var doctorFeedback = "referral/doctor/feedback";
     }),
     ringingPhoneFunc: function ringingPhoneFunc() {
       var _this14 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11() {
         var self;
-        return _regeneratorRuntime().wrap(function _callee12$(_context12) {
-          while (1) switch (_context12.prev = _context12.next) {
+        return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+          while (1) switch (_context11.prev = _context11.next) {
             case 0:
-              _context12.next = 2;
+              _context11.next = 2;
               return _this14.$refs.ringingPhone.play();
             case 2:
               self = _this14;
@@ -24140,9 +24118,9 @@ var doctorFeedback = "referral/doctor/feedback";
               }, 60000);
             case 4:
             case "end":
-              return _context12.stop();
+              return _context11.stop();
           }
-        }, _callee12);
+        }, _callee11);
       }))();
     },
     //--------------------------------------------------------------------------
