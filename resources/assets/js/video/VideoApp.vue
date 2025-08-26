@@ -164,7 +164,7 @@ export default {
     // Call once to set initial sizing
     // this.handleResize();
     // // Initialize camera devices
-    // this.getCameraDevices();
+    this.getCameraDevices();
   },
 
   beforeUnmount() {
@@ -246,30 +246,30 @@ export default {
   methods: {
       // Mobile device detection removed to always show camera switch functionality
 
-      // async getCameraDevices() {
-      //   try {
-      //     // Get list of available video devices
-      //     const devices = await AgoraRTC.getCameras();
-      //     this.availableCameras = devices;
-      //     console.log('Available cameras:', devices); // Debug log
+      async getCameraDevices() {
+        try {
+          // Get list of available video devices
+          const devices = await AgoraRTC.getCameras();
+          this.availableCameras = devices;
+          console.log('Available cameras:', devices); // Debug log
           
-      //     if (devices.length > 0) {
-      //       this.currentCameraId = devices[0].deviceId;
-      //       this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-      //       console.log('Current camera ID:', this.currentCameraId);
-      //     } else {
-      //       console.warn('No cameras found');
-      //       this.showCameraSwitch = false;
-      //     }
-      //   } catch (error) {
-      //     console.error('Error getting cameras:', error);
-      //     this.showCameraSwitch = false;
-      //     Lobibox.alert("error", {
-      //       msg: "Error accessing cameras. Please check your device settings.",
-      //       closeButton: false,
-      //     });
-      //   }
-      // },
+          if (devices.length > 0) {
+            this.currentCameraId = devices[0].deviceId;
+            this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
+            console.log('Current camera ID:', this.currentCameraId);
+          } else {
+            console.warn('No cameras found');
+            this.showCameraSwitch = false;
+          }
+        } catch (error) {
+          console.error('Error getting cameras:', error);
+          this.showCameraSwitch = false;
+          Lobibox.alert("error", {
+            msg: "Error accessing cameras. Please check your device settings.",
+            closeButton: false,
+          });
+        }
+      },
       
       switchCamera() {
         console.log("Attempting to switch camera...");

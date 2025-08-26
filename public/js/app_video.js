@@ -22716,13 +22716,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _FeedbackModal_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FeedbackModal.vue */ "./resources/assets/js/video/FeedbackModal.vue");
 /* harmony import */ var _PDFViewerModal_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./PDFViewerModal.vue */ "./resources/assets/js/video/PDFViewerModal.vue");
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return e; }; var t, e = {}, r = Object.prototype, n = r.hasOwnProperty, o = Object.defineProperty || function (t, e, r) { t[e] = r.value; }, i = "function" == typeof Symbol ? Symbol : {}, a = i.iterator || "@@iterator", c = i.asyncIterator || "@@asyncIterator", u = i.toStringTag || "@@toStringTag"; function define(t, e, r) { return Object.defineProperty(t, e, { value: r, enumerable: !0, configurable: !0, writable: !0 }), t[e]; } try { define({}, ""); } catch (t) { define = function define(t, e, r) { return t[e] = r; }; } function wrap(t, e, r, n) { var i = e && e.prototype instanceof Generator ? e : Generator, a = Object.create(i.prototype), c = new Context(n || []); return o(a, "_invoke", { value: makeInvokeMethod(t, r, c) }), a; } function tryCatch(t, e, r) { try { return { type: "normal", arg: t.call(e, r) }; } catch (t) { return { type: "throw", arg: t }; } } e.wrap = wrap; var h = "suspendedStart", l = "suspendedYield", f = "executing", s = "completed", y = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var p = {}; define(p, a, function () { return this; }); var d = Object.getPrototypeOf, v = d && d(d(values([]))); v && v !== r && n.call(v, a) && (p = v); var g = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(p); function defineIteratorMethods(t) { ["next", "throw", "return"].forEach(function (e) { define(t, e, function (t) { return this._invoke(e, t); }); }); } function AsyncIterator(t, e) { function invoke(r, o, i, a) { var c = tryCatch(t[r], t, o); if ("throw" !== c.type) { var u = c.arg, h = u.value; return h && "object" == _typeof(h) && n.call(h, "__await") ? e.resolve(h.__await).then(function (t) { invoke("next", t, i, a); }, function (t) { invoke("throw", t, i, a); }) : e.resolve(h).then(function (t) { u.value = t, i(u); }, function (t) { return invoke("throw", t, i, a); }); } a(c.arg); } var r; o(this, "_invoke", { value: function value(t, n) { function callInvokeWithMethodAndArg() { return new e(function (e, r) { invoke(t, n, e, r); }); } return r = r ? r.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); } }); } function makeInvokeMethod(e, r, n) { var o = h; return function (i, a) { if (o === f) throw Error("Generator is already running"); if (o === s) { if ("throw" === i) throw a; return { value: t, done: !0 }; } for (n.method = i, n.arg = a;;) { var c = n.delegate; if (c) { var u = maybeInvokeDelegate(c, n); if (u) { if (u === y) continue; return u; } } if ("next" === n.method) n.sent = n._sent = n.arg;else if ("throw" === n.method) { if (o === h) throw o = s, n.arg; n.dispatchException(n.arg); } else "return" === n.method && n.abrupt("return", n.arg); o = f; var p = tryCatch(e, r, n); if ("normal" === p.type) { if (o = n.done ? s : l, p.arg === y) continue; return { value: p.arg, done: n.done }; } "throw" === p.type && (o = s, n.method = "throw", n.arg = p.arg); } }; } function maybeInvokeDelegate(e, r) { var n = r.method, o = e.iterator[n]; if (o === t) return r.delegate = null, "throw" === n && e.iterator["return"] && (r.method = "return", r.arg = t, maybeInvokeDelegate(e, r), "throw" === r.method) || "return" !== n && (r.method = "throw", r.arg = new TypeError("The iterator does not provide a '" + n + "' method")), y; var i = tryCatch(o, e.iterator, r.arg); if ("throw" === i.type) return r.method = "throw", r.arg = i.arg, r.delegate = null, y; var a = i.arg; return a ? a.done ? (r[e.resultName] = a.value, r.next = e.nextLoc, "return" !== r.method && (r.method = "next", r.arg = t), r.delegate = null, y) : a : (r.method = "throw", r.arg = new TypeError("iterator result is not an object"), r.delegate = null, y); } function pushTryEntry(t) { var e = { tryLoc: t[0] }; 1 in t && (e.catchLoc = t[1]), 2 in t && (e.finallyLoc = t[2], e.afterLoc = t[3]), this.tryEntries.push(e); } function resetTryEntry(t) { var e = t.completion || {}; e.type = "normal", delete e.arg, t.completion = e; } function Context(t) { this.tryEntries = [{ tryLoc: "root" }], t.forEach(pushTryEntry, this), this.reset(!0); } function values(e) { if (e || "" === e) { var r = e[a]; if (r) return r.call(e); if ("function" == typeof e.next) return e; if (!isNaN(e.length)) { var o = -1, i = function next() { for (; ++o < e.length;) if (n.call(e, o)) return next.value = e[o], next.done = !1, next; return next.value = t, next.done = !0, next; }; return i.next = i; } } throw new TypeError(_typeof(e) + " is not iterable"); } return GeneratorFunction.prototype = GeneratorFunctionPrototype, o(g, "constructor", { value: GeneratorFunctionPrototype, configurable: !0 }), o(GeneratorFunctionPrototype, "constructor", { value: GeneratorFunction, configurable: !0 }), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, u, "GeneratorFunction"), e.isGeneratorFunction = function (t) { var e = "function" == typeof t && t.constructor; return !!e && (e === GeneratorFunction || "GeneratorFunction" === (e.displayName || e.name)); }, e.mark = function (t) { return Object.setPrototypeOf ? Object.setPrototypeOf(t, GeneratorFunctionPrototype) : (t.__proto__ = GeneratorFunctionPrototype, define(t, u, "GeneratorFunction")), t.prototype = Object.create(g), t; }, e.awrap = function (t) { return { __await: t }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, c, function () { return this; }), e.AsyncIterator = AsyncIterator, e.async = function (t, r, n, o, i) { void 0 === i && (i = Promise); var a = new AsyncIterator(wrap(t, r, n, o), i); return e.isGeneratorFunction(r) ? a : a.next().then(function (t) { return t.done ? t.value : a.next(); }); }, defineIteratorMethods(g), define(g, u, "Generator"), define(g, a, function () { return this; }), define(g, "toString", function () { return "[object Generator]"; }), e.keys = function (t) { var e = Object(t), r = []; for (var n in e) r.push(n); return r.reverse(), function next() { for (; r.length;) { var t = r.pop(); if (t in e) return next.value = t, next.done = !1, next; } return next.done = !0, next; }; }, e.values = values, Context.prototype = { constructor: Context, reset: function reset(e) { if (this.prev = 0, this.next = 0, this.sent = this._sent = t, this.done = !1, this.delegate = null, this.method = "next", this.arg = t, this.tryEntries.forEach(resetTryEntry), !e) for (var r in this) "t" === r.charAt(0) && n.call(this, r) && !isNaN(+r.slice(1)) && (this[r] = t); }, stop: function stop() { this.done = !0; var t = this.tryEntries[0].completion; if ("throw" === t.type) throw t.arg; return this.rval; }, dispatchException: function dispatchException(e) { if (this.done) throw e; var r = this; function handle(n, o) { return a.type = "throw", a.arg = e, r.next = n, o && (r.method = "next", r.arg = t), !!o; } for (var o = this.tryEntries.length - 1; o >= 0; --o) { var i = this.tryEntries[o], a = i.completion; if ("root" === i.tryLoc) return handle("end"); if (i.tryLoc <= this.prev) { var c = n.call(i, "catchLoc"), u = n.call(i, "finallyLoc"); if (c && u) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } else if (c) { if (this.prev < i.catchLoc) return handle(i.catchLoc, !0); } else { if (!u) throw Error("try statement without catch or finally"); if (this.prev < i.finallyLoc) return handle(i.finallyLoc); } } } }, abrupt: function abrupt(t, e) { for (var r = this.tryEntries.length - 1; r >= 0; --r) { var o = this.tryEntries[r]; if (o.tryLoc <= this.prev && n.call(o, "finallyLoc") && this.prev < o.finallyLoc) { var i = o; break; } } i && ("break" === t || "continue" === t) && i.tryLoc <= e && e <= i.finallyLoc && (i = null); var a = i ? i.completion : {}; return a.type = t, a.arg = e, i ? (this.method = "next", this.next = i.finallyLoc, y) : this.complete(a); }, complete: function complete(t, e) { if ("throw" === t.type) throw t.arg; return "break" === t.type || "continue" === t.type ? this.next = t.arg : "return" === t.type ? (this.rval = this.arg = t.arg, this.method = "return", this.next = "end") : "normal" === t.type && e && (this.next = e), y; }, finish: function finish(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.finallyLoc === t) return this.complete(r.completion, r.afterLoc), resetTryEntry(r), y; } }, "catch": function _catch(t) { for (var e = this.tryEntries.length - 1; e >= 0; --e) { var r = this.tryEntries[e]; if (r.tryLoc === t) { var n = r.completion; if ("throw" === n.type) { var o = n.arg; resetTryEntry(r); } return o; } } throw Error("illegal catch attempt"); }, delegateYield: function delegateYield(e, r, n) { return this.delegate = { iterator: values(e), resultName: r, nextLoc: n }, "next" === this.method && (this.arg = t), y; } }, e; }
 function asyncGeneratorStep(n, t, e, r, o, a, c) { try { var i = n[a](c), u = i.value; } catch (n) { return void e(n); } i.done ? t(u) : Promise.resolve(u).then(r, o); }
 function _asyncToGenerator(n) { return function () { var t = this, e = arguments; return new Promise(function (r, o) { var a = n.apply(t, e); function _next(n) { asyncGeneratorStep(a, r, o, _next, _throw, "next", n); } function _throw(n) { asyncGeneratorStep(a, r, o, _next, _throw, "throw", n); } _next(void 0); }); }; }
 
@@ -22871,7 +22871,7 @@ var doctorFeedback = "referral/doctor/feedback";
     // Call once to set initial sizing
     // this.handleResize();
     // // Initialize camera devices
-    // this.getCameraDevices();
+    this.getCameraDevices();
   },
   beforeUnmount: function beforeUnmount() {
     window.removeEventListener("click", this.showDivAgain);
@@ -22924,32 +22924,50 @@ var doctorFeedback = "referral/doctor/feedback";
   },
   methods: {
     // Mobile device detection removed to always show camera switch functionality
-    // async getCameraDevices() {
-    //   try {
-    //     // Get list of available video devices
-    //     const devices = await AgoraRTC.getCameras();
-    //     this.availableCameras = devices;
-    //     console.log('Available cameras:', devices); // Debug log
-    //     if (devices.length > 0) {
-    //       this.currentCameraId = devices[0].deviceId;
-    //       this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-    //       console.log('Current camera ID:', this.currentCameraId);
-    //     } else {
-    //       console.warn('No cameras found');
-    //       this.showCameraSwitch = false;
-    //     }
-    //   } catch (error) {
-    //     console.error('Error getting cameras:', error);
-    //     this.showCameraSwitch = false;
-    //     Lobibox.alert("error", {
-    //       msg: "Error accessing cameras. Please check your device settings.",
-    //       closeButton: false,
-    //     });
-    //   }
-    // },
+    getCameraDevices: function getCameraDevices() {
+      var _this3 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+        var devices;
+        return _regeneratorRuntime().wrap(function _callee$(_context) {
+          while (1) switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              _context.next = 3;
+              return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].getCameras();
+            case 3:
+              devices = _context.sent;
+              _this3.availableCameras = devices;
+              console.log('Available cameras:', devices); // Debug log
+
+              if (devices.length > 0) {
+                _this3.currentCameraId = devices[0].deviceId;
+                _this3.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
+                console.log('Current camera ID:', _this3.currentCameraId);
+              } else {
+                console.warn('No cameras found');
+                _this3.showCameraSwitch = false;
+              }
+              _context.next = 14;
+              break;
+            case 9:
+              _context.prev = 9;
+              _context.t0 = _context["catch"](0);
+              console.error('Error getting cameras:', _context.t0);
+              _this3.showCameraSwitch = false;
+              Lobibox.alert("error", {
+                msg: "Error accessing cameras. Please check your device settings.",
+                closeButton: false
+              });
+            case 14:
+            case "end":
+              return _context.stop();
+          }
+        }, _callee, null, [[0, 9]]);
+      }))();
+    },
     switchCamera: function switchCamera() {
       var _this$channelParamete,
-        _this3 = this;
+        _this4 = this;
       console.log("Attempting to switch camera...");
       var track = (_this$channelParamete = this.channelParameters) === null || _this$channelParamete === void 0 ? void 0 : _this$channelParamete.localVideoTrack;
       if (!track || track.isClosed) {
@@ -22969,7 +22987,7 @@ var doctorFeedback = "referral/doctor/feedback";
 
       // Find the next camera
       var currentIndex = this.availableCameras.findIndex(function (camera) {
-        return camera.deviceId === _this3.currentCameraId;
+        return camera.deviceId === _this4.currentCameraId;
       });
       var nextIndex = (currentIndex + 1) % this.availableCameras.length;
       var nextCamera = this.availableCameras[nextIndex];
@@ -22977,7 +22995,7 @@ var doctorFeedback = "referral/doctor/feedback";
 
       // 🔑 Switch device on the SAME track
       track.setDevice(nextCamera.deviceId).then(function () {
-        _this3.currentCameraId = nextCamera.deviceId;
+        _this4.currentCameraId = nextCamera.deviceId;
         console.log("Camera switch successful (no republish needed)");
       })["catch"](function (err) {
         console.error("Camera switch failed:", err);
@@ -23093,13 +23111,13 @@ var doctorFeedback = "referral/doctor/feedback";
       this.afkTimeout = setTimeout(this.showAfkDialog, 2 * 60 * 1000); // 2 minutes
     },
     showAfkDialog: function showAfkDialog() {
-      var _this4 = this;
+      var _this5 = this;
       this.afkDialogVisible = true;
       this.afkCountdown = 30;
       this.afkCountdownInterval = setInterval(function () {
-        _this4.afkCountdown--;
-        if (_this4.afkCountdown <= 0) {
-          _this4.endCallAfk();
+        _this5.afkCountdown--;
+        if (_this5.afkCountdown <= 0) {
+          _this5.endCallAfk();
         }
       }, 1000);
     },
@@ -23110,7 +23128,7 @@ var doctorFeedback = "referral/doctor/feedback";
       this.resetAfkTimer();
     },
     endCallAfk: function endCallAfk() {
-      var _this5 = this;
+      var _this6 = this;
       clearInterval(this.afkCountdownInterval);
       this.afkDialogVisible = false;
       // End the call (reuse your leaveChannel method)
@@ -23118,7 +23136,7 @@ var doctorFeedback = "referral/doctor/feedback";
       if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
         this.screenRecorder.stop();
         this.screenRecorder.onstop = function () {
-          _this5.saveScreenRecording(true);
+          _this6.saveScreenRecording(true);
         };
       }
 
@@ -23144,40 +23162,40 @@ var doctorFeedback = "referral/doctor/feedback";
       window.removeEventListener("touchstart", this.resetAfkTimer);
     },
     startScreenRecording: function startScreenRecording() {
-      var _this6 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var _this7 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var isSupported, screenStream, micStream, audioContext, destination, systemAudioSource, micAudioSource, combinedStream;
-        return _regeneratorRuntime().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
+        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+          while (1) switch (_context2.prev = _context2.next) {
             case 0:
-              _context.prev = 0;
+              _context2.prev = 0;
               // Check for browser compatibility
               isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
               if (isSupported) {
-                _context.next = 5;
+                _context2.next = 5;
                 break;
               }
               Lobibox.alert("warning", {
                 msg: "Your browser does not support screen recording with microphone audio. Please use the latest version of Chrome, Edge, or Firefox.",
                 closeButton: false
               });
-              return _context.abrupt("return");
+              return _context2.abrupt("return");
             case 5:
               // Inform the user about permissions
               console.log("Requesting permissions for screen and microphone...");
 
               // Request screen capture with system audio
-              _context.next = 8;
+              _context2.next = 8;
               return navigator.mediaDevices.getDisplayMedia({
                 video: true,
                 audio: true // Request system audio
               });
             case 8:
-              screenStream = _context.sent;
+              screenStream = _context2.sent;
               console.log("Screen stream obtained:", screenStream);
 
               // Request microphone access
-              _context.next = 12;
+              _context2.next = 12;
               return navigator.mediaDevices.getUserMedia({
                 audio: {
                   echoCancellation: true,
@@ -23188,7 +23206,7 @@ var doctorFeedback = "referral/doctor/feedback";
                 }
               });
             case 12:
-              micStream = _context.sent;
+              micStream = _context2.sent;
               console.log("Microphone stream obtained:", micStream);
 
               // Debugging: Log audio tracks from microphone
@@ -23219,15 +23237,15 @@ var doctorFeedback = "referral/doctor/feedback";
               console.log("Combined stream created:", combinedStream);
 
               // Initialize MediaRecorder with the combined stream
-              _this6.screenRecorder = new MediaRecorder(combinedStream, {
+              _this7.screenRecorder = new MediaRecorder(combinedStream, {
                 mimeType: "video/webm; codecs=vp8" // WebM format
               });
-              _this6.recordedChunks = [];
+              _this7.recordedChunks = [];
 
               // Collect recorded data
-              _this6.screenRecorder.ondataavailable = function (event) {
+              _this7.screenRecorder.ondataavailable = function (event) {
                 if (event.data.size > 0) {
-                  _this6.recordedChunks.push(event.data);
+                  _this7.recordedChunks.push(event.data);
                 }
               };
 
@@ -23240,24 +23258,24 @@ var doctorFeedback = "referral/doctor/feedback";
               });
 
               // Start recording
-              _this6.screenRecorder.start();
+              _this7.screenRecorder.start();
               //for minutes timer
               //this.startCallTimer();
               console.log("Screen recording started with desktop and microphone audio.");
-              _context.next = 33;
+              _context2.next = 33;
               break;
             case 29:
-              _context.prev = 29;
-              _context.t0 = _context["catch"](0);
-              console.error("Error starting screen recording:", _context.t0);
+              _context2.prev = 29;
+              _context2.t0 = _context2["catch"](0);
+              console.error("Error starting screen recording:", _context2.t0);
 
               // Handle permission denial or other errors
-              if (_context.t0.name === "NotAllowedError") {
+              if (_context2.t0.name === "NotAllowedError") {
                 Lobibox.alert("warning", {
                   msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
                   closeButton: false
                 });
-              } else if (_context.t0.name === "NotFoundError") {
+              } else if (_context2.t0.name === "NotFoundError") {
                 Lobibox.alert("warning", {
                   msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
                   closeButton: false
@@ -23270,9 +23288,9 @@ var doctorFeedback = "referral/doctor/feedback";
               }
             case 33:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
-        }, _callee, null, [[0, 29]]);
+        }, _callee2, null, [[0, 29]]);
       }))();
     },
     preventCloseWhileUploading: function preventCloseWhileUploading(event) {
@@ -23284,55 +23302,55 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     saveScreenRecording: function saveScreenRecording() {
       var _arguments = arguments,
-        _this7 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+        _this8 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, username, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
-        return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
+        return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+          while (1) switch (_context3.prev = _context3.next) {
             case 0:
               closeAfterUpload = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
-              if (!(_this7.recordedChunks.length > 0)) {
-                _context2.next = 54;
+              if (!(_this8.recordedChunks.length > 0)) {
+                _context3.next = 54;
                 break;
               }
-              _this7.loading = true; // Show loader
+              _this8.loading = true; // Show loader
 
               // Convert recorded chunks to a Blob
-              blob = new Blob(_this7.recordedChunks, {
+              blob = new Blob(_this8.recordedChunks, {
                 type: "video/webm"
               }); // --- Max file size check (2GB) ---
               maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
               if (!(blob.size > maxSize)) {
-                _context2.next = 9;
+                _context3.next = 9;
                 break;
               }
-              _this7.loading = false;
+              _this8.loading = false;
               Lobibox.alert("error", {
                 msg: "The recording is too large to upload (max 2GB). Please record a shorter session."
               });
-              return _context2.abrupt("return");
+              return _context3.abrupt("return");
             case 9:
               // Generate the filename
-              patientCode = _this7.form.code || "Unknown_Patient";
-              activityId = _this7.activity_id;
-              referring_md = _this7.form.referring_md;
-              referred = _this7.form.action_md; // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+              patientCode = _this8.form.code || "Unknown_Patient";
+              activityId = _this8.activity_id;
+              referring_md = _this8.form.referring_md;
+              referred = _this8.form.action_md; // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
               currentDate = new Date();
               dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-              timeStart = new Date(_this7.startTime).toLocaleTimeString("en-US", {
+              timeStart = new Date(_this8.startTime).toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
               timeEnd = currentDate.toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
               fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // Get facility name for folder (sanitize on server)
-              username = _this7.user.username || "UnknownUser"; // --- Detect upload speed and set chunk size ---
+              username = _this8.user.username || "UnknownUser"; // --- Detect upload speed and set chunk size ---
               chunkSize = 5 * 1024 * 1024; // Default to 5MB
               totalChunks = Math.ceil(blob.size / chunkSize);
               chunkIndex = 0;
             case 22:
               if (!(chunkIndex < totalChunks)) {
-                _context2.next = 47;
+                _context3.next = 47;
                 break;
               }
               start = chunkIndex * chunkSize;
@@ -23344,8 +23362,8 @@ var doctorFeedback = "referral/doctor/feedback";
               formData.append("chunkIndex", chunkIndex);
               formData.append("totalChunks", totalChunks);
               formData.append("username", username); // <-- Add facility name
-              _context2.prev = 32;
-              _context2.next = 35;
+              _context3.prev = 32;
+              _context3.next = 35;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
                 headers: {
                   "Content-Type": "multipart/form-data"
@@ -23353,30 +23371,30 @@ var doctorFeedback = "referral/doctor/feedback";
               });
             case 35:
               // Update progress after each chunk
-              _this7.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
-              _context2.next = 44;
+              _this8.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
+              _context3.next = 44;
               break;
             case 38:
-              _context2.prev = 38;
-              _context2.t0 = _context2["catch"](32);
-              _this7.loading = false;
-              _this7.uploadProgress = 0; // Reset on error
+              _context3.prev = 38;
+              _context3.t0 = _context3["catch"](32);
+              _this8.loading = false;
+              _this8.uploadProgress = 0; // Reset on error
               Lobibox.alert("error", {
-                msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context2.t0.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context2.t0.message),
+                msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context3.t0.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context3.t0.message),
                 callback: function callback() {
                   window.top.close();
                 }
               });
-              return _context2.abrupt("return");
+              return _context3.abrupt("return");
             case 44:
               chunkIndex++;
-              _context2.next = 22;
+              _context3.next = 22;
               break;
             case 47:
-              _this7.uploadProgress = 100; // Ensure it's 100% at the end
-              _this7.recordedChunks = []; // Clear recorded chunks to free memory
-              _this7.loading = false; // Hide loader
-              _this7.uploadProgress = 0; // Reset progress
+              _this8.uploadProgress = 100; // Ensure it's 100% at the end
+              _this8.recordedChunks = []; // Clear recorded chunks to free memory
+              _this8.loading = false; // Hide loader
+              _this8.uploadProgress = 0; // Reset progress
 
               if (closeAfterUpload) {
                 Lobibox.alert("success", {
@@ -23386,28 +23404,28 @@ var doctorFeedback = "referral/doctor/feedback";
                   }
                 });
               }
-              _context2.next = 55;
+              _context3.next = 55;
               break;
             case 54:
               console.error("No recorded data available to save.");
             case 55:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
-        }, _callee2, null, [[32, 38]]);
+        }, _callee3, null, [[32, 38]]);
       }))();
     },
     closeFeedbackModal: function closeFeedbackModal() {
       this.feedbackModalVisible = false; // Hide the feedback modal
     },
     startCallTimer: function startCallTimer() {
-      var _this8 = this;
+      var _this9 = this;
       // Store the start time in milliseconds
       this.startTime = Date.now();
 
       // Update the timer every 10 milliseconds
       this.callTimer = setInterval(function () {
-        var elapsedTime = Date.now() - _this8.startTime;
+        var elapsedTime = Date.now() - _this9.startTime;
 
         // Calculate minutes, seconds, and milliseconds
         var hours = Math.floor(elapsedTime / 3600000);
@@ -23417,9 +23435,9 @@ var doctorFeedback = "referral/doctor/feedback";
         // Format the time as mm:ss:ms
 
         if (hours == 0) {
-          _this8.callDuration = "".concat(String(minutes).padStart(1, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
+          _this9.callDuration = "".concat(String(minutes).padStart(1, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
         } else {
-          _this8.callDuration = "".concat(String(hours).padStart(1, "0"), " : ").concat(String(minutes).padStart(2, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
+          _this9.callDuration = "".concat(String(hours).padStart(1, "0"), " : ").concat(String(minutes).padStart(2, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
         }
       }, 10);
     },
@@ -23585,58 +23603,58 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     },
     startBasicCall: function startBasicCall() {
-      var _this9 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var _this10 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
         var agoraEngine, remotePlayerContainer, localPlayerContainer, self, devices, tracksToPublish;
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
             case 0:
               // Create an instance of the Agora Engine
-              _this9.agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
+              _this10.agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
                 mode: "rtc",
                 codec: "vp8"
               });
-              agoraEngine = _this9.agoraEngine; // Use this reference
+              agoraEngine = _this10.agoraEngine; // Use this reference
               // Setup channel parameters with user count tracking
-              if (!_this9.channelParameters) {
-                _this9.channelParameters = {};
+              if (!_this10.channelParameters) {
+                _this10.channelParameters = {};
               }
-              _this9.channelParameters.userCount = 0; // Initialize user count
-              _this9.channelParameters.maxUsers = 2; // Maximum 2 users allowed
+              _this10.channelParameters.userCount = 0; // Initialize user count
+              _this10.channelParameters.maxUsers = 2; // Maximum 2 users allowed
               remotePlayerContainer = document.createElement("div");
               localPlayerContainer = document.createElement("div");
-              localPlayerContainer.id = _this9.options.uid;
-              self = _this9; // Listen for when a user joins the channel
+              localPlayerContainer.id = _this10.options.uid;
+              self = _this10; // Listen for when a user joins the channel
               agoraEngine.on("user-joined", /*#__PURE__*/function () {
-                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3(user) {
-                  return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-                    while (1) switch (_context3.prev = _context3.next) {
+                var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(user) {
+                  return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+                    while (1) switch (_context4.prev = _context4.next) {
                       case 0:
                         console.log("User joined:", user.uid);
                         self.channelParameters.userCount++;
-                        _this9.isUserJoined = true;
+                        _this10.isUserJoined = true;
                         // Check if channel already has maximum users
                         if (!(self.channelParameters.userCount >= self.channelParameters.maxUsers)) {
-                          _context3.next = 12;
+                          _context4.next = 12;
                           break;
                         }
                         console.log("Channel is full! Maximum users reached.");
                         self.showChannelFullMessage();
                         // Disconnect this user since the channel is full
-                        _context3.next = 8;
+                        _context4.next = 8;
                         return agoraEngine.leave();
                       case 8:
                         self.channelParameters.userCount--; // Decrement user count after leaving
-                        return _context3.abrupt("return");
+                        return _context4.abrupt("return");
                       case 12:
-                        if (_this9.referring_md === "yes") {
-                          _this9.startScreenRecording();
+                        if (_this10.referring_md === "yes") {
+                          _this10.startScreenRecording();
                         }
                       case 13:
                       case "end":
-                        return _context3.stop();
+                        return _context4.stop();
                     }
-                  }, _callee3);
+                  }, _callee4);
                 }));
                 return function (_x) {
                   return _ref.apply(this, arguments);
@@ -23646,11 +23664,11 @@ var doctorFeedback = "referral/doctor/feedback";
               // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
               //agora
               agoraEngine.on("user-published", /*#__PURE__*/function () {
-                var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(user, mediaType) {
-                  return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-                    while (1) switch (_context4.prev = _context4.next) {
+                var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(user, mediaType) {
+                  return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+                    while (1) switch (_context5.prev = _context5.next) {
                       case 0:
-                        _context4.next = 2;
+                        _context5.next = 2;
                         return agoraEngine.subscribe(user, mediaType);
                       case 2:
                         console.log("subscribe success");
@@ -23680,9 +23698,9 @@ var doctorFeedback = "referral/doctor/feedback";
                         }
                       case 6:
                       case "end":
-                        return _context4.stop();
+                        return _context5.stop();
                     }
-                  }, _callee4);
+                  }, _callee5);
                 }));
                 return function (_x2, _x3) {
                   return _ref2.apply(this, arguments);
@@ -23694,46 +23712,46 @@ var doctorFeedback = "referral/doctor/feedback";
                 console.log(user.uid + " has left the channel");
                 self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
               });
-              _context5.prev = 12;
+              _context6.prev = 12;
               console.log("Attempting to join channel...", self.options.channel);
-              _context5.next = 16;
+              _context6.next = 16;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
             case 16:
               console.log("Successfully joined channel");
 
               // Create audio track
-              _context5.next = 19;
+              _context6.next = 19;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
             case 19:
-              self.channelParameters.localAudioTrack = _context5.sent;
-              _context5.prev = 20;
-              _context5.next = 23;
+              self.channelParameters.localAudioTrack = _context6.sent;
+              _context6.prev = 20;
+              _context6.next = 23;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].getCameras();
             case 23:
-              devices = _context5.sent;
+              devices = _context6.sent;
               if (!(devices && devices.length > 0)) {
-                _context5.next = 34;
+                _context6.next = 34;
                 break;
               }
-              _context5.next = 27;
+              _context6.next = 27;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 27:
-              self.channelParameters.localVideoTrack = _context5.sent;
+              self.channelParameters.localVideoTrack = _context6.sent;
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
               $(localPlayerContainer).addClass("localPlayerLayer");
               self.channelParameters.localVideoTrack.play(localPlayerContainer);
-              _context5.next = 35;
+              _context6.next = 35;
               break;
             case 34:
               console.log("No camera detected");
             case 35:
-              _context5.next = 40;
+              _context6.next = 40;
               break;
             case 37:
-              _context5.prev = 37;
-              _context5.t0 = _context5["catch"](20);
-              console.warn("Error accessing camera:", _context5.t0);
+              _context6.prev = 37;
+              _context6.t0 = _context6["catch"](20);
+              console.warn("Error accessing camera:", _context6.t0);
             case 40:
               // Publish tracks based on availability
               tracksToPublish = [self.channelParameters.localAudioTrack];
@@ -23742,24 +23760,24 @@ var doctorFeedback = "referral/doctor/feedback";
                 // Only play video if we have a track
                 self.channelParameters.localVideoTrack.play(localPlayerContainer);
               }
-              _context5.next = 44;
+              _context6.next = 44;
               return agoraEngine.publish(tracksToPublish);
             case 44:
               console.log("publish success!");
               window.onload = function () {
                 self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
               };
-              _context5.next = 51;
+              _context6.next = 51;
               break;
             case 48:
-              _context5.prev = 48;
-              _context5.t1 = _context5["catch"](12);
-              console.error("Error joining channel:", _context5.t1);
+              _context6.prev = 48;
+              _context6.t1 = _context6["catch"](12);
+              console.error("Error joining channel:", _context6.t1);
             case 51:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
-        }, _callee5, null, [[12, 48], [20, 37]]);
+        }, _callee6, null, [[12, 48], [20, 37]]);
       }))();
     },
     // Method to show channel full message to user
@@ -23797,32 +23815,32 @@ var doctorFeedback = "referral/doctor/feedback";
       return vars;
     },
     joinVideo: function joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
         var devices, tracksToPublish;
-        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
+        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+          while (1) switch (_context7.prev = _context7.next) {
             case 0:
               console.log("local");
-              _context6.prev = 1;
-              _context6.next = 4;
+              _context7.prev = 1;
+              _context7.next = 4;
               return agoraEngine.join(self.options.appId, self.options.channel, self.options.token, self.options.uid);
             case 4:
-              _context6.next = 6;
+              _context7.next = 6;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createMicrophoneAudioTrack();
             case 6:
-              channelParameters.localAudioTrack = _context6.sent;
-              _context6.next = 9;
+              channelParameters.localAudioTrack = _context7.sent;
+              _context7.next = 9;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].getCameras();
             case 9:
-              devices = _context6.sent;
+              devices = _context7.sent;
               if (!(devices && devices.length > 0)) {
-                _context6.next = 18;
+                _context7.next = 18;
                 break;
               }
-              _context6.next = 13;
+              _context7.next = 13;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 13:
-              channelParameters.localVideoTrack = _context6.sent;
+              channelParameters.localVideoTrack = _context7.sent;
               // Append the local video container to the page body.
               document.body.append(localPlayerContainer);
               $(".localPlayerDiv").html(localPlayerContainer);
@@ -23838,41 +23856,41 @@ var doctorFeedback = "referral/doctor/feedback";
               }
 
               // Publish the local audio and video tracks in the channel.
-              _context6.next = 22;
+              _context7.next = 22;
               return agoraEngine.publish(tracksToPublish);
             case 22:
               console.log("publish success!");
-              _context6.next = 28;
+              _context7.next = 28;
               break;
             case 25:
-              _context6.prev = 25;
-              _context6.t0 = _context6["catch"](1);
-              console.error("Error in joinVideo:", _context6.t0);
+              _context7.prev = 25;
+              _context7.t0 = _context7["catch"](1);
+              console.error("Error in joinVideo:", _context7.t0);
             case 28:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
-        }, _callee6, null, [[1, 25]]);
+        }, _callee7, null, [[1, 25]]);
       }))();
     },
     sendCallDuration: function sendCallDuration() {
-      var _this10 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+      var _this11 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
         var duration, parts, totalMinutes, response;
-        return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-          while (1) switch (_context7.prev = _context7.next) {
+        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+          while (1) switch (_context8.prev = _context8.next) {
             case 0:
-              if (!_this10.isLeavingChannel) {
-                _context7.next = 2;
+              if (!_this11.isLeavingChannel) {
+                _context8.next = 2;
                 break;
               }
-              return _context7.abrupt("return");
+              return _context8.abrupt("return");
             case 2:
               // Prevent duplicate sends
-              _this10.isLeavingChannel = true;
+              _this11.isLeavingChannel = true;
 
               // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
-              duration = _this10.callDuration.replace(/\s/g, ""); // Remove spaces
+              duration = _this11.callDuration.replace(/\s/g, ""); // Remove spaces
               parts = duration.split(":").map(Number);
               totalMinutes = 0;
               if (parts.length === 2) {
@@ -23887,69 +23905,69 @@ var doctorFeedback = "referral/doctor/feedback";
 
               // Ensure integer and at least 1 minute if any call happened
               totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
-              _context7.prev = 8;
-              _context7.next = 11;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this10.baseUrl, "/save-call-duration"), {
+              _context8.prev = 8;
+              _context8.next = 11;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this11.baseUrl, "/save-call-duration"), {
                 call_duration: totalMinutes,
                 // send as int(11)
-                tracking_id: _this10.tracking_id,
-                referral_code: _this10.referral_code
+                tracking_id: _this11.tracking_id,
+                referral_code: _this11.referral_code
               });
             case 11:
-              response = _context7.sent;
+              response = _context8.sent;
               console.log("Call duration saved (minutes):", totalMinutes, response.data);
               localStorage.removeItem("callStartTime"); // Clean up
-              return _context7.abrupt("return", true);
+              return _context8.abrupt("return", true);
             case 17:
-              _context7.prev = 17;
-              _context7.t0 = _context7["catch"](8);
-              console.error("Error saving call duration:", _context7.t0);
-              return _context7.abrupt("return", false);
+              _context8.prev = 17;
+              _context8.t0 = _context8["catch"](8);
+              console.error("Error saving call duration:", _context8.t0);
+              return _context8.abrupt("return", false);
             case 21:
             case "end":
-              return _context7.stop();
+              return _context8.stop();
           }
-        }, _callee7, null, [[8, 17]]);
+        }, _callee8, null, [[8, 17]]);
       }))();
     },
     leaveChannel: function leaveChannel() {
-      var _this11 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
-        return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-          while (1) switch (_context8.prev = _context8.next) {
+      var _this12 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+          while (1) switch (_context9.prev = _context9.next) {
             case 0:
               if (!confirm("Are you sure you want to leave this channel?")) {
-                _context8.next = 9;
+                _context9.next = 9;
                 break;
               }
               // Stop screen recording and save the file
-              if (_this11.screenRecorder && _this11.screenRecorder.state !== "inactive") {
-                _this11.screenRecorder.stop();
-                _this11.screenRecorder.onstop = function () {
-                  _this11.saveScreenRecording(true);
+              if (_this12.screenRecorder && _this12.screenRecorder.state !== "inactive") {
+                _this12.screenRecorder.stop();
+                _this12.screenRecorder.onstop = function () {
+                  _this12.saveScreenRecording(true);
                 };
               } else {
                 window.top.close();
               }
 
               // Wait for duration to be sent before closing
-              if (!(_this11.referring_md === "yes")) {
-                _context8.next = 8;
+              if (!(_this12.referring_md === "yes")) {
+                _context9.next = 8;
                 break;
               }
-              clearInterval(_this11.callTimer); // Stop the timer
-              _context8.next = 6;
-              return _this11.sendCallDuration();
+              clearInterval(_this12.callTimer); // Stop the timer
+              _context9.next = 6;
+              return _this12.sendCallDuration();
             case 6:
-              _context8.next = 9;
+              _context9.next = 9;
               break;
             case 8:
               window.top.close();
             case 9:
             case "end":
-              return _context8.stop();
+              return _context9.stop();
           }
-        }, _callee8);
+        }, _callee9);
       }))();
     },
     beforeDestroy: function beforeDestroy() {
@@ -23957,86 +23975,86 @@ var doctorFeedback = "referral/doctor/feedback";
       // Remove sendCallDuration from here since it's handled in leaveChannel
     },
     videoStreamingOnAndOff: function videoStreamingOnAndOff() {
-      var _this12 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
+      var _this13 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
         var devices, localPlayerContainer, newContainer;
-        return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-          while (1) switch (_context9.prev = _context9.next) {
+        return _regeneratorRuntime().wrap(function _callee10$(_context10) {
+          while (1) switch (_context10.prev = _context10.next) {
             case 0:
-              _this12.videoStreaming = !_this12.videoStreaming;
-              if (!_this12.videoStreaming) {
-                _context9.next = 34;
+              _this13.videoStreaming = !_this13.videoStreaming;
+              if (!_this13.videoStreaming) {
+                _context10.next = 34;
                 break;
               }
-              if (_this12.channelParameters.localVideoTrack) {
-                _context9.next = 31;
+              if (_this13.channelParameters.localVideoTrack) {
+                _context10.next = 31;
                 break;
               }
-              _context9.prev = 3;
-              _context9.next = 6;
+              _context10.prev = 3;
+              _context10.next = 6;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].getCameras();
             case 6:
-              devices = _context9.sent;
+              devices = _context10.sent;
               if (!(devices && devices.length > 0)) {
-                _context9.next = 19;
+                _context10.next = 19;
                 break;
               }
-              _context9.next = 10;
+              _context10.next = 10;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 10:
-              _this12.channelParameters.localVideoTrack = _context9.sent;
-              localPlayerContainer = document.getElementById(_this12.options.uid);
+              _this13.channelParameters.localVideoTrack = _context10.sent;
+              localPlayerContainer = document.getElementById(_this13.options.uid);
               if (!localPlayerContainer) {
                 newContainer = document.createElement("div");
-                newContainer.id = _this12.options.uid;
+                newContainer.id = _this13.options.uid;
                 document.body.append(newContainer);
                 $(".localPlayerDiv").html(newContainer);
                 $(newContainer).addClass("localPlayerLayer");
               }
-              _this12.channelParameters.localVideoTrack.play(_this12.options.uid);
+              _this13.channelParameters.localVideoTrack.play(_this13.options.uid);
 
               // Publish the video track if we're connected
-              if (!_this12.channelParameters.localAudioTrack) {
-                _context9.next = 17;
+              if (!_this13.channelParameters.localAudioTrack) {
+                _context10.next = 17;
                 break;
               }
-              _context9.next = 17;
-              return agoraEngine.publish([_this12.channelParameters.localVideoTrack]);
+              _context10.next = 17;
+              return agoraEngine.publish([_this13.channelParameters.localVideoTrack]);
             case 17:
-              _context9.next = 22;
+              _context10.next = 22;
               break;
             case 19:
               console.log("No camera detected");
-              _this12.videoStreaming = false;
-              return _context9.abrupt("return");
+              _this13.videoStreaming = false;
+              return _context10.abrupt("return");
             case 22:
-              _context9.next = 29;
+              _context10.next = 29;
               break;
             case 24:
-              _context9.prev = 24;
-              _context9.t0 = _context9["catch"](3);
-              console.warn("Error accessing camera:", _context9.t0);
-              _this12.videoStreaming = false;
-              return _context9.abrupt("return");
+              _context10.prev = 24;
+              _context10.t0 = _context10["catch"](3);
+              console.warn("Error accessing camera:", _context10.t0);
+              _this13.videoStreaming = false;
+              return _context10.abrupt("return");
             case 29:
-              _context9.next = 32;
+              _context10.next = 32;
               break;
             case 31:
               // If we already have a video track, just enable it
-              _this12.channelParameters.localVideoTrack.setEnabled(true);
+              _this13.channelParameters.localVideoTrack.setEnabled(true);
             case 32:
-              _context9.next = 35;
+              _context10.next = 35;
               break;
             case 34:
               // Turning video off
-              if (_this12.channelParameters.localVideoTrack) {
-                _this12.channelParameters.localVideoTrack.setEnabled(false);
+              if (_this13.channelParameters.localVideoTrack) {
+                _this13.channelParameters.localVideoTrack.setEnabled(false);
               }
             case 35:
             case "end":
-              return _context9.stop();
+              return _context10.stop();
           }
-        }, _callee9, null, [[3, 24]]);
+        }, _callee10, null, [[3, 24]]);
       }))();
     },
     audioStreamingOnAnddOff: function audioStreamingOnAnddOff() {
@@ -24067,30 +24085,30 @@ var doctorFeedback = "referral/doctor/feedback";
       clearTimeout(this.timeoutId);
     }),
     ringingPhoneFunc: function ringingPhoneFunc() {
-      var _this13 = this;
-      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
+      var _this14 = this;
+      return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11() {
         var self;
-        return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-          while (1) switch (_context10.prev = _context10.next) {
+        return _regeneratorRuntime().wrap(function _callee11$(_context11) {
+          while (1) switch (_context11.prev = _context11.next) {
             case 0:
-              _context10.next = 2;
-              return _this13.$refs.ringingPhone.play();
+              _context11.next = 2;
+              return _this14.$refs.ringingPhone.play();
             case 2:
-              self = _this13;
+              self = _this14;
               setTimeout(function () {
                 console.log("pause");
                 self.$refs.ringingPhone.pause();
               }, 60000);
             case 4:
             case "end":
-              return _context10.stop();
+              return _context11.stop();
           }
-        }, _callee10);
+        }, _callee11);
       }))();
     },
     //--------------------------------------------------------------------------
     generatePrescription: function generatePrescription() {
-      var _this14 = this;
+      var _this15 = this;
       var getPrescription = {
         code: this.referral_code,
         form_type: this.form_type,
@@ -24101,11 +24119,11 @@ var doctorFeedback = "referral/doctor/feedback";
           var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
 
           // Set the PDF URL
-          _this14.PdfUrl = "".concat(_this14.baseUrl, "/doctor/print/prescription/").concat(_this14.tracking_id, "/").concat(prescribedActivityId);
+          _this15.PdfUrl = "".concat(_this15.baseUrl, "/doctor/print/prescription/").concat(_this15.tracking_id, "/").concat(prescribedActivityId);
 
           // Show the modal using the ref method
-          _this14.$nextTick(function () {
-            _this14.$refs.pdfViewer.openModal();
+          _this15.$nextTick(function () {
+            _this15.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
@@ -24117,21 +24135,21 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     },
     generateLabrequest: function generateLabrequest() {
-      var _this15 = this;
+      var _this16 = this;
       var url = "".concat(this.baseUrl, "/api/check/labresult");
       var payload = {
         activity_id: this.activity_id
       };
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
         if (response.data.id) {
-          var pdfUrl = "".concat(_this15.baseUrl, "/doctor/print/labresult/").concat(_this15.activity_id);
+          var pdfUrl = "".concat(_this16.baseUrl, "/doctor/print/labresult/").concat(_this16.activity_id);
 
           // Set the PDF URL for the modal
-          _this15.PdfUrl = pdfUrl;
+          _this16.PdfUrl = pdfUrl;
 
           // Show the PDF in the custom modal
-          _this15.$nextTick(function () {
-            _this15.$refs.pdfViewer.openModal();
+          _this16.$nextTick(function () {
+            _this16.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
