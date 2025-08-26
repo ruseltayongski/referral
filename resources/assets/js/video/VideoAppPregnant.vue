@@ -16,6 +16,10 @@ export default {
   },
   data() {
     return {
+      isMobileDevice: false,
+      showCameraSwitch: true,
+      currentCameraId: null,
+      availableCameras: [],
       //start video in minutes
       isUserJoined: false,
       callMinutes: 0,
@@ -209,7 +213,49 @@ export default {
       }
     }
   },
+   computed: {
+    isMobile() {
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+  },
   methods: {
+      switchCamera() {
+        console.log("Attempting to switch camera...");
+
+        const track = this.channelParameters?.localVideoTrack;
+        if (!track || track.isClosed) {
+          Lobibox.alert("error", { msg: "Video track not initialized", closeButton: false });
+          return;
+        }
+
+        if (!this.availableCameras || this.availableCameras.length < 2) {
+          Lobibox.alert("error", { msg: "Not enough cameras available", closeButton: false });
+          return;
+        }
+
+        // Find the next camera
+        const currentIndex = this.availableCameras.findIndex(
+          (camera) => camera.deviceId === this.currentCameraId
+        );
+        const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+        const nextCamera = this.availableCameras[nextIndex];
+
+        console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
+
+        // 🔑 Switch device on the SAME track
+        track.setDevice(nextCamera.deviceId)
+          .then(() => {
+            this.currentCameraId = nextCamera.deviceId;
+            console.log("Camera switch successful (no republish needed)");
+          })
+          .catch((err) => {
+            console.error("Camera switch failed:", err);
+            Lobibox.alert("error", {
+              msg: `Failed to switch camera: ${err.message}`,
+              closeButton: false,
+            });
+          });
+      },
     initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
       const mainPic = document.querySelector(".mainPic");
@@ -1352,6 +1398,24 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
+                 <div class="button-container" v-if="isMobile">
+                  <div 
+                    v-if="showCameraSwitch" 
+                    class="tooltip-text" 
+                    style="background-color: #218838"
+                  >
+                    Switch Camera
+                  </div>
+                  <button
+                    class="btn btn-success btn-md camera-switch-button"
+                    @click="switchCamera"
+                    type="button"
+                    @mouseover="showCameraSwitch = true"
+                    @mouseleave="showCameraSwitch = false"
+                  >
+                    <i class="bi-arrow-repeat"></i>
+                  </button>
+                </div> 
                 &nbsp;
                 <div class="button-container">
                   <div
