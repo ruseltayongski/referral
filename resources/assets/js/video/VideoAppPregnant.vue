@@ -2075,29 +2075,6 @@ td {
   z-index: 10;
 }
 
-.net-speed-indicator {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 10000;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 1rem;
-  background: rgba(15, 15, 15, 0.103);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  pointer-events: none;
-}
-.net-speed-indicator.fast {
-  border: 2px solid #4caf50;
-  color: #4caf50;
-}
-.net-speed-indicator.slow {
-  border: 2px solid #e53935;
-  color: #e53935;
-}
-
 @media screen and (max-width: 768px) {
   .localPlayerLayer {
     height: 120px !important;
