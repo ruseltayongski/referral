@@ -360,6 +360,7 @@ export default {
 
               // 🔹 Step 1: Unpublish old track and wait
               await agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
+              await new Promise(r => setTimeout(r, 200));
 
               // 🔹 Step 2: Stop & close old track
               this.channelParameters.localVideoTrack.stop();
@@ -1646,7 +1647,7 @@ export default {
                   <div 
                     v-if="showCameraSwitch" 
                     class="tooltip-text" 
-                    style="background-color: #218838"
+                    style="background-color: transparent"
                   >
                     Switch Camera
                   </div>
