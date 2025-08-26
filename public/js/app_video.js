@@ -22995,8 +22995,20 @@ var doctorFeedback = "referral/doctor/feedback";
 
       // 🔑 Switch device on the SAME track
       track.setDevice(nextCamera.deviceId).then(function () {
+        // update current camera id
         _this4.currentCameraId = nextCamera.deviceId;
         console.log("Camera switch successful (no republish needed)");
+
+        // 🔑 re-play the track so the new camera feed shows immediately
+        var container = document.getElementById(_this4.options.uid);
+        if (container) {
+          try {
+            track.stop(); // stop old rendering
+            track.play(container); // re-render new stream
+          } catch (err) {
+            console.warn("Replay failed:", err);
+          }
+        }
       })["catch"](function (err) {
         console.error("Camera switch failed:", err);
         Lobibox.alert("error", {

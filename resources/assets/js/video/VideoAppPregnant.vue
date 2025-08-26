@@ -244,7 +244,6 @@ export default {
           });
         }
       },
-
       switchCamera() {
         console.log("Attempting to switch camera...");
 
@@ -269,18 +268,30 @@ export default {
         console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
 
         // 🔑 Switch device on the SAME track
-        track.setDevice(nextCamera.deviceId)
-          .then(() => {
-            this.currentCameraId = nextCamera.deviceId;
-            console.log("Camera switch successful (no republish needed)");
-          })
-          .catch((err) => {
-            console.error("Camera switch failed:", err);
-            Lobibox.alert("error", {
-              msg: `Failed to switch camera: ${err.message}`,
-              closeButton: false,
-            });
+       track.setDevice(nextCamera.deviceId)
+        .then(() => {
+          // update current camera id
+          this.currentCameraId = nextCamera.deviceId;
+          console.log("Camera switch successful (no republish needed)");
+
+          // 🔑 re-play the track so the new camera feed shows immediately
+          const container = document.getElementById(this.options.uid);
+          if (container) {
+            try {
+              track.stop();             // stop old rendering
+              track.play(container);    // re-render new stream
+            } catch (err) {
+              console.warn("Replay failed:", err);
+            }
+          }
+        })
+        .catch((err) => {
+          console.error("Camera switch failed:", err);
+          Lobibox.alert("error", {
+            msg: `Failed to switch camera: ${err.message}`,
+            closeButton: false,
           });
+        });
       },
     initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
