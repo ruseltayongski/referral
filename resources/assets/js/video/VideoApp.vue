@@ -372,13 +372,13 @@ export default {
               // 🔹 Step 4: Create new track
               const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
                   cameraId: nextCamera.deviceId,
-                  encoderConfig: {
-                      width: 640,
-                      height: 360,
-                      frameRate: 15,
-                      bitrateMin: 400,
-                      bitrateMax: 1000,
-                  },
+                  // encoderConfig: {
+                  //     width: 640,
+                  //     height: 360,
+                  //     frameRate: 15,
+                  //     bitrateMin: 400,
+                  //     bitrateMax: 1000,
+                  // },
               });
 
               // 🔹 Step 5: Publish new track
