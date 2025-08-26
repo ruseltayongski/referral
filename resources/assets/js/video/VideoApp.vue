@@ -265,143 +265,73 @@ export default {
           });
         }
       },
-
-      // async switchCamera() {
-      //     try {
-      //       console.log('Attempting to switch camera...');
-      //       if (!this.channelParameters.localVideoTrack || this.availableCameras.length < 2) {
-      //         console.log('Cannot switch camera: No video track or not enough cameras');
-      //         return;
-      //       }
-
-      //       // Find next camera in the list
-      //       const currentIndex = this.availableCameras.findIndex(camera => camera.deviceId === this.currentCameraId);
-      //       const nextIndex = (currentIndex + 1) % this.availableCameras.length;
-      //       const nextCamera = this.availableCameras[nextIndex];
-      //       console.log('Switching to camera:', nextCamera);
-
-      //       // Create new video track with next camera
-      //       const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
-      //         cameraId: nextCamera.deviceId,
-      //         encoderConfig: {
-      //           width: 640,
-      //           height: 360,
-      //           frameRate: 15,
-      //           bitrateMin: 400,
-      //           bitrateMax: 1000,
-      //         },
-      //       });
-
-      //       // Stop and close current video track
-      //       await this.channelParameters.localVideoTrack.stop();
-      //       await this.channelParameters.localVideoTrack.close();
-
-      //       // Get reference to current AgoraEngine instance
-      //       const agoraEngine = AgoraRTC.client || this.agoraEngine;
-            
-      //       if (!agoraEngine) {
-      //           throw new Error('AgoraEngine not initialized');
-      //       }
-
-      //       // Replace video track in the channel
-      //       if (agoraEngine) {
-      //         await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
-      //         this.channelParameters.localVideoTrack = newVideoTrack;
-      //         await this.agoraEngine.publish([this.channelParameters.localVideoTrack]);
-
-      //         // Play new video track locally
-      //         const localPlayerContainer = document.getElementById(this.options.uid);
-      //         if (localPlayerContainer) {
-      //           this.channelParameters.localVideoTrack.play(localPlayerContainer);
-      //           console.log('New camera track playing');
-      //         }
-              
-      //         // Update current camera ID
-      //         this.currentCameraId = nextCamera.deviceId;
-      //         console.log('Camera switch successful');
-      //       } else {
-      //         console.error('AgoraEngine not initialized');
-      //         throw new Error('AgoraEngine not initialized');
-      //       }
-
-      //     } catch (error) {
-      //       console.error('Error switching camera:', error);
-      //       Lobibox.alert("error", {
-      //         msg: "Failed to switch camera. Please try again.",
-      //         closeButton: false,
-      //       });
-      //     }
-      // },
       
        async switchCamera() {
-          try {
-              console.log('Attempting to switch camera...');
+        try {
+          console.log("Attempting to switch camera...");
 
-              if (!this.channelParameters?.localVideoTrack) {
-                  throw new Error('Video track not initialized');
-              }
-              if (this.availableCameras.length < 2) {
-                  throw new Error('Not enough cameras available');
-              }
-
-              const agoraEngine = AgoraRTC.client || this.agoraEngine;
-              if (!agoraEngine) {
-                  throw new Error('AgoraEngine not initialized');
-              }
-
-              // Find next camera
-              const currentIndex = this.availableCameras.findIndex(
-                  cam => cam.deviceId === this.currentCameraId
-              );
-              const nextIndex = (currentIndex + 1) % this.availableCameras.length;
-              const nextCamera = this.availableCameras[nextIndex];
-
-              console.log('Switching to:', nextCamera.label || nextCamera.deviceId);
-
-              // 🔹 Step 1: Unpublish old track and wait
-              await agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
-              await new Promise(r => setTimeout(r, 200));
-
-              // 🔹 Step 2: Stop & close old track
-              this.channelParameters.localVideoTrack.stop();
-              this.channelParameters.localVideoTrack.close();
-
-              // 🔹 Step 3: Clear old track reference
-              this.channelParameters.localVideoTrack = null;
-
-              // 🔹 Step 4: Create new track
-              const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
-                  cameraId: nextCamera.deviceId,
-                  // encoderConfig: {
-                  //     width: 640,
-                  //     height: 360,
-                  //     frameRate: 15,
-                  //     bitrateMin: 400,
-                  //     bitrateMax: 1000,
-                  // },
-              });
-
-              // 🔹 Step 5: Publish new track
-              await agoraEngine.publish([newVideoTrack]);
-
-              // Update references
-              this.channelParameters.localVideoTrack = newVideoTrack;
-              this.currentCameraId = nextCamera.deviceId;
-
-              // Update preview
-              const localPlayerContainer = document.getElementById(this.options.uid);
-              if (localPlayerContainer) {
-                  newVideoTrack.play(localPlayerContainer);
-              }
-
-              console.log('Camera switch successful');
-          } catch (error) {
-              console.error('Camera switch failed:', error);
-              Lobibox.alert("error", {
-                  msg: `Failed to switch camera: ${error.message}`,
-                  closeButton: false,
-              });
+          // Check if video track exists and is active
+          if (
+            !this.channelParameters?.localVideoTrack ||
+            this.channelParameters.localVideoTrack.isClosed
+          ) {
+            console.log("No active local video track found");
+            throw new Error("Video track not initialized or already closed");
           }
+
+          // Check if there are multiple cameras
+          if (!this.availableCameras || this.availableCameras.length < 2) {
+            console.log("Not enough cameras to switch");
+            throw new Error("Not enough cameras available");
+          }
+
+          // Find the next camera
+          const currentIndex = this.availableCameras.findIndex(
+            (camera) => camera.deviceId === this.currentCameraId
+          );
+          const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+          const nextCamera = this.availableCameras[nextIndex];
+
+          console.log("Switching to camera:", nextCamera.label || nextCamera.deviceId);
+
+          // Unpublish the old track (only if it exists and not closed)
+          if (
+            this.channelParameters.localVideoTrack &&
+            !this.channelParameters.localVideoTrack.isClosed
+          ) {
+            await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
+            this.channelParameters.localVideoTrack.stop();
+            this.channelParameters.localVideoTrack.close();
+          }
+
+          // Create a new video track with the next camera
+          const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
+            cameraId: nextCamera.deviceId
+            // encoderConfig can be left out for default settings
+          });
+
+          // Update track reference
+          this.channelParameters.localVideoTrack = newVideoTrack;
+
+          // Publish new track
+          await this.agoraEngine.publish([newVideoTrack]);
+
+          // Update local preview
+          const localPlayerContainer = document.getElementById(this.options.uid);
+          if (localPlayerContainer) {
+            newVideoTrack.play(localPlayerContainer);
+          }
+
+          // Save the current camera ID
+          this.currentCameraId = nextCamera.deviceId;
+          console.log("Camera switch successful");
+        } catch (error) {
+          console.error("Camera switch failed:", error);
+          Lobibox.alert("error", {
+            msg: `Failed to switch camera: ${error.message}`,
+            closeButton: false,
+          });
+        }
       },
       
       initDraggableDiv() {
