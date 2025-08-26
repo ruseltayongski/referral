@@ -296,8 +296,15 @@ export default {
             await this.channelParameters.localVideoTrack.stop();
             await this.channelParameters.localVideoTrack.close();
 
+            // Get reference to current AgoraEngine instance
+            const agoraEngine = AgoraRTC.client || this.agoraEngine;
+            
+            if (!agoraEngine) {
+                throw new Error('AgoraEngine not initialized');
+            }
+
             // Replace video track in the channel
-            if (this.agoraEngine) {
+            if (agoraEngine) {
               await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
               this.channelParameters.localVideoTrack = newVideoTrack;
               await this.agoraEngine.publish([this.channelParameters.localVideoTrack]);
