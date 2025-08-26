@@ -1658,7 +1658,7 @@ export default {
                     @mouseover="showCameraSwitch = true"
                     @mouseleave="showCameraSwitch = false"
                   >
-                    <i class="bi-camera-reverse"></i>
+                    <i class="bi-arrow-repeat"></i>
                   </button>
                 </div> 
                 &nbsp;
