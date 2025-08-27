@@ -82,7 +82,8 @@
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date_range" class="form-control" />
             </div>
             <div class="form-group">
-                <select class="select2" name="province_filter" id="province">
+                <select class="select2 form-control" name="province_filter" id="province">
+                <!-- <select class="form-control" name="province_filter" id="province"> -->
                     <option value="">All Province</option>
                     @foreach($provinces as $p)
                         <option {{ ($province==$p->id) ? 'selected':'' }} value="{{ $p->id }}">{{ $p->description }}</option>
@@ -90,7 +91,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <select class="select2" name="facility_filter" id="facility">
+                <select class="select2 form-control" name="facility_filter" id="facility">
+                <!-- <select class="form-control" name="facility_filter" id="facility"> -->
                     <option value="">All Facility</option>
                     @foreach($facilities as $f)
                         <option {{ ($facility==$f->id) ? 'selected':'' }} value="{{ $f->id }}">{{ $f->name }}</option>

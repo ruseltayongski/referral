@@ -41,13 +41,13 @@
             </div>
             <small><i>Municipality</i></small>
             <div class="form-group muncity_holder">
-                <select class="muncity select2" name="muncity" onchange="filterSidebar($(this),'barangay')" required>
+                <select class="muncity select2 form-control" name="muncity" onchange="filterSidebar($(this),'barangay')" required>
                     <option value="">Please select municipality</option>
                 </select>
             </div>
             <small><i>Barangay</i></small>
             <div class="form-group barangay_holder">
-                <select class="barangay select2" name="brgy" required>
+                <select class="barangay select2 form-control" name="brgy" required>
                     <option value="">Please select barangay</option>
                 </select>
             </div>
