@@ -164,7 +164,7 @@ export default {
     // Call once to set initial sizing
     // this.handleResize();
     // // Initialize camera devices
-    // this.getCameraDevices();
+    this.getCameraDevices();
   },
 
   beforeUnmount() {
@@ -238,93 +238,89 @@ export default {
       }
     },
   },
+  computed: {
+    isMobile() {
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+  },
   methods: {
       // Mobile device detection removed to always show camera switch functionality
 
-      // async getCameraDevices() {
-      //   try {
-      //     // Get list of available video devices
-      //     const devices = await AgoraRTC.getCameras();
-      //     this.availableCameras = devices;
-      //     console.log('Available cameras:', devices); // Debug log
+      async getCameraDevices() {
+        try {
+          // Get list of available video devices
+          const devices = await AgoraRTC.getCameras();
+          this.availableCameras = devices;
+          console.log('Available cameras:', devices); // Debug log
           
-      //     if (devices.length > 0) {
-      //       this.currentCameraId = devices[0].deviceId;
-      //       this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-      //       console.log('Current camera ID:', this.currentCameraId);
-      //     } else {
-      //       console.warn('No cameras found');
-      //       this.showCameraSwitch = false;
-      //     }
-      //   } catch (error) {
-      //     console.error('Error getting cameras:', error);
-      //     this.showCameraSwitch = false;
-      //     Lobibox.alert("error", {
-      //       msg: "Error accessing cameras. Please check your device settings.",
-      //       closeButton: false,
-      //     });
-      //   }
-      // },
+          if (devices.length > 0) {
+            this.currentCameraId = devices[0].deviceId;
+            this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
+            console.log('Current camera ID:', this.currentCameraId);
+          } else {
+            console.warn('No cameras found');
+            this.showCameraSwitch = false;
+          }
+        } catch (error) {
+          console.error('Error getting cameras:', error);
+          this.showCameraSwitch = false;
+          Lobibox.alert("error", {
+            msg: "Error accessing cameras. Please check your device settings.",
+            closeButton: false,
+          });
+        }
+      },
+      
+      switchCamera() {
+        console.log("Attempting to switch camera...");
 
-      // async switchCamera() {
-      //     try {
-      //       console.log('Attempting to switch camera...');
-      //       if (!this.channelParameters.localVideoTrack || this.availableCameras.length < 2) {
-      //         console.log('Cannot switch camera: No video track or not enough cameras');
-      //         return;
-      //       }
+        const track = this.channelParameters?.localVideoTrack;
+        if (!track || track.isClosed) {
+          Lobibox.alert("error", { msg: "Video track not initialized", closeButton: false });
+          return;
+        }
 
-      //       // Find next camera in the list
-      //       const currentIndex = this.availableCameras.findIndex(camera => camera.deviceId === this.currentCameraId);
-      //       const nextIndex = (currentIndex + 1) % this.availableCameras.length;
-      //       const nextCamera = this.availableCameras[nextIndex];
-      //       console.log('Switching to camera:', nextCamera);
+        if (!this.availableCameras || this.availableCameras.length < 2) {
+          Lobibox.alert("error", { msg: "Not enough cameras available", closeButton: false });
+          return;
+        }
 
-      //       // Create new video track with next camera
-      //       const newVideoTrack = await AgoraRTC.createCameraVideoTrack({
-      //         cameraId: nextCamera.deviceId,
-      //         encoderConfig: {
-      //           width: 640,
-      //           height: 360,
-      //           frameRate: 15,
-      //           bitrateMin: 400,
-      //           bitrateMax: 1000,
-      //         },
-      //       });
+        // Find the next camera
+        const currentIndex = this.availableCameras.findIndex(
+          (camera) => camera.deviceId === this.currentCameraId
+        );
+        const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+        const nextCamera = this.availableCameras[nextIndex];
 
-      //       // Stop and close current video track
-      //       await this.channelParameters.localVideoTrack.stop();
-      //       await this.channelParameters.localVideoTrack.close();
+        console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
 
-      //       // Replace video track in the channel
-      //       if (this.agoraEngine) {
-      //         await this.agoraEngine.unpublish([this.channelParameters.localVideoTrack]);
-      //         this.channelParameters.localVideoTrack = newVideoTrack;
-      //         await this.agoraEngine.publish([this.channelParameters.localVideoTrack]);
+        // 🔑 Switch device on the SAME track
+        track.setDevice(nextCamera.deviceId)
+        .then(() => {
+          // update current camera id
+          this.currentCameraId = nextCamera.deviceId;
+          console.log("Camera switch successful (no republish needed)");
 
-      //         // Play new video track locally
-      //         const localPlayerContainer = document.getElementById(this.options.uid);
-      //         if (localPlayerContainer) {
-      //           this.channelParameters.localVideoTrack.play(localPlayerContainer);
-      //           console.log('New camera track playing');
-      //         }
-              
-      //         // Update current camera ID
-      //         this.currentCameraId = nextCamera.deviceId;
-      //         console.log('Camera switch successful');
-      //       } else {
-      //         console.error('AgoraEngine not initialized');
-      //         throw new Error('AgoraEngine not initialized');
-      //       }
-
-      //     } catch (error) {
-      //       console.error('Error switching camera:', error);
-      //       Lobibox.alert("error", {
-      //         msg: "Failed to switch camera. Please try again.",
-      //         closeButton: false,
-      //       });
-      //     }
-      // },
+          // 🔑 re-play the track so the new camera feed shows immediately
+          const container = document.getElementById(this.options.uid);
+          if (container) {
+            try {
+              track.stop();             // stop old rendering
+              track.play(container);    // re-render new stream
+            } catch (err) {
+              console.warn("Replay failed:", err);
+            }
+          }
+        })
+        .catch((err) => {
+          console.error("Camera switch failed:", err);
+          Lobibox.alert("error", {
+            msg: `Failed to switch camera: ${err.message}`,
+            closeButton: false,
+          });
+        });
+      },
+      
       initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
       const mainPic = document.querySelector(".mainPic");
@@ -1564,7 +1560,8 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
-                <!-- <div class="button-container" v-if="availableCameras.length > 1">
+                 <!-- <div class="button-container" v-if="availableCameras.length > 1"> -->
+                <div class="button-container" v-if="isMobile">
                   <div 
                     v-if="showCameraSwitch" 
                     class="tooltip-text" 
@@ -1579,9 +1576,9 @@ export default {
                     @mouseover="showCameraSwitch = true"
                     @mouseleave="showCameraSwitch = false"
                   >
-                    <i class="bi-camera"></i>
+                    <i class="bi-arrow-repeat"></i>
                   </button>
-                </div> -->
+                </div> 
                 &nbsp;
                 <div class="button-container">
                   <div

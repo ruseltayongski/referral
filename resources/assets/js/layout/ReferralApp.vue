@@ -1023,7 +1023,7 @@
 
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
-                    console.log("event discharge:",event);
+                    // console.log("event discharge:",event);
                     // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
@@ -1318,7 +1318,7 @@
                         }
                     }
                     else if(event.payload.notif_type === "queue patient") {
-                        console.log("que at::", event.payload);
+                        // console.log("que at::", event.payload);
                         if(event.payload.referred_from === this.user.facility_id) {
                             this.notifyReferralQueueUpdated(event.payload.patient_code, event.payload.activity_id, event.payload.remarks, event.payload.date_queued, event.payload.patient_name, event.payload.queued_by, event.payload.queued_by_facility, event.payload.redirect_track, event.payload.first_queue);
                         }
@@ -1445,11 +1445,11 @@
         position: absolute;
         top: 10;
         right: 0;
-        -ms-transform: translateX(30%) translateY(0%) rotate(38deg);
+        /* -ms-transform: translateX(30%) translateY(0%) rotate(38deg);
         -webkit-transform: translateX(30%) translateY(0%) rotate4(38deg);
         transform: translateX(30%) translateY(0%) rotate(38deg); 
         -ms-transform-origin: top left;
         -webkit-transform-origin: top left;
-        transform-origin: top left;
+        transform-origin: top left; */
     }
 </style>

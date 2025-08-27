@@ -16,6 +16,10 @@ export default {
   },
   data() {
     return {
+      isMobileDevice: false,
+      showCameraSwitch: true,
+      currentCameraId: null,
+      availableCameras: [],
       //start video in minutes
       isUserJoined: false,
       callMinutes: 0,
@@ -162,6 +166,7 @@ export default {
 
     //this.hideDivAfterTimeout();
     window.addEventListener("click", this.showDivAgain);
+    this.getCameraDevices();
   },
   beforeUnmount() {
     //this.clearTimeout();
@@ -209,7 +214,85 @@ export default {
       }
     }
   },
+   computed: {
+    isMobile() {
+      return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    }
+  },
   methods: {
+      async getCameraDevices() {
+        try {
+          // Get list of available video devices
+          const devices = await AgoraRTC.getCameras();
+          this.availableCameras = devices;
+          console.log('Available cameras:', devices); // Debug log
+          
+          if (devices.length > 0) {
+            this.currentCameraId = devices[0].deviceId;
+            this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
+            console.log('Current camera ID:', this.currentCameraId);
+          } else {
+            console.warn('No cameras found');
+            this.showCameraSwitch = false;
+          }
+        } catch (error) {
+          console.error('Error getting cameras:', error);
+          this.showCameraSwitch = false;
+          Lobibox.alert("error", {
+            msg: "Error accessing cameras. Please check your device settings.",
+            closeButton: false,
+          });
+        }
+      },
+      switchCamera() {
+        console.log("Attempting to switch camera...");
+
+        const track = this.channelParameters?.localVideoTrack;
+        if (!track || track.isClosed) {
+          Lobibox.alert("error", { msg: "Video track not initialized", closeButton: false });
+          return;
+        }
+
+        if (!this.availableCameras || this.availableCameras.length < 2) {
+          Lobibox.alert("error", { msg: "Not enough cameras available", closeButton: false });
+          return;
+        }
+
+        // Find the next camera
+        const currentIndex = this.availableCameras.findIndex(
+          (camera) => camera.deviceId === this.currentCameraId
+        );
+        const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+        const nextCamera = this.availableCameras[nextIndex];
+
+        console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
+
+        // 🔑 Switch device on the SAME track
+       track.setDevice(nextCamera.deviceId)
+        .then(() => {
+          // update current camera id
+          this.currentCameraId = nextCamera.deviceId;
+          console.log("Camera switch successful (no republish needed)");
+
+          // 🔑 re-play the track so the new camera feed shows immediately
+          const container = document.getElementById(this.options.uid);
+          if (container) {
+            try {
+              track.stop();             // stop old rendering
+              track.play(container);    // re-render new stream
+            } catch (err) {
+              console.warn("Replay failed:", err);
+            }
+          }
+        })
+        .catch((err) => {
+          console.error("Camera switch failed:", err);
+          Lobibox.alert("error", {
+            msg: `Failed to switch camera: ${err.message}`,
+            closeButton: false,
+          });
+        });
+      },
     initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
       const mainPic = document.querySelector(".mainPic");
@@ -1352,6 +1435,24 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
+                 <div class="button-container" v-if="isMobile">
+                  <div 
+                    v-if="showCameraSwitch" 
+                    class="tooltip-text" 
+                    style="background-color: #218838"
+                  >
+                    Switch Camera
+                  </div>
+                  <button
+                    class="btn btn-success btn-md camera-switch-button"
+                    @click="switchCamera"
+                    type="button"
+                    @mouseover="showCameraSwitch = true"
+                    @mouseleave="showCameraSwitch = false"
+                  >
+                    <i class="bi-arrow-repeat"></i>
+                  </button>
+                </div> 
                 &nbsp;
                 <div class="button-container">
                   <div
@@ -2073,29 +2174,6 @@ td {
   top: 20px;
   left: 20px;
   z-index: 10;
-}
-
-.net-speed-indicator {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 10000;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-weight: bold;
-  font-size: 1rem;
-  background: rgba(15, 15, 15, 0.103);
-  color: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  pointer-events: none;
-}
-.net-speed-indicator.fast {
-  border: 2px solid #4caf50;
-  color: #4caf50;
-}
-.net-speed-indicator.slow {
-  border: 2px solid #e53935;
-  color: #e53935;
 }
 
 @media screen and (max-width: 768px) {
