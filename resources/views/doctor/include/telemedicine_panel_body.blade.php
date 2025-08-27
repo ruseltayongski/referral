@@ -171,7 +171,7 @@
                     <i class="fa fa-file-text-o"></i> Prescription
                     </a>&nbsp;&nbsp;
                     <a class="btn btn-app" onclick="telemedicineLabResult(`{{ $referred_track->id }}`, `{{$lab_request->laboratory_code}}`)">
-                        <i class="fa fa-building-o"></i> Lab Result
+                        <i class="fa fa-building-o"></i> Lab Request
                         </a>'>
                 <i class="fa fa-home" aria-hidden="true"></i>
             </div>

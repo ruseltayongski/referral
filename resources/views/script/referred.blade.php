@@ -913,7 +913,7 @@
         const url = "{{ asset('doctor/print/prescription') }}";
         if(activity_id) {
             window.open(`${url}/${track_id}/${activity_id}`);
-        } else if(prescriptionIsCompleted) {
+        } else if(!prescriptionIsCompleted) {
             window.open(`${url}/${track_id}/${referred_id}?prescription_new=true`);
         }
         else {
