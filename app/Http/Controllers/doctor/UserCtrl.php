@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Log;
 
 class UserCtrl extends Controller
 {
@@ -22,6 +23,7 @@ class UserCtrl extends Controller
 
     public function searchDoctor(Request $req)
     {
+         Log::info('Search Doctor Request:', $req->all());
         $data = array(
             'keyword' => $req->keyword,
             'facility_id' => $req->facility_id

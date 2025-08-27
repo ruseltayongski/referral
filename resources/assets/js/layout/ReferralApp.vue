@@ -754,21 +754,6 @@
 
                 console.log("follow Up sobOpd_id", subopd_id);
                 if(this.user.subopd_id == subopd_id){
-                    if(this.activeCallWindows.has(tracking_id)){
-                        const existingWindow = this.activeCallWindows.get(tracking_id);
-                
-                        // Check if the window is still open and valid
-                        if (existingWindow && !existingWindow.closed) {
-                            console.log("Call already active for tracking_id:", tracking_id);
-                            // Optionally focus the existing window
-                            existingWindow.focus();
-                            return; // Prevent opening a new call
-                        } else {
-                            // Window was closed, remove from tracking
-                            this.activeCallWindows.delete(tracking_id);
-                        }
-                    }
-
                     this.tracking_id = tracking_id
                     this.referral_code = code
                     this.playVideoCallAudio();
@@ -1047,6 +1032,22 @@
                             this.doctorCaller = event.payload.doctorCaller;
                             this.telemedicineFormType = event.payload.form_type;
                             this.activity_id = event.payload.activity_id;
+                            
+                            if(this.activeCallWindows.has(event.payload.tracking_id)){
+                                const existingWindow = this.activeCallWindows.get(event.payload.tracking_id);
+                        
+                                // Check if the window is still open and valid
+                                if (existingWindow && !existingWindow.closed) {
+                                    console.log("Call already active for tracking_id:", event.payload.tracking_id);
+                                    // Optionally focus the existing window
+                                    existingWindow.focus();
+                                    return; // Prevent opening a new call
+                                } else {
+                                    // Window was closed, remove from tracking
+                                    this.activeCallWindows.delete(event.payload.tracking_id);
+                                }
+                            }
+
                             this.callADoctor(event.payload.tracking_id,event.payload.code,event.payload.subopd_id);
                         } 
                         else if(event.payload.referred_from === this.user.facility_id) {
