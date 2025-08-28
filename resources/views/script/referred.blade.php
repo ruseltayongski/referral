@@ -915,13 +915,13 @@
             window.open(`${url}/${track_id}/${activity_id}`);
         } else if(prescriptionIsCompleted) {
             // window.open(`${url}/${track_id}/${referred_id}?prescription_new=true`);
-             Lobibox.alert("error",
+             Lobibox.alert("warning",
             {
                 msg: "No prescription has been created by the referred doctor"
             });
         }
         else {
-            Lobibox.alert("error",
+            Lobibox.alert("warning",
             {
                 msg: "No prescription has been created by the referred doctor"
             });
