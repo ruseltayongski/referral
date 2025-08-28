@@ -3318,11 +3318,11 @@
             
             if (value == -1) {
                 // Show the "Other Reason for Referral" textarea if "-1" is selected
-                console.log("VALUE: ", value);
+                // console.log("VALUE: ", value);
                 $('#pregnant_other_reason_referral_div').show();
             } else {
                 // Hide the "Other Reason for Referral" textarea if another option is selected
-                console.log("VALUE: ", value);  
+                // console.log("VALUE: ", value);  
                 $('#pregnant_other_reason_referral_div').hide();
             }
         });

@@ -911,10 +911,10 @@
     function telemedicinePrescription(track_id, activity_id, referred_code, referred_id) {
         const prescriptionIsCompleted = $('#prescribed_progress'+referred_code+referred_id).hasClass('completed');
         const url = "{{ asset('doctor/print/prescription') }}";
-        if(activity_id) {
+        if(activity_id && prescriptionIsCompleted) {
             window.open(`${url}/${track_id}/${activity_id}`);
-        } else if(prescriptionIsCompleted) {
-            window.open(`${url}/${track_id}/${referred_id}?prescription_new=true`);
+        // } else if(prescriptionIsCompleted) {
+        //     window.open(`${url}/${track_id}/${referred_id}?prescription_new=true`);
         }
         else {
             Lobibox.alert("error",

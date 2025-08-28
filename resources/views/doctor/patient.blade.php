@@ -1047,7 +1047,7 @@ $counter = 0;
                     $('#menarche_show').css('display', 'block');
                     $('#menarche_show_pregnant').css('display', 'block');
                     $('#menarche').attr('min', '9');
-                    console.log("show obstetric");
+                    // console.log("show obstetric");
                 } else {
                     $('#menarche_show').css('display', 'none');
                     $('#menarche_show_pregnant').css('display', 'none');
