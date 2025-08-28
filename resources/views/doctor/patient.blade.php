@@ -1315,7 +1315,7 @@ $counter = 0;
                                 msg: "Successfully referred the patient!"
                             });
                     } else {
-                        $('.loading').hide(); // Hide loading animation on success
+                        // $('.loading').hide(); // Hide loading animation on success
                         setTimeout(function(){
                             // $(location).attr('href', "{{ asset('doctor/referred') }}");
                              $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
