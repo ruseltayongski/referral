@@ -696,7 +696,7 @@
 }
 
 .remotePlayerLayer {
-  display: block;
+    display: block;
     width: 100%;
     height: 100%;
 }
@@ -721,9 +721,6 @@
   width: 150px;
 }
 
-.localPlayerLayer div {
-  border-radius: 10px;
-}
 
 .localPlayerDiv {
   position: absolute;

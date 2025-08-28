@@ -2209,7 +2209,7 @@ td {
   .localPlayerLayer {
     height: 120px !important;
     width: 90px !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
   
   .localPlayerDiv {
@@ -2224,7 +2224,7 @@ td {
   .localPlayerDiv img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
   
 }
@@ -2233,7 +2233,7 @@ td {
   .localPlayerLayer {
     height: 100px !important;
     width: 75px !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
   
   .localPlayerDiv {
@@ -2250,7 +2250,7 @@ td {
   .localPlayerDiv img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
 }
 </style>
