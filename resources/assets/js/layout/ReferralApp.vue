@@ -910,7 +910,7 @@
                                     ? '<h5 class="text-red blink_new_referral pull-right">New Telemed</h5>'
                                     : '<h5 class="text-red blink_new_referral pull-right">New Referral</h5>';
                                 content +=  '     <div class="form-group">' +
-                                    '                <a class="btn btn-warning btn-xs view_form" href="#"\n' +
+                                    '                <a class="btn btn-warning btn-xs view_form" href="javascript:void(0)"\n' +
                                     '                   data-toggle="modal"\n' +
                                     '                   data-code="'+event.payload.patient_code+'"\n' +
                                     '                   data-telemed="'+event.payload.telemedicine+'"\n' +

@@ -507,14 +507,12 @@ class TelemedicineCtrl extends Controller
         
         $facility_id = AppointmentSchedule::pluck('facility_id');
 
-        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule','appointmentSchedules.subOpd'])->find($facility_id);
-        
-        // $config = AppointmentSchedule::with(['configSchedule' => function($query) {
-        //     $query->select('id','category','days','time');
-        // }])
-        // ->select('configId','appointed_date','date_end')
-        // ->get();
-        // dd($appointment_slot);
+        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule','appointmentSchedules.subOpd'])
+        ->whereHas('appointmentSchedules', function($q) use ($user){
+            $q->where('facility_id','!=',$user->facility_id);
+        })
+        ->find($facility_id);
+
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,

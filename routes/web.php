@@ -159,7 +159,7 @@ Route::get('doctor/option/per/activity', 'doctor\HomeCtrl@optionPerActivity');
 Route::get('doctor/option/last/transaction', 'doctor\HomeCtrl@optionLastTransaction');
 Route::get('doctor/dashboard/getTransactions/{type}', 'doctor\HomeCtrl@getTransactions');
 
-Route::get('doctor/referral', 'doctor\ReferralCtrl@index');
+Route::get('doctor/referral', 'doctor\ReferralCtrl@index')->name('incoming_patient');
 
 Route::get('doctor/referral/seen/{track_id}', 'doctor\ReferralCtrl@seen'); //if the form is seen
 Route::get('doctor/referral/seenBy_save/{track_id}/{code}', 'doctor\ReferralCtrl@seenBy'); //if the form is seen

@@ -1279,7 +1279,8 @@ $counter = 0;
                             });
                     } //push notification for CCMD
                     else {
-                        $(location).attr('href', "{{ asset('doctor/referred') }}");
+                        // $(location).attr('href', "{{ asset('doctor/referred') }}");
+                         $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
                     }
                 }
                 });
@@ -1316,7 +1317,8 @@ $counter = 0;
                     } else {
                         $('.loading').hide(); // Hide loading animation on success
                         setTimeout(function(){
-                            $(location).attr('href', "{{ asset('doctor/referred') }}");
+                            // $(location).attr('href', "{{ asset('doctor/referred') }}");
+                             $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
                         }, 500);
                     }
                     },
