@@ -67,7 +67,8 @@ export default {
       appointedTimes: [],
       configTimeSlot: [],
       appointmentclickDate: null,
-      manualDate: null
+      manualDate: null,
+      selectedDate: null,
     };
   },
   mounted() {},

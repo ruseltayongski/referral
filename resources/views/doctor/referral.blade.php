@@ -179,7 +179,7 @@ $user = Session::get('auth');
 
                                 $check_dept = \App\Department::find($row->department_id);
                                 // $check_subdeOpd = \App\SubOpd::find($row->subopd_id);
-                             
+
                                 // if($row->subopd_id){
                                 //     $subdepartment = $check_subdeOpd;
                                 // }
@@ -387,6 +387,45 @@ $user = Session::get('auth');
             });
         <?php Session::put("incoming_denied",false); ?>
         @endif
+
+
+        $(document).ready(function() {
+            let selectedButtonData = null; 
+            
+            $(".referral_body").html(loading); 
+            $(document).on('click', '.view_form', function () {
+            
+                selectedButtonData = $(this).data(); 
+                let telemedValue = selectedButtonData.telemed; // Get telemedicine value
+                console.log("telemedValue", telemedValue, parseInt(telemedValue) == 1);
+                // console.log("Telemedicine Value:", telemedValue); // Debugging
+                
+                if (parseInt(telemedValue) == 1) {
+                    $('#privacyNoticeModal').modal('show');
+                }else{
+                    $('#privacyNoticeModal').modal('hide');
+                    $('#referralForm').modal('show');
+                    return;
+                }
+            });
+
+            $('#privacyNoticeModal').on('shown.bs.modal', function () {
+                $('#privacyCheckbox').prop('checked', false);
+                $('#acceptPrivacyBtn').prop('disabled', true);
+            });
+
+            $('#privacyCheckbox').change(function () {
+                $('#acceptPrivacyBtn').prop('disabled', !this.checked);
+            });
+
+            $('#acceptPrivacyBtn').click(function () {
+                $('#privacyNoticeModal').modal('hide');
+                setTimeout(function() {
+                    $('#referralForm').modal('show');
+                }, 500);
+            });
+        });
+
     </script>
 
     <!--

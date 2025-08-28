@@ -35,15 +35,26 @@
     }
 
     function reloadMessage() {
+        // $("#message").val('').focus();
+        // $("#"+code).html("Loading...");
+        // $("#"+code).load("{{ url('doctor/feedback/') }}/"+code);
+        // $("#current_code").val(code);
+
+        // scrolldownFeedback(code);
         $("#message").val('').focus();
         $("#"+code).html("Loading...");
-        $("#"+code).load("{{ url('doctor/feedback/') }}/"+code);
-        $("#current_code").val(code);
 
-        scrolldownFeedback(code);
+        $.get("{{ url('doctor/feedback/') }}/"+code, function(response) {
+            // response.html contains the HTML view
+            $("#"+code).html(response.html);
+            // If you need response.data, you can use it here
+            // console.log(response.data);
+            $("#current_code").val(code);
+            scrolldownFeedback(code);
+        });
     }
 
-      function normalizeUrl(url) {
+    function normalizeUrl(url) {
         return url.replace(/([^:]\/)\/+/g, "$1");
     }
 

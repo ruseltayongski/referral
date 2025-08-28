@@ -633,7 +633,6 @@
     </div> <!-- /container -->
 </body>
 </html>
-
 @include('modal.server')
 @include('modal.editProfile')
 @include('modal.password')

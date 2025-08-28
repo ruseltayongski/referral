@@ -25,7 +25,6 @@ export default {
       calendar: null,
       previouslyClickedDay: null,
       dateSelected: null,
-      selectedDate:null,
       appointedParams:{} ,
       header: {
         left: "prev,next today",
