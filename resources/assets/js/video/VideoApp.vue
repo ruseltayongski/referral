@@ -1523,7 +1523,7 @@ export default {
               <div class="iconCall position-absolute fade-in" v-if="showDiv">
                 <div class="button-container">
                   <div
-                    v-if="showMic"
+                    v-if="!isMobile && showMic"
                     class="tooltip-text"
                     style="background-color: #138496"
                   >
@@ -1543,7 +1543,7 @@ export default {
                 &nbsp;
                 <div class="button-container">
                   <div
-                    v-if="showVedio"
+                    v-if="!isMobile && showVedio"
                     class="tooltip-text"
                     style="background-color: #218838"
                   >
@@ -1560,11 +1560,12 @@ export default {
                     <i class="bi-camera-video-fill"></i>
                   </button>
                 </div>
+                &nbsp;
                  <!-- <div class="button-container" v-if="availableCameras.length > 1"> -->
                 <div class="button-container" v-if="isMobile">
-                  <div 
-                    v-if="showCameraSwitch" 
-                    class="tooltip-text" 
+                  <div
+                    v-if="!isMobile && showCameraSwitch" 
+                    class="tooltip-text"
                     style="background-color: #218838"
                   >
                     Switch Camera
@@ -1582,7 +1583,7 @@ export default {
                 &nbsp;
                 <div class="button-container">
                   <div
-                    v-if="showEndcall"
+                    v-if="!isMobile && showEndcall"
                     class="tooltip-text"
                     style="background-color: #c82333"
                   >
@@ -1602,7 +1603,7 @@ export default {
                 &nbsp;
                 <div class="button-container">
                   <div
-                    v-if="showUpward"
+                    v-if="!isMobile && showUpward"
                     class="tooltip-text"
                     style="background-color: #e0a800"
                   >
@@ -1621,7 +1622,7 @@ export default {
                 </div>
                 <div class="button-container">
                   <div
-                    v-if="showPrescription"
+                    v-if="!isMobile && showPrescription"
                     class="tooltip-text"
                     style="background-color: #218838"
                   >
@@ -1641,7 +1642,7 @@ export default {
                 </div>
                 <div class="button-container">
                   <div
-                    v-if="showTooltip"
+                    v-if="!isMobile && showTooltip"
                     class="tooltip-text"
                     style="background-color: #007bff"
                   >
@@ -1662,7 +1663,7 @@ export default {
 
                 <div class="button-container">
                   <div
-                    v-if="showTooltipFeedback"
+                    v-if="!isMobile && showTooltipFeedback"
                     class="tooltip-text"
                     style="background-color: #17a2b8"
                   >
@@ -2206,6 +2207,108 @@ td {
 }
 
 @media screen and (max-width: 768px) {
+  .reco-button {
+    border-radius: 50% !important;
+    width: 30px !important;     
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+
+    display: flex !important;
+    justify-content: center !important; 
+    align-items: center !important;  
+  }
+  .bi-chat-left-text {
+    font-size: 12px !important;
+  }
+  .bi-prescription2 {
+    font-size: 12px !important;
+  }
+  .prescription-button {
+    border-radius: 50% !important;
+    width: 30px !important;     
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+
+    display: flex !important;
+    justify-content: center !important; 
+    align-items: center !important;  
+  }
+  .bi-prescription {
+    font-size: 12px !important;
+  }
+  .upward-button {
+    border-radius: 50% !important;
+    width: 30px !important;     
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+
+    display: flex !important;
+    justify-content: center !important; 
+    align-items: center !important;  
+  }
+  .bi-hospital {
+    font-size: 12px !important;
+  }
+  .decline-button {
+    border-radius: 50% !important;
+    width: 30px !important;     
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+
+    display: flex !important;
+    justify-content: center !important; 
+    align-items: center !important;  
+  }
+  .bi-telephone-x-fill {
+    font-size: 12px !important;
+  }
+  .camera-switch-button{
+    border-radius: 50% !important;
+    width: 30px !important;     
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+
+    display: flex !important;
+    justify-content: center !important; 
+    align-items: center !important;    
+  }
+  .bi-arrow-repeat {
+    font-size: 12px !important;
+  }
+  .video-button {
+   border-radius: 50% !important;
+    width: 30px !important;     
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+
+    display: flex !important;
+    justify-content: center !important; 
+    align-items: center !important;    
+  }
+  .bi-camera-video-fill {
+    font-size: 12px !important;
+  }
+  .mic-button {
+    border-radius: 50% !important;
+    width: 30px !important;     
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+
+    display: flex !important;
+    justify-content: center !important; 
+    align-items: center !important;     
+  }
+
+  .bi-mic-fill {
+    font-size: 12px !important; 
+  }
   .localPlayerLayer {
     height: 120px !important;
     width: 90px !important;

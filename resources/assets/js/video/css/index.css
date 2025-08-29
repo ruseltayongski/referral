@@ -587,16 +587,22 @@
 }
 .mic-button {
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
   background-color: rgba(81, 83, 85, 0.596);
   border-color: transparent;
 }
 .camera-switch-button {
-   border-radius: 50%;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   background-color: rgba(81, 83, 85, 0.596);
   border-color: transparent;
 }
 .video-button {
   border-radius: 50%;
+  width: 40px;
+  height: 40px;
   background-color: rgba(81, 83, 85, 0.596);
   border-color: transparent;
 }
@@ -807,8 +813,6 @@ tr:nth-child(even) {
 .mic-button-slash:after {
   transform: rotate(-45deg);
 }
-.camera-switch-button-slash:before,
-.camera-switch-button-slash:after,
 .video-button-slash:before,
 .video-button-slash:after {
   content: "";
@@ -820,16 +824,15 @@ tr:nth-child(even) {
   /* height: 2px; */
   background-color: #ff0000;
 }
-.camera-switch-button-slash:before,
 .video-button-slash:before {
   transform: rotate(-45deg);
   padding: 2px;
 }
-.camera-switch-button-slash:after,
+
 .video-button-slash:after {
   transform: rotate(-45deg);
 }
-.camera-switch-button,
+.camera-switch-button:hover,
 .video-button:hover,
 .mic-button:hover,
 .decline-button:hover,
