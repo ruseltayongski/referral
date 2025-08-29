@@ -797,7 +797,7 @@ tr:nth-child(even) {
   left: 0;
   right: 0;
   transform: translateY(-50%);
-  height: 2px;
+  /* height: 2px; */
   background-color: #ff0000;
 }
 .mic-button-slash:before {
@@ -817,7 +817,7 @@ tr:nth-child(even) {
   left: 0;
   right: 0;
   transform: translateY(-50%);
-  height: 2px;
+  /* height: 2px; */
   background-color: #ff0000;
 }
 .camera-switch-button-slash:before,
