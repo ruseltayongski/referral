@@ -49,7 +49,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                     <th>Patient Name/Code</th>
                                     <th>Date Accepted</th>
                                     <th>Current Status</th>
-                                    <th>Action</th>
+                                   {{-- <th>Action</th> --}}
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -179,12 +179,12 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                             @endif
 
                                             @if($step<=4)
-                                                <button class="btn btn-sm btn-info btn-feedback" data-toggle="modal"
+                                               {{-- <button class="btn btn-sm btn-info btn-feedback" data-toggle="modal"
                                                         data-target="#feedbackModal"
                                                         data-code="{{ $row->code }}">
                                                     <i class="fa fa-comments"> {{ $feedback }}</i>
 
-                                                </button>
+                                                </button> --}}
                                             @endif
                                         </td>
                                     </tr>

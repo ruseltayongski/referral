@@ -27,8 +27,8 @@
                         <th>Issue and Concern</th>
                         <th width="20%">Action</th>
                     </tr>
+                   
                     @foreach($pending_activity as $row)
-                    
                         <tr class="">
                             <td >
                                 <strong class="text-bold" style="font-size: 15pt">

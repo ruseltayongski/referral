@@ -80,16 +80,16 @@ class ReferralCtrl extends Controller
         $allowedDepartments = explode(',', $settings->other_department_telemed);
         $telemedOrReferral = $request->filterRef;
 
-        // // Check if filterRef exists in query string
-        // if (!$request->has('filterRef')) {
-        //     // If not, redirect to same route with default or previous session value
-        //     $lastFilter = session('last_filterRef', 0); // default 0 if never set
-        //     return redirect()->route('incoming_patient', ['filterRef' => $lastFilter]);
-        // }
+        // Check if filterRef exists in query string
+        if (!$request->has('filterRef')) {
+            // If not, redirect to same route with default or previous session value
+            $lastFilter = session('last_filterRef', 0); // default 0 if never set
+            return redirect()->route('incoming_patient', ['filterRef' => $lastFilter]);
+        }
 
-        // // If filterRef exists, save it to session so we remember for next time
-        // $telemedOrReferral = $request->query('filterRef');
-        // session(['last_filterRef' => $telemedOrReferral]);
+        // If filterRef exists, save it to session so we remember for next time
+        $telemedOrReferral = $request->query('filterRef');
+        session(['last_filterRef' => $telemedOrReferral]);
 
         $data = Tracking::select(
             'tracking.*',
@@ -731,17 +731,6 @@ class ReferralCtrl extends Controller
     //============== REFERRED ================
     public function referred(Request $request)
     {
-        // if(!$request->has('filterRef')){
-        //     $lastTelemed = session('last_filterRef', 0);
-
-        //     return redirect()->route('doctor_referred', ['filterRef' => $lastTelemed]);
-        // }
-
-        // $telemedOrReferral = $request->query('filterRef');
-        // session(['last_filterRef' => $telemedOrReferral]);
-
-        $telemedOrReferral = $request->input('filterRef', null);
-
         $user = Session::get('auth');
         ParamCtrl::lastLogin();
         $search = $request->search;
@@ -754,6 +743,7 @@ class ReferralCtrl extends Controller
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
 
         if($request->referredCode){
+            
             ParamCtrl::lastLogin();
             $data = Tracking::select(
                 'tracking.*',
@@ -773,7 +763,6 @@ class ReferralCtrl extends Controller
                 ->where('tracking.code',$request->referredCode)
                 ->orderBy('date_referred','desc')
                 ->paginate(10);
-
         } else {
             $data = Activity::select(
                 'tracking.*',
@@ -793,6 +782,17 @@ class ReferralCtrl extends Controller
                 ->leftJoin('tracking','tracking.code','=','activity.code')
                 ->leftJoin('users','users.id','=',DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
                 ->where('activity.referred_from',$user->facility_id);
+
+            if(!$request->has('filterRef')){
+                $lastTelemed = session('last_filterRef', 0);
+
+                return redirect()->route('doctor_referred', ['filterRef' => $lastTelemed]);
+            }
+
+            $telemedOrReferral = $request->query('filterRef');
+            session(['last_filterRef' => $telemedOrReferral]);
+
+            // $telemedOrReferral = $request->input('filterRef', null);
 
             if ($telemedOrReferral !== null) {
                 if($telemedOrReferral == 1){
