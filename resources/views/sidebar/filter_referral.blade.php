@@ -77,6 +77,7 @@
             {{ csrf_field() }}
             <div class="form-group">
                 <input type="text" placeholder="Code, Firstname, Lastname" class="form-control" value="{{ $keyword }}" id="keyword" name="search"/>
+                <input type="hidden" name="filterRef" value="{{ request('filterRef') }}">
             </div>
             <div class="form-group">
                 <input type="text" id="daterange" value="{{ $start.' - '.$end }}" max="{{ date('Y-m-d') }}" name="date_range" class="form-control" />
