@@ -59,7 +59,7 @@
                     })
                     this.reco = dataMap
                     this.reco_handler = dataMap
-                    console.log("reco handler:", this.reco_handler);
+                    // console.log("reco handler:", this.reco_handler);
                 });
             },
             async selectRec(payload) {
@@ -109,7 +109,7 @@
                             // Remove if already inserted mistakenly
                             this.reco = this.reco.filter((rec) => rec.code !== response.data.code)
                             this.reco_handler = this.reco_handler.filter((rec) => rec.code !== response.data.code)
-                            console.log("new data:", response.data);
+                            // console.log("new data:", response.data);
 
                             const cleanMessage = response.data.message
                                 ? response.data.message.replace(/<\/?[^>]+(>|$)/g, "")

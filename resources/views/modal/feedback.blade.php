@@ -37,6 +37,11 @@
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-success btn-md">Send</button>
                             </span>
+                            &nbsp;
+                                <button type="button" id="closeBtn" class="btn btn-default btn-md" style="display: none;">
+                                    Close
+                                </button>
+                            </span>
                         </div>
                     </form>
                 </div>
@@ -244,4 +249,26 @@
     //     });
     // });
 
+    function isMobile() {
+        return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i.test(navigator.userAgent);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const closeBtn = document.getElementById("closeBtn");
+        const modal = document.getElementById("feedbackModal");
+
+        // Show close button only if mobile
+        if (isMobile()) {
+            closeBtn.style.display = "inline-block";
+        }
+
+        // Handle close button click
+        closeBtn.addEventListener("click", function () {
+            // If you're using Bootstrap modal:
+            $('#feedbackModal').modal('hide');
+
+            // If you're using plain JS modal:
+            // modal.style.display = "none";
+        });
+    });
 </script>

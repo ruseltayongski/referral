@@ -472,7 +472,7 @@
                     };
                     var title = $(this).data("title");
                     $.post(url,json,function(result){
-                        console.log(result);
+                        // console.log(result);
                         Lobibox.notify('success', {
                             title: "",
                             msg: title+" saved!",

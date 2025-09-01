@@ -46,7 +46,7 @@
                         }
                     });
                 }else{
-                    console.log('dont submit');
+                    // console.log('dont submit');
                     $('.loading').hide();
                 }
             }

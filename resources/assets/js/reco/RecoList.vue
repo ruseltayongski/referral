@@ -30,7 +30,7 @@
         props: ["reco","user"],
         mounted() {
             this.logo = $("#doh_logo").val()
-            console.log(this.messagesInfo, "reco data:", this.reco);
+            // console.log(this.messagesInfo, "reco data:", this.reco);
         },
         methods: {
             selectReco(rec) {

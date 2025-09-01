@@ -160,10 +160,10 @@ export default {
             }
           }
         });
-          console.log(`All slots for ${targetDate}:`, allSlotsForDate);
+          // console.log(`All slots for ${targetDate}:`, allSlotsForDate);
 
         if (allSlotsForDate.length === 0) {
-          console.log(`No slots found for date ${targetDate}`);
+          // console.log(`No slots found for date ${targetDate}`);
           return;
         }
 
@@ -174,7 +174,7 @@ export default {
           
           const isSlotFull = assignedCount >= slot.slot;
           
-          console.log(`Slot ID ${slot.id}, Time: ${slot.appointed_time}, Assigned: ${assignedCount}/${slot.slot}, Full: ${isSlotFull}`);
+          // console.log(`Slot ID ${slot.id}, Time: ${slot.appointed_time}, Assigned: ${assignedCount}/${slot.slot}, Full: ${isSlotFull}`);
           
           return {
             id: slot.id,
@@ -193,7 +193,7 @@ export default {
       const allSlotsInPast = allSlotsForDate.every(slot => {
         const slotDateTime = new Date(`${targetDate}T${slot.appointed_time}`);
         const isPast = slotDateTime <= currentDateTime;
-        console.log(`Slot ${slot.id} time ${slot.appointed_time} is in past: ${isPast}`);
+        // console.log(`Slot ${slot.id} time ${slot.appointed_time} is in past: ${isPast}`);
         return isPast;
       });
 
@@ -323,13 +323,13 @@ export default {
           const configsched = Object.values(response1.data)[0];
 
           if(AppointedDates.includes(dateselect)){
-            console.log("list of matched date:", AppointedDates);
+            // console.log("list of matched date:", AppointedDates);
              PassconfigId = configsched.configId;
           }
             //console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
         }else{
             PassconfigId = null;
-            console.log("not matched", parameterDate);
+            // console.log("not matched", parameterDate);
         }
         
        this.$emit("day-click-date", PassconfigId);

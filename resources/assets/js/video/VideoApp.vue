@@ -136,7 +136,7 @@ export default {
       )
       .then((res) => {
         const response = res.data;
-        console.log(response);
+        // console.log(response);
         this.form = response.form;
         if (response.age_type === "y")
           this.patient_age = response.patient_age + " Years Old";
@@ -144,15 +144,15 @@ export default {
           this.patient_age = response.patient_age + " Months Old";
 
         this.icd = response.icd;
-        console.log("testing\n" + this.icd);
+        // console.log("testing\n" + this.icd);
 
         this.file_path = response.file_path;
         this.file_name = response.file_name;
 
-        console.log(response);
+        // console.log(response);
       })
       .catch((error) => {
-        console.log(error);
+        // console.log(error);
       });
 
     //this.hideDivAfterTimeout();
@@ -219,7 +219,7 @@ export default {
                   event.payload.redirect_track
                 );
             } catch (err) {
-              console.log("modal not open");
+              // console.log("modal not open");
               this.notifyReco(
                 event.payload.code,
                 event.payload.feedback_count,
@@ -251,12 +251,12 @@ export default {
           // Get list of available video devices
           const devices = await AgoraRTC.getCameras();
           this.availableCameras = devices;
-          console.log('Available cameras:', devices); // Debug log
+          // console.log('Available cameras:', devices); // Debug log
           
           if (devices.length > 0) {
             this.currentCameraId = devices[0].deviceId;
             this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-            console.log('Current camera ID:', this.currentCameraId);
+            // console.log('Current camera ID:', this.currentCameraId);
           } else {
             console.warn('No cameras found');
             this.showCameraSwitch = false;
@@ -272,7 +272,7 @@ export default {
       },
       
       switchCamera() {
-        console.log("Attempting to switch camera...");
+        // console.log("Attempting to switch camera...");
 
         const track = this.channelParameters?.localVideoTrack;
         if (!track || track.isClosed) {
@@ -292,14 +292,14 @@ export default {
         const nextIndex = (currentIndex + 1) % this.availableCameras.length;
         const nextCamera = this.availableCameras[nextIndex];
 
-        console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
+        // console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
 
         // 🔑 Switch device on the SAME track
         track.setDevice(nextCamera.deviceId)
         .then(() => {
           // update current camera id
           this.currentCameraId = nextCamera.deviceId;
-          console.log("Camera switch successful (no republish needed)");
+          // console.log("Camera switch successful (no republish needed)");
 
           // 🔑 re-play the track so the new camera feed shows immediately
           const container = document.getElementById(this.options.uid);
@@ -508,7 +508,7 @@ export default {
         }
 
         // Inform the user about permissions
-        console.log("Requesting permissions for screen and microphone...");
+        // console.log("Requesting permissions for screen and microphone...");
 
         // Request screen capture with system audio
         const screenStream = await navigator.mediaDevices.getDisplayMedia({
@@ -516,7 +516,7 @@ export default {
           audio: true, // Request system audio
         });
 
-        console.log("Screen stream obtained:", screenStream);
+        // console.log("Screen stream obtained:", screenStream);
 
         // Request microphone access
         const micStream = await navigator.mediaDevices.getUserMedia({
@@ -527,11 +527,11 @@ export default {
           },
         });
 
-        console.log("Microphone stream obtained:", micStream);
+        // console.log("Microphone stream obtained:", micStream);
 
         // Debugging: Log audio tracks from microphone
         micStream.getAudioTracks().forEach((track) => {
-          console.log("Microphone track:", track);
+          // console.log("Microphone track:", track);
         });
 
         // Create an AudioContext for mixing audio
@@ -562,7 +562,7 @@ export default {
           ...destination.stream.getAudioTracks(), // Mixed audio (system + microphone)
         ]);
 
-        console.log("Combined stream created:", combinedStream);
+        // console.log("Combined stream created:", combinedStream);
 
         // Initialize MediaRecorder with the combined stream
         this.screenRecorder = new MediaRecorder(combinedStream, {
@@ -579,19 +579,19 @@ export default {
 
         // Debugging: Monitor video and audio tracks for lag
         combinedStream.getTracks().forEach((track) => {
-          console.log(
-            `Track kind: ${track.kind}, readyState: ${track.readyState}`
-          );
-          track.onended = () => console.log(`Track ended: ${track.kind}`);
+          // console.log(
+          //   `Track kind: ${track.kind}, readyState: ${track.readyState}`
+          // );
+          track.onended = () =>console.log(`Track ended: ${track.kind}`);
         });
 
         // Start recording
         this.screenRecorder.start();
         //for minutes timer
         //this.startCallTimer();
-        console.log(
-          "Screen recording started with desktop and microphone audio."
-        );
+        // console.log(
+        //   "Screen recording started with desktop and microphone audio."
+        // );
       } catch (error) {
         console.error("Error starting screen recording:", error);
 
@@ -979,8 +979,8 @@ export default {
           }
 
           if (Array.isArray(files) && files.length > 0) {
-            console.log("Setting up file preview with files:", files);
-            console.log("Starting index:", startIndex);
+            // console.log("Setting up file preview with files:", files);
+            // console.log("Starting index:", startIndex);
             window.setupfeedbackFilePreview(files, startIndex, code);
             $("#filePreviewContentReco").modal("show");
           }
@@ -1007,14 +1007,14 @@ export default {
 
       // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
-        console.log("User joined:", user.uid);
+        // console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
         this.isUserJoined = true;
         // Check if channel already has maximum users
         if (
           self.channelParameters.userCount >= self.channelParameters.maxUsers
         ) {
-          console.log("Channel is full! Maximum users reached.");
+          // console.log("Channel is full! Maximum users reached.");
           self.showChannelFullMessage();
           // Disconnect this user since the channel is full
           await agoraEngine.leave();
@@ -1031,7 +1031,7 @@ export default {
       //agora
       agoraEngine.on("user-published", async (user, mediaType) => {
         await agoraEngine.subscribe(user, mediaType);
-        console.log("subscribe success");
+        // console.log("subscribe success");
         if (mediaType === "video") {
           // Pause ringing audio when remote video is received
           if (self.$refs && self.$refs.ringingPhone) {
@@ -1063,7 +1063,7 @@ export default {
 
       // Listen for users leaving the channel
       agoraEngine.on("user-left", (user) => {
-        console.log(user.uid + " has left the channel");
+        // console.log(user.uid + " has left the channel");
         self.channelParameters.userCount = Math.max(
           0,
           self.channelParameters.userCount - 1
@@ -1071,7 +1071,7 @@ export default {
       });
 
       try {
-        console.log("Attempting to join channel...", self.options.channel);
+        // console.log("Attempting to join channel...", self.options.channel);
         await agoraEngine.join(
           self.options.appId,
           self.options.channel,
@@ -1079,7 +1079,7 @@ export default {
           self.options.uid
         );
 
-        console.log("Successfully joined channel");
+        // console.log("Successfully joined channel");
 
         // Create audio track
         self.channelParameters.localAudioTrack =
@@ -1096,7 +1096,7 @@ export default {
             $(localPlayerContainer).addClass("localPlayerLayer");
             self.channelParameters.localVideoTrack.play(localPlayerContainer);
           } else {
-            console.log("No camera detected");
+            // console.log("No camera detected");
           }
         } catch (error) {
           console.warn("Error accessing camera:", error);
@@ -1110,7 +1110,7 @@ export default {
           self.channelParameters.localVideoTrack.play(localPlayerContainer);
         }
         await agoraEngine.publish(tracksToPublish);
-        console.log("publish success!");
+        // console.log("publish success!");
 
         window.onload = function () {
           self.joinVideo(
@@ -1171,7 +1171,7 @@ export default {
       localPlayerContainer,
       self
     ) {
-      console.log("local");
+      // console.log("local");
       try {
         // Join a channel.
         await agoraEngine.join(
@@ -1207,7 +1207,7 @@ export default {
         
         // Publish the local audio and video tracks in the channel.
         await agoraEngine.publish(tracksToPublish);
-        console.log("publish success!");
+        // console.log("publish success!");
       } catch (error) {
         console.error("Error in joinVideo:", error);
       }
@@ -1244,11 +1244,11 @@ export default {
           }
         );
 
-        console.log(
-          "Call duration saved (minutes):",
-          totalMinutes,
-          response.data
-        );
+        // console.log(
+        //   "Call duration saved (minutes):",
+        //   totalMinutes,
+        //   response.data
+        // );
         localStorage.removeItem("callStartTime"); // Clean up
         return true;
       } catch (error) {
@@ -1329,7 +1329,7 @@ export default {
                 await agoraEngine.publish([this.channelParameters.localVideoTrack]);
               }
             } else {
-              console.log("No camera detected");
+              // console.log("No camera detected");
               this.videoStreaming = false;
               return;
             }
@@ -1372,7 +1372,7 @@ export default {
       await this.$refs.ringingPhone.play();
       let self = this;
       setTimeout(function () {
-        console.log("pause");
+        // console.log("pause");
         self.$refs.ringingPhone.pause();
       }, 60000);
     },
@@ -1452,9 +1452,9 @@ export default {
             axios
               .post(`${self.baseUrl}/api/video/upward`, endorseUpward)
               .then((response) => {
-                console.log(response.status);
-                console.log("data Upward:", response.data);
-                console.log("endorseUpward:", endorseUpward);
+                // console.log(response.status);
+                // console.log("data Upward:", response.data);
+                // console.log("endorseUpward:", endorseUpward);
                 if (response.data.trim() === "success") {
                   Lobibox.alert("success", {
                     msg: "Successfully endorse the patient for upward referral!",

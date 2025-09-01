@@ -99,7 +99,7 @@ export default {
       this.showAppointmentTime = false;
     },
     configSelectedTime(newValue) {
-      console.log("my value::", newValue);
+      // console.log("my value::", newValue);
       this.emitCurrentData();
     },
     currentConfig: {
@@ -245,7 +245,7 @@ export default {
         }
         const isSlotFull = assignedCount >= slotCapacity;
       
-      console.log("assignedCount", assignedCount, 'slotCapacity', appointmentId, "isSlotFull", isSlotFull);
+      // console.log("assignedCount", assignedCount, 'slotCapacity', appointmentId, "isSlotFull", isSlotFull);
       
       if (date) {
           let currentDateTime = new Date();
@@ -315,7 +315,7 @@ export default {
      
       if (this.followUpReferredId) {
         const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');
-        console.log("follow upd opdId:", this.selectedCategory, this.selectedAppointmentTime);
+        // console.log("follow upd opdId:", this.selectedCategory, this.selectedAppointmentTime);
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
         $(".telemedicine").val(1);
@@ -333,7 +333,7 @@ export default {
         $("#telemedicineFollowupFormModal").modal("show");
       } else {
         let appointment = null;
-        console.log("appointmentID:", appointmentId);
+        // console.log("appointmentID:", appointmentId);
         if(this.selectedCategory){
             appointment = {
               facility_id: this.facilitySelectedId,
@@ -354,7 +354,7 @@ export default {
             };
         }
 
-        console.log(appointment);
+        // console.log(appointment);
         window.location.href = `${
           this.base
         }/doctor/patient?appointmentKey=${this.generateAppointmentKey(
@@ -378,7 +378,7 @@ export default {
       this.selectedAppointmentDoctor = null;
     },
     handleDoctorChange(doctorId, appointmentId) {
-      console.log(doctorId, 'appointmentId', appointmentId);
+      // console.log(doctorId, 'appointmentId', appointmentId);
 
       this.selectedAppointmentDoctor = doctorId;
     },

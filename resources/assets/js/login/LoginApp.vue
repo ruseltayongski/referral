@@ -1206,38 +1206,38 @@
             (async () => {
                 await loadScript(path+"/resources/medilab/assets/vendor/glightbox/js/glightbox.min.js")
                     .then(() => {
-                        console.log("loaded: glightbox")
+                        // console.log("loaded: glightbox")
                     })
                     .catch(() => {
-                        console.log("not loaded (glightbox)");
+                        // console.log("not loaded (glightbox)");
                     });
                 await loadScript(path+"/resources/medilab/assets/vendor/swiper/swiper-bundle.min.js")
                     .then(() => {
-                        console.log("loaded: swiper")
+                        // console.log("loaded: swiper")
                     })
                     .catch(() => {
-                        console.log("not loaded (swiper");
+                        // console.log("not loaded (swiper");
                     });
                 await loadScript(path+"/resources/medilab/assets/vendor/bootstrap/js/bootstrap.bundle.min.js")
                     .then(() => {
-                        console.log("loaded: boostrap bundle")
+                        // console.log("loaded: boostrap bundle")
                     })
                     .catch(() => {
-                        console.log("not loaded (boostrap bundle)");
+                        // console.log("not loaded (boostrap bundle)");
                     });
                 await loadScript(path+"/resources/medilab/assets/vendor/purecounter/purecounter.js")
                     .then(() => {
-                        console.log("loaded: purecounter")
+                        // console.log("loaded: purecounter")
                     })
                     .catch(() => {
-                        console.log("not loaded (purecounter)");
+                        // console.log("not loaded (purecounter)");
                     });
                 await loadScript(path+"/resources/medilab/assets/js/main.js")
                     .then(() => {
-                        console.log("loaded: main.js")
+                        // console.log("loaded: main.js")
                     })
                     .catch(() => {
-                        console.log("not loaded (main.js)");
+                        // console.log("not loaded (main.js)");
                     });
             })();
             window.addEventListener('load', () => {

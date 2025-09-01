@@ -404,18 +404,18 @@
                     this.prescriptionSubmitted = true;
                     this.fetchPrescriptions(this.code);
 
-                    console.log('Success data:', combinedPrescriptions);
+                    // console.log('Success data:', combinedPrescriptions);
                     Lobibox.alert("success", {
                         msg: "Prescription Prescription successfully!",
                         callback: () => {
                             $("#prescriptionModal").modal("hide");
-                            console.log("Prescription alert closed");
+                            // console.log("Prescription alert closed");
                         }
                     });
                 })
                 .catch((error) => {
                     console.error('Error message:', error);
-                    console.log('Error data:', combinedPrescriptions);
+                    // console.log('Error data:', combinedPrescriptions);
                     Lobibox.alert("error", {
                         msg: "Failed to save prescription.",
                     });

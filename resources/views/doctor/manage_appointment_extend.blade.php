@@ -868,8 +868,7 @@ const editConfigUrl = "{{ url('get-config-data-sched') }}"
         url:`${deleteConfigUrl}/${scheduleId}`,
         method: 'GET',
         success: function(res) {
-
-            console.log("res Id:", res.schedId, res.configId);
+            // console.log("res Id:", res.schedId, res.configId);
         },
         error: function(error){
             console.error('Error fetching config:', {

@@ -193,7 +193,7 @@ import axios from 'axios';
             },
             getThumbnail(file) {
                 const ext = this.getFileExtension(file);
-                console.log("file :", file, "baseUrl", this.BaseUrlFile); 
+                // console.log("file :", file, "baseUrl", this.BaseUrlFile); 
                 
                 // let baseUrl = $("#broadcasting_url").val().replace(/[\/|]$/, "");
                 // console.log("my patrhererre:", baseUrl);
@@ -260,7 +260,7 @@ import axios from 'axios';
                                 }
                             }
                         });
-                        console.log("editor uploadfiles:", self.uploadedFiles);
+                        // console.log("editor uploadfiles:", self.uploadedFiles);
                         editor.on('init', function () {
                             editor.getContainer().style.width = "100%";
                         });
@@ -360,11 +360,11 @@ import axios from 'axios';
                  return 'unknown';      
             },
             sendFeedback() {    
-                console.log("sendFeedback called", this.uploadedFiles);
+                // console.log("sendFeedback called", this.uploadedFiles);
                 if(this.select_rec.code) {
                     tinyMCE.triggerSave();
                     let str = $("#mytextarea").val();
-                    console.log("str stirng data", str);
+                    // console.log("str stirng data", str);
                     // str = str.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
                     
                     str = str.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "");
@@ -378,7 +378,7 @@ import axios from 'axios';
                         if (this.user.level === "doctor")
                             this.sender_name += "Dr. "
                         
-                        console.log("str message:", str);
+                        // console.log("str message:", str);
 
                         this.sender_name += this.user.fname + " " + this.user.mname + " " + this.user.lname
                         
@@ -388,7 +388,7 @@ import axios from 'axios';
                         if (filesArray.length > 0) {
                             fileNamesString = filesArray.map(file => file.name).join('|');
                         }
-                        console.log("fileNamesString", fileNamesString);
+                        // console.log("fileNamesString", fileNamesString);
                         this.new_message = {
                             code: this.select_rec.code,
                             message: str,
@@ -412,7 +412,7 @@ import axios from 'axios';
                         formData.append('message', str);
 
                        filesArray.forEach((file, index) => {
-                            console.log(`Adding file ${index}:`, file.name, file);
+                            // console.log(`Adding file ${index}:`, file.name, file);
                             formData.append(`file_upload[${index}]`, file);
                         });
 
@@ -421,7 +421,7 @@ import axios from 'axios';
                                 'Content-Type': 'multipart/form-data'
                             }
                         }).then(response => {
-                            console.log('Message sent successfully:', response.data);
+                            // console.log('Message sent successfully:', response.data);
 
                             if (response.data.filename) {
                                     this.uploadedFiles.clear();
@@ -494,7 +494,7 @@ import axios from 'axios';
                 this.loadingFlag = true
             },
             globalFiles(newVal) {
-                console.log("Global files updated:", newVal);
+                // console.log("Global files updated:", newVal);
             }
         },
         created() {
@@ -502,7 +502,7 @@ import axios from 'axios';
             this.logo = $("#doh_logo").val()
             Echo.join('reco')
                 .listen('SocketReco', (event) => {
-                    console.log("SocketReco event received:", event);
+                    // console.log("SocketReco event received:", event);
                     if(event.payload.code === this.select_rec.code && event.payload.userid_sender !== this.user.id) {
                         this.new_message = {
                             code: this.select_rec.code,
@@ -517,7 +517,7 @@ import axios from 'axios';
                         }
                         this.messages.push(this.new_message)
                         this.scrolldownFeedback(this.select_rec.code)
-                        console.log("listen1", this.messages);
+                        // console.log("listen1", this.messages);
                         // Lobibox.notify('success', {
                         //     delay: false,
                         //     closeOnClick: false,

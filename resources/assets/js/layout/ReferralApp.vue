@@ -114,11 +114,11 @@
         //         }
         //     },   
             playAudio(telemedicine, subOpdId) {
-                console.log("playVid:",parseInt(telemedicine) == 1,"Telemed", parseInt(telemedicine));
+                // console.log("playVid:",parseInt(telemedicine) == 1,"Telemed", parseInt(telemedicine));
                 if(parseInt(telemedicine) == 1){
-                    console.log("Inside playVid", parseInt(this.user.subopd_id) === parseInt(subOpdId),"subOPD", parseInt(subOpdId), "User Opd:", parseInt(this.user.subopd_id));
+                    // console.log("Inside playVid", parseInt(this.user.subopd_id) === parseInt(subOpdId),"subOPD", parseInt(subOpdId), "User Opd:", parseInt(this.user.subopd_id));
                     if(parseInt(this.user.subopd_id) === parseInt(subOpdId)){
-                        console.log("play Audio working correctly");
+                        // console.log("play Audio working correctly");
                         audioTelemed.play();
                         setTimeout(function(){
                             audioTelemed.pause();
@@ -136,7 +136,7 @@
                 await this.$refs.audioVideo.play();
                 let self = this;
                 setTimeout(function() {
-                    console.log("pause");
+                    // console.log("pause");
                     $("#video-call-confirmation").modal('hide');
                     self.$refs.audioVideo.pause();
                 },60000);
@@ -175,7 +175,7 @@
             //         '                    </div>')
             // },
            appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
-                console.log("inside the recos append:", filepath);
+                // console.log("inside the recos append:", filepath);
                 let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
                 let message = msg && msg.trim() !== ""
                     ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
@@ -286,8 +286,8 @@
                         this.globalFiles = [...this.globalFiles, ...newGlobalFiles];
                     }
 
-                    console.log("Updated globalFiles in appendReco:", window.globalFiles);
-                    console.log("Files for code " + code + ":", window.globalFilesByCode[code]);
+                    // console.log("Updated globalFiles in appendReco:", window.globalFiles);
+                    // console.log("Files for code " + code + ":", window.globalFilesByCode[code]);
                 }
 
 
@@ -353,8 +353,8 @@
                     }
                     
                     if (Array.isArray(files) && files.length > 0) {
-                        console.log("Setting up file preview with files:", files);
-                        console.log("Starting index:", startIndex);
+                        // console.log("Setting up file preview with files:", files);
+                        // console.log("Starting index:", startIndex);
                         window.setupfeedbackFilePreview(files, startIndex, code);
                         $('#filePreviewContentReco').modal('show');
                     }
@@ -369,8 +369,8 @@
                     '       </a>';
                 const isTelemed = parseInt(Telemedicine) === 1;
                 const isForUser = parseInt(subOpdId) === parseInt(this.user.subopd_id);
-                console.log("notifyRef:", parseInt(Telemedicine) === 1, parseInt(subOpdId) === parseInt(this.user.subopd_id),"Telemed:", parseInt(Telemedicine),"Facility SubOpd:",parseInt(subOpdId),'UserSubOpd:', parseInt(this.user.subopd_id))
-                console.log("isTelemed:", isTelemed);
+                // console.log("notifyRef:", parseInt(Telemedicine) === 1, parseInt(subOpdId) === parseInt(this.user.subopd_id),"Telemed:", parseInt(Telemedicine),"Facility SubOpd:",parseInt(subOpdId),'UserSubOpd:', parseInt(this.user.subopd_id))
+                // console.log("isTelemed:", isTelemed);
                   if (isTelemed) {
                     if (!isForUser) return;
                     Lobibox.notify('success', {
@@ -752,13 +752,13 @@
             },
             callADoctor(tracking_id,code,subopd_id) {
 
-                console.log("follow Up sobOpd_id", subopd_id);
+                // console.log("follow Up sobOpd_id", subopd_id);
                 if(this.user.subopd_id == subopd_id){
                     this.tracking_id = tracking_id
                     this.referral_code = code
                     this.playVideoCallAudio();
                     $(document).ready(function() {
-                        console.log( "ready!" );
+                        // console.log( "ready!" );
                         $("#video-call-confirmation").modal('toggle');
                     });
                 }
@@ -771,12 +771,12 @@
                     let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
                     //const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
                     const referring_md_status = 'no'
-                    console.log("referring_md_status", referring_md_status);
+                    // console.log("referring_md_status", referring_md_status);
                     let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
                     let newWindow = window.open(url, windowName, windowFeatures);
                     if (newWindow && newWindow.outerWidth) {
                         // If the window was successfully opened, attempt to maximize it
-                        console.log("the open open of wendow");
+                        // console.log("the open open of wendow");
                         newWindow.moveTo(0, 0);
                         newWindow.resizeTo(screen.availWidth, screen.availHeight);
 
@@ -787,7 +787,7 @@
                             if (newWindow.closed) {
                                 this.activeCallWindows.delete(this.tracking_id);
                                 clearInterval(checkClosed);
-                                console.log("Video call window closed for tracking_id:", this.tracking_id);
+                                // console.log("Video call window closed for tracking_id:", this.tracking_id);
                             }
                         }, 1000);
                     }
@@ -795,8 +795,8 @@
                     localStorage.setItem('callStartTime', Date.now());
 
                     this.telemedicineExamined();
-                    console.log("windowFeatures", windowFeatures);
-                    console.log("Video call started at:", new Date());
+                    // console.log("windowFeatures", windowFeatures);
+                    // console.log("Video call started at:", new Date());
             },
             examinedCompleted(patient_code, activity_id) {
                 $("#examined_progress"+patient_code+activity_id).addClass("completed");
@@ -815,7 +815,7 @@
                     code : this.referral_code,
                 }
                 await axios.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined).then(response => {
-                    console.log(response)
+                    // console.log(response)
                 });
             },
             cancelCall() {
@@ -826,7 +826,7 @@
         //     $("#video-call-confirmation").modal('toggle');
         // },
         created() {
-            console.log("VUE.JS 3")
+            // console.log("VUE.JS 3")
 
             const pass_vue_fact = document.getElementById("pass_to_vue_facility");
            
@@ -879,7 +879,7 @@
                         this.playAudio(event.payload.telemedicine, subOpdIdInt);
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {
-                            console.log("append the refer patient");
+                            // console.log("append the refer patient");
                             $('.count_referral').html(this.increment_referral);
                                 
                                 let position = event.payload.position;
@@ -956,7 +956,7 @@
                                 if (!objDiv.scrollTop)
                                     this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_trck)
                             } catch(err){
-                                console.log("modal not open");
+                                // console.log("modal not open");
                                 this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
                             }
                         }
@@ -1027,7 +1027,7 @@
                     // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
                     if(event.payload.status === 'telemedicine') {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
-                            console.log("callAdoctor", event);
+                            // console.log("callAdoctor", event);
                             this.action_md = event.payload.action_md;
                             this.doctorCaller = event.payload.doctorCaller;
                             this.telemedicineFormType = event.payload.form_type;
@@ -1038,7 +1038,7 @@
                         
                                 // Check if the window is still open and valid
                                 if (existingWindow && !existingWindow.closed) {
-                                    console.log("Call already active for tracking_id:", event.payload.tracking_id);
+                                    // console.log("Call already active for tracking_id:", event.payload.tracking_id);
                                     // Optionally focus the existing window
                                     existingWindow.focus();
                                     return; // Prevent opening a new call
@@ -1052,19 +1052,19 @@
                         } 
                         else if(event.payload.referred_from === this.user.facility_id) {
                             if(event.payload.telemedicine_status === 'examined') {
-                                console.log("examinedcompleted: new");
+                                // console.log("examinedcompleted: new");
                                 this.examinedCompleted(event.payload.code, event.payload.activity_id);
                             } else if(event.payload.telemedicine_status === 'prescription') {
-                                console.log("prescribedCompleted");
+                                // console.log("prescribedCompleted");
                                 this.prescribedCompleted(event.payload.code, event.payload.activity_id)
                             } else if(event.payload.telemedicine_status === 'upward') {
-                                console.log("upwardCompleted");
+                                // console.log("upwardCompleted");
                                 this.upwardCompleted(event.payload.code, event.payload.activity_id)
                             }
                         }
                     } else {
-                        console.log("discharge file upload::", event.payload.lab_result);
-                        console.log("my event discharged:", event);
+                        // console.log("discharge file upload::", event.payload.lab_result);
+                        // console.log("my event discharged:", event);
                         if(event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
@@ -1101,15 +1101,15 @@
                             this.notifyReferralCancelled(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track)
                         }
                         if(event.payload.referred_from === this.user.facility_id && event.payload.admin === 'yes') {
-                            console.log("admin cancellation!!");
+                            // console.log("admin cancellation!!");
                             this.notifyReferralCancelledAdmin(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.cancelled_date, event.payload.redirect_track, event.payload.remarks);
                         }
                     }
                     else if(event.payload.notif_type === "undo cancel") {
                         if(event.payload.referred_to === this.user.facility_id) {
-                            console.log('undo cancel');
-                            console.log('undo status', event.payload.status);
-                            console.log(event.payload);
+                            // console.log('undo cancel');
+                            // console.log('undo status', event.payload.status);
+                            // console.log(event.payload);
                             let status = event.payload.status;
                             if(status === 'referred' || status === 'redirected' || status === 'accepted' || status === 'followup') { // I add this code status === 'followup' to realtime the undo of cancellation in followup status
                                 let type = event.payload.form_type;
@@ -1220,11 +1220,11 @@
                                 this.notifyReferralUpdateFormFaciChanged(msg);
                             }
                             if(event.payload.referred_to === this.user.facility_id) {
-                                console.log("lahe payload;", event, )
+                                // console.log("lahe payload;", event, )
                                 this.playAudio(event.payload.telemedicine, null);
                                 this.increment_referral++;
                                 if($("#referral_page_check").val()) {
-                                    console.log("append the refer patient");
+                                    // console.log("append the refer patient");
                                     $('.count_referral').html(this.increment_referral);
                                     let type = event.payload.form_type;
                                     type = type==='normal' ? 'normal-section':'pregnant-section';
@@ -1452,4 +1452,32 @@
         -webkit-transform-origin: top left;
         transform-origin: top left; */
     }
+
+    /* changes for notification */
+
+    /* Default desktop style (you can adjust if needed) */
+        .lobibox-notify {
+        max-width: 350px; 
+        font-size: 14px;
+        }
+
+        /* Mobile adjustments */
+        @media screen and (max-width: 768px) {
+        .lobibox-notify {
+            width: 60% !important;   /* take most of screen width */
+            left: 5% !important;     /* center horizontally */
+            right: 5% !important;
+            font-size: 9px;         /* smaller font for mobile */
+            word-wrap: break-word;   /* prevent overflow */
+        }
+
+        .lobibox-notify .lobibox-body {
+            padding: 5px !important; /* adjust spacing */
+        }
+
+        .lobibox-notify .btn {
+            font-size: 9px !important;
+            padding: 5px 8px !important;
+        }
+        }
 </style>
