@@ -3612,118 +3612,124 @@
     var normal_count = 0 ;
     
     function readURLNormal(input, pos) {
-        // Asset paths for icons
-        var word_normal = '{{ asset('resources/img/document_icon.png') }}';
-        var pdf_normal = '{{ asset('resources/img/pdf_icon.png') }}'; // Fixed from pdf_normal_icon
+         var word_normal  = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf_normal   = '{{ asset('resources/img/pdf_icon.png') }}';
         var excel_normal = '{{ asset('resources/img/sheet_icon.png') }}';
 
         if (input.files) {
-            var tmp_pos = pos;
-
             for (var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
+                var file_ = input.files[i];
+                if (!file_) continue;
 
-                if (file && file !== null) {
+                var fileType_ = file_.type;
+
+                // Show preview or icon
+                if (fileType_ === 'application/pdf') {
+                    $('#normal_file-upload-image' + pos).attr('src', pdf_normal);
+                } else if (fileType_ === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                    $('#normal_file-upload-image' + pos).attr('src', word_normal);
+                } else if (fileType_ === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                    $('#normal_file-upload-image' + pos).attr('src', excel_normal);
+                } else {
                     var reader = new FileReader();
-                    var fileType = file.type; // Capture file type for the current file
-
-                    // Onload logic for unsupported file types
-                    reader.onloadend = (function(file, tmp_pos) {
+                    reader.onloadend = (function (pos, file_) {
                         return function (e) {
-                            $('#normal_file-upload-image' + tmp_pos).attr('src', e.target.result);
-                            $('#normal_image-upload-wrap' + tmp_pos).hide();
-                            $('#normal_file-upload-content' + tmp_pos).show();
-                            $('#normal_image-title' + tmp_pos).html(file.name);
+                            $('#normal_file-upload-image' + pos).attr('src', e.target.result);
                         };
-                    })(file, tmp_pos);
-
-                    // Set icons based on file type
-                    if (fileType === 'application/pdf') {
-                        $('#normal_file-upload-image' + tmp_pos).attr('src', pdf_normal);
-                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#normal_file-upload-image' + tmp_pos).attr('src', word_normal);
-                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#normal_file-upload-image' + tmp_pos).attr('src', excel_normal);
-                    } else {
-                        // Read as data URL for other file types
-                        reader.readAsDataURL(file);
-                    }
-
-                    // Update UI elements
-                    $('#normal_image-upload-wrap' + tmp_pos).hide();
-                    $('#normal_file-upload-content' + tmp_pos).show();
-                    $('#normal_image-title' + tmp_pos).html(file.name);
-
-                    // Increment counters and positions
-                    tmp_pos += 1;
-                    normal_count += 1;
-
-                    // Add a new file upload row
-                    addFileNormal();
+                    })(pos, file_);
+                    reader.readAsDataURL(file_);
                 }
+
+                // Update UI for this file
+                $('#normal_image-upload-wrap' + pos).hide();
+                $('#normal_file-upload-content' + pos).show();
+                $('#normal_image-title' + pos).html(file_.name);
+
+                normal_count++;
+                pos++;
+
+                // create a new slot right away for the NEXT file
+                addFileNormal();
             }
 
-            // Show the remove files button
             $('#normal_remove_files').show();
         }
     }
 
     function addFileNormal() {
+        // Prevent multiple empty slots
+        if ($("#normal_upload" + normal_pos).length) return;
+
         var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
 
-        if((normal_count % 4) == 0) {
-            $('.normal_file_attachment').append(
-                '<div class="clearfix"></div>'
-            );
+        if ((normal_count % 4) == 0) {
+            $('.normal_file_attachment').append('<div class="clearfix"></div>');
         }
+
         $('.normal_file_attachment').append(
-            '<div class="col-md-3" id="normal_upload'+normal_pos+'">\n' +
+            '<div class="col-md-3" id="normal_upload' + normal_pos + '">\n' +
             '   <div class="file-upload">\n' +
-            '       <div class="text-center image-upload-wrap" id="normal_image-upload-wrap'+normal_pos+'">\n' +
-            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLNormal(this, '+normal_pos+');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.word_normalprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf_normal"/>\n' +
-            '           <img src="'+add_file_icon   +'" style="width: 50%; height: 50%;">\n' +
+            '       <div class="text-center image-upload-wrap" id="normal_image-upload-wrap' + normal_pos + '">\n' +
+            '           <input class="file-upload-input" multiple type="file" name="file_upload[]" onchange="readURLNormal(this, ' + normal_pos + ');" accept="image/png, image/jpeg, image/jpg, image/gif, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/pdf"/>\n' +
+            '           <img src="' + add_file_icon + '" style="width: 50%; height: 50%;">\n' +
             '       </div>\n' +
-            '       <div class="file-upload-content" id="normal_file-upload-content'+normal_pos+'">\n' +
-            '           <img class="file-upload-image" id="normal_file-upload-image'+normal_pos+'"/>\n' +
+            '       <div class="file-upload-content" id="normal_file-upload-content' + normal_pos + '">\n' +
+            '           <img class="file-upload-image" id="normal_file-upload-image' + normal_pos + '"/>\n' +
             '           <div class="image-title-wrap">\n' +
-            '               <small class="text-success"><small class="image-title" id="normal_image-title'+normal_pos+'" style="display:block; word_normal-wrap: break-word_normal;">Uploaded File</small></small>\n' +
-            '               <button type="button" id="normal_remove_upload'+normal_pos+'" onclick="removeUploadNormal('+normal_pos+')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
+            '               <small class="text-success"><small class="image-title" id="normal_image-title' + normal_pos + '" style="display:block; word-wrap: break-word;">Uploaded File</small></small>\n' +
+            '               <button type="button" id="normal_remove_upload' + normal_pos + '" onclick="removeUploadNormal(' + normal_pos + ')" class="remove-icon-btn"><i class="fa fa-trash"></i></button>\n' +
             '           </div>\n' +
             '       </div>\n' +
             '   </div>\n' +
             '</div>'
         );
-        normal_pos+=1;
+
+        console.log("After Adding - normal_pos:", normal_pos);
+        normal_pos++;
     }
 
     function removeFileNormal() {
-        $('.normal_file_attachment').html("");
+         $('.normal_file_attachment').html("");
         normal_count = 0;
         normal_pos = 1;
         $('#normal_remove_files').hide();
-        addFileNormal();
+        addFileNormal(); // always leave one slot
     }
 
     function removeUploadNormal(uploadCount){
-        $('#normal_upload' + uploadCount).remove();
-        upload_count -= 1;
-        if(normal_pos > uploadCount){
-            normal_pos -= 1;
+        $("#normal_upload" + uploadCount).remove();
+        normal_count--;
+
+        // If no files left, show remove button off
+        if (normal_count === 0) {
+            $('#normal_remove_files').hide();
         }
-        if(uploadCount === 0){
-            $('#remove_files_btn');
-        }
+
+        // Reindex all slots so positions are sequential
+        reindexNormalSlots();
     }
 
-    $(document).ready(function() {
-        for (var i = 0; i < normal_count; i++) {
-            $('#normal_image-upload-wrap' + i).bind('dragover', function () {
-                $('#normal_image-upload-wrap' + i).addClass('image-dropping');
-            });
-            $('#normal_image-upload-wrap' + i).bind('dragleave', function () {
-                $('#normal_image-upload-wrap' + i).removeClass('image-dropping');
-            });
-        }
+    function reindexNormalSlots() {
+        var slots = $(".normal_file_attachment > div");
+        normal_pos = 0;
+
+        slots.each(function () {
+            var newPos = normal_pos;
+
+            // Update IDs inside this slot
+            $(this).attr("id", "normal_upload" + newPos);
+            $(this).find(".image-upload-wrap").attr("id", "normal_image-upload-wrap" + newPos);
+            $(this).find(".file-upload-input").attr("onchange", "readURLNormal(this," + newPos + ")");
+            $(this).find(".file-upload-content").attr("id", "normal_file-upload-content" + newPos);
+            $(this).find(".file-upload-image").attr("id", "normal_file-upload-image" + newPos);
+            $(this).find(".image-title").attr("id", "normal_image-title" + newPos);
+            $(this).find(".remove-icon-btn").attr("onclick", "removeUploadNormal(" + newPos + ")");
+
+            normal_pos++;
+        });
+    }
+
+    $(document).ready(function () {
         $('#normal_remove_files').hide();
     });
     </script>
