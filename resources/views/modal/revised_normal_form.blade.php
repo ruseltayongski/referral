@@ -2625,7 +2625,6 @@
         });
 
         push_notification_diagnosis_ccmc = values.join(","); //diagnosis for CCMD for their push notification
-        console.log(values);
     }
 
     function othersDiagnosisRevised() {
@@ -3684,7 +3683,6 @@
             '</div>'
         );
 
-        console.log("After Adding - normal_pos:", normal_pos);
         normal_pos++;
     }
 

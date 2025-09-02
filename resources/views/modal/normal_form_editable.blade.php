@@ -505,13 +505,12 @@ $department_id = $appoitment_sched[0]->department_id;
             var id = $(this).val();
             if (this.checked) {
                 $("#icd_selected").append('=> ' + icd_description + ' ' + '<br><input id="icd" type="hidden" name="icd_ids[]" value="' + id + '">');
-                console.log("icd id: " + id);
             }
             clearOtherDiagnosis();
         });
 
         push_notification_diagnosis_ccmc = values.join(","); //diagnosis for CCMD for their push notification
-        console.log(values);
+        // console.log(values);
     }
 
     function othersDiagnosis() {
@@ -528,7 +527,7 @@ $department_id = $appoitment_sched[0]->department_id;
 
 <script>
     $('.normal_form').on('submit', function(e) {
-    console.log('Submitting CKD ID:', $('#ckd_id').val());
+    // console.log('Submitting CKD ID:', $('#ckd_id').val());
     });
     var upload_pos = 2;
     var upload_count = 0;
@@ -632,20 +631,20 @@ $department_id = $appoitment_sched[0]->department_id;
     }
 
     function showPreviewFile(index) {
-        console.log("file Upload :", fileInfoArray);
+        // console.log("file Upload :", fileInfoArray);
         let activeFiles = fileInfoArray.filter(file => file !== null);
-        console.log("Active files:", activeFiles);
-        
+        // console.log("Active files:", activeFiles);
+
         // If no valid files at this index, close modal
         if (!activeFiles[index]) {
-            console.log("No file found at index:", index);
+            // console.log("No file found at index:", index);
             $('#filePreviewModal').modal('hide');
             return;
         }
 
         let currentFile = activeFiles[index];
         $('#carousel-inner').empty();
-        console.log("Showing preview for file:", currentFile.name);
+        // console.log("Showing preview for file:", currentFile.name);
 
         let content = '';
 
@@ -769,7 +768,7 @@ $department_id = $appoitment_sched[0]->department_id;
         if (fileIndex !== -1) {
             // Remove the file from fileInfoArray
             fileInfoArray.splice(fileIndex, 1);
-            console.log("File removed successfully. Updated fileInfoArray:", fileInfoArray);
+            // console.log("File removed successfully. Updated fileInfoArray:", fileInfoArray);
             
             // Remove all existing file upload elements except the last one (add file button)
             $('.attachment').children().not(':last').remove();
@@ -804,7 +803,7 @@ $department_id = $appoitment_sched[0]->department_id;
                 
                 // Insert before the last element (add file button)
                 $('.attachment').children().last().before(newElement);
-                console.log("fileInfo", fileInfo);
+                // console.log("fileInfo", fileInfo);
                 // Set up the file input with the correct file
                 const currentInput = document.getElementById('file_upload_input' + position);
                 if (currentInput) {
