@@ -183,7 +183,7 @@
                 window.location.href = 'doctor/referral';
             },
             showIncomingModal(type) {
-                console.log(type);
+                // console.log(type);
                 $('#dashboard_modal').modal('show');
                 $('#dashboard_modal_body').html(loading);
                 axios.get('doctor/dashboard/getTransactions/'+type).then(response => {
@@ -298,12 +298,12 @@
                     this.left_sum += this.incoming_statistics.referred + this.incoming_statistics.redirected + this.incoming_statistics.transferred
                     this.right_sum += this.incoming_statistics.accepted + this.incoming_statistics.denied + this.incoming_statistics.seen_only + this.incoming_statistics.not_seen
                     if(this.left_sum > this.right_sum) {
-                        console.log("first")
+                        // console.log("first")
                         this.incoming_statistics.seen_only += this.left_sum - this.right_sum
                         this.right_sum += this.left_sum - this.right_sum
                     }
                     else if(this.left_sum < this.right_sum) {
-                        console.log('second')
+                        // console.log('second')
                         this.incoming_statistics.referred += this.right_sum - this.left_sum
                         this.left_sum += this.right_sum - this.left_sum;
                     }

@@ -454,7 +454,7 @@ $(document).ready(function() {
         }
 
         let end = Math.min(thumbPageStart + thumbPageSize, currentFiles.length);
-        console.log("thumbPageStart", thumbPageStart);
+        // console.log("thumbPageStart", thumbPageStart);
 
         // ✅ Render the current set of thumbnails
         for (let i = thumbPageStart; i < end; i++) {

@@ -23,7 +23,7 @@
             };
         },
         mounted() {
-            console.log('wwwww!');
+            // console.log('wwwww!');
             Echo.private(`messages.${this.user.id}`)
                 .listen('NewMessage', (e) => {
                     this.hanleIncoming(e.message);
@@ -46,7 +46,7 @@
                 this.messages.push(message);
             },
             hanleIncoming(message) {
-                console.log(message);
+                // console.log(message);
                 if (this.selectedContact && message.from == this.selectedContact.id) {
                     this.saveNewMessage(message);
                     return;

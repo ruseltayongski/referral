@@ -150,7 +150,7 @@ $counter = 1;
                 "_token" : "<?php echo csrf_token()?>"
             };
             $.post(url,json,function(data){
-                console.log(data);
+                // console.log(data);
                 if(data.success) {
                     $('#status'+id).attr('class','badge bg-light-blue');
                     $('#status'+id).html('SEEN');
@@ -169,7 +169,7 @@ $counter = 1;
             };
             $.post(url,json,function(data){
                 $('.loading').hide();
-                console.log(data.remarks);
+                // console.log(data.remarks);
                 if(data.status === 'resolved') {
                     $('#modal_remarks').val(data.remarks);
                     $('#modal_remarks').attr('readonly', true);

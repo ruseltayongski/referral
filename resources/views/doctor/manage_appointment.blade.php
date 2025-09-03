@@ -526,7 +526,7 @@
                         return;
 
                     } else {
-                        console.log('No conflicts.');
+                        // console.log('No conflicts.');
                     }
                 },
                 error: function(xhr, status, error) {
@@ -1046,7 +1046,7 @@
            // url = url.replace(':id', appointmentId);
 
             $.get(url, function(data) {
-                console.log('my appointed Id:asdasd',data);
+                // console.log('my appointed Id:asdasd',data);
 
                 $('#update_additionalTimeContainer').empty();//to empty the previous  generate form
                 if(data && data.length > 0){
@@ -1096,13 +1096,13 @@
                     let day = date.getDate();
                     let year = date.getFullYear();
                     let formattedDate = `${month} ${day}, ${year}`;
-                    console.log("date format",formattedDate);
+                    // console.log("date format",formattedDate);
                     // if(currentDate <= appointment.appointed_date && !alertshown && available_doctor){
                     if(available_doctor && !alertshown){
                         // alert("Are you sure you want to delete this Present or Future Appointment?");
                         alertshown = true;
                         showdeletModal = false;
-                        console.log('showdeletModal',showdeletModal);
+                        // console.log('showdeletModal',showdeletModal);
                         Lobibox.alert("error",
                             {
                                 msg: `You cannot delete this appointment. It has already been scheduled by the assigned doctor on ${formattedDate}.`
@@ -1218,7 +1218,7 @@
 
         $(document).ready(function() {
             var facility_id = $(`#id`).val();
-            console.log(facility_id);
+            // console.log(facility_id);
 
             if (facility_id) {
                 $.get("{{ url('get-doctors').'/' }}" + facility_id, function(result) {
@@ -1265,7 +1265,7 @@
             $(".appointment_count").val(++currentCount);
 
             var adjustedCounts = currentCount - deleteCount;
-            console.log("adjustedCounts", adjustedCounts);
+            // console.log("adjustedCounts", adjustedCounts);
             if (adjustedCounts < 1) adjustedCounts = 1;
 
             var timeInputGroup = $('<div class="time-input-group">');
@@ -1377,7 +1377,7 @@
             var fromTimeObj = new Date(appointmentDate + "T" + fromTime);
             var toTimeObj = new Date(appointmentDate + "T" + toTime);
 
-            console.log("toTimeObj", toTimeObj);
+            // console.log("toTimeObj", toTimeObj);
             if (toTimeObj <= fromTimeObj) {
                 alert('End time must be after start time');
                 toInput.val('');
@@ -1447,7 +1447,7 @@
             $('.select2').val(null).trigger('change'); 
             $('#additionalTimeContainer').empty();
             $(".appointment_count").val(1);
-            console.log("wok ra");
+            // console.log("wok ra");
 
             setTimeout(() => {
                 skipAlertCLose = false;
@@ -1538,7 +1538,7 @@
 
                 $('#addAppointmentFormUpdate').find(`[name^="update_appointed_time"], [name^="update_appointed_time_to"], [name^="Update_available_doctor"]`).val('');
 
-                console.log("it is work");
+                // console.log("it is work");
             });
 
             timeInputGroup.find('.delete-time-input').on('click', function () {
@@ -1550,7 +1550,7 @@
             if(appointment){
                 // console.log('timeInputGroup', timeInputGroup.length);
                 timeInputGroup.find('.delete-time-input').on('click', function () {
-                console.log('my appointment delete', appointment);
+                // console.log('my appointment delete', appointment);
                 var appoint_id = appointment.id;
                 var url = "{{ route('delete-timeSlot', ':id') }}";
                 url = url.replace(':id', appoint_id);
@@ -1619,7 +1619,7 @@
                 const timeOverlap = (fromTime < slot.to && toTime > slot.from);
 
                 if (timeOverlap) {
-                    console.log("conflict appointmentSlot", appointmentSlot);
+                    // console.log("conflict appointmentSlot", appointmentSlot);
                     return {
                         hasConflict: true,
                         message: `Time slot ${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} conflicts with existing appointment ${slot.from.toLocaleTimeString()} - ${slot.to.toLocaleTimeString()}`
@@ -1636,11 +1636,11 @@
             
             let OrigslotIndex  = slotIndex - (UpdatedeleteCount + 1);  
                 
-            console.log("OrigslotIndex update", "equal", OrigslotIndex);
+            // console.log("OrigslotIndex update", "equal", OrigslotIndex);
 
             const conflict = checkConflict(OrigslotIndex, fromTime, toTime);
             if (conflict.hasConflict) {
-                console.log(conflict.message);
+                // console.log(conflict.message);
                 
                 Lobibox.alert("error", {
                     msg: conflict.message
@@ -1667,7 +1667,7 @@
                 appointmentSlot.push(newSlot);
             
             }
-            console.log("total update slot", appointmentSlot);
+            // console.log("total update slot", appointmentSlot);
             return true;
         }
 
@@ -1776,7 +1776,7 @@
             appointmentSlot = appointmentSlot.filter(slot => {
                 return !isNaN(slot.from.getTime()) && !isNaN(slot.to.getTime());
             });
-            console.log("Initial appointmentSlot array:", appointmentSlot);
+            // console.log("Initial appointmentSlot array:", appointmentSlot);
             //updateAddSlotButtonState();
         });
 
@@ -1791,7 +1791,7 @@
             //updateAddSlotButtonState();
             
             if (!updatefromTime || !updatetoTime || !UpdateDate) {
-                console.log("Missing time or date input");
+                // console.log("Missing time or date input");
                 return;
             }
 
@@ -1804,7 +1804,7 @@
                 } else {
                     // Revert to original values if update fails
                     let originalSlot = appointmentSlot[slotIndex];
-                    console.log("originalSlot", originalSlot);
+                    // console.log("originalSlot", originalSlot);
                     if (originalSlot) {
                         $(`#update_appointed_time${slotIndex+1}`).val(originalSlot.from.toTimeString().slice(0,5));
                         $(`#update_appointedTime_to${slotIndex+1}`).val(originalSlot.to.toTimeString().slice(0,5));
@@ -1822,12 +1822,12 @@
             let newfromTime = $(`#empty_appointed_time${index+1}`).val().slice(0,5);
             let newTotime = $(`#empty_appointedTime_to${index+1}`).val().slice(0,5);
             var UpdateDate = $("#updateAppointmentId").val();
-            console.log("update time", newTotime);
+            // console.log("update time", newTotime);
             deleteTimefrom = newfromTime && newTotime;
             //updateAddSlotButtonState();
 
             if (!newfromTime || !newTotime || !UpdateDate) {
-                console.log("Missing time or date input");
+                // console.log("Missing time or date input");
                 return;
             }
 
@@ -1942,7 +1942,7 @@ function deleteTimeInput(appointment){
     $(document).ready(function() {
         $('#cancelbtn-clear').on('click', function() {
              $('#delete_additionalTimeContainer').empty();
-            console.log("it works");
+            // console.log("it works");
         });
 
             $('#appointment_filter').select2({
@@ -1955,7 +1955,7 @@ function deleteTimeInput(appointment){
 // ----------------------Trapping Appointment Time From and Time To and Date----------------------------//    
     const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
     document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
-    console.log('today', today);
+    // console.log('today', today);
 
 
    $(document).ready(function() {
@@ -2133,8 +2133,8 @@ function deleteTimeInput(appointment){
                     {
                         msg: "Appointment time Slot is already taken"
                     });
-                    console.log("Cleared From Input:", fromInput);
-                    console.log("Cleared To Input:", toInput);
+                    // console.log("Cleared From Input:", fromInput);
+                    // console.log("Cleared To Input:", toInput);
 
                     fromInput.val('');
                     toInput.val('');
@@ -2176,7 +2176,7 @@ function deleteTimeInput(appointment){
             allAppointmentTimes = allAppointmentTimes.filter(appointment =>appointment.to instanceof Date && !isNaN(appointment.to));
 
 
-            console.log("allAppointmentTimes", allAppointmentTimes);
+            // console.log("allAppointmentTimes", allAppointmentTimes);
             // console.log("selectedDoctors::", timeObject);
             // console.log('slot', index);
             $('input[name="appointed_date"]').data('fromTimeObj', fromTimeObj);
@@ -2191,7 +2191,7 @@ function deleteTimeInput(appointment){
             $('.delete-time-input').on('click', function () {
 
 
-                console.log("I remove the", allAppointmentTimes, 'index count', index);
+                // console.log("I remove the", allAppointmentTimes, 'index count', index);
 
 
             });

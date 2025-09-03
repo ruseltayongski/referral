@@ -22,7 +22,7 @@
             }
         },
         mounted() {
-            console.log(this.activity_id)
+            // console.log(this.activity_id)
             this.__getLaboratories()
         },
         watch: {
@@ -118,7 +118,7 @@
             async __saveLaboratories(params) {
                 try{
                     const response = await saveLabRequest(params)
-                    console.log(response.data)  
+                    // console.log(response.data)  
                 }catch (error){
                      console.error('Error saving laboratories:', error);
                 }

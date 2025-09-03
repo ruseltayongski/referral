@@ -106,7 +106,7 @@ export default {
   },
     mounted() {
     this.fetchMessages();
-    console.log("Modal Mounted, fetching messages");
+    // console.log("Modal Mounted, fetching messages");
 
     // window.Echo.channel("reco") // Replace "feedback-channel" with your channel name
     //     .listen("SocketReco", (event) => {
@@ -130,16 +130,16 @@ export default {
         : `${this.baseUrl}/resources/img/receiver.png`; // Replace this with the correct public path
   },
     fetchMessages() {
-        console.log("path image url", this.baseUrl, 'userId::', this.userId);
+        // console.log("path image url", this.baseUrl, 'userId::', this.userId);
         axios.get(`/${this.fetchUrl}/${this.code}?ajax=true`).then((response) => {
         this.messages = response.data.messages;
-        console.log(" response",  response);
+        // console.log(" response",  response);
         this.scrollToBottom();
         
         });
     },
     sendMessage(){
-        console.log("sender image",  this.getImagePath("sender.png"), this.messageData);
+        // console.log("sender image",  this.getImagePath("sender.png"), this.messageData);
          if (this.newMessage.trim()) {
         const newMsg = {
           senderId: this.userId,
@@ -171,7 +171,7 @@ export default {
     code: "fetchMessages",
       isVisible: {
         handler(newVal) {
-        console.log("isVisible changed to:", newVal);
+        // console.log("isVisible changed to:", newVal);
         if (newVal) {
             this.fetchMessages();
         }

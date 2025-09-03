@@ -585,6 +585,7 @@
     var pregnant_pos_ = 2;
     var pregnant_count = 0 ;
     var pregnant_count_ = 0 ;
+
     function readURLPregnant(input, pos, version) {
         var word = '{{ asset('resources/img/document_icon.png') }}';
         var pdf = '{{ asset('resources/img/pdf_icon.png') }}';
@@ -625,40 +626,171 @@
         
         }else if (version === 2){
             if (input.files) {
-            var tmp_pos = pos;
-            for(var i = 0; i < input.files.length; i++) {
-                var file = input.files[i];
-                if(file && file !== null) {
-                    var reader = new FileReader();
-                    var type = file.type;
-                    if(type === 'application/pdf') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',pdf);
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',word);
-                        pos+=1;
-                    } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
-                        $('#pregnant_file-upload-image_'+pos).attr('src',excel);
-                        pos+=1;
-                    } else {
-                        reader.onloadend = function(e) {
-                            $('#pregnant_file-upload-image_'+pos).attr('src',e.target.result);
+                var tmp_pos = pos;
+                for(var i = 0; i < input.files.length; i++) {
+                    var file = input.files[i];
+                    if(file && file !== null) {
+                        var reader = new FileReader();
+                        var type = file.type;
+                        if(type === 'application/pdf') {
+                            $('#pregnant_file-upload-image_'+pos).attr('src',pdf);
                             pos+=1;
-                        };
+                        } else if(type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                            $('#pregnant_file-upload-image_'+pos).attr('src',word);
+                            pos+=1;
+                        } else if(type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                            $('#pregnant_file-upload-image_'+pos).attr('src',excel);
+                            pos+=1;
+                        } else {
+                            reader.onloadend = function(e) {
+                                $('#pregnant_file-upload-image_'+pos).attr('src',e.target.result);
+                                pos+=1;
+                            };
+                        }
+                        $('#pregnant_image-upload-wrap_'+tmp_pos).hide();
+                        $('#pregnant_file-upload-content_'+tmp_pos).show();
+                        $('#pregnant_image-title_'+tmp_pos++).html(file.name);
+                        reader.readAsDataURL(file);
+                        pregnant_count_+=1;
                     }
-                    $('#pregnant_image-upload-wrap_'+tmp_pos).hide();
-                    $('#pregnant_file-upload-content_'+tmp_pos).show();
-                    $('#pregnant_image-title_'+tmp_pos++).html(file.name);
-                    reader.readAsDataURL(file);
-                    pregnant_count_+=1;
+                    addFilePregnant(2);
                 }
-                addFilePregnant(2);
             }
-        }
-        $('#preg_remove_files_').show();
+            $('#preg_remove_files_').show();
+            //************************************************************** */
+            
+                if (input.files) {
+                for (var i = 0; i < input.files.length; i++) {
+                    var file_ = input.files[i];
+                    if (!file_) continue;
+
+                    var fileType= file_.type;
+
+                    // Show preview or icon
+                    if (fileType === 'application/pdf') {
+                        $('#pregnant_file-upload-image_' + pos).attr('src', pdf);
+                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                        $('#pregnant_file-upload-image_' + pos).attr('src', word);
+                    } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                        $('#pregnant_file-upload-image_' + pos).attr('src', excel);
+                    } else {
+                        var reader = new FileReader();
+                        reader.onloadend = (function (pos, file_) {
+                            return function (e) {
+                                $('#pregnant_file-upload-image_' + pos).attr('src', e.target.result);
+                            };
+                        })(pos, file_);
+                        reader.readAsDataURL(file_);
+                    }
+
+                    // Update UI for this file
+                    $('#pregnant_image-upload-wrap_' + pos).hide();
+                    $('#pregnant_file-upload-content_' + pos).show();
+                    $('#pregnant_image-title_' + pos).html(file_.name);
+
+                    pregnant_count_++;
+                    pos++;
+
+                    // create a new slot right away for the NEXT file
+                    addFilePregnant(2);
+                }
+
+                $('#preg_remove_files_').show();
+            }
         }
        
     }
+
+    function readURLPregnant(input, pos, version) {
+        var word  = '{{ asset('resources/img/document_icon.png') }}';
+        var pdf   = '{{ asset('resources/img/pdf_icon.png') }}';
+        var excel = '{{ asset('resources/img/sheet_icon.png') }}';
+
+        if (!input.files || input.files.length === 0) return;
+
+        if (version === 1) {
+            var tmp_pos = pos;
+
+            for (var i = 0; i < input.files.length; i++) {
+                var file = input.files[i];
+                if (!file) continue;
+
+                var type = file.type;
+                var reader = new FileReader();
+
+                if (type === 'application/pdf') {
+                    $('#pregnant_file-upload-image' + pos).attr('src', pdf);
+                } else if (type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                    $('#pregnant_file-upload-image' + pos).attr('src', word);
+                } else if (type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                    $('#pregnant_file-upload-image' + pos).attr('src', excel);
+                } else {
+                    // Image or other file
+                    reader.onloadend = (function (pos) {
+                        return function (e) {
+                            $('#pregnant_file-upload-image' + pos).attr('src', e.target.result);
+                        };
+                    })(pos);
+                    reader.readAsDataURL(file);
+                }
+
+                // Update UI
+                $('#pregnant_image-upload-wrap' + tmp_pos).hide();
+                $('#pregnant_file-upload-content' + tmp_pos).show();
+                $('#pregnant_image-title' + tmp_pos).html(file.name);
+
+                pregnant_count++;
+                pos++;
+                tmp_pos++;
+
+                // Create new empty slot
+                addFilePregnant(1);
+            }
+
+            $('#preg_remove_files').show();
+
+        } else if (version === 2) {
+            var tmp_pos2 = pos;
+
+            for (var j = 0; j < input.files.length; j++) {
+                var file_ = input.files[j];
+                if (!file_) continue;
+
+                var type2 = file_.type;
+                var reader2 = new FileReader();
+
+                if (type2 === 'application/pdf') {
+                    $('#pregnant_file-upload-image_' + pos).attr('src', pdf);
+                } else if (type2 === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                    $('#pregnant_file-upload-image_' + pos).attr('src', word);
+                } else if (type2 === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                    $('#pregnant_file-upload-image_' + pos).attr('src', excel);
+                } else {
+                    reader2.onloadend = (function (pos) {
+                        return function (e) {
+                            $('#pregnant_file-upload-image_' + pos).attr('src', e.target.result);
+                        };
+                    })(pos);
+                    reader2.readAsDataURL(file_);
+                }
+
+                // Update UI
+                $('#pregnant_image-upload-wrap_' + tmp_pos2).hide();
+                $('#pregnant_file-upload-content_' + tmp_pos2).show();
+                $('#pregnant_image-title_' + tmp_pos2).html(file_.name);
+
+                pregnant_count_++;
+                pos++;
+                tmp_pos2++;
+
+                // Create new empty slot
+                addFilePregnant(2);
+            }
+
+            $('#preg_remove_files_').show();
+        }
+    }
+
     function addFilePregnant(version) {
         var add_file_icon = '{{ asset('resources/img/add_file.png') }}';
 
@@ -716,66 +848,95 @@
     }
 
     function removeFilePregnant(version) {
-        if (version === 1){
+        if (version === 1) {
             $('.pregnant_file_attachment').html("");
-        pregnant_count = 0;
-        pregnant_pos = 1;
-        $('#preg_remove_files').hide();
-        addFilePregnant(1);
-
-        }else if (version === 2){
+            pregnant_count = 0;
+            pregnant_pos = 1;
+            $('#preg_remove_files').hide();
+            addFilePregnant(1);
+        } else if (version === 2) {
             $('.pregnant_file_attachment_').html("");
-        pregnant_count_ = 0;
-        pregnant_pos_ = 1;
-        $('#preg_remove_files_').hide();
-        addFilePregnant(2);
+            pregnant_count_ = 0;
+            pregnant_pos_ = 1;
+            $('#preg_remove_files_').hide();
+            addFilePregnant(2);
         }
     }
 
-    function removeUploadPregnant(uploadCount, version){
-        if (version === 1){
+    function removeUploadPregnant(uploadCount, version) {
+        if (version === 1) {
             $('#pregnant_upload' + uploadCount).remove();
-        upload_count -= 1;
-        if(pregnant_pos > uploadCount){
-            pregnant_pos -= 1;
-        }
-        if(uploadCount === 0){
-            $('#remove_files_btn');
-        }
-        }else if (version === 2){
+            reindexPregnant(1);
+        } else if (version === 2) {
             $('#pregnant_upload_' + uploadCount).remove();
-        upload_count -= 1;
-        if(pregnant_pos_ > uploadCount){
-            pregnant_pos_ -= 1;
+            reindexPregnant(2);
         }
-        if(uploadCount === 0){
-            $('#remove_files_btn');
-        }
-        }
-      
-   
-
     }
 
-    $(document).ready(function() {
-        for (var i = 0; i < pregnant_count; i++) {
-            $('#pregnant_image-upload-wrap' + i).bind('dragover', function () {
-                $('#pregnant_image-upload-wrap' + i).addClass('image-dropping');
-            });
-            $('#pregnant_image-upload-wrap' + i).bind('dragleave', function () {
-                $('#pregnant_image-upload-wrap' + i).removeClass('image-dropping');
-            });
-        }
+    /**
+     * Reindex all file upload slots after one is removed
+     */
+    function reindexPregnant(version) {
+        if (version === 1) {
+            let items = $('.pregnant_file_attachment .col-md-3');
+            pregnant_count = items.length;
+            pregnant_pos = pregnant_count + 1;
 
-        for (var i = 0; i < pregnant_count_; i++) {
-            $('#pregnant_image-upload-wrap_' + i).bind('dragover', function () {
-                $('#pregnant_image-upload-wrap_' + i).addClass('image-dropping');
+            items.each(function (index) {
+                let newIndex = index + 1;
+                $(this).attr('id', 'pregnant_upload' + newIndex);
+                $(this).find('.image-upload-wrap')
+                    .attr('id', 'pregnant_image-upload-wrap' + newIndex)
+                    .find('input')
+                    .attr('onchange', 'readURLPregnant(this,' + newIndex + ',1)');
+                $(this).find('.file-upload-content')
+                    .attr('id', 'pregnant_file-upload-content' + newIndex);
+                $(this).find('.file-upload-image')
+                    .attr('id', 'pregnant_file-upload-image' + newIndex);
+                $(this).find('.image-title')
+                    .attr('id', 'pregnant_image-title' + newIndex);
+                $(this).find('button')
+                    .attr('id', 'pregnant_remove_upload' + newIndex)
+                    .attr('onclick', 'removeUploadPregnant(' + newIndex + ',1)');
             });
-            $('#pregnant_image-upload-wrap_' + i).bind('dragleave', function () {
-                $('#pregnant_image-upload-wrap_' + i).removeClass('image-dropping');
+
+            if (pregnant_count === 0) {
+                $('#preg_remove_files').hide();
+                addFilePregnant(1);
+            }
+        } else if (version === 2) {
+            let items = $('.pregnant_file_attachment_ .col-md-3');
+            pregnant_count_ = items.length;
+            pregnant_pos_ = pregnant_count_ + 1;
+
+            items.each(function (index) {
+                let newIndex = index + 1;
+                $(this).attr('id', 'pregnant_upload_' + newIndex);
+                $(this).find('.image-upload-wrap')
+                    .attr('id', 'pregnant_image-upload-wrap_' + newIndex)
+                    .find('input')
+                    .attr('onchange', 'readURLPregnant(this,' + newIndex + ',2)');
+                $(this).find('.file-upload-content')
+                    .attr('id', 'pregnant_file-upload-content_' + newIndex);
+                $(this).find('.file-upload-image')
+                    .attr('id', 'pregnant_file-upload-image_' + newIndex);
+                $(this).find('.image-title')
+                    .attr('id', 'pregnant_image-title_' + newIndex);
+                $(this).find('button')
+                    .attr('id', 'pregnant_remove_upload' + newIndex)
+                    .attr('onclick', 'removeUploadPregnant(' + newIndex + ',2)');
             });
+
+            if (pregnant_count_ === 0) {
+                $('#preg_remove_files_').hide();
+                addFilePregnant(2);
+            }
         }
+    }
+
+    $(document).ready(function () {
         $('#preg_remove_files').hide();
         $('#preg_remove_files_').hide();
     });
+
 </script>

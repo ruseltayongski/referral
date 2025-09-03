@@ -56,20 +56,20 @@
             }
         },
         created() {
-            console.log("WELCOME to VUE JS...")
+            // console.log("WELCOME to VUE JS...")
             this.getUserOnboard()
             Echo.join('chat')
                 .here(users => {
-                    console.log("Listen here!!!")
+                    // console.log("Listen here!!!")
                     //this.users = users;
                     this.users = users.filter((user) => user.id !== this.user_login.id)
                 })
                 .joining(user => {
-                    console.log("joining")
+                    // console.log("joining")
                     this.users.push(user);
                 })
                 .leaving(user => {
-                    console.log("leaving")
+                    // console.log("leaving")
                     this.users = this.users.filter(u => u.id !== user.id);
                 })
                 .listenForWhisper('typing', ({id, name}) => {
@@ -81,12 +81,12 @@
                 })
                 .listen('MessageSent', (event) => {
                     if(this.messages.length === 0) {
-                        console.log("null");
+                        // console.log("null");
                         this.fetchMessages(event.message.from)
                         this.selected = event.user.id
                     }
                     else if(this.user_login.id === event.message.to){
-                        console.log("get event!")
+                        // console.log("get event!")
                         this.selected = event.user.id
                         this.messages.push({
                             from: event.message.from,
@@ -111,7 +111,7 @@
             addMessage(message) {
                 this.messages.push(message);
                 axios.post('conversation/send', message).then(response => {
-                    console.log(response.data);
+                    // console.log(response.data);
                 });
             },
             getUserOnboard() {

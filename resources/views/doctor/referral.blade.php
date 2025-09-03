@@ -408,7 +408,7 @@ $user = Session::get('auth');
             
                 selectedButtonData = $(this).data(); 
                 let telemedValue = selectedButtonData.telemed; // Get telemedicine value
-                console.log("telemedValue", telemedValue, parseInt(telemedValue) == 1);
+                // console.log("telemedValue", telemedValue, parseInt(telemedValue) == 1);
                 // console.log("Telemedicine Value:", telemedValue); // Debugging
                 
                 if (parseInt(telemedValue) == 1) {

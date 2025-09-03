@@ -107,7 +107,7 @@ $count = 1;
     $('#ongoing_btn, #resolve_btn').hide();
 
     function changeStatus(status) {
-        console.log(status);
+        // console.log(status);
         var id = $('#modal_id').val();
         if(status === 'resolved') {
             $('#add_remarks').hide();
