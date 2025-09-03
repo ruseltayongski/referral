@@ -112,6 +112,7 @@
     $('.edit_department_normal').on('change',function() {
         var referred_facility = $('.edit_facility_normal').val();
         var id = $(this).val();
+        console.log('dept id: ',id);
         var list = "{{ url('list/doctor') }}";
         if(id){
             if(referred_facility==0){
@@ -121,6 +122,7 @@
                 url: list+'/'+referred_facility+'/'+id,
                 type: 'GET',
                 success: function(data){
+                    console.log("normal Data:",data);
                     $('.edit_action_md').empty()
                         .append($('<option>', {
                             value: '',

@@ -2431,31 +2431,43 @@
                             </div> -->
 
                             <div class="row">
-                            <div class="col-lg-12">
-                                <div class="container-referral2">
-                                    <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
-                                        <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
-                                        <span class="pull-right"><i class="fa fa-plus"></i></span>
-                                    </button><br><br>
-                                </div>
-                                <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
-                                    <i>Select reason for referral:</i><span class="text-red">*</span>
-                                    <div class="container-referral">
-                                        <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
-                                            <option value="">Select reason for referral</option>
-                                            <option value="-1">Other reason for referral</option>
-                                            @foreach($reason_for_referral as $reason_referral)
-                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
-                                            @endforeach
-                                        </select><br><br>
-                                        <div id="other_reason_referral_div" style="display:none;">
-                                            <span>Other Reason for Referral:</span> <br/>
-                                            <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" require></textarea>
+                                <div class="col-lg-12">
+                                    <div class="container-referral2">
+                                        <button class="btn btn-m collapsed" type="button" style="width: 100%;" data-toggle="collapse" data-target="#collapse_reason_referral" aria-expanded="false" aria-controls="collapse_reason_referral">
+                                            <b>REASON FOR REFERRAL</b><i> (required)</i><span class="text-red">*</span>
+                                            <span class="pull-right"><i class="fa fa-plus"></i></span>
+                                        </button><br><br>
+                                    </div>
+                                    <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
+                                        <i>Select reason for referral:</i><span class="text-red">*</span>
+                                        <div class="container-referral">
+                                            <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
+                                                <option value="">Select reason for referral</option>
+                                                <option value="-1">Other reason for referral</option>
+                                                @foreach($reason_for_referral as $reason_referral)
+                                                    <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                                @endforeach
+                                            </select><br><br>
+                                            <div id="other_reason_referral_div" style="display:none;">
+                                                <span>Other Reason for Referral:</span> <br/>
+                                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" require></textarea>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
+                            @if(empty($appointmentParam))
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                    
+                                        <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
+                                            <option value="">Any...</option>
+                                        </select>
+                                    </div>
+                                </div><br>
+                            @endif
 
                             <hr />
                             <div class="form-footer pull-right">

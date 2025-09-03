@@ -410,7 +410,7 @@ class PatientCtrl extends Controller
             'referred_to' => ($status == 'walkin') ? $user->facility_id : $req->referred_facility,
             'department_id' => $req->referred_department,
             'referring_md' => ($status == 'walkin') ? 0 : $user->id,
-            'action_md' => '',
+            'action_md' => $req->reffered_md ? $req->reffered_md : 0,
             'type' => $type,
             'form_id' => $form_id,
             'form_type' => 'version1',

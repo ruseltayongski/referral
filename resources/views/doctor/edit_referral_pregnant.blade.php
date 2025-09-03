@@ -181,7 +181,7 @@ $facilities = \App\Facility::select('id','name')
                 <span class="referring_contact">{{ $form['pregnant']->referring_contact }}</span>
             </div>
         </div><br>
-
+      
         <div class="row">
             <div class="col-md-12">
                 <small class="text-success"><b>ACCOMPANIED BY THE HEALTH WORKER: </b></small>
@@ -352,7 +352,6 @@ $facilities = \App\Facility::select('id','name')
                             </select>
                         </td>
                     </tr>
-
                     <tr>
                         <td colspan="4" id="other_reason_referral">
                         </td>
@@ -424,8 +423,18 @@ $facilities = \App\Facility::select('id','name')
                     </tr>
                 </table>
             </div>
-        </div>
+        </div> <br>
 
+        @if($form['pregnant']->telemedicine == 0)
+            <div class="row">
+                <div class="col-md-12">
+                    <small class="text-success"><b>NAME OF DOCTOR (REFERRED HOSPITAL):</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                    <select name="referred_md" class="form-control edit_pregnant_action_md" style="width: 100%;">
+                        <option value="">Any</option>
+                    </select>
+                </div>
+            </div> <br>
+        @endif
         <div class="row">
             <div class="col-md-12">
                 <div class="with_file_attached hide">

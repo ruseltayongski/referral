@@ -158,6 +158,10 @@ $user = Session::get('auth');
                 </tr>
             @endif
 
+             <tr>
+                <td colspan="6">Name of referred MD/HCW- Mobile Contact # (ReCo): <span class="referred_md form-details">{{$form['pregnant']->md_referred }}</span></td>
+            </tr>
+
             @if(isset($file_path))
                 <tr>
                     <td colspan="6">

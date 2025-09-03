@@ -347,15 +347,26 @@ $user = Session::get('auth');
             // const referring_md_status = userid == action_md ? 'no' : 'yes';
             const referring_md_status = 'no';
             let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${tracking_id}&code=${referral_code}&form_type=${form_type}&referring_md=${referring_md_status}&activity_id=${activity_id}`;
+           
             let newWindow = window.open(url, windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {
                 newWindow.moveTo(0, 0);
                 newWindow.resizeTo(screen.availWidth, screen.availHeight);
             }
+
+            const checkWindowClosed = setInterval(() => {
+                if (newWindow && newWindow.closed) {
+                    console.log("Telemedicine window closed, removing tracking_id...");
+                    localStorage.removeItem("telemedicine_tracking_id");
+                    clearInterval(checkWindowClosed); // Stop checking once closed
+                }
+            }, 1000)
+
             const updateExamined = {
                 code : referral_code
             }
             $.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined, function(response) {
+                localStorage.setItem("telemedicine_tracking_id", tracking_id);
                 console.log(response)
             })
         }

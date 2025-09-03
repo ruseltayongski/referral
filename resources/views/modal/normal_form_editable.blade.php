@@ -314,10 +314,9 @@ $department_id = $appoitment_sched[0]->department_id;
                             <div class="col-md-12">
                                 <div id="other_reason_referral"></div>
                             </div>
-                        </div><br>
+                        </div><br>       
 
-                        @if($telemedicine)
-                        <div class="row">
+                        <!-- <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
                                 @if($appointmentParam)
@@ -330,11 +329,19 @@ $department_id = $appoitment_sched[0]->department_id;
                                     <option value="">Any...</option>
                                 </select>
                                 @endif
-
                             </div>
-                        </div><br>
+                        </div><br> -->
+                        @if(empty($appointmentParam))
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                
+                                    <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
+                                        <option value="">Any...</option>
+                                    </select>
+                                </div>
+                            </div><br>
                         @endif
-
                         <!-- <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
