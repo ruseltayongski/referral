@@ -1108,7 +1108,7 @@
                                                                     <img class="file-upload-image" id="normal_file-upload-image1"/>
                                                                     <div class="image-title-wrap">
                                                                         <small class="text-success"><small class="image-title" id="normal_image-title1" style="display:block; word_normal-wrap: break-word_normal;">Uploaded File</small></small>
-                                                                        {{--<button type="button" id="normal_remove_upload1" onclick="removeUploadNormal(1)" class="btn-sm remove-image">Remove</button>--}}
+                                                                        <button type="button" id="normal_remove_upload1" onclick="removeUploadNormal(1)" class="remove-icon-btn"><i class="fa fa-trash"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
