@@ -60,12 +60,80 @@
                     }));
                 });
                 $('.edit_department_pregnant').val("<?php echo $form['pregnant']->department_id;?>");
+                setReferredMd();
             },
             error: function(){
                 $('#serverModal').modal();
             }
         });
     }
+
+    function setReferredMd() {
+        var referred_facility = $('.edit_facility_pregnant').val();
+        var id = $('.edit_department_pregnant').val();
+        var list = "{{ url('list/doctor') }}";
+        console.log("department Pregnant:", id);
+        if(id){
+            if(referred_facility==0){
+                referred_facility = "{{ $user->facility_id }}";
+            }
+            $.ajax({
+                url: list+'/'+referred_facility+'/'+id,
+                type: 'GET',
+                success: function(data){
+                    $('.edit_pregnant_action_md').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Any...'
+                        }));
+                    jQuery.each(data, function(i,val){
+                        $('.edit_pregnant_action_md').append($('<option>', {
+                            value: val.id,
+                            text: 'Dr. ' + val.fname + ' ' + val.mname + ' ' + val.lname + ' - ' + val.contact,
+                        }));
+                    });
+                    $('.edit_pregnant_action_md').val("<?php echo $form['pregnant']->md_referred_id? $form['pregnant']->md_referred_id : $form['pregnant']->action_md ;?>");
+                    console.log("formd_referred_id:", <?php echo $form['pregnant']->md_referred_id; ?>);
+                },
+                error:function(){
+                    $('#serverModal').modal();
+                }
+            });
+        }
+    }
+
+     $('.edit_department_pregnant').on('change',function() {
+        var referred_facility = $('.edit_facility_pregnant').val();
+        var id = $(this).val();
+        console.log("pregnant Dept Id", id);
+        var list = "{{ url('list/doctor') }}";
+        if(id){
+            if(referred_facility==0){
+                referred_facility = "{{ $user->facility_id }}";
+            }
+            $.ajax({
+                url: list+'/'+referred_facility+'/'+id,
+                type: 'GET',
+                success: function(data){
+                    console.log('pregnant data:',data);
+                    $('.edit_pregnant_action_md').empty()
+                        .append($('<option>', {
+                            value: '',
+                            text : 'Any...'
+                        }));
+                    jQuery.each(data, function(i,val){
+                        $('.edit_pregnant_action_md').append($('<option>', {
+                            value: val.id,
+                            text : 'Dr. '+val.fname+' '+val.mname+' '+val.lname+' - '+val.contact
+                        }));
+                    });
+                },
+                error:function(){
+                    $('#serverModal').modal();
+                }
+            });
+        }
+    });
 
     $('.edit_facility_pregnant').on('change',function(){
         var id = $(this).val();

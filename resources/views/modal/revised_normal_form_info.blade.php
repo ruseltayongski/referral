@@ -347,6 +347,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                     <small class="text-success">Name of Patient</small><br>
                                     <span class="patient_name">{{$form->patient_name}}</span>
                                 </div>
+                               
                                 <div class="col-md-4">
                                     <small class="text-success">Address</small><br>
                                     <span class="patient_address">{{$form->patient_address}}</span>
@@ -2908,7 +2909,7 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                     </button><br><br>
                                 </div>
                                 <div class="collapse" id="collapse_reason_referral_normInfo" style="width: 100%;">
-                                <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span><br>
+                                    <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span><br>
                                     <select name="reason_referral" class="form-control-select select2 reason_referral" required="">
                                         <option value="">Select reason for referral</option>
                                         <option value="-1">Other reason for referral</option>
@@ -2918,8 +2919,16 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                     </select><br><br>
                                         <div id="other_reason_referral"></div>
                                     </div>
-                                </div>                          
+                                </div> 
+                                
+                                <div style="width: 100%;">
+                                    <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                    <select name="referred_md_normal" class="edit_action_md form-control-select" style="width: 100%">
+                                        <option value="">Any...</option>
+                                    </select>
+                                </div>
                         </div>
+
                         <div class="form-footer pull-right" style="margin: 10px;">
                         <button type="submit" id="edit_save_btn" class="btn btn-primary btn-flat btn-submit"><i class="fa fa-send"></i> Update</button>
                 </div>

@@ -309,7 +309,7 @@ $facilities = \App\Facility::select('id','name')
                         <br>
                         <div class="row" style="margin: 5px;">
                             <div class="col-md-4">
-                                <small class="text-success">Name of Referring Facility</small><br>
+                                <small class="text-success">Name of Referring Facility </small><br>
                                 &nbsp;<span>{{ $form['pregnant']->referring_facility }}</span>
                             </div>
                             <div class="col-md-4">
@@ -2871,7 +2871,7 @@ $facilities = \App\Facility::select('id','name')
                                 </div>
                             </div>
                         </div>
-                      
+                        
                         <div class="row" style="margin: 5px;">
                             <div class="col-lg-12">
                                 <div class="container-referral2">
@@ -2895,6 +2895,13 @@ $facilities = \App\Facility::select('id','name')
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <small class="text-success"><b>NAME OF DOCTOR (REFERRED HOSPITAL):</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                <select name="preg_referred_md" class="form-control edit_pregnant_action_md" style="width: 100%;">
+                                    <option value="">Any</option>
+                                </select>
+                            </div>
+
                         </div> 
 
                         <div class="form-footer pull-right" style="margin: 10px;">

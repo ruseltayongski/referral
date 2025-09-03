@@ -558,7 +558,7 @@ class ReferralCtrl extends Controller
             "referring_fac_id" => $track->referring_fac_id,
             "form_type" => "pregnant"
         ];
-      
+     
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
@@ -595,6 +595,8 @@ class ReferralCtrl extends Controller
             'mm.description as ff_muncity',
             'pp.description as ff_province',
             'pregnant_form.health_worker',
+            DB::raw('CONCAT("Dr. ",u.fname," ",u.mname," ",u.lname," / ",u.contact) as md_referred'), // Referred MD with contact no.
+            'u.id as md_referred_id',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as woman_name'),
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
             'patients.sex',
@@ -628,6 +630,7 @@ class ReferralCtrl extends Controller
             ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
             ->leftJoin('facility','facility.id','=','tracking.referred_from')
             ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
+            ->leftJoin('users as u','u.id','=','tracking.action_md') // Action MD 
             ->leftJoin('users','users.id','=','pregnant_form.referred_by')
             ->leftJoin('barangay','barangay.id','=','patients.brgy')
             ->leftJoin('muncity','muncity.id','=','patients.muncity')
@@ -2325,7 +2328,7 @@ class ReferralCtrl extends Controller
             $data = PregnantForm::where('code', $track)->first();
             $baby_id = $req->baby_id;
             $match = Patients::where('id', $baby_id)->first();
-
+            $tracking->update(['action_md' => $req->referred_md]);
             if($old_facility != $req->referred_to)
                 $data->update(['referred_date' => date('Y-m-d H:i:s')]);
 
@@ -2360,7 +2363,7 @@ class ReferralCtrl extends Controller
                 $b->birth_date = $dob;
                 $b->save();
             }
-
+            unset($data_update['referred_md']);
             unset($data_update['baby_fname']);
             unset($data_update['baby_mname']);
             unset($data_update['baby_lname']);
@@ -2566,7 +2569,8 @@ class ReferralCtrl extends Controller
                 'date_referred' => $date,
                 'date_arrived' => '',
                 'date_seen' => '',
-                'action_md' => $user->id,
+                // 'action_md' => $user->id,
+                'action_md' => $req->referred_md,
                 'department_id' => $req->department_id,
                 'referred_to' => $req->referred_to,
                 'referring_md' => $user->id,

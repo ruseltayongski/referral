@@ -413,24 +413,24 @@ $facilities = \App\Facility::select('id','name')
                     <span class="referring_md">{{ $form->md_referring }}</span>
                 </div>
             </div><br>
-
+            
             <div class="row">
                 <div class="col-md-12">
                     <small class="text-success"><b>CONTACT # OF REFERRING MD/HCW: </b></small>
                     <span class="referring_md_contact">{{ $form->referring_md_contact }}</span>
                 </div>
             </div><br>
-
-            <div class="row">
-                <div class="col-md-12">
-                    <small class="text-success"><b>NAME OF DOCTOR (REFERRED HOSPITAL):</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
-                    <select name="referred_md" class="form-control edit_action_md" style="width: 100%;">
-                        <option value="">Any</option>
-                    </select>
+            @if($form->telemedicine == 0)
+                <div class="row">
+                    <div class="col-md-12">
+                        <small class="text-success"><b>NAME OF DOCTOR (REFERRED HOSPITAL):</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                        <select name="referred_md" class="form-control edit_action_md" style="width: 100%;">
+                            <option value="">Any</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
-
         <hr />
         <button class="btn btn-default btn-flat exit_edit_btn" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
         <div class="form-fotter pull-right">

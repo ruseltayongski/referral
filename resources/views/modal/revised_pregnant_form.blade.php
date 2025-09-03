@@ -2202,7 +2202,17 @@
                                 </div>
                             </div>
                         </div>
-
+                          @if(empty($appointmentParam))
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                
+                                    <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
+                                        <option value="">Any...</option>
+                                    </select>
+                                </div>
+                            </div><br>
+                        @endif
                         <hr>
                         <div class="form-footer pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Back</button>

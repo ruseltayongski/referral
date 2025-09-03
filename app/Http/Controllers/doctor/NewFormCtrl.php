@@ -1457,6 +1457,7 @@ class NewFormCtrl extends Controller
             'mm.description as ff_muncity',
             'pp.description as ff_province',
             'pregnant_form.health_worker',
+            DB::raw('CONCAT("DR. ",u.fname," ",u.mname," ",u.lname," / ",u.contact) as md_referred'), // Referred MD with contact no.
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as woman_name'),
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
             'patients.sex',
@@ -1491,6 +1492,7 @@ class NewFormCtrl extends Controller
             ->leftJoin('tracking','tracking.form_id','=','pregnant_form.id')
             ->leftJoin('facility','facility.id','=','tracking.referred_from')
             ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
+            ->leftJoin('users as u','u.id','=','tracking.action_md') // Action MD 
             ->leftJoin('users','users.id','=','pregnant_form.referred_by')
             ->leftJoin('barangay','barangay.id','=','patients.brgy')
             ->leftJoin('muncity','muncity.id','=','patients.muncity')
@@ -1626,6 +1628,7 @@ class NewFormCtrl extends Controller
             "type"=>$type,
             "status" => $status
         ];
+     
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
@@ -1948,7 +1951,7 @@ class NewFormCtrl extends Controller
             'referred_to' => ($status == 'walkin') ? $user->facility_id : $req->referred_facility,
             'department_id' => $req->referred_department,
             'referring_md' => ($status == 'walkin') ? 0 : $user->id,
-            'action_md' => '',
+            'action_md' => $req->reffered_md ? $req->reffered_md : 0,
             'type' => $type,
             'form_id' => $form_id,
             'form_type' => 'version2',
@@ -2123,7 +2126,7 @@ class NewFormCtrl extends Controller
         $old_facility = (int) $req->old_facility;
 
         $tracking = Tracking::where('id', $id)->first();
-
+        $tracking->update(['action_md' => $req->preg_referred_md ? $req->preg_referred_md : $req->referred_md_normal]);
         if($tracking->status == 'rejected') {
             Session::put('ignore_edit',true);
             return redirect()->back();
@@ -2206,7 +2209,7 @@ class NewFormCtrl extends Controller
             "reason_referral" => $req->reason_referral,
             "other_reason_referral" => $req->reason_referral,
             "file_cleared" => null,
-            "referred_md" => $req->referred_md,
+            "referred_md" => $req->referred_md_normal,
         ];
 
         /* FACILITY AND DEPARTMENT */
@@ -2216,7 +2219,6 @@ class NewFormCtrl extends Controller
         if($form_type === 'normal') {
             $data_update = $request_arr2;
             $data = PatientForm::where('code', $track)->first();
-
             /* DIAGNOSIS NOTES */
             if(($data->diagnosis !== $req->diagnosis) || $req->notes_diag_cleared)
                 $updated .= ", Diagnosis Notes";

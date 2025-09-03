@@ -972,6 +972,11 @@
             </td>
         </tr>
     @endif
+
+     <tr>
+        <td colspan="6">Name of referred MD/HCW- Mobile Contact # (ReCo): <span class="referred_md form-details">{{$form->md_referred }}</span></td>
+    </tr>
+
 </table>
 <hr/>
 

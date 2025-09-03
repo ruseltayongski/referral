@@ -1033,19 +1033,27 @@
                             this.telemedicineFormType = event.payload.form_type;
                             this.activity_id = event.payload.activity_id;
                             
-                            if(this.activeCallWindows.has(event.payload.tracking_id)){
-                                const existingWindow = this.activeCallWindows.get(event.payload.tracking_id);
-                        
+                            const openedTrackingId = localStorage.getItem("telemedicine_tracking_id");
+                            console.log("openedTrackingId", openedTrackingId);
+                            if(this.activeCallWindows.has(event.payload.tracking_id) || this.activeCallWindows.has(openedTrackingId)){
+                                const existingWindow = this.activeCallWindows.get(event.payload.tracking_id);   
+                                const AcceptingWindow = this.activeCallWindows.get(openedTrackingId);
                                 // Check if the window is still open and valid
-                                if (existingWindow && !existingWindow.closed) {
-                                    // console.log("Call already active for tracking_id:", event.payload.tracking_id);
+                                if (existingWindow && !existingWindow.closed || (AcceptingWindow && !AcceptingWindow.closed)) {
+                                    //console.log("Call already active for tracking_id event:", event.payload.tracking_id);
                                     // Optionally focus the existing window
                                     existingWindow.focus();
+                                    
                                     return; // Prevent opening a new call
                                 } else {
                                     // Window was closed, remove from tracking
                                     this.activeCallWindows.delete(event.payload.tracking_id);
                                 }
+                                
+                            }
+
+                            if(openedTrackingId){
+                                return;
                             }
 
                             this.callADoctor(event.payload.tracking_id,event.payload.code,event.payload.subopd_id);
