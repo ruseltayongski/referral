@@ -67,11 +67,15 @@
         var reco_seen_url = "<?php echo asset('reco/seen1').'/'; ?>"+code;
         $.get(reco_seen_url,function(){ });
 
-        $('#feedbackModal').bind('shown', function() {
-            $('textarea.mytextarea1').tinymce({
+        // $('#feedbackModal').bind('shown', function() {
+        //     $('textarea.mytextarea1').tinymce({
 
-            });
-            console.log("wew")
+        //     });
+        //     console.log("wew")
+        // });
+
+        $('#feedbackModal').on('shown.bs.modal', function() {
+            initTinyMCEWithCode(code); // pass code dynamically
         });
 
         $('.feedback_code').html(code);

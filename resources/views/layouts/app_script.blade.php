@@ -90,81 +90,174 @@
     let currentFile = null;
 
     // TinyMCE initialization for selecting files (pdf, images) and input text 
-    tinymce.init({
-        selector: ".mytextarea1",
-        plugins: "emoticons autoresize",
-        toolbar: "emoticons uploadfile",
-        toolbar_location: "bottom",
-        menubar: false,
-        statusbar: false,
-        automatic_uploads: true,
-        setup: function (editor) {
+    // tinymce.init({
+    //     selector: ".mytextarea1",
+    //     plugins: "emoticons autoresize",
+    //     toolbar: "emoticons uploadfile",
+    //     toolbar_location: "bottom",
+    //     menubar: false,
+    //     statusbar: false,
+    //     automatic_uploads: true,
+    //     setup: function (editor) {
 
-            // Add custom upload button
-            editor.ui.registry.addButton('uploadfile', {
-                icon: 'upload',
-                tooltip: 'Upload Image or PDF',
-                onAction: function() {
-                    // Trigger file picker
-                    currentEditor = editor;
+    //         // Add custom upload button
+    //         editor.ui.registry.addButton('uploadfile', {
+    //             icon: 'upload',
+    //             tooltip: 'Upload Image or PDF',
+    //             onAction: function() {
+    //                 // Trigger file picker
+    //                 currentEditor = editor;
                     
-                    var input = document.createElement('input');
-                    input.setAttribute('type', 'file');
-                    input.setAttribute('accept', 'image/*,.pdf');
-                    input.setAttribute('multiple', true); // Allow multiple files
+    //                 var input = document.createElement('input');
+    //                 input.setAttribute('type', 'file');
+    //                 input.setAttribute('accept', 'image/*,.pdf');
+    //                 input.setAttribute('multiple', true); // Allow multiple files
                     
-                    input.onchange = function() {
-                        var files = this.files;
-                        if (files.length > 0) {
-                             console.log("editor:", editor);
-                            // Process each selected file
-                            for (let i = 0; i < files.length; i++) {
-                                processFileReco(files[i], editor);
+    //                 input.onchange = function() {
+    //                     var files = this.files;
+    //                     if (files.length > 0) {
+    //                          console.log("editor:", editor);
+    //                         // Process each selected file
+    //                         for (let i = 0; i < files.length; i++) {
+    //                             processFileReco(files[i], editor);
+    //                         }
+    //                     }
+    //                 };
+                    
+    //                 input.click();
+    //             }
+    //         });
+            
+    //         editor.ui.registry.addIcon('custom-upload', '<i class="fa fa-upload"></i>');
+            
+    //         // Add click handler for inserted files
+    //         editor.on('click', function(e) {
+    //             const target = e.target;
+
+    //             if (target.tagName === 'IMG' && target.getAttribute('data-file-id')) {
+    //                 const fileId = target.getAttribute('data-file-id');
+    //                 const storedFile = window.uploadedFiles.get(fileId);
+                    
+    //                 if (storedFile) {
+    //                      $('#filePreviewModalReco').modal('show');
+    //                     // Show preview modal for the clicked file
+    //                     // showFilePreview(storedFile, true); 
+    //                 }
+    //             }
+    //         });
+            
+    //         // Add double-click handler as alternative
+    //         editor.on('dblclick', function(e) {
+    //             const target = e.target;
+    //             if (target.tagName === 'IMG' && target.getAttribute('data-file-id')) {
+    //                 const fileId = target.getAttribute('data-file-id');
+    //                 const storedFile = window.uploadedFiles.get(fileId);
+                    
+    //                 if (storedFile) {
+    //                      $('#filePreviewModalReco').modal('show');
+    //                     // showFilePreview(storedFile, true);
+    //                 }
+    //             }
+    //         });
+            
+    //         editor.on('init', function () {
+    //             editor.getContainer().style.width = "100%";
+    //         });
+    //     }
+    // });
+    function initTinyMCEWithCode(code) {
+        var url = "<?php echo asset('tracking').'/'; ?>" + code;
+
+        $.get(url, function (tracking) {
+            console.log("tracking telemedicine:", tracking.telemedicine);
+
+            // Build toolbar string based on telemedicine
+            let toolbarItems = "emoticons uploadfile";
+            if (tracking.telemedicine == 0) {
+                toolbarItems += " callbutton"; // add call button only if telemedicine is 0
+            }
+
+            tinymce.init({
+                selector: ".mytextarea1",
+                plugins: "emoticons autoresize",
+                toolbar: toolbarItems,
+                toolbar_location: "bottom",
+                toolbar_mode: "wrap",
+                menubar: false,
+                statusbar: false,
+                automatic_uploads: true,
+                setup: function (editor) {
+                    // Call button (only registered if telemedicine == 0)
+                    if (tracking.telemedicine == 0) {
+                        editor.ui.registry.addIcon('call-icon',
+                            '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
+                            '<path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.72 11.72 0 003.69.59 1 1 0 011 1v3.61a1 1 0 01-1 1A17 17 0 013 5a1 1 0 011-1h3.61a1 1 0 011 1 11.72 11.72 0 00.59 3.69 1 1 0 01-.24 1.01l-2.34 2.09z"/>' +
+                            '</svg>'
+                        );
+                        editor.ui.registry.addButton('callbutton', {
+                            icon: 'call-icon',
+                            tooltip: 'Start Call',
+                            onAction: function () {
+                                console.log('call button clicked');
+                                $('#callModal').modal('show');
+                                  telemedicineExamined(
+                                    tracking.id,
+                                    'code',
+                                    tracking.action_md,
+                                    tracking.referring_md,
+                                    null,
+                                    tracking.type,
+                                    tracking.referred_to,
+                                    null,
+                                    null,
+                                    null,
+                                    null,
+                                    null
+                                );
                             }
-                        }
-                    };
-                    
-                    input.click();
-                }
-            });
-            
-            editor.ui.registry.addIcon('custom-upload', '<i class="fa fa-upload"></i>');
-            
-            // Add click handler for inserted files
-            editor.on('click', function(e) {
-                const target = e.target;
+                        });
+                    }
 
-                if (target.tagName === 'IMG' && target.getAttribute('data-file-id')) {
-                    const fileId = target.getAttribute('data-file-id');
-                    const storedFile = window.uploadedFiles.get(fileId);
-                    
-                    if (storedFile) {
-                         $('#filePreviewModalReco').modal('show');
-                        // Show preview modal for the clicked file
-                        // showFilePreview(storedFile, true); 
-                    }
+                    // Upload button
+                    editor.ui.registry.addButton('uploadfile', {
+                        icon: 'upload',
+                        tooltip: 'Upload Image or PDF',
+                        onAction: function () {
+                            currentEditor = editor;
+                            var input = document.createElement('input');
+                            input.setAttribute('type', 'file');
+                            input.setAttribute('accept', 'image/*,.pdf');
+                            input.setAttribute('multiple', true);
+                            input.onchange = function () {
+                                var files = this.files;
+                                if (files.length > 0) {
+                                    for (let i = 0; i < files.length; i++) {
+                                        processFileReco(files[i], editor);
+                                    }
+                                }
+                            };
+                            input.click();
+                        }
+                    });
+
+                    // File click + dblclick handlers
+                    editor.on('click dblclick', function (e) {
+                        const target = e.target;
+                        if (target.tagName === 'IMG' && target.getAttribute('data-file-id')) {
+                            const fileId = target.getAttribute('data-file-id');
+                            const storedFile = window.uploadedFiles.get(fileId);
+                            if (storedFile) $('#filePreviewModalReco').modal('show');
+                        }
+                    });
+
+                    editor.on('init', function () {
+                        editor.getContainer().style.width = "100%";
+                    });
                 }
             });
-            
-            // Add double-click handler as alternative
-            editor.on('dblclick', function(e) {
-                const target = e.target;
-                if (target.tagName === 'IMG' && target.getAttribute('data-file-id')) {
-                    const fileId = target.getAttribute('data-file-id');
-                    const storedFile = window.uploadedFiles.get(fileId);
-                    
-                    if (storedFile) {
-                         $('#filePreviewModalReco').modal('show');
-                        // showFilePreview(storedFile, true);
-                    }
-                }
-            });
-            
-            editor.on('init', function () {
-                editor.getContainer().style.width = "100%";
-            });
-        }
-    });
+        });
+    }
+
 
     let fileUploadBatch = false;
     let fileUploadTimeout = null;

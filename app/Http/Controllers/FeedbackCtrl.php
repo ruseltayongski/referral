@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Activity;
 use App\Feedback;
 use App\RecoSeen;
+use App\Tracking;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -17,6 +18,16 @@ class FeedbackCtrl extends Controller
 
     public function home() {
         return view('feedback.feedback');
+    }
+
+    public function GetTracking($code){
+       $tracking = Tracking::where('code', $code)->first();
+
+        if (!$tracking) {
+            return response()->json(['error' => 'Tracking not found'], 404);
+        }
+
+        return response()->json($tracking);
     }
 
     public function CommentAppend(Request $request) {

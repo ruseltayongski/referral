@@ -18,6 +18,8 @@ use App\FacilityAssign;
 |
 */
 
+
+
 Route::get('/', 'HomeCtrl@index');
 
 Route::match(['GET', 'POST'], 'logout', 'LogoutCtrl@logout');
@@ -238,6 +240,7 @@ Route::get('doctor/feedback/load/{code}', 'doctor\ReferralCtrl@loadFeedback');
 Route::get('doctor/feedback/notification/{code}/{user_id}', 'doctor\ReferralCtrl@notificationFeedback');
 Route::post('doctor/feedback', 'doctor\ReferralCtrl@saveFeedback');
 
+
 Route::get('/get-feedback-files', 'doctor\ReferralCtrl@getFeedbackFiles');
 
 Route::get('doctor/history/{code}', 'doctor\PatientCtrl@history');
@@ -366,6 +369,7 @@ Route::post('/mcc/track', 'mcc\ReportCtrl@searchTrackReferral');
 
 
 //FEEDBACK
+Route::get('/tracking/{code}', 'FeedbackCtrl@GetTracking');
 Route::get('feedback/home', 'FeedbackCtrl@home');
 Route::post('feedback/comment_append', 'FeedbackCtrl@CommentAppend');
 
