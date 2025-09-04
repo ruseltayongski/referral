@@ -22167,6 +22167,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
+// import axios from 'axios';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -22185,11 +22186,17 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
     },
     requested_by: {
       type: Number
+    },
+    code: {
+      type: String
     }
   },
   mounted: function mounted() {
     // console.log(this.activity_id)
     this.__getLaboratories();
+    // if (this.code) {
+    //     this.fetchLabRequest(this.code);
+    // }
   },
   watch: {
     laboratories: {
@@ -22315,7 +22322,30 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
     },
     getCheckboxKey: function getCheckboxKey(laboratoryCode) {
       return "checkbox_".concat(this.activity_id, "_").concat(laboratoryCode);
-    }
+    } // async fetchLabRequest(code) {
+    //     try {
+    //         const response = await axios.get(`${this.baseUrl}/api/video/labrequest/${code}`);
+    //         const labRequests = response.data.labrequests;
+    //         if (labRequests && labRequests.length > 0) {
+    //             // Reset existing selections
+    //             this.checkedLaboratories = [];
+    //             this.isOtherSelected = false;
+    //             this.otherLabRequest = '';
+    //             // Process each lab request
+    //             labRequests.forEach(request => {
+    //                 if (request.laboratory_code) {
+    //                     this.checkedLaboratories.push(request.laboratory_code);
+    //                 }
+    //                 if (request.others) {
+    //                     this.isOtherSelected = true;
+    //                     this.otherLabRequest = request.others;
+    //                 }
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching lab requests:', error);
+    //     }
+    // }
   }
 });
 

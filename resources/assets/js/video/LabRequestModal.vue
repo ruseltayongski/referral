@@ -1,5 +1,6 @@
 <script>
     import { getLaboratories, saveLabRequest } from "./api/index"
+    // import axios from 'axios';
     export default {
         data() {
             return {
@@ -19,11 +20,17 @@
             },
             requested_by: {
                 type: Number
+            },
+            code: {
+                type: String
             }
         },
         mounted() {
             // console.log(this.activity_id)
             this.__getLaboratories()
+            // if (this.code) {
+            //     this.fetchLabRequest(this.code);
+            // }
         },
         watch: {
                  laboratories: {
@@ -126,7 +133,33 @@
             },
             getCheckboxKey(laboratoryCode) {
                 return `checkbox_${this.activity_id}_${laboratoryCode}`;
-            }
+            },
+            // async fetchLabRequest(code) {
+            //     try {
+            //         const response = await axios.get(`${this.baseUrl}/api/video/labrequest/${code}`);
+            //         const labRequests = response.data.labrequests;
+                    
+            //         if (labRequests && labRequests.length > 0) {
+            //             // Reset existing selections
+            //             this.checkedLaboratories = [];
+            //             this.isOtherSelected = false;
+            //             this.otherLabRequest = '';
+
+            //             // Process each lab request
+            //             labRequests.forEach(request => {
+            //                 if (request.laboratory_code) {
+            //                     this.checkedLaboratories.push(request.laboratory_code);
+            //                 }
+            //                 if (request.others) {
+            //                     this.isOtherSelected = true;
+            //                     this.otherLabRequest = request.others;
+            //                 }
+            //             });
+            //         }
+            //     } catch (error) {
+            //         console.error('Error fetching lab requests:', error);
+            //     }
+            // }
         }
     };
 </script>
