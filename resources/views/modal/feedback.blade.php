@@ -36,9 +36,9 @@
                             <textarea placeholder="Type Message ..." class="mytextarea1"></textarea>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-success btn-md">Send</button>
-                            </span>
-                            &nbsp;
-                                <button type="button" id="closeBtn" class="btn btn-default btn-md" style="display: none;">
+                                 &nbsp;
+                                 <br />
+                                <button type="button" id="closeBtn" class="btn btn-default btn-md" style="display: none; margin-start: 5px;">
                                     Close
                                 </button>
                             </span>

@@ -880,7 +880,7 @@
                                                                 <img class="file-upload-image" id="pregnant_file-upload-image_1"/>
                                                                 <div class="image-title-wrap">
                                                                     <small class="image-title" id="pregnant_image-title_1" style="display:block; word-wrap: break-word;">Uploaded File</small></small>
-                                                                     <button type="button" id="pregnant_remove_upload1" onclick="removeUploadPregnant(1, 2)" class="remove-icon-btn"><i class="fa fa-trash"></i></button>
+                                                                     <button type="button" id="pregnant_remove_upload_1" onclick="removeUploadPregnant(1, 2)" class="remove-icon-btn"><i class="fa fa-trash"></i></button>
                                                                 </div>
                                                             </div>
                                                         </div>
