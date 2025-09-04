@@ -1108,7 +1108,7 @@
                                                                     <img class="file-upload-image" id="normal_file-upload-image1"/>
                                                                     <div class="image-title-wrap">
                                                                         <small class="text-success"><small class="image-title" id="normal_image-title1" style="display:block; word_normal-wrap: break-word_normal;">Uploaded File</small></small>
-                                                                        {{--<button type="button" id="normal_remove_upload1" onclick="removeUploadNormal(1)" class="btn-sm remove-image">Remove</button>--}}
+                                                                        <button type="button" id="normal_remove_upload1" onclick="removeUploadNormal(1)" class="remove-icon-btn"><i class="fa fa-trash"></i></button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -2439,6 +2439,17 @@
                                         </button><br><br>
                                     </div>
                                     <div class="collapse" id="collapse_reason_referral" style="width: 100%;">
+                                            @if(empty($appointmentParam))
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
+                                                    
+                                                        <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
+                                                            <option value="">Any...</option>
+                                                        </select>
+                                                    </div>
+                                                </div><br>
+                                            @endif
                                         <i>Select reason for referral:</i><span class="text-red">*</span>
                                         <div class="container-referral">
                                             <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
@@ -2456,18 +2467,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            @if(empty($appointmentParam))
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <small class="text-success"><b>NAME OF REFERRED:</b> <i>(MD/HCW- Mobile Contact # (ReCo))</i></small><br>
-                                    
-                                        <select name="reffered_md" class="referred_md form-control-select select2" style="width: 100%">
-                                            <option value="">Any...</option>
-                                        </select>
-                                    </div>
-                                </div><br>
-                            @endif
 
                             <hr />
                             <div class="form-footer pull-right">
@@ -2637,7 +2636,6 @@
         });
 
         push_notification_diagnosis_ccmc = values.join(","); //diagnosis for CCMD for their push notification
-        console.log(values);
     }
 
     function othersDiagnosisRevised() {
@@ -3696,7 +3694,6 @@
             '</div>'
         );
 
-        console.log("After Adding - normal_pos:", normal_pos);
         normal_pos++;
     }
 

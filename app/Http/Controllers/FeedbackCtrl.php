@@ -20,15 +20,15 @@ class FeedbackCtrl extends Controller
         return view('feedback.feedback');
     }
 
-    public function GetTracking($code){
-       $tracking = Tracking::where('code', $code)->first();
+    // public function GetTracking($code){
+    //    $tracking = Tracking::where('code', $code)->first();
 
-        if (!$tracking) {
-            return response()->json(['error' => 'Tracking not found'], 404);
-        }
+    //     if (!$tracking) {
+    //         return response()->json(['error' => 'Tracking not found'], 404);
+    //     }
 
-        return response()->json($tracking);
-    }
+    //     return response()->json($tracking);
+    // }
 
     public function CommentAppend(Request $request) {
         $textarea_body = view('feedback.textarea_body');
