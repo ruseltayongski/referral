@@ -20,6 +20,7 @@ $reason_for_referral = \App\ReasonForReferral::get();
                         <input type="hidden" name="patient_id" class="patient_id" value="" />
                         <input type="hidden" name="date_referred" class="date_referred" value="{{ date('Y-m-d H:i:s') }}" />
                         <input type="hidden" name="code" value="" />
+                        <input type="hidden" name="telemedicine" value="0" />
                         <input type="hidden" name="source" value="{{ $source }}" />
                         <input type="hidden" class="referring_name" value="{{ $myfacility->name }}" /><br>
 

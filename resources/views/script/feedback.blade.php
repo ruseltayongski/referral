@@ -74,6 +74,10 @@
             console.log("wew")
         });
 
+        // $('#feedbackModal').on('shown.bs.modal', function() {
+        //     initTinyMCEWithCode(code); // pass code dynamically
+        // });
+
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);
         $('#message').addClass("message input-"+code+"-{{ $user->id }}");

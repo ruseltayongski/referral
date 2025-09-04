@@ -202,7 +202,7 @@ export default {
         targetTd.css("background-color", "#dd4b39"); // not available color red
         // targetTd.css("border-color", "#dd4b39");
       } else {
-      
+        
         targetTd.css("background-color", "rgb(50, 183, 122)"); // available color green
         targetdrag.css("border-color", "#00a65a");
       }
@@ -225,6 +225,14 @@ export default {
       const clickedDate = moment(date._d).format("YYYY-MM-DD");
       const clickedDay = document.querySelector(`.fc-day[data-date='${clickedDate}']`);
 
+      const hasSlot = this.appointmentSlot.some(appointment =>
+        appointment.appointment_schedules &&
+        appointment.appointment_schedules.some(sched => sched.appointed_date === clickedDate)
+      );
+
+      if(!hasSlot){
+        return;
+      }
        // Check if it's a green slot (available date)
       const isGreenSlot =
         clickedDay &&

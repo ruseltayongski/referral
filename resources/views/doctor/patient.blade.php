@@ -1416,6 +1416,7 @@ $counter = 0;
         reason = $('.woman_information_given').val();
         department_id = $('.select_department_pregnant').val();
         department_name = $('.select_department_pregnant :selected').text();
+        telemed = $('.telemedicine').val();
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/walkin/pregnant') }}",
             type: 'POST',
@@ -1424,6 +1425,7 @@ $counter = 0;
                 setTimeout(function() {
                     window.location.reload(false);
                 }, 500);
+                $('.loading').hide(); // Hide loading animation on success
             },
             error: function(XMLHttpRequest, textStatus, errorThrown) {
                 console.log(XMLHttpRequest);

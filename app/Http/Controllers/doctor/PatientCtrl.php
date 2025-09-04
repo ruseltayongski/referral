@@ -397,7 +397,7 @@ class PatientCtrl extends Controller
 
     public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '', $telemed_assign_id)
     {
-      
+        // Log::info('A new form was created.', ['wasRecently:' => $req->all()]);
         $subOPD_Id = (int) $req->configId;
         $match = array(
             'code' => $code
@@ -768,7 +768,7 @@ class PatientCtrl extends Controller
                     ]);
                 $req->reffered_to = $user->facility_id;
 
-                $tracking_id = self::addTracking($code, $patient_id, $user, $req, $type, $form->id, 'walkin');
+                $tracking_id = self::addTracking($code, $patient_id, $user, $req, $type, $form->id,'walkin',null);
             }
         } else if ($type === 'pregnant') {
             $baby = array(
@@ -831,13 +831,15 @@ class PatientCtrl extends Controller
                 $icd->icd_id = $i;
                 $icd->save();
             }
-
+        //    Log::info('A new form was created.', ['wasRecentlyCreated:' => $form]);
+        //       Log::info('A new form was created.', ['wasRecently:' => $form->wasRecentlyCreated]);
             if ($form->wasRecentlyCreated) {
                 PregnantForm::where('unique_id', $unique_id)
                     ->update([
                         'code' => $code
                     ]);
-                $tracking_id = self::addTracking($code, $patient_id, $user, $req, $type, $form->id, 'walkin');
+                    
+                $tracking_id = self::addTracking($code, $patient_id, $user, $req, $type, $form->id,'walkin',null);
             }
         }
 
