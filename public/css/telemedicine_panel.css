@@ -357,6 +357,30 @@ a.btn.filecolorclose {
 }
 
 @media (max-width: 768px) {
+  .stepper-item-upward {
+    width: 50px;
+  }
+  .upward_progress {
+    width: 550px;
+  }
+  .stepper-item-prescription .step-name{
+    font-size: 8px;
+    text-align: center;
+    width: 100px;
+    margin-left: -10px;
+  }
+  .stepper-item-prescription {
+    width: 100px;
+  }
+  .stepper-item .step-name {
+    font-size: 8px;
+    text-align: center;
+    width: 55px;
+    margin-left: -10px;
+  }
+  .position-blue {
+    font-size: 11px;
+  }
   #closeModalId {
     display: block;
     width: 100%;

@@ -2795,6 +2795,11 @@ class ApiController extends Controller
         return $data;
     }
 
+    public function getPatientLabRequests($requested_by){
+        $data = LabRequest::where('requested_by', $requested_by)->get();
+        return $data;
+    }
+
     public function store(Request $request)
     {
      

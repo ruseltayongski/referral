@@ -718,6 +718,7 @@ Route::post('delete/configSched', 'doctor\TelemedicineCtrl@removeconfigSched')->
 Route::post('/api/video/prescriptions', 'ApiController@savePrescriptions');
 Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
+Route::get('/api/video/labresults/{id}', 'ApiController@getPatientLabRequests');
 
 //new forms
 Route::match(['GET','POST'],'/revised/referral', 'doctor\NewFormCtrl@index');
