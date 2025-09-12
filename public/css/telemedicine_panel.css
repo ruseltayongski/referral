@@ -1,4 +1,3 @@
-
 .panel-scoped-telemedicine .stepper-wrapper {
   font-family: Arial;
   margin-top: 20px;
@@ -6,6 +5,7 @@
   justify-content: space-between;
   margin-bottom: 20px;
 }
+
 .panel-scoped-telemedicine .stepper-item {
   position: relative;
   display: flex;
@@ -13,6 +13,7 @@
   align-items: center;
   flex: 1;
 }
+
 .panel-scoped-telemedicine .stepper-item::before {
   position: absolute;
   content: "";
@@ -22,6 +23,7 @@
   left: -50%;
   z-index: 2;
 }
+
 .panel-scoped-telemedicine .stepper-item .step-counter {
   position: relative;
   z-index: 5;
@@ -34,13 +36,16 @@
   background: #ccc;
   margin-bottom: 6px;
 }
+
 .panel-scoped-telemedicine .stepper-item.active {
   font-weight: bold;
 }
+
 .panel-scoped-telemedicine .stepper-item.completed .step-counter {
   background-color: #4F9B83;
   color: white;
 }
+
 .panel-scoped-telemedicine .stepper-item.completed::after {
   position: absolute;
   content: "";
@@ -51,10 +56,12 @@
   z-index: 3;
   color: white;
 }
+
 .panel-scoped-telemedicine .step-counter-examined:hover {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
   position: absolute;
   content: "";
@@ -65,14 +72,17 @@
   z-index: 3;
   transform: rotate(26deg);
 }
+
 .panel-scoped-telemedicine .stepper-item-prescription::after {
   transform: rotate(160deg);
   margin-top: -28px;
 }
+
 .panel-scoped-telemedicine .step-counter-prescription:hover {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .panel-scoped-telemedicine .stepper-item-upward {
   position: relative;
   display: flex;
@@ -80,6 +90,7 @@
   align-items: center;
   flex: 1;
 }
+
 .panel-scoped-telemedicine .stepper-item-upward .step-counter {
   position: relative;
   z-index: 5;
@@ -93,10 +104,12 @@
   margin-bottom: 6px;
   margin-top: -50px;
 }
+
 .panel-scoped-telemedicine .stepper-item-upward.completed .step-counter {
   background-color: #4F9B83;
   color: white;
 }
+
 .panel-scoped-telemedicine .stepper-item-upward.completed::after {
   position: absolute;
   content: "";
@@ -106,6 +119,7 @@
   z-index: 3;
   margin-top: -30px;
 }
+
 .panel-scoped-telemedicine .stepper-item-upward::before {
   position: absolute;
   content: "";
@@ -116,6 +130,7 @@
   transform: rotate(160deg);
   margin-top: -8px;
 }
+
 .panel-scoped-telemedicine .stepper-item-follow_new .step-counter-follow_new {
   z-index: 5;
   display: flex;
@@ -127,10 +142,12 @@
   background: #ccc;
   margin-top: -44px;
 }
+
 .panel-scoped-telemedicine .stepper-item-follow_new.completed .step-counter-follow_new {
   background-color: #4F9B83;
   color: white;
 }
+
 .panel-scoped-telemedicine .stepper-item-follow_new {
   position: absolute;
   display: flex;
@@ -139,6 +156,7 @@
   flex: 1;
   margin-top: 100px;
 }
+
 .panel-scoped-telemedicine .stepper-item-follow_new::before {
   position: absolute;
   content: "";
@@ -149,19 +167,24 @@
   transform: rotate(26deg);
   margin-top: -74px;
 }
+
 .panel-scoped-telemedicine .step-counter-follow_new:hover {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .panel-scoped-telemedicine .step-counter-referred {
   cursor: pointer;
 }
+
 .panel-scoped-telemedicine .step-counter-referred:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .panel-scoped-telemedicine .stepper-item-referred {
   margin-top: -50px;
 }
+
 .panel-scoped-telemedicine .stepper-item .step-counter-follow {
   z-index: 5;
   display: flex;
@@ -173,14 +196,17 @@
   background: #ccc;
   margin-top: 5px;
 }
+
 .panel-scoped-telemedicine .stepper-item-follow {
   margin-top: 35px;
   width: 150px;
 }
+
 .panel-scoped-telemedicine .stepper-item-follow.completed .step-counter-follow {
   background-color: #4F9B83;
   color: white;
 }
+
 .panel-scoped-telemedicine .stepper-item-follow.completed::before {
   position: absolute;
   content: "";
@@ -189,15 +215,18 @@
   z-index: 3;
   margin-top: -1px;
 }
+
 .panel-scoped-telemedicine .step-counter-follow:hover {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .panel-scoped-telemedicine .stepper-item-treated_new {
   width: 150px;
   top: 120px;
   margin-bottom: 150px;
 }
+
 .panel-scoped-telemedicine .stepper-item .step-counter-treated_new {
   z-index: 5;
   display: flex;
@@ -209,13 +238,16 @@
   background: #ccc;
   margin-top: 5px;
 }
+
 .panel-scoped-telemedicine .step-name-treated_new {
   margin-top: 1px;
 }
+
 .panel-scoped-telemedicine .stepper-item-treated_new.completed .step-counter-treated_new {
   background-color: #4F9B83;
   color: white;
 }
+
 .panel-scoped-telemedicine .stepper-item-treated_new::before {
   position: absolute;
   content: "";
@@ -225,6 +257,7 @@
   top: -42px;
   left: -80px;
 }
+
 .panel-scoped-telemedicine .stepper-item-treated_new.completed::before {
   position: absolute;
   content: "";
@@ -235,25 +268,32 @@
   margin-top: -10px;
   color: white;
 }
+
 .panel-scoped-telemedicine .step-name-treated_new::after {
   content: none !important;
 }
+
 .panel-scoped-telemedicine .step-counter-treated_new:hover {
   cursor: pointer;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
 .panel-scoped-telemedicine .stepper-item-follow_new::after {
   content: none !important;
 }
+
 .panel-scoped-telemedicine .stepper-item:first-child::before {
   content: none;
 }
+
 .panel-scoped-telemedicine .stepper-item:last-child::after {
   content: none;
 }
+
 .panel-scoped-telemedicine .stepper-item:nth-child(6)::after {
   content: none;
 }
+
 .panel-scoped-telemedicine .stepper-item:nth-child(7)::after {
   content: none;
 }
@@ -350,27 +390,32 @@ a.btn.filecolorclose {
   .stepper-item-upward {
     width: 50px;
   }
-  .stepper-item{
+
+  .stepper-item {
     width: 45px;
   }
-  .stepper-item-prescription .step-name{
+
+  .stepper-item-prescription .step-name {
     font-size: 8px;
     text-align: center;
     width: 100px;
     margin-left: -10px;
   }
+
   .stepper-item .step-name {
     font-size: 8px;
     text-align: center;
     width: 55px;
     margin-left: -10px;
   }
+
   .stepper-item .step-name-treated_new {
     font-size: 8px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
   }
+
   .panel-scoped-telemedicine .stepper-item.completed::after {
     position: absolute;
     content: "";
@@ -381,9 +426,11 @@ a.btn.filecolorclose {
     z-index: 3;
     color: white;
   }
-  .panel-scoped-telemedicine .stepper-item-referred.completed::after { 
+
+  .panel-scoped-telemedicine .stepper-item-referred.completed::after {
     display: none;
   }
+
   .panel-scoped-telemedicine .stepper-item-treated_new.completed::before {
     position: absolute;
     content: "";
@@ -395,9 +442,11 @@ a.btn.filecolorclose {
     margin-top: -0px;
     color: white;
   }
-  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after{
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
     display: none;
   }
+
   .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
     position: absolute;
     content: "";
@@ -409,6 +458,7 @@ a.btn.filecolorclose {
     z-index: 3;
     transform: rotate(26deg);
   }
+
   .panel-scoped-telemedicine .stepper-item-follow_new::before {
     position: absolute;
     content: "";
@@ -419,6 +469,7 @@ a.btn.filecolorclose {
     transform: rotate(26deg);
     margin-top: -74px;
   }
+
   .panel-scoped-telemedicine .stepper-item-treated_new::before {
     position: absolute;
     content: "";
@@ -428,50 +479,54 @@ a.btn.filecolorclose {
     top: -60px;
     left: -30px;
   }
+
   .position-blue {
     font-size: 10px;
   }
+
   #closeModalId {
     display: block;
     width: 100%;
     margin-top: 10px;
   }
 }
+
 .popover {
   width: 230px;
 }
+
 /*-----------------For Ipad Mini Portrait------------*/
-@media only screen 
-  and (min-device-width: 768px) 
-  and (max-device-width: 768px)
-  and (min-device-height: 1024px)
-  and (max-device-height: 1024px)
-  and (orientation: portrait) {
+@media only screen and (min-device-width: 768px) and (max-device-width: 768px) and (min-device-height: 1024px) and (max-device-height: 1024px) and (orientation: portrait) {
   .stepper-item-upward {
     width: 50px;
   }
-  .stepper-item{
+
+  .stepper-item {
     width: 45px;
   }
-  .stepper-item-prescription .step-name{
+
+  .stepper-item-prescription .step-name {
     font-size: 8px;
     text-align: center;
     width: 100px;
     margin-left: -10px;
   }
+
   .stepper-item .step-name {
     font-size: 8px;
     text-align: center;
     width: 55px;
     margin-left: -10px;
   }
+
   .stepper-item .step-name-treated_new {
     font-size: 8px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
   }
-   .panel-scoped-telemedicine .stepper-item-treated_new::before {
+
+  .panel-scoped-telemedicine .stepper-item-treated_new::before {
     position: absolute;
     content: "";
     border-bottom: 2px solid #ccc;
@@ -481,6 +536,7 @@ a.btn.filecolorclose {
     top: -60px;
     left: -70px;
   }
+
   .panel-scoped-telemedicine .stepper-item.completed::after {
     position: absolute;
     content: "";
@@ -491,9 +547,11 @@ a.btn.filecolorclose {
     z-index: 3;
     color: white;
   }
-  .panel-scoped-telemedicine .stepper-item-referred.completed::after { 
+
+  .panel-scoped-telemedicine .stepper-item-referred.completed::after {
     display: none;
   }
+
   .panel-scoped-telemedicine .stepper-item-treated_new.completed::before {
     position: absolute;
     content: "";
@@ -506,9 +564,11 @@ a.btn.filecolorclose {
     margin-top: 10px;
     color: white;
   }
-  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after{
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
     display: none;
   }
+
   .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
     position: absolute;
     content: "";
@@ -520,6 +580,7 @@ a.btn.filecolorclose {
     z-index: 3;
     transform: rotate(26deg);
   }
+
   .panel-scoped-telemedicine .stepper-item-follow_new::before {
     position: absolute;
     content: "";
@@ -531,6 +592,7 @@ a.btn.filecolorclose {
     transform: rotate(26deg);
     margin-top: -74px;
   }
+
   .panel-scoped-telemedicine .stepper-item.completed::after {
     position: absolute;
     content: "";
@@ -543,6 +605,6 @@ a.btn.filecolorclose {
     color: white;
   }
 }
+
 /*-----------------css from File Folder List Modal------------*/
 /*-----------------css from File Folder List Modal------------*/
-.panel-scoped-telemedicine .stepper-wrapper{display:flex;font-family:Arial;justify-content:space-between;margin-bottom:20px;margin-top:20px}.panel-scoped-telemedicine .stepper-item{align-items:center;display:flex;flex:1;flex-direction:column;position:relative}.panel-scoped-telemedicine .stepper-item:before{border-bottom:2px solid #ccc;content:"";left:-50%;position:absolute;top:20px;width:100%;z-index:2}.panel-scoped-telemedicine .stepper-item .step-counter{align-items:center;background:#ccc;border-radius:50%;display:flex;height:40px;justify-content:center;margin-bottom:6px;position:relative;width:40px;z-index:5}.panel-scoped-telemedicine .stepper-item.active{font-weight:700}.panel-scoped-telemedicine .stepper-item.completed .step-counter{background-color:#4f9b83;color:#fff}.panel-scoped-telemedicine .stepper-item.completed:after{border-bottom:2px solid #4bb543;color:#fff;content:"";left:50%;position:absolute;top:20px;width:120px;z-index:3}.panel-scoped-telemedicine .step-counter-examined:hover{box-shadow:0 0 10px rgba(0,0,0,.5);cursor:pointer}.panel-scoped-telemedicine .stepper-item-prescription.completed:before{border-bottom:2px solid #4bb543;content:"";left:50px;position:absolute;top:44px;transform:rotate(26deg);width:125px;z-index:3}.panel-scoped-telemedicine .stepper-item-prescription:after{margin-top:-28px;transform:rotate(160deg)}.panel-scoped-telemedicine .step-counter-prescription:hover{box-shadow:0 0 10px rgba(0,0,0,.5);cursor:pointer}.panel-scoped-telemedicine .stepper-item-upward{align-items:center;display:flex;flex:1;flex-direction:column;position:relative}.panel-scoped-telemedicine .stepper-item-upward .step-counter{align-items:center;background:#ccc;border-radius:50%;display:flex;height:40px;justify-content:center;margin-bottom:6px;margin-top:-50px;position:relative;width:40px;z-index:5}.panel-scoped-telemedicine .stepper-item-upward.completed .step-counter{background-color:#4f9b83;color:#fff}.panel-scoped-telemedicine .stepper-item-upward.completed:after{border-bottom:2px solid #4bb543;content:"";left:40%;margin-top:-30px;position:absolute;width:100%;z-index:3}.panel-scoped-telemedicine .stepper-item-upward:before{border-bottom:2px solid #ccc;content:"";left:-45%;margin-top:-8px;position:absolute;transform:rotate(160deg);width:100%;z-index:2}.panel-scoped-telemedicine .stepper-item-follow_new .step-counter-follow_new{align-items:center;background:#ccc;border-radius:50%;display:flex;height:40px;justify-content:center;margin-top:-44px;width:40px;z-index:5}.panel-scoped-telemedicine .stepper-item-follow_new.completed .step-counter-follow_new{background-color:#4f9b83;color:#fff}.panel-scoped-telemedicine .stepper-item-follow_new{align-items:center;display:flex;flex:1;flex-direction:column;margin-top:100px;position:absolute}.panel-scoped-telemedicine .stepper-item-follow_new:before{border-bottom:2px solid #ccc;content:"";left:-100px;margin-top:-74px;position:absolute;transform:rotate(26deg);width:120px;z-index:2}.panel-scoped-telemedicine .step-counter-follow_new:hover{box-shadow:0 0 10px rgba(0,0,0,.5);cursor:pointer}.panel-scoped-telemedicine .step-counter-referred{cursor:pointer}.panel-scoped-telemedicine .step-counter-referred:hover{box-shadow:0 0 10px rgba(0,0,0,.5)}.panel-scoped-telemedicine .stepper-item-referred{margin-top:-50px}.panel-scoped-telemedicine .stepper-item .step-counter-follow{align-items:center;background:#ccc;border-radius:50%;display:flex;height:40px;justify-content:center;margin-top:5px;width:40px;z-index:5}.panel-scoped-telemedicine .stepper-item-follow{margin-top:35px;width:150px}.panel-scoped-telemedicine .stepper-item-follow.completed .step-counter-follow{background-color:#4f9b83;color:#fff}.panel-scoped-telemedicine .stepper-item-follow.completed:before{border-bottom:2px solid #4bb543;content:"";margin-top:-1px;position:absolute;width:135px;z-index:3}.panel-scoped-telemedicine .step-counter-follow:hover{box-shadow:0 0 10px rgba(0,0,0,.5);cursor:pointer}.panel-scoped-telemedicine .stepper-item-treated_new{margin-bottom:150px;top:120px;width:150px}.panel-scoped-telemedicine .stepper-item .step-counter-treated_new{align-items:center;background:#ccc;border-radius:50%;display:flex;height:40px;justify-content:center;margin-top:5px;width:40px;z-index:5}.panel-scoped-telemedicine .step-name-treated_new{margin-top:1px}.panel-scoped-telemedicine .stepper-item-treated_new.completed .step-counter-treated_new{background-color:#4f9b83;color:#fff}.panel-scoped-telemedicine .stepper-item-treated_new:before{border-bottom:2px solid #ccc;content:"";left:-80px;position:absolute;top:-42px;transform:rotate(45deg);width:180px}.panel-scoped-telemedicine .stepper-item-treated_new.completed:before{border-bottom:2px solid #4bb543;color:#fff;content:"";margin-top:-10px;position:absolute;transform:rotate(44deg);width:175px;z-index:3}.panel-scoped-telemedicine .step-name-treated_new:after{content:none!important}.panel-scoped-telemedicine .step-counter-treated_new:hover{box-shadow:0 0 10px rgba(0,0,0,.5);cursor:pointer}.panel-scoped-telemedicine .stepper-item-follow_new:after{content:none!important}.panel-scoped-telemedicine .stepper-item:first-child:before,.panel-scoped-telemedicine .stepper-item:last-child:after,.panel-scoped-telemedicine .stepper-item:nth-child(6):after,.panel-scoped-telemedicine .stepper-item:nth-child(7):after{content:none}.carousel img{margin:0 auto}.left-control .glyphicon-chevron-left{left:50%;margin-left:-50px}.right-control .glyphicon-chevron-right{margin-right:-50px;right:50%}.d-file{background-color:#4caf50;border-radius:5px;color:#fff;display:inline-block;font-size:14px;margin:4px;max-width:150px;overflow:hidden;padding:8px 12px;text-decoration:none;text-overflow:ellipsis;transition:background-color .3s,transform .3s;white-space:nowrap}.d-file:hover{color:#7ae205;transform:translateY(-2px)}.file-icon{display:inline-block;margin-right:8px;vertical-align:middle}.filecolor{background:linear-gradient(180deg,#52c755,#056608)!important;border:1px solid #056608!important;color:#fff!important}a.btn.filecolor:hover{background:linear-gradient(180deg,#056608,#8bd98d);color:#fff;transform:translateY(-10px)}a.btn.filecolorDelete{background:linear-gradient(180deg,#ee3533,#ed1e24);color:#fff}a.btn.filecolorDelete:hover{background:linear-gradient(180deg,#ed1e24,#f3787a);color:#fff;transform:translateY(-10px)}a.btn.filecolorclose{background:linear-gradient(180deg,#ededed,#ccc);border:1px solid #bbb;color:dark;transition:background-color .3s,transform .2s}.filecolorclose:hover{background:linear-gradient(180deg,#ed1e24,#f3787a);box-shadow:2px 2px 10px rgba(0,0,0,.2);transform:translateY(-10px)}#closeModalId{display:inline-block;width:auto}@media (max-width:768px){#closeModalId{display:block;margin-top:10px;width:100%}}.popover{width:230px}
