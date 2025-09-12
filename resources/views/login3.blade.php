@@ -11,8 +11,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicons -->
-    <link href="{{ asset('favicon1.png') }}" rel="icon" type="image/x-icon">
-    <link href="{{ asset('favicon1.png') }}" rel="apple-touch-icon">
+    <link href="{{ url('/public/favicon1.png') }}" rel="icon" type="image/x-icon">
+    <link href="{{ url('/public/favicon1.png') }}" rel="apple-touch-icon">
 
 </head>
 

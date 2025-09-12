@@ -222,6 +222,19 @@ class ApiController extends Controller
             $tracking->action_md = 0;
         }
 
+        $latestStatus = $tracking->status;
+        if (in_array($latestStatus, ['travel'])) {
+
+            $latestAccepted = \DB::table('activity')
+                ->where('code', $request->code)
+                ->where('status', 'accepted')
+                ->orderByDesc('id')
+                ->first();
+            if($latestAccepted){
+                $tracking->action_md = $latestAccepted->action_md;
+            }
+        }
+
         $latest_subOpd_id = Activity::where('code',$request->code)
                             ->whereIn('status', ['followup','referred'])
                             ->orderBy('created_at', 'desc')
@@ -2814,6 +2827,11 @@ class ApiController extends Controller
             'LABOR00141' => 'Widal Test'
         );
 
+        return $data;
+    }
+
+    public function getPatientLabRequests($requested_by){
+        $data = LabRequest::where('requested_by', $requested_by)->get();
         return $data;
     }
 

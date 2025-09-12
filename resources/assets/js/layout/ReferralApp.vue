@@ -1068,7 +1068,7 @@
                      console.log("event discharge:",event);
                     // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
                     this.telemedicine = event.payload.telemedicine;
-                    if(event.payload.telemedicine == 1) {
+                    if(event.payload.status == "telemedicine") {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             // console.log("callAdoctor", event);
                             this.action_md = event.payload.action_md;
@@ -1135,7 +1135,7 @@
                         if(event.payload.referred_from === 0){
                             return;
                         }
-                        
+
                         if(event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }

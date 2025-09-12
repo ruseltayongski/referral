@@ -61,7 +61,7 @@ class FeedbackCtrl extends Controller
             $tracking->action_md = 0;
         } 
 
-         if (in_array($latestStatus, ['travel', 'arrived', 'admitted', 'discharged'])) {
+        if (in_array($latestStatus, ['travel', 'arrived', 'admitted', 'discharged'])) {
             $latestAccepted = \DB::table('activity')
                 ->where('code', $code)
                 ->where('status', 'accepted')
