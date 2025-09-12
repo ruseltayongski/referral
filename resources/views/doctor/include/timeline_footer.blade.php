@@ -108,6 +108,36 @@
 </div>
 
 <script>
+
+    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility,telemedicine) {
+        
+        if(telemedicine === 0){
+        
+            console.log("please trigger this ", referred_to)
+            var url = "<?php echo asset('api/video/call'); ?>";
+            var json = {
+                "_token" : "<?php echo csrf_token(); ?>",
+                "tracking_id" : tracking_id,
+                "code" : code,
+                "action_md" : action_md ? action_md : '',
+                "referring_md" : referring_md,
+                "trigger_by" : "{{ $user->id }}",
+                "form_type" : form_tpe,
+                "referred_to" : referred_to
+            };
+            console.log("json data:", json);
+            $.post(url,json,function(){});
+            var windowName = 'NewWindow'; // Name of the new window
+            var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
+            if (newWindow && newWindow.outerWidth) {
+                // If the window was successfully opened, attempt to maximize it
+                newWindow.moveTo(0, 0);
+                newWindow.resizeTo(screen.availWidth, screen.availHeight);
+            }
+
+        }
+    }
    
    $(document).ready(function() {
         let selectedButtonData = null; 

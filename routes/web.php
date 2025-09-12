@@ -369,7 +369,7 @@ Route::post('/mcc/track', 'mcc\ReportCtrl@searchTrackReferral');
 
 
 //FEEDBACK
-// Route::get('/tracking/{code}', 'FeedbackCtrl@GetTracking');
+Route::get('/tracking/{code}', 'FeedbackCtrl@GetTracking');
 Route::get('feedback/home', 'FeedbackCtrl@home');
 Route::post('feedback/comment_append', 'FeedbackCtrl@CommentAppend');
 

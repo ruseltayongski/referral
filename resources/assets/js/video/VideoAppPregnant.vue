@@ -19,6 +19,7 @@ export default {
       isMobileDevice: false,
       showCameraSwitch: true,
       currentCameraId: null,
+      telemedicine: null,
       availableCameras: [],
       //start video in minutes
       isUserJoined: false,
@@ -145,6 +146,7 @@ export default {
         // console.log(response);
         this.form = response.form["pregnant"];
         this.formBaby = response.form["baby"];
+        this.telemedicine = response.form.telemedicine
 
         if (response.age_type === "y")
           this.patient_age = response.patient_age + " Years Old";
@@ -1474,7 +1476,7 @@ export default {
                   </button>
                 </div>
                 &nbsp;
-                <div class="button-container">
+                <div class="button-container" v-if="this.telemedicine == 0">
                   <div
                     v-if="!isMobile && showUpward"
                     class="tooltip-text"
@@ -1493,7 +1495,7 @@ export default {
                     <i class="bi-hospital"></i>
                   </button>
                 </div>
-                <div class="button-container">
+                <div class="button-container" v-if="this.telemedicine == 0">
                   <div
                     v-if="!isMobile && showPrescription"
                     class="tooltip-text"
@@ -1513,7 +1515,7 @@ export default {
                     <i class="bi bi-prescription"></i>
                   </button>
                 </div>
-                <div class="button-container">
+                <div class="button-container" v-if="this.telemedicine == 0">
                   <div
                     v-if="!isMobile && showTooltip"
                     class="tooltip-text"
@@ -1547,7 +1549,7 @@ export default {
                     data-toggle="modal"
                     data-target="#feedbackModal"
                     :data-code="referral_code"
-                    onclick="viewReco($(this))"
+                    onclick="viewReco($(this),0)"
                     @mouseover="showTooltipFeedback = true"
                     @mouseleave="showTooltipFeedback = false"
                   >
@@ -1960,7 +1962,7 @@ export default {
                   <!-- ======================================================================= -->
                 </div>
               </div>
-                 <div class="row g-0">
+                 <div class="row g-0" v-if="this.telemedicine == 0">
                     <div class="col-6">
                         <button class="btn btn-success btn-md w-100 ml-2"  type="button" @click="generatePrescription()">
                             <i class="bi bi-prescription"></i> Generate Prescription

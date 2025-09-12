@@ -202,6 +202,25 @@ class ApiController extends Controller
 
     public function callADoctor(Request $request) {
         $user = Session::get('auth');
+        
+         $tracking = \DB::table('tracking')
+        ->join('activity', 'tracking.code', '=', 'activity.code')
+        ->where('tracking.code', $request->code)
+        ->select(
+            'tracking.id as tracking_id',
+            'tracking.type as type',
+            'tracking.telemedicine as telemedicine',
+            'tracking.referring_md as track_referring_md',
+            'activity.action_md as action_md',
+            'activity.status as status',
+            'activity.id as activity_id'
+        )
+        ->orderByDesc('activity.id') // latest activity first
+        ->first();
+
+        if($tracking->status == "rejected" || $tracking->status == "transferred"){
+            $tracking->action_md = 0;
+        }
 
         $latest_subOpd_id = Activity::where('code',$request->code)
                             ->whereIn('status', ['followup','referred'])
@@ -214,15 +233,18 @@ class ApiController extends Controller
         $call = [
             "tracking_id" => $request->tracking_id,
             "code" => $request->code,
-            "action_md" => (int)$request->action_md,
-            "referring_md" => (int)$request->referring_md,
+            "action_md" => (int)$tracking->action_md ? (int)$tracking->action_md : (int)$request->action_md,
+            "referring_md" => (int)$tracking->track_referring_md ? (int)$tracking->$track_referring_md : (int)$request->referring_md,
             "trigger_by" => (int)$request->trigger_by,
-            "status" => "telemedicine",
+            // "status" => "telemedicine",
+            "telemedicine" => $tracking->telemedicine,
             "doctorCaller" => $doctorCaller,
             "form_type" => $request->form_type,
-            "activity_id" => $request->activity_id,
-            "referred_to" => (int)$request->referred_to,
-            "subopd_id" => $subOpd_id 
+            "activity_id" => $request->activity_id ? $request->activity_id : $tracking->activity_id,
+            "referred_to" => (int)$tracking->action_md ? (int)$request->referred_to : 63,
+            "referred_from" => (int)$request->referred_from,
+            "subopd_id" => $subOpd_id,
+            "trackingObject" => $tracking
         ];
         broadcast(new SocketReferralDischarged($call));
     }
