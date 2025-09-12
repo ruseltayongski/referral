@@ -94,9 +94,11 @@
                 action_md: Number,
                 imageUrl: $("#broadcasting_url").val()+"/resources/img/video/doctorLogo.png",
                 doctorCaller: String,
+                telemedicine: null,
                 telemedicineFormType: String,
                 activity_id: Number,
-                activeCallWindows: new Map()
+                activeCallWindows: new Map(),
+                activeCalls: new Map(),
             }
         },
         methods: {
@@ -750,10 +752,18 @@
                     '                                                <i class="fa fa-stethoscope"></i> Track\n' +
                     '                                            </a>';
             },
-            callADoctor(tracking_id,code,subopd_id) {
+            callADoctor(tracking_id,code,subopd_id, telemedicine) {
 
-                // console.log("follow Up sobOpd_id", subopd_id);
-                if(this.user.subopd_id == subopd_id){
+                console.log("follow Up sobOpd_id", subopd_id, this.user.subopd_id, telemedicine);
+                if(this.user.subopd_id == subopd_id && telemedicine == 1){
+                    this.tracking_id = tracking_id
+                    this.referral_code = code
+                    this.playVideoCallAudio();
+                    $(document).ready(function() {
+                        // console.log( "ready!" );
+                        $("#video-call-confirmation").modal('toggle');
+                    });
+                }else{
                     this.tracking_id = tracking_id
                     this.referral_code = code
                     this.playVideoCallAudio();
@@ -779,22 +789,40 @@
                         // console.log("the open open of wendow");
                         newWindow.moveTo(0, 0);
                         newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                        this.activeCallWindows.set(this.tracking_id, newWindow);
 
-                         this.activeCallWindows.set(this.tracking_id, newWindow);
+                          // clear activeCalls when the new window closes
+                        const tracking_id = this.tracking_id;
+                        // 🟩 Add call state to localStorage (mark acceptedBy)
+                        const key = 'activeCall_' + tracking_id;
+                        let callData = JSON.parse(localStorage.getItem(key) || '{}');
+                        callData.tracking_id = this.tracking_id;
+                        callData.acceptedBy = this.user.id; // accepting doctor
+                        localStorage.setItem(key, JSON.stringify(callData));
 
-                           // Listen for when the window closes
-                        const checkClosed = setInterval(() => {
+                        // 🟩 Poll for window close and unset acceptedBy
+                        const interval = setInterval(() => {
                             if (newWindow.closed) {
-                                this.activeCallWindows.delete(this.tracking_id);
-                                clearInterval(checkClosed);
-                                // console.log("Video call window closed for tracking_id:", this.tracking_id);
+                            clearInterval(interval);
+                            let callData = JSON.parse(localStorage.getItem(key) || '{}');
+                            if (callData.acceptedBy === this.user.id) {
+                                delete callData.acceptedBy;
+                            }
+                            if (!callData.startedBy && !callData.acceptedBy) {
+                                localStorage.removeItem(key);
+                            } else {
+                                localStorage.setItem(key, JSON.stringify(callData));
+                            }
+                            console.log('Accepting doctor closed window – updated', callData);
                             }
                         }, 1000);
                     }
                     
                     localStorage.setItem('callStartTime', Date.now());
-
-                    this.telemedicineExamined();
+                    if(this.telemedicine != 0){
+                        this.telemedicineExamined();
+                    }
+                    
                     // console.log("windowFeatures", windowFeatures);
                     // console.log("Video call started at:", new Date());
             },
@@ -822,9 +850,23 @@
                 this.$refs.audioVideo.pause();
             }
         },
-        // mounted() {
-        //     $("#video-call-confirmation").modal('toggle');
-        // },
+        mounted() {
+            //$("#video-call-confirmation").modal('toggle');
+            window.addEventListener('storage', (event) => {
+                if (event.key && event.key.startsWith('activeCall_')) {
+                    const tId = event.key.split('_')[1];
+                    const sharedActive = JSON.parse(event.newValue || '{}');
+
+                    // If both fields are empty -> you can re-trigger call
+                    if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                    console.log(`Both sides cleared – can trigger call for ${tId}`);
+                    // your callADoctor logic here
+                    } else {
+                    console.log(`Active call state changed for ${tId}`, sharedActive);
+                    }
+                }
+            });
+        },
         created() {
             // console.log("VUE.JS 3")
 
@@ -1023,9 +1065,10 @@
 
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
-                    // console.log("event discharge:",event);
+                     console.log("event discharge:",event);
                     // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
-                    if(event.payload.status === 'telemedicine') {
+                    this.telemedicine = event.payload.telemedicine;
+                    if(event.payload.status == "telemedicine") {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             // console.log("callAdoctor", event);
                             this.action_md = event.payload.action_md;
@@ -1056,7 +1099,7 @@
                                 return;
                             }
 
-                            this.callADoctor(event.payload.tracking_id,event.payload.code,event.payload.subopd_id);
+                            this.callADoctor(event.payload.tracking_id,event.payload.code,event.payload.subopd_id,event.payload.telemedicine);
                         } 
                         else if(event.payload.referred_from === this.user.facility_id) {
                             if(event.payload.telemedicine_status === 'examined') {
@@ -1070,9 +1113,29 @@
                                 this.upwardCompleted(event.payload.code, event.payload.activity_id)
                             }
                         }
-                    } else {
-                        // console.log("discharge file upload::", event.payload.lab_result);
-                        // console.log("my event discharged:", event);
+                    }else {
+                        this.action_md = event.payload.action_md;
+                        this.doctorCaller = event.payload.doctorCaller;
+                        this.telemedicineFormType = event.payload.form_type;
+                        this.activity_id = event.payload.activity_id;
+                  
+                        if(event.payload.referred_to === this.user.facility_id) {
+
+                            const tId = event.payload.tracking_id;
+                            const sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
+                            console.log("sharedActive", sharedActive);
+                            if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                                this.callADoctor(tId,event.payload.code, null,event.payload.telemedicine);
+                            }else{
+                                  console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                            }
+                        }
+                       
+                        console.log("my event discharged notification:", this.passToVueFacility);
+                        if(event.payload.referred_from === 0){
+                            return;
+                        }
+
                         if(event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }

@@ -31,6 +31,7 @@ export default {
       startTime: null, // Store the exact start time
       isLeavingChannel: false,
       isUserJoined: false,
+      telemedicine: null,
       //feedback
       feedbackUrl: baseUrlfeedback,
       doctorfeedback: doctorFeedback,
@@ -136,7 +137,7 @@ export default {
       )
       .then((res) => {
         const response = res.data;
-        // console.log(response);
+        this.telemedicine = response.form.telemedicine
         this.form = response.form;
         if (response.age_type === "y")
           this.patient_age = response.patient_age + " Years Old";
@@ -1032,6 +1033,7 @@ export default {
       agoraEngine.on("user-published", async (user, mediaType) => {
         await agoraEngine.subscribe(user, mediaType);
         // console.log("subscribe success");
+        console.log("option channel name:", this.options);
         if (mediaType === "video") {
           // Pause ringing audio when remote video is received
           if (self.$refs && self.$refs.ringingPhone) {
@@ -1180,6 +1182,7 @@ export default {
           self.options.token,
           self.options.uid
         );
+
         // Create a local audio track from the audio sampled by a microphone.
         channelParameters.localAudioTrack =
           await AgoraRTC.createMicrophoneAudioTrack();
@@ -1601,7 +1604,7 @@ export default {
                   </button>
                 </div>
                 &nbsp;
-                <div class="button-container">
+                <div class="button-container" v-if="this.user.facility_id != 63 && this.telemedicine == 1">
                   <div
                     v-if="!isMobile && showUpward"
                     class="tooltip-text"
@@ -1620,7 +1623,7 @@ export default {
                     <i class="bi-hospital"></i>
                   </button>
                 </div>
-                <div class="button-container">
+                <div class="button-container" v-if="this.telemedicine == 1">
                   <div
                     v-if="!isMobile && showPrescription"
                     class="tooltip-text"
@@ -1640,7 +1643,7 @@ export default {
                     <i class="bi bi-prescription"></i>
                   </button>
                 </div>
-                <div class="button-container">
+                <div class="button-container" v-if="this.telemedicine == 1">
                   <div
                     v-if="!isMobile && showTooltip"
                     class="tooltip-text"
@@ -1660,7 +1663,6 @@ export default {
                     <i class="bi bi-prescription2"></i>
                   </button>
                 </div>
-
                 <div class="button-container">
                   <div
                     v-if="!isMobile && showTooltipFeedback"
@@ -1674,7 +1676,7 @@ export default {
                     data-toggle="modal"
                     data-target="#feedbackModal"
                     :data-code="referral_code"
-                    onclick="viewReco($(this))"
+                    onclick="viewReco($(this),0)"
                     @mouseover="showTooltipFeedback = true"
                     @mouseleave="showTooltipFeedback = false"
                   >
@@ -1920,7 +1922,7 @@ export default {
                   </tr>
                 </tbody>
               </table>
-              <div class="row g-0">
+              <div class="row g-0" v-if="this.telemedicine == 1">
                 <div class="col-6">
                   <button
                     class="btn btn-success btn-md w-100 ml-2"

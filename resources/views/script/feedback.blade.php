@@ -5,6 +5,7 @@
     var code = 0;
     //var feedbackRef = dbRef.ref('Feedback');
     var last_id = 0;
+    let userId = {{ $user->id }};
 
     // $('.btn-feedback').on('click',function () {
     //     console.log("feedback");
@@ -59,7 +60,7 @@
     }
 
     var globalFiles = [];
-    function viewReco(data) {
+    function viewReco(data,videoApp) {
         code = data.data("code");
         console.log("viewRecos");
         let baseUrl = "{{ asset('') }}";
@@ -67,16 +68,16 @@
         var reco_seen_url = "<?php echo asset('reco/seen1').'/'; ?>"+code;
         $.get(reco_seen_url,function(){ });
 
-        $('#feedbackModal').bind('shown', function() {
-            $('textarea.mytextarea1').tinymce({
+        // $('#feedbackModal').bind('shown', function() {
+        //     $('textarea.mytextarea1').tinymce({
 
-            });
-            console.log("wew")
-        });
-
-        // $('#feedbackModal').on('shown.bs.modal', function() {
-        //     initTinyMCEWithCode(code); // pass code dynamically
+        //     });
+        //     console.log("wew")
         // });
+
+        $('#feedbackModal').on('shown.bs.modal', function() {
+            initTinyMCEWithCode(code,userId,videoApp); // pass code dynamically
+        });
 
         $('.feedback_code').html(code);
         $('.direct-chat-messages').attr('id',code);

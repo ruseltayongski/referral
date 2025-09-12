@@ -849,51 +849,23 @@
         $("#telemedicineFollowupFormModal").modal('show');
     }
 
-    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility) {
-        const upwardIsCompleted = $('#upward_progress'+code+activity_id).hasClass('completed');
-        const treatedIsCompleted = $('#treated_progress'+code+activity_id).hasClass('completed');
-        const acceptedComplete = $("#accepted_progress"+code+activity_id).hasClass('completed');
-        console.log('accepted',acceptedComplete);
-        console.log("referred_to::", referred_to, "ownfacility:", ownfacility);
-      
-        if (referred_to == ownfacility) {
+    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility,telemedicine) {
 
-            Lobibox.alert("error",
-                {
-                    msg: "You are not authorized to proceed with the consultation.!"
-                });
-
-            return;
-        }
-        if(alreadyTreated || alreadyfollow || treatedIsCompleted    ){// I am adding this condition for consultation tracking icon condition
-            Lobibox.alert("error",
-                {
-                    msg: "This tracking area has already been followed or treated!"
-                });
-        }else if(!acceptedComplete){
-            Lobibox.alert("error",
-                {
-                    msg: "You cannot Consult unless the user accept your Appointment!"
-                });
-        }
-        else if(alreadyReferred || alreadyupward || upwardIsCompleted ){// I am adding this condition for consultation tracking icon condition
-            Lobibox.alert("error",
-                {
-                    msg: "This tracking area has already been Upward or Refferred!"
-                });
-        }else{
+        if(telemedicine === 0){
+           
+            console.log("please trigger this ")
             var url = "<?php echo asset('api/video/call'); ?>";
             var json = {
                 "_token" : "<?php echo csrf_token(); ?>",
                 "tracking_id" : tracking_id,
                 "code" : code,
-                "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
+                "action_md" : action_md ? action_md : '',
                 "referring_md" : referring_md,
                 "trigger_by" : "{{ $user->id }}",
                 "form_type" : form_tpe,
-                "activity_id" : activity_id,
                 "referred_to" : referred_to
             };
+            console.log("json data:", json);
             $.post(url,json,function(){});
             var windowName = 'NewWindow'; // Name of the new window
             var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
@@ -902,7 +874,91 @@
                 // If the window was successfully opened, attempt to maximize it
                 newWindow.moveTo(0, 0);
                 newWindow.resizeTo(screen.availWidth, screen.availHeight);
+
+                
+                 // 🟩 Add call state to localStorage (mark startedBy)
+                const key = 'activeCall_' + tracking_id;
+                let callData = JSON.parse(localStorage.getItem(key) || '{}');
+                callData.tracking_id = tracking_id;
+                callData.startedBy = "{{ $user->id }}"; // referring doctor
+                localStorage.setItem(key, JSON.stringify(callData));
+
+                // 🟩 Poll for window close and unset startedBy
+                const interval = setInterval(() => {
+                    if (newWindow.closed) {
+                        clearInterval(interval);
+                        let callData = JSON.parse(localStorage.getItem(key) || '{}');
+                        if (callData.startedBy === "{{ $user->id }}") {
+                            delete callData.startedBy;
+                        }
+                        if (!callData.startedBy && !callData.acceptedBy) {
+                            localStorage.removeItem(key);
+                        } else {
+                            localStorage.setItem(key, JSON.stringify(callData));
+                        }
+                        console.log('Referring doctor closed window – updated', callData);
+                    }
+                }, 1000);
             }
+
+        }else{
+
+            const upwardIsCompleted = $('#upward_progress'+code+activity_id).hasClass('completed');
+            const treatedIsCompleted = $('#treated_progress'+code+activity_id).hasClass('completed');
+            const acceptedComplete = $("#accepted_progress"+code+activity_id).hasClass('completed');
+            console.log('accepted',acceptedComplete);
+            console.log("referred_to::", referred_to, "ownfacility:", ownfacility);
+        
+            if (referred_to == ownfacility) {
+
+                Lobibox.alert("error",
+                    {
+                        msg: "You are not authorized to proceed with the consultation.!"
+                    });
+
+                return;
+            }
+            if(alreadyTreated || alreadyfollow || treatedIsCompleted    ){// I am adding this condition for consultation tracking icon condition
+                Lobibox.alert("error",
+                    {
+                        msg: "This tracking area has already been followed or treated!"
+                    });
+            }else if(!acceptedComplete){
+                Lobibox.alert("error",
+                    {
+                        msg: "You cannot Consult unless the user accept your Appointment!"
+                    });
+            }
+            else if(alreadyReferred || alreadyupward || upwardIsCompleted ){// I am adding this condition for consultation tracking icon condition
+                Lobibox.alert("error",
+                    {
+                        msg: "This tracking area has already been Upward or Refferred!"
+                    });
+            }else{
+                var url = "<?php echo asset('api/video/call'); ?>";
+                var json = {
+                    "_token" : "<?php echo csrf_token(); ?>",
+                    "tracking_id" : tracking_id,
+                    "code" : code,
+                    "action_md" : action_md ? action_md : $("#accepted_progress"+code+activity_id).attr("data-actionmd"),
+                    "referring_md" : referring_md,
+                    "trigger_by" : "{{ $user->id }}",
+                    "form_type" : form_tpe,
+                    "activity_id" : activity_id,
+                    "referred_to" : referred_to
+                };
+                $.post(url,json,function(){});
+                var windowName = 'NewWindow'; // Name of the new window
+                var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+                var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
+                if (newWindow && newWindow.outerWidth) {
+                    // If the window was successfully opened, attempt to maximize it
+                    newWindow.moveTo(0, 0);
+                    newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                }
+
+            }
+
 
         }
 
