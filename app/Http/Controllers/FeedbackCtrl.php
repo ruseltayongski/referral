@@ -43,7 +43,7 @@ class FeedbackCtrl extends Controller
         ->first();
 
          $referring_md_Status = Activity::where("code", $code)
-            ->where('status','referred')->select('referring_md')->first();
+            ->where('status','referred')->select('referring_md', 'referred_from')->first();
 
         // if($tracking->status == "rejected" || $tracking->status == "transferred"){
         //     $tracking->action_md = 0;
@@ -72,6 +72,7 @@ class FeedbackCtrl extends Controller
             if ($latestAccepted) {
                 $tracking->referred_from = $latestAccepted->referred_from;
                 $tracking->referred_to = $latestAccepted->referred_to;
+                $tracking->action_md = $latestAccepted->action_md;
             }
         }
 

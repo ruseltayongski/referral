@@ -753,7 +753,6 @@
                     '                                            </a>';
             },
             callADoctor(tracking_id,code,subopd_id, telemedicine) {
-
                 console.log("follow Up sobOpd_id", subopd_id, this.user.subopd_id, telemedicine);
                 if(this.user.subopd_id == subopd_id && telemedicine == 1){
                     this.tracking_id = tracking_id
@@ -1119,15 +1118,38 @@
                         this.telemedicineFormType = event.payload.form_type;
                         this.activity_id = event.payload.activity_id;
                   
-                        if(event.payload.referred_to === this.user.facility_id) {
+                        // if(event.payload.referred_to === this.user.facility_id && (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id)) {
+
+                        //     const tId = event.payload.tracking_id;
+                        //     const sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
+                        //     console.log("sharedActive", sharedActive);
+                        //     if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                        //         this.callADoctor(tId,event.payload.code, null,event.payload.telemedicine);
+                        //     }else{
+                        //           console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                        //     }
+                        // }
+
+                        if (event.payload.referred_to === this.user.facility_id) {
 
                             const tId = event.payload.tracking_id;
                             const sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
-                            console.log("sharedActive", sharedActive);
-                            if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
-                                this.callADoctor(tId,event.payload.code, null,event.payload.telemedicine);
-                            }else{
-                                  console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                                console.log("working");
+                            if (event.payload.referred_to === 63) {
+                                console.log("walay action md");
+                                if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                                    this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
+                                } else {
+                                    console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                                }
+                            } 
+                            else if (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id) {
+                                console.log("accepted md");
+                                if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                                    this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
+                                } else {
+                                    console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                                }
                             }
                         }
                        

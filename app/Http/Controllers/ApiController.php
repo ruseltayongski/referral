@@ -203,6 +203,9 @@ class ApiController extends Controller
     public function callADoctor(Request $request) {
         $user = Session::get('auth');
         
+      $referring_md_Status = Activity::where("code", $request->code)
+            ->where('status','referred')->select('referring_md')->first();
+
          $tracking = \DB::table('tracking')
         ->join('activity', 'tracking.code', '=', 'activity.code')
         ->where('tracking.code', $request->code)
@@ -220,19 +223,6 @@ class ApiController extends Controller
 
         if($tracking->status == "rejected" || $tracking->status == "transferred"){
             $tracking->action_md = 0;
-        }
-
-        $latestStatus = $tracking->status;
-        if (in_array($latestStatus, ['travel'])) {
-
-            $latestAccepted = \DB::table('activity')
-                ->where('code', $request->code)
-                ->where('status', 'accepted')
-                ->orderByDesc('id')
-                ->first();
-            if($latestAccepted){
-                $tracking->action_md = $latestAccepted->action_md;
-            }
         }
 
         $latest_subOpd_id = Activity::where('code',$request->code)
@@ -257,7 +247,7 @@ class ApiController extends Controller
             "referred_to" => (int)$tracking->action_md ? (int)$request->referred_to : 63,
             "referred_from" => (int)$request->referred_from,
             "subopd_id" => $subOpd_id,
-            "trackingObject" => $tracking
+            "first_referring_md" => $referring_md_Status->referring_md
         ];
         broadcast(new SocketReferralDischarged($call));
     }
