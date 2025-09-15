@@ -6,6 +6,7 @@ import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue"; // I add this
 import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
+import OldFormReferralPregnant from "./OldFormReferralPregnant.vue";
 export default {
   name: "RecoApp",
   components: {
@@ -13,6 +14,7 @@ export default {
     LabRequestModal,
     PDFViewerModal,
     FeedbackModal,
+    OldFormReferralPregnant,
   },
   data() {
     return {
@@ -111,27 +113,26 @@ export default {
     };
   },
   mounted() {
-    window.addEventListener("keydown", this.pregnantKeydown)
+    window.addEventListener("keydown", this.pregnantKeydown);
     document.title = "TELEMEDICINE";
-      // Change favicon
-      const link = document.querySelector("link[rel~='icon']");
-      if (link) {
-        link.href = this.dohLogoUrl; // Make sure logo.png is in your public folder
-      } else {
-        const newLink = document.createElement('link');
-        newLink.rel = 'icon';
-        newLink.href = this.dohLogoUrl;
-        document.head.appendChild(newLink);
-      }
+    // Change favicon
+    const link = document.querySelector("link[rel~='icon']");
+    if (link) {
+      link.href = this.dohLogoUrl; // Make sure logo.png is in your public folder
+    } else {
+      const newLink = document.createElement("link");
+      newLink.rel = "icon";
+      newLink.href = this.dohLogoUrl;
+      document.head.appendChild(newLink);
+    }
 
-     // Automatically start screen recording when the component is mounted
+    // Automatically start screen recording when the component is mounted
     //  if (this.referring_md === "yes") {
     //     this.startScreenRecording();
     //   }
-    
-    
-    window.addEventListener('beforeunload', this.preventCloseWhileUploading);
-    window.addEventListener('beforeunload', this.stopCallTimer);
+
+    window.addEventListener("beforeunload", this.preventCloseWhileUploading);
+    window.addEventListener("beforeunload", this.stopCallTimer);
     // Initialize draggable div logic
     this.$nextTick(() => {
       this.initDraggableDiv();
@@ -146,7 +147,7 @@ export default {
         // console.log(response);
         this.form = response.form["pregnant"];
         this.formBaby = response.form["baby"];
-        this.telemedicine = response.form.telemedicine
+        this.telemedicine = response.form.telemedicine;
 
         if (response.age_type === "y")
           this.patient_age = response.patient_age + " Years Old";
@@ -173,11 +174,11 @@ export default {
   beforeUnmount() {
     //this.clearTimeout();
     window.removeEventListener("click", this.showDivAgain);
-    window.removeEventListener('beforeunload', this.preventCloseWhileUploading);
-    window.removeEventListener("keydown", this.pregnantKeydown)
+    window.removeEventListener("beforeunload", this.preventCloseWhileUploading);
+    window.removeEventListener("keydown", this.pregnantKeydown);
     this.stopCallTimer();
-     // Remove event listener when component is destroyed
-     window.removeEventListener('resize', this.handleResize);
+    // Remove event listener when component is destroyed
+    window.removeEventListener("resize", this.handleResize);
   },
   props: ["user"],
   created() {
@@ -187,90 +188,123 @@ export default {
       self.ringingPhoneFunc();
     });
     this.startBasicCall();
-      Echo.join('reco')
-      .listen('SocketReco', (event) => {
-          $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
-          axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
-              if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
-                  this.reco_count++
-                  $("#reco_count").html(this.reco_count)
-                  this.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message,event.payload.filepath)
-                  try {
-                      let objDiv = document.getElementById(event.payload.code);
-                      objDiv.scrollTop = objDiv.scrollHeight;
-                      if (!objDiv.scrollTop)
-                          this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
-                  } catch(err){
-                      // console.log("modal not open");
-                      this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
-                  }
-              }
-          });
-      });
+    Echo.join("reco").listen("SocketReco", (event) => {
+      $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
+      axios
+        .get(
+          $("#broadcasting_url").val() +
+            "/activity/check/" +
+            event.payload.code +
+            "/" +
+            this.user.facility_id
+        )
+        .then((response) => {
+          if (
+            response.data &&
+            event.payload.sender_facility !== this.user.facility_id &&
+            $("#archived_reco_page").val() !== "true"
+          ) {
+            this.reco_count++;
+            $("#reco_count").html(this.reco_count);
+            this.appendReco(
+              event.payload.code,
+              event.payload.name_sender,
+              event.payload.facility_sender,
+              event.payload.date_now,
+              event.payload.message,
+              event.payload.filepath
+            );
+            try {
+              let objDiv = document.getElementById(event.payload.code);
+              objDiv.scrollTop = objDiv.scrollHeight;
+              if (!objDiv.scrollTop)
+                this.notifyReco(
+                  event.payload.code,
+                  event.payload.feedback_count,
+                  event.payload.redirect_track
+                );
+            } catch (err) {
+              // console.log("modal not open");
+              this.notifyReco(
+                event.payload.code,
+                event.payload.feedback_count,
+                event.payload.redirect_track
+              );
+            }
+          }
+        });
+    });
   },
   watch: {
     isUserJoined() {
-      if(this.isUserJoined) {
+      if (this.isUserJoined) {
         this.$refs.ringingPhone.pause();
         this.startCallTimer();
       }
-    }
+    },
   },
-   computed: {
+  computed: {
     isMobile() {
       return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    }
+    },
   },
   methods: {
-      async getCameraDevices() {
-        try {
-          // Get list of available video devices
-          const devices = await AgoraRTC.getCameras();
-          this.availableCameras = devices;
-          // console.log('Available cameras:', devices); // Debug log
-          
-          if (devices.length > 0) {
-            this.currentCameraId = devices[0].deviceId;
-            this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-            // console.log('Current camera ID:', this.currentCameraId);
-          } else {
-            // console.warn('No cameras found');
-            this.showCameraSwitch = false;
-          }
-        } catch (error) {
-          console.error('Error getting cameras:', error);
+    async getCameraDevices() {
+      try {
+        // Get list of available video devices
+        const devices = await AgoraRTC.getCameras();
+        this.availableCameras = devices;
+        // console.log('Available cameras:', devices); // Debug log
+
+        if (devices.length > 0) {
+          this.currentCameraId = devices[0].deviceId;
+          this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
+          // console.log('Current camera ID:', this.currentCameraId);
+        } else {
+          // console.warn('No cameras found');
           this.showCameraSwitch = false;
-          Lobibox.alert("error", {
-            msg: "Error accessing cameras. Please check your device settings.",
-            closeButton: false,
-          });
         }
-      },
-      switchCamera() {
-        // console.log("Attempting to switch camera...");
+      } catch (error) {
+        console.error("Error getting cameras:", error);
+        this.showCameraSwitch = false;
+        Lobibox.alert("error", {
+          msg: "Error accessing cameras. Please check your device settings.",
+          closeButton: false,
+        });
+      }
+    },
+    switchCamera() {
+      // console.log("Attempting to switch camera...");
 
-        const track = this.channelParameters?.localVideoTrack;
-        if (!track || track.isClosed) {
-          Lobibox.alert("error", { msg: "Video track not initialized", closeButton: false });
-          return;
-        }
+      const track = this.channelParameters?.localVideoTrack;
+      if (!track || track.isClosed) {
+        Lobibox.alert("error", {
+          msg: "Video track not initialized",
+          closeButton: false,
+        });
+        return;
+      }
 
-        if (!this.availableCameras || this.availableCameras.length < 2) {
-          Lobibox.alert("error", { msg: "Not enough cameras available", closeButton: false });
-          return;
-        }
+      if (!this.availableCameras || this.availableCameras.length < 2) {
+        Lobibox.alert("error", {
+          msg: "Not enough cameras available",
+          closeButton: false,
+        });
+        return;
+      }
 
-        // Find the next camera
-        const currentIndex = this.availableCameras.findIndex(
-          (camera) => camera.deviceId === this.currentCameraId
-        );
-        const nextIndex = (currentIndex + 1) % this.availableCameras.length;
-        const nextCamera = this.availableCameras[nextIndex];
+      // Find the next camera
+      const currentIndex = this.availableCameras.findIndex(
+        (camera) => camera.deviceId === this.currentCameraId
+      );
+      const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+      const nextCamera = this.availableCameras[nextIndex];
 
-        // console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
+      // console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
 
-        // 🔑 Switch device on the SAME track
-       track.setDevice(nextCamera.deviceId)
+      // 🔑 Switch device on the SAME track
+      track
+        .setDevice(nextCamera.deviceId)
         .then(() => {
           // update current camera id
           this.currentCameraId = nextCamera.deviceId;
@@ -280,8 +314,8 @@ export default {
           const container = document.getElementById(this.options.uid);
           if (container) {
             try {
-              track.stop();             // stop old rendering
-              track.play(container);    // re-render new stream
+              track.stop(); // stop old rendering
+              track.play(container); // re-render new stream
             } catch (err) {
               console.warn("Replay failed:", err);
             }
@@ -294,7 +328,7 @@ export default {
             closeButton: false,
           });
         });
-      },
+    },
     initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
       const mainPic = document.querySelector(".mainPic");
@@ -305,7 +339,8 @@ export default {
       }
 
       let isDragging = false;
-      let offsetX = 0, offsetY = 0;
+      let offsetX = 0,
+        offsetY = 0;
 
       // Position the draggable div in the bottom-right corner initially
       positionInBottomRight();
@@ -321,12 +356,18 @@ export default {
       document.addEventListener("touchend", endDrag);
 
       function positionInBottomRight() {
-        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const containerBounds = mainPic
+          ? mainPic.getBoundingClientRect()
+          : document.body.getBoundingClientRect();
         const padding = 20;
 
         draggableDiv.style.position = "absolute";
-        draggableDiv.style.left = `${containerBounds.right - draggableDiv.offsetWidth - padding}px`;
-        draggableDiv.style.top = `${containerBounds.bottom - draggableDiv.offsetHeight - padding}px`;
+        draggableDiv.style.left = `${
+          containerBounds.right - draggableDiv.offsetWidth - padding
+        }px`;
+        draggableDiv.style.top = `${
+          containerBounds.bottom - draggableDiv.offsetHeight - padding
+        }px`;
       }
 
       function startDrag(event) {
@@ -360,7 +401,9 @@ export default {
       }
 
       function moveElement(clientX, clientY) {
-        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const containerBounds = mainPic
+          ? mainPic.getBoundingClientRect()
+          : document.body.getBoundingClientRect();
         const newX = Math.min(
           Math.max(clientX - offsetX, containerBounds.left),
           containerBounds.right - draggableDiv.offsetWidth
@@ -383,114 +426,125 @@ export default {
       // Ensure the draggable div stays within bounds on window resize
       window.addEventListener("resize", positionInBottomRight);
     },
-    pregnantKeydown(e){
-        const previewModal = document.getElementById("filePreviewContentReco");
-        // console.log("previeModal", previewModal);
-         if (previewModal && previewModal.classList.contains("show")) {
-          //  console.log("work my vue");
-          if(e.key === "ArrowLeft"){
-            const prev = document.getElementById("prevBtn");
-            if (prev) prev.click();   // Trigger the Blade button click
-          }
-          else if(e.key === "ArrowRight"){
-            const next = document.getElementById("nextBtn");
-            if(next) next.click();
-          }
-
-           else if (e.key === "Escape") {
-            $("#filePreviewContentReco").modal("hide");  // Close modal using jQuery
-          }
+    pregnantKeydown(e) {
+      const previewModal = document.getElementById("filePreviewContentReco");
+      // console.log("previeModal", previewModal);
+      if (previewModal && previewModal.classList.contains("show")) {
+        //  console.log("work my vue");
+        if (e.key === "ArrowLeft") {
+          const prev = document.getElementById("prevBtn");
+          if (prev) prev.click(); // Trigger the Blade button click
+        } else if (e.key === "ArrowRight") {
+          const next = document.getElementById("nextBtn");
+          if (next) next.click();
+        } else if (e.key === "Escape") {
+          $("#filePreviewContentReco").modal("hide"); // Close modal using jQuery
         }
+      }
     },
     closeFeedbackModal() {
       this.feedbackModalVisible = false;
     },
     notifyReco(code, feedback_count, redirect_track) {
-        let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
-            '                               data-target=\'#feedbackModal\'\n' +
-            '                               data-code="'+code+'" ' +
-            '                               >\n' +
-            '                           <i class=\'fa fa-comments\'></i> ReCo <span class=\'badge bg-blue\' id="reco_count'+code+'">'+feedback_count+'</span>\n' +
-            '                       </button><a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
-            '                                                <i class=\'fa fa-stethoscope\'></i> Track\n' +
-            '                                            </a>';
-        Lobibox.notify("success", {
-            title: code,
-            size: 'normal',
-            delay: false,
-            closeOnClick: false,
-            img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
-            msg: content
-        });
-        
+      let content =
+        "<button class='btn btn-xs btn-info' onclick='viewReco($(this))' data-toggle='modal'\n" +
+        "                               data-target='#feedbackModal'\n" +
+        '                               data-code="' +
+        code +
+        '" ' +
+        "                               >\n" +
+        "                           <i class='fa fa-comments'></i> ReCo <span class='badge bg-blue' id=\"reco_count" +
+        code +
+        '">' +
+        feedback_count +
+        "</span>\n" +
+        '                       </button><a href="' +
+        redirect_track +
+        "\" class='btn btn-xs btn-warning' target='_blank'>\n" +
+        "                                                <i class='fa fa-stethoscope'></i> Track\n" +
+        "                                            </a>";
+      Lobibox.notify("success", {
+        title: code,
+        size: "normal",
+        delay: false,
+        closeOnClick: false,
+        img: $("#broadcasting_url").val() + "/resources/img/ro7.png",
+        msg: content,
+      });
     },
-     appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
-        let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
-        let message = msg && msg.trim() !== ""
-            ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
-            : '';
+    appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
+      let picture_sender =
+        $("#broadcasting_url").val() + "/resources/img/receiver.png";
+      let message =
+        msg && msg.trim() !== ""
+          ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
+          : "";
 
-        let fileHtml = '';
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        const pdfExtensions = ['pdf'];
-        let filePaths = [];
-        let newGlobalFiles = [];
-        
-        const startingGlobalIndex = globalFiles ? globalFiles.length : 0;
+      let fileHtml = "";
+      const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
+      const pdfExtensions = ["pdf"];
+      let filePaths = [];
+      let newGlobalFiles = [];
 
-        if (filepath) {
-            if (typeof filepath === 'string') {
-                // Split by pipe and filter out empty strings
-                filePaths = filepath.split('|').filter(path => path.trim() !== '');
-            } else if (Array.isArray(filepath)) {
-                filePaths = filepath.filter(path => path.trim() !== '');
-            }
+      const startingGlobalIndex = globalFiles ? globalFiles.length : 0;
+
+      if (filepath) {
+        if (typeof filepath === "string") {
+          // Split by pipe and filter out empty strings
+          filePaths = filepath.split("|").filter((path) => path.trim() !== "");
+        } else if (Array.isArray(filepath)) {
+          filePaths = filepath.filter((path) => path.trim() !== "");
         }
+      }
 
-        if (filePaths.length > 0) {
-            fileHtml += '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
-            const baseUrl = $("#broadcasting_url").val();
+      if (filePaths.length > 0) {
+        fileHtml +=
+          '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
+        const baseUrl = $("#broadcasting_url").val();
 
-              filePaths.forEach((file, index) => {
-                if (file.trim() !== '') {
-                    let url;
+        filePaths.forEach((file, index) => {
+          if (file.trim() !== "") {
+            let url;
 
-                    const globalFileIndex = startingGlobalIndex + index;
+            const globalFileIndex = startingGlobalIndex + index;
 
-                    if (file.startsWith('http://') || file.startsWith('https://')) {
-                        // Already a full URL
-                        url = file;
-                    } else if (file.startsWith('/')) {
-                        // Absolute path
-                        url = baseUrl + file;
-                    } 
+            if (file.startsWith("http://") || file.startsWith("https://")) {
+              // Already a full URL
+              url = file;
+            } else if (file.startsWith("/")) {
+              // Absolute path
+              url = baseUrl + file;
+            }
 
-                    newGlobalFiles.push(url);
+            newGlobalFiles.push(url);
 
-                    try {
-                        url = new URL(file, baseUrl);  // Use base in case it's a relative URL
-                    } catch (err) {
-                        console.error('Invalid file URL:', file, err);
-                        return; // skip this file
-                    }
+            try {
+              url = new URL(file, baseUrl); // Use base in case it's a relative URL
+            } catch (err) {
+              console.error("Invalid file URL:", file, err);
+              return; // skip this file
+            }
 
-                    const fileName = url.pathname.split('/').pop();
-                    const extension = fileName.split('.').pop().toLowerCase();
-                    const displayName = fileName.length > 10 ? fileName.substring(0, 7) + '...' : fileName;
+            const fileName = url.pathname.split("/").pop();
+            const extension = fileName.split(".").pop().toLowerCase();
+            const displayName =
+              fileName.length > 10
+                ? fileName.substring(0, 7) + "..."
+                : fileName;
 
-                    const isPDF = pdfExtensions.includes(extension);
-                    const icon = isPDF 
-                        ? $("#broadcasting_url").val() + '/public/fileupload/pdffile.png'
-                        : $("#broadcasting_url").val() + `${file}`;
+            const isPDF = pdfExtensions.includes(extension);
+            const icon = isPDF
+              ? $("#broadcasting_url").val() + "/public/fileupload/pdffile.png"
+              : $("#broadcasting_url").val() + `${file}`;
 
-                      fileHtml += `
+            fileHtml += `
                         <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
                             <a href="javascript:void(0)" class="file-preview-trigger realtime-file-preview" 
                                 data-file-type="${extension}"
                                 data-file-url="${file}"
                                 data-file-name="${fileName}"
                                 data-feedback-code="${code}"
-                                data-file-paths="${filePaths.join('|')}"
+                                data-file-paths="${filePaths.join("|")}"
                                 data-current-index="${globalFileIndex}"
                                 data-local-index="${index}"
                                 data-use-global="true">
@@ -505,45 +559,45 @@ export default {
                             </div>
                         </div>
                     `;
-                }
-            });
+          }
+        });
 
-            fileHtml += '</div>';
+        fileHtml += "</div>";
+      }
+
+      // UPDATE GLOBAL FILES ARRAY
+      if (newGlobalFiles.length > 0) {
+        // Initialize globalFiles if it doesn't exist
+        if (typeof window.globalFiles === "undefined") {
+          window.globalFiles = [];
         }
 
-        // UPDATE GLOBAL FILES ARRAY
-        if (newGlobalFiles.length > 0) {
-            // Initialize globalFiles if it doesn't exist
-            if (typeof window.globalFiles === 'undefined') {
-                window.globalFiles = [];
-            }
-            
-            // Add new files to global array
-            window.globalFiles = window.globalFiles.concat(newGlobalFiles);
-            
-            // Store per-code basis for better organization
-            if (!window.globalFilesByCode) {
-                window.globalFilesByCode = {};
-            }
-            if (!window.globalFilesByCode[code]) {
-                window.globalFilesByCode[code] = [];
-            }
-            window.globalFilesByCode[code] = window.globalFilesByCode[code].concat(newGlobalFiles);
+        // Add new files to global array
+        window.globalFiles = window.globalFiles.concat(newGlobalFiles);
 
-            // If you're using Vue's reactive data, you might want to update a Vue data property
-            if (this.$data && this.$data.globalFiles) {
-                this.globalFiles = [...this.globalFiles, ...newGlobalFiles];
-            }
+        // Store per-code basis for better organization
+        if (!window.globalFilesByCode) {
+          window.globalFilesByCode = {};
+        }
+        if (!window.globalFilesByCode[code]) {
+          window.globalFilesByCode[code] = [];
+        }
+        window.globalFilesByCode[code] =
+          window.globalFilesByCode[code].concat(newGlobalFiles);
 
-            // console.log("Updated globalFiles in appendReco:", window.globalFiles);
-            // console.log("Files for code " + code + ":", window.globalFilesByCode[code]);
+        // If you're using Vue's reactive data, you might want to update a Vue data property
+        if (this.$data && this.$data.globalFiles) {
+          this.globalFiles = [...this.globalFiles, ...newGlobalFiles];
         }
 
+        // console.log("Updated globalFiles in appendReco:", window.globalFiles);
+        // console.log("Files for code " + code + ":", window.globalFilesByCode[code]);
+      }
 
-        let messageColor = 'style="margin-top: 5px;"';
-        let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
+      let messageColor = 'style="margin-top: 5px;"';
+      let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
 
-        $(".reco-body" + code).append(`
+      $(".reco-body" + code).append(`
             <div class='direct-chat-msgs left'>
                 <div class='direct-chat-info clearfix'>
                     <span class="direct-chat-name text-info pull-left">${facility_sender}</span><br>
@@ -558,63 +612,69 @@ export default {
             </div>
         `);
 
-        this.FeedbackFilePreviewListeners();
+      this.FeedbackFilePreviewListeners();
     },
-     FeedbackFilePreviewListeners() {
-        $(document).off('click', '.realtime-file-preview').on('click', '.realtime-file-preview', function(e) {
-            e.preventDefault();
+    FeedbackFilePreviewListeners() {
+      $(document)
+        .off("click", ".realtime-file-preview")
+        .on("click", ".realtime-file-preview", function (e) {
+          e.preventDefault();
 
-            const baseUrl = $("#broadcasting_url").val();
-            const filePathsString = $(this).data('file-paths');
-            const filePaths = typeof filePathsString === 'string' ? filePathsString.split('|').filter(p => p.trim() !== '') : [];
-            // var desc = 'desc';
-            const fullfilePaths = filePaths.map(file =>
-                file.startsWith('http') ? file : baseUrl + file
-            );
-            const useGlobal = $(this).data('use-global');
-            const globalIndex = parseInt($(this).data('current-index'));
-            const localIndex = parseInt($(this).data('local-index'));
-            const feedbackCode = $(this).data('feedback-code');
+          const baseUrl = $("#broadcasting_url").val();
+          const filePathsString = $(this).data("file-paths");
+          const filePaths =
+            typeof filePathsString === "string"
+              ? filePathsString.split("|").filter((p) => p.trim() !== "")
+              : [];
+          // var desc = 'desc';
+          const fullfilePaths = filePaths.map((file) =>
+            file.startsWith("http") ? file : baseUrl + file
+          );
+          const useGlobal = $(this).data("use-global");
+          const globalIndex = parseInt($(this).data("current-index"));
+          const localIndex = parseInt($(this).data("local-index"));
+          const feedbackCode = $(this).data("feedback-code");
 
-            let files = [];
-            let startIndex = 0;
-            
-            if (useGlobal && globalFiles && globalFiles.length > 0) {
-                // Use globalFiles array for navigation
-                files = globalFiles.map(normalizeUrl);
-                startIndex = globalIndex;
-            } else {
-                // Fallback to local files from data attribute
-                let filesAttr = $(this).attr('data-files');
-                try {
-                    if (filesAttr) {
-                        files = JSON.parse(filesAttr);
-                        files = files.map(normalizeUrl);
-                        startIndex = localIndex;
-                    } else {
-                        console.warn("data-files attribute is missing or empty.");
-                        return;
-                    }
-                } catch (e) {
-                    console.error("Invalid JSON in data-files:", filesAttr, e);
-                    return;
-                }
+          let files = [];
+          let startIndex = 0;
+
+          if (useGlobal && globalFiles && globalFiles.length > 0) {
+            // Use globalFiles array for navigation
+            files = globalFiles.map(normalizeUrl);
+            startIndex = globalIndex;
+          } else {
+            // Fallback to local files from data attribute
+            let filesAttr = $(this).attr("data-files");
+            try {
+              if (filesAttr) {
+                files = JSON.parse(filesAttr);
+                files = files.map(normalizeUrl);
+                startIndex = localIndex;
+              } else {
+                console.warn("data-files attribute is missing or empty.");
+                return;
+              }
+            } catch (e) {
+              console.error("Invalid JSON in data-files:", filesAttr, e);
+              return;
             }
-            
-            if (Array.isArray(files) && files.length > 0) {
-                // console.log("Setting up file preview with files:", files);
-                // console.log("Starting index:", startIndex);
-                window.setupfeedbackFilePreview(files, startIndex, code);
-                $('#filePreviewContentReco').modal('show');
-            }
-            $('#filePreviewContentReco').modal('show');
+          }
+
+          if (Array.isArray(files) && files.length > 0) {
+            // console.log("Setting up file preview with files:", files);
+            // console.log("Starting index:", startIndex);
+            window.setupfeedbackFilePreview(files, startIndex, code);
+            $("#filePreviewContentReco").modal("show");
+          }
+          $("#filePreviewContentReco").modal("show");
         });
     },
     async startScreenRecording() {
-
       try {
         // Check for browser compatibility
-        const isSupported = !!navigator.mediaDevices.getDisplayMedia && !!navigator.mediaDevices.getUserMedia;
+        const isSupported =
+          !!navigator.mediaDevices.getDisplayMedia &&
+          !!navigator.mediaDevices.getUserMedia;
         if (!isSupported) {
           Lobibox.alert("error", {
             msg: "Your browser does not support screen recording with microphone audio. Please use the latest version of Chrome, Edge, or Firefox.",
@@ -639,7 +699,7 @@ export default {
           audio: {
             echoCancellation: true, // Reduce echo
             noiseSuppression: true, // Reduce background noise
-            sampleRate: 44100,      // Set sample rate for better quality
+            sampleRate: 44100, // Set sample rate for better quality
           },
         });
 
@@ -656,7 +716,8 @@ export default {
 
         // Connect system audio to the AudioContext
         if (screenStream.getAudioTracks().length > 0) {
-          const systemAudioSource = audioContext.createMediaStreamSource(screenStream);
+          const systemAudioSource =
+            audioContext.createMediaStreamSource(screenStream);
           systemAudioSource.connect(destination);
         } else {
           console.warn("No system audio track found in screen stream.");
@@ -664,7 +725,8 @@ export default {
 
         // Connect microphone audio to the AudioContext
         if (micStream.getAudioTracks().length > 0) {
-          const micAudioSource = audioContext.createMediaStreamSource(micStream);
+          const micAudioSource =
+            audioContext.createMediaStreamSource(micStream);
           micAudioSource.connect(destination);
         } else {
           console.warn("No microphone audio track found.");
@@ -672,7 +734,7 @@ export default {
 
         // Combine video from screenStream and mixed audio
         const combinedStream = new MediaStream([
-          ...screenStream.getVideoTracks(),  // Desktop video
+          ...screenStream.getVideoTracks(), // Desktop video
           ...destination.stream.getAudioTracks(), // Mixed audio (system + microphone)
         ]);
 
@@ -752,8 +814,12 @@ export default {
         const referred = this.form.action_md;
         const currentDate = new Date();
         const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-        const timeStart = new Date(this.startTime).toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
-        const timeEnd = currentDate.toLocaleTimeString("en-US", { hour12: false }).replace(/:/g, "-");
+        const timeStart = new Date(this.startTime)
+          .toLocaleTimeString("en-US", { hour12: false })
+          .replace(/:/g, "-");
+        const timeEnd = currentDate
+          .toLocaleTimeString("en-US", { hour12: false })
+          .replace(/:/g, "-");
 
         const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
 
@@ -776,16 +842,23 @@ export default {
           formData.append("username", username); // <-- Add facility name
 
           try {
-            await axios.post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
-              headers: { "Content-Type": "multipart/form-data" },
-            });
+            await axios.post(
+              "https://telemedapi.cvchd7.com/api/save-screen-record",
+              formData,
+              {
+                headers: { "Content-Type": "multipart/form-data" },
+              }
+            );
             // Update progress after each chunk
-            this.uploadProgress = Math.round(((chunkIndex + 1) / totalChunks) * 100);
+            this.uploadProgress = Math.round(
+              ((chunkIndex + 1) / totalChunks) * 100
+            );
           } catch (error) {
             this.loading = false;
             this.uploadProgress = 0; // Reset on error
             Lobibox.alert("warning", {
-              msg: `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
+              msg:
+                `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
                 (error.response?.data?.message || error.message),
             });
             return;
@@ -798,23 +871,24 @@ export default {
         this.uploadProgress = 0; // Reset progress
 
         if (closeAfterUpload) {
-            Lobibox.alert("success", {
-              msg: `Your conversation has been successfully recorded and uploaded.`,
-              callback: function () {
-                window.top.close();
-              },
-            });
+          Lobibox.alert("success", {
+            msg: `Your conversation has been successfully recorded and uploaded.`,
+            callback: function () {
+              window.top.close();
+            },
+          });
         }
       } else {
         console.error("No recorded data available to save.");
       }
     },
     preventCloseWhileUploading(event) {
-        if (this.loading) {
-          event.preventDefault();
-          event.returnValue = "File upload in progress. Please wait until it finishes.";
-          return event.returnValue;
-        }
+      if (this.loading) {
+        event.preventDefault();
+        event.returnValue =
+          "File upload in progress. Please wait until it finishes.";
+        return event.returnValue;
+      }
     },
     startCallTimer() {
       this.startTime = Date.now();
@@ -825,15 +899,17 @@ export default {
         const minutes = Math.floor((elapsedTime % 3600000) / 60000);
         const seconds = Math.floor((elapsedTime % 60000) / 1000);
 
-
         // Format the time as mm:ss:ms
-      
-        if(hours == 0){
-          this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(seconds).padStart(2, "0")} `;
-        }else {
-          this.callDuration = `${String(hours).padStart(1, "0")} : ${String(minutes).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
+
+        if (hours == 0) {
+          this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(
+            seconds
+          ).padStart(2, "0")} `;
+        } else {
+          this.callDuration = `${String(hours).padStart(1, "0")} : ${String(
+            minutes
+          ).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
         }
-        
       }, 10);
     },
     async startBasicCall() {
@@ -866,14 +942,14 @@ export default {
       // console.log("All devices:", devices);
       // console.log("Detected real cameras:", realCameras);
       // console.log("Has real camera:", hasCamera);
-      
+
       // if (hasCamera) {
       //    console.log("has camera:", hasCamera);
       //   self.channelParameters.localVideoTrack =
       //     await AgoraRTC.createCameraVideoTrack();
       // } else {
       //   console.log("no camera", hasCamera);
-        
+
       //   Lobibox.alert("error", {
       //     msg: "Camera is required!.",
       //     closeButton: false,
@@ -884,21 +960,23 @@ export default {
       //   return;
       // }
 
-     // Listen for when a user joins the channel
+      // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
         self.channelParameters.userCount++;
         this.isUserJoined = true;
         // Check if channel already has maximum users
-        if (self.channelParameters.userCount >= self.channelParameters.maxUsers) {
+        if (
+          self.channelParameters.userCount >= self.channelParameters.maxUsers
+        ) {
           // console.log("Channel is full! Maximum users reached.");
           self.showChannelFullMessage();
           // Disconnect this user since the channel is full
           await agoraEngine.leave();
           self.channelParameters.userCount--; // Decrement user count after leaving
           return;
-        }else{
-          if(this.referring_md === "yes"){
-              this.startScreenRecording();
+        } else {
+          if (this.referring_md === "yes") {
+            this.startScreenRecording();
           }
         }
       });
@@ -918,7 +996,9 @@ export default {
 
           document.body.append(remotePlayerContainer);
           document.querySelector(".remotePlayerDiv").innerHTML = "";
-          document.querySelector(".remotePlayerDiv").append(remotePlayerContainer);
+          document
+            .querySelector(".remotePlayerDiv")
+            .append(remotePlayerContainer);
           remotePlayerContainer.classList.add("remotePlayerLayer");
 
           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
@@ -936,7 +1016,10 @@ export default {
       });
 
       agoraEngine.on("user-left", (user) => {
-        self.channelParameters.userCount = Math.max(0, self.channelParameters.userCount - 1);
+        self.channelParameters.userCount = Math.max(
+          0,
+          self.channelParameters.userCount - 1
+        );
       });
 
       try {
@@ -948,16 +1031,20 @@ export default {
         );
 
         // Create audio track
-        self.channelParameters.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+        self.channelParameters.localAudioTrack =
+          await AgoraRTC.createMicrophoneAudioTrack();
 
         // Check if camera is available before creating video track
         try {
           const devices = await AgoraRTC.getCameras();
           if (devices && devices.length > 0) {
-            self.channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+            self.channelParameters.localVideoTrack =
+              await AgoraRTC.createCameraVideoTrack();
             document.body.append(localPlayerContainer);
             document.querySelector(".localPlayerDiv").innerHTML = "";
-            document.querySelector(".localPlayerDiv").append(localPlayerContainer);
+            document
+              .querySelector(".localPlayerDiv")
+              .append(localPlayerContainer);
             localPlayerContainer.classList.add("localPlayerLayer");
             self.channelParameters.localVideoTrack.play(localPlayerContainer);
           } else {
@@ -1001,9 +1088,9 @@ export default {
       fullMessage.style.color = "white";
       fullMessage.style.borderRadius = "5px";
       fullMessage.style.zIndex = "9999";
-      
+
       document.body.appendChild(fullMessage);
-      
+
       // Remove the message after a few seconds
       setTimeout(() => {
         fullMessage.remove();
@@ -1041,7 +1128,7 @@ export default {
         // Create a local audio track from the audio sampled by a microphone.
         channelParameters.localAudioTrack =
           await AgoraRTC.createMicrophoneAudioTrack();
-          
+
         // Check if camera is available before creating video track
         const devices = await AgoraRTC.getCameras();
         if (devices && devices.length > 0) {
@@ -1052,17 +1139,17 @@ export default {
           document.body.append(localPlayerContainer);
           $(".localPlayerDiv").html(localPlayerContainer);
           $(localPlayerContainer).addClass("localPlayerLayer");
-          
+
           // Play the local video track.
           channelParameters.localVideoTrack.play(localPlayerContainer);
         }
-        
+
         // Publish the tracks that are available
         const tracksToPublish = [channelParameters.localAudioTrack];
         if (channelParameters.localVideoTrack) {
           tracksToPublish.push(channelParameters.localVideoTrack);
         }
-        
+
         // Publish the local audio and video tracks in the channel.
         await agoraEngine.publish(tracksToPublish);
         // console.log("publish success!");
@@ -1070,13 +1157,13 @@ export default {
         console.error("Error in joinVideo:", error);
       }
     },
-   async sendCallDuration() {
+    async sendCallDuration() {
       if (this.isLeavingChannel) return; // Prevent duplicate sends
       this.isLeavingChannel = true;
 
       // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
-      let duration = this.callDuration.replace(/\s/g, ''); // Remove spaces
-      let parts = duration.split(':').map(Number);
+      let duration = this.callDuration.replace(/\s/g, ""); // Remove spaces
+      let parts = duration.split(":").map(Number);
       let totalMinutes = 0;
 
       if (parts.length === 2) {
@@ -1085,7 +1172,7 @@ export default {
         if (parts[1] >= 30) totalMinutes += 1; // round up if 30+ seconds
       } else if (parts.length === 3) {
         // Format: hh:mm:ss
-        totalMinutes = (parts[0] * 60) + parts[1];
+        totalMinutes = parts[0] * 60 + parts[1];
         if (parts[2] >= 30) totalMinutes += 1; // round up if 30+ seconds
       }
 
@@ -1093,14 +1180,17 @@ export default {
       totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
 
       try {
-        const response = await axios.post(`${this.baseUrl}/save-call-duration`, {
-          call_duration: totalMinutes, // send as int(11)
-          tracking_id: this.tracking_id,
-          referral_code: this.referral_code
-        });
+        const response = await axios.post(
+          `${this.baseUrl}/save-call-duration`,
+          {
+            call_duration: totalMinutes, // send as int(11)
+            tracking_id: this.tracking_id,
+            referral_code: this.referral_code,
+          }
+        );
 
         // console.log("Call duration saved (minutes):", totalMinutes, response.data);
-        localStorage.removeItem('callStartTime'); // Clean up
+        localStorage.removeItem("callStartTime"); // Clean up
         return true;
       } catch (error) {
         console.error("Error saving call duration:", error);
@@ -1109,7 +1199,7 @@ export default {
     },
     async leaveChannel() {
       // if (confirm("Are you sure you want to leave this channel?")) {
-        
+
       //   // Wait for duration to be sent before closing
       //   if(this.referring_md == 'yes'){
       //     clearInterval(this.callTimer); // Stop the timer
@@ -1125,47 +1215,50 @@ export default {
       // }
 
       if (confirm("Are you sure you want to leave this channel?")) {
-            // Stop screen recording and save the file
-            if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
-                this.screenRecorder.stop();
-                this.screenRecorder.onstop = () => {
-                    this.saveScreenRecording(true);
-                };
-            }else {
-              window.top.close();
-            }
-
-            // Wait for duration to be sent before closing
-            if (this.referring_md === "yes") {
-                clearInterval(this.callTimer); // Stop the timer
-                await this.sendCallDuration();
-
-                // // Give more time for the request to complete
-                // setTimeout(() => {
-                //     window.top.close();
-                // }, 10000);
-            } else {
-                window.top.close();
-            }
+        // Stop screen recording and save the file
+        if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+          this.screenRecorder.stop();
+          this.screenRecorder.onstop = () => {
+            this.saveScreenRecording(true);
+          };
+        } else {
+          window.top.close();
         }
+
+        // Wait for duration to be sent before closing
+        if (this.referring_md === "yes") {
+          clearInterval(this.callTimer); // Stop the timer
+          await this.sendCallDuration();
+
+          // // Give more time for the request to complete
+          // setTimeout(() => {
+          //     window.top.close();
+          // }, 10000);
+        } else {
+          window.top.close();
+        }
+      }
     },
-   stopCallTimer() {
-    if (this.callTimer) {
-      clearInterval(this.callTimer);
-    }
+    stopCallTimer() {
+      if (this.callTimer) {
+        clearInterval(this.callTimer);
+      }
     },
     async videoStreamingOnAndOff() {
       this.videoStreaming = !this.videoStreaming;
-      
+
       if (this.videoStreaming) {
         // If turning video on and we don't have a video track yet
         if (!this.channelParameters.localVideoTrack) {
           try {
             const devices = await AgoraRTC.getCameras();
             if (devices && devices.length > 0) {
-              this.channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-              const localPlayerContainer = document.getElementById(this.options.uid);
-              
+              this.channelParameters.localVideoTrack =
+                await AgoraRTC.createCameraVideoTrack();
+              const localPlayerContainer = document.getElementById(
+                this.options.uid
+              );
+
               if (!localPlayerContainer) {
                 const newContainer = document.createElement("div");
                 newContainer.id = this.options.uid;
@@ -1173,12 +1266,14 @@ export default {
                 $(".localPlayerDiv").html(newContainer);
                 $(newContainer).addClass("localPlayerLayer");
               }
-              
+
               this.channelParameters.localVideoTrack.play(this.options.uid);
-              
+
               // Publish the video track if we're connected
               if (this.channelParameters.localAudioTrack) {
-                await agoraEngine.publish([this.channelParameters.localVideoTrack]);
+                await agoraEngine.publish([
+                  this.channelParameters.localVideoTrack,
+                ]);
               }
             } else {
               // console.log("No camera detected");
@@ -1260,17 +1355,18 @@ export default {
       }
     },
     generatePrescription() {
-    const getPrescription = {
-      code: this.referral_code,
-      form_type: this.form_type,
-      tracking_id: this.tracking_id,
-    };
+      const getPrescription = {
+        code: this.referral_code,
+        form_type: this.form_type,
+        tracking_id: this.tracking_id,
+      };
 
-    axios
+      axios
         .post(`${this.baseUrl}/api/video/prescription/check`, getPrescription)
         .then((response) => {
           if (response.data.status === "success") {
-            const prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
+            const prescribedActivityId =
+              response.data.prescriptions[0].prescribed_activity_id;
 
             // Set the PDF URL
             this.PdfUrl = `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`;
@@ -1290,17 +1386,17 @@ export default {
         });
     },
     generateLabrequest() {
-       const url = `${this.baseUrl}/api/check/labresult`;
-        const payload = {
-          activity_id: this.activity_id 
-        };
+      const url = `${this.baseUrl}/api/check/labresult`;
+      const payload = {
+        activity_id: this.activity_id,
+      };
 
       axios
         .post(url, payload)
         .then((response) => {
           if (response.data.id) {
             const pdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
-            
+
             // Set the PDF URL for the modal
             this.PdfUrl = pdfUrl;
 
@@ -1349,29 +1445,28 @@ export default {
     },
   },
 };
-
 </script>
 <template>
-    <div v-if="loading" class="loader-overlay">
+  <div v-if="loading" class="loader-overlay">
     <div class="loader" style="margin-right: 20px"></div>
-    <div style="width: 300px; margin-top: 20px;">
-      <div style="background: #444; border-radius: 8px; overflow: hidden;">
+    <div style="width: 300px; margin-top: 20px">
+      <div style="background: #444; border-radius: 8px; overflow: hidden">
         <div
           :style="{
             width: uploadProgress + '%',
             background: '#4caf50',
             height: '18px',
-            transition: 'width 0.3s'
+            transition: 'width 0.3s',
           }"
-        >
+        ></div>
       </div>
-      </div>
-      <p style="color: white; text-align: center; margin: 5px 0 0 0;">
-        Please wait until upload is complete.<br>Do not close this window. {{ uploadProgress }}%
+      <p style="color: white; text-align: center; margin: 5px 0 0 0">
+        Please wait until upload is complete.<br />Do not close this window.
+        {{ uploadProgress }}%
       </p>
     </div>
-  </div> 
-    <!-- <div
+  </div>
+  <!-- <div
       v-if="netSpeedMbps"
       class="net-speed-indicator"
       :class="netSpeedStatus"
@@ -1383,7 +1478,7 @@ export default {
       </span>
     </div> -->
   <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
-<div class="fullscreen-div">
+  <div class="fullscreen-div">
     <div class="main-container">
       <div class="video-container">
         <div class="mainPic">
@@ -1399,167 +1494,173 @@ export default {
           <Transition name="fade">
             <div class="iconCall position-absolute fade-in" v-if="showDiv">
               <div class="button-container">
-                  <div
-                    v-if="!isMobile && showMic"
-                    class="tooltip-text"
-                    style="background-color: #138496"
-                  >
-                    Audio
-                  </div>
-                  <button
-                    class="btn btn-info btn-md mic-button"
-                    :class="{ 'mic-button-slash': !audioStreaming }"
-                    @click="audioStreamingOnAnddOff"
-                    type="button"
-                    @mouseover="showMic = true"
-                    @mouseleave="showMic = false"
-                  >
-                    <i class="bi-mic-fill"></i>
-                  </button>
+                <div
+                  v-if="!isMobile && showMic"
+                  class="tooltip-text"
+                  style="background-color: #138496"
+                >
+                  Audio
                 </div>
-                &nbsp;
-                <div class="button-container">
-                  <div
-                    v-if="!isMobile && showVedio"
-                    class="tooltip-text"
-                    style="background-color: #218838"
-                  >
-                    Video
-                  </div>
-                  <button
-                    class="btn btn-success btn-md video-button"
-                    :class="{ 'video-button-slash': !videoStreaming }"
-                    @click="videoStreamingOnAndOff"
-                    type="button"
-                    @mouseover="showVedio = true"
-                    @mouseleave="showVedio = false"
-                  >
-                    <i class="bi-camera-video-fill"></i>
-                  </button>
+                <button
+                  class="btn btn-info btn-md mic-button"
+                  :class="{ 'mic-button-slash': !audioStreaming }"
+                  @click="audioStreamingOnAnddOff"
+                  type="button"
+                  @mouseover="showMic = true"
+                  @mouseleave="showMic = false"
+                >
+                  <i class="bi-mic-fill"></i>
+                </button>
+              </div>
+              &nbsp;
+              <div class="button-container">
+                <div
+                  v-if="!isMobile && showVedio"
+                  class="tooltip-text"
+                  style="background-color: #218838"
+                >
+                  Video
                 </div>
-                 <div class="button-container" v-if="isMobile">
-                  <div 
-                    v-if="!isMobile &&showCameraSwitch" 
-                    class="tooltip-text" 
-                    style="background-color: #218838"
-                  >
-                    Switch Camera
-                  </div>
-                  <button
-                    class="btn btn-success btn-md camera-switch-button"
-                    @click="switchCamera"
-                    type="button"
-                    @mouseover="showCameraSwitch = true"
-                    @mouseleave="showCameraSwitch = false"
-                  >
-                    <i class="bi-arrow-repeat"></i>
-                  </button>
-                </div> 
-                &nbsp;
-                <div class="button-container">
-                  <div
-                    v-if="!isMobile && showEndcall"
-                    class="tooltip-text"
-                    style="background-color: #c82333"
-                  >
-                    End Call
-                  </div>
-                  <button
-                    class="btn btn-danger btn-md decline-button"
-                    @click="leaveChannel"
-                    type="button"
-                    @mouseover="showEndcall = true"
-                    @mouseleave="showEndcall = false"
-                    :disabled="loading"
-                  >
-                    <i class="bi-telephone-x-fill"></i>
-                  </button>
+                <button
+                  class="btn btn-success btn-md video-button"
+                  :class="{ 'video-button-slash': !videoStreaming }"
+                  @click="videoStreamingOnAndOff"
+                  type="button"
+                  @mouseover="showVedio = true"
+                  @mouseleave="showVedio = false"
+                >
+                  <i class="bi-camera-video-fill"></i>
+                </button>
+              </div>
+              <div class="button-container" v-if="isMobile">
+                <div
+                  v-if="!isMobile && showCameraSwitch"
+                  class="tooltip-text"
+                  style="background-color: #218838"
+                >
+                  Switch Camera
                 </div>
-                &nbsp;
-                <div class="button-container" v-if="this.telemedicine == 0">
-                  <div
-                    v-if="!isMobile && showUpward"
-                    class="tooltip-text"
-                    style="background-color: #e0a800"
-                  >
-                    Upward
-                  </div>
-                  <button
-                    class="btn btn-warning btn-md upward-button"
-                    @click="endorseUpward"
-                    type="button"
-                    v-if="referring_md == 'no'"
-                    @mouseover="showUpward = true"
-                    @mouseleave="showUpward = false"
-                  >
-                    <i class="bi-hospital"></i>
-                  </button>
+                <button
+                  class="btn btn-success btn-md camera-switch-button"
+                  @click="switchCamera"
+                  type="button"
+                  @mouseover="showCameraSwitch = true"
+                  @mouseleave="showCameraSwitch = false"
+                >
+                  <i class="bi-arrow-repeat"></i>
+                </button>
+              </div>
+              &nbsp;
+              <div class="button-container">
+                <div
+                  v-if="!isMobile && showEndcall"
+                  class="tooltip-text"
+                  style="background-color: #c82333"
+                >
+                  End Call
                 </div>
-                <div class="button-container" v-if="this.telemedicine == 0">
-                  <div
-                    v-if="!isMobile && showPrescription"
-                    class="tooltip-text"
-                    style="background-color: #218838"
-                  >
-                    Prescription
-                  </div>
-                  <button
-                    class="btn btn-success btn-md prescription-button"
-                    data-toggle="modal"
-                    data-target="#prescriptionModal"
-                    type="button"
-                    v-if="referring_md == 'yes'"
-                    @mouseover="showPrescription = true"
-                    @mouseleave="showPrescription = false"
-                  >
-                    <i class="bi bi-prescription"></i>
-                  </button>
+                <button
+                  class="btn btn-danger btn-md decline-button"
+                  @click="leaveChannel"
+                  type="button"
+                  @mouseover="showEndcall = true"
+                  @mouseleave="showEndcall = false"
+                  :disabled="loading"
+                >
+                  <i class="bi-telephone-x-fill"></i>
+                </button>
+              </div>
+              &nbsp;
+              <div class="button-container" v-if="this.telemedicine == 1">
+                <div
+                  v-if="!isMobile && showUpward"
+                  class="tooltip-text"
+                  style="background-color: #e0a800"
+                >
+                  Upward
                 </div>
-                <div class="button-container" v-if="this.telemedicine == 0">
-                  <div
-                    v-if="!isMobile && showTooltip"
-                    class="tooltip-text"
-                    style="background-color: #007bff;"
-                  >
-                    Lab Request
-                  </div>
-                  <button
-                    class="btn btn-primary btn-md prescription-button"
-                    data-toggle="modal"
-                    data-target="#labRequestModal"
-                    type="button"
-                    v-if="referring_md == 'yes'"
-                    @mouseover="showTooltip = true"
-                    @mouseleave="showTooltip = false"
-                  >
-                    <i class="bi bi-prescription2"></i>
-                  </button>
+                <button
+                  class="btn btn-warning btn-md upward-button"
+                  @click="endorseUpward"
+                  type="button"
+                  v-if="referring_md == 'no'"
+                  @mouseover="showUpward = true"
+                  @mouseleave="showUpward = false"
+                >
+                  <i class="bi-hospital"></i>
+                </button>
+              </div>
+              <div class="button-container" v-if="this.telemedicine == 1">
+                <div
+                  v-if="!isMobile && showPrescription"
+                  class="tooltip-text"
+                  style="background-color: #218838"
+                >
+                  Prescription
                 </div>
-                
-                 <div class="button-container">
-                  <div
-                    v-if="!isMobile && showTooltipFeedback"
-                    class="tooltip-text"
-                    style="background-color: #17a2b8;"
-                  >
-                    Chat
-                  </div>
-                  <button
-                    class="btn btn-info btn-md reco-button"
-                    data-toggle="modal"
-                    data-target="#feedbackModal"
-                    :data-code="referral_code"
-                    onclick="viewReco($(this),0)"
-                    @mouseover="showTooltipFeedback = true"
-                    @mouseleave="showTooltipFeedback = false"
-                  >
-                    <i class="bi bi-chat-left-text"></i>
-                  </button>
+                <button
+                  class="btn btn-success btn-md prescription-button"
+                  data-toggle="modal"
+                  data-target="#prescriptionModal"
+                  type="button"
+                  v-if="referring_md == 'yes'"
+                  @mouseover="showPrescription = true"
+                  @mouseleave="showPrescription = false"
+                >
+                  <i class="bi bi-prescription"></i>
+                </button>
+              </div>
+              <div class="button-container" v-if="this.telemedicine == 1">
+                <div
+                  v-if="!isMobile && showTooltip"
+                  class="tooltip-text"
+                  style="background-color: #007bff"
+                >
+                  Lab Request
                 </div>
+                <button
+                  class="btn btn-primary btn-md prescription-button"
+                  data-toggle="modal"
+                  data-target="#labRequestModal"
+                  type="button"
+                  v-if="referring_md == 'yes'"
+                  @mouseover="showTooltip = true"
+                  @mouseleave="showTooltip = false"
+                >
+                  <i class="bi bi-prescription2"></i>
+                </button>
+              </div>
+
+              <div class="button-container">
+                <div
+                  v-if="!isMobile && showTooltipFeedback"
+                  class="tooltip-text"
+                  style="background-color: #17a2b8"
+                >
+                  Chat
+                </div>
+                <button
+                  class="btn btn-info btn-md reco-button"
+                  data-toggle="modal"
+                  data-target="#feedbackModal"
+                  :data-code="referral_code"
+                  onclick="viewReco($(this),0)"
+                  @mouseover="showTooltipFeedback = true"
+                  @mouseleave="showTooltipFeedback = false"
+                >
+                  <i class="bi bi-chat-left-text"></i>
+                </button>
+              </div>
             </div>
           </Transition>
-             <div class="localPlayerDiv" id="draggable-div">
-            <img :src="doctorUrl1" id="local-image" class="img2" alt="Image2" draggable="true"/>
+          <div class="localPlayerDiv" id="draggable-div">
+            <img
+              :src="doctorUrl1"
+              id="local-image"
+              class="img2"
+              alt="Image2"
+              draggable="true"
+            />
           </div>
         </div>
       </div>
@@ -1569,421 +1670,74 @@ export default {
             <div class="form-header-container">
               <img :src="dohLogoUrl" alt="Image3" class="dohLogo" />
               <div class="formHeader">
-                  <div>
+                <div>
                   <p>Republic of the Philippines</p>
                   <p>DEPARTMENT OF HEALTH</p>
                   <p><b>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p>
                   <p>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p>
                   <p>
-                    Regional Director's Office Tel. No. (032) 253-6355 Fax No. (032)
-                    254-0109
+                    Regional Director's Office Tel. No. (032) 253-6355 Fax No.
+                    (032) 254-0109
                   </p>
                   <p>
                     Official Website:
-                    <span style="color: blue">http://www.ro7.doh.gov.ph</span> Email
-                    Address: dohro7@gmail.com
+                    <span style="color: blue">http://www.ro7.doh.gov.ph</span>
+                    Email Address: dohro7@gmail.com
                   </p>
                 </div>
               </div>
               <div class="clinical">
-                <span style="color: #4caf50"><b>BEmONC/CEmONC REFERRAL FORM</b></span>
+                <span style="color: #4caf50"
+                  ><b>BEmONC/CEmONC REFERRAL FORM</b></span
+                >
               </div>
             </div>
-         
-            <div class="tableForm">
-              <table class="table table-striped form-label formTable">
-                <tbody>
-                  <tr>
-                    <th colspan="12">REFERRAL RECORD</th>
-                  </tr>
-                  <tr>
-                    <td colspan="6">Who is referring</td>
-                    <td colspan="6">
-                      Record Number:
-                      <span class="forDetails">{{ form.record_no }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Referred Date:
-                      <span class="forDetails">{{ form.referred_date }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="6">
-                      Referring Name:
-                      <span class="forDetails">{{ form.md_referring }}</span>
-                    </td>
-                    <td colspan="6">
-                      Arrival Date:
-                      <span class="forDetails">{{ form.arrival_date }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Contact # of Referring MD/HCW:
-                      <span class="forDetails">{{
-                        form.referring_md_contact
-                      }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Referring Facility:
-                      <span class="forDetails">{{
-                        form.referring_facility
-                      }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Facility Contact #:
-                      <span class="forDetails">
-                        {{ form.referring_contact }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Accompanied by the Health Worker:
-                      <span class="forDetails">{{ form.health_worker }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="6">
-                      Referred to:
-                      <span class="forDetails">{{ form.referred_facility }}</span>
-                    </td>
-                    <td colspan="6">
-                      Department:
-                      <span class="forDetails"> {{ form.department }} </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Covid Number:
-                      <span class="forDetails"> {{ form.covid_number }} </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Clinical Status:
-                      <span class="forDetails">
-                        {{ form.refer_clinical_status }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Surviellance Category:
-                      <span class="forDetails">
-                        {{ form.refer_sur_category }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="row">
-                <div class="col">
-                  <table>
-                    <tbody>
-                      <tr class="bg-gray">
-                        <td colspan="6" class="padded-header">
-                          <strong>WOMAN</strong>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="3">
-                          Name:
-                          <span class="forDetails">{{ form.woman_name }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Age: <span class="forDetails">{{ form.woman_age }}</span
-                          ><br /><small>(at time of referral)</small>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Address:
-                          <br />
-                          <span class="forDetails">{{
-                            form.patient_address
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Main Reason for Referral:
-                          <br />
-                          <span class="forDetails">{{ form.woman_reason }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Major Findings (Clinica and BP,Temp,Lab)
-                          <br />
-                          <span class="forDetails" style="white-space: pre-line">
-                            {{ form.woman_major_findings }}
-                          </span>
-                        </td>
-                      </tr>
 
-                      <tr class="bg-gray">
-                        <td colspan="6" class="padded-header">
-                          <strong>Treatments Give Time</strong>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Before Referral:
-                          <br />
-                          <span class="forDetails">{{
-                            form.woman_before_treatment
-                          }}</span>
-                          -
-                          <span class="forDetails">{{
-                            form.woman_before_given_time
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          During Referral:
-                          <br />
-                          <span class="forDetails">{{
-                            form.woman_during_transport
-                          }}</span>
-                          -
-                          <span class="forDetails">{{
-                            form.woman_transport_given_time
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Information Given to the Woman and Companion About the
-                          Reason for Referral
-                          <br />
-                          <span
-                            class="forDetails"
-                            style="white-space: pre-line"
-                            >{{ form.woman_information_given }}</span
-                          >
-                        </td>
-                      </tr>
-                      <tr v-if="icd.length > 0" class="padded-row">
-                        <td colspan="6">
-                          ICD-10 Code and Description:
-                          <li v-for="i in icd" :key="i.code">
-                            <span class="forDetails"
-                              >{{ i.code }} - {{ i.description }}</span
-                            >
-                          </li>
-                        </td>
-                      </tr>
-                      <tr v-if="form.notes_diagnoses" class="padded-row">
-                        <td colspan="6">
-                          Diagnosis/Impression:
-                          <br />
-                          <span
-                            class="forDetails"
-                            style="white-space: pre-line"
-                            >{{ form.notes_diagnoses }}</span
-                          >
-                        </td>
-                      </tr>
-                      <tr v-if="form.other_diagnoses" class="padded-row">
-                        <td colspan="6">
-                          Other Diagnoses:
-                          <br />
-                          <span
-                            class="forDetails"
-                            style="white-space: pre-line"
-                            >{{ form.other_diagnoses }}</span
-                          >
-                        </td>
-                      </tr>
-                      <tr v-if="reason" class="padded-row">
-                        <td colspan="6">
-                          Reason for referral:
-                          <br />
-                          <span
-                            class="forDetails"
-                            style="white-space: pre-line"
-                            >{{ reason.reason }}</span
-                          >
-                        </td>
-                      </tr>
-                      <tr v-if="form.other_reason_referral" class="padded-row">
-                        <td colspan="6">
-                          Reason for referral:
-                          <br />
-                          <span
-                            class="forDetails"
-                            style="white-space: pre-line"
-                            >{{ form.other_reason_referral }}</span
-                          >
-                        </td>
-                      </tr>
-                      <tr v-if="file_path" class="padded-row">
-                        <td colspan="6">
-                          <span v-if="file_path.length > 1"
-                            >File Attachments:
-                          </span>
-                          <span v-else>File Attachment: </span>
-                          <br />
-                          <span v-for="(path, index) in file_path" :key="index">
-                            <a
-                              :href="path"
-                              :key="index"
-                              id="file_download"
-                              class="reason"
-                              target="_blank"
-                              download
-                              >{{ file_name[index] }}</a
-                            >
-                            <span v-if="index + 1 !== file_path.length"
-                              >,&nbsp;</span
-                            >
-                          </span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+            <div class="tableForm">
+              <OldFormReferralPregnant
+                :initialForm="{ ...form }"
+                :initialFormBaby="{ ...formBaby }"
+                :file_path="file_path"
+                :icd="icd"
+                :patient_age="patient_age"
+                :file_name="file_name"
+              />
+
+              <div class="row g-0" v-if="this.telemedicine == 1">
+                <div class="col-6">
+                  <button
+                    class="btn btn-success btn-md w-100 ml-2"
+                    type="button"
+                    @click="generatePrescription()"
+                  >
+                    <i class="bi bi-prescription"></i> Generate Prescription
+                  </button>
                 </div>
-                <div class="col">
-                  <table>
-                    <tbody>
-                      <tr class="bg-gray">
-                        <th colspan="6" class="padded-header">BABY</th>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Name:
-                          <span class="forDetails">{{ formBaby.baby_name }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Date of Birth:
-                          <span class="forDetails">{{ formBaby.baby_dob }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Birth Weight:
-                          <span class="forDetails">{{ formBaby.weight }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Gestational Age:
-                          <span class="forDetails">{{
-                            formBaby.gestational_age
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Main Reason for Referral:
-                          <br />
-                          <span class="forDetails">{{
-                            formBaby.baby_reason
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Major Findings (Clinical and BP,Temp,Lab)
-                          <br />
-                          <span
-                            class="forDetails"
-                            style="white-space: pre-line"
-                            >{{ formBaby.baby_major_findings }}</span
-                          >
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Last (Breast) Feed (Time):
-                          <br />
-                          <span class="forDetails">{{
-                            formBaby.baby_last_feed
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="bg-gray">
-                        <td colspan="6" class="padded-header">
-                          <strong>Treatments Give Time</strong>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Before Referral:
-                          <br />
-                          <span class="forDetails">{{
-                            formBaby.baby_before_treatment
-                          }}</span>
-                          -
-                          <span class="forDetails">{{
-                            formBaby.baby_before_given_time
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          During Transport:
-                          <br />
-                          <span class="forDetails">{{
-                            formBaby.baby_during_transport
-                          }}</span>
-                          -
-                          <span class="forDetails">{{
-                            formBaby.baby_transport_given_time
-                          }}</span>
-                        </td>
-                      </tr>
-                      <tr class="padded-row">
-                        <td colspan="6">
-                          Information Given to the Woman and Companion About the
-                          Reason for Referral
-                          <br />
-                          <span
-                            class="forDetails"
-                            style="white-space: pre-line"
-                            >{{ formBaby.baby_information_given }}</span
-                          >
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>  
-                  <!-- ======================================================================= -->
+                <div class="col-6">
+                  <button
+                    class="btn btn-primary btn-md w-100"
+                    type="button"
+                    @click="generateLabrequest()"
+                    style="
+                      background-color: #0d6efd;
+                      border-color: #0d6efd;
+                      box-shadow: none;
+                      pointer-events: auto;
+                    "
+                    onmouseover="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
+                    onmouseout="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
+                  >
+                    <i class="bi bi-clipboard2-pulse"></i> Generate Lab Request
+                  </button>
                 </div>
               </div>
-                 <div class="row g-0" v-if="this.telemedicine == 0">
-                    <div class="col-6">
-                        <button class="btn btn-success btn-md w-100 ml-2"  type="button" @click="generatePrescription()">
-                            <i class="bi bi-prescription"></i> Generate Prescription
-                        </button>
-                    </div>
-                    <div class="col-6">
-                    <button class="btn btn-primary btn-md w-100" type="button" @click="generateLabrequest()" 
-                        style="background-color: #0d6efd; border-color: #0d6efd; box-shadow: none; pointer-events: auto;"
-                        onmouseover="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
-                        onmouseout="this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';">
-                        <i class="bi bi-clipboard2-pulse"></i> Generate Lab Request
-                    </button>
-                    </div>
-                </div>
               <!-- ======================================================================= -->
-           </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-     <PrescriptionModal
+    <PrescriptionModal
       :activity_id="parseInt(activity_id)"
       :baseUrl="baseUrl"
       :code="referral_code"
@@ -1993,7 +1747,7 @@ export default {
       :activity_id="parseInt(activity_id)"
       :requested_by="parseInt(user.id)"
     />
-    
+
     <FeedbackModal
       :isVisible="feedbackModalVisible"
       :code="currentCode"
@@ -2011,7 +1765,7 @@ export default {
 @import "./css/index.css";
 
 td {
- padding:5px; 
+  padding: 5px;
 }
 
 /* Fullscreen layout */
@@ -2062,16 +1816,17 @@ td {
   .main-container {
     flex-direction: column;
   }
-  
-  .video-container, .form-container {
+
+  .video-container,
+  .form-container {
     width: 100%;
     flex: none;
   }
-  
+
   .video-container {
     height: 50%;
   }
-  
+
   .form-container {
     height: 50%;
   }
@@ -2091,7 +1846,6 @@ td {
   padding-left: 10px;
   padding-right: 10px;
   padding-bottom: 10px;
-  
 }
 
 .form-header-container {
@@ -2100,7 +1854,6 @@ td {
   z-index: 2;
   padding-bottom: 2px;
 }
-
 
 .clinical {
   text-align: center;
@@ -2114,21 +1867,23 @@ td {
 }
 
 /* Transitions */
-.fade-enter-active, .fade-leave-active {
+.fade-enter-active,
+.fade-leave-active {
   transition: opacity 0.5s;
 }
 
-.fade-enter-from, .fade-leave-to {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
 #draggable-div {
-    width: 195px;
-    height: 200px;
-    min-width: 150px;
-    min-height: 200px;
-    max-width: 150px;
-    max-height: 200px;
+  width: 195px;
+  height: 200px;
+  min-width: 150px;
+  min-height: 200px;
+  max-width: 150px;
+  max-height: 200px;
 }
 
 .loader-overlay {
@@ -2163,12 +1918,12 @@ td {
 }
 
 #call-timer {
-    font-size: 16px;
-    background: rgba(0, 0, 0, 0.425);
-    color: #fff;
-    padding: 4px 10px;
-    border-radius: 5px;
-    letter-spacing: 2px;
+  font-size: 16px;
+  background: rgba(0, 0, 0, 0.425);
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 5px;
+  letter-spacing: 2px;
 }
 
 .call-duration {
@@ -2181,14 +1936,14 @@ td {
 @media screen and (max-width: 768px) {
   .reco-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-chat-left-text {
     font-size: 12px !important;
@@ -2198,95 +1953,95 @@ td {
   }
   .prescription-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-prescription {
     font-size: 12px !important;
   }
   .upward-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-hospital {
     font-size: 12px !important;
   }
   .decline-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-telephone-x-fill {
     font-size: 12px !important;
   }
-  .camera-switch-button{
+  .camera-switch-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;    
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-arrow-repeat {
     font-size: 12px !important;
   }
   .video-button {
-   border-radius: 50% !important;
-    width: 30px !important;     
+    border-radius: 50% !important;
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;    
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-camera-video-fill {
     font-size: 12px !important;
   }
   .mic-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;     
+    justify-content: center !important;
+    align-items: center !important;
   }
 
   .bi-mic-fill {
-    font-size: 12px !important; 
+    font-size: 12px !important;
   }
   .localPlayerLayer {
     height: 120px !important;
     width: 90px !important;
     object-fit: cover !important;
   }
-  
+
   .localPlayerDiv {
     min-height: 120px !important;
     min-width: 90px !important;
@@ -2301,7 +2056,6 @@ td {
     height: 100% !important;
     object-fit: cover !important;
   }
-  
 }
 
 @media screen and (max-width: 480px) {
@@ -2310,7 +2064,7 @@ td {
     width: 75px !important;
     object-fit: cover !important;
   }
-  
+
   .localPlayerDiv {
     min-height: 100px !important;
     min-width: 75px !important;

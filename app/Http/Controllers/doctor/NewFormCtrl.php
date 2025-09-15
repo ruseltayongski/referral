@@ -1553,6 +1553,12 @@ class NewFormCtrl extends Controller
         );
     }
 
+    public function normalFormTelemedNewForm($id){
+        $track = Tracking::select('status', 'type')->where('id', $id)->first();
+        Session::put('telemed', true);
+        return self::getViewForm_normal($id, $track->status, $track->type);
+    }
+
     public function getViewForm_normal($id,$referral_status,$form_type){
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description', 'icd.icd_id as id')

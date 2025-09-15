@@ -6,6 +6,7 @@ import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue";
 import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
+import OldFormReferral from "./OldFormReferral.vue";
 
 let baseUrlfeedback = `referral/doctor/vue/feedback`;
 let doctorFeedback = `referral/doctor/feedback`;
@@ -16,6 +17,7 @@ export default {
     LabRequestModal,
     FeedbackModal,
     PDFViewerModal,
+    OldFormReferral,
   },
   data() {
     return {
@@ -127,7 +129,7 @@ export default {
 
     window.addEventListener("beforeunload", this.preventCloseWhileUploading);
     window.addEventListener("beforeunload", this.stopCallTimer);
-     // Initialize draggable div logic
+    // Initialize draggable div logic
     this.$nextTick(() => {
       this.initDraggableDiv();
     });
@@ -137,7 +139,7 @@ export default {
       )
       .then((res) => {
         const response = res.data;
-        this.telemedicine = response.form.telemedicine
+        this.telemedicine = response.form.telemedicine;
         this.form = response.form;
         if (response.age_type === "y")
           this.patient_age = response.patient_age + " Years Old";
@@ -242,61 +244,68 @@ export default {
   computed: {
     isMobile() {
       return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    }
+    },
   },
   methods: {
-      // Mobile device detection removed to always show camera switch functionality
+    // Mobile device detection removed to always show camera switch functionality
 
-      async getCameraDevices() {
-        try {
-          // Get list of available video devices
-          const devices = await AgoraRTC.getCameras();
-          this.availableCameras = devices;
-          // console.log('Available cameras:', devices); // Debug log
-          
-          if (devices.length > 0) {
-            this.currentCameraId = devices[0].deviceId;
-            this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-            // console.log('Current camera ID:', this.currentCameraId);
-          } else {
-            console.warn('No cameras found');
-            this.showCameraSwitch = false;
-          }
-        } catch (error) {
-          console.error('Error getting cameras:', error);
+    async getCameraDevices() {
+      try {
+        // Get list of available video devices
+        const devices = await AgoraRTC.getCameras();
+        this.availableCameras = devices;
+        // console.log('Available cameras:', devices); // Debug log
+
+        if (devices.length > 0) {
+          this.currentCameraId = devices[0].deviceId;
+          this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
+          // console.log('Current camera ID:', this.currentCameraId);
+        } else {
+          console.warn("No cameras found");
           this.showCameraSwitch = false;
-          Lobibox.alert("error", {
-            msg: "Error accessing cameras. Please check your device settings.",
-            closeButton: false,
-          });
         }
-      },
-      
-      switchCamera() {
-        // console.log("Attempting to switch camera...");
+      } catch (error) {
+        console.error("Error getting cameras:", error);
+        this.showCameraSwitch = false;
+        Lobibox.alert("error", {
+          msg: "Error accessing cameras. Please check your device settings.",
+          closeButton: false,
+        });
+      }
+    },
 
-        const track = this.channelParameters?.localVideoTrack;
-        if (!track || track.isClosed) {
-          Lobibox.alert("error", { msg: "Video track not initialized", closeButton: false });
-          return;
-        }
+    switchCamera() {
+      // console.log("Attempting to switch camera...");
 
-        if (!this.availableCameras || this.availableCameras.length < 2) {
-          Lobibox.alert("error", { msg: "Not enough cameras available", closeButton: false });
-          return;
-        }
+      const track = this.channelParameters?.localVideoTrack;
+      if (!track || track.isClosed) {
+        Lobibox.alert("error", {
+          msg: "Video track not initialized",
+          closeButton: false,
+        });
+        return;
+      }
 
-        // Find the next camera
-        const currentIndex = this.availableCameras.findIndex(
-          (camera) => camera.deviceId === this.currentCameraId
-        );
-        const nextIndex = (currentIndex + 1) % this.availableCameras.length;
-        const nextCamera = this.availableCameras[nextIndex];
+      if (!this.availableCameras || this.availableCameras.length < 2) {
+        Lobibox.alert("error", {
+          msg: "Not enough cameras available",
+          closeButton: false,
+        });
+        return;
+      }
 
-        // console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
+      // Find the next camera
+      const currentIndex = this.availableCameras.findIndex(
+        (camera) => camera.deviceId === this.currentCameraId
+      );
+      const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+      const nextCamera = this.availableCameras[nextIndex];
 
-        // 🔑 Switch device on the SAME track
-        track.setDevice(nextCamera.deviceId)
+      // console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
+
+      // 🔑 Switch device on the SAME track
+      track
+        .setDevice(nextCamera.deviceId)
         .then(() => {
           // update current camera id
           this.currentCameraId = nextCamera.deviceId;
@@ -306,8 +315,8 @@ export default {
           const container = document.getElementById(this.options.uid);
           if (container) {
             try {
-              track.stop();             // stop old rendering
-              track.play(container);    // re-render new stream
+              track.stop(); // stop old rendering
+              track.play(container); // re-render new stream
             } catch (err) {
               console.warn("Replay failed:", err);
             }
@@ -320,9 +329,9 @@ export default {
             closeButton: false,
           });
         });
-      },
-      
-      initDraggableDiv() {
+    },
+
+    initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
       const mainPic = document.querySelector(".mainPic");
 
@@ -332,7 +341,8 @@ export default {
       }
 
       let isDragging = false;
-      let offsetX = 0, offsetY = 0;
+      let offsetX = 0,
+        offsetY = 0;
 
       // Position the draggable div in the bottom-right corner initially
       positionInBottomRight();
@@ -348,12 +358,18 @@ export default {
       document.addEventListener("touchend", endDrag);
 
       function positionInBottomRight() {
-        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const containerBounds = mainPic
+          ? mainPic.getBoundingClientRect()
+          : document.body.getBoundingClientRect();
         const padding = 20;
 
         draggableDiv.style.position = "absolute";
-        draggableDiv.style.left = `${containerBounds.right - draggableDiv.offsetWidth - padding}px`;
-        draggableDiv.style.top = `${containerBounds.bottom - draggableDiv.offsetHeight - padding}px`;
+        draggableDiv.style.left = `${
+          containerBounds.right - draggableDiv.offsetWidth - padding
+        }px`;
+        draggableDiv.style.top = `${
+          containerBounds.bottom - draggableDiv.offsetHeight - padding
+        }px`;
       }
 
       function startDrag(event) {
@@ -387,7 +403,9 @@ export default {
       }
 
       function moveElement(clientX, clientY) {
-        const containerBounds = mainPic ? mainPic.getBoundingClientRect() : document.body.getBoundingClientRect();
+        const containerBounds = mainPic
+          ? mainPic.getBoundingClientRect()
+          : document.body.getBoundingClientRect();
         const newX = Math.min(
           Math.max(clientX - offsetX, containerBounds.left),
           containerBounds.right - draggableDiv.offsetWidth
@@ -583,7 +601,7 @@ export default {
           // console.log(
           //   `Track kind: ${track.kind}, readyState: ${track.readyState}`
           // );
-          track.onended = () =>console.log(`Track ended: ${track.kind}`);
+          track.onended = () => console.log(`Track ended: ${track.kind}`);
         });
 
         // Start recording
@@ -609,7 +627,7 @@ export default {
           });
         } else {
           Lobibox.alert("warning", {
-             msg: "No microphone devices found. Please ensure your devices are connected and try again.",
+            msg: "No microphone devices found. Please ensure your devices are connected and try again.",
             closeButton: false,
           });
         }
@@ -709,11 +727,11 @@ export default {
         this.uploadProgress = 0; // Reset progress
 
         if (closeAfterUpload) {
-            Lobibox.alert("success", {
-              msg: `Your conversation has been successfully recorded and uploaded.`,
-              callback: function () {
-                window.top.close();
-              },
+          Lobibox.alert("success", {
+            msg: `Your conversation has been successfully recorded and uploaded.`,
+            callback: function () {
+              window.top.close();
+            },
           });
         }
       } else {
@@ -989,7 +1007,7 @@ export default {
         });
     },
     async startBasicCall() {
-       // Create an instance of the Agora Engine
+      // Create an instance of the Agora Engine
       this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
       const agoraEngine = this.agoraEngine; // Use this reference
 
@@ -1186,7 +1204,7 @@ export default {
         // Create a local audio track from the audio sampled by a microphone.
         channelParameters.localAudioTrack =
           await AgoraRTC.createMicrophoneAudioTrack();
-          
+
         // Check if camera is available before creating video track
         const devices = await AgoraRTC.getCameras();
         if (devices && devices.length > 0) {
@@ -1197,17 +1215,17 @@ export default {
           document.body.append(localPlayerContainer);
           $(".localPlayerDiv").html(localPlayerContainer);
           $(localPlayerContainer).addClass("localPlayerLayer");
-          
+
           // Play the local video track.
           channelParameters.localVideoTrack.play(localPlayerContainer);
         }
-        
+
         // Publish the tracks that are available
         const tracksToPublish = [channelParameters.localAudioTrack];
         if (channelParameters.localVideoTrack) {
           tracksToPublish.push(channelParameters.localVideoTrack);
         }
-        
+
         // Publish the local audio and video tracks in the channel.
         await agoraEngine.publish(tracksToPublish);
         // console.log("publish success!");
@@ -1283,7 +1301,7 @@ export default {
           this.screenRecorder.onstop = () => {
             this.saveScreenRecording(true);
           };
-        }else {
+        } else {
           window.top.close();
         }
 
@@ -1307,16 +1325,19 @@ export default {
     },
     async videoStreamingOnAndOff() {
       this.videoStreaming = !this.videoStreaming;
-      
+
       if (this.videoStreaming) {
         // If turning video on and we don't have a video track yet
         if (!this.channelParameters.localVideoTrack) {
           try {
             const devices = await AgoraRTC.getCameras();
             if (devices && devices.length > 0) {
-              this.channelParameters.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
-              const localPlayerContainer = document.getElementById(this.options.uid);
-              
+              this.channelParameters.localVideoTrack =
+                await AgoraRTC.createCameraVideoTrack();
+              const localPlayerContainer = document.getElementById(
+                this.options.uid
+              );
+
               if (!localPlayerContainer) {
                 const newContainer = document.createElement("div");
                 newContainer.id = this.options.uid;
@@ -1324,12 +1345,14 @@ export default {
                 $(".localPlayerDiv").html(newContainer);
                 $(newContainer).addClass("localPlayerLayer");
               }
-              
+
               this.channelParameters.localVideoTrack.play(this.options.uid);
-              
+
               // Publish the video track if we're connected
               if (this.channelParameters.localAudioTrack) {
-                await agoraEngine.publish([this.channelParameters.localVideoTrack]);
+                await agoraEngine.publish([
+                  this.channelParameters.localVideoTrack,
+                ]);
               }
             } else {
               // console.log("No camera detected");
@@ -1472,7 +1495,7 @@ export default {
         },
       });
     },
-  }
+  },
 };
 </script>
 
@@ -1564,10 +1587,10 @@ export default {
                   </button>
                 </div>
                 &nbsp;
-                 <!-- <div class="button-container" v-if="availableCameras.length > 1"> -->
+                <!-- <div class="button-container" v-if="availableCameras.length > 1"> -->
                 <div class="button-container" v-if="isMobile">
                   <div
-                    v-if="!isMobile && showCameraSwitch" 
+                    v-if="!isMobile && showCameraSwitch"
                     class="tooltip-text"
                     style="background-color: #218838"
                   >
@@ -1582,7 +1605,7 @@ export default {
                   >
                     <i class="bi-arrow-repeat"></i>
                   </button>
-                </div> 
+                </div>
                 &nbsp;
                 <div class="button-container">
                   <div
@@ -1604,7 +1627,10 @@ export default {
                   </button>
                 </div>
                 &nbsp;
-                <div class="button-container" v-if="this.user.facility_id != 63 && this.telemedicine == 1">
+                <div
+                  class="button-container"
+                  v-if="this.user.facility_id != 63 && this.telemedicine == 1"
+                >
                   <div
                     v-if="!isMobile && showUpward"
                     class="tooltip-text"
@@ -1725,204 +1751,15 @@ export default {
                 >
               </div>
             </div>
-            <div class="tableForm">
-              <table class="table table-striped formTable">
-                <tbody>
-                  <tr>
-                    <td colspan="12">
-                      Name of Referring Facility:
-                      <span class="forDetails">
-                        {{ form.referring_name }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Facility Contact #:
-                      <span class="forDetails">
-                        {{ form.referring_contact }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Address:
-                      <span class="forDetails">
-                        {{ form.referring_address }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="6">
-                      Referred to:
-                      <span class="forDetails"> {{ form.referred_name }} </span>
-                    </td>
-                    <td colspan="6">
-                      Department:
-                      <span class="forDetails"> {{ form.department }} </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Address:
-                      <span class="forDetails">
-                        {{ form.referred_address }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="6">
-                      Date/Time Referred (ReCo):
-                      <span class="dateReferred">
-                        {{ form.time_referred }}
-                      </span>
-                    </td>
-                    <td colspan="6">
-                      Date/Time Transferred:<span class="forDetails">
-                        {{ form.time_transferred }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="4">
-                      Name of Patient:
-                      <span class="forDetails"> {{ form.patient_name }} </span>
-                    </td>
-                    <td colspan="4">
-                      Age: <span class="forDetails"> {{ patient_age }} </span>
-                    </td>
-                    <td colspan="4">
-                      Sex:
-                      <span class="forDetails"> {{ form.patient_sex }} </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="6">
-                      Address:
-                      <span class="forDetails">
-                        {{ form.patient_address }}
-                      </span>
-                    </td>
-                    <td colspan="6">
-                      Status:
-                      <span class="forDetails">
-                        {{ form.patient_status }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="6">
-                      Philhealth status:
-                      <span class="forDetails"> {{ form.phic_status }} </span>
-                    </td>
-                    <td colspan="6">
-                      Philhealth #:
-                      <span class="forDetails"> {{ form.phic_id }} </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Covid Number:
-                      <span class="forDetails"> {{ form.covid_number }} </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Clinical Status:
-                      <span class="forDetails">
-                        {{ form.refer_clinical_status }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Surviellance Category:
-                      <span class="forDetails">
-                        {{ form.refer_sur_category }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Case Summary (pertinent Hx/PE, including meds, labs,
-                      course etc.): <br /><span class="caseforDetails">{{
-                        form.case_summary
-                      }}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Summary of ReCo (pls. refer to ReCo Guide in Referring
-                      Patients Checklist):<br /><span class="recoSummary">
-                        {{ form.reco_summary }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      ICD-10 Code and Description:
-                      <li v-for="i in icd">
-                        <span class="caseforDetails"
-                          >{{ i.code }} - {{ i.description }}</span
-                        >
-                      </li>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Reason for referral:
-                      <span class="forDetails">
-                        {{ form.reason }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr v-if="file_path">
-                    <td colspan="12">
-                      <span v-if="file_path.length > 1"
-                        >File Attachments:
-                      </span>
-                      <span v-else>File Attachment: </span>
-                      <span v-for="(path, index) in file_path" :key="index">
-                        <a
-                          :href="path"
-                          :key="index"
-                          id="file_download"
-                          class="reason"
-                          target="_blank"
-                          download
-                          >{{ file_name[index] }}</a
-                        >
-                        <span v-if="index + 1 !== file_path.length"
-                          >,&nbsp;</span
-                        >
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Name of Referring MD/HCW:
-                      <span class="forDetails"> {{ form.md_referring }} </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Contact # of Referring MD/HCW:
-                      <span class="forDetails">
-                        {{ form.referring_md_contact }}
-                      </span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="12">
-                      Name of referred MD/HCW-Mobile Contact # (ReCo):
-                      <br /><span class="mdHcw">
-                        {{ form.md_referred }}
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div class="row g-0" v-if="this.telemedicine == 1">
+            <div class="tableForm" v-if="telemedicine == 1">
+              <OldFormReferral
+                :initialForm="{ ...form }"
+                :file_path="file_path"
+                :icd="icd"
+                :patient_age="patient_age"
+                :file_name="file_name"
+              />
+              <div class="row g-0">
                 <div class="col-6">
                   <button
                     class="btn btn-success btn-md w-100 ml-2"
@@ -1950,6 +1787,15 @@ export default {
                   </button>
                 </div>
               </div>
+            </div>
+            <div class="tableForm" v-else>
+              <OldFormReferral
+                :initialForm="{ ...form }"
+                :file_path="file_path"
+                :icd="icd"
+                :patient_age="patient_age"
+                :file_name="file_name"
+              />
             </div>
           </div>
         </div>
@@ -2211,14 +2057,14 @@ td {
 @media screen and (max-width: 768px) {
   .reco-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-chat-left-text {
     font-size: 12px !important;
@@ -2228,95 +2074,95 @@ td {
   }
   .prescription-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-prescription {
     font-size: 12px !important;
   }
   .upward-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-hospital {
     font-size: 12px !important;
   }
   .decline-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;  
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-telephone-x-fill {
     font-size: 12px !important;
   }
-  .camera-switch-button{
+  .camera-switch-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;    
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-arrow-repeat {
     font-size: 12px !important;
   }
   .video-button {
-   border-radius: 50% !important;
-    width: 30px !important;     
+    border-radius: 50% !important;
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;    
+    justify-content: center !important;
+    align-items: center !important;
   }
   .bi-camera-video-fill {
     font-size: 12px !important;
   }
   .mic-button {
     border-radius: 50% !important;
-    width: 30px !important;     
+    width: 30px !important;
     height: 30px !important;
     background-color: rgba(81, 83, 85, 0.596) !important;
     border-color: transparent !important;
 
     display: flex !important;
-    justify-content: center !important; 
-    align-items: center !important;     
+    justify-content: center !important;
+    align-items: center !important;
   }
 
   .bi-mic-fill {
-    font-size: 12px !important; 
+    font-size: 12px !important;
   }
   .localPlayerLayer {
     height: 120px !important;
     width: 90px !important;
     object-fit: scale-down !important;
   }
-  
+
   .localPlayerDiv {
     min-height: 120px !important;
     min-width: 90px !important;
@@ -2331,7 +2177,6 @@ td {
     height: 100% !important;
     object-fit: scale-down !important;
   }
-  
 }
 
 @media screen and (max-width: 480px) {
@@ -2340,7 +2185,7 @@ td {
     width: 75px !important;
     object-fit: scale-down !important;
   }
-  
+
   .localPlayerDiv {
     min-height: 100px !important;
     min-width: 75px !important;
