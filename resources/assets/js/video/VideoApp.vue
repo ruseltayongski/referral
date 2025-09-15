@@ -34,6 +34,7 @@ export default {
       isLeavingChannel: false,
       isUserJoined: false,
       telemedicine: null,
+      form_type: "",
       //feedback
       feedbackUrl: baseUrlfeedback,
       doctorfeedback: doctorFeedback,
@@ -133,6 +134,26 @@ export default {
     this.$nextTick(() => {
       this.initDraggableDiv();
     });
+    axios 
+      .get(
+        `${this.baseUrl}/video/normal/newform/${this.tracking_id}`
+      )
+      .then((res => {
+        const response = res.data;
+        if (response.success) {
+          this.form_type = response.form_type || "normal";
+          console.log("Form type:", this.form_type);
+          console.log("type:", response.type);
+        } else {
+          // Default to normal if no record found
+          this.form_type = "normal";
+          // console.warn("No form type found, defaulting to 'normal'");
+        }
+      }))
+      .catch((error) => {
+        this.form_type = "normal";
+        // console.error("Error fetching form type, defaulting to 'normal':", error);
+      });
     axios
       .get(
         `${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`

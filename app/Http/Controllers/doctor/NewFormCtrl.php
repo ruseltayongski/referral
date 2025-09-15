@@ -1559,6 +1559,15 @@ class NewFormCtrl extends Controller
         return self::getViewForm_normal($id, $track->status, $track->type);
     }
 
+    public function checkFormVersion($id){
+        $track = Tracking::select('form_type','type')->where('id', $id)->first();
+        if ($track){
+            return response()->json(['success' => true, 'form_type' => $track->form_type, 'type' => $track->type]);
+        }else {
+            return response()->json(['success' => false, 'message' => 'No record found.']);
+        }
+    }
+
     public function getViewForm_normal($id,$referral_status,$form_type){
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description', 'icd.icd_id as id')
