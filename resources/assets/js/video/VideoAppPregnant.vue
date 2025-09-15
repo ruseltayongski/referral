@@ -147,7 +147,7 @@ export default {
         // console.log(response);
         this.form = response.form["pregnant"];
         this.formBaby = response.form["baby"];
-        this.telemedicine = response.form.telemedicine;
+        this.telemedicine = response.form["pregnant"].telemedicine
 
         if (response.age_type === "y")
           this.patient_age = response.patient_age + " Years Old";

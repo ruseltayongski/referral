@@ -176,18 +176,16 @@
         userID = userId;
         VideoApp =  Number(videoApp);;
         // console.log("video appp:", videoApp, videoApp == 0);
-       
         $.get(url, function (res) {
             telemed = res.tracking.telemedicine;
             console.log("tracking telemedicine:", res);
-            console.log("condition of referrin md", userID == res.referring_md_Status.referring_md);
+            // console.log("condition of referrin md", userID == res.referring_md_Status.referring_md);
             console.log("user id:", userID, "action md", res.tracking.action_md);
             // Build toolbar string based on telemedicine
             let toolbarItems = "emoticons uploadfile";
             if (telemed == 0 && (userID == res.tracking.action_md || userID == res.referring_md_Status.referring_md) && VideoApp !== 0) {
                 toolbarItems += " callbutton"; // add call button only if telemedicine is 0
             }
-            
             console.log("code latest", currentCode);
             tinymce.init({
                 selector: ".mytextarea1",
@@ -218,7 +216,7 @@
                                     res.tracking.track_referring_md,
                                     res.tracking.activity_id,
                                     res.tracking.type,
-                                    userID == res.tracking.action_md ? res.tracking.referred_from : res.tracking.referred_to,
+                                    userID == res.tracking.action_md ? res.referring_md_Status.referred_from : res.tracking.referred_to,
                                     null,
                                     null,
                                     null,
@@ -384,11 +382,7 @@
     });
     
     $('#feedbackModal').on('hidden.bs.modal', function () {
-        // tinymce.get($('.mytextarea1').attr('id')).setContent('');
-        const editor = tinymce.get($('.mytextarea1').attr('id'));
-        if (editor) {
-            editor.setContent('');
-        }
+        tinymce.get($('.mytextarea1').attr('id')).setContent('');
         window.uploadedFiles.clear();
         $('#filePreviewModalReco').modal('hide');
         tinymce.remove('.mytextarea1'); 
