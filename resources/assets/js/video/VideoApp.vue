@@ -1030,6 +1030,7 @@ export default {
         self.channelParameters.userCount++;
         this.isUserJoined = true;
         // Check if channel already has maximum users
+        console.log("user count: ", self.channelParameters.userCount, "max users:", self.channelParameters.maxUsers);
         if (
           self.channelParameters.userCount >= self.channelParameters.maxUsers
         ) {

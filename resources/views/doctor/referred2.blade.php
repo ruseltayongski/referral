@@ -121,7 +121,43 @@ $user = Session::get('auth');
                         ->orderBy('id','desc')
                         ->get();
 
-                     
+                $filterRef = request('filterRef'); 
+                $referral_accepted = null;
+                $telemed_accepted = null;
+                $telemed_referred_from = null;
+
+                $activity_referred_from = DB::table('activity')
+                    ->select('referred_from')
+                    ->where('code', $row->code)
+                    ->where('status', 'referred')
+                    ->first()  ?? (object)['referred_from' => null];
+
+                if($filterRef == 1){
+                    $query = DB::table('activity')
+                    ->select('status')
+                    ->where('code', $row->code)
+                    ->where('status','upward') // ✅ correct way
+                    ->get();
+                    // $upward = $query[0]->status;
+                   $upward = $query->firstWhere('status', 'upward');
+                    if($upward){
+                        $telemed_accepted =  DB::table('activity')
+                            ->select('status')
+                            ->where('code', $row->code)
+                            ->orderBy('activity.id', 'desc')
+                            ->first();
+                    }
+                    
+                 }else{
+                     $referral_accepted = DB::table('tracking')
+                        ->join('activity', 'tracking.code', '=', 'activity.code')
+                        ->select('activity.status', 'tracking.telemedicine')
+                        ->where('tracking.code', $row->code)
+                        ->where('tracking.telemedicine', 0)
+                        ->orderBy('activity.id', 'desc')
+                        ->first();
+                 }
+               
                     $department_name = 'N/A';
                     $dept = \App\Department::find($row->department_id);
                     $subOPD = \App\SubOpd::find($row->subopd_id);
@@ -212,41 +248,24 @@ $user = Session::get('auth');
                                 </a>
                             @endif
                             <div id="html_websocket_departed{{ $row->code }}" style="display: inline;"></div>
-                           @if((Session::get('referred_accepted_track') || Session::get('redirected_accepted_track') ) || !Session::get('referred_travel_track') && !Session::get('redirected_travel_track') && !Session::get('referred_arrived_track') && !Session::get('redirected_arrived_track') && $row->referred_from == $user->facility_id)
+                       
+                        {{-- @if((Session::get('referred_accepted_track') || Session::get('redirected_accepted_track') ) || !Session::get('referred_travel_track') && !Session::get('redirected_travel_track') && !Session::get('referred_arrived_track') && !Session::get('redirected_arrived_track') && $row->referred_from == $user->facility_id)
                                 <a href="#transferModal" data-toggle="modal"
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
-                            {{-- @else
+                            @else
                             <a href="#transferModal" data-toggle="modal"
-                            data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a> --}}
-                            @endif
-                            <!-- @if((Session::get('referred_accepted_track') || Session::get('redirected_accepted_track')) && (!Session::get('referred_travel_track') || !Session::get('redirected_travel_track')) && (!Session::get('referred_arrived_track') || !Session::get('redirected_arrived_track')) 
-                            && (!Session::get('referred_notarrived_track') || !Session::get('redirected_notarrived_track')) && $row->referred_from == $user->facility_id)
+                            data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
+                            @endif  --}}
+                             
+                            @if(($referral_accepted && $referral_accepted->status == "accepted") 
+                                && ($activity_referred_from && $activity_referred_from->referred_from == $user->facility_id))
                                 <a href="#transferModal" data-toggle="modal"
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
-                            @elseif(Session::get('redirected_transferred_track') && Session::get('redirected_accepted_track') && Session::get('redirected_travel_track') && Session::get('redirected_notarrived_track'))
-                                <a href="#transferModal" data-toggle="modal"
+                            @elseif(($telemed_accepted && $telemed_accepted->status == "accepted") 
+                                && ($activity_referred_from && $activity_referred_from->referred_from == $user->facility_id))
+                                 <a href="#transferModal" data-toggle="modal"
                                    data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
-                            @endif -->
-                            <!-- @if(Session::get('referred_accepted_track') && !Session::get('referred_travel_track') && !Session::get('referred_arrived_track') 
-                            && (!Session::get('referred_notarrived_track') && $row->referred_from == $user->facility_id))
-                                <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart1</a>
-                            @elseif(Session::get('redirected_transferred_track') && Session::get('redirected_accepted_track') && !Session::get('redirected_travel_track') && !Session::get('redirected_arrived_track'))
-                                <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart2</a>
-                            @elseif(!Session::get('redirected_transferred_track') && Session::get('redirected_accepted_track') && !Session::get('referred_travel_track') && (!Session::get('referred_examined_track') || !Session::get('follow_examined_track')))
-                             <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> EXAMINE</a>
-                            @endif -->
-                         
-                            <!-- @if(Session::get('referred_accepted_track') && !Session::get('referred_travel_track') && !Session::get('referred_arrived_track'))
-                                <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
-                            @elseif(Session::get('redirected_transferred_track') && Session::get('redirected_accepted_track') && !Session::get('redirected_travel_track') && !Session::get('redirected_arrived_track'))
-                                <a href="#transferModal" data-toggle="modal"
-                                   data-id="{{ $row->id }}" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>
-                            @endif -->
-
+                            @endif  
                             <button class="btn btn-xs btn-info btn-feedback" 
                                 data-toggle="modal"
                                 data-target="#feedbackModal"

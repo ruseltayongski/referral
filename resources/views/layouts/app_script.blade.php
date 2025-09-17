@@ -183,9 +183,12 @@
             console.log("user id:", userID, "action md", res.tracking.action_md);
             // Build toolbar string based on telemedicine
             let toolbarItems = "emoticons uploadfile";
-            if (telemed == 0 && (userID == res.tracking.action_md || userID == res.referring_md_Status.referring_md) && VideoApp !== 0) {
-                toolbarItems += " callbutton"; // add call button only if telemedicine is 0
-            }
+            
+            // not ready for deployment
+
+            // if (telemed == 0 && (userID == res.tracking.action_md || userID == res.referring_md_Status.referring_md) && VideoApp !== 0) {  
+            //     toolbarItems += " callbutton"; // add call button only if telemedicine is 0
+            // }
             console.log("code latest", currentCode);
             tinymce.init({
                 selector: ".mytextarea1",

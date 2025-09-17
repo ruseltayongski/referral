@@ -1067,7 +1067,7 @@
                      console.log("event discharge:",event);
                     // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
                     this.telemedicine = event.payload.telemedicine;
-                    if(event.payload.status == "telemedicine") {
+                    if(event.payload.status == "telemedicine" || event.payload.telemedicine == 1) {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             // console.log("callAdoctor", event);
                             this.action_md = event.payload.action_md;
@@ -1104,6 +1104,7 @@
                             if(event.payload.telemedicine_status === 'examined') {
                                 // console.log("examinedcompleted: new");
                                 this.examinedCompleted(event.payload.code, event.payload.activity_id);
+                                this.prescribedCompleted(event.payload.code, event.payload.activity_id)
                             } else if(event.payload.telemedicine_status === 'prescription') {
                                 // console.log("prescribedCompleted");
                                 this.prescribedCompleted(event.payload.code, event.payload.activity_id)
@@ -1153,12 +1154,11 @@
                             }
                         }
                        
-                        console.log("my event discharged notification:", this.passToVueFacility);
                         if(event.payload.referred_from === 0){
                             return;
                         }
 
-                        if(event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility) {
+                        if(event.payload.status == "discharged" && (event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility)) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
                     }

@@ -446,12 +446,14 @@ export default {
                       :key="categoryId"
                     >
                       <!-- Sub OPD Category Selection -->
-                      <div class="category-header"
+                      <!-- <div class="category-header"
                         :class="{
                         'category-highlight': shouldHighlightCategory(categoryId),
                         'category-pulse': shouldPulseCategory(categoryId)
                       }"
                       
+                      > -->
+                      <div class="category-header"
                       >
                         <input
                           type="radio"
@@ -545,15 +547,15 @@ export default {
   </div>
 </template>
 <style scoped>
-.category-highlight {
+/* .category-highlight {
   background: linear-gradient(90deg, rgba(0, 166, 90, 0.1) 0%, rgba(0, 166, 90, 0.05) 100%);
   border-left: 4px solid #00a65a;
   padding: 8px;
   margin: 2px 0;
   border-radius: 4px;
   transition: all 0.3s ease;
-}
-.category-pulse {
+} */
+/* .category-pulse {
   animation: category-pulse 2s ease-in-out 3;
 }
 
@@ -570,7 +572,7 @@ export default {
     box-shadow: 0 0 0 0 rgba(0, 166, 90, 0);
     transform: scale(1);
   }
-}
+} */
 
 .appointment-time-list {
   /* display: flex;  */
