@@ -408,10 +408,12 @@ $user = Session::get('auth');
             
                 selectedButtonData = $(this).data(); 
                 let telemedValue = selectedButtonData.telemed; // Get telemedicine value
+                let followupTelemed = selectedButtonData.status;
+                let privacy_not = selectedButtonData.privacy_notice; // Get status value
                 // console.log("telemedValue", telemedValue, parseInt(telemedValue) == 1);
-                // console.log("Telemedicine Value:", telemedValue); // Debugging
+                 console.log("Telemedicine Value:", telemedValue, followupTelemed,privacy_not); // Debugging
                 
-                if (parseInt(telemedValue) == 1) {
+                if (parseInt(telemedValue) == 1 && (followupTelemed === 'followup' || followupTelemed === 'referred' || privacy_not == "privacy")) {
                     $('#privacyNoticeModal').modal('show');
                 }else{
                     $('#privacyNoticeModal').modal('hide');

@@ -132,13 +132,13 @@ $user = Session::get('auth');
                     ->where('status', 'referred')
                     ->first()  ?? (object)['referred_from' => null];
 
-                if($filterRef == 1){
+                // if($filterRef == 1){
                     $query = DB::table('activity')
                     ->select('status')
                     ->where('code', $row->code)
                     ->where('status','upward') // ✅ correct way
                     ->get();
-                    // $upward = $query[0]->status;
+                //     // $upward = $query[0]->status;
                    $upward = $query->firstWhere('status', 'upward');
                     if($upward){
                         $telemed_accepted =  DB::table('activity')
@@ -148,7 +148,7 @@ $user = Session::get('auth');
                             ->first();
                     }
                     
-                 }else{
+                //  }else{
                      $referral_accepted = DB::table('tracking')
                         ->join('activity', 'tracking.code', '=', 'activity.code')
                         ->select('activity.status', 'tracking.telemedicine')
@@ -156,8 +156,10 @@ $user = Session::get('auth');
                         ->where('tracking.telemedicine', 0)
                         ->orderBy('activity.id', 'desc')
                         ->first();
-                 }
-               
+
+                    
+                 //}
+                 
                     $department_name = 'N/A';
                     $dept = \App\Department::find($row->department_id);
                     $subOPD = \App\SubOpd::find($row->subopd_id);

@@ -922,7 +922,7 @@
                         if($("#referral_page_check").val()) {
                             // console.log("append the refer patient");
                             $('.count_referral').html(this.increment_referral);
-                                
+
                                 let position = event.payload.position;
                                 let position_bracket = ['','1st','2nd','3rd', '4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th'];
                                 let position_content = '';
@@ -931,6 +931,14 @@
                                         "                                            <span class='top-right-badge badge1 red'>" + position_bracket[position + 1] + " Position</span>\n" +
                                         "                                        </div>";
                                 }
+                                // remove the dynamic incoming and insert the realtime incoming
+                                let patientCode = event.payload.patient_code;
+                                let existingItem = $("#referral_incoming" + patientCode);
+                            
+                                if (existingItem.length > 0) {
+                                    existingItem.remove();
+                                }
+
                                 let type = event.payload.form_type;
                                 type = type=='normal' ? 'normal-section':'pregnant-section';
                                 let referral_type = (type=='normal-section') ? 'normal':'pregnant';
@@ -957,6 +965,7 @@
                                     '                   data-telemed="'+event.payload.telemedicine+'"\n' +
                                     '                   data-item="#item-'+event.payload.tracking_id+'"\n' +
                                     '                   data-referral_status="referred"\n' +
+                                    '                   data-privacy_notice="privacy"\n' +
                                     '                   data-type="'+referral_type+'"\n' +
                                     '                   data-id="'+event.payload.tracking_id+'"\n' +
                                     '                   data-referred_from="'+event.payload.referred_from+'"\n' +
