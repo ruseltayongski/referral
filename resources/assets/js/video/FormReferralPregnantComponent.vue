@@ -1,0 +1,1321 @@
+<script>
+export default {
+  props: {
+    initialForm: {
+      type: Object,
+      required: true,
+      default: () => ({}),
+    },
+    initialFormBaby: {
+      type: Object,
+      required: true,
+      default: () => ({}),
+    },
+    past_medical_history: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    personal_and_social_history: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    review_of_system: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    nutritional_status: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    pertinent_laboratory: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    latest_vital_signs: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    glasgocoma_scale: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    obstetric_and_gynecologic_history: {
+      type: Object,
+      required: false,
+      default: () => ({}),
+    },
+    file_path: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+    icd: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+    file_name: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+    form_version: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    current_medication: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    patient_age: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    pregnancy: {
+      type: Array,
+      required: true
+    }
+  },
+  data() {
+    return {
+      form: { ...this.initialForm },
+      formBaby: { ...this.initialFormBaby },
+      localFilePath: this.file_path,
+      localFileName: this.file_name,
+    };
+  },
+  watch: {
+    initialForm: {
+      handler(newValue) {
+        this.form = { ...newValue };
+      },
+      deep: true,
+    },
+    initialFormBaby: {
+      handler(newValue) {
+        this.formBaby = { ...newValue };
+      },
+      deep: true,
+    },
+    file_path: {
+      handler(newValue) {
+        this.localFilePath = [...newValue];
+        console.log("File path updated:", this.localFilePath);
+      },
+      deep: true,
+    },
+    file_name: {
+      handler(newValue) {
+        this.localFileName = [...newValue];
+        console.log("File name updated:", this.localFileName);
+      },
+      deep: true,
+    },
+  },
+  computed: {
+    filteredPregnancy() {
+      return this.pregnancy.filter(record =>
+        record.pregnancy_order !== null ||
+        record.pregnancy_year !== null ||
+        record.pregnancy_gestation_completed !== null ||
+        record.pregnancy_outcome !== null ||
+        record.pregnancy_place_of_birth !== null ||
+        record.pregnancy_sex !== null ||
+        record.pregnancy_birth_weight !== null ||
+        record.pregnancy_present_status !== null ||
+        record.pregnancy_complication !== null
+      );
+    }
+  },
+   methods: {
+    formatDate(dateStr) {
+      if (!dateStr) return "";
+
+      // make sure it's valid ISO format (replace space with T)
+      const date = new Date(dateStr.replace(" ", "T"));
+
+      return date.toLocaleString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      }).replace(",", ""); // remove the extra comma before time
+    },
+     isEmpty(value) {
+      if (value === null || value === undefined) return true;
+      if (typeof value === 'string' && value.trim() === '') return true;
+      if (Array.isArray(value) && value.length === 0) return true;
+      if (typeof value === 'object' && Object.keys(value).length === 0) return true;
+      return false;
+    }
+  }
+};
+</script>
+
+<template>
+  <table class="table table-striped form-label formTable">
+    <tbody>
+      <tr>
+        <th colspan="12">REFERRAL RECORD</th>
+      </tr>
+      <tr>
+        <td colspan="6">Who is referring</td>
+        <td colspan="6">
+          Record Number:
+          <span class="forDetails">{{ form.record_no }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Referred Date:
+          <span class="forDetails">{{ form.referred_date }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          Referring Name:
+          <span class="forDetails">{{ form.md_referring }}</span>
+        </td>
+        <td colspan="6">
+          Arrival Date:
+          <span class="forDetails">{{ form.arrival_date }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Contact # of Referring MD/HCW:
+          <span class="forDetails">{{ form.referring_md_contact }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Referring Facility:
+          <span class="forDetails">{{ form.referring_facility }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Facility Contact #:
+          <span class="forDetails">
+            {{ form.referring_contact }}
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Accompanied by the Health Worker:
+          <span class="forDetails">{{ form.health_worker }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          Referred to:
+          <span class="forDetails">{{ form.referred_facility }}</span>
+        </td>
+        <td colspan="6">
+          Department:
+          <span class="forDetails"> {{ form.department }} </span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Covid Number:
+          <span class="forDetails"> {{ form.covid_number }} </span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Clinical Status:
+          <span class="forDetails">
+            {{ form.refer_clinical_status }}
+          </span>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="12">
+          Surviellance Category:
+          <span class="forDetails">
+            {{ form.refer_sur_category }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="row">
+    <div class="col">
+      <table>
+        <tbody>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>WOMAN</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="3">
+              Name:
+              <span class="forDetails">{{ form.woman_name }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Age: <span class="forDetails">{{ form.woman_age }}</span
+              ><br /><small>(at time of referral)</small>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Address:
+              <br />
+              <span class="forDetails">{{ form.patient_address }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Main Reason for Referral:
+              <br />
+              <span class="forDetails">{{ form.woman_reason }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Major Findings (Clinica and BP,Temp,Lab)
+              <br />
+              <span class="forDetails" style="white-space: pre-line">
+                {{ form.woman_major_findings }}
+              </span>
+            </td>
+          </tr>
+
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Treatments Give Time</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Before Referral:
+              <br />
+              <span class="forDetails">{{ form.woman_before_treatment }}</span>
+              -
+              <span class="forDetails">{{ form.woman_before_given_time }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              During Referral:
+              <br />
+              <span class="forDetails">{{ form.woman_during_transport }}</span>
+              -
+              <span class="forDetails">{{
+                form.woman_transport_given_time
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Information Given to the Woman and Companion About the Reason for
+              Referral
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                form.woman_information_given
+              }}</span>
+            </td>
+          </tr>
+          <tr
+            v-if="icd.length > 0 && form_version != 'version2'"
+            class="padded-row"
+          >
+            <td colspan="6">
+              ICD-10 Code and Description:
+              <li v-for="i in icd" :key="i.code">
+                <span class="forDetails"
+                  >{{ i.code }} - {{ i.description }}</span
+                >
+              </li>
+            </td>
+          </tr>
+          <tr
+            v-if="form.notes_diagnoses && form_version != 'version2'"
+            class="padded-row"
+          >
+            <td colspan="6">
+              Diagnosis/Impression:
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                form.notes_diagnoses
+              }}</span>
+            </td>
+          </tr>
+          <tr
+            v-if="form.other_diagnoses && form_version != 'version2'"
+            class="padded-row"
+          >
+            <td colspan="6">
+              Other Diagnoses:
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                form.other_diagnoses
+              }}</span>
+            </td>
+          </tr>
+          <tr v-if="reason && form_version != 'version2'" class="padded-row">
+            <td colspan="6">
+              Reason for referral:
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                reason.reason
+              }}</span>
+            </td>
+          </tr>
+          <tr
+            v-if="form.other_reason_referral && form_version != 'version2'"
+            class="padded-row"
+          >
+            <td colspan="6">
+              Reason for referral:
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                form.other_reason_referral
+              }}</span>
+            </td>
+          </tr>
+          <tr v-if="file_path && form_version != 'version2'" class="padded-row">
+            <td colspan="6">
+              <span v-if="file_path.length > 1">File Attachments: </span>
+              <span v-else>File Attachment: </span>
+              <br />
+              <span v-for="(path, index) in file_path" :key="index">
+                <a
+                  :href="path"
+                  :key="index"
+                  id="file_download"
+                  class="reason"
+                  target="_blank"
+                  download
+                  >{{ file_name[index] }}</a
+                >
+                <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col">
+      <table>
+        <tbody>
+          <tr class="bg-gray">
+            <th colspan="6" class="padded-header">BABY</th>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Name:
+              <span class="forDetails">{{ formBaby.baby_name }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Date of Birth:
+              <span class="forDetails">{{ formBaby.baby_dob }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Birth Weight:
+              <span class="forDetails">{{ formBaby.weight }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Gestational Age:
+              <span class="forDetails">{{ formBaby.gestational_age }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Main Reason for Referral:
+              <br />
+              <span class="forDetails">{{ formBaby.baby_reason }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Major Findings (Clinical and BP,Temp,Lab)
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                formBaby.baby_major_findings
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Last (Breast) Feed (Time):
+              <br />
+              <span class="forDetails">{{ formBaby.baby_last_feed }}</span>
+            </td>
+          </tr>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Treatments Give Time</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Before Referral:
+              <br />
+              <span class="forDetails">{{
+                formBaby.baby_before_treatment
+              }}</span>
+              -
+              <span class="forDetails">{{
+                formBaby.baby_before_given_time
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              During Transport:
+              <br />
+              <span class="forDetails">{{
+                formBaby.baby_during_transport
+              }}</span>
+              -
+              <span class="forDetails">{{
+                formBaby.baby_transport_given_time
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Information Given to the Woman and Companion About the Reason for
+              Referral
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                formBaby.baby_information_given
+              }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br />
+  <div class="row">
+    <div class="col">
+      <table v-if="form_version == 'version2'">
+        <tbody>
+          <tr class="bg-gray text-center" v-if="!isEmpty(icd) && !isEmpty(form.other_diagnoses)">
+            <td colspan="12"><b> Diagnosis </b></td>
+          </tr>
+          <tr v-if="icd != null">
+            <td colspan="12">
+              ICD-10 Code and Description:
+              <li v-for="i in icd">
+                <span class="caseforDetails"
+                  >{{ i.code }} - {{ i.description }}</span
+                >
+              </li>
+            </td>
+          </tr>
+          <tr class="padded-row" v-if="form.other_diagnoses != ''">
+            <td colspan="12">
+              Other Diagnosis:
+              <span class="forDetails">{{ form.other_diagnoses }}</span>
+            </td>
+          </tr>
+           <tr class="bg-gray text-center" v-if="!isEmpty(past_medical_history.allergies) && !isEmpty(past_medical_history.allergy_drugs_cause) &&
+            !isEmpty(past_medical_history.allergy_food_cause) && !isEmpty(past_medical_history.commordities_asthma_year) && !isEmpty(past_medical_history.commordities_cancer)
+            && !isEmpty(past_medical_history.commordities_diabetes_year) && !isEmpty(past_medical_history.commordities_hyper_year) && !isEmpty(past_medical_history.commordities_others) && !isEmpty(past_medical_history.heredo_asthma_side) && !isEmpty(past_medical_history.heredo_cancer_side) &&
+            !isEmpty(past_medical_history.heredo_diab_side) && !isEmpty(past_medical_history.heredo_hyper_side) && !isEmpty(past_medical_history.heredo_kidney_side)
+            && !isEmpty(past_medical_history.heredo_thyroid_side) && !isEmpty(past_medical_history.heredo_others)">
+              <td colspan="12"><b> Past Medical History </b></td>
+            </tr>
+            <tr class="padded-row" v-if="!isEmpty(past_medical_history.allergies) || !isEmpty(past_medical_history.allergy_drugs_cause) || !isEmpty(past_medical_history.allergy_food_cause)">
+              <td colspan="12">
+                Allergies:
+                <span class="forDetails">{{ past_medical_history.allergies }}</span>
+                Drugs cause:
+                <span class="forDetails"
+                  >{{ past_medical_history.allergy_drugs_cause }} &nbsp;</span
+                >
+                Food cause:
+                <span class="forDetails"
+                  >{{ past_medical_history.allergy_food_cause }} &nbsp;</span
+                >
+              </td>
+            </tr>
+            <tr class="padded-row" v-if="!isEmpty(past_medical_history.commordities_asthma_year) || 
+            !isEmpty(past_medical_history.commordities_cancer) || !isEmpty(past_medical_history.commordities_diabetes_year) ||
+            !isEmpty(past_medical_history.commordities_hyper_year) || !isEmpty(past_medical_history.commordities_others)">
+              <td colspan="12">
+                <br />Commorbidities &nbsp;
+                <!-- <span class="forDetails">{{past_medical_history.commordities?.replace("Select All,", "")}}&nbsp;</span> -->
+                Asthma:
+                <span class="forDetails"
+                  >{{ past_medical_history.commordities_asthma_year }} &nbsp;</span
+                >
+                Cancer:
+                <span class="forDetails"
+                  >{{ past_medical_history.commordities_cancer }} &nbsp;</span
+                >
+                Diabetes:
+                <span class="forDetails"
+                  >{{ past_medical_history.commordities_diabetes_year }} &nbsp;</span
+                >
+                Hypertension:
+                <span class="forDetails"
+                  >{{ past_medical_history.commordities_hyper_year }} &nbsp;</span
+                >
+                Others:
+                <span class="forDetails"
+                  >{{ past_medical_history.commordities_others }} &nbsp;</span
+                >
+              </td>
+            </tr>
+            <tr class="padded-row" v-if="!isEmpty(past_medical_history.heredo_asthma_side) || !isEmpty(past_medical_history.heredo_cancer_side) ||
+            !isEmpty(past_medical_history.heredo_diab_side) || !isEmpty(past_medical_history.heredo_hyper_side) || !isEmpty(past_medical_history.heredo_kidney_side)
+            || !isEmpty(past_medical_history.heredo_thyroid_side) || !isEmpty(past_medical_history.heredo_others)">
+              <td colspan="12">
+                <br />Heredofamilial Diseases &nbsp;
+                <!-- <span class="forDetails">{{ past_medical_history.heredofamilial_diseases }} &nbsp;</span> -->
+                Asthma:
+                <span class="forDetails"
+                  >{{ past_medical_history.heredo_asthma_side }} &nbsp;</span
+                >
+                Cancer:
+                <span class="forDetails"
+                  >{{ past_medical_history.heredo_cancer_side }} &nbsp;</span
+                >
+                Diabetes:
+                <span class="forDetails"
+                  >{{ past_medical_history.heredo_diab_side }} &nbsp;</span
+                >
+                Hypertension:
+                <span class="forDetails"
+                  >{{ past_medical_history.heredo_hyper_side }} &nbsp;</span
+                >
+                Kidney Disease:
+                <span class="forDetails"
+                  >{{ past_medical_history.heredo_kidney_side }} &nbsp;</span
+                >
+                Thyroid Disease:
+                <span class="forDetails"
+                  >{{ past_medical_history.heredo_thyroid_side }} &nbsp;</span
+                >
+                Others:
+                <span class="forDetails"
+                  >{{ past_medical_history.heredo_others }} &nbsp;</span
+                >
+              </td>
+            </tr>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Personal and Social History</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Alcohol:
+              <span class="forDetails"
+                >{{ personal_and_social_history.alcohol_drinking }} &nbsp;</span
+              >
+              Per day:
+              <span class="forDetails"
+                >{{
+                  personal_and_social_history.alcohol_bottles_per_day
+                }}
+                &nbsp;</span
+              >
+              Year quitted:
+              <span class="forDetails"
+                >{{
+                  personal_and_social_history.alcohol_drinking_quit_year
+                }}
+                &nbsp;</span
+              >
+              Type of liquor:
+              <span class="forDetails"
+                >{{
+                  personal_and_social_history.alcohol_liquor_type
+                }}
+                &nbsp;</span
+              >
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              <br />Smoking:
+              <span class="forDetails"
+                >{{ personal_and_social_history.smoking }} &nbsp;</span
+              >
+              Sticks per day:
+              <span class="forDetails"
+                >{{
+                  personal_and_social_history.smoking_sticks_per_day
+                }}
+                &nbsp;</span
+              >
+              Year quitted:
+              <span class="forDetails"
+                >{{
+                  personal_and_social_history.smoking_quit_year
+                }}
+                &nbsp;</span
+              >
+              Remarks:
+              <span class="forDetails"
+                >{{ personal_and_social_history.smoking_remarks }} &nbsp;</span
+              >
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              <br />Illicit Drugs:
+              <span class="forDetails"
+                >{{ personal_and_social_history.illicit_drugs }} &nbsp;</span
+              >
+              Year quitted:
+              <span class="forDetails"
+                >{{
+                  personal_and_social_history.illicit_drugs_quit_year
+                }}
+                &nbsp;</span
+              >
+              Illicit drugs taken:
+              <span class="forDetails"
+                >{{
+                  personal_and_social_history.illicit_drugs_taken
+                }}
+                &nbsp;</span
+              >
+            </td>
+          </tr>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Current Medications</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              <span class="forDetails">
+                {{ current_medication }}
+              </span>
+            </td>
+          </tr>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong
+                >Pertinent Laboratory and Other Ancillary Procedures</strong
+              >
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Laboratory:
+              <span class="forDetails">
+                {{
+                  pertinent_laboratory.pertinent_laboratory_and_procedures
+                }}&nbsp;
+              </span>
+              Other:
+              <span class="forDetails">
+                {{ pertinent_laboratory.lab_procedure_other }}
+              </span>
+              <tr
+                class="padded-row"
+                v-if="file_path && form_version == 'version2'"
+              >
+                <td colspan="12">
+                  <span v-if="file_path.length > 1">File Attachments: </span>
+                  <span v-else>File Attachment: </span>
+                  <span v-for="(path, index) in file_path" :key="index">
+                    <a
+                      :href="path"
+                      :key="index"
+                      id="file_download"
+                      class="reason"
+                      target="_blank"
+                      download
+                      >{{ file_name[index] }}</a
+                    >
+                    <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
+                  </span>
+                </td>
+              </tr>
+            </td>
+          </tr>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Nutritional Status</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Diet:
+              <span class="forDetails"
+                >{{ nutritional_status.diet }}&nbsp;</span
+              >
+              Specify Diets:
+              <span class="forDetails">{{
+                nutritional_status.specify_diets
+              }}</span>
+            </td>
+          </tr>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Latest Vital Signs</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              Temperature:
+              <span class="forDetails"
+                >{{ latest_vital_signs.temperature }}&nbsp;</span
+              >
+              Pulse Rate/Heart Rate:
+              <span class="forDetails"
+                >{{ latest_vital_signs.pulse_rate }}&nbsp;</span
+              >
+              Respiratory Rate:
+              <span class="forDetails">{{
+                latest_vital_signs.respiratory_rate
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              Blood Pressure:
+              <span class="forDetails"
+                >{{ latest_vital_signs.blood_pressure }}&nbsp;</span
+              >
+              O2 Saturation:
+              <span class="forDetails">{{
+                latest_vital_signs.oxygen_saturation
+              }}</span>
+            </td>
+          </tr>
+           <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Glasgow Coma Scale</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              <table class="table table-bordered glasgow-table">
+                <thead>
+                  <tr>
+                    <th
+                      v-for="i in 10"
+                      :key="i"
+                      :class="{
+                        highlight:
+                          Number(glasgocoma_scale?.pupil_size_chart) === i,
+                      }"
+                    >
+                      <b>{{ i }}</b>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td
+                      v-for="i in 10"
+                      :key="i"
+                      :class="{
+                        highlight:
+                          Number(glasgocoma_scale?.pupil_size_chart) === i,
+                      }"
+                    >
+                      <span
+                        class="glasgow-dot"
+                        :style="{
+                          height: i * 4 + 2 + 'px',
+                          width: i * 4 + 2 + 'px',
+                        }"
+                      >
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Pupil Size Chart:
+              <span class="forDetails">{{ glasgocoma_scale.pupil_size_chart}}&nbsp;&nbsp;</span>
+              Motor Response:
+              <span class="forDetails">{{ glasgocoma_scale.motor_response }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Verbal Response:
+              <span class="forDetails">{{ glasgocoma_scale.verbal_response}}&nbsp;&nbsp;</span>
+              Eye Response:
+              <span class="forDetails">{{ glasgocoma_scale.eye_response }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              GCS Response:
+              <span class="forDetails">{{ glasgocoma_scale.gsc_score }}</span>
+            </td>
+          </tr>
+          <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Review of Systems</strong>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Skin:
+              <span class="forDetails"
+                >{{
+                  review_of_system.skin
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{ review_of_system.skin_others }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Head:
+              <span class="forDetails"
+                >{{
+                  review_of_system.head
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{ review_of_system.head_others }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Eyes:
+              <span class="forDetails"
+                >{{
+                  review_of_system.eyes
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{ review_of_system.eyes_others }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Ears:
+              <span class="forDetails"
+                >{{
+                  review_of_system.ears
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{ review_of_system.eyes_others }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Nose/Sinuses:
+              <span class="forDetails"
+                >{{
+                  review_of_system.nose_or_sinuses
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{ review_of_system.nose_others }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Mouth/Throat:
+              <span class="forDetails"
+                >{{
+                  review_of_system.mouth_or_throat
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.mouth_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Neck:
+              <span class="forDetails"
+                >{{
+                  review_of_system.neck
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{ review_of_system.neck_others }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Breast:
+              <span class="forDetails"
+                >{{
+                  review_of_system.breast
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.breast_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Respiratory/Cardiac:
+              <span class="forDetails"
+                >{{
+                  review_of_system.respiratory_or_cardiac
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.respiratory_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Gastrointestinal:
+              <span class="forDetails"
+                >{{
+                  review_of_system.gastrointestinal
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.gastrointestinal_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Urinary:
+              <span class="forDetails"
+                >{{
+                  review_of_system.urinary
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.urinary_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Peripheral Vascular:
+              <span class="forDetails"
+                >{{
+                  review_of_system.peripheral_vascular
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.peripheral_vascular_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Musculoskeletal:
+              <span class="forDetails"
+                >{{
+                  review_of_system.musculoskeletal
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.musculoskeletal_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Neurologic:
+              <span class="forDetails"
+                >{{
+                  review_of_system.neurologic
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.neurologic_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Hematologic:
+              <span class="forDetails"
+                >{{
+                  review_of_system.hematologic
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.hematologic_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Endocrine:
+              <span class="forDetails"
+                >{{
+                  review_of_system.endocrine
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.endocrine_others
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="6">
+              Psychiatric:
+              <span class="forDetails"
+                >{{
+                  review_of_system.psychiatric
+                    ?.replace("Select All,", "")
+                    ?.replace(",Others", "")
+                }}&nbsp;</span
+              >
+              Others:
+              <span class="forDetails">{{
+                review_of_system.psychiatric_others
+              }}</span>
+            </td>
+          </tr>
+           <tr class="bg-gray">
+            <td colspan="6" class="padded-header">
+              <strong>Reason for Referral</strong>
+            </td>
+          </tr>
+          <tr v-if="reason" class="padded-row">
+            <td colspan="6">
+              Reason for referral:
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                reason.reason
+              }}</span>
+            </td>
+          </tr>
+          <tr v-if="form.other_reason_referral" class="padded-row">
+            <td colspan="6">
+              Reason for referral:
+              <br />
+              <span class="forDetails" style="white-space: pre-line">{{
+                form.other_reason_referral
+              }}</span>
+            </td>
+          </tr>
+          <tr class="bg-gray text-center">
+            <td colspan="12">
+              <b>Obstetric and Gynecologic History</b>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              Menarche:
+              <span class="forDetails"
+                >{{ obstetric_and_gynecologic_history.menarche }}&nbsp;</span
+              >
+              Menopause:
+              <span class="forDetails">{{
+                obstetric_and_gynecologic_history.menopause
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              Menstrual Cycle:
+              <span class="forDetails"
+                >{{ obstetric_and_gynecologic_history.menstrual_cycle }}&nbsp;</span
+              >
+              Menstrual Duration:
+              <span class="forDetails">{{
+                obstetric_and_gynecologic_history.menstrual_cycle_duration
+              }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row"> 
+            <td colspan="12">
+              Menstrual Pads per Day:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.menstrual_cycle_padsperday }}&nbsp;</span>
+              Menstrual Medication:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.menstrual_cycle_medication }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              Contraceptive:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.contraceptive_history }}&nbsp;</span>
+              Others:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.contraceptive_others }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              Parity
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              G:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_g }}&nbsp;</span>
+              FT:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_ft }}&nbsp;</span>
+              A:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_a }}&nbsp;</span>
+              LMP:
+              <span class="forDetails">{{ formatDate(obstetric_and_gynecologic_history.parity_lnmp) }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              P:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_p }}&nbsp;</span>
+              PT:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_pt }}&nbsp;</span>
+              L:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_l }}&nbsp;</span>
+              EDC:
+              <span class="forDetails">{{ formatDate(obstetric_and_gynecologic_history.parity_edc) }}</span>
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              AOG
+            </td>
+          </tr>
+          <tr class="padded-row">
+            <td colspan="12">
+              LMP:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.aog_lnmp }}&nbsp;</span>
+              UTZ:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.aog_eutz }}&nbsp;</span>
+              Prenatal History:
+              <span class="forDetails">{{ obstetric_and_gynecologic_history.prenatal_history }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+   <div v-if="form.sex === 'Female' && filteredPregnancy.length > 0 && form_version != 'version1'" class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr style="font-size: 10pt;">
+              <th class="text-center" style="width:50%;">Pregnancy Order</th>
+              <th class="text-center" style="width:20%;">Year of Birth</th>
+              <th class="text-center">Gestation Completed</th>
+              <th class="text-center">Pregnancy Outcome</th>
+              <th class="text-center">Place of Birth</th>
+              <th class="text-center">Biological Sex</th>
+              <th class="text-center" style="width:50%;">Birth Weight</th>
+              <th class="text-center">Present Status</th>
+              <th class="text-center">Complication(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(record, index) in filteredPregnancy" :key="index">
+              <td>{{ record.pregnancy_order }}</td>
+              <td>{{ record.pregnancy_year }}</td>
+              <td>{{ record.pregnancy_gestation_completed }}</td>
+              <td>{{ record.pregnancy_outcome }}</td>
+              <td>{{ record.pregnancy_place_of_birth }}</td>
+              <td>{{ record.pregnancy_sex }}</td>
+              <td>{{ record.pregnancy_birth_weight }}</td>
+              <td>{{ record.pregnancy_present_status }}</td>
+              <td>{{ record.pregnancy_complication }}</td>
+            </tr>
+            <tr v-if="filteredPregnancy.length === 0">
+              <td colspan="9" class="text-center">No data available.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+/* Add your component styles here */
+.glasgow-table {
+  border: 1px solid lightgrey;
+  width: 100%;
+}
+.glasgow-table th.highlight,
+.glasgow-table td.highlight {
+  border: 2px solid orange !important;
+  background-color: #fffbda !important; /* Light red background */
+}
+
+.glasgow-dot {
+  background-color: #494646;
+  border-radius: 50%;
+  display: inline-block;
+}
+#glasgow_table_1,
+tr td:nth-child(1) {
+  width: 35%;
+}
+#glasgow_table_2 tr td:nth-child(2) {
+  width: 35%;
+}
+</style>

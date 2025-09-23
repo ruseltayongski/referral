@@ -1346,8 +1346,13 @@ class NewFormCtrl extends Controller
             Session::put("refer_patient",true);
         }
     }
+    public static function pregnantFormTelemedNewForm($id){
+        $track = Tracking::select('status', 'type')->where('id', $id)->first();
+        Session::put('telemed', true);
+        return self::getViewForm_pregnant($id, $track->status);
+    }
 
-    public function getViewForm_pregnant($id,$referral_status){
+    public static function getViewForm_pregnant($id,$referral_status){
         $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description', 'icd.icd_id as id')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')

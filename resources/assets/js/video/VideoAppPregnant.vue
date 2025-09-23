@@ -6,7 +6,7 @@ import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue"; // I add this
 import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
-import OldFormReferralPregnant from "./OldFormReferralPregnant.vue";
+import OldFormReferralPregnant from "./FormReferralPregnantComponent.vue";
 export default {
   name: "RecoApp",
   components: {
@@ -108,6 +108,16 @@ export default {
       feedbackUrl: "",
       baseUrlFeed: "",
       doctorfeedback: "",
+      past_medical_history: null,
+      personal_and_social_history: null,
+      review_of_system: null,
+      nutritional_status: null,
+      current_medication: null,
+      pertinent_laboratory: null,
+      latest_vital_signs:null,
+      glasgocoma_scale: null,
+      obstetric_and_gynecologic_history: null,
+      pregnancy:null,
       // netSpeedMbps: null,
       // netSpeedStatus: '', // 'fast' or 'slow'
     };
@@ -138,33 +148,88 @@ export default {
       this.initDraggableDiv();
     });
     axios
-      .get(
-        `${this.baseUrl}/doctor/referral/video/pregnant/form/${this.tracking_id}`
-      )
+      .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
       .then((res) => {
         const response = res.data;
-        // console.log("testing");
-        // console.log(response);
-        this.form = response.form["pregnant"];
-        this.formBaby = response.form["baby"];
-        this.telemedicine = response.form["pregnant"].telemedicine
+        if (response.success) {
+          this.form_version = response.form_type;
+          console.log("Form version:", this.form_version);
 
-        if (response.age_type === "y")
-          this.patient_age = response.patient_age + " Years Old";
-        else if (response.age_type === "m")
-          this.patient_age = response.patient_age + " Months Old";
+          if (this.form_version === "version1") {
+            axios
+              .get(
+                `${this.baseUrl}/doctor/referral/video/pregnant/form/${this.tracking_id}`
+              )
+              .then((res) => {
+                const response = res.data;
+                console.log("Form response:", response);
+                console.log("Form response:", response);
+                // console.log("testing");
+                // console.log(response);
+                this.form = response.form["pregnant"];
+                this.formBaby = response.form["baby"];
+                this.telemedicine = response.form["pregnant"].telemedicine;
 
-        this.icd = response.icd;
-        // console.log("testing\n" + this.icd);
+                if (response.age_type === "y")
+                  this.patient_age = response.patient_age + " Years Old";
+                else if (response.age_type === "m")
+                  this.patient_age = response.patient_age + " Months Old";
 
-        this.file_path = response.file_path;
-        this.file_name = response.file_name;
-        this.reason = response.reason;
+                this.icd = response.icd;
+                // console.log("testing\n" + this.icd);
 
-        // console.log(response);
+                this.file_path = response.file_path;
+                this.file_name = response.file_name;
+                this.reason = response.reason;
+
+                // console.log(response);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else if (this.form_version === "version2") {
+            axios
+              .get(
+                `${this.baseUrl}/video/pregnant/newform/data/${this.tracking_id}`
+              )
+              .then((res) => {
+                const response = res.data;
+                this.form = response.form["pregnant"];
+                this.formBaby = response.form["baby"];
+                this.telemedicine = response.form["pregnant"].telemedicine;
+                this.past_medical_history = response.past_medical_history;
+                this.personal_and_social_history = response.personal_and_social_history;
+                this.review_of_system = response.review_of_system;
+                this.nutritional_status = response.nutritional_status;
+                this.current_medication = response.personal_and_social_history.current_medications;
+                this.latest_vital_signs = response.latest_vital_signs;
+                this.pertinent_laboratory = response.pertinent_laboratory;
+                this.glasgocoma_scale = response.glasgocoma_scale;
+                this.obstetric_and_gynecologic_history = response.obstetric_and_gynecologic_history;
+                this.pregnancy = response.pregnancy;
+
+                if (response.age_type === "y")
+                  this.patient_age = response.patient_age + " Years Old";
+                else if (response.age_type === "m")
+                  this.patient_age = response.patient_age + " Months Old";
+
+                this.icd = response.icd;
+                // console.log("testing\n" + this.icd);
+
+                this.file_path = response.file_path;
+                this.file_name = response.file_name;
+                this.reason = response.reason;
+
+                console.log("Form response:", response);
+              });
+          }
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(
+          "Error fetching form type, defaulting to 'normal':",
+          error
+        );
       });
 
     //this.hideDivAfterTimeout();
@@ -1697,10 +1762,21 @@ export default {
               <OldFormReferralPregnant
                 :initialForm="{ ...form }"
                 :initialFormBaby="{ ...formBaby }"
+                :past_medical_history="{...past_medical_history}"
+                :personal_and_social_history="{...personal_and_social_history}"
+                :review_of_system="{...review_of_system}"
+                :nutritional_status="{...nutritional_status}"
+                :pertinent_laboratory="{...pertinent_laboratory}"
+                :latest_vital_signs="{...latest_vital_signs}"
+                :glasgocoma_scale="{...glasgocoma_scale}"
+                :obstetric_and_gynecologic_history = "{...obstetric_and_gynecologic_history}"
                 :file_path="file_path"
                 :icd="icd"
-                :patient_age="patient_age"
                 :file_name="file_name"
+                :form_version="form_version"
+                :current_medication="current_medication"
+                :patient_age="patient_age"
+                :pregnancy="pregnancy"
               />
 
               <div class="row g-0" v-if="this.telemedicine == 1">
