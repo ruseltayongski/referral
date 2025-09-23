@@ -922,7 +922,7 @@
                         if($("#referral_page_check").val()) {
                             // console.log("append the refer patient");
                             $('.count_referral').html(this.increment_referral);
-                                
+
                                 let position = event.payload.position;
                                 let position_bracket = ['','1st','2nd','3rd', '4th','5th','6th','7th','8th','9th','10th','11th','12th','13th','14th','15th','16th','17th','18th','19th','20th'];
                                 let position_content = '';
@@ -931,6 +931,14 @@
                                         "                                            <span class='top-right-badge badge1 red'>" + position_bracket[position + 1] + " Position</span>\n" +
                                         "                                        </div>";
                                 }
+                                // remove the dynamic incoming and insert the realtime incoming
+                                let patientCode = event.payload.patient_code;
+                                let existingItem = $("#referral_incoming" + patientCode);
+                            
+                                if (existingItem.length > 0) {
+                                    existingItem.remove();
+                                }
+
                                 let type = event.payload.form_type;
                                 type = type=='normal' ? 'normal-section':'pregnant-section';
                                 let referral_type = (type=='normal-section') ? 'normal':'pregnant';
@@ -957,6 +965,7 @@
                                     '                   data-telemed="'+event.payload.telemedicine+'"\n' +
                                     '                   data-item="#item-'+event.payload.tracking_id+'"\n' +
                                     '                   data-referral_status="referred"\n' +
+                                    '                   data-privacy_notice="privacy"\n' +
                                     '                   data-type="'+referral_type+'"\n' +
                                     '                   data-id="'+event.payload.tracking_id+'"\n' +
                                     '                   data-referred_from="'+event.payload.referred_from+'"\n' +
@@ -1067,7 +1076,7 @@
                      console.log("event discharge:",event);
                     // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
                     this.telemedicine = event.payload.telemedicine;
-                    if(event.payload.status == "telemedicine") {
+                    if(event.payload.status == "telemedicine" || event.payload.telemedicine == 1) {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             // console.log("callAdoctor", event);
                             this.action_md = event.payload.action_md;
@@ -1104,6 +1113,7 @@
                             if(event.payload.telemedicine_status === 'examined') {
                                 // console.log("examinedcompleted: new");
                                 this.examinedCompleted(event.payload.code, event.payload.activity_id);
+                                this.prescribedCompleted(event.payload.code, event.payload.activity_id)
                             } else if(event.payload.telemedicine_status === 'prescription') {
                                 // console.log("prescribedCompleted");
                                 this.prescribedCompleted(event.payload.code, event.payload.activity_id)
@@ -1153,12 +1163,11 @@
                             }
                         }
                        
-                        console.log("my event discharged notification:", this.passToVueFacility);
                         if(event.payload.referred_from === 0){
                             return;
                         }
 
-                        if(event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility) {
+                        if(event.payload.status == "discharged" && (event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility)) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
                     }

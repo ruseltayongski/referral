@@ -129,10 +129,20 @@ class ReferralCtrl extends Controller
 
             $matchingSubOpdCodes = $latestActivitySub->pluck('code');
 
-                $data = $data->where('tracking.telemedicine', $telemedOrReferral)
-                        ->whereIn('tracking.code', $matchingSubOpdCodes);
+                // $data = $data->where('tracking.telemedicine', $telemedOrReferral)
+                //         ->whereIn('tracking.code', $matchingSubOpdCodes);
                 // ->where('latest_activity.sub_opdId', $user->subopd_id)
                 // ->where('latest_activity.referred_to', $user->facility_id);
+
+                 $data = $data->where('tracking.telemedicine', 1)
+                        ->whereIn('tracking.code', $matchingSubOpdCodes)
+                        ->whereNotExists(function ($q) {
+                            $q->select(DB::raw(1))
+                            ->from('activity')
+                            ->whereRaw('activity.code = tracking.code')
+                            ->where('activity.status', 'redirected');
+                        }); 
+
         }
         else {
             // $data = $data->where('tracking.telemedicine', '!=', 1)
@@ -402,6 +412,7 @@ class ReferralCtrl extends Controller
             "referring_fac_id" => $track->referring_fac_id,
             "form_type" => $form_type
         ];
+        // dd($arr);
         if(Session::get('telemed')) {
             Session::put('telemed',false);
             return $arr;
@@ -768,6 +779,7 @@ class ReferralCtrl extends Controller
                 ->paginate(10);
         } else {
             $data = Activity::select(
+                'activity.status',
                 'tracking.*',
                 DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
                 DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
@@ -812,10 +824,33 @@ class ReferralCtrl extends Controller
                         ->unique()
                         ->toArray();
                     
-                    $data = $data->where('tracking.telemedicine', $telemedOrReferral)
-                                 ->whereIn('tracking.id', $trackingIds);        
+                     $data = $data->where('tracking.telemedicine', 1)
+                        ->whereIn('tracking.id', $trackingIds)
+                        ->whereNotExists(function ($q) {
+                            $q->select(DB::raw(1))
+                            ->from('activity')
+                            ->whereRaw('activity.code = tracking.code')
+                            ->where('activity.status', 'redirected');
+                        }); 
                 }else{
-                    $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+                    // $data = $data->where('tracking.telemedicine', $telemedOrReferral);
+
+                    $data = $data->where(function ($q) use ($telemedOrReferral) {
+                        // First condition: telemedicine = $telemedOrReferral
+                        $q->where('tracking.telemedicine', $telemedOrReferral)
+
+                        // OR telemedicine = 1 and HAS upward/redirected
+                        ->orWhere(function ($q2) {
+                            $q2->where('tracking.telemedicine', 1)
+                                ->whereExists(function ($sub) {
+                                    $sub->select(DB::raw(1))
+                                        ->from('activity')
+                                        ->whereRaw('activity.code = tracking.code')
+                                        ->where('activity.status', 'redirected');
+                                });
+                        });
+                    });
+                                
                 }
             }
 
@@ -1676,7 +1711,8 @@ class ReferralCtrl extends Controller
         if($req->facility == 790 || $req->facility == 23) {
             session()->put('for_firebase_data', $new_referral);
         }
-        return Redirect::back();
+        // return Redirect::back();
+        return redirect()->route('doctor_referred', ['filterRef' => 0]);
     }
 
     public function seenBy($track_id,$code)

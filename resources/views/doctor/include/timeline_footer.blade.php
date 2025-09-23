@@ -23,9 +23,10 @@
         {{--@if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )--}}
         @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred' || $row->status == 'followup')
             <div class="form-group">
-                <a class="btn btn-warning btn-xs view_form" href="#"
+                <a class="btn btn-warning btn-xs view_form" href="javascript:void(0)"
                    data-toggle="modal"
                    data-code="{{ $row->code }}"
+                   data-status="{{ $row->status }}"
                    data-telemed ="{{$row->telemedicine}}"
                    data-item="#item-{{ $row->id }}"
                    data-status="{{ $row->status }}"
@@ -139,41 +140,36 @@
         }
     }
    
-   $(document).ready(function() {
-        let selectedButtonData = null; 
-        
-        $(".referral_body").html(loading); 
-        $(document).on('click', '.view_form', function () {
+//    $(document).ready(function() {
+//         let selectedButtonData = null; 
+
+//         $(".referral_body").html(loading); 
+//         $(document).on('click', '.view_form', function () {
            
-            selectedButtonData = $(this).data(); 
-            let telemedValue = selectedButtonData.telemed; // Get telemedicine value
+//             selectedButtonData = $(this).data(); 
+//             let telemedValue = selectedButtonData.telemed; // Get telemedicine value
+//             let followupTelemed = selectedButtonData.status; // Get status value
+//             console.log("Telemed Value:", telemedValue);
+//             if (telemedValue == 1 && (followupTelemed === 'followup' || followupTelemed === 'referred')) {
+//                  $('#privacyNoticeModal').modal('show');
+//             }
+//         });
 
-            // console.log("Telemedicine Value:", telemedValue); // Debugging
-            if (telemedValue == 1) {
-                $('#privacyNoticeModal').modal('show');
-            }else{
-            
-                $('#privacyNoticeModal').modal('hide');
-                $('#referralForm').modal('show');
-                return;
-            }
-        });
+//         $('#privacyNoticeModal').on('shown.bs.modal', function () {
+//             $('#privacyCheckbox').prop('checked', false);
+//             $('#acceptPrivacyBtn').prop('disabled', true);
+//         });
 
-        $('#privacyNoticeModal').on('shown.bs.modal', function () {
-            $('#privacyCheckbox').prop('checked', false);
-            $('#acceptPrivacyBtn').prop('disabled', true);
-        });
+//         $('#privacyCheckbox').change(function () {
+//             $('#acceptPrivacyBtn').prop('disabled', !this.checked);
+//         });
 
-        $('#privacyCheckbox').change(function () {
-            $('#acceptPrivacyBtn').prop('disabled', !this.checked);
-        });
-
-        $('#acceptPrivacyBtn').click(function () {
-            $('#privacyNoticeModal').modal('hide');
-            setTimeout(function() {
-                $('#referralForm').modal('show');
-            }, 500);
-        });
-    });
+//         $('#acceptPrivacyBtn').click(function () {
+//             $('#privacyNoticeModal').modal('hide');
+//             setTimeout(function() {
+//                 $('#referralForm').modal('show');
+//             }, 500);
+//         });
+//     });
 
 </script>

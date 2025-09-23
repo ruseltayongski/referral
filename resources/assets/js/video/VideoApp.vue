@@ -1088,10 +1088,11 @@ export default {
 
       // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
-        // console.log("User joined:", user.uid);
+        console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
         this.isUserJoined = true;
         // Check if channel already has maximum users
+        console.log("user count: ", self.channelParameters.userCount, "max users:", self.channelParameters.maxUsers);
         if (
           self.channelParameters.userCount >= self.channelParameters.maxUsers
         ) {
@@ -1226,10 +1227,10 @@ export default {
       document.body.appendChild(fullMessage);
 
       // Remove the message after a few seconds
-      setTimeout(() => {
-        fullMessage.remove();
-        window.top.close();
-      }, 5000);
+      // setTimeout(() => {
+      //   fullMessage.remove();
+      //   window.top.close();
+      // }, 5000);
     },
 
     getUrlVars() {

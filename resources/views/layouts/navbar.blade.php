@@ -61,7 +61,7 @@ $multi_faci = Session::get('multiple_login');
                     -->
                 </ul>
             </li>
-
+           
             <!-- Telemed Dropdown -->
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -71,14 +71,14 @@ $multi_faci = Session::get('multiple_login');
                 <ul class="dropdown-menu">
                     <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
                     <li>
-                        <a href="{{ url('doctor/referral') }}?filterRef=1">
+                        <a href="{{ url('doctor/referral') }}?filterRef=1"  id="incoming-link">
                             <i class="fa fa-ambulance incoming_nav"></i> Incoming &nbsp;&nbsp; 
                             {{-- <span class="badge">
                                 <span class="count_referral_telemed">{{ $countTelemed }}</span> New
                             </span> --}}
                         </a>
                     </li>
-                    <li>
+                    <li>    
                         <a href="{{ url('doctor/referred') }}?filterRef=1">
                             <i class="fa fa-ambulance outgoing_nav"></i> Outgoing &nbsp;&nbsp; 
                             <!-- <span class="badge">
@@ -88,7 +88,7 @@ $multi_faci = Session::get('multiple_login');
                     </li>
                     <li class="divider"></li>
                     <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
-                    <li><a href="{{ url('configSchedule')}}"><i class="fa fa-table"></i> Config Schedule</a></li>
+                    <li><a href="{{ url('configSchedule')}}" id="configSched_Id"><i class="fa fa-table"></i> Config Schedule</a></li>
                     <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports </a>
                     <ul class="dropdown-menu">
@@ -306,3 +306,45 @@ $multi_faci = Session::get('multiple_login');
         </li>
     </ul>
 </div><!--/.nav-collapse -->
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const userDept = {{ $user->department_id }};
+        const userSubOpd = {{ $user->subopd_id ?? 'null' }};
+
+        const incomingLink = document.getElementById('incoming-link');
+        const configSchedLink = document.getElementById('configSched_Id');
+
+        function showWarning(event) {
+            event.preventDefault();
+            Lobibox.notify('warning', {
+                size: 'mini',
+                rounded: true,
+                delay: 4000,
+                sound: false,
+                title: 'Access Denied',
+                msg: 'You are not authorized to access this section (OPD only).'
+            });
+        }
+
+        if(incomingLink){
+            incomingLink.addEventListener('click', function(event) {
+                if (userDept !== 5 && !userSubOpd) {
+                    showWarning(event);
+                }
+            });
+        }
+
+        if(configSchedLink){
+            configSchedLink.addEventListener('click', function(event) {
+                if (userDept !== 5 && !userSubOpd) {
+                    showWarning(event);
+                }
+            });
+        }
+        
+
+    }); 
+
+</script>
