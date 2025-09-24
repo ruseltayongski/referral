@@ -318,13 +318,9 @@ $multi_faci = Session::get('multiple_login');
 
         function showWarning(event) {
             event.preventDefault();
-            Lobibox.notify('warning', {
-                size: 'mini',
-                rounded: true,
-                delay: 4000,
-                sound: false,
-                title: 'Access Denied',
-                msg: 'You are not authorized to access this section (OPD only).'
+            Lobibox.alert("warning",
+            {
+                msg: "You are not authorized to access this section (OPD only)."
             });
         }
 
