@@ -130,7 +130,7 @@ export default {
           record.pregnancy_present_status !== null ||
           record.pregnancy_complication !== null
       );
-    }
+    },
   },
   methods: {
     formatDate(dateStr) {
@@ -533,16 +533,16 @@ export default {
       <tr
         class="bg-gray text-center padded-row"
         v-if="
-          !isEmpty(personal_and_social_history.alcohol_drinking) &&
-          !isEmpty(personal_and_social_history.alcohol_bottles_per_day) &&
-          !isEmpty(personal_and_social_history.alcohol_drinking_quit_year) &&
-          !isEmpty(personal_and_social_history.alcohol_liquor_type) &&
-          !isEmpty(personal_and_social_history.smoking) &&
-          !isEmpty(personal_and_social_history.smoking_sticks_per_day) &&
-          !isEmpty(personal_and_social_history.smoking_quit_year) &&
-          !isEmpty(personal_and_social_history.smoking_remarks) &&
-          !isEmpty(personal_and_social_history.illicit_drugs) &&
-          !isEmpty(personal_and_social_history.illicit_drugs_quit_year) &&
+          !isEmpty(personal_and_social_history.alcohol_drinking) ||
+          !isEmpty(personal_and_social_history.alcohol_bottles_per_day) ||
+          !isEmpty(personal_and_social_history.alcohol_drinking_quit_year) ||
+          !isEmpty(personal_and_social_history.alcohol_liquor_type) ||
+          !isEmpty(personal_and_social_history.smoking) ||
+          !isEmpty(personal_and_social_history.smoking_sticks_per_day) ||
+          !isEmpty(personal_and_social_history.smoking_quit_year) ||
+          !isEmpty(personal_and_social_history.smoking_remarks) ||
+          !isEmpty(personal_and_social_history.illicit_drugs) ||
+          !isEmpty(personal_and_social_history.illicit_drugs_quit_year) ||
           !isEmpty(personal_and_social_history.illicit_drugs_taken)
         "
       >

@@ -2266,7 +2266,7 @@ td {
 
   .localPlayerDiv {
     min-height: 100px !important;
-    min-width: 75px !important;
+    min-width: 70px !important;
     max-height: 20vh !important;
     max-width: 25vw !important;
     bottom: 60px !important;
