@@ -20,13 +20,18 @@
         ->where("status", "accepted")
         ->exists();
     Session::put('referred_accepted_track', $referred_accepted_track); // I add this on 24/3/24
-    $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
-        ->where("referred_to", $referred_track->referred_to)
+    // $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+    //     ->where("referred_to", $referred_track->referred_to)
+    //     ->where("created_at", ">=", $referred_track->created_at)
+    //     ->where("status", "rejected")
+    //     ->exists();
+     $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+        ->where("referred_from", $referred_track->referred_from)
         ->where("created_at", ">=", $referred_track->created_at)
         ->where("status", "rejected")
         ->exists();
     $referred_cancelled_track = \App\Activity::where("code", $referred_track->code)
-        ->where("referred_to", $referred_track->referred_to)
+        ->where("referred_from", $referred_track->referred_from)
         ->where("created_at", ">=", $referred_track->created_at)
         ->where("status", "cancelled")
         ->exists();
@@ -59,7 +64,7 @@
         ->where("status", "discharged")
         ->exists();
     $referred_transferred_track = \App\Activity::where("code", $referred_track->code) // I add this changes for discharged highlight complete
-        ->where("referred_from", $referred_track->referred_to)
+        ->where("referred_from", $referred_track->referred_from)
         ->where("created_at", ">=", $referred_track->created_at)
         ->where("status", "transferred")
         ->exists();
@@ -120,10 +125,10 @@
                                         ?>
             " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">
                     <?php
-                    if ($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
-                        echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
-                    elseif ($referred_cancelled_track)
+                    if ($referred_cancelled_track)
                         echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
+                    elseif ($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
+                        echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';                        
                     elseif ($referred_queued_track && !$referred_accepted_track)
                         echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
                     else
@@ -196,13 +201,18 @@
         ->where("status", "accepted")
         ->exists();
     Session::put('redirected_accepted_track', $redirected_accepted_track); // I add this on 24/3/24
+    // $redirected_rejected_track = \App\Activity::where("code", $redirect_track->code)
+    //     ->where("referred_to", $redirect_track->referred_to)
+    //     ->where("created_at", ">=", $redirect_track->created_at)
+    //     ->where("status", "rejected")
+    //     ->exists();
     $redirected_rejected_track = \App\Activity::where("code", $redirect_track->code)
         ->where("referred_to", $redirect_track->referred_to)
         ->where("created_at", ">=", $redirect_track->created_at)
         ->where("status", "rejected")
         ->exists();
     $redirected_cancelled_track = \App\Activity::where("code", $redirect_track->code)
-        ->where("referred_to", $redirect_track->referred_to)
+        ->where("referred_from", $redirect_track->referred_from)
         ->where("created_at", ">=", $redirect_track->created_at)
         ->where("status", "cancelled")
         ->exists();
@@ -238,7 +248,7 @@
     Session::put('redirected_transferred_track', $redirected_transferred_track);
 
     $redirected_transferred_track1 = \App\Activity::where("code", $redirect_track->code) // i add this for discharge condition
-        ->where("referred_from",$redirect_track->referred_to)
+        ->where("referred_to",$redirect_track->referred_to)
         ->where("created_at", ">=", $redirect_track->created_at)
         ->where("status", "transferred")
         ->exists();
@@ -337,6 +347,8 @@
     @if(count($activities) > 0)
     <?php $first = 0;
     $latest_act = \App\Activity::where('code', $row->code)->latest('created_at')->first();
+    $referred_act = \App\Activity::select('referred_from')->where('code', $row->code)->where('status', 'referred')->latest('created_at')->first();
+
     ?>
     <div class="row">
         <div class="tracking col-sm-12">
@@ -387,7 +399,7 @@
                             </button>
                             @endif --}}
 
-                            @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
+                            @if($user->facility_id==$referred_act->referred_from && $latest_act->status=='rejected')
                             <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
                                 <i class="fa fa-ambulance"></i> Redirect to other facility<br>
                             </button>

@@ -40,6 +40,10 @@
   background-color: #4F9B83;
   color: white;
 }
+.panel-scoped-telemedicine .stepper-item.completed .step-counter.step-counter-referral {
+  background-color: #4bb543;
+  color: white;
+}
 .panel-scoped-telemedicine .stepper-item.completed::after {
   position: absolute;
   content: "";
