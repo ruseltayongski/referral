@@ -516,7 +516,7 @@ export default {
     <div class="col">
       <table v-if="form_version == 'version2'">
         <tbody>
-          <tr class="bg-gray text-center" v-if="!isEmpty(icd) && !isEmpty(form.other_diagnoses)">
+          <tr class="bg-gray text-center" v-if="!isEmpty(icd) || !isEmpty(form.other_diagnoses)">
             <td colspan="12"><b> Diagnosis </b></td>
           </tr>
           <tr v-if="icd != null">
@@ -638,8 +638,16 @@ export default {
           >
             <td colspan="12"><b> Personal and Social History </b></td>
           </tr>
-          <tr class="padded-row">
-            <td colspan="6">
+          <tr
+            class="padded-row"
+            v-if="
+              !isEmpty(personal_and_social_history.alcohol_drinking) ||
+              !isEmpty(personal_and_social_history.alcohol_bottles_per_day) ||
+              !isEmpty(personal_and_social_history.alcohol_drinking_quit_year) ||
+              !isEmpty(personal_and_social_history.alcohol_liquor_type)
+            "
+          >
+            <td colspan="12">
               Alcohol:
               <span class="forDetails"
                 >{{ personal_and_social_history.alcohol_drinking }} &nbsp;</span
@@ -660,15 +668,20 @@ export default {
               >
               Type of liquor:
               <span class="forDetails"
-                >{{
-                  personal_and_social_history.alcohol_liquor_type
-                }}
-                &nbsp;</span
+                >{{ personal_and_social_history.alcohol_liquor_type }} &nbsp;</span
               >
             </td>
           </tr>
-          <tr class="padded-row">
-            <td colspan="6">
+          <tr
+            class="padded-row"
+            v-if="
+              !isEmpty(personal_and_social_history.smoking) ||
+              !isEmpty(personal_and_social_history.smoking_sticks_per_day) ||
+              !isEmpty(personal_and_social_history.smoking_quit_year) ||
+              !isEmpty(personal_and_social_history.smoking_remarks)
+            "
+          >
+            <td colspan="12">
               <br />Smoking:
               <span class="forDetails"
                 >{{ personal_and_social_history.smoking }} &nbsp;</span
@@ -682,10 +695,7 @@ export default {
               >
               Year quitted:
               <span class="forDetails"
-                >{{
-                  personal_and_social_history.smoking_quit_year
-                }}
-                &nbsp;</span
+                >{{ personal_and_social_history.smoking_quit_year }} &nbsp;</span
               >
               Remarks:
               <span class="forDetails"
@@ -693,8 +703,15 @@ export default {
               >
             </td>
           </tr>
-          <tr class="padded-row">
-            <td colspan="6">
+          <tr
+            class="padded-row"
+            v-if="
+              !isEmpty(personal_and_social_history.illicit_drugs) ||
+              !isEmpty(personal_and_social_history.illicit_drugs_quit_year) ||
+              !isEmpty(personal_and_social_history.illicit_drugs_taken)
+            "
+          >
+            <td colspan="12">
               <br />Illicit Drugs:
               <span class="forDetails"
                 >{{ personal_and_social_history.illicit_drugs }} &nbsp;</span
@@ -708,90 +725,115 @@ export default {
               >
               Illicit drugs taken:
               <span class="forDetails"
-                >{{
-                  personal_and_social_history.illicit_drugs_taken
-                }}
-                &nbsp;</span
+                >{{ personal_and_social_history.illicit_drugs_taken }} &nbsp;</span
               >
             </td>
           </tr>
-          <tr class="bg-gray">
-            <td colspan="6" class="padded-header">
-              <strong>Current Medications</strong>
-            </td>
+          <tr
+            class="bg-gray text-center padded-row"
+            v-if="!isEmpty(current_medication)"
+          >
+            <td colspan="12"><b> Current Medications </b></td>
           </tr>
-          <tr class="padded-row">
-            <td colspan="6">
+          <tr class="padded-row" v-if="!isEmpty(current_medication)">
+            <td colspan="12">
               <span class="forDetails">
                 {{ current_medication }}
               </span>
             </td>
           </tr>
-          <tr class="bg-gray">
-            <td colspan="6" class="padded-header">
-              <strong
-                >Pertinent Laboratory and Other Ancillary Procedures</strong
-              >
+          <tr
+            class="bg-gray text-center padded-row"
+            v-if="
+              !isEmpty(pertinent_laboratory.pertinent_laboratory_and_procedures) &&
+              !isEmpty(pertinent_laboratory.lab_procedure_other)
+            "
+          >
+            <td colspan="12">
+              <b> Pertinent Laboratory and Other Ancillary Procedures </b>
             </td>
           </tr>
-          <tr class="padded-row">
-            <td colspan="6">
+          <tr
+            class="padded-row"
+            v-if="
+              !isEmpty(pertinent_laboratory.pertinent_laboratory_and_procedures) ||
+              !isEmpty(pertinent_laboratory.lab_procedure_other)
+            "
+          >
+            <td colspan="12">
               Laboratory:
               <span class="forDetails">
-                {{
-                  pertinent_laboratory.pertinent_laboratory_and_procedures
-                }}&nbsp;
+                {{ pertinent_laboratory.pertinent_laboratory_and_procedures }}&nbsp;
               </span>
               Other:
               <span class="forDetails">
                 {{ pertinent_laboratory.lab_procedure_other }}
               </span>
-              <tr
-                class="padded-row"
-                v-if="file_path && form_version == 'version2'"
-              >
-                <td colspan="12">
-                  <span v-if="file_path.length > 1">File Attachments: </span>
-                  <span v-else>File Attachment: </span>
-                  <span v-for="(path, index) in file_path" :key="index">
-                    <a
-                      :href="path"
-                      :key="index"
-                      id="file_download"
-                      class="reason"
-                      target="_blank"
-                      download
-                      >{{ file_name[index] }}</a
-                    >
-                    <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
-                  </span>
-                </td>
-              </tr>
             </td>
           </tr>
-          <tr class="bg-gray">
-            <td colspan="6" class="padded-header">
-              <strong>Nutritional Status</strong>
+          <tr class="padded-row" v-if="file_path && form_version == 'version2'">
+            <td colspan="12">
+              <span v-if="file_path.length > 1">File Attachments: </span>
+              <span v-else>File Attachment: </span>
+              <span v-for="(path, index) in file_path" :key="index">
+                <a
+                  :href="path"
+                  :key="index"
+                  id="file_download"
+                  class="reason"
+                  target="_blank"
+                  download
+                  >{{ file_name[index] }}</a
+                >
+                <span v-if="index + 1 !== file_path.length">,&nbsp;</span>
+              </span>
             </td>
           </tr>
-          <tr class="padded-row">
-            <td colspan="6">
+          <tr
+            class="bg-gray text-center"
+            v-if="
+              !isEmpty(nutritional_status.diet) &&
+              !isEmpty(nutritional_status.specify_diets)
+            "
+          >
+            <td colspan="12"><b> Nutritional Status </b></td>
+          </tr>
+          <tr
+            class="padded-row"
+            v-if="
+              !isEmpty(nutritional_status.diet) ||
+              !isEmpty(nutritional_status.specify_diets)
+            "
+          >
+            <td colspan="12">
               Diet:
-              <span class="forDetails"
-                >{{ nutritional_status.diet }}&nbsp;</span
-              >
+              <span class="forDetails">{{ nutritional_status.diet }}&nbsp;</span>
               Specify Diets:
-              <span class="forDetails">{{
-                nutritional_status.specify_diets
-              }}</span>
+              <span class="forDetails">{{ nutritional_status.specify_diets }}</span>
             </td>
           </tr>
-          <tr class="bg-gray">
-            <td colspan="6" class="padded-header">
-              <strong>Latest Vital Signs</strong>
+          <tr
+            class="bg-gray text-center"
+            v-if="
+              !isEmpty(latest_vital_signs.temperature) &&
+              !isEmpty(latest_vital_signs.pulse_rate) &&
+              !isEmpty(latest_vital_signs.respiratory_rate) &&
+              !isEmpty(latest_vital_signs.blood_pressure) &&
+              !isEmpty(latest_vital_signs.oxygen_saturation)
+            "
+          >
+            <td colspan="12">
+              <b>Latest Vital Signs</b>
             </td>
           </tr>
-          <tr class="padded-row">
+          <tr
+            class="padded-row"
+            v-if="
+              !isEmpty(latest_vital_signs.temperature) ||
+              !isEmpty(latest_vital_signs.pulse_rate) ||
+              !isEmpty(latest_vital_signs.respiratory_rate)
+            "
+          >
             <td colspan="12">
               Temperature:
               <span class="forDetails"
@@ -807,7 +849,13 @@ export default {
               }}</span>
             </td>
           </tr>
-          <tr class="padded-row">
+          <tr
+            class="padded-row"
+            v-if="
+              !isEmpty(latest_vital_signs.blood_pressure) ||
+              !isEmpty(latest_vital_signs.oxygen_saturation)
+            "
+          >
             <td colspan="12">
               Blood Pressure:
               <span class="forDetails"
@@ -819,451 +867,752 @@ export default {
               }}</span>
             </td>
           </tr>
-           <tr class="bg-gray">
-            <td colspan="6" class="padded-header">
-              <strong>Glasgow Coma Scale</strong>
+          <tr
+              class="padded-row"
+              v-if="
+                !isEmpty(latest_vital_signs.blood_pressure) ||
+                !isEmpty(latest_vital_signs.oxygen_saturation)
+              "
+            >
+            <td colspan="12">
+              Blood Pressure:
+              <span class="forDetails"
+                >{{ latest_vital_signs.blood_pressure }}&nbsp;</span
+              >
+              O2 Saturation:
+              <span class="forDetails">{{
+                latest_vital_signs.oxygen_saturation
+              }}</span>
             </td>
           </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              <table class="table table-bordered glasgow-table">
-                <thead>
-                  <tr>
-                    <th
-                      v-for="i in 10"
-                      :key="i"
-                      :class="{
-                        highlight:
-                          Number(glasgocoma_scale?.pupil_size_chart) === i,
+        <tr
+          class="bg-gray text-center"
+          v-if="
+            !isEmpty(glasgocoma_scale.pupil_size_chart) &&
+            !isEmpty(glasgocoma_scale.motor_response) &&
+            !isEmpty(glasgocoma_scale.verbal_response) &&
+            !isEmpty(glasgocoma_scale.eye_response) &&
+            !isEmpty(glasgocoma_scale.gsc_score) &&
+            glasgocoma_scale.gsc_score != '0'
+          "
+        >
+          <td colspan="12">
+            <b>Glasgow Coma Scale</b>
+          </td>
+        </tr>
+        <tr class="padded-row" v-if="!isEmpty(glasgocoma_scale.pupil_size_chart)">
+          <td colspan="12">
+            <table class="table table-bordered glasgow-table">
+              <thead>
+                <tr>
+                  <th
+                    v-for="i in 10"
+                    :key="i"
+                    :class="{
+                      highlight: Number(glasgocoma_scale?.pupil_size_chart) === i,
+                    }"
+                  >
+                    <b>{{ i }}</b>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td
+                    v-for="i in 10"
+                    :key="i"
+                    :class="{
+                      highlight: Number(glasgocoma_scale?.pupil_size_chart) === i,
+                    }"
+                  >
+                    <span
+                      class="glasgow-dot"
+                      :style="{
+                        height: i * 4 + 2 + 'px',
+                        width: i * 4 + 2 + 'px',
                       }"
                     >
-                      <b>{{ i }}</b>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td
-                      v-for="i in 10"
-                      :key="i"
-                      :class="{
-                        highlight:
-                          Number(glasgocoma_scale?.pupil_size_chart) === i,
-                      }"
-                    >
-                      <span
-                        class="glasgow-dot"
-                        :style="{
-                          height: i * 4 + 2 + 'px',
-                          width: i * 4 + 2 + 'px',
-                        }"
-                      >
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Pupil Size Chart:
-              <span class="forDetails">{{ glasgocoma_scale.pupil_size_chart}}&nbsp;&nbsp;</span>
-              Motor Response:
-              <span class="forDetails">{{ glasgocoma_scale.motor_response }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Verbal Response:
-              <span class="forDetails">{{ glasgocoma_scale.verbal_response}}&nbsp;&nbsp;</span>
-              Eye Response:
-              <span class="forDetails">{{ glasgocoma_scale.eye_response }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              GCS Response:
-              <span class="forDetails">{{ glasgocoma_scale.gsc_score }}</span>
-            </td>
-          </tr>
-          <tr class="bg-gray">
-            <td colspan="6" class="padded-header">
-              <strong>Review of Systems</strong>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Skin:
-              <span class="forDetails"
-                >{{
-                  review_of_system.skin
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{ review_of_system.skin_others }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Head:
-              <span class="forDetails"
-                >{{
-                  review_of_system.head
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{ review_of_system.head_others }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Eyes:
-              <span class="forDetails"
-                >{{
-                  review_of_system.eyes
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{ review_of_system.eyes_others }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Ears:
-              <span class="forDetails"
-                >{{
-                  review_of_system.ears
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{ review_of_system.eyes_others }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Nose/Sinuses:
-              <span class="forDetails"
-                >{{
-                  review_of_system.nose_or_sinuses
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{ review_of_system.nose_others }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Mouth/Throat:
-              <span class="forDetails"
-                >{{
-                  review_of_system.mouth_or_throat
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.mouth_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Neck:
-              <span class="forDetails"
-                >{{
-                  review_of_system.neck
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{ review_of_system.neck_others }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Breast:
-              <span class="forDetails"
-                >{{
-                  review_of_system.breast
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.breast_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Respiratory/Cardiac:
-              <span class="forDetails"
-                >{{
-                  review_of_system.respiratory_or_cardiac
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.respiratory_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Gastrointestinal:
-              <span class="forDetails"
-                >{{
-                  review_of_system.gastrointestinal
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.gastrointestinal_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Urinary:
-              <span class="forDetails"
-                >{{
-                  review_of_system.urinary
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.urinary_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Peripheral Vascular:
-              <span class="forDetails"
-                >{{
-                  review_of_system.peripheral_vascular
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.peripheral_vascular_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Musculoskeletal:
-              <span class="forDetails"
-                >{{
-                  review_of_system.musculoskeletal
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.musculoskeletal_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Neurologic:
-              <span class="forDetails"
-                >{{
-                  review_of_system.neurologic
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.neurologic_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Hematologic:
-              <span class="forDetails"
-                >{{
-                  review_of_system.hematologic
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.hematologic_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Endocrine:
-              <span class="forDetails"
-                >{{
-                  review_of_system.endocrine
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.endocrine_others
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="6">
-              Psychiatric:
-              <span class="forDetails"
-                >{{
-                  review_of_system.psychiatric
-                    ?.replace("Select All,", "")
-                    ?.replace(",Others", "")
-                }}&nbsp;</span
-              >
-              Others:
-              <span class="forDetails">{{
-                review_of_system.psychiatric_others
-              }}</span>
-            </td>
-          </tr>
-           <tr class="bg-gray">
-            <td colspan="6" class="padded-header">
-              <strong>Reason for Referral</strong>
-            </td>
-          </tr>
-          <tr v-if="reason" class="padded-row">
-            <td colspan="6">
-              Reason for referral:
-              <br />
-              <span class="forDetails" style="white-space: pre-line">{{
-                reason.reason
-              }}</span>
-            </td>
-          </tr>
-          <tr v-if="form.other_reason_referral" class="padded-row">
-            <td colspan="6">
-              Reason for referral:
-              <br />
-              <span class="forDetails" style="white-space: pre-line">{{
-                form.other_reason_referral
-              }}</span>
-            </td>
-          </tr>
-          <tr class="bg-gray text-center">
-            <td colspan="12">
-              <b>Obstetric and Gynecologic History</b>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              Menarche:
-              <span class="forDetails"
-                >{{ obstetric_and_gynecologic_history.menarche }}&nbsp;</span
-              >
-              Menopause:
-              <span class="forDetails">{{
-                obstetric_and_gynecologic_history.menopause
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              Menstrual Cycle:
-              <span class="forDetails"
-                >{{ obstetric_and_gynecologic_history.menstrual_cycle }}&nbsp;</span
-              >
-              Menstrual Duration:
-              <span class="forDetails">{{
-                obstetric_and_gynecologic_history.menstrual_cycle_duration
-              }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row"> 
-            <td colspan="12">
-              Menstrual Pads per Day:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.menstrual_cycle_padsperday }}&nbsp;</span>
-              Menstrual Medication:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.menstrual_cycle_medication }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              Contraceptive:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.contraceptive_history }}&nbsp;</span>
-              Others:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.contraceptive_others }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              Parity
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              G:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_g }}&nbsp;</span>
-              FT:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_ft }}&nbsp;</span>
-              A:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_a }}&nbsp;</span>
-              LMP:
-              <span class="forDetails">{{ formatDate(obstetric_and_gynecologic_history.parity_lnmp) }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              P:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_p }}&nbsp;</span>
-              PT:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_pt }}&nbsp;</span>
-              L:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.parity_l }}&nbsp;</span>
-              EDC:
-              <span class="forDetails">{{ formatDate(obstetric_and_gynecologic_history.parity_edc) }}</span>
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              AOG
-            </td>
-          </tr>
-          <tr class="padded-row">
-            <td colspan="12">
-              LMP:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.aog_lnmp }}&nbsp;</span>
-              UTZ:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.aog_eutz }}&nbsp;</span>
-              Prenatal History:
-              <span class="forDetails">{{ obstetric_and_gynecologic_history.prenatal_history }}</span>
-            </td>
-          </tr>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr
+          class="padded-row"
+          v-if="
+            !isEmpty(glasgocoma_scale.pupil_size_chart) ||
+            !isEmpty(glasgocoma_scale.motor_response)
+          "
+        >
+          <td colspan="12">
+            Pupil Size Chart:
+            <span class="forDetails"
+              >{{ glasgocoma_scale.pupil_size_chart }}&nbsp;&nbsp;</span
+            >
+            Motor Response:
+            <span class="forDetails">{{ glasgocoma_scale.motor_response }}</span>
+          </td>
+        </tr>
+        <tr
+          class="padded-row"
+          v-if="
+            !isEmpty(glasgocoma_scale.verbal_response) ||
+            !isEmpty(glasgocoma_scale.eye_response)
+          "
+        >
+          <td colspan="12">
+            Verbal Response:
+            <span class="forDetails"
+              >{{ glasgocoma_scale.verbal_response }}&nbsp;&nbsp;</span
+            >
+            Eye Response:
+            <span class="forDetails">{{ glasgocoma_scale.eye_response }}</span>
+          </td>
+        </tr>
+        <tr
+          class="padded-row"
+          v-if="
+            !isEmpty(glasgocoma_scale.gsc_score) &&
+            glasgocoma_scale.gsc_score != '0'
+          "
+        >
+          <td colspan="12">
+            GCS Response:
+            <span class="forDetails">{{ glasgocoma_scale.gsc_score }}</span>
+          </td>
+        </tr>
+          <tr
+        class="bg-gray text-center"
+        v-if="
+          !isEmpty(review_of_system.skin) &&
+          !isEmpty(review_of_system.skin_others) &&
+          !isEmpty(review_of_system.head) &&
+          !isEmpty(review_of_system.head_others) &&
+          !isEmpty(review_of_system.eyes) &&
+          !isEmpty(review_of_system.eyes_others) &&
+          !isEmpty(review_of_system.ears) &&
+          !isEmpty(review_of_system.ears_others) &&
+          !isEmpty(review_of_system.nose_or_sinuses) &&
+          !isEmpty(review_of_system.nose_others) &&
+          !isEmpty(review_of_system.mouth_or_throat) &&
+          !isEmpty(review_of_system.mouth_others) &&
+          !isEmpty(review_of_system.neck) &&
+          !isEmpty(review_of_system.neck_others) &&
+          !isEmpty(review_of_system.breast) &&
+          !isEmpty(review_of_system.breast_others) &&
+          !isEmpty(review_of_system.respiratory_or_cardiac) &&
+          !isEmpty(review_of_system.respiratory_others) &&
+          !isEmpty(review_of_system.gastrointestinal) &&
+          !isEmpty(review_of_system.gastrointestinal_others) &&
+          !isEmpty(review_of_system.urinary) &&
+          !isEmpty(review_of_system.urinary_others) &&
+          !isEmpty(review_of_system.peripheral_vascular) &&
+          !isEmpty(review_of_system.peripheral_vascular_others) &&
+          !isEmpty(review_of_system.musculoskeletal) &&
+          !isEmpty(review_of_system.musculoskeletal_others) &&
+          !isEmpty(review_of_system.neurologic) &&
+          !isEmpty(review_of_system.neurologic_others) &&
+          !isEmpty(review_of_system.hematologic) &&
+          !isEmpty(review_of_system.hematologic_others) &&
+          !isEmpty(review_of_system.endocrine) &&
+          !isEmpty(review_of_system.endocrine_others) &&
+          !isEmpty(review_of_system.psychiatric) &&
+          !isEmpty(review_of_system.psychiatric_others)
+        "
+      >
+        <td colspan="12"><b> Review of Systems </b></td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.skin) ||
+          !isEmpty(review_of_system.skin_others)
+        "
+      >
+        <td colspan="12">
+          Skin:
+          <span class="forDetails"
+            >{{
+              review_of_system.skin
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.skin_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.head) ||
+          !isEmpty(review_of_system.head_others)
+        "
+      >
+        <td colspan="12">
+          Head:
+          <span class="forDetails"
+            >{{
+              review_of_system.head
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.head_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.eyes) ||
+          !isEmpty(review_of_system.eyes_others)
+        "
+      >
+        <td colspan="12">
+          Eyes:
+          <span class="forDetails"
+            >{{
+              review_of_system.eyes
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.eyes_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.ears) ||
+          !isEmpty(review_of_system.ears_others)
+        "
+      >
+        <td colspan="12">
+          Ears:
+          <span class="forDetails"
+            >{{
+              review_of_system.ears
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.ears_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.nose_or_sinuses) ||
+          !isEmpty(review_of_system.nose_others)
+        "
+      >
+        <td colspan="12">
+          Nose/Sinuses:
+          <span class="forDetails"
+            >{{
+              review_of_system.nose_or_sinuses
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.nose_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.mouth_or_throat) ||
+          !isEmpty(review_of_system.mouth_others)
+        "
+      >
+        <td colspan="12">
+          Mouth/Throat:
+          <span class="forDetails"
+            >{{
+              review_of_system.mouth_or_throat
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.mouth_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.neck) ||
+          !isEmpty(review_of_system.neck_others)
+        "
+      >
+        <td colspan="12">
+          Neck:
+          <span class="forDetails"
+            >{{
+              review_of_system.neck
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.neck_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.breast) ||
+          !isEmpty(review_of_system.breast_others)
+        "
+      >
+        <td colspan="12">
+          Breast:
+          <span class="forDetails"
+            >{{
+              review_of_system.breast
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.breast_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.respiratory_or_cardiac) ||
+          !isEmpty(review_of_system.respiratory_others)
+        "
+      >
+        <td colspan="12">
+          Respiratory/Cardiac:
+          <span class="forDetails"
+            >{{
+              review_of_system.respiratory_or_cardiac
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.respiratory_others
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.gastrointestinal) ||
+          !isEmpty(review_of_system.gastrointestinal_others)
+        "
+      >
+        <td colspan="12">
+          Gastrointestinal:
+          <span class="forDetails"
+            >{{
+              review_of_system.gastrointestinal
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.gastrointestinal_others
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.urinary) ||
+          !isEmpty(review_of_system.urinary_others)
+        "
+      >
+        <td colspan="12">
+          Urinary:
+          <span class="forDetails"
+            >{{
+              review_of_system.urinary
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{ review_of_system.urinary_others }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.peripheral_vascular) ||
+          !isEmpty(review_of_system.peripheral_vascular_others)
+        "
+      >
+        <td colspan="12">
+          Peripheral Vascular:
+          <span class="forDetails"
+            >{{
+              review_of_system.peripheral_vascular
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.peripheral_vascular_others
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.musculoskeletal) ||
+          !isEmpty(review_of_system.musculoskeletal_others)
+        "
+      >
+        <td colspan="12">
+          Musculoskeletal:
+          <span class="forDetails"
+            >{{
+              review_of_system.musculoskeletal
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.musculoskeletal_others
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.neurologic) ||
+          !isEmpty(review_of_system.neurologic_others)
+        "
+      >
+        <td colspan="12">
+          Neurologic:
+          <span class="forDetails"
+            >{{
+              review_of_system.neurologic
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.neurologic_others
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.hematologic) ||
+          !isEmpty(review_of_system.hematologic_others)
+        "
+      >
+        <td colspan="12">
+          Hematologic:
+          <span class="forDetails"
+            >{{
+              review_of_system.hematologic
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.hematologic_others
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.endocrine) ||
+          !isEmpty(review_of_system.endocrine_others)
+        "
+      >
+        <td colspan="12">
+          Endocrine:
+          <span class="forDetails"
+            >{{
+              review_of_system.endocrine
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.endocrine_others
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(review_of_system.psychiatric) ||
+          !isEmpty(review_of_system.psychiatric_others)
+        "
+      >
+        <td colspan="12">
+          Psychiatric:
+          <span class="forDetails"
+            >{{
+              review_of_system.psychiatric
+                ?.replace("Select All,", "")
+                ?.replace(",Others", "")
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            review_of_system.psychiatric_others
+          }}</span>
+        </td>
+      </tr>
+      <tr class="bg-gray text-center">
+        <td colspan="12">
+          <b>Reason for Referral</b>
+        </td>
+      </tr>
+      <tr v-if="!isEmpty(form.reason)">
+        <td colspan="12">
+          Reason for referral:
+          <span class="forDetails">
+            {{ form.reason }}
+          </span>
+        </td>
+      </tr>
+      <tr class="padded-row" v-if="!isEmpty(form.other_reason_referral)">
+        <td colspan="12">
+          Other Reason for Referral:
+          <span class="forDetails">{{ form.other_reason_referral }}</span>
+        </td>
+      </tr>
+      <tr
+        class="bg-gray text-center"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.menarche) ||
+          !isEmpty(obstetric_and_gynecologic_history.menopause) ||
+          !isEmpty(obstetric_and_gynecologic_history.menstrual_cycle) ||
+          !isEmpty(
+            obstetric_and_gynecologic_history.menstrual_cycle_duration
+          ) ||
+          !isEmpty(
+            obstetric_and_gynecologic_history.menstrual_cycle_padsperday
+          ) ||
+          !isEmpty(
+            obstetric_and_gynecologic_history.menstrual_cycle_medication
+          ) ||
+          !isEmpty(obstetric_and_gynecologic_history.contraceptive_history) ||
+          (!isEmpty(obstetric_and_gynecologic_history.contraceptive_others) &&
+            !isEmpty(obstetric_and_gynecologic_history.parity_g)) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_ft) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_a) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_lnmp) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_p) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_pt) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_l) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_edc) ||
+          !isEmpty(obstetric_and_gynecologic_history.aog_lnmp) ||
+          !isEmpty(obstetric_and_gynecologic_history.aog_eutz) ||
+          !isEmpty(obstetric_and_gynecologic_history.prenatal_history)
+        "
+      >
+        <td colspan="12">
+          <b>Obstetric and Gynecologic History</b>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.menarche) ||
+          !isEmpty(obstetric_and_gynecologic_history.menopause)
+        "
+      >
+        <td colspan="12">
+          Menarche:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.menarche }}&nbsp;</span
+          >
+          Menopause:
+          <span class="forDetails">{{
+            obstetric_and_gynecologic_history.menopause
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.menstrual_cycle) ||
+          !isEmpty(obstetric_and_gynecologic_history.menstrual_cycle_duration)
+        "
+      >
+        <td colspan="12">
+          Menstrual Cycle:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.menstrual_cycle }}&nbsp;</span
+          >
+          Menstrual Duration:
+          <span class="forDetails">{{
+            obstetric_and_gynecologic_history.menstrual_cycle_duration
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(
+            obstetric_and_gynecologic_history.menstrual_cycle_padsperday
+          ) ||
+          !isEmpty(obstetric_and_gynecologic_history.menstrual_cycle_medication)
+        "
+      >
+        <td colspan="12">
+          Menstrual Pads per Day:
+          <span class="forDetails"
+            >{{
+              obstetric_and_gynecologic_history.menstrual_cycle_padsperday
+            }}&nbsp;</span
+          >
+          Menstrual Medication:
+          <span class="forDetails">{{
+            obstetric_and_gynecologic_history.menstrual_cycle_medication
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.contraceptive_history) ||
+          !isEmpty(obstetric_and_gynecologic_history.contraceptive_others)
+        "
+      >
+        <td colspan="12">
+          Contraceptive:
+          <span class="forDetails"
+            >{{
+              obstetric_and_gynecologic_history.contraceptive_history
+            }}&nbsp;</span
+          >
+          Others:
+          <span class="forDetails">{{
+            obstetric_and_gynecologic_history.contraceptive_others
+          }}</span>
+        </td>
+      </tr>
+      <tr class="padded-row">
+        <td
+          colspan="12"
+          v-if="
+            !isEmpty(obstetric_and_gynecologic_history.parity_g) ||
+            !isEmpty(obstetric_and_gynecologic_history.parity_ft) ||
+            !isEmpty(obstetric_and_gynecologic_history.parity_a) ||
+            !isEmpty(obstetric_and_gynecologic_history.parity_lnmp)
+          "
+        >
+          Parity
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.parity_g) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_ft) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_a) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_lnmp)
+        "
+      >
+        <td colspan="12">
+          G:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.parity_g }}&nbsp;</span
+          >
+          FT:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.parity_ft }}&nbsp;</span
+          >
+          A:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.parity_a }}&nbsp;</span
+          >
+          LMP:
+          <span class="forDetails">{{
+            formatDate(obstetric_and_gynecologic_history.parity_lnmp)
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.parity_p) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_pt) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_l) ||
+          !isEmpty(obstetric_and_gynecologic_history.parity_edc)
+        "
+      >
+        <td colspan="12">
+          P:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.parity_p }}&nbsp;</span
+          >
+          PT:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.parity_pt }}&nbsp;</span
+          >
+          L:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.parity_l }}&nbsp;</span
+          >
+          EDC:
+          <span class="forDetails">{{
+            formatDate(obstetric_and_gynecologic_history.parity_edc)
+          }}</span>
+        </td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.aog_lnmp) ||
+          !isEmpty(obstetric_and_gynecologic_history.aog_eutz) ||
+          !isEmpty(obstetric_and_gynecologic_history.prenatal_history)
+        "
+      >
+        <td colspan="12">AOG</td>
+      </tr>
+      <tr
+        class="padded-row"
+        v-if="
+          !isEmpty(obstetric_and_gynecologic_history.aog_lnmp) ||
+          !isEmpty(obstetric_and_gynecologic_history.aog_eutz) ||
+          !isEmpty(obstetric_and_gynecologic_history.prenatal_history)
+        "
+      >
+        <td colspan="12">
+          LMP:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.aog_lnmp }}&nbsp;</span
+          >
+          UTZ:
+          <span class="forDetails"
+            >{{ obstetric_and_gynecologic_history.aog_eutz }}&nbsp;</span
+          >
+          Prenatal History:
+          <span class="forDetails">{{
+            obstetric_and_gynecologic_history.prenatal_history
+          }}</span>
+        </td>
+      </tr>
         </tbody>
       </table>
     </div>
@@ -1273,6 +1622,11 @@ export default {
       <div class="table-responsive">
         <table class="table table-bordered">
           <thead>
+            <tr class="bg-gray text-center">
+              <td colspan="12">
+                <b>Pregnancy</b>
+              </td>
+            </tr>
             <tr style="font-size: 10pt;">
               <th class="text-center" style="width:50%;">Pregnancy Order</th>
               <th class="text-center" style="width:20%;">Year of Birth</th>

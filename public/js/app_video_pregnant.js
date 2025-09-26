@@ -25022,10 +25022,11 @@ var _hoisted_142 = {
   "class": "bg-gray text-center padded-row"
 };
 var _hoisted_143 = {
+  key: 8,
   "class": "padded-row"
 };
 var _hoisted_144 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_145 = {
   "class": "forDetails"
@@ -25040,10 +25041,11 @@ var _hoisted_148 = {
   "class": "forDetails"
 };
 var _hoisted_149 = {
+  key: 9,
   "class": "padded-row"
 };
 var _hoisted_150 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_151 = {
   "class": "forDetails"
@@ -25058,10 +25060,11 @@ var _hoisted_154 = {
   "class": "forDetails"
 };
 var _hoisted_155 = {
+  key: 10,
   "class": "padded-row"
 };
 var _hoisted_156 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_157 = {
   "class": "forDetails"
@@ -25073,75 +25076,83 @@ var _hoisted_159 = {
   "class": "forDetails"
 };
 var _hoisted_160 = {
-  "class": "padded-row"
+  key: 11,
+  "class": "bg-gray text-center padded-row"
 };
 var _hoisted_161 = {
-  colspan: "6"
+  key: 12,
+  "class": "padded-row"
 };
 var _hoisted_162 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_163 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_164 = {
-  colspan: "6"
+  key: 13,
+  "class": "bg-gray text-center padded-row"
 };
 var _hoisted_165 = {
-  "class": "forDetails"
+  key: 14,
+  "class": "padded-row"
 };
 var _hoisted_166 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_167 = {
-  key: 0,
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_168 = {
-  colspan: "12"
+  "class": "forDetails"
 };
 var _hoisted_169 = {
-  key: 0
+  key: 15,
+  "class": "padded-row"
 };
 var _hoisted_170 = {
-  key: 1
+  colspan: "12"
 };
-var _hoisted_171 = ["href"];
-var _hoisted_172 = {
+var _hoisted_171 = {
   key: 0
 };
-var _hoisted_173 = {
-  "class": "padded-row"
+var _hoisted_172 = {
+  key: 1
 };
+var _hoisted_173 = ["href"];
 var _hoisted_174 = {
-  colspan: "6"
+  key: 0
 };
 var _hoisted_175 = {
-  "class": "forDetails"
+  key: 16,
+  "class": "bg-gray text-center"
 };
 var _hoisted_176 = {
-  "class": "forDetails"
-};
-var _hoisted_177 = {
+  key: 17,
   "class": "padded-row"
 };
-var _hoisted_178 = {
+var _hoisted_177 = {
   colspan: "12"
+};
+var _hoisted_178 = {
+  "class": "forDetails"
 };
 var _hoisted_179 = {
   "class": "forDetails"
 };
 var _hoisted_180 = {
-  "class": "forDetails"
+  key: 18,
+  "class": "bg-gray text-center"
 };
 var _hoisted_181 = {
-  "class": "forDetails"
-};
-var _hoisted_182 = {
+  key: 19,
   "class": "padded-row"
 };
-var _hoisted_183 = {
+var _hoisted_182 = {
   colspan: "12"
+};
+var _hoisted_183 = {
+  "class": "forDetails"
 };
 var _hoisted_184 = {
   "class": "forDetails"
@@ -25150,278 +25161,295 @@ var _hoisted_185 = {
   "class": "forDetails"
 };
 var _hoisted_186 = {
+  key: 20,
   "class": "padded-row"
 };
 var _hoisted_187 = {
-  colspan: "6"
+  colspan: "12"
 };
 var _hoisted_188 = {
-  "class": "table table-bordered glasgow-table"
+  "class": "forDetails"
 };
 var _hoisted_189 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_190 = {
-  colspan: "6"
+  key: 21,
+  "class": "padded-row"
 };
 var _hoisted_191 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_192 = {
   "class": "forDetails"
 };
 var _hoisted_193 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_194 = {
-  colspan: "6"
+  key: 22,
+  "class": "bg-gray text-center"
 };
 var _hoisted_195 = {
-  "class": "forDetails"
+  key: 23,
+  "class": "padded-row"
 };
 var _hoisted_196 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_197 = {
-  "class": "padded-row"
+  "class": "table table-bordered glasgow-table"
 };
 var _hoisted_198 = {
-  colspan: "6"
+  key: 24,
+  "class": "padded-row"
 };
 var _hoisted_199 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_200 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_201 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_202 = {
-  "class": "forDetails"
+  key: 25,
+  "class": "padded-row"
 };
 var _hoisted_203 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_204 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_205 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_206 = {
-  "class": "forDetails"
+  key: 26,
+  "class": "padded-row"
 };
 var _hoisted_207 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_208 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_209 = {
-  colspan: "6"
+  key: 27,
+  "class": "bg-gray text-center"
 };
 var _hoisted_210 = {
-  "class": "forDetails"
+  key: 28,
+  "class": "padded-row"
 };
 var _hoisted_211 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_212 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_213 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_214 = {
-  "class": "forDetails"
+  key: 29,
+  "class": "padded-row"
 };
 var _hoisted_215 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_216 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_217 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_218 = {
-  "class": "forDetails"
+  key: 30,
+  "class": "padded-row"
 };
 var _hoisted_219 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_220 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_221 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_222 = {
-  "class": "forDetails"
+  key: 31,
+  "class": "padded-row"
 };
 var _hoisted_223 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_224 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_225 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_226 = {
-  "class": "forDetails"
+  key: 32,
+  "class": "padded-row"
 };
 var _hoisted_227 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_228 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_229 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_230 = {
-  "class": "forDetails"
+  key: 33,
+  "class": "padded-row"
 };
 var _hoisted_231 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_232 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_233 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_234 = {
-  "class": "forDetails"
+  key: 34,
+  "class": "padded-row"
 };
 var _hoisted_235 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_236 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_237 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_238 = {
-  "class": "forDetails"
+  key: 35,
+  "class": "padded-row"
 };
 var _hoisted_239 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_240 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_241 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_242 = {
-  "class": "forDetails"
+  key: 36,
+  "class": "padded-row"
 };
 var _hoisted_243 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_244 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_245 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_246 = {
-  "class": "forDetails"
+  key: 37,
+  "class": "padded-row"
 };
 var _hoisted_247 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_248 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_249 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_250 = {
-  "class": "forDetails"
+  key: 38,
+  "class": "padded-row"
 };
 var _hoisted_251 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_252 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_253 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_254 = {
-  "class": "forDetails"
+  key: 39,
+  "class": "padded-row"
 };
 var _hoisted_255 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_256 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_257 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_258 = {
-  "class": "forDetails"
+  key: 40,
+  "class": "padded-row"
 };
 var _hoisted_259 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_260 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_261 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_262 = {
-  "class": "forDetails"
+  key: 41,
+  "class": "padded-row"
 };
 var _hoisted_263 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_264 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_265 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_266 = {
-  "class": "forDetails"
+  key: 42,
+  "class": "padded-row"
 };
 var _hoisted_267 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_268 = {
-  key: 8,
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_269 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_270 = {
-  "class": "forDetails",
-  style: {
-    "white-space": "pre-line"
-  }
-};
-var _hoisted_271 = {
-  key: 9,
+  key: 43,
   "class": "padded-row"
 };
+var _hoisted_271 = {
+  colspan: "12"
+};
 var _hoisted_272 = {
-  colspan: "6"
+  "class": "forDetails"
 };
 var _hoisted_273 = {
-  "class": "forDetails",
-  style: {
-    "white-space": "pre-line"
-  }
+  "class": "forDetails"
 };
 var _hoisted_274 = {
+  key: 44,
   "class": "padded-row"
 };
 var _hoisted_275 = {
@@ -25434,7 +25462,7 @@ var _hoisted_277 = {
   "class": "forDetails"
 };
 var _hoisted_278 = {
-  "class": "padded-row"
+  key: 45
 };
 var _hoisted_279 = {
   colspan: "12"
@@ -25443,58 +25471,64 @@ var _hoisted_280 = {
   "class": "forDetails"
 };
 var _hoisted_281 = {
-  "class": "forDetails"
+  key: 46,
+  "class": "padded-row"
 };
 var _hoisted_282 = {
-  "class": "padded-row"
+  colspan: "12"
 };
 var _hoisted_283 = {
-  colspan: "12"
+  "class": "forDetails"
 };
 var _hoisted_284 = {
-  "class": "forDetails"
+  key: 47,
+  "class": "bg-gray text-center"
 };
 var _hoisted_285 = {
-  "class": "forDetails"
-};
-var _hoisted_286 = {
+  key: 48,
   "class": "padded-row"
 };
-var _hoisted_287 = {
+var _hoisted_286 = {
   colspan: "12"
+};
+var _hoisted_287 = {
+  "class": "forDetails"
 };
 var _hoisted_288 = {
   "class": "forDetails"
 };
 var _hoisted_289 = {
-  "class": "forDetails"
-};
-var _hoisted_290 = {
+  key: 49,
   "class": "padded-row"
 };
-var _hoisted_291 = {
+var _hoisted_290 = {
   colspan: "12"
+};
+var _hoisted_291 = {
+  "class": "forDetails"
 };
 var _hoisted_292 = {
   "class": "forDetails"
 };
 var _hoisted_293 = {
-  "class": "forDetails"
+  key: 50,
+  "class": "padded-row"
 };
 var _hoisted_294 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_295 = {
   "class": "forDetails"
 };
 var _hoisted_296 = {
-  "class": "padded-row"
+  "class": "forDetails"
 };
 var _hoisted_297 = {
-  colspan: "12"
+  key: 51,
+  "class": "padded-row"
 };
 var _hoisted_298 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_299 = {
   "class": "forDetails"
@@ -25503,16 +25537,18 @@ var _hoisted_300 = {
   "class": "forDetails"
 };
 var _hoisted_301 = {
-  "class": "forDetails"
-};
-var _hoisted_302 = {
   "class": "padded-row"
 };
-var _hoisted_303 = {
+var _hoisted_302 = {
+  key: 0,
   colspan: "12"
 };
+var _hoisted_303 = {
+  key: 52,
+  "class": "padded-row"
+};
 var _hoisted_304 = {
-  "class": "forDetails"
+  colspan: "12"
 };
 var _hoisted_305 = {
   "class": "forDetails"
@@ -25521,19 +25557,64 @@ var _hoisted_306 = {
   "class": "forDetails"
 };
 var _hoisted_307 = {
+  "class": "forDetails"
+};
+var _hoisted_308 = {
+  "class": "forDetails"
+};
+var _hoisted_309 = {
+  key: 53,
+  "class": "padded-row"
+};
+var _hoisted_310 = {
+  colspan: "12"
+};
+var _hoisted_311 = {
+  "class": "forDetails"
+};
+var _hoisted_312 = {
+  "class": "forDetails"
+};
+var _hoisted_313 = {
+  "class": "forDetails"
+};
+var _hoisted_314 = {
+  "class": "forDetails"
+};
+var _hoisted_315 = {
+  key: 54,
+  "class": "padded-row"
+};
+var _hoisted_316 = {
+  key: 55,
+  "class": "padded-row"
+};
+var _hoisted_317 = {
+  colspan: "12"
+};
+var _hoisted_318 = {
+  "class": "forDetails"
+};
+var _hoisted_319 = {
+  "class": "forDetails"
+};
+var _hoisted_320 = {
+  "class": "forDetails"
+};
+var _hoisted_321 = {
   key: 0,
   "class": "row"
 };
-var _hoisted_308 = {
+var _hoisted_322 = {
   "class": "col-sm-12"
 };
-var _hoisted_309 = {
+var _hoisted_323 = {
   "class": "table-responsive"
 };
-var _hoisted_310 = {
+var _hoisted_324 = {
   "class": "table table-bordered"
 };
-var _hoisted_311 = {
+var _hoisted_325 = {
   key: 0
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -25577,7 +25658,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
     colspan: "6",
     "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Treatments Give Time")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_99, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_100, [_cache[55] || (_cache[55] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Before Referral: ")), _cache[56] || (_cache[56] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_101, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_before_treatment), 1 /* TEXT */), _cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" - ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_102, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_before_given_time), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_103, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_104, [_cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" During Transport: ")), _cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_105, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_during_transport), 1 /* TEXT */), _cache[60] || (_cache[60] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" - ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_106, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_transport_given_time), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_107, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_108, [_cache[61] || (_cache[61] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Information Given to the Woman and Companion About the Reason for Referral ")), _cache[62] || (_cache[62] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_109, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_information_given), 1 /* TEXT */)])])])])])]), _cache[185] || (_cache[185] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_110, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_111, [$props.form_version == 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_112, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [!$options.isEmpty($props.icd) && !$options.isEmpty($data.form.other_diagnoses) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_113, _cache[65] || (_cache[65] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Treatments Give Time")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_99, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_100, [_cache[55] || (_cache[55] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Before Referral: ")), _cache[56] || (_cache[56] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_101, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_before_treatment), 1 /* TEXT */), _cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" - ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_102, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_before_given_time), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_103, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_104, [_cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" During Transport: ")), _cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_105, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_during_transport), 1 /* TEXT */), _cache[60] || (_cache[60] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" - ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_106, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_transport_given_time), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_107, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_108, [_cache[61] || (_cache[61] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Information Given to the Woman and Companion About the Reason for Referral ")), _cache[62] || (_cache[62] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_109, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formBaby.baby_information_given), 1 /* TEXT */)])])])])])]), _cache[184] || (_cache[184] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_110, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_111, [$props.form_version == 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("table", _hoisted_112, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [!$options.isEmpty($props.icd) || !$options.isEmpty($data.form.other_diagnoses) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_113, _cache[65] || (_cache[65] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
     colspan: "12"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Diagnosis ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.icd != null ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_114, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_115, [_cache[66] || (_cache[66] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ICD-10 Code and Description: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.icd, function (i) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_116, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.code) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.description), 1 /* TEXT */)]);
@@ -25585,17 +25666,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     colspan: "12"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Past Medical History ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.past_medical_history.allergies) || !$options.isEmpty($props.past_medical_history.allergy_drugs_cause) || !$options.isEmpty($props.past_medical_history.allergy_food_cause) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_121, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_122, [_cache[69] || (_cache[69] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Allergies: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_123, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.allergies), 1 /* TEXT */), _cache[70] || (_cache[70] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Drugs cause: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_124, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.allergy_drugs_cause) + "  ", 1 /* TEXT */), _cache[71] || (_cache[71] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Food cause: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_125, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.allergy_food_cause) + "  ", 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.past_medical_history.commordities_asthma_year) || !$options.isEmpty($props.past_medical_history.commordities_cancer) || !$options.isEmpty($props.past_medical_history.commordities_diabetes_year) || !$options.isEmpty($props.past_medical_history.commordities_hyper_year) || !$options.isEmpty($props.past_medical_history.commordities_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_126, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_127, [_cache[72] || (_cache[72] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), _cache[73] || (_cache[73] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Commorbidities   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span class=\"forDetails\">{{past_medical_history.commordities?.replace(\"Select All,\", \"\")}}&nbsp;</span> "), _cache[74] || (_cache[74] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Asthma: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_128, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.commordities_asthma_year) + "  ", 1 /* TEXT */), _cache[75] || (_cache[75] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Cancer: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_129, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.commordities_cancer) + "  ", 1 /* TEXT */), _cache[76] || (_cache[76] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Diabetes: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_130, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.commordities_diabetes_year) + "  ", 1 /* TEXT */), _cache[77] || (_cache[77] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Hypertension: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_131, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.commordities_hyper_year) + "  ", 1 /* TEXT */), _cache[78] || (_cache[78] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_132, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.commordities_others) + "  ", 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.past_medical_history.heredo_asthma_side) || !$options.isEmpty($props.past_medical_history.heredo_cancer_side) || !$options.isEmpty($props.past_medical_history.heredo_diab_side) || !$options.isEmpty($props.past_medical_history.heredo_hyper_side) || !$options.isEmpty($props.past_medical_history.heredo_kidney_side) || !$options.isEmpty($props.past_medical_history.heredo_thyroid_side) || !$options.isEmpty($props.past_medical_history.heredo_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_133, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_134, [_cache[79] || (_cache[79] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), _cache[80] || (_cache[80] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Heredofamilial Diseases   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <span class=\"forDetails\">{{ past_medical_history.heredofamilial_diseases }} &nbsp;</span> "), _cache[81] || (_cache[81] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Asthma: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_135, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.heredo_asthma_side) + "  ", 1 /* TEXT */), _cache[82] || (_cache[82] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Cancer: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_136, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.heredo_cancer_side) + "  ", 1 /* TEXT */), _cache[83] || (_cache[83] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Diabetes: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_137, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.heredo_diab_side) + "  ", 1 /* TEXT */), _cache[84] || (_cache[84] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Hypertension: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_138, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.heredo_hyper_side) + "  ", 1 /* TEXT */), _cache[85] || (_cache[85] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Kidney Disease: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_139, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.heredo_kidney_side) + "  ", 1 /* TEXT */), _cache[86] || (_cache[86] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Thyroid Disease: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_140, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.heredo_thyroid_side) + "  ", 1 /* TEXT */), _cache[87] || (_cache[87] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_141, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.past_medical_history.heredo_others) + "  ", 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.personal_and_social_history.alcohol_drinking) || !$options.isEmpty($props.personal_and_social_history.alcohol_bottles_per_day) || !$options.isEmpty($props.personal_and_social_history.alcohol_drinking_quit_year) || !$options.isEmpty($props.personal_and_social_history.alcohol_liquor_type) || !$options.isEmpty($props.personal_and_social_history.smoking) || !$options.isEmpty($props.personal_and_social_history.smoking_sticks_per_day) || !$options.isEmpty($props.personal_and_social_history.smoking_quit_year) || !$options.isEmpty($props.personal_and_social_history.smoking_remarks) || !$options.isEmpty($props.personal_and_social_history.illicit_drugs) || !$options.isEmpty($props.personal_and_social_history.illicit_drugs_quit_year) || !$options.isEmpty($props.personal_and_social_history.illicit_drugs_taken) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_142, _cache[88] || (_cache[88] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
     colspan: "12"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Personal and Social History ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_143, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_144, [_cache[89] || (_cache[89] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Alcohol: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_145, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_drinking) + "  ", 1 /* TEXT */), _cache[90] || (_cache[90] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Per day: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_146, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_bottles_per_day) + "  ", 1 /* TEXT */), _cache[91] || (_cache[91] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Year quitted: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_147, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_drinking_quit_year) + "  ", 1 /* TEXT */), _cache[92] || (_cache[92] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Type of liquor: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_148, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_liquor_type) + "  ", 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_149, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_150, [_cache[93] || (_cache[93] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), _cache[94] || (_cache[94] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Smoking: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_151, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking) + "  ", 1 /* TEXT */), _cache[95] || (_cache[95] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sticks per day: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_152, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking_sticks_per_day) + "  ", 1 /* TEXT */), _cache[96] || (_cache[96] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Year quitted: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_153, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking_quit_year) + "  ", 1 /* TEXT */), _cache[97] || (_cache[97] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Remarks: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_154, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking_remarks) + "  ", 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_155, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_156, [_cache[98] || (_cache[98] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), _cache[99] || (_cache[99] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Illicit Drugs: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_157, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.illicit_drugs) + "  ", 1 /* TEXT */), _cache[100] || (_cache[100] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Year quitted: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_158, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.illicit_drugs_quit_year) + "  ", 1 /* TEXT */), _cache[101] || (_cache[101] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Illicit drugs taken: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_159, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.illicit_drugs_taken) + "  ", 1 /* TEXT */)])]), _cache[173] || (_cache[173] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "bg-gray"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "6",
-    "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Current Medications")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_160, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_161, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_162, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.current_medication), 1 /* TEXT */)])]), _cache[174] || (_cache[174] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "bg-gray"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "6",
-    "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Pertinent Laboratory and Other Ancillary Procedures")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_163, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_164, [_cache[102] || (_cache[102] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Laboratory: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_165, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.pertinent_laboratory.pertinent_laboratory_and_procedures) + "  ", 1 /* TEXT */), _cache[103] || (_cache[103] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Other: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_166, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.pertinent_laboratory.lab_procedure_other), 1 /* TEXT */), $props.file_path && $props.form_version == 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_167, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_168, [$props.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_169, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_170, "File Attachment: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.file_path, function (path, index) {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Personal and Social History ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.personal_and_social_history.alcohol_drinking) || !$options.isEmpty($props.personal_and_social_history.alcohol_bottles_per_day) || !$options.isEmpty($props.personal_and_social_history.alcohol_drinking_quit_year) || !$options.isEmpty($props.personal_and_social_history.alcohol_liquor_type) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_143, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_144, [_cache[89] || (_cache[89] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Alcohol: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_145, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_drinking) + "  ", 1 /* TEXT */), _cache[90] || (_cache[90] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Per day: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_146, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_bottles_per_day) + "  ", 1 /* TEXT */), _cache[91] || (_cache[91] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Year quitted: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_147, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_drinking_quit_year) + "  ", 1 /* TEXT */), _cache[92] || (_cache[92] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Type of liquor: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_148, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.alcohol_liquor_type) + "  ", 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.personal_and_social_history.smoking) || !$options.isEmpty($props.personal_and_social_history.smoking_sticks_per_day) || !$options.isEmpty($props.personal_and_social_history.smoking_quit_year) || !$options.isEmpty($props.personal_and_social_history.smoking_remarks) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_149, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_150, [_cache[93] || (_cache[93] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), _cache[94] || (_cache[94] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Smoking: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_151, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking) + "  ", 1 /* TEXT */), _cache[95] || (_cache[95] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Sticks per day: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_152, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking_sticks_per_day) + "  ", 1 /* TEXT */), _cache[96] || (_cache[96] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Year quitted: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_153, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking_quit_year) + "  ", 1 /* TEXT */), _cache[97] || (_cache[97] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Remarks: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_154, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.smoking_remarks) + "  ", 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.personal_and_social_history.illicit_drugs) || !$options.isEmpty($props.personal_and_social_history.illicit_drugs_quit_year) || !$options.isEmpty($props.personal_and_social_history.illicit_drugs_taken) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_155, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_156, [_cache[98] || (_cache[98] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), _cache[99] || (_cache[99] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Illicit Drugs: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_157, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.illicit_drugs) + "  ", 1 /* TEXT */), _cache[100] || (_cache[100] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Year quitted: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_158, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.illicit_drugs_quit_year) + "  ", 1 /* TEXT */), _cache[101] || (_cache[101] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Illicit drugs taken: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_159, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.personal_and_social_history.illicit_drugs_taken) + "  ", 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.current_medication) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_160, _cache[102] || (_cache[102] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Current Medications ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.current_medication) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_161, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_162, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_163, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.current_medication), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.pertinent_laboratory.pertinent_laboratory_and_procedures) && !$options.isEmpty($props.pertinent_laboratory.lab_procedure_other) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_164, _cache[103] || (_cache[103] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Pertinent Laboratory and Other Ancillary Procedures ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.pertinent_laboratory.pertinent_laboratory_and_procedures) || !$options.isEmpty($props.pertinent_laboratory.lab_procedure_other) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_165, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_166, [_cache[104] || (_cache[104] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Laboratory: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_167, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.pertinent_laboratory.pertinent_laboratory_and_procedures) + "  ", 1 /* TEXT */), _cache[105] || (_cache[105] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Other: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_168, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.pertinent_laboratory.lab_procedure_other), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.file_path && $props.form_version == 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_169, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_170, [$props.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_171, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_172, "File Attachment: ")), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.file_path, function (path, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
       key: index
     }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", {
@@ -25605,23 +25680,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "class": "reason",
       target: "_blank",
       download: ""
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.file_name[index]), 9 /* TEXT, PROPS */, _hoisted_171)), index + 1 !== $props.file_path.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_172, ", ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
-  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), _cache[175] || (_cache[175] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "bg-gray"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "6",
-    "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Nutritional Status")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_173, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_174, [_cache[104] || (_cache[104] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Diet: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_175, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.nutritional_status.diet) + " ", 1 /* TEXT */), _cache[105] || (_cache[105] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Specify Diets: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_176, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.nutritional_status.specify_diets), 1 /* TEXT */)])]), _cache[176] || (_cache[176] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "bg-gray"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "6",
-    "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Latest Vital Signs")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_177, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_178, [_cache[106] || (_cache[106] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Temperature: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_179, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.temperature) + " ", 1 /* TEXT */), _cache[107] || (_cache[107] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Pulse Rate/Heart Rate: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_180, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.pulse_rate) + " ", 1 /* TEXT */), _cache[108] || (_cache[108] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Respiratory Rate: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_181, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.respiratory_rate), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_182, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_183, [_cache[109] || (_cache[109] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Blood Pressure: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_184, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.blood_pressure) + " ", 1 /* TEXT */), _cache[110] || (_cache[110] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" O2 Saturation: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_185, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.oxygen_saturation), 1 /* TEXT */)])]), _cache[177] || (_cache[177] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "bg-gray"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "6",
-    "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Glasgow Coma Scale")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_186, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_187, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_188, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(10, function (i) {
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.file_name[index]), 9 /* TEXT, PROPS */, _hoisted_173)), index + 1 !== $props.file_path.length ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_174, ", ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.nutritional_status.diet) && !$options.isEmpty($props.nutritional_status.specify_diets) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_175, _cache[106] || (_cache[106] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Nutritional Status ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.nutritional_status.diet) || !$options.isEmpty($props.nutritional_status.specify_diets) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_176, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_177, [_cache[107] || (_cache[107] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Diet: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_178, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.nutritional_status.diet) + " ", 1 /* TEXT */), _cache[108] || (_cache[108] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Specify Diets: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_179, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.nutritional_status.specify_diets), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.latest_vital_signs.temperature) && !$options.isEmpty($props.latest_vital_signs.pulse_rate) && !$options.isEmpty($props.latest_vital_signs.respiratory_rate) && !$options.isEmpty($props.latest_vital_signs.blood_pressure) && !$options.isEmpty($props.latest_vital_signs.oxygen_saturation) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_180, _cache[109] || (_cache[109] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Latest Vital Signs")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.latest_vital_signs.temperature) || !$options.isEmpty($props.latest_vital_signs.pulse_rate) || !$options.isEmpty($props.latest_vital_signs.respiratory_rate) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_181, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_182, [_cache[110] || (_cache[110] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Temperature: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_183, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.temperature) + " ", 1 /* TEXT */), _cache[111] || (_cache[111] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Pulse Rate/Heart Rate: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_184, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.pulse_rate) + " ", 1 /* TEXT */), _cache[112] || (_cache[112] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Respiratory Rate: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_185, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.respiratory_rate), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.latest_vital_signs.blood_pressure) || !$options.isEmpty($props.latest_vital_signs.oxygen_saturation) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_186, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_187, [_cache[113] || (_cache[113] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Blood Pressure: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_188, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.blood_pressure) + " ", 1 /* TEXT */), _cache[114] || (_cache[114] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" O2 Saturation: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_189, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.oxygen_saturation), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.latest_vital_signs.blood_pressure) || !$options.isEmpty($props.latest_vital_signs.oxygen_saturation) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_190, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_191, [_cache[115] || (_cache[115] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Blood Pressure: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_192, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.blood_pressure) + " ", 1 /* TEXT */), _cache[116] || (_cache[116] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" O2 Saturation: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_193, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.latest_vital_signs.oxygen_saturation), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.glasgocoma_scale.pupil_size_chart) && !$options.isEmpty($props.glasgocoma_scale.motor_response) && !$options.isEmpty($props.glasgocoma_scale.verbal_response) && !$options.isEmpty($props.glasgocoma_scale.eye_response) && !$options.isEmpty($props.glasgocoma_scale.gsc_score) && $props.glasgocoma_scale.gsc_score != '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_194, _cache[117] || (_cache[117] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Glasgow Coma Scale")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.glasgocoma_scale.pupil_size_chart) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_195, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_196, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_197, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(10, function (i) {
     var _$props$glasgocoma_sc;
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", {
       key: i,
@@ -25643,29 +25709,21 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         width: i * 4 + 2 + 'px'
       })
     }, null, 4 /* STYLE */)], 2 /* CLASS */);
-  }), 64 /* STABLE_FRAGMENT */))])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_189, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_190, [_cache[111] || (_cache[111] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Pupil Size Chart: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_191, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.pupil_size_chart) + "  ", 1 /* TEXT */), _cache[112] || (_cache[112] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Motor Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_192, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.motor_response), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_193, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_194, [_cache[113] || (_cache[113] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Verbal Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_195, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.verbal_response) + "  ", 1 /* TEXT */), _cache[114] || (_cache[114] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Eye Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_196, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.eye_response), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_197, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_198, [_cache[115] || (_cache[115] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" GCS Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_199, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.gsc_score), 1 /* TEXT */)])]), _cache[178] || (_cache[178] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "bg-gray"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "6",
-    "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Review of Systems")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_200, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_201, [_cache[116] || (_cache[116] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Skin: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_202, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys = $props.review_of_system.skin) === null || _$props$review_of_sys === void 0 || (_$props$review_of_sys = _$props$review_of_sys.replace("Select All,", "")) === null || _$props$review_of_sys === void 0 ? void 0 : _$props$review_of_sys.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[117] || (_cache[117] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_203, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.skin_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_204, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_205, [_cache[118] || (_cache[118] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Head: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_206, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys2 = $props.review_of_system.head) === null || _$props$review_of_sys2 === void 0 || (_$props$review_of_sys2 = _$props$review_of_sys2.replace("Select All,", "")) === null || _$props$review_of_sys2 === void 0 ? void 0 : _$props$review_of_sys2.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[119] || (_cache[119] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_207, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.head_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_208, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_209, [_cache[120] || (_cache[120] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Eyes: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_210, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys3 = $props.review_of_system.eyes) === null || _$props$review_of_sys3 === void 0 || (_$props$review_of_sys3 = _$props$review_of_sys3.replace("Select All,", "")) === null || _$props$review_of_sys3 === void 0 ? void 0 : _$props$review_of_sys3.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[121] || (_cache[121] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_211, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.eyes_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_212, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_213, [_cache[122] || (_cache[122] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ears: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_214, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys4 = $props.review_of_system.ears) === null || _$props$review_of_sys4 === void 0 || (_$props$review_of_sys4 = _$props$review_of_sys4.replace("Select All,", "")) === null || _$props$review_of_sys4 === void 0 ? void 0 : _$props$review_of_sys4.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[123] || (_cache[123] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_215, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.eyes_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_216, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_217, [_cache[124] || (_cache[124] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Nose/Sinuses: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_218, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys5 = $props.review_of_system.nose_or_sinuses) === null || _$props$review_of_sys5 === void 0 || (_$props$review_of_sys5 = _$props$review_of_sys5.replace("Select All,", "")) === null || _$props$review_of_sys5 === void 0 ? void 0 : _$props$review_of_sys5.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[125] || (_cache[125] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_219, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.nose_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_220, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_221, [_cache[126] || (_cache[126] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Mouth/Throat: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_222, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys6 = $props.review_of_system.mouth_or_throat) === null || _$props$review_of_sys6 === void 0 || (_$props$review_of_sys6 = _$props$review_of_sys6.replace("Select All,", "")) === null || _$props$review_of_sys6 === void 0 ? void 0 : _$props$review_of_sys6.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[127] || (_cache[127] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_223, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.mouth_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_224, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_225, [_cache[128] || (_cache[128] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Neck: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_226, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys7 = $props.review_of_system.neck) === null || _$props$review_of_sys7 === void 0 || (_$props$review_of_sys7 = _$props$review_of_sys7.replace("Select All,", "")) === null || _$props$review_of_sys7 === void 0 ? void 0 : _$props$review_of_sys7.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[129] || (_cache[129] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_227, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.neck_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_228, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_229, [_cache[130] || (_cache[130] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Breast: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_230, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys8 = $props.review_of_system.breast) === null || _$props$review_of_sys8 === void 0 || (_$props$review_of_sys8 = _$props$review_of_sys8.replace("Select All,", "")) === null || _$props$review_of_sys8 === void 0 ? void 0 : _$props$review_of_sys8.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[131] || (_cache[131] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_231, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.breast_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_232, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_233, [_cache[132] || (_cache[132] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Respiratory/Cardiac: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_234, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys9 = $props.review_of_system.respiratory_or_cardiac) === null || _$props$review_of_sys9 === void 0 || (_$props$review_of_sys9 = _$props$review_of_sys9.replace("Select All,", "")) === null || _$props$review_of_sys9 === void 0 ? void 0 : _$props$review_of_sys9.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[133] || (_cache[133] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_235, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.respiratory_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_236, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_237, [_cache[134] || (_cache[134] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Gastrointestinal: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_238, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys10 = $props.review_of_system.gastrointestinal) === null || _$props$review_of_sys10 === void 0 || (_$props$review_of_sys10 = _$props$review_of_sys10.replace("Select All,", "")) === null || _$props$review_of_sys10 === void 0 ? void 0 : _$props$review_of_sys10.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[135] || (_cache[135] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_239, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.gastrointestinal_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_240, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_241, [_cache[136] || (_cache[136] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Urinary: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_242, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys11 = $props.review_of_system.urinary) === null || _$props$review_of_sys11 === void 0 || (_$props$review_of_sys11 = _$props$review_of_sys11.replace("Select All,", "")) === null || _$props$review_of_sys11 === void 0 ? void 0 : _$props$review_of_sys11.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[137] || (_cache[137] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_243, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.urinary_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_244, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_245, [_cache[138] || (_cache[138] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Peripheral Vascular: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_246, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys12 = $props.review_of_system.peripheral_vascular) === null || _$props$review_of_sys12 === void 0 || (_$props$review_of_sys12 = _$props$review_of_sys12.replace("Select All,", "")) === null || _$props$review_of_sys12 === void 0 ? void 0 : _$props$review_of_sys12.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[139] || (_cache[139] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_247, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.peripheral_vascular_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_248, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_249, [_cache[140] || (_cache[140] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Musculoskeletal: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_250, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys13 = $props.review_of_system.musculoskeletal) === null || _$props$review_of_sys13 === void 0 || (_$props$review_of_sys13 = _$props$review_of_sys13.replace("Select All,", "")) === null || _$props$review_of_sys13 === void 0 ? void 0 : _$props$review_of_sys13.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[141] || (_cache[141] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_251, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.musculoskeletal_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_252, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_253, [_cache[142] || (_cache[142] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Neurologic: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_254, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys14 = $props.review_of_system.neurologic) === null || _$props$review_of_sys14 === void 0 || (_$props$review_of_sys14 = _$props$review_of_sys14.replace("Select All,", "")) === null || _$props$review_of_sys14 === void 0 ? void 0 : _$props$review_of_sys14.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[143] || (_cache[143] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_255, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.neurologic_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_256, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_257, [_cache[144] || (_cache[144] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Hematologic: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_258, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys15 = $props.review_of_system.hematologic) === null || _$props$review_of_sys15 === void 0 || (_$props$review_of_sys15 = _$props$review_of_sys15.replace("Select All,", "")) === null || _$props$review_of_sys15 === void 0 ? void 0 : _$props$review_of_sys15.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[145] || (_cache[145] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_259, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.hematologic_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_260, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_261, [_cache[146] || (_cache[146] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Endocrine: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_262, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys16 = $props.review_of_system.endocrine) === null || _$props$review_of_sys16 === void 0 || (_$props$review_of_sys16 = _$props$review_of_sys16.replace("Select All,", "")) === null || _$props$review_of_sys16 === void 0 ? void 0 : _$props$review_of_sys16.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[147] || (_cache[147] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_263, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.endocrine_others), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_264, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_265, [_cache[148] || (_cache[148] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Psychiatric: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_266, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys17 = $props.review_of_system.psychiatric) === null || _$props$review_of_sys17 === void 0 || (_$props$review_of_sys17 = _$props$review_of_sys17.replace("Select All,", "")) === null || _$props$review_of_sys17 === void 0 ? void 0 : _$props$review_of_sys17.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[149] || (_cache[149] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_267, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.psychiatric_others), 1 /* TEXT */)])]), _cache[179] || (_cache[179] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "bg-gray"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "6",
-    "class": "padded-header"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Reason for Referral")])], -1 /* HOISTED */)), _ctx.reason ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_268, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_269, [_cache[150] || (_cache[150] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), _cache[151] || (_cache[151] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_270, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.reason.reason), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.other_reason_referral ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_271, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_272, [_cache[152] || (_cache[152] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), _cache[153] || (_cache[153] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_273, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[180] || (_cache[180] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+  }), 64 /* STABLE_FRAGMENT */))])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.glasgocoma_scale.pupil_size_chart) || !$options.isEmpty($props.glasgocoma_scale.motor_response) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_198, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_199, [_cache[118] || (_cache[118] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Pupil Size Chart: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_200, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.pupil_size_chart) + "  ", 1 /* TEXT */), _cache[119] || (_cache[119] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Motor Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_201, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.motor_response), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.glasgocoma_scale.verbal_response) || !$options.isEmpty($props.glasgocoma_scale.eye_response) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_202, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_203, [_cache[120] || (_cache[120] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Verbal Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_204, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.verbal_response) + "  ", 1 /* TEXT */), _cache[121] || (_cache[121] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Eye Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_205, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.eye_response), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.glasgocoma_scale.gsc_score) && $props.glasgocoma_scale.gsc_score != '0' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_206, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_207, [_cache[122] || (_cache[122] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" GCS Response: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_208, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.glasgocoma_scale.gsc_score), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.skin) && !$options.isEmpty($props.review_of_system.skin_others) && !$options.isEmpty($props.review_of_system.head) && !$options.isEmpty($props.review_of_system.head_others) && !$options.isEmpty($props.review_of_system.eyes) && !$options.isEmpty($props.review_of_system.eyes_others) && !$options.isEmpty($props.review_of_system.ears) && !$options.isEmpty($props.review_of_system.ears_others) && !$options.isEmpty($props.review_of_system.nose_or_sinuses) && !$options.isEmpty($props.review_of_system.nose_others) && !$options.isEmpty($props.review_of_system.mouth_or_throat) && !$options.isEmpty($props.review_of_system.mouth_others) && !$options.isEmpty($props.review_of_system.neck) && !$options.isEmpty($props.review_of_system.neck_others) && !$options.isEmpty($props.review_of_system.breast) && !$options.isEmpty($props.review_of_system.breast_others) && !$options.isEmpty($props.review_of_system.respiratory_or_cardiac) && !$options.isEmpty($props.review_of_system.respiratory_others) && !$options.isEmpty($props.review_of_system.gastrointestinal) && !$options.isEmpty($props.review_of_system.gastrointestinal_others) && !$options.isEmpty($props.review_of_system.urinary) && !$options.isEmpty($props.review_of_system.urinary_others) && !$options.isEmpty($props.review_of_system.peripheral_vascular) && !$options.isEmpty($props.review_of_system.peripheral_vascular_others) && !$options.isEmpty($props.review_of_system.musculoskeletal) && !$options.isEmpty($props.review_of_system.musculoskeletal_others) && !$options.isEmpty($props.review_of_system.neurologic) && !$options.isEmpty($props.review_of_system.neurologic_others) && !$options.isEmpty($props.review_of_system.hematologic) && !$options.isEmpty($props.review_of_system.hematologic_others) && !$options.isEmpty($props.review_of_system.endocrine) && !$options.isEmpty($props.review_of_system.endocrine_others) && !$options.isEmpty($props.review_of_system.psychiatric) && !$options.isEmpty($props.review_of_system.psychiatric_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_209, _cache[123] || (_cache[123] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, " Review of Systems ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.skin) || !$options.isEmpty($props.review_of_system.skin_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_210, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_211, [_cache[124] || (_cache[124] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Skin: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_212, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys = $props.review_of_system.skin) === null || _$props$review_of_sys === void 0 || (_$props$review_of_sys = _$props$review_of_sys.replace("Select All,", "")) === null || _$props$review_of_sys === void 0 ? void 0 : _$props$review_of_sys.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[125] || (_cache[125] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_213, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.skin_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.head) || !$options.isEmpty($props.review_of_system.head_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_214, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_215, [_cache[126] || (_cache[126] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Head: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_216, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys2 = $props.review_of_system.head) === null || _$props$review_of_sys2 === void 0 || (_$props$review_of_sys2 = _$props$review_of_sys2.replace("Select All,", "")) === null || _$props$review_of_sys2 === void 0 ? void 0 : _$props$review_of_sys2.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[127] || (_cache[127] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_217, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.head_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.eyes) || !$options.isEmpty($props.review_of_system.eyes_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_218, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_219, [_cache[128] || (_cache[128] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Eyes: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_220, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys3 = $props.review_of_system.eyes) === null || _$props$review_of_sys3 === void 0 || (_$props$review_of_sys3 = _$props$review_of_sys3.replace("Select All,", "")) === null || _$props$review_of_sys3 === void 0 ? void 0 : _$props$review_of_sys3.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[129] || (_cache[129] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_221, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.eyes_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.ears) || !$options.isEmpty($props.review_of_system.ears_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_222, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_223, [_cache[130] || (_cache[130] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ears: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_224, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys4 = $props.review_of_system.ears) === null || _$props$review_of_sys4 === void 0 || (_$props$review_of_sys4 = _$props$review_of_sys4.replace("Select All,", "")) === null || _$props$review_of_sys4 === void 0 ? void 0 : _$props$review_of_sys4.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[131] || (_cache[131] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_225, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.ears_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.nose_or_sinuses) || !$options.isEmpty($props.review_of_system.nose_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_226, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_227, [_cache[132] || (_cache[132] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Nose/Sinuses: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_228, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys5 = $props.review_of_system.nose_or_sinuses) === null || _$props$review_of_sys5 === void 0 || (_$props$review_of_sys5 = _$props$review_of_sys5.replace("Select All,", "")) === null || _$props$review_of_sys5 === void 0 ? void 0 : _$props$review_of_sys5.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[133] || (_cache[133] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_229, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.nose_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.mouth_or_throat) || !$options.isEmpty($props.review_of_system.mouth_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_230, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_231, [_cache[134] || (_cache[134] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Mouth/Throat: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_232, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys6 = $props.review_of_system.mouth_or_throat) === null || _$props$review_of_sys6 === void 0 || (_$props$review_of_sys6 = _$props$review_of_sys6.replace("Select All,", "")) === null || _$props$review_of_sys6 === void 0 ? void 0 : _$props$review_of_sys6.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[135] || (_cache[135] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_233, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.mouth_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.neck) || !$options.isEmpty($props.review_of_system.neck_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_234, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_235, [_cache[136] || (_cache[136] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Neck: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_236, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys7 = $props.review_of_system.neck) === null || _$props$review_of_sys7 === void 0 || (_$props$review_of_sys7 = _$props$review_of_sys7.replace("Select All,", "")) === null || _$props$review_of_sys7 === void 0 ? void 0 : _$props$review_of_sys7.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[137] || (_cache[137] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_237, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.neck_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.breast) || !$options.isEmpty($props.review_of_system.breast_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_238, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_239, [_cache[138] || (_cache[138] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Breast: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_240, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys8 = $props.review_of_system.breast) === null || _$props$review_of_sys8 === void 0 || (_$props$review_of_sys8 = _$props$review_of_sys8.replace("Select All,", "")) === null || _$props$review_of_sys8 === void 0 ? void 0 : _$props$review_of_sys8.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[139] || (_cache[139] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_241, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.breast_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.respiratory_or_cardiac) || !$options.isEmpty($props.review_of_system.respiratory_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_242, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_243, [_cache[140] || (_cache[140] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Respiratory/Cardiac: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_244, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys9 = $props.review_of_system.respiratory_or_cardiac) === null || _$props$review_of_sys9 === void 0 || (_$props$review_of_sys9 = _$props$review_of_sys9.replace("Select All,", "")) === null || _$props$review_of_sys9 === void 0 ? void 0 : _$props$review_of_sys9.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[141] || (_cache[141] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_245, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.respiratory_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.gastrointestinal) || !$options.isEmpty($props.review_of_system.gastrointestinal_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_246, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_247, [_cache[142] || (_cache[142] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Gastrointestinal: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_248, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys10 = $props.review_of_system.gastrointestinal) === null || _$props$review_of_sys10 === void 0 || (_$props$review_of_sys10 = _$props$review_of_sys10.replace("Select All,", "")) === null || _$props$review_of_sys10 === void 0 ? void 0 : _$props$review_of_sys10.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[143] || (_cache[143] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_249, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.gastrointestinal_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.urinary) || !$options.isEmpty($props.review_of_system.urinary_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_250, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_251, [_cache[144] || (_cache[144] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Urinary: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_252, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys11 = $props.review_of_system.urinary) === null || _$props$review_of_sys11 === void 0 || (_$props$review_of_sys11 = _$props$review_of_sys11.replace("Select All,", "")) === null || _$props$review_of_sys11 === void 0 ? void 0 : _$props$review_of_sys11.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[145] || (_cache[145] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_253, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.urinary_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.peripheral_vascular) || !$options.isEmpty($props.review_of_system.peripheral_vascular_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_254, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_255, [_cache[146] || (_cache[146] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Peripheral Vascular: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_256, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys12 = $props.review_of_system.peripheral_vascular) === null || _$props$review_of_sys12 === void 0 || (_$props$review_of_sys12 = _$props$review_of_sys12.replace("Select All,", "")) === null || _$props$review_of_sys12 === void 0 ? void 0 : _$props$review_of_sys12.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[147] || (_cache[147] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_257, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.peripheral_vascular_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.musculoskeletal) || !$options.isEmpty($props.review_of_system.musculoskeletal_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_258, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_259, [_cache[148] || (_cache[148] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Musculoskeletal: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_260, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys13 = $props.review_of_system.musculoskeletal) === null || _$props$review_of_sys13 === void 0 || (_$props$review_of_sys13 = _$props$review_of_sys13.replace("Select All,", "")) === null || _$props$review_of_sys13 === void 0 ? void 0 : _$props$review_of_sys13.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[149] || (_cache[149] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_261, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.musculoskeletal_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.neurologic) || !$options.isEmpty($props.review_of_system.neurologic_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_262, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_263, [_cache[150] || (_cache[150] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Neurologic: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_264, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys14 = $props.review_of_system.neurologic) === null || _$props$review_of_sys14 === void 0 || (_$props$review_of_sys14 = _$props$review_of_sys14.replace("Select All,", "")) === null || _$props$review_of_sys14 === void 0 ? void 0 : _$props$review_of_sys14.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[151] || (_cache[151] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_265, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.neurologic_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.hematologic) || !$options.isEmpty($props.review_of_system.hematologic_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_266, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_267, [_cache[152] || (_cache[152] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Hematologic: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_268, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys15 = $props.review_of_system.hematologic) === null || _$props$review_of_sys15 === void 0 || (_$props$review_of_sys15 = _$props$review_of_sys15.replace("Select All,", "")) === null || _$props$review_of_sys15 === void 0 ? void 0 : _$props$review_of_sys15.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[153] || (_cache[153] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_269, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.hematologic_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.endocrine) || !$options.isEmpty($props.review_of_system.endocrine_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_270, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_271, [_cache[154] || (_cache[154] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Endocrine: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_272, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys16 = $props.review_of_system.endocrine) === null || _$props$review_of_sys16 === void 0 || (_$props$review_of_sys16 = _$props$review_of_sys16.replace("Select All,", "")) === null || _$props$review_of_sys16 === void 0 ? void 0 : _$props$review_of_sys16.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[155] || (_cache[155] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_273, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.endocrine_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.review_of_system.psychiatric) || !$options.isEmpty($props.review_of_system.psychiatric_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_274, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_275, [_cache[156] || (_cache[156] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Psychiatric: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_276, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$review_of_sys17 = $props.review_of_system.psychiatric) === null || _$props$review_of_sys17 === void 0 || (_$props$review_of_sys17 = _$props$review_of_sys17.replace("Select All,", "")) === null || _$props$review_of_sys17 === void 0 ? void 0 : _$props$review_of_sys17.replace(",Others", "")) + " ", 1 /* TEXT */), _cache[157] || (_cache[157] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_277, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.review_of_system.psychiatric_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[181] || (_cache[181] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
     "class": "bg-gray text-center"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
     colspan: "12"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Obstetric and Gynecologic History")])], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_274, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_275, [_cache[154] || (_cache[154] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menarche: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_276, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menarche) + " ", 1 /* TEXT */), _cache[155] || (_cache[155] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menopause: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_277, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menopause), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_278, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_279, [_cache[156] || (_cache[156] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Cycle: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_280, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle) + " ", 1 /* TEXT */), _cache[157] || (_cache[157] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Duration: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_281, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle_duration), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_282, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_283, [_cache[158] || (_cache[158] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Pads per Day: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_284, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle_padsperday) + " ", 1 /* TEXT */), _cache[159] || (_cache[159] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Medication: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_285, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle_medication), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_286, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_287, [_cache[160] || (_cache[160] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Contraceptive: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_288, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.contraceptive_history) + " ", 1 /* TEXT */), _cache[161] || (_cache[161] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_289, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.contraceptive_others), 1 /* TEXT */)])]), _cache[181] || (_cache[181] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "padded-row"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Reason for Referral")])], -1 /* HOISTED */)), !$options.isEmpty($data.form.reason) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_278, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_279, [_cache[158] || (_cache[158] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_280, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.reason), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($data.form.other_reason_referral) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_281, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_282, [_cache[159] || (_cache[159] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Other Reason for Referral: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_283, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.menarche) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menopause) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle_duration) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle_padsperday) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle_medication) || !$options.isEmpty($props.obstetric_and_gynecologic_history.contraceptive_history) || !$options.isEmpty($props.obstetric_and_gynecologic_history.contraceptive_others) && !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_g) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_ft) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_a) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_lnmp) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_p) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_pt) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_l) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_edc) || !$options.isEmpty($props.obstetric_and_gynecologic_history.aog_lnmp) || !$options.isEmpty($props.obstetric_and_gynecologic_history.aog_eutz) || !$options.isEmpty($props.obstetric_and_gynecologic_history.prenatal_history) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_284, _cache[160] || (_cache[160] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Obstetric and Gynecologic History")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.menarche) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menopause) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_285, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_286, [_cache[161] || (_cache[161] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menarche: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_287, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menarche) + " ", 1 /* TEXT */), _cache[162] || (_cache[162] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menopause: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_288, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menopause), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle_duration) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_289, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_290, [_cache[163] || (_cache[163] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Cycle: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_291, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle) + " ", 1 /* TEXT */), _cache[164] || (_cache[164] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Duration: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_292, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle_duration), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle_padsperday) || !$options.isEmpty($props.obstetric_and_gynecologic_history.menstrual_cycle_medication) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_293, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_294, [_cache[165] || (_cache[165] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Pads per Day: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_295, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle_padsperday) + " ", 1 /* TEXT */), _cache[166] || (_cache[166] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Menstrual Medication: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_296, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.menstrual_cycle_medication), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.contraceptive_history) || !$options.isEmpty($props.obstetric_and_gynecologic_history.contraceptive_others) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_297, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_298, [_cache[167] || (_cache[167] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Contraceptive: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_299, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.contraceptive_history) + " ", 1 /* TEXT */), _cache[168] || (_cache[168] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Others: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_300, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.contraceptive_others), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_301, [!$options.isEmpty($props.obstetric_and_gynecologic_history.parity_g) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_ft) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_a) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_lnmp) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("td", _hoisted_302, " Parity ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_g) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_ft) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_a) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_lnmp) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_303, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_304, [_cache[169] || (_cache[169] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" G: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_305, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_g) + " ", 1 /* TEXT */), _cache[170] || (_cache[170] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" FT: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_306, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_ft) + " ", 1 /* TEXT */), _cache[171] || (_cache[171] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" A: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_307, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_a) + " ", 1 /* TEXT */), _cache[172] || (_cache[172] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" LMP: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_308, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatDate($props.obstetric_and_gynecologic_history.parity_lnmp)), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_p) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_pt) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_l) || !$options.isEmpty($props.obstetric_and_gynecologic_history.parity_edc) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_309, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_310, [_cache[173] || (_cache[173] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" P: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_311, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_p) + " ", 1 /* TEXT */), _cache[174] || (_cache[174] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" PT: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_312, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_pt) + " ", 1 /* TEXT */), _cache[175] || (_cache[175] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" L: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_313, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_l) + " ", 1 /* TEXT */), _cache[176] || (_cache[176] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" EDC: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_314, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatDate($props.obstetric_and_gynecologic_history.parity_edc)), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.aog_lnmp) || !$options.isEmpty($props.obstetric_and_gynecologic_history.aog_eutz) || !$options.isEmpty($props.obstetric_and_gynecologic_history.prenatal_history) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_315, _cache[177] || (_cache[177] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+    colspan: "12"
+  }, "AOG", -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$options.isEmpty($props.obstetric_and_gynecologic_history.aog_lnmp) || !$options.isEmpty($props.obstetric_and_gynecologic_history.aog_eutz) || !$options.isEmpty($props.obstetric_and_gynecologic_history.prenatal_history) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_316, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_317, [_cache[178] || (_cache[178] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" LMP: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_318, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.aog_lnmp) + " ", 1 /* TEXT */), _cache[179] || (_cache[179] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" UTZ: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_319, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.aog_eutz) + " ", 1 /* TEXT */), _cache[180] || (_cache[180] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Prenatal History: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_320, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.prenatal_history), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), $data.form.sex === 'Female' && $options.filteredPregnancy.length > 0 && $props.form_version != 'version1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_321, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_322, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_323, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_324, [_cache[183] || (_cache[183] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+    "class": "bg-gray text-center"
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
     colspan: "12"
-  }, " Parity ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_290, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_291, [_cache[162] || (_cache[162] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" G: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_292, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_g) + " ", 1 /* TEXT */), _cache[163] || (_cache[163] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" FT: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_293, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_ft) + " ", 1 /* TEXT */), _cache[164] || (_cache[164] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" A: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_294, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_a) + " ", 1 /* TEXT */), _cache[165] || (_cache[165] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" LMP: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_295, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatDate($props.obstetric_and_gynecologic_history.parity_lnmp)), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_296, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_297, [_cache[166] || (_cache[166] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" P: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_298, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_p) + " ", 1 /* TEXT */), _cache[167] || (_cache[167] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" PT: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_299, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_pt) + " ", 1 /* TEXT */), _cache[168] || (_cache[168] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" L: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_300, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.parity_l) + " ", 1 /* TEXT */), _cache[169] || (_cache[169] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" EDC: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_301, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatDate($props.obstetric_and_gynecologic_history.parity_edc)), 1 /* TEXT */)])]), _cache[182] || (_cache[182] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
-    "class": "padded-row"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
-    colspan: "12"
-  }, " AOG ")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", _hoisted_302, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_303, [_cache[170] || (_cache[170] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" LMP: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_304, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.aog_lnmp) + " ", 1 /* TEXT */), _cache[171] || (_cache[171] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" UTZ: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_305, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.aog_eutz) + " ", 1 /* TEXT */), _cache[172] || (_cache[172] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Prenatal History: ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_306, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.obstetric_and_gynecologic_history.prenatal_history), 1 /* TEXT */)])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), $data.form.sex === 'Female' && $options.filteredPregnancy.length > 0 && $props.form_version != 'version1' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_307, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_308, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_309, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_310, [_cache[184] || (_cache[184] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "Pregnancy")])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", {
     style: {
       "font-size": "10pt"
     }
@@ -25700,7 +25758,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: index
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_order), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_year), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_gestation_completed), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_outcome), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_place_of_birth), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_sex), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_birth_weight), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_present_status), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(record.pregnancy_complication), 1 /* TEXT */)]);
-  }), 128 /* KEYED_FRAGMENT */)), $options.filteredPregnancy.length === 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_311, _cache[183] || (_cache[183] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
+  }), 128 /* KEYED_FRAGMENT */)), $options.filteredPregnancy.length === 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_325, _cache[182] || (_cache[182] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", {
     colspan: "9",
     "class": "text-center"
   }, "No data available.", -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */);

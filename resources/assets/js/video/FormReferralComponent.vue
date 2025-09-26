@@ -738,7 +738,7 @@ export default {
           !isEmpty(review_of_system.psychiatric_others)
         "
       >
-        <td colspan="12"><b> Review of Systems </b></td>
+      <td colspan="12"><b> Review of Systems </b></td>
       </tr>
       <tr
         class="padded-row"
@@ -1519,6 +1519,11 @@ export default {
       <div class="table-responsive">
         <table class="table table-bordered">
           <thead>
+            <tr class="bg-gray text-center">
+              <td colspan="12">
+                <b>Pregnancy</b>
+              </td>
+            </tr>
             <tr style="font-size: 10pt">
               <th class="text-center" style="width: 50%">Pregnancy Order</th>
               <th class="text-center" style="width: 20%">Year of Birth</th>
