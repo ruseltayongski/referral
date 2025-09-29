@@ -960,19 +960,18 @@ export default {
       //   return;
       // }
 
-      // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
+        console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
         this.isUserJoined = true;
-        // Check if channel already has maximum users
-        if (
-          self.channelParameters.userCount >= self.channelParameters.maxUsers
-        ) {
-          // console.log("Channel is full! Maximum users reached.");
+
+        console.log("user count: ", self.channelParameters.userCount, 
+                    "max users:", self.channelParameters.maxUsers);
+
+        if (self.channelParameters.userCount >= self.channelParameters.maxUsers) {
           self.showChannelFullMessage();
-          // Disconnect this user since the channel is full
           await agoraEngine.leave();
-          self.channelParameters.userCount--; // Decrement user count after leaving
+          self.channelParameters.userCount--;
           return;
         } else {
           if (this.referring_md === "yes") {
@@ -980,6 +979,27 @@ export default {
           }
         }
       });
+
+      // Listen for when a user joins the channel
+      // agoraEngine.on("user-joined", async (user) => {
+      //   self.channelParameters.userCount++;
+      //   this.isUserJoined = true;
+      //   // Check if channel already has maximum users
+      //   if (
+      //     self.channelParameters.userCount >= self.channelParameters.maxUsers
+      //   ) {
+      //     // console.log("Channel is full! Maximum users reached.");
+      //     self.showChannelFullMessage();
+      //     // Disconnect this user since the channel is full
+      //     await agoraEngine.leave();
+      //     self.channelParameters.userCount--; // Decrement user count after leaving
+      //     return;
+      //   } else {
+      //     if (this.referring_md === "yes") {
+      //       this.startScreenRecording();
+      //     }
+      //   }
+      // });
 
       agoraEngine.on("user-published", async (user, mediaType) => {
         await agoraEngine.subscribe(user, mediaType);
@@ -1074,11 +1094,12 @@ export default {
         console.error("Error joining channel:", error);
       }
     },
-    showChannelFullMessage() {
+     showChannelFullMessage() {
       // Create an alert or message to inform user
       const fullMessage = document.createElement("div");
       fullMessage.className = "channel-full-message";
-      fullMessage.textContent = "This call is already accepted.";
+      fullMessage.textContent =
+        "This channel is full. Maximum 2 users allowed.";
       fullMessage.style.position = "fixed";
       fullMessage.style.top = "50%";
       fullMessage.style.left = "50%";

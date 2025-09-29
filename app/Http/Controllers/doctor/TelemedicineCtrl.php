@@ -35,9 +35,16 @@ class TelemedicineCtrl extends Controller
     {
         $user = Session::get('auth');
         $facility = $user->facility_id;
-        $sub_Opd = SubOpd::select('id', 'description')
-            ->get();
 
+        $type = $req->input('type', session('last_type', 'upcoming'));
+        $dateFrom = $req->input('date_from');
+        $dateTo = $req->input('date_to');
+        $viewAll = $req->input('view_all', false);
+
+        $allowedTypes = ['upcoming', 'past'];
+        $now = \Carbon\Carbon::now();
+        
+        $sub_Opd = SubOpd::select('id', 'description')->get();
         $config_sched = Cofig_schedule::select('id','department_id','facility_id','subopd_id','created_by','description','category','days','time')->get();
         $query = AppointmentSchedule::
             with([
@@ -82,10 +89,33 @@ class TelemedicineCtrl extends Controller
             // Apply facility filter for all users
             $query->where('facility_id', $facility);
             $query->where('created_by', $user->id);
+            
+            if($type === 'upcoming'){
+                // $query->where('appointed_date', '>=', Carbon::now()->format('Y-m-d'));
+                $query->whereRaw("STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') >= ?", [$now]);
+            } elseif ($type === 'past') {
+                // $query->where('appointed_date', '<', Carbon::now()->format('Y-m-d'));
+                $query->whereRaw("STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') < ?", [$now]);
+            }
+            
+            if(!$viewAll && $dateFrom && $dateTo){
+                $query->whereRaw("
+                    STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s')
+                    BETWEEN ? AND ?
+                ", [
+                    $dateFrom . ' 00:00:00',
+                    $dateTo . ' 23:59:59'
+                ]);
+            }
 
         $appointment_schedule = $query->orderBy('created_at', 'desc')
-            //->where('status', $appointmentstatus)
-            ->paginate(20);
+            ->paginate(20)
+             ->appends([
+                    'type' => $type,
+                    'date_from' => $dateFrom,
+                    'date_to' => $dateTo,
+                    'view_all' => $viewAll
+                ]);
     
         $user_facility = User::where('department_id',$user->department_id)
         //  ->where('level','doctor')
@@ -94,6 +124,11 @@ class TelemedicineCtrl extends Controller
         ->groupBy('facility_id')
         ->get();
         
+        if (!in_array($type, $allowedTypes)) {
+            $lastype = session('last_type', 'upcoming');
+            return redirect()->route('manage.appointment', ['type' => $lastype]);
+        }
+
         $data = [
             'appointment_schedule' => $appointment_schedule,
             'facility' => $user_facility,
@@ -103,7 +138,8 @@ class TelemedicineCtrl extends Controller
             'configs' => $config_sched,
             'appointment_filter' => $appointmentstatus,
             'subOpd' => $sub_Opd,
-            'user' => $user
+            'user' => $user,
+            'type' => $type 
         ];
 
         return view('doctor.manage_appointment', $data);
@@ -497,7 +533,7 @@ class TelemedicineCtrl extends Controller
     public function removeconfigSched(Request $req){
         $config_sched = Cofig_schedule::where('id', $req->configId)->first();
         $config_sched->delete();
-
+        Session::put('appointment_delete',true);
         return redirect::back();
     }
 
@@ -583,7 +619,7 @@ class TelemedicineCtrl extends Controller
             }
     
             Session::put('appointment_save',true);
-            return redirect()->to('manage/appointment'); 
+           return redirect()->to('manage/appointment?type=upcoming'); 
         }
 
     }

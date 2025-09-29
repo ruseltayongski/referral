@@ -1526,8 +1526,20 @@ class ReferralCtrl extends Controller
 
     }
 
+    private static function Referral_upward($code){
+        $referral_upward = DB::table('tracking')
+            ->join('activity', 'tracking.code', '=', 'activity.code')
+            ->select('activity.status')
+            ->where('tracking.code', $code)
+            ->where('tracking.telemedicine', 1)
+            ->where('activity.status', 'upward')
+            ->first();
+        return $referral_upward;
+    }
+
     public function transfer(Request $req) {
-      
+        
+        $upward_referral =  self::Referral_upward($req->code);
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
 
@@ -1582,7 +1594,7 @@ class ReferralCtrl extends Controller
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
             "status" => "transferred",
-            'telemedicine' => $track->telemedicine,
+            'telemedicine' => $upward_referral->status ? 0 : $track->telemedicine,
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track
@@ -1595,6 +1607,7 @@ class ReferralCtrl extends Controller
 
     public function redirect(Request $req) // MyRedirect
     {
+        $upward_referral =  self::Referral_upward($req->code);
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::where("code",$req->code)->first();
@@ -1665,6 +1678,7 @@ class ReferralCtrl extends Controller
                     ->orWhere("status","transferred");
             })
             ->count();
+        
         $new_referral = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
@@ -1684,7 +1698,7 @@ class ReferralCtrl extends Controller
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
             "position" => $position,
-            "telemedicine" => $req->statusUpward !== null ? 0 : $track->telemedicine,
+            "telemedicine" => $req->statusUpward || $upward_referral->status !== null ? 0 : $track->telemedicine,
             "push_diagnosis" => $finalDiagnosis,
             "chiefComplaint" => $chiefComplain,
         ];
