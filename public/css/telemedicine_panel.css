@@ -458,6 +458,13 @@ a.btn.filecolorclose {
     width: 100%;
     margin-top: 10px;
   }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 50px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
+  }
 }
 .popover {
   width: 230px;
@@ -575,6 +582,13 @@ a.btn.filecolorclose {
     left: 50%;
     z-index: 4;
     color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 100px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
   }
 }
 /* iPad Air - Portrait (820x1180) */
@@ -706,11 +720,18 @@ a.btn.filecolorclose {
     position: absolute;
     content: "";
     border-bottom: 2px solid #4bb543;
-    width: 68px;
+    width: 60px;
     top: 20px;
     left: 50%;
     z-index: 3;
     color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 45px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
   }
 }
 /* iPhone SE */
@@ -736,6 +757,13 @@ a.btn.filecolorclose {
     z-index: 3;
     color: white;
   }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 50px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
+  }
 }
 /* iPhone 12 Pro */
 @media only screen and (min-device-width: 390px) and (max-device-width: 390px) and (min-device-height: 844px) and (max-device-height: 844px) and (orientation: portrait) {
@@ -754,11 +782,18 @@ a.btn.filecolorclose {
     position: absolute;
     content: "";
     border-bottom: 2px solid #4bb543;
-    width: 65px;
+    width: 45px;
     top: 20px;
     left: 50%;
     z-index: 3;
     color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 45px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
   }
 }
 /* iPhone 14 Pro Max */
@@ -784,6 +819,13 @@ a.btn.filecolorclose {
     z-index: 3;
     color: white;
   }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 50px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
+  }
 }
 /* Google Pixel 7 */
 @media only screen and (min-device-width: 412px) and (max-device-width: 412px) and (min-device-height: 915px) and (max-device-height: 915px) and (orientation: portrait) {
@@ -791,11 +833,18 @@ a.btn.filecolorclose {
     position: absolute;
     content: "";
     border-bottom: 2px solid #4bb543;
-    width: 66px;
+    width: 50px;
     top: 20px;
     left: 50%;
     z-index: 3;
     color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 50px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
   }
 }
 /* Surface Pro 7 */
@@ -854,6 +903,13 @@ a.btn.filecolorclose {
     left: 40px;
     z-index: 3;
     transform: rotate(30deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 60px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
   }
 }
 /* Asus Zenbook Fold Portrait (unfolded full tablet mode) */

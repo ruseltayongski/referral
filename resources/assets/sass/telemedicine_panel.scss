@@ -516,6 +516,12 @@ a.btn.filecolorclose{
     width: 100%;
     margin-top: 10px;
   }
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 50px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
+  }
 }
 
 .popover {
@@ -656,6 +662,12 @@ a.btn.filecolorclose{
     left: 50%;
     z-index: 4;
     color: white;
+  }
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 100px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
   }
 }
 /* iPad Air - Portrait (820x1180) */
@@ -812,11 +824,17 @@ a.btn.filecolorclose{
       content: "";
       border-bottom: 2px solid #4bb543;
       // border-bottom: 2px solid #b55443;
-      width: 68px;
+      width: 60px;
       top: 20px;
       left: 50%;
       z-index: 3;
       color: white;
+    }
+    .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 45px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
     }
   }
 
@@ -851,11 +869,12 @@ a.btn.filecolorclose{
         z-index: 3;
         color: white;
       }
-      // .panel-scoped-telemedicine .stepper-item-prescription::after {
-      //   transform: rotate(160deg);
-      //   margin-top: -25px;
-      //   display: hidden;
-      // }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 50px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+      }
   }
 
   /* iPhone 12 Pro */
@@ -882,11 +901,17 @@ a.btn.filecolorclose{
         position: absolute;
         content: "";
         border-bottom: 2px solid #4bb543;
-        width: 65px;
+        width: 45px;
         top: 20px;
         left: 50%;
         z-index: 3;
         color: white;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 45px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
       }
   
   }
@@ -920,6 +945,12 @@ a.btn.filecolorclose{
         z-index: 3;
         color: white;
       }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 50px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+      }
     }
 
     /* Google Pixel 7 */
@@ -934,11 +965,17 @@ a.btn.filecolorclose{
         position: absolute;
         content: "";
         border-bottom: 2px solid #4bb543;
-        width: 66px;
+        width: 50px;
         top: 20px;
         left: 50%;
         z-index: 3;
         color: white;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 50px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
       }
     }
 
@@ -1011,6 +1048,12 @@ a.btn.filecolorclose{
         left: 40px;
         z-index: 3;
         transform: rotate(30deg);
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 60px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
       }
     }
 
