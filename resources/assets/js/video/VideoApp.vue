@@ -1463,7 +1463,7 @@ export default {
           console.log(error);
         });
     },
-    endorseUpward(referralCode, formType) {
+    endorseUpward(){
       let self = this;
       Lobibox.confirm({
         msg: "Do you want to endorse this patient for an upward level of referral?",
