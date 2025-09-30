@@ -87,8 +87,14 @@ $multi_faci = Session::get('multiple_login');
                         </a>
                     </li>
                     <li class="divider"></li>
-                    <li><a href="{{ url('manage/appointment') }}"><i class="fa fa-table"></i> Manage Appointment</a></li>
-                    <li><a href="{{ url('configSchedule')}}" id="configSched_Id"><i class="fa fa-table"></i> Config Schedule</a></li>
+                    <li class="dropdown-submenu">
+                        <a href="#"><i class="fa fa-table"></i> Manage Appointment</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('manage/appointment?type=upcoming') }}" data-toggle="modal"><i class="fa fa-calendar-check-o"></i>Upcoming Appointment</a></li>
+                            <li><a href="{{ url('manage/appointment?type=past') }}" data-toggle="modal"><i class="fa fa-history"></i>Past Appointment</a></li>
+                            <li><a href="{{ url('configSchedule')}}" id="configSched_Id"><i class="fa fa-table"></i> Config Schedule</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports </a>
                     <ul class="dropdown-menu">

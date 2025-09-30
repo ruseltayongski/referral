@@ -370,6 +370,40 @@ $user = Session::get('auth');
                 console.log(response)
             })
         }
+
+        function endorseUpward(referralCode, formType){
+            
+            Lobibox.confirm({
+                msg: "Do you want to endorse this patient for an upward level of referral?",
+                callback: function ($this, type, ev) {
+                if (type == "yes") {
+                    const endorseUpward = {
+                    code: referralCode,
+                    form_type: formType,
+                    };
+                    axios
+                    .post(`${self.baseUrl}/api/video/upward`, endorseUpward)
+                    .then((response) => {
+                        // console.log(response.status);
+                        // console.log("data Upward:", response.data);
+                        // console.log("endorseUpward:", endorseUpward);
+                        if (response.data.trim() === "success") {
+                        Lobibox.alert("success", {
+                            msg: "Successfully endorse the patient for upward referral!",
+                        });
+
+                        $('#upward_button' + referralCode).remove();
+
+                        } else {
+                        Lobibox.alert("error", {
+                            msg: "Error in server!",
+                        });
+                        }
+                    });
+                }
+                },
+            });
+        }
     </script>
     <script>
         $(".select2").select2({ width: '100%' });

@@ -115,6 +115,17 @@
     .editremove-time-slot{
         margin-top: 32px;
     }
+
+    .table td.text-center {
+        white-space: nowrap;      /* keep buttons in one line */
+        vertical-align: middle;   /* vertically center */
+    }
+
+    .table th.text-center:last-child,
+    .table td.text-center:last-child {
+        min-width: 140px;  /* adjust as needed based on number of buttons */
+    }
+
     </style>
     
 @endsection
@@ -145,12 +156,23 @@
         <div class="box-header with-border">
             <div class="pull-right form-inline">
                 <div class="form-group" style="margin-bottom: 10px;">
-
                     <form id="filterForm" method="GET">
-                        <!-- <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search...">
+                         <input type="hidden" name="type" value="{{ $type }}">
+                        <input type="date" 
+                            class="form-control" 
+                            name="date_from" 
+                            value="{{ request('date_from') }}" 
+                            placeholder="Date From">
+                        
+                        <input type="date" 
+                            class="form-control" 
+                            name="date_to" 
+                            value="{{ request('date_to') }}" 
+                            placeholder="Date To">
+                            
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-search"></i> Search
-                        </button> -->
+                        </button>
                         @if($user->subopd_id || $user->level == 'support')
                         <button type="button" class="btn btn-primary btn-sm btn-flat" id="add-appointment" data-toggle="modal" data-target="#addAppointmentModal">
                             <i class="fa fa-calendar-plus-o"></i> Add
@@ -167,13 +189,18 @@
                     </form>
                 </div>
             </div>
-            <h3>APPOINTMENTS</h3>
+            <h3 class="upcoming-title">
+                @if($type === 'past')
+                    <i class="fa fa-history"></i> Past Appointments
+                @else
+                    <i class="fa fa-calendar-check-o"></i> Upcoming Appointments
+                @endif
+            </h3>
         </div>
-
         <!-- Table List -->
         <div class="box-body appointments">
             @if(count($appointment_schedule)>0)
-                    <div class="table-responsive">
+                <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover table-fixed-header">
                         <tr class="bg-success bg-navy-active">
                             <th class="text-center">Appointment Date</th>
@@ -185,13 +212,17 @@
                             <!-- <th class="text-center">Department</th> -->
                             <th class="text-center">OPD Category</th> 
                             <th class="text-center">Slot</th>
-                            <!-- <th class="text-center">Slot</th> -->
+                            <th class="text-center">Booked Slot</th>
+                            <th class="text-center" style="font-size:15px;">Remaining Slot</th>
                             <th class="text-center">Action</th>
                         </tr>
                         @foreach($appointment_schedule as $row)
 
-                                @php $monthweeks =  Cofig_schedule::where('id', $row->configId)->first()->category;@endphp
-                           
+                            @php 
+                                $monthweeks =  Cofig_schedule::where('id', $row->configId)->first()->category;
+                                $bookedSlots = $row->telemedAssignedDoctor()->count();
+                            @endphp
+                            
                             <tr style="font-size: 12px">
                                 <td>{{  \Carbon\Carbon::parse($row->appointed_date)->format('F d, Y')  }}</td>
                                 {{-- <td>{{ $row->date_end ? \Carbon\Carbon::parse($row->date_end)->format('F d, Y') : 'N/A' }}</td> --}}
@@ -201,11 +232,31 @@
                                 <td> {{ $row->facility->name }} </td>
                                 <!-- <td> {{ $row->department->description }} </td> -->
                                 <td> {{ $row->subOpd->description }}</td>
-                                <td>{{ $row->slot}}</td> 
+                                <td class="text-center">{{ $row->slot}}</td> 
                                 <!-- <td> {{ count($row->telemedAssignedDoctor) }} </td> -->
+                                <td class="text-center">{{ $bookedSlots }} </td>
+                                <td class="text-center" style="font-size:14px; font-weight:bold;">
+                                    
+                                    {{ $row->slot - $bookedSlots }}
+                                    
+                                </td>
                                 <td class="text-center">
-                                    <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})"><i class="fa fa-pencil"></i></button>
-                                {{-- <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})"><i class="fa fa-trash"></i></button> --}}
+                                    @if($type === 'upcoming')
+                                        {{-- Update Button --}}
+                                        <button class="btn btn-primary btn-sm" onclick="UpdateModal({{ $row->id }})">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+
+                                        {{-- Delete Button --}}
+                                        <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @else
+                                        {{-- Only Delete Button if not upcoming --}}
+                                        <button class="btn btn-danger btn-sm" onclick="DeleteModal({{ $row->id }})">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    @endif
                                     @if($row->configId)
                                         <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#scheduleModal{{$row->id}}">
                                                 <i class="fa fa-eye"></i>
@@ -423,6 +474,11 @@
         });
         <?php Session::put('appointment_delete',false); ?>
         @endif
+
+        document.querySelector('button[name="view_all"]').addEventListener('click', function() {
+            document.querySelector('input[name="date_from"]').value = '';
+            document.querySelector('input[name="date_to"]').value = '';
+        });
 
         //---------------- for Config-Appointment ---------------//
         const checkConfigSLot = "{{ url('check-config-existSlot') }}";
@@ -1085,9 +1141,7 @@
                 data.forEach(function(appointment){
 
                     let currentDate = new Date().toISOString().split('T')[0];
-
-                    let available_doctor = appointment.telemed_assigned_doctor.appointment_id;
-
+                    let available_doctor = appointment.telemed_assigned_doctor[0]?.appointment_id;
                     let appointedDate = appointment.appointed_date;
                     let date = new Date(appointedDate);
                     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -1096,14 +1150,11 @@
                     let day = date.getDate();
                     let year = date.getFullYear();
                     let formattedDate = `${month} ${day}, ${year}`;
-                    // console.log("date format",formattedDate);
-                    // if(currentDate <= appointment.appointed_date && !alertshown && available_doctor){
+                  
                     if(available_doctor && !alertshown){
-                        // alert("Are you sure you want to delete this Present or Future Appointment?");
                         alertshown = true;
                         showdeletModal = false;
-                        // console.log('showdeletModal',showdeletModal);
-                        Lobibox.alert("error",
+                        Lobibox.alert("warning",
                             {
                                 msg: `You cannot delete this appointment. It has already been scheduled by the assigned doctor on ${formattedDate}.`
                             });

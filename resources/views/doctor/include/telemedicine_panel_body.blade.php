@@ -78,9 +78,9 @@
     $followup_track = \App\Activity::where("code",$row->code)
         ->where("status","followup")
         ->get();
-
-    $refer_followUp = \App\Activity::where("code",$row->code)->where("status","followup")->exists();
-
+    
+    $refer_followUp = \App\Activity::select('status')->where("code",$row->code)->where('status','upward')->exists();
+ 
     $lab_request = \App\LabRequest::where("activity_id",$referred_track->id)
         ->first(); // I am adding this condition for error messages of lab result icon
 
@@ -578,6 +578,12 @@
         @endforeach
     @endif
 
+     @php
+        $redirectedTrack = json_decode($redirected_track, true);
+        $referredFromArray = array_column($redirectedTrack, 'referred_from');
+
+    @endphp
+
     @if(count($redirected_track) > 0)
         @foreach($redirected_track as $redirect_track)
             <?php
@@ -652,6 +658,7 @@
             ?>
             <!-- Start changes -->
             <small class="label position-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
+            <input type="hidden" id="pass_to_vue_facility" value="{{ end($referredFromArray)  }}">
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                     <div class="step-counter  step-counter-referral"><i class="fa fa-share" aria-hidden="true"></i></div>
@@ -716,7 +723,7 @@
                     @endif
                 </div>
                 <!----------------my changes jondy--------------->
-                <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_cancelled_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_cancelled_track && !$redirected_rejected_track) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter step-counter-referral"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
                 </div>
@@ -731,6 +738,7 @@
     @if(count($activities) > 0)
         <?php $first = 0;
         $latest_act = \App\Activity::where('code',$row->code)->latest('created_at')->first();
+        $referred_act = \App\Activity::select('referred_from')->where('code', $row->code)->where('status', 'referred')->latest('created_at')->first();
         ?>
         <div class="row">
             <div class="tracking col-sm-12">
@@ -775,9 +783,15 @@
                                         <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $act->fac_rejected }}</span> recommended to redirect <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> to other facility.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                         <br />
-                                        @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
+                                       {{-- @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
                                             <button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities('{{ $act->code }}')">
                                                 <i class="fa fa-camera"></i> Consult other facilities<br>
+                                            </button>
+                                        @endif --}}
+
+                                         @if($user->facility_id==$referred_act->referred_from && $latest_act->status=='rejected')
+                                            <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
+                                                <i class="fa fa-ambulance"></i> Redirect to other facility<br>
                                             </button>
                                         @endif
                                     </td>

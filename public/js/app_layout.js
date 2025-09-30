@@ -22349,7 +22349,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       rejected_process_element.removeClass("bg-orange");
       rejected_process_element.addClass("bg-red");
       var redirectButtonName = "";
-      if (telemedicine) redirectButtonName = '<button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities(\'' + patient_code + '\')">\n' + '    <i class="fa fa-camera"></i> Consult other facilities<br>\n' + '</button>';else redirectButtonName = '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="' + patient_code + '">\n' + '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' + '                                                            </button>\n';
+      if (telemedicine)
+        // redirectButtonName = '<button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities(\'' + patient_code + '\')">\n' +
+        //     '    <i class="fa fa-camera"></i> Consult other facilities<br>\n' +
+        //     '</button>';
+        redirectButtonName = '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="' + patient_code + '">\n' + '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' + '                                                            </button>\n';else redirectButtonName = '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="' + patient_code + '">\n' + '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' + '                                                            </button>\n';
       $("#rejected_name" + patient_code + activity_id).html("Declined");
       $("#prepend_from_websocket" + patient_code).prepend('' + '<tr>\n' + '                                                    <td>' + date_rejected + '</td>\n' + '                                                    <td>\n' + '                                                        <span class="txtDoctor">' + rejected_by + '</span> of <span class="txtHospital">' + rejected_by_facility + '</span> recommended to redirect <span class="txtPatient">' + patient_name + '</span> to other facility.\n' + '                                                        <span class="remarks">Remarks: ' + remarks + '</span>\n' + '                                                        <br>\n' + redirectButtonName + '                                                     </td>\n' + '                                                </tr>');
       var msg = patient_name + ' was recommend to redirect by Dr. ' + rejected_by + ' of ' + rejected_by_facility + '<br><br>\n' + '       <a href="' + redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
@@ -22689,8 +22693,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     });
     this.increment_referral = this.count_referral;
     Echo.join('new_referral').listen('NewReferral', function (event) {
-      // console.log("newly incoming Telemed::", event, event.payload.telemedicine);
-
+      console.log("newly incoming::", event);
       var subOpdIdInt = parseInt(event.payload.subOpdId, 10);
       var urlParams = new URLSearchParams(window.location.search);
       var filterRef = urlParams.get('filterRef');
@@ -22767,7 +22770,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     });
     Echo.join('referral_seen').listen('SocketReferralSeen', function (event) {
       $("#count_seen" + event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
-      //console.log("Seen payload Facility Id",event.payload.referring_facility_id, "Pass to Vue Facility", this.passToVueFacility);
       if (event.payload.referring_facility_id === _this4.passToVueFacility || event.payload.referring_facility_id === _this4.user.facility_id) {
         _this4.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track);
       }

@@ -860,26 +860,26 @@ $(document).ready(function () {
 });
 
 
-const deleteConfigUrl = "{{ url('delete-Config') }}";
-const editConfigUrl = "{{ url('get-config-data-sched') }}"
+// const deleteConfigUrl = "{{ url('delete-Config') }}";
+// const editConfigUrl = "{{ url('get-config-data-sched') }}";
 // function DeleteConfig(scheduleId, configId){
 //     console.log(`Requesting URL: delete-Config/${scheduleId}/${configId}`);
-    $.ajax({
-        url:`${deleteConfigUrl}/${scheduleId}`,
-        method: 'GET',
-        success: function(res) {
-            // console.log("res Id:", res.schedId, res.configId);
-        },
-        error: function(error){
-            console.error('Error fetching config:', {
-                status: error.status,
-                statusText: error.statusText,
-                response: error.responseText
-            });
-        }
-    })
+    // $.ajax({
+    //     url:`${deleteConfigUrl}/${scheduleId}`,
+    //     method: 'GET',
+    //     success: function(res) {
+    //         // console.log("res Id:", res.schedId, res.configId);
+    //     },
+    //     error: function(error){
+    //         console.error('Error fetching config:', {
+    //             status: error.status,
+    //             statusText: error.statusText,
+    //             response: error.responseText
+    //         });
+    //     }
+    // })
     
-    $('#deleteConfigAppointment').modal('show');
+    // $('#deleteConfigAppointment').modal('show');
 //}
 
 function UpdateConfig(config_appointment_id, config_id) {

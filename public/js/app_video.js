@@ -23924,19 +23924,16 @@ var doctorFeedback = "referral/doctor/feedback";
                         console.log("User joined:", user.uid);
                         self.channelParameters.userCount++;
                         _this10.isUserJoined = true;
-                        // Check if channel already has maximum users
                         console.log("user count: ", self.channelParameters.userCount, "max users:", self.channelParameters.maxUsers);
                         if (!(self.channelParameters.userCount >= self.channelParameters.maxUsers)) {
                           _context4.next = 12;
                           break;
                         }
-                        // console.log("Channel is full! Maximum users reached.");
                         self.showChannelFullMessage();
-                        // Disconnect this user since the channel is full
                         _context4.next = 8;
                         return agoraEngine.leave();
                       case 8:
-                        self.channelParameters.userCount--; // Decrement user count after leaving
+                        self.channelParameters.userCount--;
                         return _context4.abrupt("return");
                       case 12:
                         if (_this10.referring_md === "yes") {
@@ -23952,7 +23949,6 @@ var doctorFeedback = "referral/doctor/feedback";
                   return _ref.apply(this, arguments);
                 };
               }());
-
               // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
               //agora
               agoraEngine.on("user-published", /*#__PURE__*/function () {
@@ -24086,10 +24082,10 @@ var doctorFeedback = "referral/doctor/feedback";
       document.body.appendChild(fullMessage);
 
       // Remove the message after a few seconds
-      // setTimeout(() => {
-      //   fullMessage.remove();
-      //   window.top.close();
-      // }, 5000);
+      setTimeout(function () {
+        fullMessage.remove();
+        window.top.close();
+      }, 5000);
     },
     getUrlVars: function getUrlVars() {
       var vars = [],
@@ -24457,8 +24453,8 @@ var doctorFeedback = "referral/doctor/feedback";
         callback: function callback($this, type, ev) {
           if (type == "yes") {
             var endorseUpward = {
-              code: self.referral_code,
-              form_type: self.form_type
+              code: self.referral_code || referralCode,
+              form_type: self.form_type || formType
             };
             axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(self.baseUrl, "/api/video/upward"), endorseUpward).then(function (response) {
               // console.log(response.status);

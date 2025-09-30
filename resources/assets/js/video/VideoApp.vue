@@ -1091,16 +1091,14 @@ export default {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
         this.isUserJoined = true;
-        // Check if channel already has maximum users
-        console.log("user count: ", self.channelParameters.userCount, "max users:", self.channelParameters.maxUsers);
-        if (
-          self.channelParameters.userCount >= self.channelParameters.maxUsers
-        ) {
-          // console.log("Channel is full! Maximum users reached.");
+
+        console.log("user count: ", self.channelParameters.userCount, 
+                    "max users:", self.channelParameters.maxUsers);
+
+        if (self.channelParameters.userCount >= self.channelParameters.maxUsers) {
           self.showChannelFullMessage();
-          // Disconnect this user since the channel is full
           await agoraEngine.leave();
-          self.channelParameters.userCount--; // Decrement user count after leaving
+          self.channelParameters.userCount--;
           return;
         } else {
           if (this.referring_md === "yes") {
@@ -1108,7 +1106,6 @@ export default {
           }
         }
       });
-
       // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
       //agora
       agoraEngine.on("user-published", async (user, mediaType) => {
@@ -1227,10 +1224,10 @@ export default {
       document.body.appendChild(fullMessage);
 
       // Remove the message after a few seconds
-      // setTimeout(() => {
-      //   fullMessage.remove();
-      //   window.top.close();
-      // }, 5000);
+      setTimeout(() => {
+        fullMessage.remove();
+        window.top.close();
+      }, 5000);
     },
 
     getUrlVars() {
@@ -1528,15 +1525,15 @@ export default {
           console.log(error);
         });
     },
-    endorseUpward() {
+    endorseUpward(){
       let self = this;
       Lobibox.confirm({
         msg: "Do you want to endorse this patient for an upward level of referral?",
         callback: function ($this, type, ev) {
           if (type == "yes") {
             const endorseUpward = {
-              code: self.referral_code,
-              form_type: self.form_type,
+              code: self.referral_code || referralCode,
+              form_type: self.form_type || formType,
             };
             axios
               .post(`${self.baseUrl}/api/video/upward`, endorseUpward)

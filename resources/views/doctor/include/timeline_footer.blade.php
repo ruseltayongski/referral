@@ -16,7 +16,14 @@
     }
 </style>
 
-
+<?php
+$statusExamined = DB::table('activity')
+                    ->select('status')
+                    ->where('code', $row->code)
+                    ->orderby('id', 'desc')
+                    ->first();
+              
+?>
 
 <div class="timeline-footer">
     <div class="form-inline">
@@ -41,10 +48,19 @@
                 </a>
             </div>
         @endif
-        
+    
         @if($row->status == 'accepted' && $row->telemedicine)
             <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->where('status','referred')->orderBy('id','desc')->first() ?>
             <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine({{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>
+        @endif
+        @if($statusExamined->status === 'examined' && $row->telemedicine)
+            <button
+                class="btn btn-warning btn-xs upward-button"
+                id="upward_button{{ $row->code }}"
+                onclick="endorseUpward('{{ $row->code }}','{{ $row->type }}')"
+                type="button">
+                <i class="fa fa-hospital-o"></i> Upward
+            </button>
         @endif
         @if($seen > 0)
             <div class="form-group">

@@ -23862,32 +23862,30 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               //   });
               //   return;
               // }
-              // Listen for when a user joins the channel
               agoraEngine.on("user-joined", /*#__PURE__*/function () {
                 var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4(user) {
                   return _regeneratorRuntime().wrap(function _callee4$(_context4) {
                     while (1) switch (_context4.prev = _context4.next) {
                       case 0:
+                        console.log("User joined:", user.uid);
                         self.channelParameters.userCount++;
                         _this8.isUserJoined = true;
-                        // Check if channel already has maximum users
+                        console.log("user count: ", self.channelParameters.userCount, "max users:", self.channelParameters.maxUsers);
                         if (!(self.channelParameters.userCount >= self.channelParameters.maxUsers)) {
-                          _context4.next = 10;
+                          _context4.next = 12;
                           break;
                         }
-                        // console.log("Channel is full! Maximum users reached.");
                         self.showChannelFullMessage();
-                        // Disconnect this user since the channel is full
-                        _context4.next = 6;
+                        _context4.next = 8;
                         return agoraEngine.leave();
-                      case 6:
-                        self.channelParameters.userCount--; // Decrement user count after leaving
+                      case 8:
+                        self.channelParameters.userCount--;
                         return _context4.abrupt("return");
-                      case 10:
+                      case 12:
                         if (_this8.referring_md === "yes") {
                           _this8.startScreenRecording();
                         }
-                      case 11:
+                      case 13:
                       case "end":
                         return _context4.stop();
                     }
@@ -23897,6 +23895,28 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   return _ref.apply(this, arguments);
                 };
               }());
+
+              // Listen for when a user joins the channel
+              // agoraEngine.on("user-joined", async (user) => {
+              //   self.channelParameters.userCount++;
+              //   this.isUserJoined = true;
+              //   // Check if channel already has maximum users
+              //   if (
+              //     self.channelParameters.userCount >= self.channelParameters.maxUsers
+              //   ) {
+              //     // console.log("Channel is full! Maximum users reached.");
+              //     self.showChannelFullMessage();
+              //     // Disconnect this user since the channel is full
+              //     await agoraEngine.leave();
+              //     self.channelParameters.userCount--; // Decrement user count after leaving
+              //     return;
+              //   } else {
+              //     if (this.referring_md === "yes") {
+              //       this.startScreenRecording();
+              //     }
+              //   }
+              // });
+
               agoraEngine.on("user-published", /*#__PURE__*/function () {
                 var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee5(user, mediaType) {
                   return _regeneratorRuntime().wrap(function _callee5$(_context5) {
@@ -24003,7 +24023,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // Create an alert or message to inform user
       var fullMessage = document.createElement("div");
       fullMessage.className = "channel-full-message";
-      fullMessage.textContent = "This call is already accepted.";
+      fullMessage.textContent = "This channel is full. Maximum 2 users allowed.";
       fullMessage.style.position = "fixed";
       fullMessage.style.top = "50%";
       fullMessage.style.left = "50%";

@@ -440,9 +440,12 @@
                 rejected_process_element.addClass("bg-red");
                 let redirectButtonName = "";
                 if(telemedicine)
-                    redirectButtonName = '<button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities(\'' + patient_code + '\')">\n' +
-                        '    <i class="fa fa-camera"></i> Consult other facilities<br>\n' +
-                        '</button>';
+                    // redirectButtonName = '<button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities(\'' + patient_code + '\')">\n' +
+                    //     '    <i class="fa fa-camera"></i> Consult other facilities<br>\n' +
+                    //     '</button>';
+                    redirectButtonName = '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="'+patient_code+'">\n' +
+                        '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' +
+                        '                                                            </button>\n';
                 else
                     redirectButtonName = '                                                           <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="'+patient_code+'">\n' +
                         '                                                                <i class="fa fa-ambulance"></i> Redirect to other facility\n' +
@@ -887,7 +890,7 @@
             this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    // console.log("newly incoming Telemed::", event, event.payload.telemedicine);
+                    console.log("newly incoming::", event);
                     
                     const subOpdIdInt = parseInt(event.payload.subOpdId, 10);
 
@@ -1016,7 +1019,6 @@
             Echo.join('referral_seen')
                 .listen('SocketReferralSeen', (event) => {
                     $("#count_seen"+event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
-                      //console.log("Seen payload Facility Id",event.payload.referring_facility_id, "Pass to Vue Facility", this.passToVueFacility);
                     if(event.payload.referring_facility_id === this.passToVueFacility || event.payload.referring_facility_id === this.user.facility_id) {
                         this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track)
                     }
