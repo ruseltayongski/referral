@@ -186,9 +186,9 @@
             
             // not ready for deployment
 
-            if (telemed == 0 && (userID == res.tracking.action_md || userID == res.referring_md_Status.referring_md) && VideoApp !== 0) {  
-                toolbarItems += " callbutton"; // add call button only if telemedicine is 0
-            }
+            // if (telemed == 0 && (userID == res.tracking.action_md || userID == res.referring_md_Status.referring_md) && VideoApp !== 0) {  
+            //     toolbarItems += " callbutton"; // add call button only if telemedicine is 0
+            // }
             console.log("code latest", currentCode);
             tinymce.init({
                 selector: ".mytextarea1",
@@ -388,7 +388,7 @@
         tinymce.get($('.mytextarea1').attr('id')).setContent('');
         window.uploadedFiles.clear();
         $('#filePreviewModalReco').modal('hide');
-        tinymce.remove('.mytextarea1'); 
+        // tinymce.remove('.mytextarea1'); 
         $('.direct-chat-messages').html('Loading...');
         $('#feedbackForm')[0].reset();
         $('#fileDisplayBar').html('<div class="upload-prompt" id="uploadPrompt"></div>');
