@@ -402,23 +402,30 @@ a.btn.filecolorclose{
   .stepper-item {
     width: 45px;
   }
+  
 
   .stepper-item-prescription .step-name {
-    font-size: 8px;
+    font-size: 10px;
     text-align: center;
     width: 100px;
     margin-left: -10px;
   }
 
   .stepper-item .step-name {
-    font-size: 8px;
+    font-size: 10px;
     text-align: center;
     width: 55px;
     margin-left: -10px;
   }
 
   .stepper-item .step-name-treated_new {
-    font-size: 8px;
+    font-size: 10px;
+    text-align: center;
+    width: 60px;
+    margin-left: -10px;
+  }
+  .stepper-item-upward .step-name {
+    font-size: 10px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
@@ -500,7 +507,7 @@ a.btn.filecolorclose{
   }
 
   .position-blue {
-    font-size: 10px;
+    font-size: 8px;
   }
 
   #closeModalId {
@@ -525,14 +532,20 @@ a.btn.filecolorclose{
   }
 
   .stepper-item-prescription .step-name {
-    font-size: 8px;
+    font-size: 10px;
     text-align: center;
     width: 100px;
     margin-left: -10px;
   }
 
+  .step-counter .step-name {
+    font-size: 10px;
+    text-align: center;
+    width: 55px;
+    margin-left: -10px;
+  }
   .stepper-item .step-name {
-    font-size: 8px;
+    font-size: 10px;
     text-align: center;
     width: 55px;
     margin-left: -10px;
@@ -976,6 +989,7 @@ a.btn.filecolorclose{
       and (max-device-height: 720px) 
       and (orientation: portrait) {
 
+        
       .panel-scoped-telemedicine .stepper-item.completed::after {
         position: absolute;
         content: "";
@@ -1118,7 +1132,9 @@ a.btn.filecolorclose{
         z-index: 3;
         transform: rotate(26deg);
       }
-      
+      .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+        display: none;
+      }
       .panel-scoped-telemedicine .stepper-item-prescription::after {
         width: 109px;
         transform: rotate(160deg);
