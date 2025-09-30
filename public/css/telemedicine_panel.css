@@ -21,6 +21,15 @@
   left: -65%;
   z-index: 2;
 }
+.panel-scoped-telemedicine .stepper-item::after {
+  position: absolute;
+  content: "";
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  left: 50%;
+  z-index: 2;
+}
 .panel-scoped-telemedicine .stepper-item .step-counter {
   position: relative;
   z-index: 5;
@@ -67,18 +76,6 @@
   left: 50px;
   z-index: 3;
   transform: rotate(26deg);
-}
-@media (max-width: 1024px) {
-  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #4bb543;
-    width: 125px;
-    top: 58px;
-    left: 50px;
-    z-index: 3;
-    transform: rotate(26deg);
-  }
 }
 .panel-scoped-telemedicine .stepper-item-prescription::after {
   transform: rotate(160deg);
@@ -129,7 +126,7 @@
   left: -45%;
   z-index: 2;
   transform: rotate(160deg);
-  margin-top: -8px;
+  margin-top: -10.5px;
 }
 .panel-scoped-telemedicine .stepper-item-follow_new .step-counter-follow_new {
   z-index: 5;
@@ -624,8 +621,326 @@ a.btn.filecolorclose {
   .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
     display: none;
   }
+}
+/* iPad Pro 12.9" - Portrait (1024 x 1366) */
+@media only screen and (min-device-width: 1024px) and (max-device-width: 1024px) and (min-device-height: 1366px) and (max-device-height: 1366px) and (orientation: portrait) {
+  .stepper-item-upward {
+    width: 50px;
+  }
 
-  /* iPad Pro 12.9" - Portrait (1024 x 1366) */
+  .panel-scoped-telemedicine .stepper-item-treated_new::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    /* border-bottom: 2px solid #f00707; */
+    width: 165px;
+    transform: rotate(55deg);
+    top: -60px;
+    left: -70px;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-follow_new::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 95px;
+    z-index: 2;
+    left: -72px;
+    transform: rotate(26deg);
+    margin-top: -72px;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 110px;
+    top: 57px;
+    left: 50px;
+    z-index: 3;
+    transform: rotate(26deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 105px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 185px;
+    z-index: 3;
+    transform: rotate(55deg);
+    margin-top: 20px;
+    color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+    display: none;
+  }
+}
+/* Samsung Galaxy S20 Ultra */
+@media only screen and (min-device-width: 412px) and (max-device-width: 412px) and (min-device-height: 915px) and (max-device-height: 915px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 55px;
+    top: 47px;
+    left: 20px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+}
+/* iPhone XR */
+@media only screen and (min-device-width: 414px) and (max-device-width: 414px) and (min-device-height: 896px) and (max-device-height: 896px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 55px;
+    top: 45px;
+    left: 20px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 68px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+}
+/* iPhone SE */
+@media only screen and (min-device-width: 375px) and (max-device-width: 375px) and (min-device-height: 667px) and (max-device-height: 667px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 55px;
+    top: 49px;
+    left: 20px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 64px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+}
+/* iPhone 12 Pro */
+@media only screen and (min-device-width: 390px) and (max-device-width: 390px) and (min-device-height: 844px) and (max-device-height: 844px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 55px;
+    top: 49px;
+    left: 20px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 65px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+}
+/* iPhone 14 Pro Max */
+@media only screen and (min-device-width: 430px) and (max-device-width: 430px) and (min-device-height: 932px) and (max-device-height: 932px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 55px;
+    top: 45px;
+    left: 20px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 68px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+}
+/* Google Pixel 7 */
+@media only screen and (min-device-width: 412px) and (max-device-width: 412px) and (min-device-height: 915px) and (max-device-height: 915px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 66px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+}
+/* Surface Pro 7 */
+@media only screen and (min-device-width: 912px) and (max-device-width: 912px) and (min-device-height: 1368px) and (max-device-height: 1368px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 105px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 125px;
+    top: 55px;
+    left: 50px;
+    z-index: 3;
+    transform: rotate(26deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+    display: none;
+  }
+}
+/* Surface Duo*/
+@media only screen and (min-device-width: 540px) and (max-device-width: 540px) and (min-device-height: 720px) and (max-device-height: 720px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 86px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 75px;
+    top: 48px;
+    left: 40px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+}
+/* Asus Zenbook Fold Portrait (unfolded full tablet mode) */
+@media only screen and (min-device-width: 853px) and (max-device-width: 853px) and (min-device-height: 1280px) and (max-device-height: 1280px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 125px;
+    top: 55px;
+    left: 50px;
+    z-index: 3;
+    transform: rotate(26deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 105px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-upward::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 104px;
+    left: -23%;
+    z-index: 2;
+    transform: rotate(160deg);
+    margin-top: -10.5px;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+    display: none;
+  }
+}
+/* Samsung A51/A71 portrait viewport */
+@media only screen and (width: 412px) and (height: 914px) and (orientation: portrait) {
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 55px;
+    top: 46px;
+    left: 20px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 53px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    transform: rotate(160deg);
+    margin-top: -24px;
+  }
+}
+/* Nest Hub (landscape default) */
+@media only screen and (width: 1024px) and (height: 600px) and (orientation: landscape) {
+  /* Your Nest Hub styles */
+  body {
+    font-size: 16px;
+  }
 }
 /*-----------------css from File Folder List Modal------------*/
 /*-----------------css from File Folder List Modal------------*/
