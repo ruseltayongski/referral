@@ -137,16 +137,16 @@
     margin-top: -30px;
   }
 
-  .stepper-item-upward::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    width: 100%;
-    left: -45%;
-    z-index: 2;
-    transform: rotate(160deg);
-    margin-top: -10.5px;
-  }
+  // .stepper-item-upward::before {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #ccc;
+  //   width: 100%;
+  //   left: -45%;
+  //   z-index: 2;
+  //   transform: rotate(160deg);
+  //   margin-top: -10.5px;
+  // }
 
   .stepper-item-follow_new .step-counter-follow_new {
     z-index: 5;
@@ -450,17 +450,17 @@ a.btn.filecolorclose{
     margin-top: -0px;
     color: white;
   }
-  .panel-scoped-telemedicine .stepper-item-upward::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    // border-bottom: 2px solid #f10707;
-    width: 100%;
-    left: -45%;
-    z-index: 2;
-    transform: rotate(160deg);
-    margin-top: -5px;
-  }
+  // .panel-scoped-telemedicine .stepper-item-upward::before {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #ccc;
+  //   // border-bottom: 2px solid #f10707;
+  //   width: 100%;
+  //   left: -45%;
+  //   z-index: 2;
+  //   transform: rotate(160deg);
+  //   margin-top: -5px;
+  // }
 
   .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
     display: none;
@@ -621,17 +621,17 @@ a.btn.filecolorclose{
     transform: rotate(26deg);
     margin-top: -72px;
   }
-  .panel-scoped-telemedicine .stepper-item-upward::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    // border-bottom: 2px solid #f1da07;
-    width: 100%;
-    left: -45%;
-    z-index: 2;
-    transform: rotate(160deg);
-    margin-top: -8px;
-  }
+  // .panel-scoped-telemedicine .stepper-item-upward::before {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #ccc;
+  //   // border-bottom: 2px solid #f1da07;
+  //   width: 100%;
+  //   left: -45%;
+  //   z-index: 2;
+  //   transform: rotate(160deg);
+  //   margin-top: -8px;
+  // }
   .panel-scoped-telemedicine .stepper-item.completed::after {
     position: absolute;
     content: "";
@@ -662,6 +662,11 @@ a.btn.filecolorclose{
     left: 50px;
     z-index: 3;
     transform: rotate(26deg);
+  }
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 110px;
+    transform: rotate(160deg);
+    margin-top: -18px;
   }
 
    .panel-scoped-telemedicine .stepper-item.completed::after {
@@ -832,6 +837,11 @@ a.btn.filecolorclose{
         z-index: 3;
         color: white;
       }
+      // .panel-scoped-telemedicine .stepper-item-prescription::after {
+      //   transform: rotate(160deg);
+      //   margin-top: -25px;
+      //   display: hidden;
+      // }
   }
 
   /* iPhone 12 Pro */
@@ -931,7 +941,7 @@ a.btn.filecolorclose{
         content: "";
         border-bottom: 2px solid #4bb543;
         // border-bottom: 2px solid #eb0e0e;
-        width: 105px;
+        width: 109px;
         top: 20px;
         left: 50%;
         z-index: 3;
@@ -950,6 +960,11 @@ a.btn.filecolorclose{
       }
       .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
         display: none;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 110px;
+        transform: rotate(160deg);
+        margin-top: -18px;
       }
     }
 
@@ -1014,20 +1029,20 @@ a.btn.filecolorclose{
         z-index: 3;
         color: white;
       }
-      .panel-scoped-telemedicine .stepper-item-upward::before {
-        position: absolute;
-        content: "";
-        border-bottom: 2px solid #ccc;
-        width: 104px;
-        left: -23%;
-        z-index: 2;
-        transform: rotate(160deg);
-        margin-top: -10.5px;
-      }
+      // .panel-scoped-telemedicine .stepper-item-upward::before {
+      //   position: absolute;
+      //   content: "";
+      //   border-bottom: 2px solid #ccc;
+      //   width: 104px;
+      //   left: -23%;
+      //   z-index: 2;
+      //   transform: rotate(160deg);
+      //   margin-top: -10.5px;
+      // }
       .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 109px;
         transform: rotate(160deg);
         margin-top: -25px;
-        display: hidden;
       }
       .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
         display: none;
@@ -1072,9 +1087,42 @@ a.btn.filecolorclose{
       and (height: 600px) 
       and (orientation: landscape) {
 
-      /* Your Nest Hub styles */
-      body {
-        font-size: 16px;
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 104px;
+        top: 19px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      // .panel-scoped-telemedicine .stepper-item-upward::before
+      // {
+      //     position: absolute;
+      //     content: "";
+      //     border-bottom: 2px solid #ccc;
+      //     width: 145px;
+      //     left: -33%;
+      //     z-index: 2;
+      //     transform: rotate(160deg);
+      //     margin-top: -10.5px;
+      // }
+      .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 125px;
+        top: 58px;
+        left: 50px;
+        z-index: 3;
+        transform: rotate(26deg);
+      }
+      
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 109px;
+        transform: rotate(160deg);
+        margin-top: -23px;
       }
     }  
 /*-----------------css from File Folder List Modal------------*/
