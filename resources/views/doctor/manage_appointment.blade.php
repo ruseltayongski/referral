@@ -1717,7 +1717,7 @@
                 appointmentSlot.push(newSlot);
             
             }
-             console.log("total update slot", appointmentSlot);
+            //  console.log("total update slot", appointmentSlot);
             return true;
         }
 
