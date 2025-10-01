@@ -6,7 +6,7 @@ import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue";
 import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
-import OldFormReferral from "./OldFormReferral.vue";
+import FormReferralComponent from "./FormReferralComponent.vue";
 
 let baseUrlfeedback = `referral/doctor/vue/feedback`;
 let doctorFeedback = `referral/doctor/feedback`;
@@ -17,7 +17,7 @@ export default {
     LabRequestModal,
     FeedbackModal,
     PDFViewerModal,
-    OldFormReferral,
+    FormReferralComponent,
   },
   data() {
     return {
@@ -34,6 +34,7 @@ export default {
       isLeavingChannel: false,
       isUserJoined: false,
       telemedicine: null,
+      form_version: null,
       //feedback
       feedbackUrl: baseUrlfeedback,
       doctorfeedback: doctorFeedback,
@@ -110,6 +111,17 @@ export default {
       afkDialogVisible: false,
       afkCountdown: 10,
       afkCountdownInterval: null,
+      current_medication: null,
+
+      past_medical_history: null,
+      personal_and_social_history: null,
+      pertinent_laboratory: null,
+      review_of_system: null,
+      nutritional_status: null,
+      latest_vital_signs:null,
+      glasgocoma_scale:null,
+      obstetric_and_gynecologic_history: null,
+      pregnancy: null,
     };
   },
   mounted() {
@@ -134,28 +146,78 @@ export default {
       this.initDraggableDiv();
     });
     axios
-      .get(
-        `${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`
-      )
+      .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
       .then((res) => {
         const response = res.data;
-        this.telemedicine = response.form.telemedicine;
-        this.form = response.form;
-        if (response.age_type === "y")
-          this.patient_age = response.patient_age + " Years Old";
-        else if (response.age_type === "m")
-          this.patient_age = response.patient_age + " Months Old";
+        if (response.success) {
+          this.form_version = response.form_type;
+          // console.log("Form type:", this.form_version);
 
-        this.icd = response.icd;
-        // console.log("testing\n" + this.icd);
+          if (this.form_version === "version1") {
+            axios
+              .get(
+                `${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`
+              )
+              .then((res) => {
+                const response = res.data;
+                this.telemedicine = response.form.telemedicine;
+                this.form = response.form;
+                if (response.age_type === "y")
+                  this.patient_age = response.patient_age + " Years Old";
+                else if (response.age_type === "m")
+                  this.patient_age = response.patient_age + " Months Old";
 
-        this.file_path = response.file_path;
-        this.file_name = response.file_name;
+                this.icd = response.icd;
+                // console.log("testing\n" + this.icd);
 
-        // console.log(response);
+                this.file_path = response.file_path;
+                this.file_name = response.file_name;
+
+                // console.log(response);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else if (this.form_version === "version2") {
+            axios
+              .get(
+                `${this.baseUrl}/video/normal/newform/data/${this.tracking_id}`
+              )
+              .then((res) => {
+                const response = res.data;
+                this.telemedicine = response.form.telemedicine;
+                this.form = response.form;
+                this.current_medication = response.personal_and_social_history.current_medications;
+                this.past_medical_history = response.past_medical_history;
+                this.personal_and_social_history = response.personal_and_social_history;
+                this.pertinent_laboratory = response.pertinent_laboratory;
+                this.review_of_system = response.review_of_system;
+                this.nutritional_status = response.nutritional_status;
+                this.latest_vital_signs = response.latest_vital_signs;
+                this.glasgocoma_scale = response.glasgocoma_scale;
+                this.obstetric_and_gynecologic_history =  response.obstetric_and_gynecologic_history;
+                this.pregnancy = response.pregnancy;
+
+                if (response.age_type === "y")
+                  this.patient_age = response.patient_age + " Years Old";
+                else if (response.age_type === "m")
+                  this.patient_age = response.patient_age + " Months Old";
+
+                console.log("Form response:", response);
+                this.icd = response.icd;
+                // console.log("testing\n" + this.icd);
+
+                this.file_path = response.file_path;
+                this.file_name = response.file_name;
+              });
+          }
+        }
       })
       .catch((error) => {
-        // console.log(error);
+        console.error(
+          "Error fetching form type, defaulting to 'normal':",
+          error
+        );
       });
 
     //this.hideDivAfterTimeout();
@@ -1750,12 +1812,15 @@ export default {
               </div>
             </div>
             <div class="tableForm" v-if="telemedicine == 1">
-              <OldFormReferral
+               <FormReferralComponent
                 :initialForm="{ ...form }"
                 :file_path="file_path"
                 :icd="icd"
                 :patient_age="patient_age"
                 :file_name="file_name"
+                :form_version="form_version"
+                :current_medication="current_medication"
+                :telemedicine="telemedicine"
               />
               <div class="row g-0">
                 <div class="col-6">
@@ -1786,13 +1851,25 @@ export default {
                 </div>
               </div>
             </div>
-            <div class="tableForm" v-else>
-              <OldFormReferral
+            <div class="telemedForm" v-else>
+              <FormReferralComponent
                 :initialForm="{ ...form }"
                 :file_path="file_path"
                 :icd="icd"
                 :patient_age="patient_age"
                 :file_name="file_name"
+                :past_medical_history="{...past_medical_history}"
+                :pertinent_laboratory="{...pertinent_laboratory}"
+                :personal_and_social_history="{...personal_and_social_history}"
+                :review_of_system="{...review_of_system}"
+                :nutritional_status="{...nutritional_status}"
+                :latest_vital_signs="{...latest_vital_signs}"
+                :glasgocoma_scale="{...glasgocoma_scale}"
+                :obstetric_and_gynecologic_history="{...obstetric_and_gynecologic_history}"
+                :form_version="form_version"
+                :current_medication="current_medication"
+                :telemedicine="telemedicine"
+                :pregnancy="pregnancy || []"
               />
             </div>
           </div>
@@ -2186,7 +2263,7 @@ td {
 
   .localPlayerDiv {
     min-height: 100px !important;
-    min-width: 75px !important;
+    min-width: 70px !important;
     max-height: 20vh !important;
     max-width: 25vw !important;
     bottom: 60px !important;

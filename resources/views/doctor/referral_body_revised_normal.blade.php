@@ -11,7 +11,7 @@
         background-color: #FFFBDA; /* Light red background */
     }
 
-     .glasgow-dot {
+    .glasgow-dot {
         background-color: #494646;
         border-radius: 50%;
         display: inline-block;

@@ -20,19 +20,20 @@
     border-bottom: 2px solid #ccc;
     width: 100%;
     top: 20px;
-    left: -50%;
+    left: -65%;
     z-index: 2;
   }
 
-  /*.stepper-item::after {
+  .stepper-item::after {
     position: absolute;
     content: "";
     border-bottom: 2px solid #ccc;
+    // border-bottom: 2px solid #f00707;
     width: 100%;
     top: 20px;
     left: 50%;
     z-index: 2;
-  }*/
+  }
 
   .stepper-item .step-counter {
     position: relative;
@@ -83,13 +84,14 @@
     content: "";
     border-bottom: 2px solid #4bb543;
     width: 125px;
-    top: 44px;
+    top: 46px;
     left: 50px;
     z-index: 3;
     transform: rotate(26deg);
   }
 
   .stepper-item-prescription::after {
+    width: 125px;
     transform: rotate(160deg);
     margin-top: -28px;
   }
@@ -136,16 +138,16 @@
     margin-top: -30px;
   }
 
-  .stepper-item-upward::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    width: 100%;
-    left: -45%;
-    z-index: 2;
-    transform: rotate(160deg);
-    margin-top: -8px;
-  }
+  // .stepper-item-upward::before {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #ccc;
+  //   width: 100%;
+  //   left: -45%;
+  //   z-index: 2;
+  //   transform: rotate(160deg);
+  //   margin-top: -10.5px;
+  // }
 
   .stepper-item-follow_new .step-counter-follow_new {
     z-index: 5;
@@ -393,8 +395,7 @@ a.btn.filecolorclose{
   width: auto; 
 }
 
-/*-----------------For Ipad Mini Portrait------------*/
-@media only screen and (min-device-width: 768px) and (max-device-width: 768px) and (min-device-height: 1024px) and (max-device-height: 1024px) and (orientation: portrait) {
+@media (max-width: 768px) {
   .stepper-item-upward {
     width: 50px;
   }
@@ -402,133 +403,30 @@ a.btn.filecolorclose{
   .stepper-item {
     width: 45px;
   }
+  
 
   .stepper-item-prescription .step-name {
-    font-size: 8px;
+    font-size: 10px;
     text-align: center;
     width: 100px;
     margin-left: -10px;
   }
 
   .stepper-item .step-name {
-    font-size: 8px;
+    font-size: 10px;
     text-align: center;
     width: 55px;
     margin-left: -10px;
   }
 
   .stepper-item .step-name-treated_new {
-    font-size: 8px;
+    font-size: 10px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
   }
-
-  .panel-scoped-telemedicine .stepper-item-treated_new::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    /* border-bottom: 2px solid #f00707; */
-    width: 165px;
-    transform: rotate(55deg);
-    top: -60px;
-    left: -70px;
-  }
-
-  .panel-scoped-telemedicine .stepper-item.completed::after {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #4bb543;
-    width: 60px;
-    top: 20px;
-    left: 50%;
-    z-index: 3;
-    color: white;
-  }
-
-  .panel-scoped-telemedicine .stepper-item-referred.completed::after {
-    display: none;
-  }
-
-  .panel-scoped-telemedicine .stepper-item-treated_new.completed::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #4bb543;
-    /* border-bottom: 2px solid #b55443; */
-    width: 155px;
-    left: -60px;
-    z-index: 3;
-    transform: rotate(55deg);
-    margin-top: 10px;
-    color: white;
-  }
-
-  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
-    display: none;
-  }
-
-  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #4bb543;
-    /* border-bottom: 2px solid #b55443; */
-    width: 100px;
-    top: 45px;
-    left: 50px;
-    z-index: 3;
-    transform: rotate(26deg);
-  }
-
-  .panel-scoped-telemedicine .stepper-item-follow_new::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    /* border-bottom: 2px solid #b55443; */
-    width: 95px;
-    z-index: 2;
-    left: -72px;
-    transform: rotate(26deg);
-    margin-top: -74px;
-  }
-
-  .panel-scoped-telemedicine .stepper-item.completed::after {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #4bb543;
-    /* border-bottom: 2px solid #b55443; */
-    width: 95px;
-    top: 20px;
-    left: 50%;
-    z-index: 4;
-    color: white;
-  }
-}
-
-@media (max-width: 768px) {
- .stepper-item-upward {
-    width: 50px;
-  }
-
-  .stepper-item {
-    width: 45px;
-  }
-
-  .stepper-item-prescription .step-name {
-    font-size: 8px;
-    text-align: center;
-    width: 100px;
-    margin-left: -10px;
-  }
-
-  .stepper-item .step-name {
-    font-size: 8px;
-    text-align: center;
-    width: 55px;
-    margin-left: -10px;
-  }
-
-  .stepper-item .step-name-treated_new {
-    font-size: 8px;
+  .stepper-item-upward .step-name {
+    font-size: 10px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
@@ -560,6 +458,161 @@ a.btn.filecolorclose{
     margin-top: -0px;
     color: white;
   }
+  // .panel-scoped-telemedicine .stepper-item-upward::before {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #ccc;
+  //   // border-bottom: 2px solid #f10707;
+  //   width: 100%;
+  //   left: -45%;
+  //   z-index: 2;
+  //   transform: rotate(160deg);
+  //   margin-top: -5px;
+  // }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+    display: none;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    // border-bottom: 2px solid #b55443;
+    width: 55px;
+    top: 50px;
+    left: 20px;
+    z-index: 3;
+    transform: rotate(30deg);
+  }
+  
+  .panel-scoped-telemedicine .stepper-item-follow_new::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 93px;
+    z-index: 2;
+    left: -50px;
+    transform: rotate(30deg);
+    margin-top: -73px;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 137px;
+    transform: rotate(65deg);
+    top: -55px;
+    left: -30px;
+  }
+
+  .position-blue {
+    font-size: 8px;
+  }
+
+  #closeModalId {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 50px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
+  }
+}
+
+.popover {
+  width: 230px;
+}
+
+/*-----------------For Ipad Mini Portrait------------*/
+@media only screen and (min-device-width: 768px) and (max-device-width: 768px) and (min-device-height: 1024px) and (max-device-height: 1024px) and (orientation: portrait) {
+  .stepper-item-upward {
+    width: 50px;
+  }
+
+  .stepper-item {
+    width: 45px;
+  }
+
+  .stepper-item-prescription .step-name {
+    font-size: 10px;
+    text-align: center;
+    width: 100px;
+    margin-left: -10px;
+  }
+
+  .step-counter .step-name {
+    font-size: 10px;
+    text-align: center;
+    width: 55px;
+    margin-left: -10px;
+  }
+  .stepper-item .step-name {
+    font-size: 10px;
+    text-align: center;
+    width: 55px;
+    margin-left: -10px;
+  }
+
+  .stepper-item .step-name-treated_new {
+    font-size: 8px;
+    text-align: center;
+    width: 60px;
+    margin-left: -10px;
+  }
+  
+   .panel-scoped-telemedicine .stepper-item::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 22px;
+    left: -65%;
+    z-index: 2;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #ccc;
+    /* border-bottom: 2px solid #f00707; */
+    width: 165px;
+    transform: rotate(55deg);
+    top: -60px;
+    left: -70px;
+  }
+
+  // .panel-scoped-telemedicine .stepper-item.completed::after {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #4bb543;
+  //   width: 60px;
+  //   top: 20px;
+  //   left: 50%;
+  //   z-index: 3;
+  //   color: white;
+  // }
+
+  .panel-scoped-telemedicine .stepper-item-referred.completed::after {
+    display: none;
+  }
+
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    /* border-bottom: 2px solid #b55443; */
+    width: 155px;
+    left: -60px;
+    z-index: 3;
+    transform: rotate(55deg);
+    margin-top: 10px;
+    color: white;
+  }
 
   .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
     display: none;
@@ -570,9 +623,9 @@ a.btn.filecolorclose{
     content: "";
     border-bottom: 2px solid #4bb543;
     /* border-bottom: 2px solid #b55443; */
-    width: 55px;
-    top: 45px;
-    left: 20px;
+    width: 100px;
+    top: 48px;
+    left: 50px;
     z-index: 3;
     transform: rotate(26deg);
   }
@@ -581,37 +634,557 @@ a.btn.filecolorclose{
     position: absolute;
     content: "";
     border-bottom: 2px solid #ccc;
+    // border-bottom: 2px solid #b5aa43;
     width: 95px;
     z-index: 2;
-    left: -50px;
+    left: -72px;
     transform: rotate(26deg);
-    margin-top: -74px;
+    margin-top: -72px;
   }
-
-  .panel-scoped-telemedicine .stepper-item-treated_new::before {
+  // .panel-scoped-telemedicine .stepper-item-upward::before {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #ccc;
+  //   // border-bottom: 2px solid #f1da07;
+  //   width: 100%;
+  //   left: -45%;
+  //   z-index: 2;
+  //   transform: rotate(160deg);
+  //   margin-top: -8px;
+  // }
+  .panel-scoped-telemedicine .stepper-item.completed::after {
     position: absolute;
     content: "";
-    border-bottom: 2px solid #ccc;
-    width: 137px;
-    transform: rotate(65deg);
-    top: -60px;
-    left: -30px;
+    border-bottom: 2px solid #4bb543;
+    // border-bottom: 2px solid #b55443;
+    width: 95px;
+    top: 22px;
+    left: 50%;
+    z-index: 4;
+    color: white;
   }
-
-  .position-blue {
-    font-size: 10px;
-  }
-
-  #closeModalId {
-    display: block;
-    width: 100%;
-    margin-top: 10px;
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 100px;
+    transform: rotate(160deg);
+    margin-top: -25px;
+    display: hidden;
   }
 }
-.popover {
-  width: 230px;
+/* iPad Air - Portrait (820x1180) */
+@media only screen 
+  and (min-device-width: 820px) 
+  and (max-device-width: 820px) 
+  and (min-device-height: 1180px) 
+  and (max-device-height: 1180px) 
+  and (orientation: portrait) {
+  
+  .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    // border-bottom: 2px solid #b55443;
+    width: 100px;
+    top: 50px;
+    left: 50px;
+    z-index: 3;
+    transform: rotate(26deg);
+  }
+  .panel-scoped-telemedicine .stepper-item-prescription::after {
+    width: 110px;
+    transform: rotate(160deg);
+    margin-top: -18px;
+  }
+
+   .panel-scoped-telemedicine .stepper-item.completed::after {
+    position: absolute;
+    content: "";
+    border-bottom: 2px solid #4bb543;
+    width: 109px;
+    top: 20px;
+    left: 50%;
+    z-index: 3;
+    color: white;
+  }
+  .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+    display: none;
+  }
+
 }
 
+  /* iPad Pro 12.9" - Portrait (1024 x 1366) */
+  @media only screen 
+    and (min-device-width: 1024px) 
+    and (max-device-width: 1024px) 
+    and (min-device-height: 1366px) 
+    and (max-device-height: 1366px) 
+    and (orientation: portrait) {
+    .stepper-item-upward {
+      width: 50px;
+    }
+    .panel-scoped-telemedicine .stepper-item-treated_new::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #ccc;
+      /* border-bottom: 2px solid #f00707; */
+      width: 165px;
+      transform: rotate(55deg);
+      top: -60px;
+      left: -70px;
+    }
+    .panel-scoped-telemedicine .stepper-item-follow_new::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #ccc;
+      // border-bottom: 2px solid #b5aa43;
+      width: 95px;
+      z-index: 2;
+      left: -72px;
+      transform: rotate(26deg);
+      margin-top: -72px;
+    }
+    .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      width: 110px;
+      top: 57px;
+      left: 50px;
+      z-index: 3;
+      transform: rotate(26deg);
+    }
+    .panel-scoped-telemedicine .stepper-item.completed::after {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      width: 105px;
+      top: 20px;
+      left: 50%;
+      z-index: 3;
+      color: white;
+    }
+    
+    .panel-scoped-telemedicine .stepper-item-treated_new.completed::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      width: 185px; //changes from 145
+      z-index: 3;
+      transform: rotate(55deg); //changes from 30
+      margin-top: 20px; // changes from -5
+      color:white; 
+    }
+    .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+      display: none;
+    }
+  }
+  /* Samsung Galaxy S20 Ultra */
+  @media only screen 
+    and (min-device-width: 412px) 
+    and (max-device-width: 412px) 
+    and (min-device-height: 915px) 
+    and (max-device-height: 915px) 
+    and (orientation: portrait) {
+      
+    .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      // border-bottom: 2px solid #b55443;
+      width: 55px;
+      top: 47px;
+      left: 20px;
+      z-index: 3;
+      transform: rotate(30deg);
+    }
+
+  }
+
+  /* iPhone XR */
+  @media only screen 
+    and (min-device-width: 414px) 
+    and (max-device-width: 414px) 
+    and (min-device-height: 896px) 
+    and (max-device-height: 896px) 
+    and (orientation: portrait) {
+
+    .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      // border-bottom: 2px solid #b55443;
+      width: 55px;
+      top: 45px;
+      left: 20px;
+      z-index: 3;
+      transform: rotate(30deg);
+    }
+
+    .panel-scoped-telemedicine .stepper-item.completed::after {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      // border-bottom: 2px solid #b55443;
+      width: 60px;
+      top: 20px;
+      left: 50%;
+      z-index: 3;
+      color: white;
+    }
+    .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 45px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+    }
+  }
+
+  /* iPhone SE */
+  @media only screen 
+    and (min-device-width: 375px) 
+    and (max-device-width: 375px) 
+    and (min-device-height: 667px) 
+    and (max-device-height: 667px) 
+    and (orientation: portrait) {
+
+    .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      // border-bottom: 2px solid #b55443;
+      width: 55px;
+      top: 49px;
+      left: 20px;
+      z-index: 3;
+      transform: rotate(30deg);
+    }
+
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        // border-bottom: 2px solid #b55443;
+        width: 64px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 50px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+      }
+  }
+
+  /* iPhone 12 Pro */
+  @media only screen 
+    and (min-device-width: 390px) 
+    and (max-device-width: 390px) 
+    and (min-device-height: 844px) 
+    and (max-device-height: 844px) 
+    and (orientation: portrait) {
+
+    .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+      position: absolute;
+      content: "";
+      border-bottom: 2px solid #4bb543;
+      // border-bottom: 2px solid #b55443;
+      width: 55px;
+      top: 49px;
+      left: 20px;
+      z-index: 3;
+      transform: rotate(30deg);
+    }
+
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 45px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 45px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+      }
+  
+  }
+
+    /* iPhone 14 Pro Max */
+    @media only screen 
+      and (min-device-width: 430px) 
+      and (max-device-width: 430px) 
+      and (min-device-height: 932px) 
+      and (max-device-height: 932px) 
+      and (orientation: portrait) {
+      .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        // border-bottom: 2px solid #b55443;
+        width: 55px;
+        top: 45px;
+        left: 20px;
+        z-index: 3;
+        transform: rotate(30deg);
+      }
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        // border-bottom: 2px solid #b55443;
+        width: 68px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 50px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+      }
+    }
+
+    /* Google Pixel 7 */
+    @media only screen 
+      and (min-device-width: 412px) 
+      and (max-device-width: 412px) 
+      and (min-device-height: 915px) 
+      and (max-device-height: 915px) 
+      and (orientation: portrait) {
+
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 50px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 50px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+      }
+    }
+
+    /* Surface Pro 7 */
+    @media only screen 
+      and (min-device-width: 912px) 
+      and (max-device-width: 912px) 
+      and (min-device-height: 1368px) 
+      and (max-device-height: 1368px) 
+      and (orientation: portrait) {
+
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        // border-bottom: 2px solid #eb0e0e;
+        width: 109px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        // border-bottom: 2px solid #f0140c;
+        width: 125px;
+        top: 55px;
+        left: 50px;
+        z-index: 3;
+        transform: rotate(26deg);
+      }
+      .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+        display: none;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 110px;
+        transform: rotate(160deg);
+        margin-top: -18px;
+      }
+    }
+
+    /* Surface Duo*/
+    @media only screen 
+      and (min-device-width: 540px) 
+      and (max-device-width: 540px) 
+      and (min-device-height: 720px) 
+      and (max-device-height: 720px) 
+      and (orientation: portrait) {
+
+        
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 86px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+
+        .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 75px;
+        top: 48px;
+        left: 40px;
+        z-index: 3;
+        transform: rotate(30deg);
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 60px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+        display: hidden;
+      }
+    }
+
+    /* Asus Zenbook Fold Portrait (unfolded full tablet mode) */
+    @media only screen 
+      and (min-device-width: 853px) 
+      and (max-device-width: 853px) 
+      and (min-device-height: 1280px) 
+      and (max-device-height: 1280px) 
+      and (orientation: portrait) {
+
+      .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        // border-bottom: 2px solid #ee0707;
+        width: 125px;
+        top: 55px;
+        left: 50px;
+        z-index: 3;
+        transform: rotate(26deg);
+      }
+
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 105px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      // .panel-scoped-telemedicine .stepper-item-upward::before {
+      //   position: absolute;
+      //   content: "";
+      //   border-bottom: 2px solid #ccc;
+      //   width: 104px;
+      //   left: -23%;
+      //   z-index: 2;
+      //   transform: rotate(160deg);
+      //   margin-top: -10.5px;
+      // }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 109px;
+        transform: rotate(160deg);
+        margin-top: -25px;
+      }
+      .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+        display: none;
+      }
+    }
+    /* Samsung A51/A71 portrait viewport */
+    @media only screen 
+      and (width: 412px) 
+      and (height: 914px) 
+      and (orientation: portrait) {
+
+      .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        // border-bottom: 2px solid #b55443;
+        width: 55px;
+        top: 46px;
+        left: 20px;
+        z-index: 3;
+        transform: rotate(30deg);
+      }
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 53px;
+        top: 20px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        transform: rotate(160deg);
+        margin-top: -24px;
+      }
+    }
+    /* Nest Hub (landscape default) */
+    @media only screen 
+      and (width: 1024px) 
+      and (height: 600px) 
+      and (orientation: landscape) {
+
+      .panel-scoped-telemedicine .stepper-item.completed::after {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 104px;
+        top: 19px;
+        left: 50%;
+        z-index: 3;
+        color: white;
+      }
+      // .panel-scoped-telemedicine .stepper-item-upward::before
+      // {
+      //     position: absolute;
+      //     content: "";
+      //     border-bottom: 2px solid #ccc;
+      //     width: 145px;
+      //     left: -33%;
+      //     z-index: 2;
+      //     transform: rotate(160deg);
+      //     margin-top: -10.5px;
+      // }
+      .panel-scoped-telemedicine .stepper-item-prescription.completed::before {
+        position: absolute;
+        content: "";
+        border-bottom: 2px solid #4bb543;
+        width: 125px;
+        top: 58px;
+        left: 50px;
+        z-index: 3;
+        transform: rotate(26deg);
+      }
+      .panel-scoped-telemedicine .stepper-item-treated_new.completed::after {
+        display: none;
+      }
+      .panel-scoped-telemedicine .stepper-item-prescription::after {
+        width: 109px;
+        transform: rotate(160deg);
+        margin-top: -23px;
+      }
+    }  
 /*-----------------css from File Folder List Modal------------*/
 
 /*-----------------css from File Folder List Modal------------*/

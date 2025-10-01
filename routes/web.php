@@ -748,3 +748,6 @@ Route::get('ckd-referral/{id}', 'CKDController@referFromCKD');
 Route::get('/export/consultation-report', 'doctor\TelemedicineCtrl@exportConsultationReport')->name('export.consultation.report');
 Route::get('opcen/get-patient-code/{id}', 'CKDController@getPatientCode');
 Route::get('ckd-referral/get-patient-code/{id}', 'CKDController@getPatientCode');
+Route::get('video/normal/newform/{id}', 'doctor\NewFormCtrl@checkFormVersion');
+Route::get('video/normal/newform/data/{id}', 'doctor\NewFormCtrl@normalFormTelemedNewForm');
+Route::get('video/pregnant/newform/data/{id}', 'doctor\NewFormCtrl@pregnantFormTelemedNewForm');

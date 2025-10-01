@@ -6,7 +6,7 @@ import PrescriptionModal from "./PrescriptionModal.vue";
 import LabRequestModal from "./LabRequestModal.vue"; // I add this
 import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
-import OldFormReferralPregnant from "./OldFormReferralPregnant.vue";
+import FormReferralPregnantComponent from "./FormReferralPregnantComponent.vue";
 export default {
   name: "RecoApp",
   components: {
@@ -14,7 +14,7 @@ export default {
     LabRequestModal,
     PDFViewerModal,
     FeedbackModal,
-    OldFormReferralPregnant,
+    FormReferralPregnantComponent,
   },
   data() {
     return {
@@ -108,6 +108,16 @@ export default {
       feedbackUrl: "",
       baseUrlFeed: "",
       doctorfeedback: "",
+      past_medical_history: null,
+      personal_and_social_history: null,
+      review_of_system: null,
+      nutritional_status: null,
+      current_medication: null,
+      pertinent_laboratory: null,
+      latest_vital_signs: null,
+      glasgocoma_scale: null,
+      obstetric_and_gynecologic_history: null,
+      pregnancy: null,
       // netSpeedMbps: null,
       // netSpeedStatus: '', // 'fast' or 'slow'
     };
@@ -138,33 +148,91 @@ export default {
       this.initDraggableDiv();
     });
     axios
-      .get(
-        `${this.baseUrl}/doctor/referral/video/pregnant/form/${this.tracking_id}`
-      )
+      .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
       .then((res) => {
         const response = res.data;
-        // console.log("testing");
-        // console.log(response);
-        this.form = response.form["pregnant"];
-        this.formBaby = response.form["baby"];
-        this.telemedicine = response.form["pregnant"].telemedicine
+        if (response.success) {
+          this.form_version = response.form_type;
+          console.log("Form version:", this.form_version);
 
-        if (response.age_type === "y")
-          this.patient_age = response.patient_age + " Years Old";
-        else if (response.age_type === "m")
-          this.patient_age = response.patient_age + " Months Old";
+          if (this.form_version === "version1") {
+            axios
+              .get(
+                `${this.baseUrl}/doctor/referral/video/pregnant/form/${this.tracking_id}`
+              )
+              .then((res) => {
+                const response = res.data;
+                console.log("Form response:", response);
+                console.log("Form response:", response);
+                // console.log("testing");
+                // console.log(response);
+                this.form = response.form["pregnant"];
+                this.formBaby = response.form["baby"];
+                this.telemedicine = response.form["pregnant"].telemedicine;
 
-        this.icd = response.icd;
-        // console.log("testing\n" + this.icd);
+                if (response.age_type === "y")
+                  this.patient_age = response.patient_age + " Years Old";
+                else if (response.age_type === "m")
+                  this.patient_age = response.patient_age + " Months Old";
 
-        this.file_path = response.file_path;
-        this.file_name = response.file_name;
-        this.reason = response.reason;
+                this.icd = response.icd;
+                // console.log("testing\n" + this.icd);
 
-        // console.log(response);
+                this.file_path = response.file_path;
+                this.file_name = response.file_name;
+                this.reason = response.reason;
+
+                // console.log(response);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          } else if (this.form_version === "version2") {
+            axios
+              .get(
+                `${this.baseUrl}/video/pregnant/newform/data/${this.tracking_id}`
+              )
+              .then((res) => {
+                const response = res.data;
+                this.form = response.form["pregnant"];
+                this.formBaby = response.form["baby"];
+                this.telemedicine = response.form["pregnant"].telemedicine;
+                this.past_medical_history = response.past_medical_history;
+                this.personal_and_social_history =
+                  response.personal_and_social_history;
+                this.review_of_system = response.review_of_system;
+                this.nutritional_status = response.nutritional_status;
+                this.current_medication =
+                  response.personal_and_social_history.current_medications;
+                this.latest_vital_signs = response.latest_vital_signs;
+                this.pertinent_laboratory = response.pertinent_laboratory;
+                this.glasgocoma_scale = response.glasgocoma_scale;
+                this.obstetric_and_gynecologic_history =
+                  response.obstetric_and_gynecologic_history;
+                this.pregnancy = response.pregnancy;
+
+                if (response.age_type === "y")
+                  this.patient_age = response.patient_age + " Years Old";
+                else if (response.age_type === "m")
+                  this.patient_age = response.patient_age + " Months Old";
+
+                this.icd = response.icd;
+                // console.log("testing\n" + this.icd);
+
+                this.file_path = response.file_path;
+                this.file_name = response.file_name;
+                this.reason = response.reason;
+
+                console.log("Form response:", response);
+              });
+          }
+        }
       })
       .catch((error) => {
-        console.log(error);
+        console.error(
+          "Error fetching form type, defaulting to 'normal':",
+          error
+        );
       });
 
     //this.hideDivAfterTimeout();
@@ -1555,7 +1623,7 @@ export default {
               </div>
               <div class="button-container" v-if="isMobile">
                 <div
-                  v-if="!isMobile && showCameraSwitch"
+                  v-if="isMobile && showCameraSwitch"
                   class="tooltip-text"
                   style="background-color: #218838"
                 >
@@ -1715,13 +1783,28 @@ export default {
             </div>
 
             <div class="tableForm">
-              <OldFormReferralPregnant
+              <FormReferralPregnantComponent
                 :initialForm="{ ...form }"
                 :initialFormBaby="{ ...formBaby }"
+                :past_medical_history="{ ...past_medical_history }"
+                :personal_and_social_history="{
+                  ...personal_and_social_history,
+                }"
+                :review_of_system="{ ...review_of_system }"
+                :nutritional_status="{ ...nutritional_status }"
+                :pertinent_laboratory="{ ...pertinent_laboratory }"
+                :latest_vital_signs="{ ...latest_vital_signs }"
+                :glasgocoma_scale="{ ...glasgocoma_scale }"
+                :obstetric_and_gynecologic_history="{
+                  ...obstetric_and_gynecologic_history,
+                }"
                 :file_path="file_path"
                 :icd="icd"
-                :patient_age="patient_age"
                 :file_name="file_name"
+                :form_version="form_version"
+                :current_medication="current_medication"
+                :patient_age="patient_age"
+                :pregnancy="pregnancy || []"
               />
 
               <div class="row g-0" v-if="this.telemedicine == 1">
@@ -1784,7 +1867,6 @@ export default {
 
 <style scoped>
 @import "./css/index.css";
-
 td {
   padding: 5px;
 }
@@ -1837,19 +1919,24 @@ td {
   .main-container {
     flex-direction: column;
   }
+  .fullscreen-div {
+    overflow: auto;
+    position: relative;
+  }
 
   .video-container,
   .form-container {
     width: 100%;
     flex: none;
+    overflow: hidden;
   }
 
   .video-container {
-    height: 50%;
+    height: 60%;
   }
 
   .form-container {
-    height: 50%;
+    height: 40%;
   }
 }
 
@@ -1952,6 +2039,50 @@ td {
   top: 20px;
   left: 20px;
   z-index: 10;
+}
+
+.net-speed-indicator {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 10000;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 1rem;
+  background: rgba(15, 15, 15, 0.103);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+}
+.net-speed-indicator.fast {
+  border: 2px solid #4caf50;
+  color: #4caf50;
+}
+.net-speed-indicator.slow {
+  border: 2px solid #e53935;
+  color: #e53935;
+}
+
+/* AFK Dialog Styles */
+.afk-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.afk-dialog {
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);
 }
 
 @media screen and (max-width: 768px) {
@@ -2060,7 +2191,7 @@ td {
   .localPlayerLayer {
     height: 120px !important;
     width: 90px !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
 
   .localPlayerDiv {
@@ -2075,7 +2206,7 @@ td {
   .localPlayerDiv img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
 }
 
@@ -2083,12 +2214,12 @@ td {
   .localPlayerLayer {
     height: 100px !important;
     width: 75px !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
 
   .localPlayerDiv {
     min-height: 100px !important;
-    min-width: 75px !important;
+    min-width: 70px !important;
     max-height: 20vh !important;
     max-width: 25vw !important;
     bottom: 60px !important;
@@ -2100,7 +2231,7 @@ td {
   .localPlayerDiv img {
     width: 100% !important;
     height: 100% !important;
-    object-fit: cover !important;
+    object-fit: scale-down !important;
   }
 }
 </style>
