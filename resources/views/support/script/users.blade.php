@@ -145,7 +145,7 @@ $(document).ready(function () {
             subOpdSection.show();
         }else{
             subOpdSection.hide();
-            subOpdSelect.val('');
+            // subOpdSelect.val('');
         }
     }
 
@@ -171,7 +171,6 @@ $('.update_info').on('click',function(){
         success: function(data)
         {
             user_info = data;
-            console.log("user_info", data);
             updateProfile();
         },
         error: function(){
@@ -192,7 +191,6 @@ $('#edit_other_department_select').on('change', function () {
 });
 
 function updateProfile() {
-    console.log("user_info::", user_info.subopd_id);
     $('.user_id').val(user_id);
     $('.fname').val(user_info.fname);
     $('.mname').val(user_info.mname);

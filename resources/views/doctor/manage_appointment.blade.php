@@ -884,7 +884,7 @@
 
 
             const configCheckbox = document.getElementById('enable_config_appointment');
-                
+            
             const elementsToToggle = [
                 { element: document.getElementById('appointment_date_label'), showOnCheck: false },
                 { element: document.getElementById('appointment_date'), showOnCheck: false },
@@ -896,7 +896,8 @@
 
             configCheckbox.addEventListener('change', function () {
                 const isChecked = this.checked;
-                
+
+                console.log("isChecked", isChecked);
                 if(isChecked){
 
                     $("#additionalTimeContainer").empty();
@@ -915,7 +916,7 @@
                     $("#week_time_slot").css("display", "none");
                     $('#Addappointment').prop('disabled', true);
                 }
-                // Toggle visibility for each element based on checkbox state
+                //Toggle visibility for each element based on checkbox state
                 elementsToToggle.forEach(({ element, showOnCheck }) => {
                     element.style.display = isChecked === showOnCheck ? 'inline' : 'none';
                 });
@@ -1139,7 +1140,7 @@
               if(data && data.length > 0){
 
                 data.forEach(function(appointment){
-
+                
                     let currentDate = new Date().toISOString().split('T')[0];
                     let available_doctor = appointment.telemed_assigned_doctor[0]?.appointment_id;
                     let appointedDate = appointment.appointed_date;
@@ -1150,8 +1151,8 @@
                     let day = date.getDate();
                     let year = date.getFullYear();
                     let formattedDate = `${month} ${day}, ${year}`;
-                  
-                    if(available_doctor && !alertshown){
+                   console.log("available_doctor", available_doctor, "appointment.id", appointment.id);
+                    if(available_doctor == appointment.id && !alertshown){
                         alertshown = true;
                         showdeletModal = false;
                         Lobibox.alert("warning",
@@ -1591,59 +1592,57 @@
 
                 // console.log("it is work");
             });
-
-            timeInputGroup.find('.delete-time-input').on('click', function () {
-                UpdatedeleteCount++;
-                timeInputGroup.remove(); 
-                updateAddSlotButtonState();
-            });
           
             if(appointment){
                 // console.log('timeInputGroup', timeInputGroup.length);
                 timeInputGroup.find('.delete-time-input').on('click', function () {
-                // console.log('my appointment delete', appointment);
-                var appoint_id = appointment.id;
-                var url = "{{ route('delete-timeSlot', ':id') }}";
-                url = url.replace(':id', appoint_id);
-                let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
-        
-                if(doctorAssigned){
-                    Lobibox.alert("error",
-                    {
-                        msg: "You cannot delete this appointment. It has already been scheduled by the assigned doctor!"
-                    });
+                    var appoint_id = appointment.id;
+                    var url = "{{ route('delete-timeSlot', ':id') }}";
+                    url = url.replace(':id', appoint_id);
+                    let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
+            
+                    if(doctorAssigned){
+                        Lobibox.alert("error",
+                        {
+                            msg: "You cannot delete this appointment. It has already been scheduled by the assigned doctor!"
+                        });
 
-                }else{
-                    Lobibox.confirm({
-                        msg: "Are you sure you want to delete this time slot?",
-                        callback: function ($this, type, ev) {
-                            if(type == 'yes') {
-                                    $.ajax({
-                                    url: url,
-                                    type: 'DELETE',
-                                    data: {
-                                        _token: $('meta[name="csrf-token"]').attr('content'), 
-                                        id: appoint_id
-                                    },
-                                    success: function(message,appointedSlot){
-                                        Lobibox.alert("success",
-                                        {
-                                            msg: "Time Slot Successfuly deleted!"
-                                        });
-                                        timeInputGroup.remove();
-                                    },
-                                    error: function(error) {
-                                        alert('Error deleting appointment', error);
-                                    }
-                                });
+                    }else{
+                        Lobibox.confirm({
+                            msg: "Are you sure you want to delete this time slot?",
+                            callback: function ($this, type, ev) {
+                                if(type == 'yes') {
+                                        $.ajax({
+                                        url: url,
+                                        type: 'DELETE',
+                                        data: {
+                                            _token: $('meta[name="csrf-token"]').attr('content'), 
+                                            id: appoint_id
+                                        },
+                                        success: function(message,appointedSlot){
+                                            Lobibox.alert("success",
+                                            {
+                                                msg: "Time Slot Successfuly deleted!"
+                                            });
+
+                                            UpdatedeleteCount++;
+                                            timeInputGroup.remove();
+                                            updateAddSlotButtonState();
+                                        },
+                                        error: function(error) {
+                                            alert('Error deleting appointment', error);
+                                        }
+                                    });
+                                }
                             }
-                        }
-                    });
-                }
-            });
+                        });
+                    }
+                });
             }else{
                 timeInputGroup.find('.delete-time-input').on('click', function () {
-                    timeInputGroup.remove();
+                    UpdatedeleteCount++;
+                    timeInputGroup.remove(); 
+                    updateAddSlotButtonState();
                 });
             }
 
@@ -1660,9 +1659,9 @@
         //-----------------------for update fix
  
         let appointmentSlot = [];
-    
+        
         function checkConflict(slotIndex, fromTime, toTime) {
-
+            console.log("Checking conflict for slotIndex:", slotIndex, "fromTime:", fromTime, "toTime:", toTime);
             for (let i = 0; i < appointmentSlot.length; i++) {
                 if (i === slotIndex) continue; // Skip checking against itself for updates
 
@@ -1709,7 +1708,7 @@
                 from: fromTime,
                 to: toTime,
             };
-            
+         
             if (OrigslotIndex < appointmentSlot.length) {
                 // Update existing slot
                 appointmentSlot[OrigslotIndex] = newSlot;
@@ -1718,7 +1717,7 @@
                 appointmentSlot.push(newSlot);
             
             }
-            // console.log("total update slot", appointmentSlot);
+             console.log("total update slot", appointmentSlot);
             return true;
         }
 

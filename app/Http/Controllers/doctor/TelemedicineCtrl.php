@@ -697,13 +697,13 @@ class TelemedicineCtrl extends Controller
 
     }
 
-    public function deleteAppointmentSched(Request $request){
+    public function deleteAppointmentSched(Request $request) {
         $facility_id = Session::get('auth')->facility_id;
         $user = Session::get('auth');
-        $appointed_date = AppointmentSchedule::where('id', $request->id)
-        ->pluck('appointed_date')
-        ->first();
-        $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)->
+        // $appointed_date = AppointmentSchedule::where('id', $request->id)
+        // ->pluck('appointed_date')
+        // ->first();
+        $appointment = AppointmentSchedule::where('id', $request->id)->
             with([
                 'createdBy' => function ($query) {
                     $query->select(

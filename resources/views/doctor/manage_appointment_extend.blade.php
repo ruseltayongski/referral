@@ -77,7 +77,7 @@
 
                                 <div class="col-md-8" style="display: none;" id="please_select_categ">
                                     <!-- <div class="text-center" style="display: flex; justify-content: center; align-items: center;"> -->
-                                        <div class="panel panel-default" style="padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+                                        <div class="panel panel-default"  style="padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                                             <div class="panel-body">
                                                 <label class="text-center text-warning" style="margin-top: 10px; font-size: 14px;">
                                                     Select a default schedule to proceed with the appointment setup.

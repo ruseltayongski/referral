@@ -347,7 +347,7 @@
     @if(count($activities) > 0)
     <?php $first = 0;
     $latest_act = \App\Activity::where('code', $row->code)->latest('created_at')->first();
-    $referred_act = \App\Activity::select('referred_from')->where('code', $row->code)->where('status', 'referred')->latest('created_at')->first();
+    // $referred_act = \App\Activity::select('referred_from')->where('code', $row->code)->where('status', 'referred')->latest('created_at')->first();
 
     ?>
     <div class="row">
@@ -393,17 +393,17 @@
                             <span class="remarks">Remarks: {{ $act->remarks }}</span>
                             <br />
                            
-                            {{-- @if($user->facility_id==$act->referred_from || $act->referred_from && $latest_act->status=='rejected')
+                            @if($user->facility_id==$act->referred_from && $latest_act->status=='rejected')
+                            <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
+                                <i class="fa fa-ambulance"></i> Redirect to other facility<br>
+                            </button>
+                            @endif 
+
+                            {{-- @if($user->facility_id==$referred_act->referred_from && $latest_act->status=='rejected')
                             <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
                                 <i class="fa fa-ambulance"></i> Redirect to other facility<br>
                             </button>
                             @endif --}}
-
-                            @if($user->facility_id==$referred_act->referred_from && $latest_act->status=='rejected')
-                            <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $act->code }}">
-                                <i class="fa fa-ambulance"></i> Redirect to other facility<br>
-                            </button>
-                            @endif
                         </td>
                     </tr>
                     @elseif($act->status=='referred' || $act->status=='redirected')
