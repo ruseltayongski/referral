@@ -1,3 +1,11 @@
+.panel-scoped-telemedicine {
+  /* Remove line for first step */
+  /* Remove line for last step */
+  /* Completed state */
+  /* Active state */
+  /* default completed step connector */
+  /* special rule for Discharged step (always green when completed) */
+}
 .panel-scoped-telemedicine .stepper-wrapper {
   font-family: Arial;
   margin-top: 20px;
@@ -13,13 +21,28 @@
   flex: 1;
 }
 .panel-scoped-telemedicine .stepper-item::before {
-  position: absolute;
-  content: "";
-  border-bottom: 2px solid #ccc;
-  width: 100%;
-  top: 20px;
-  left: -65%;
-  z-index: 2;
+  left: -50%;
+}
+.panel-scoped-telemedicine .stepper-item:first-child::before,
+.panel-scoped-telemedicine .stepper-item:first-child.completed::before {
+  content: none !important;
+  border: none !important;
+}
+.panel-scoped-telemedicine .stepper-item:last-child::after,
+.panel-scoped-telemedicine .stepper-item:last-child.completed::after {
+  content: none !important;
+  border: none !important;
+}
+.panel-scoped-telemedicine .stepper-item.completed .step-counter {
+  background-color: #4bb543;
+  color: white;
+}
+.panel-scoped-telemedicine .stepper-item.completed::after {
+  border-bottom: 2px solid #4bb543;
+}
+.panel-scoped-telemedicine .stepper-item.active .step-counter {
+  background-color: #007bff;
+  color: white;
 }
 .panel-scoped-telemedicine .stepper-item::after {
   position: absolute;
@@ -31,16 +54,37 @@
   z-index: 2;
 }
 .panel-scoped-telemedicine .stepper-item .step-counter {
-  position: relative;
-  z-index: 5;
+  font-size: 12pt;
+  font-weight: bold;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background: #ccc;
   margin-bottom: 6px;
+  z-index: 5;
+  position: relative;
+}
+.panel-scoped-telemedicine .panel-scoped-telemedicine .stepper-item.completed::after {
+  border-bottom: 2px solid #4bb543;
+  /* normal completed green */
+}
+.panel-scoped-telemedicine .panel-scoped-telemedicine .stepper-item:last-child.completed .step-counter {
+  background: #4bb543 !important;
+  /* green background */
+  color: #fff !important;
+  border-color: #4bb543 !important;
+}
+.panel-scoped-telemedicine .stepper-item::before,
+.panel-scoped-telemedicine .stepper-item::after {
+  content: "";
+  position: absolute;
+  border-bottom: 2px solid #ccc;
+  width: 100%;
+  top: 20px;
+  z-index: 2;
 }
 .panel-scoped-telemedicine .stepper-item.active {
   font-weight: bold;
@@ -366,10 +410,10 @@ a.btn.filecolorclose {
   }
 
   .stepper-item .step-name {
-    font-size: 10px;
+    font-size: 10pt;
+    font-weight: 500;
+    margin-top: 8px;
     text-align: center;
-    width: 55px;
-    margin-left: -10px;
   }
 
   .stepper-item .step-name-treated_new {

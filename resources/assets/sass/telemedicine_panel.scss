@@ -14,16 +14,47 @@
     flex: 1;
   }
 
-  .stepper-item::before {
-    position: absolute;
-    content: "";
-    border-bottom: 2px solid #ccc;
-    width: 100%;
-    top: 20px;
-    left: -65%;
-    z-index: 2;
+  // .stepper-item::before {
+  //   position: absolute;
+  //   content: "";
+  //   border-bottom: 2px solid #ccc;
+  //   width: 100%;
+  //   top: 20px;
+  //   left: -65%;
+  //   z-index: 2;
+  // }
+    .stepper-item::before {
+      left: -50%;
+    }
+     /* Remove line for first step */
+  .stepper-item:first-child::before,
+  .stepper-item:first-child.completed::before {
+    content: none !important;
+    border: none !important;
   }
 
+  /* Remove line for last step */
+  .stepper-item:last-child::after,
+  .stepper-item:last-child.completed::after {
+    content: none !important;
+    border: none !important;
+  }
+
+  /* Completed state */
+  .stepper-item.completed .step-counter {
+    background-color: #4bb543;
+    color: white;
+  }
+
+  .stepper-item.completed::after {
+    border-bottom: 2px solid #4bb543;
+  }
+
+  /* Active state */
+  .stepper-item.active .step-counter {
+    background-color: #007bff;
+    color: white;
+  }
   .stepper-item::after {
     position: absolute;
     content: "";
@@ -35,18 +66,42 @@
     z-index: 2;
   }
 
-  .stepper-item .step-counter {
-    position: relative;
-    z-index: 5;
+   .stepper-item .step-counter {
+    font-size: 12pt;
+    font-weight: bold;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     width: 40px;
     height: 40px;
     border-radius: 50%;
     background: #ccc;
     margin-bottom: 6px;
+    z-index: 5;
+    position: relative;
+  }
+  /* default completed step connector */
+  .panel-scoped-telemedicine .stepper-item.completed::after {
+    border-bottom: 2px solid #4bb543; /* normal completed green */
+  }
 
+  /* special rule for Discharged step (always green when completed) */
+  .panel-scoped-telemedicine .stepper-item:last-child.completed .step-counter {
+    background: #4bb543 !important; /* green background */
+    color: #fff !important;
+    border-color: #4bb543 !important;
+  }
+
+  
+
+  .stepper-item::before,
+  .stepper-item::after {
+    content: "";
+    position: absolute;
+    border-bottom: 2px solid #ccc;
+    width: 100%;
+    top: 20px;
+    z-index: 2;
   }
 
   .stepper-item.active {
@@ -413,10 +468,10 @@ a.btn.filecolorclose{
   }
 
   .stepper-item .step-name {
-    font-size: 10px;
+    font-size: 10pt;
+    font-weight: 500;
+    margin-top: 8px;
     text-align: center;
-    width: 55px;
-    margin-left: -10px;
   }
 
   .stepper-item .step-name-treated_new {
