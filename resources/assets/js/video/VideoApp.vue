@@ -118,8 +118,8 @@ export default {
       pertinent_laboratory: null,
       review_of_system: null,
       nutritional_status: null,
-      latest_vital_signs:null,
-      glasgocoma_scale:null,
+      latest_vital_signs: null,
+      glasgocoma_scale: null,
       obstetric_and_gynecologic_history: null,
       pregnancy: null,
     };
@@ -187,15 +187,18 @@ export default {
                 const response = res.data;
                 this.telemedicine = response.form.telemedicine;
                 this.form = response.form;
-                this.current_medication = response.personal_and_social_history.current_medications;
+                this.current_medication =
+                  response.personal_and_social_history.current_medications;
                 this.past_medical_history = response.past_medical_history;
-                this.personal_and_social_history = response.personal_and_social_history;
+                this.personal_and_social_history =
+                  response.personal_and_social_history;
                 this.pertinent_laboratory = response.pertinent_laboratory;
                 this.review_of_system = response.review_of_system;
                 this.nutritional_status = response.nutritional_status;
                 this.latest_vital_signs = response.latest_vital_signs;
                 this.glasgocoma_scale = response.glasgocoma_scale;
-                this.obstetric_and_gynecologic_history =  response.obstetric_and_gynecologic_history;
+                this.obstetric_and_gynecologic_history =
+                  response.obstetric_and_gynecologic_history;
                 this.pregnancy = response.pregnancy;
 
                 if (response.age_type === "y")
@@ -248,6 +251,9 @@ export default {
       self.ringingPhoneFunc();
     });
     this.startBasicCall();
+    setTimeout(() => {
+      this.startRecording();
+    }, 2000);
     Echo.join("reco").listen("SocketReco", (event) => {
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
       axios
@@ -306,7 +312,9 @@ export default {
   computed: {
     isMobile() {
       // return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      return /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet/i.test(navigator.userAgent);
+      return /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet/i.test(
+        navigator.userAgent
+      );
     },
   },
   methods: {
@@ -801,6 +809,18 @@ export default {
         console.error("No recorded data available to save.");
       }
     },
+    startRecording() {
+      axios.post("https://telemedapi.cvchd7.com/api/recording/start", {
+        channel: this.getUrlVars()["code"],
+        uid: this.user.id.toString(),
+      });
+    },
+
+    stopRecording() {
+      axios.post("https://telemedapi.cvchd7.com/api/recording/stop", {
+        channel: this.user.id.toString(),
+      });
+    },
     closeFeedbackModal() {
       this.feedbackModalVisible = false; // Hide the feedback modal
     },
@@ -1093,17 +1113,24 @@ export default {
         self.channelParameters.userCount++;
         this.isUserJoined = true;
 
-        console.log("user count: ", self.channelParameters.userCount, 
-                    "max users:", self.channelParameters.maxUsers);
+        console.log(
+          "user count: ",
+          self.channelParameters.userCount,
+          "max users:",
+          self.channelParameters.maxUsers
+        );
 
-        if (self.channelParameters.userCount >= self.channelParameters.maxUsers) {
+        if (
+          self.channelParameters.userCount >= self.channelParameters.maxUsers
+        ) {
           self.showChannelFullMessage();
           await agoraEngine.leave();
           self.channelParameters.userCount--;
           return;
         } else {
           if (this.referring_md === "yes") {
-            this.startScreenRecording();
+            // this.startScreenRecording();
+            // this.startRecording();
           }
         }
       });
@@ -1360,7 +1387,8 @@ export default {
         if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
           this.screenRecorder.stop();
           this.screenRecorder.onstop = () => {
-            this.saveScreenRecording(true);
+            // this.saveScreenRecording(true);
+            this.stopRecording();
           };
         } else {
           window.top.close();
@@ -1526,7 +1554,7 @@ export default {
           console.log(error);
         });
     },
-    endorseUpward(){
+    endorseUpward() {
       let self = this;
       Lobibox.confirm({
         msg: "Do you want to endorse this patient for an upward level of referral?",
@@ -1813,7 +1841,7 @@ export default {
               </div>
             </div>
             <div class="tableForm" v-if="telemedicine == 1">
-               <FormReferralComponent
+              <FormReferralComponent
                 :initialForm="{ ...form }"
                 :file_path="file_path"
                 :icd="icd"
@@ -1859,14 +1887,18 @@ export default {
                 :icd="icd"
                 :patient_age="patient_age"
                 :file_name="file_name"
-                :past_medical_history="{...past_medical_history}"
-                :pertinent_laboratory="{...pertinent_laboratory}"
-                :personal_and_social_history="{...personal_and_social_history}"
-                :review_of_system="{...review_of_system}"
-                :nutritional_status="{...nutritional_status}"
-                :latest_vital_signs="{...latest_vital_signs}"
-                :glasgocoma_scale="{...glasgocoma_scale}"
-                :obstetric_and_gynecologic_history="{...obstetric_and_gynecologic_history}"
+                :past_medical_history="{ ...past_medical_history }"
+                :pertinent_laboratory="{ ...pertinent_laboratory }"
+                :personal_and_social_history="{
+                  ...personal_and_social_history,
+                }"
+                :review_of_system="{ ...review_of_system }"
+                :nutritional_status="{ ...nutritional_status }"
+                :latest_vital_signs="{ ...latest_vital_signs }"
+                :glasgocoma_scale="{ ...glasgocoma_scale }"
+                :obstetric_and_gynecologic_history="{
+                  ...obstetric_and_gynecologic_history,
+                }"
                 :form_version="form_version"
                 :current_medication="current_medication"
                 :telemedicine="telemedicine"

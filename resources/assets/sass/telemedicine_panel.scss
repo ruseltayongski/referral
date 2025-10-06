@@ -461,27 +461,29 @@ a.btn.filecolorclose{
   
 
   .stepper-item-prescription .step-name {
-    font-size: 10px;
-    text-align: center;
+    font-size: 6px;
+    text-align: end;
     width: 100px;
     margin-left: -10px;
   }
 
   .stepper-item .step-name {
-    font-size: 10pt;
+    font-size: 5pt;
     font-weight: 500;
     margin-top: 8px;
     text-align: center;
   }
-
+  .step-counter-prescription .step-name {
+    text-align: end;
+  }
   .stepper-item .step-name-treated_new {
-    font-size: 10px;
+    // font-size: 8px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
   }
   .stepper-item-upward .step-name {
-    font-size: 10px;
+    font-size: 6px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
@@ -594,27 +596,27 @@ a.btn.filecolorclose{
   }
 
   .stepper-item-prescription .step-name {
-    font-size: 10px;
+    // font-size: 8px;
     text-align: center;
     width: 100px;
     margin-left: -10px;
   }
 
   .step-counter .step-name {
-    font-size: 10px;
+    // font-size: 8px;
     text-align: center;
     width: 55px;
     margin-left: -10px;
   }
   .stepper-item .step-name {
-    font-size: 10px;
+    // font-size: 8px;
     text-align: center;
     width: 55px;
     margin-left: -10px;
   }
 
   .stepper-item .step-name-treated_new {
-    font-size: 8px;
+    // font-size: 8px;
     text-align: center;
     width: 60px;
     margin-left: -10px;
