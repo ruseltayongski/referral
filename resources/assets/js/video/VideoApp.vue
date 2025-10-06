@@ -311,10 +311,13 @@ export default {
   },
   computed: {
     isMobile() {
-      // return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      return /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet/i.test(
-        navigator.userAgent
-      );
+      const isTabletSize =
+        window.innerWidth >= 600 && window.innerWidth <= 1200;
+      const isTabletUA =
+        /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet|Tab|PlayBook|Silk|Kindle|Touch/i.test(
+          navigator.userAgent
+        );
+      return isTabletUA || isTabletSize;
     },
   },
   methods: {

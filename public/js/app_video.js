@@ -23204,8 +23204,9 @@ var doctorFeedback = "referral/doctor/feedback";
   },
   computed: {
     isMobile: function isMobile() {
-      // return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-      return /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet/i.test(navigator.userAgent);
+      var isTabletSize = window.innerWidth >= 600 && window.innerWidth <= 1200;
+      var isTabletUA = /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet|Tab|PlayBook|Silk|Kindle|Touch/i.test(navigator.userAgent);
+      return isTabletUA || isTabletSize;
     }
   },
   methods: {
