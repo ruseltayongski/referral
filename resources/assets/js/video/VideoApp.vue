@@ -251,9 +251,9 @@ export default {
       self.ringingPhoneFunc();
     });
     this.startBasicCall();
-    setTimeout(() => {
-      this.startRecording();
-    }, 2000);
+    // setTimeout(() => {
+    //   this.startRecording();
+    // }, 2000);
     Echo.join("reco").listen("SocketReco", (event) => {
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
       axios
@@ -1129,7 +1129,7 @@ export default {
           return;
         } else {
           if (this.referring_md === "yes") {
-            // this.startScreenRecording();
+            this.startScreenRecording();
             // this.startRecording();
           }
         }
@@ -1387,8 +1387,8 @@ export default {
         if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
           this.screenRecorder.stop();
           this.screenRecorder.onstop = () => {
-            // this.saveScreenRecording(true);
-            this.stopRecording();
+            this.saveScreenRecording(true);
+            // this.stopRecording();
           };
         } else {
           window.top.close();
