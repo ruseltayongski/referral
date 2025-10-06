@@ -22713,27 +22713,27 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       var now = new Date();
       var hasValidAppointment = this.appointment.appointment_schedules.some(function (sched) {
         // console.log("sched", sched);
-        //for config Schedule display facility 
+        //for config Schedule display facility
         var DisplayConfigFacility;
         if (sched.configId) {
           var effectiveDate = new Date(sched.appointed_date);
           var date_endMidnight = new Date(sched.date_end);
-          var configTime = sched.config_schedule.time.split('|');
+          var configTime = sched.config_schedule.time.split("|");
           var timeSlot = configTime.filter(function (item) {
-            return item.includes('-');
+            return item.includes("-");
           });
           var isWithinTimeRange = timeSlot.some(function (timeRange) {
-            var _timeRange$split = timeRange.split('-'),
+            var _timeRange$split = timeRange.split("-"),
               _timeRange$split2 = _slicedToArray(_timeRange$split, 2),
               start = _timeRange$split2[0],
               end = _timeRange$split2[1];
             var startTime = new Date();
             var endTime = new Date();
-            var _start$split$map = start.split(':').map(Number),
+            var _start$split$map = start.split(":").map(Number),
               _start$split$map2 = _slicedToArray(_start$split$map, 2),
               startHours = _start$split$map2[0],
               startMinutes = _start$split$map2[1];
-            var _end$split$map = end.split(':').map(Number),
+            var _end$split$map = end.split(":").map(Number),
               _end$split$map2 = _slicedToArray(_end$split$map, 2),
               endHours = _end$split$map2[0],
               endMinutes = _end$split$map2[1];
@@ -23383,6 +23383,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "class": "btn btn-block btn-success btn-select",
     id: "selected_data",
     name: "selected_data",
+    style: {
+      "width": "auto"
+    },
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $options.facilitySelected($props.appointment.id);
     })

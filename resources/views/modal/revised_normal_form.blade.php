@@ -2521,6 +2521,14 @@
     <!-- /.modal-dialog -->
 </div>
 <script>
+document.getElementById('icd10_keyword_normalrevised').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent accidental form submission
+        searchICD10Revised();
+    }
+});
+</script>
+<script>
     $(document).ready(function () {
         // Open the collapse when the form loads
         $("#collapse_illness_history_normal").collapse('show');
