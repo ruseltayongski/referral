@@ -23172,9 +23172,9 @@ var doctorFeedback = "referral/doctor/feedback";
       self.ringingPhoneFunc();
     });
     this.startBasicCall();
-    setTimeout(function () {
-      _this2.startRecording();
-    }, 2000);
+    // setTimeout(() => {
+    //   this.startRecording();
+    // }, 2000);
     Echo.join("reco").listen("SocketReco", function (event) {
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
       axios__WEBPACK_IMPORTED_MODULE_0___default().get($("#broadcasting_url").val() + "/activity/check/" + event.payload.code + "/" + _this2.user.facility_id).then(function (response) {
@@ -23952,7 +23952,7 @@ var doctorFeedback = "referral/doctor/feedback";
                         return _context4.abrupt("return");
                       case 12:
                         if (_this10.referring_md === "yes") {
-                          // this.startScreenRecording();
+                          _this10.startScreenRecording();
                           // this.startRecording();
                         }
                       case 13:
@@ -24246,8 +24246,8 @@ var doctorFeedback = "referral/doctor/feedback";
               if (_this12.screenRecorder && _this12.screenRecorder.state !== "inactive") {
                 _this12.screenRecorder.stop();
                 _this12.screenRecorder.onstop = function () {
-                  // this.saveScreenRecording(true);
-                  _this12.stopRecording();
+                  _this12.saveScreenRecording(true);
+                  // this.stopRecording();
                 };
               } else {
                 window.top.close();
