@@ -1,8 +1,23 @@
+    <style>
+    .view-schedule:hover {
+        color: #0056b3; /* darker blue on hover */
+        text-decoration: underline;
+        transition: all 0.2s ease-in-out;
+    }
+    .view-schedule i {
+        transition: transform 0.2s ease-in-out;
+    }
+    .view-schedule:hover i {
+        transform: scale(1.2) rotate(10deg); /* subtle zoom & tilt */
+    }
+</style>
+    
     <?php 
             $appointmentSconfig =  \App\AppointmentSchedule::select('id','configId','opdCategory','appointed_date','date_end')->get(); 
             $configs = \App\Cofig_schedule::select('id','department_id', 'subopd_id','facility_id','description')
                         ->where('department_id', 5)
                         ->where('facility_id',  $user->facility_id)
+                        ->where('created_by', $user->id)
                         ->where('subopd_id', $user->subopd_id)->get();
     ?>
     <!-- Add Modal -->
@@ -33,7 +48,7 @@
                                     <div class="label-border">
                                 
                                         <div style="display: none;" id="side_Config">
-                                            <label for="appointed_date" id="effective_label">Effective Date:</label>   <!-- Config Appointment -->
+                                            <label for="appointed_date" id="effective_label">Effective Date: </label>   <!-- Config Appointment -->
                                             <input type="date" class="form-control Effective_date" name="effective_date" id="effective_date">
                                             
                                             <label for="defaultCategory" >Choose default schedule: </label><!-- Config Appointment -->
@@ -107,15 +122,15 @@
                                                                 <label>Time To:</label>
                                                                 <input type="time" name="time_to[Monday][]" class="form-control input-sm">
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <!-- <div class="col-md-2">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Monday">
+                                                        <!-- <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Monday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </div>
                                                 <div class="checkbox">
@@ -132,15 +147,15 @@
                                                                 <label>Time To:</label>
                                                                 <input type="time" name="time_to[Tuesday][]" class="form-control input-sm">
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <!-- <div class="col-md-2">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Tuesday">
+                                                        <!-- <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Tuesday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </div>
                                                 <div class="checkbox">
@@ -157,15 +172,15 @@
                                                                 <label>Time To:</label>
                                                                 <input type="time" name="time_to[Wednesday][]" class="form-control input-sm">
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <!-- <div class="col-md-2">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Wednesday">
+                                                        <!-- <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Wednesday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </div>
                                                 <div class="checkbox">
@@ -182,15 +197,15 @@
                                                                 <label>Time To:</label>
                                                                 <input type="time" name="time_to[Thursday][]" class="form-control input-sm">
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <!-- <div class="col-md-2">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Thursday">
+                                                        <!-- <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Thursday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </div>
                                                 <div class="checkbox">
@@ -207,15 +222,15 @@
                                                                 <label>Time To:</label>
                                                                 <input type="time" name="time_to[Friday][]" class="form-control input-sm">
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <!-- <div class="col-md-2">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Friday">
+                                                        <!-- <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Friday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </div>
                                                 <div class="checkbox">
@@ -232,15 +247,15 @@
                                                                 <label>Time To:</label>
                                                                 <input type="time" name="time_to[Saturday][]" class="form-control input-sm">
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <!-- <div class="col-md-2">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Saturday">
+                                                        <!-- <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Saturday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </div>
                                                 <div class="checkbox">
@@ -257,17 +272,36 @@
                                                                 <label>Time To:</label>
                                                                 <input type="time" name="time_to[Sunday][]" class="form-control input-sm">
                                                             </div>
-                                                            <div class="col-md-2">
+                                                            <!-- <div class="col-md-2">
                                                                 <button type="button" class="btn btn-danger btn-sm remove-time-slot">
                                                                     <i class="fa fa-trash"></i>
                                                                 </button>
-                                                            </div>
+                                                            </div> -->
                                                         </div>
-                                                        <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Sunday">
+                                                        <!-- <button type="button" class="btn btn-primary btn-sm add-time-slot" data-day="Sunday">
                                                             <i class="fa fa-plus"></i> Add Time Slot
-                                                        </button>
+                                                        </button> -->
                                                     </div>
                                                 </div>
+                                               <!-- <div class="col-md-12 d-flex align-items-center" style="padding: 0;">
+                                                <div id="viewSchedule"
+                                                    class="view-schedule"
+                                                    style="cursor:pointer; display:flex; align-items:center; gap:6px; font-weight:500; color:#007bff;"
+                                                    data-bs-toggle="popover"
+                                                    data-bs-html="true"
+                                                    data-bs-placement="right"
+                                                    title="Add Slot"
+                                                    data-bs-content="
+                                                        <label style='font-size:13px;'>Date:</label>
+                                                        <input type='date' class='form-control mb-2'>
+                                                        <label style='font-size:13px;'>Time:</label>
+                                                        <input type='time' class='form-control mb-2'>
+                                                        <button class='btn btn-sm btn-primary w-100'>Save Slot</button>
+                                                    ">
+                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                                    <span>View Schedule</span>
+                                                </div>
+                                            </div> -->
                                                 <div class="col-md-6" style="padding: 0;">
                                                     <label for="slot" style="padding:0;">Slot :</label>
                                                     <input type="number" id="number_slot" name="number_slot" class="form-control">
@@ -276,6 +310,7 @@
                                         </div>
                                         <p id="SchedCategory"></p>
                                 </div>
+                                
 
                                 <div class="col-md-8" id="Manual-time-slot">
                                     <div class ="time-input-group">
@@ -831,6 +866,13 @@
         </div>
     </div>
 <script>
+
+    document.addEventListener("DOMContentLoaded", function(){
+        var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+        var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+            return new bootstrap.Popover(popoverTriggerEl)
+        })
+    });
 
 $(document).ready(function () {
 

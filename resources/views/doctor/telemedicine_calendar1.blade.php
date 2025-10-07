@@ -10,7 +10,7 @@
 
 @section('content')
     @include('modal.refer')
-    
+  
     <div id="app_appointment">
         <appointment-app :user="{{ $user }}" :appointment_slot="{{ json_encode($appointment_slot) }}" :appointment_config="{{ json_encode($appointment_config) }}"></appointment-app>
         <!-- <appointment-app :user="{{ $user }}" :appointment_sched="{{ json_encode($appointment_slot) }}"></appointment-app> -->

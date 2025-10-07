@@ -1204,6 +1204,7 @@ class ReferralCtrl extends Controller
             "referred_from" => $latest_activity->referred_from,
             "patient_code" => $latest_activity->code,
             "tracking_id" => $track_id,
+            "telemedicine" => $track->telemedicine,
             "activity_id" => $latest_activity->id,
             "date_accepted" => date('M d, Y h:i A',strtotime($activity->date_referred)),
             "remarks" => $activity->remarks,
