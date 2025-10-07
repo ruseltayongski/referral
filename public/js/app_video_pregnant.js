@@ -22981,6 +22981,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   data: function data() {
     return {
+      isWindowLoading: true,
       isMobileDevice: false,
       showCameraSwitch: true,
       currentCameraId: null,
@@ -23089,6 +23090,18 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   },
   mounted: function mounted() {
     var _this = this;
+    // Add this Promise.all to wait for all initial loading tasks
+    Promise.all([this.getCameraDevices()
+    // Add other async initialization calls here
+    ]).then(function () {
+      // Add a small delay to ensure everything is rendered
+      setTimeout(function () {
+        _this.isWindowLoading = false;
+      }, 1000);
+    })["catch"](function (error) {
+      console.error("Error during initialization:", error);
+      _this.isWindowLoading = false;
+    });
     window.addEventListener("keydown", this.pregnantKeydown);
     document.title = "TELEMEDICINE";
     // Change favicon
@@ -23228,6 +23241,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     }
   },
   methods: {
+    errorCaptured: function errorCaptured(err, vm, info) {
+      console.error("Error captured:", err);
+      this.isWindowLoading = false;
+      return false; // Prevent error from propagating
+    },
     getCameraDevices: function getCameraDevices() {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
@@ -26126,183 +26144,187 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
 
 var _hoisted_1 = {
   key: 0,
-  "class": "loader-overlay"
+  "class": "window-loader-overlay"
 };
 var _hoisted_2 = {
+  key: 1,
+  "class": "loader-overlay"
+};
+var _hoisted_3 = {
   style: {
     "width": "300px",
     "margin-top": "20px"
   }
 };
-var _hoisted_3 = {
+var _hoisted_4 = {
   style: {
     "background": "#444",
     "border-radius": "8px",
     "overflow": "hidden"
   }
 };
-var _hoisted_4 = {
+var _hoisted_5 = {
   style: {
     "color": "white",
     "text-align": "center",
     "margin": "5px 0 0 0"
   }
 };
-var _hoisted_5 = ["src"];
-var _hoisted_6 = {
+var _hoisted_6 = ["src"];
+var _hoisted_7 = {
   "class": "fullscreen-div"
 };
-var _hoisted_7 = {
+var _hoisted_8 = {
   "class": "main-container"
 };
-var _hoisted_8 = {
+var _hoisted_9 = {
   "class": "video-container"
 };
-var _hoisted_9 = {
+var _hoisted_10 = {
   "class": "mainPic"
 };
-var _hoisted_10 = {
+var _hoisted_11 = {
   "class": "remotePlayerDiv"
 };
-var _hoisted_11 = {
+var _hoisted_12 = {
   id: "calling"
 };
-var _hoisted_12 = {
+var _hoisted_13 = {
   key: 0
 };
-var _hoisted_13 = ["src"];
-var _hoisted_14 = {
+var _hoisted_14 = ["src"];
+var _hoisted_15 = {
   "class": "call-duration"
 };
-var _hoisted_15 = {
+var _hoisted_16 = {
   id: "call-timer"
 };
-var _hoisted_16 = {
+var _hoisted_17 = {
   key: 0,
   "class": "iconCall position-absolute fade-in"
 };
-var _hoisted_17 = {
+var _hoisted_18 = {
   "class": "button-container"
 };
-var _hoisted_18 = {
+var _hoisted_19 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#138496"
   }
 };
-var _hoisted_19 = {
-  "class": "button-container"
-};
 var _hoisted_20 = {
-  key: 0,
-  "class": "tooltip-text",
-  style: {
-    "background-color": "#218838"
-  }
+  "class": "button-container"
 };
 var _hoisted_21 = {
   key: 0,
-  "class": "button-container"
+  "class": "tooltip-text",
+  style: {
+    "background-color": "#218838"
+  }
 };
 var _hoisted_22 = {
+  key: 0,
+  "class": "button-container"
+};
+var _hoisted_23 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#218838"
   }
 };
-var _hoisted_23 = {
+var _hoisted_24 = {
   "class": "button-container"
 };
-var _hoisted_24 = {
+var _hoisted_25 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#c82333"
   }
 };
-var _hoisted_25 = ["disabled"];
-var _hoisted_26 = {
+var _hoisted_26 = ["disabled"];
+var _hoisted_27 = {
   key: 1,
   "class": "button-container"
 };
-var _hoisted_27 = {
+var _hoisted_28 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#e0a800"
   }
 };
-var _hoisted_28 = {
+var _hoisted_29 = {
   key: 2,
   "class": "button-container"
 };
-var _hoisted_29 = {
+var _hoisted_30 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#218838"
   }
 };
-var _hoisted_30 = {
+var _hoisted_31 = {
   key: 3,
   "class": "button-container"
 };
-var _hoisted_31 = {
+var _hoisted_32 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#007bff"
   }
 };
-var _hoisted_32 = {
+var _hoisted_33 = {
   "class": "button-container"
 };
-var _hoisted_33 = {
+var _hoisted_34 = {
   key: 0,
   "class": "tooltip-text",
   style: {
     "background-color": "#17a2b8"
   }
 };
-var _hoisted_34 = ["data-code"];
-var _hoisted_35 = {
+var _hoisted_35 = ["data-code"];
+var _hoisted_36 = {
   "class": "localPlayerDiv",
   id: "draggable-div"
 };
-var _hoisted_36 = ["src"];
-var _hoisted_37 = {
+var _hoisted_37 = ["src"];
+var _hoisted_38 = {
   "class": "form-container"
 };
-var _hoisted_38 = {
+var _hoisted_39 = {
   "class": "telemedForm"
 };
-var _hoisted_39 = {
+var _hoisted_40 = {
   "class": "form-scrollable"
 };
-var _hoisted_40 = {
+var _hoisted_41 = {
   "class": "form-header-container"
 };
-var _hoisted_41 = ["src"];
-var _hoisted_42 = {
+var _hoisted_42 = ["src"];
+var _hoisted_43 = {
   "class": "tableForm"
 };
-var _hoisted_43 = {
+var _hoisted_44 = {
   key: 0,
   "class": "row g-0"
-};
-var _hoisted_44 = {
-  "class": "col-6"
 };
 var _hoisted_45 = {
   "class": "col-6"
 };
 var _hoisted_46 = {
+  "class": "col-6"
+};
+var _hoisted_47 = {
   key: 0,
   "class": "afk-overlay"
 };
-var _hoisted_47 = {
+var _hoisted_48 = {
   "class": "afk-dialog"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
@@ -26312,31 +26334,35 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_LabRequestModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LabRequestModal");
   var _component_FeedbackModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FeedbackModal");
   var _component_PDFViewerModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PDFViewerModal");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Window loader "), $data.isWindowLoading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _cache[23] || (_cache[23] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "window-loader"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "spinner"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "Loading please wait...")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "loader",
     style: {
       "margin-right": "20px"
     }
-  }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)({
       width: $data.uploadProgress + '%',
       background: '#4caf50',
       height: '18px',
       transition: 'width 0.3s'
     })
-  }, null, 4 /* STYLE */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_4, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Please wait until upload is complete.")), _cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Do not close this window. " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.uploadProgress) + "% ", 1 /* TEXT */)])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div\r\n      v-if=\"netSpeedMbps\"\r\n      class=\"net-speed-indicator\"\r\n      :class=\"netSpeedStatus\"\r\n    >\r\n      <span>\r\n        {{ netSpeedMbps }} Mbps\r\n        <span v-if=\"netSpeedStatus === 'fast'\">(Fast)</span>\r\n        <span v-else>(Slow)</span>\r\n      </span>\r\n    </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
+  }, null, 4 /* STYLE */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_5, [_cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Please wait until upload is complete.")), _cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Do not close this window. " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.uploadProgress) + "% ", 1 /* TEXT */)])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div\r\n      v-if=\"netSpeedMbps\"\r\n      class=\"net-speed-indicator\"\r\n      :class=\"netSpeedStatus\"\r\n    >\r\n      <span>\r\n        {{ netSpeedMbps }} Mbps\r\n        <span v-if=\"netSpeedStatus === 'fast'\">(Fast)</span>\r\n        <span v-else>(Slow)</span>\r\n      </span>\r\n    </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("audio", {
     ref: "ringingPhone",
     src: $data.ringingPhoneUrl,
     loop: ""
-  }, null, 8 /* PROPS */, _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [!$data.isUserJoined ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h3", _hoisted_12, "Calling...")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, null, 8 /* PROPS */, _hoisted_6), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [!$data.isUserJoined ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h3", _hoisted_13, "Calling...")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl,
     "class": "remote-img",
     alt: "Image1"
-  }, null, 8 /* PROPS */, _hoisted_13)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.callDuration), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
+  }, null, 8 /* PROPS */, _hoisted_14)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.callDuration), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(vue__WEBPACK_IMPORTED_MODULE_0__.Transition, {
     name: "fade"
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
-      return [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [!$options.isMobile && $data.showMic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_18, " Audio ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      return [$data.showDiv ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, [!$options.isMobile && $data.showMic ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_19, " Audio ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-info btn-md mic-button", {
           'mic-button-slash': !$data.audioStreaming
         }]),
@@ -26350,9 +26376,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[2] || (_cache[2] = function ($event) {
           return $data.showMic = false;
         })
-      }, _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-mic-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [!$options.isMobile && $data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_20, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [!$options.isMobile && $data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-md video-button", {
           'video-button-slash': !$data.videoStreaming
         }]),
@@ -26366,9 +26392,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[5] || (_cache[5] = function ($event) {
           return $data.showVedio = false;
         })
-      }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[28] || (_cache[28] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-camera-video-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), $options.isMobile ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, [$options.isMobile && $data.showCameraSwitch ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_22, " Switch Camera ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), $options.isMobile ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_22, [$options.isMobile && $data.showCameraSwitch ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_23, " Switch Camera ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-success btn-md camera-switch-button",
         onClick: _cache[6] || (_cache[6] = function () {
           return $options.switchCamera && $options.switchCamera.apply($options, arguments);
@@ -26380,9 +26406,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[8] || (_cache[8] = function ($event) {
           return $data.showCameraSwitch = false;
         })
-      }, _cache[28] || (_cache[28] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[29] || (_cache[29] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-arrow-repeat"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [!$options.isMobile && $data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_24, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [!$options.isMobile && $data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger btn-md decline-button",
         onClick: _cache[9] || (_cache[9] = function () {
           return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
@@ -26395,9 +26421,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $data.showEndcall = false;
         }),
         disabled: $data.loading
-      }, _cache[29] || (_cache[29] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[30] || (_cache[30] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-telephone-x-fill"
-      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_25)]), _cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), _this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, [!$options.isMobile && $data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'no' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_26)]), _cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), _this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, [!$options.isMobile && $data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'no' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-warning btn-md upward-button",
         onClick: _cache[12] || (_cache[12] = function () {
@@ -26410,9 +26436,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[14] || (_cache[14] = function ($event) {
           return $data.showUpward = false;
         })
-      }, _cache[30] || (_cache[30] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[31] || (_cache[31] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-hospital"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, [!$options.isMobile && $data.showPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, " Prescription ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, [!$options.isMobile && $data.showPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, " Prescription ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-success btn-md prescription-button",
         "data-toggle": "modal",
@@ -26424,9 +26450,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[16] || (_cache[16] = function ($event) {
           return $data.showPrescription = false;
         })
-      }, _cache[31] || (_cache[31] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[32] || (_cache[32] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_30, [!$options.isMobile && $data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, [!$options.isMobile && $data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.referring_md == 'yes' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-primary btn-md prescription-button",
         "data-toggle": "modal",
@@ -26438,9 +26464,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[18] || (_cache[18] = function ($event) {
           return $data.showTooltip = false;
         })
-      }, _cache[32] || (_cache[32] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[33] || (_cache[33] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription2"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [!$options.isMobile && $data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_33, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [!$options.isMobile && $data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_34, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-info btn-md reco-button",
         "data-toggle": "modal",
         "data-target": "#feedbackModal",
@@ -26452,22 +26478,22 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[20] || (_cache[20] = function ($event) {
           return $data.showTooltipFeedback = false;
         })
-      }, _cache[33] || (_cache[33] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[34] || (_cache[34] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-chat-left-text"
-      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_34)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
+      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_35)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)];
     }),
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl1,
     id: "local-image",
     "class": "img2",
     alt: "Image2",
     draggable: "true"
-  }, null, 8 /* PROPS */, _hoisted_36)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, null, 8 /* PROPS */, _hoisted_37)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_41, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.dohLogoUrl,
     alt: "Image3",
     "class": "dohLogo"
-  }, null, 8 /* PROPS */, _hoisted_41), _cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-1ef045ee><div data-v-1ef045ee><p data-v-1ef045ee>Republic of the Philippines</p><p data-v-1ef045ee>DEPARTMENT OF HEALTH</p><p data-v-1ef045ee><b data-v-1ef045ee>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-1ef045ee>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-1ef045ee> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-1ef045ee> Official Website: <span style=\"color:blue;\" data-v-1ef045ee>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-1ef045ee><span style=\"color:#4caf50;\" data-v-1ef045ee><b data-v-1ef045ee>BEmONC/CEmONC REFERRAL FORM</b></span></div>", 2))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_FormReferralPregnantComponent, {
+  }, null, 8 /* PROPS */, _hoisted_42), _cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-1ef045ee><div data-v-1ef045ee><p data-v-1ef045ee>Republic of the Philippines</p><p data-v-1ef045ee>DEPARTMENT OF HEALTH</p><p data-v-1ef045ee><b data-v-1ef045ee>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-1ef045ee>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-1ef045ee> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-1ef045ee> Official Website: <span style=\"color:blue;\" data-v-1ef045ee>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-1ef045ee><span style=\"color:#4caf50;\" data-v-1ef045ee><b data-v-1ef045ee>BEmONC/CEmONC REFERRAL FORM</b></span></div>", 2))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_FormReferralPregnantComponent, {
     initialForm: _objectSpread({}, $data.form),
     initialFormBaby: _objectSpread({}, $data.formBaby),
     past_medical_history: _objectSpread({}, $data.past_medical_history),
@@ -26485,15 +26511,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     current_medication: $data.current_medication,
     patient_age: $data.patient_age,
     pregnancy: $data.pregnancy || []
-  }, null, 8 /* PROPS */, ["initialForm", "initialFormBaby", "past_medical_history", "personal_and_social_history", "review_of_system", "nutritional_status", "pertinent_laboratory", "latest_vital_signs", "glasgocoma_scale", "obstetric_and_gynecologic_history", "file_path", "icd", "file_name", "form_version", "current_medication", "patient_age", "pregnancy"]), this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 8 /* PROPS */, ["initialForm", "initialFormBaby", "past_medical_history", "personal_and_social_history", "review_of_system", "nutritional_status", "pertinent_laboratory", "latest_vital_signs", "glasgocoma_scale", "obstetric_and_gynecologic_history", "file_path", "icd", "file_name", "form_version", "current_medication", "patient_age", "pregnancy"]), this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-success btn-md w-100 ml-2",
     type: "button",
     onClick: _cache[21] || (_cache[21] = function ($event) {
       return $options.generatePrescription();
     })
-  }, _cache[38] || (_cache[38] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[39] || (_cache[39] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-prescription"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-md w-100",
     type: "button",
     onClick: _cache[22] || (_cache[22] = function ($event) {
@@ -26507,7 +26533,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     },
     onmouseover: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';",
     onmouseout: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
-  }, _cache[39] || (_cache[39] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[40] || (_cache[40] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-clipboard2-pulse"
   }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Lab Request ")]))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" ======================================================================= ")])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PrescriptionModal, {
     activity_id: parseInt($data.activity_id),
@@ -26528,7 +26554,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 8 /* PROPS */, ["isVisible", "code", "userId", "fetchUrl", "imageUrl", "postUrl", "onCloseModal"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PDFViewerModal, {
     ref: "pdfViewer",
     pdfUrl: $data.PdfUrl
-  }, null, 8 /* PROPS */, ["pdfUrl"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Place AFK dialog here, before closing fullscreen-div "), $data.afkDialogVisible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "You have been inactive for some time.", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [_cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ending call in ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.afkCountdown), 1 /* TEXT */), _cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" seconds... "))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
+  }, null, 8 /* PROPS */, ["pdfUrl"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Place AFK dialog here, before closing fullscreen-div "), $data.afkDialogVisible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [_cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "You have been inactive for some time.", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ending call in ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.afkCountdown), 1 /* TEXT */), _cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" seconds... "))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -28746,7 +28772,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_css_index_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-1ef045ee] {\r\n  padding: 5px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-1ef045ee] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-1ef045ee] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-1ef045ee] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-1ef045ee] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-1ef045ee] {\r\n    flex-direction: column;\n}\n.fullscreen-div[data-v-1ef045ee] {\r\n    overflow: auto;\r\n    position: relative;\n}\n.video-container[data-v-1ef045ee],\r\n  .form-container[data-v-1ef045ee] {\r\n    width: 100%;\r\n    flex: none;\r\n    overflow: hidden;\n}\n.video-container[data-v-1ef045ee] {\r\n    height: 60%;\n}\n.form-container[data-v-1ef045ee] {\r\n    height: 40%;\n}\n}\n.remote-img[data-v-1ef045ee] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-1ef045ee] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-1ef045ee] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-1ef045ee] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-1ef045ee] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-1ef045ee],\r\n.fade-leave-active[data-v-1ef045ee] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-1ef045ee],\r\n.fade-leave-to[data-v-1ef045ee] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-1ef045ee] {\r\n  width: 195px;\r\n  height: 200px;\r\n  min-width: 150px;\r\n  min-height: 200px;\r\n  max-width: 150px;\r\n  max-height: 200px;\n}\n.loader-overlay[data-v-1ef045ee] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 9999;\n}\n.loader[data-v-1ef045ee] {\r\n  border: 8px solid #f3f3f3;\r\n  border-top: 8px solid #3498db;\r\n  border-radius: 50%;\r\n  width: 50px;\r\n  height: 50px;\r\n  animation: spin-1ef045ee 1s linear infinite;\n}\n@keyframes spin-1ef045ee {\n0% {\r\n    transform: rotate(0deg);\n}\n100% {\r\n    transform: rotate(360deg);\n}\n}\n#call-timer[data-v-1ef045ee] {\r\n  font-size: 16px;\r\n  background: rgba(0, 0, 0, 0.425);\r\n  color: #fff;\r\n  padding: 4px 10px;\r\n  border-radius: 5px;\r\n  letter-spacing: 2px;\n}\n.call-duration[data-v-1ef045ee] {\r\n  position: absolute;\r\n  top: 20px;\r\n  left: 20px;\r\n  z-index: 10;\n}\n.net-speed-indicator[data-v-1ef045ee] {\r\n  position: fixed;\r\n  right: 20px;\r\n  bottom: 20px;\r\n  z-index: 10000;\r\n  padding: 8px 16px;\r\n  border-radius: 20px;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  background: rgba(15, 15, 15, 0.103);\r\n  color: #fff;\r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);\r\n  pointer-events: none;\n}\n.net-speed-indicator.fast[data-v-1ef045ee] {\r\n  border: 2px solid #4caf50;\r\n  color: #4caf50;\n}\n.net-speed-indicator.slow[data-v-1ef045ee] {\r\n  border: 2px solid #e53935;\r\n  color: #e53935;\n}\r\n\r\n/* AFK Dialog Styles */\n.afk-overlay[data-v-1ef045ee] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  z-index: 99999;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.afk-dialog[data-v-1ef045ee] {\r\n  background: #fff;\r\n  padding: 30px 40px;\r\n  border-radius: 10px;\r\n  text-align: center;\r\n  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);\n}\n@media screen and (max-width: 768px) {\n.reco-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-chat-left-text[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.bi-prescription2[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.prescription-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-prescription[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.upward-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-hospital[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.decline-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-telephone-x-fill[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.camera-switch-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-arrow-repeat[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.video-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-camera-video-fill[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.mic-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-mic-fill[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.localPlayerLayer[data-v-1ef045ee] {\r\n    height: 120px !important;\r\n    width: 90px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-1ef045ee] {\r\n    min-height: 120px !important;\r\n    min-width: 90px !important;\r\n    max-height: 25vh !important;\r\n    max-width: 30vw !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-1ef045ee],\r\n  .localPlayerDiv img[data-v-1ef045ee] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\n@media screen and (max-width: 480px) {\n.localPlayerLayer[data-v-1ef045ee] {\r\n    height: 100px !important;\r\n    width: 75px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-1ef045ee] {\r\n    min-height: 100px !important;\r\n    min-width: 70px !important;\r\n    max-height: 20vh !important;\r\n    max-width: 25vw !important;\r\n    bottom: 60px !important;\r\n    right: 5px !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-1ef045ee],\r\n  .localPlayerDiv img[data-v-1ef045ee] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-1ef045ee] {\r\n  padding: 5px;\n}\n.window-loader-overlay[data-v-1ef045ee] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: #ffffff;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 99999;\n}\n.window-loader[data-v-1ef045ee] {\r\n  text-align: center;\n}\n.spinner[data-v-1ef045ee] {\r\n  width: 50px;\r\n  height: 50px;\r\n  border: 5px solid #f3f3f3;\r\n  border-top: 5px solid #3498db;\r\n  border-radius: 50%;\r\n  margin: 0 auto 1rem;\r\n  animation: spin-1ef045ee 1s linear infinite;\n}\n.window-loader p[data-v-1ef045ee] {\r\n  color: #666;\r\n  font-size: 1.1rem;\r\n  margin-top: 10px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-1ef045ee] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-1ef045ee] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-1ef045ee] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-1ef045ee] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-1ef045ee] {\r\n    flex-direction: column;\n}\n.fullscreen-div[data-v-1ef045ee] {\r\n    overflow: auto;\r\n    position: relative;\n}\n.video-container[data-v-1ef045ee],\r\n  .form-container[data-v-1ef045ee] {\r\n    width: 100%;\r\n    flex: none;\r\n    overflow: hidden;\n}\n.video-container[data-v-1ef045ee] {\r\n    height: 60%;\n}\n.form-container[data-v-1ef045ee] {\r\n    height: 40%;\n}\n}\n.remote-img[data-v-1ef045ee] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-1ef045ee] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-1ef045ee] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-1ef045ee] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-1ef045ee] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-1ef045ee],\r\n.fade-leave-active[data-v-1ef045ee] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-1ef045ee],\r\n.fade-leave-to[data-v-1ef045ee] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-1ef045ee] {\r\n  width: 195px;\r\n  height: 200px;\r\n  min-width: 150px;\r\n  min-height: 200px;\r\n  max-width: 150px;\r\n  max-height: 200px;\n}\n.loader-overlay[data-v-1ef045ee] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 9999;\n}\n.loader[data-v-1ef045ee] {\r\n  border: 8px solid #f3f3f3;\r\n  border-top: 8px solid #3498db;\r\n  border-radius: 50%;\r\n  width: 50px;\r\n  height: 50px;\r\n  animation: spin-1ef045ee 1s linear infinite;\n}\n@keyframes spin-1ef045ee {\n0% {\r\n    transform: rotate(0deg);\n}\n100% {\r\n    transform: rotate(360deg);\n}\n}\n#call-timer[data-v-1ef045ee] {\r\n  font-size: 16px;\r\n  background: rgba(0, 0, 0, 0.425);\r\n  color: #fff;\r\n  padding: 4px 10px;\r\n  border-radius: 5px;\r\n  letter-spacing: 2px;\n}\n.call-duration[data-v-1ef045ee] {\r\n  position: absolute;\r\n  top: 20px;\r\n  left: 20px;\r\n  z-index: 10;\n}\n.net-speed-indicator[data-v-1ef045ee] {\r\n  position: fixed;\r\n  right: 20px;\r\n  bottom: 20px;\r\n  z-index: 10000;\r\n  padding: 8px 16px;\r\n  border-radius: 20px;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  background: rgba(15, 15, 15, 0.103);\r\n  color: #fff;\r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);\r\n  pointer-events: none;\n}\n.net-speed-indicator.fast[data-v-1ef045ee] {\r\n  border: 2px solid #4caf50;\r\n  color: #4caf50;\n}\n.net-speed-indicator.slow[data-v-1ef045ee] {\r\n  border: 2px solid #e53935;\r\n  color: #e53935;\n}\r\n\r\n/* AFK Dialog Styles */\n.afk-overlay[data-v-1ef045ee] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  z-index: 99999;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.afk-dialog[data-v-1ef045ee] {\r\n  background: #fff;\r\n  padding: 30px 40px;\r\n  border-radius: 10px;\r\n  text-align: center;\r\n  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);\n}\n@media screen and (max-width: 768px) {\n.reco-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-chat-left-text[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.bi-prescription2[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.prescription-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-prescription[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.upward-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-hospital[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.decline-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-telephone-x-fill[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.camera-switch-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-arrow-repeat[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.video-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-camera-video-fill[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.mic-button[data-v-1ef045ee] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-mic-fill[data-v-1ef045ee] {\r\n    font-size: 12px !important;\n}\n.localPlayerLayer[data-v-1ef045ee] {\r\n    height: 120px !important;\r\n    width: 90px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-1ef045ee] {\r\n    min-height: 120px !important;\r\n    min-width: 90px !important;\r\n    max-height: 25vh !important;\r\n    max-width: 30vw !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-1ef045ee],\r\n  .localPlayerDiv img[data-v-1ef045ee] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\n@media screen and (max-width: 480px) {\n.localPlayerLayer[data-v-1ef045ee] {\r\n    height: 100px !important;\r\n    width: 75px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-1ef045ee] {\r\n    min-height: 100px !important;\r\n    min-width: 70px !important;\r\n    max-height: 20vh !important;\r\n    max-width: 25vw !important;\r\n    bottom: 60px !important;\r\n    right: 5px !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-1ef045ee],\r\n  .localPlayerDiv img[data-v-1ef045ee] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

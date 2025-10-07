@@ -101,7 +101,7 @@
     border-bottom: 2px solid #ccc;
     width: 100%;
     top: 20px;
-    left: -60px;
+    // left: -60px;
     z-index: 2;
   }
 
@@ -455,6 +455,17 @@ a.btn.filecolorclose{
   .stepper-item-upward {
     width: 50px;
   }
+  .panel-scoped-telemedicine.stepper-item::before, 
+  .panel-scoped-telemedicine .stepper-item::after
+  {
+      content: "";
+      position: absolute;
+      border-bottom: 2px solid #ccc;
+      width: 100%;
+      top: 20px;
+      left: -60px;
+      z-index: 2;
+  }
 
   .stepper-item {
     width: 45px;
@@ -561,7 +572,7 @@ a.btn.filecolorclose{
     border-bottom: 2px solid #ccc;
     width: 137px;
     transform: rotate(65deg);
-    top: -55px;
+    top: -53px;
     left: -30px;
   }
 
