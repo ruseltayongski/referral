@@ -22,7 +22,7 @@ class Facility extends Model
     public function appointmentSchedules()
     {
         return $this->hasMany(AppointmentSchedule::class, 'facility_id')
-        ->with(['subOpd', 'telemedAssignedDoctor', 'configSchedule']);
+        ->with(['subOpd', 'telemedAssignedDoctor', 'configSchedule', 'createdBy']);
     }
 
     public function activities()

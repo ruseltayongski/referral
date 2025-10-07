@@ -482,120 +482,104 @@
 
         //---------------- for Config-Appointment ---------------//
         const checkConfigSLot = "{{ url('check-config-existSlot') }}";
-        // function checkSlotExistence(date, slot, $inputGroup, days, category){
-        //     console.log("Date and multiple slot: ", date, slot);
-        //     $.ajax({
-        //         url: checkConfigSLot,
-        //         method: "POST", 
-        //         data: {
-        //             _token:  $('meta[name="csrf-token"]').attr('content'),
-        //             date: date,
-        //             slots: slot,
-        //             days: days,
-        //             category: category,
-        //         },
-        //         success: function (response) {
-        //             console.log("responses", response);
-
-        //         }
-        //     });
-
-        // }
+    
         let conflictShown = false;
         let lastCheckedStartDate = null;
+        let date_exists = []; 
+        function checkSlotExistence(startDate, slots, $inputGroup, days, category,callback) {
+            return new Promise((resolve, reject) => {
+            
+                if (lastCheckedStartDate !== startDate) {
+                    conflictShown = false;
+                    lastCheckedStartDate = startDate;
+                }else{
+                    conflictShown = false;
+                }
+                
+                // Generate all appointment dates based on category and selected days
+                const appointmentDates = generateAppointmentDates(startDate, days, category);
+                // console.log("Generated appointment dates: ", appointmentDates, slots);
+                
+                // Create appointment slots array with all dates and their slots
+                const appointmentSlots = [];
 
-        function checkSlotExistence(startDate, slots, $inputGroup, days, category) {
-            
-             if (lastCheckedStartDate !== startDate) {
-                conflictShown = false;
-                lastCheckedStartDate = startDate;
-             }else{
-                conflictShown = false;
-             }
-            
-            // Generate all appointment dates based on category and selected days
-            const appointmentDates = generateAppointmentDates(startDate, days, category);
-            // console.log("Generated appointment dates: ", appointmentDates, slots);
-            
-            // Create appointment slots array with all dates and their slots
-            const appointmentSlots = [];
-            appointmentDates.forEach(date => {
-                slots.forEach(slot => {
-                    appointmentSlots.push({
-                        date: date,
-                        time_from: slot.time_from,
-                        time_to: slot.time_to
+                const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                
+                appointmentDates.forEach(date => {
+
+                    const dateObj = new Date(date);
+                    const dayName = dayNames[dateObj.getDay()];
+                    slots.forEach(slot => {
+                        if (slot.day === dayName) {
+                            appointmentSlots.push({
+                                date: date,
+                                time_from: slot.time_from,
+                                time_to: slot.time_to
+                            });
+                        }
                     });
                 });
-            });
-            
-            // console.log("All appointment slots to check: ", appointmentSlots);
-            
-            $.ajax({
-                url: checkConfigSLot,
-                method: "POST", 
-                  contentType: "application/json",
-                 data: JSON.stringify({
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    appointment_slots: appointmentSlots,
-                    days: days,
-                    category: category,
-                    start_date: startDate
-                }),
-                success: function (response) {
-                    
-                    if (response.status === 'error' && !conflictShown) {
-
-                        let skipAlertCLose = false; 
-                        
-                        Lobibox.alert("error",
-                        {
-                            msg: response.message,
-                            closeButton: false,
-                            closable: false,
-                            callback: function () {
-
-                                $('#addAppointmentModal').modal('hide');
-
-                                skipAlertCLose = true;
-                                // $(this).find('.time-input-group').remove();
-                                $('#addAppointmentForm_add')[0].reset();
-                                $('.select2').val(null).trigger('change'); 
-                                $('#additionalTimeContainer').empty();
-                                $(".appointment_count").val(1);
-                                
-                                const effectiveDate = $('#effective_date').val();
-                                if (effectiveDate) {
-                                    $('#defaultCategorySelect').prop('disabled', false);
-                                } else {
-                                    $('#defaultCategorySelect').prop('disabled', true);
+                console.log("days:::", slots,"category", category,"start Date", startDate);
+                console.log("All appointment slots to check: ", appointmentSlots);
+                
+                $.ajax({
+                    url: checkConfigSLot,
+                    method: "POST", 
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        appointment_slots: appointmentSlots,
+                        day_slot: slots,
+                        category: category,
+                        start_date: startDate
+                    }),
+                    success: function (response) {
+                        // console.log("Server response:", response.data);
+                        if (response.status === 'warning' && !conflictShown) {
+                            // console.log("Skipped conflicting dates:", response.conflict_dates);
+                            console.log("my available_slots:", response.valid_slots);
+                            date_exists = response.conflict_dates;
+                            // window.existing_date = response.conflict_dates;
+                            Lobibox.alert("info", {
+                                msg: response.message,
+                                closeButton: false,
+                                closable: false,
+                                callback: function () {
+                                    // Proceed only with valid slots
+                                    const safeSlots = response.valid_slots || [];
+                                    // console.log("Safe slots to create:", safeSlots);
+                                     resolve({ date_exists, response });
+                                    // TODO: rebuild UI or trigger creation logic using safeSlots only
                                 }
+                            });
 
-                                setTimeout(() => {
-                                    skipAlertCLose = false;
-                                }, 200);
-                            }
-                        });
+                            conflictShown = true; 
+                            return;
 
-                        conflictShown = true; 
-                       
-                        return;
+                        } else if (response.status === 'ok') {
+                            // console.log("All slots safe:", response.valid_slots);
+                            // use response.valid_slots to continue
+                            // window.existing_date = [];
+                            resolve({ date_exists: [], response });
+                        }
 
-                    } else {
-                        // console.log('No conflicts.');
+                        if (callback && typeof callback === 'function') {
+                            callback(date_exists, {});
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Ajax error: ", error);
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error("Ajax error: ", error);
-                }
+                });
+                console.log("list of date exist outside:", date_exists);
             });
         }
-
+       
         function generateAppointmentDates(startDate, selectedDays, category) {
             // console.log('generate date days:', startDate, selectedDays, category);
             const dates = [];
             const start = new Date(startDate);
-            
+           
             // Determine end date based on category
             const endDate = new Date(start);
             if (category === "1 Week") {
@@ -635,14 +619,15 @@
 
         var userData = @json($user);
         $(document).ready(function () {
-
+             console.log("list of date exist: dsasdsd", window.existing_date);
             const $defaultCategorySelect = $("#defaultCategorySelect");
             const $effectiveDate = $("#effective_date");
             const $weekTimeSlot = $("#week_time_slot");
             const configData = @json($config_sched_data);
-
+            let duplicate_date = null;
+            console.log("exisin date in categslot:", window.existing_date); 
             function categslot(){
-
+                
                 $('.time-slots').hide().find('.time-slots').remove();
 
                 const selectedConfigId = $defaultCategorySelect.val();
@@ -678,13 +663,14 @@
                         }
                     });
 
-                   const allCollectedSlots = [];
-
+                    const allCollectedSlots = [];
+                    let  timeSlotsDiv = null;
+                    
                     days.forEach(day => {
                         $(`.day-checkbox[value="${day}"]`).prop("checked", true);
-                        const $timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
+                         timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
                         
-                        $timeSlotsDiv.show();
+                        timeSlotsDiv.show();
 
                         if(dayTimeMap[day]) {
                             dayTimeMap[day].forEach(range => {
@@ -707,51 +693,168 @@
                                         <label>Time To:</label>
                                         <input type="time" name="time_to[${day}][]" class="form-control input-sm" value="${timeTo}">
                                     </div>
-                                    <div class="col-md-2">
-                                        <button type="button" class="btn btn-danger btn-sm remove-time-slot">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </div>
                                 </div`;
-                                 $timeSlotsDiv.append(timeSlotHtml);
+
+                                //  <div class="col-md-2">
+                                //         <button type="button" class="btn btn-danger btn-sm remove-time-slot">
+                                //             <i class="fa fa-trash"></i>
+                                //         </button>
+                                //     </div>
+
+                                 timeSlotsDiv.append(timeSlotHtml);
                                 // const $timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
                                 // const $newSlot = $(timeSlotHtml);
                                 // $timeSlotsDiv.append($newSlot);
 
-                                 checkSlotExistence(effectiveDateValue,allCollectedSlots, $timeSlotsDiv, days,category);
+                                //  checkSlotExistence(effectiveDateValue,allCollectedSlots, $timeSlotsDiv, days,category);
                             });
                         }
                    });
-                    var OneweekToOneMonth = selectedConfig.category;
-                   
-                    // console.log("effectiveDate::", effectiveDateValue);
-
-                    if(effectiveDateValue){
-                        const startDate = new Date(effectiveDateValue);
-                        let endDate;
-
-                        if(OneweekToOneMonth === "1 Week"){
-                            endDate = new Date(startDate);
-                            endDate.setDate(startDate.getDate() + 6);
-                        } else if (OneweekToOneMonth === "1 Month"){
-                            endDate = new Date(startDate);
-                            endDate.setMonth(startDate.getMonth() + 1);
-                            endDate.setDate(endDate.getDate() - 1);
+                    
+                    checkSlotExistence(effectiveDateValue,allCollectedSlots, timeSlotsDiv, days,category) 
+                         .then(({ date_exists, response }) => {
+                        var OneweekOrOneMonth = selectedConfig.category;
+                        
+                        let dateExistsArray;
+                        if(Array.isArray(date_exists)){
+                            dateExistsArray  = date_exists;
+                        }else if(typeof date_exists === 'object' && date_exists !== null){
+                            dateExistsArray = Object.values(date_exists);
+                        }else{
+                            dateExistsArray = [];
                         }
-                        const formattedSched = `<strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> - <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>`;
-                        $("#SchedCategory").html(`
-                          <div class="col-md-12 schedule-output text-center" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; margin-top: 10px;">
-                                <span class="schedule-range">
-                                    <i class="fa fa-calendar"></i> <strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> <strong> - </strong> 
-                                    <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
-                                    <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
-                                    <i class="fa fa-calendar"></i> <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>
-                                     &nbsp; <span class="schedule-category" style="font-weight: bold;"> (${OneweekToOneMonth})</span>
-                                </span>
-                            </div>
 
-                        `);
-                    }
+                        console.log("dateExistsArray:", dateExistsArray);
+                        if(effectiveDateValue){
+                            const startDate = new Date(effectiveDateValue);
+                            let endDate;
+                            if(OneweekOrOneMonth  === "1 Week"){
+                                console.log("date_exists.length:", date_exists.length);
+                                if(dateExistsArray.length > 0){
+                                    endDate = new Date(startDate);
+                                    endDate.setDate(startDate.getDate() + 6 + (dateExistsArray.length));
+                                }else{
+                                    endDate = new Date(startDate);
+                                    endDate.setDate(startDate.getDate() + 6);
+                                }
+                                
+                            } else if (OneweekOrOneMonth  === "1 Month"){
+                                console.log("dateExistsArray.length:", dateExistsArray.length);
+                                if (dateExistsArray.length > 0) {
+                                    // extend based on number of date_exists
+                                    endDate = new Date(startDate);
+                                    endDate.setMonth(startDate.getMonth() + 1); 
+                                    endDate.setDate(startDate.getDate() - 1);
+                                    endDate.setDate(endDate.getDate() + dateExistsArray.length);
+                                } else {
+                                    endDate = new Date(startDate);
+                                    endDate.setMonth(startDate.getMonth() + 1);
+                                    endDate.setDate(endDate.getDate() - 1);
+                                }
+                                
+                            }
+
+                            let current = new Date(startDate);
+                            const generateSlots = [];
+
+                            while(current <= endDate){
+                                const dayName = current.toLocaleString("en-US", {weekday: "long"});
+                                const formattedDate = current.toISOString().split("T")[0];
+                                console.log("dayName::", dayName);
+                                if(!dateExistsArray.includes(formattedDate)){
+                                    allCollectedSlots.forEach(slot => {
+                                        if(slot.day === dayName){
+                                            generateSlots.push({
+                                                date: formattedDate,
+                                                time_from: slot.time_from,
+                                                time_to: slot.time_to
+                                            });
+                                        }
+                                    });
+                                }
+
+                                current.setDate(current.getDate() + 1);
+                            }
+
+                            const groupedSlots = generateSlots.reduce((acc, slot) => {
+                                if(!acc[slot.date]) acc[slot.date] = [];
+                                acc[slot.date].push(slot);
+
+                                return acc;
+                            }, {});
+
+                            function formattime(time){
+                                const [hour, minute] = time.split(":");
+                                const date = new Date();
+                                date.setHours(hour, minute);
+                                return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+                            }
+
+                                // Create slot list grouped by date
+                                const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
+                                    const readableDate = new Date(date).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                        weekday: "long"
+                                    });
+
+                                    const times = slots.map(s =>
+                                        `<li style="margin-left: 15px; list-style: none;">🕒 ${formattime(s.time_from)} – ${formattime(s.time_to)}</li>`
+                                    ).join("");
+
+                                    return `
+                                        <div style="margin-bottom: 15px; background: #f9f9f9; padding: 5px; border-radius: 8px;">
+                                            <strong>${readableDate}</strong>
+                                            <ul style="margin: 5px 0; padding: 0;">${times}</ul>
+                                        </div>
+                                    `;
+                                });
+                            
+                                const twoColumnLayout = `
+                                    <div style="
+                                        display: grid;
+                                        grid-template-columns: repeat(auto-fill, minmax(48%, 1fr));
+                                        gap: 5px;
+                                        max-height: 400px;
+                                        overflow-y: auto;
+                                        font-size: 14px;
+                                        padding-right: 5px;
+                                    ">
+                                        ${formattedItems.join("")}
+                                    </div>
+                                `;
+
+                            // Lobibox.alert("info", {
+                            //     msg: twoColumnLayout,
+                            //     closeButton: false,
+                            //     closable: false,
+                            // });
+                            
+                            const formattedSched = `<strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> - <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>`;
+                            $("#SchedCategory").html(`
+                            <div class="col-md-12 schedule-output text-center" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; margin-top: 10px;">
+                                    <span class="schedule-range">
+                                        <i class="fa fa-calendar"></i> <strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> <strong> - </strong> 
+                                        <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
+                                        <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
+                                        <input type='hidden' name="exist_Date" value="${dateExistsArray}">
+                                        <i class="fa fa-calendar"></i> <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>
+                                        &nbsp; <span class="schedule-category" style="font-weight: bold;"> (${ OneweekOrOneMonth })</span>
+                                    </span>
+                                    Your ${OneweekOrOneMonth} schedule can now be created
+                                    ${twoColumnLayout}
+
+                                </div>
+
+                            `);
+                        }
+
+                    })
+                    .catch(error => {
+                        console.error("Error checking slots:", error);
+                    });
+                    
                  
                 }else{
                     $('#please_select_categ').css("display", "block");
@@ -1106,18 +1209,51 @@
                 // console.log('my appointed Id:asdasd',data);
 
                 $('#update_additionalTimeContainer').empty();//to empty the previous  generate form
-                if(data && data.length > 0){
-                    data.forEach(function(appointment){   
-                        // $('#update_department_id').val(appointment.department.description);
-                        // $('#update_facility_id').val(appointment.facility_id).trigger('change');
+                
+                // if(data && data.length > 0){
+                //     data.forEach(function(appointment){   
+                //         // $('#update_department_id').val(appointment.department.description);
+                //         // $('#update_facility_id').val(appointment.facility_id).trigger('change');
+                //         $('#appointed_date').val(appointment.appointed_date);
+                //         let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
+                //         updateAddTimeInput(appointment,doctorAssigned);
+                //     });
+                // }else{
+                //     console.log('No appointments found.');
+                // }
+                
+                if (data && data.length > 0) {
+                    const now = new Date();
+
+                    data.forEach(function (appointment) {
+                        const apptDate = appointment.appointed_date;
+                        const apptTime = appointment.appointed_time;
+
+                        // Combine date + time into one object
+                        const apptDateTime = new Date(`${apptDate}T${apptTime}`);
                         $('#appointed_date').val(appointment.appointed_date);
-                        let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
-                        updateAddTimeInput(appointment,doctorAssigned);
+                        if (apptDate === now.toISOString().split("T")[0]) {
+                            // Same date as today
+                            if (apptDateTime < now) {
+                                // console.log("PAST appointment:", appointment);
+                                // 👉 If you only want to render past, uncomment:
+                                // updateAddTimeInput(appointment, doctorAssigned);
+                            } else {
+                                console.log("PRESENT appointment:", appointment);
+                                let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
+                                updateAddTimeInput(appointment, doctorAssigned);
+                            }
+                        } else {
+                            // Different day (future/past date)
+                            // console.log("OTHER appointment:", appointment);
+                            let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
+                            updateAddTimeInput(appointment, doctorAssigned);
+                        }
                     });
-                }else{
+                } else {
                     console.log('No appointments found.');
                 }
-                
+
 
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("AJAX Error: " + errorThrown);
@@ -1664,7 +1800,7 @@
             console.log("Checking conflict for slotIndex:", slotIndex, "fromTime:", fromTime, "toTime:", toTime);
             for (let i = 0; i < appointmentSlot.length; i++) {
                 if (i === slotIndex) continue; // Skip checking against itself for updates
-
+                // console.log("Comparing with slot:", i, "slot index:", slotIndex);
                 const slot = appointmentSlot[i];
                 const timeOverlap = (fromTime < slot.to && toTime > slot.from);
 
@@ -1708,7 +1844,9 @@
                 from: fromTime,
                 to: toTime,
             };
-         
+
+            console.log("New or Updated Slot:", OrigslotIndex, "at index:",  appointmentSlot.length);
+
             if (OrigslotIndex < appointmentSlot.length) {
                 // Update existing slot
                 appointmentSlot[OrigslotIndex] = newSlot;
@@ -1717,7 +1855,7 @@
                 appointmentSlot.push(newSlot);
             
             }
-            //  console.log("total update slot", appointmentSlot);
+              console.log("total update slot", appointmentSlot);
             return true;
         }
 

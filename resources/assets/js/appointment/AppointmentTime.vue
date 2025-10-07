@@ -445,14 +445,6 @@ export default {
                       v-for="(categoryGroup, categoryId) in groupedAppointments"
                       :key="categoryId"
                     >
-                      <!-- Sub OPD Category Selection -->
-                      <!-- <div class="category-header"
-                        :class="{
-                        'category-highlight': shouldHighlightCategory(categoryId),
-                        'category-pulse': shouldPulseCategory(categoryId)
-                      }"
-                      
-                      > -->
                       <div class="category-header"
                       >
                         <input
@@ -506,11 +498,12 @@ export default {
                               'text-danger': areAllSlotAvailable(appointment.telemed_assigned_doctor) || !appointment.telemed_assigned_doctor || isPastDatetime(appointment.appointed_date, appointment.appointed_time)
                             }"
                           >
-                            {{ appointment.appointed_time }} to {{ appointment.appointedTime_to }} 
+                            {{ appointment.appointed_time }} to {{ appointment.appointedTime_to }} {{ appointment.created_by ? '- Dr. ' + appointment.created_by.fname + ' ' + appointment.created_by.lname : ''  }}
                             <span v-if="areAllSlotAvailable(appointment.telemed_assigned_doctor) || !appointment.telemed_assigned_doctor || isPastDatetime(appointment.appointed_date, appointment.appointed_time)">
                               (Unavailable)
                             </span>
                           </option>
+                          
                         </select>
                       </div>
                     </div>

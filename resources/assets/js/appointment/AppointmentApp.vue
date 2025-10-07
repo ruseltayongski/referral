@@ -127,6 +127,7 @@ export default {
       this.facilitySelectedId = payload;
     },
     appointedTime(payload) {
+      console.log("appointedTime::", payload);
       this.appointedTimes = payload;
 
         if (payload && payload.length > 0) {

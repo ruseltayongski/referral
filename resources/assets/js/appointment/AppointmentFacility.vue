@@ -204,6 +204,8 @@ export default {
         //remove element
         $(".fc-day").css("background-color", "");
         $(".fc-day").removeClass("add-cursor-pointer");
+        $(".fc-day").removeClass("selected-date-indicator");
+        // $(".selected-date-indicator").remove();
       }
       this.$emit("facilitySelected", id);
     },

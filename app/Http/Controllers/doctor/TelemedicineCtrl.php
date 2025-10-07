@@ -432,60 +432,184 @@ class TelemedicineCtrl extends Controller
         return redirect::back();
     }
 
-    public function CheckAppointExists(Request $request){
 
-        // $user = Session::get('auth');
+    // public function CheckAppointExists(Request $request)
+    // {
+    //     $user = Session::get('auth');
 
-        // $date = $request->date;
-        // $slots = $request->slots;
+    //     $start_date = $request->start_date;
+    //     $category = $request->category;
+    //     $day_Slot = $request->day_slot;
 
-        // $exists = false;
+    //     // Determine number of days required
+    //     $requiredDays = $category === '1 week' ? 7 : 30;
+    //     $durationDays = $requiredDays;
 
-        // foreach ($slots as $slot) {
-        //     if (empty($slot['time_from']) || empty($slot['time_to'])) {
-        //         continue; 
-        //     }
+    //     $allConflictDates = [];
+    //     $finalSlots = [];
+    //     $loopCounter = 0;
 
-        //     try {
-        //         $timeFrom = date("H:i:s", strtotime($slot['time_from']));
-        //         $timeTo = date("H:i:s", strtotime($slot['time_to']));
+    //     do {
+    //         $loopCounter++;
 
-        //         if (!$timeFrom || !$timeTo) {
-        //             continue; 
-        //         }
+    //         $end_date = date('Y-m-d', strtotime($start_date . " +{$durationDays} days"));
 
-        //         $conflict = AppointmentSchedule::where('created_by', $user->id)
-        //             ->where('facility_id', $user->facility_id)
-        //             ->where('appointed_date', $date)
-        //             ->where(function ($query) use ($timeFrom, $timeTo) {
-        //                 $query->where('appointed_time', '<', $timeTo)
-        //                     ->where('appointedTime_to', '>', $timeFrom);
-        //             })
-        //             ->exists();
+    //         // ✅ Use global PHP Date classes
+    //         $period = new \DatePeriod(
+    //             new \DateTime($start_date),
+    //             new \DateInterval('P1D'),
+    //             (new \DateTime($end_date))->modify('+1 day')
+    //         );
 
-        //         if ($conflict) {
-        //             $exists = true;
-        //             break;
-        //         }
-        //     } catch (\Exception $e) {
+    //         $slots = [];
+    //         foreach ($period as $date) {
+    //             $dayName = $date->format('l');
+    //             foreach ($day_Slot as $slot) {
+    //                 if ($slot['day'] === $dayName) {
+    //                     $slots[] = [
+    //                         'date' => $date->format('Y-m-d'),
+    //                         'time_from' => $slot['time_from'],
+    //                         'time_to' => $slot['time_to']
+    //                     ];
+    //                 }
+    //             }
+    //         }
 
-        //         continue;
-        //     }
-        // }
+    //         // Check for conflicts
+    //         $currentConflictDates = [];
+    //         foreach ($slots as $slot) {
+    //             $date = $slot['date'];
+    //             $timeFrom = date("H:i:s", strtotime($slot['time_from']));
+    //             $timeTo = date("H:i:s", strtotime($slot['time_to']));
 
-        // return  response()->json(['exists' => $request->all()]);
+    //             $conflict = AppointmentSchedule::where('created_by', $user->id)
+    //                 ->where('facility_id', $user->facility_id)
+    //                 ->where('appointed_date', $date)
+    //                 ->where(function ($query) use ($timeFrom, $timeTo) {
+    //                     $query->where('appointed_time', '<', $timeTo)
+    //                         ->where('appointedTime_to', '>', $timeFrom);
+    //                 })
+    //                 ->exists();
 
+    //             if ($conflict) {
+    //                 $currentConflictDates[] = $date;
+    //             }
+    //         }
+
+    //         // Remove duplicates within the same loop
+    //         $currentConflictDates = array_unique($currentConflictDates);
+
+    //         // ✅ Track only unique total conflicts
+    //         $newConflicts = array_diff($currentConflictDates, $allConflictDates);
+    //         $allConflictDates = array_unique(array_merge($allConflictDates, $currentConflictDates));
+
+    //         // Remove conflicting slots
+    //         $nonConflictSlots = array_filter($slots, fn($slot) => !in_array($slot['date'], $allConflictDates));
+    //         $finalSlots = $nonConflictSlots;
+
+    //         // ✅ Extend only by the number of *new* conflicts found this round
+    //         if (count($newConflicts) > 0) {
+    //             $durationDays += count($newConflicts);
+    //         }
+
+    //         if ($loopCounter > 10) break; // safety stop
+
+    //     } while (count($finalSlots) < $requiredDays && count($newConflicts) > 0);
+
+    //     // Format conflict message
+    //     if (!empty($allConflictDates)) {
+    //         $uniqueDates = array_unique($allConflictDates);
+    //         sort($uniqueDates);
+
+    //         // Format consecutive ranges
+    //         $ranges = [];
+    //         $start = $end = null;
+    //         foreach($uniqueDates as $i => $date){
+    //             $dateObj = new \DateTime($date);
+    //             $nextDateObj = isset($uniqueDates[$i + 1]) ? new \DateTime($uniqueDates[$i + 1]) : null;
+
+    //             if (!$start) $start = $dateObj;
+
+    //             if ($nextDateObj && $nextDateObj->diff($dateObj)->days == 1){
+    //                 $end = $nextDateObj;
+    //             } else {
+    //                 if ($end) {
+    //                     if ($start->format('F') === $end->format('F')) {
+    //                         $ranges[] = $start->format('F j') . '–' . $end->format('j, Y');
+    //                     } else {
+    //                         $ranges[] = $start->format('F j, Y') . ' – ' . $end->format('F j, Y');
+    //                     }
+    //                 } else {
+    //                     $ranges[] = $start->format('F j, Y');
+    //                 }
+    //                 $start = $end = null;
+    //             }
+    //         }
+
+    //         $formattedDates = implode(', ', $ranges);
+    //         $extendedDays = $durationDays - $requiredDays;
+
+    //         return response()->json([
+    //             'status' => 'warning',
+    //             'message' => "Conflicts detected on <strong>{$formattedDates}</strong>. We've extended the schedule by <strong>{$extendedDays} day(s)</strong> to find available slots.",
+    //             'conflict_dates' => $uniqueDates,
+    //             'total_extended_days' => $extendedDays,
+    //             'final_slots' => array_values($finalSlots),
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'ok',
+    //         'message' => 'No conflicting schedules found.',
+    //         'final_slots' => array_values($finalSlots),
+    //     ]);
+    // }
+
+    public function CheckAppointExists(Request $request)
+    {
         $user = Session::get('auth');
-        $slots = $request->appointment_slots ?? [];
 
-        $conflictDates = [];
+        $start_date = $request->start_date;
+        $category = $request->category;
+        $day_Slot = $request->day_slot;
 
-        foreach ($slots as $slot) {
-            if (empty($slot['time_from']) || empty($slot['time_to']) || empty($slot['date'])) {
-                continue; // Skip invalid entries
+        // Determine number of days required
+        $requiredDays = $category === '1 week' ? 7 : 30;
+        $durationDays = $requiredDays;
+
+        $allConflictDates = [];
+        $finalSlots = [];
+        $loopCounter = 0;
+
+        do {
+            $loopCounter++;
+
+            $end_date = date('Y-m-d', strtotime($start_date . " +{$durationDays} days"));
+
+            // ✅ Use global PHP Date classes
+            $period = new \DatePeriod(
+                new \DateTime($start_date),
+                new \DateInterval('P1D'),
+                (new \DateTime($end_date))->modify('+1 day')
+            );
+
+            $slots = [];
+            foreach ($period as $date) {
+                $dayName = $date->format('l');
+                foreach ($day_Slot as $slot) {
+                    if ($slot['day'] === $dayName) {
+                        $slots[] = [
+                            'date' => $date->format('Y-m-d'),
+                            'time_from' => $slot['time_from'],
+                            'time_to' => $slot['time_to']
+                        ];
+                    }
+                }
             }
 
-            try {
+            // Check for conflicts
+            $currentConflictDates = [];
+            foreach ($slots as $slot) {
                 $date = $slot['date'];
                 $timeFrom = date("H:i:s", strtotime($slot['time_from']));
                 $timeTo = date("H:i:s", strtotime($slot['time_to']));
@@ -500,35 +624,230 @@ class TelemedicineCtrl extends Controller
                     ->exists();
 
                 if ($conflict) {
-                    $conflictDates[] = $date;
+                    $currentConflictDates[] = $date;
                 }
-            } catch (\Exception $e) {
-                // Optionally log exception
-                continue;
             }
-        }
 
-        if (!empty($conflictDates)) {
+            // Remove duplicates within the same loop
+            $currentConflictDates = array_unique($currentConflictDates);
 
-              $formattedDates = array_map(function($date) {
-                    return date("F j, Y", strtotime($date));
-                }, array_unique($conflictDates));
+            // ✅ Track only unique total conflicts
+            $newConflicts = array_diff($currentConflictDates, $allConflictDates);
+            $allConflictDates = array_unique(array_merge($allConflictDates, $currentConflictDates));
 
-            $formattedDates = implode(', ', array_unique($conflictDates));
-            
+            // Remove conflicting slots
+            $nonConflictSlots = array_filter($slots, fn($slot) => !in_array($slot['date'], $allConflictDates));
+            $finalSlots = $nonConflictSlots;
+
+            // ✅ Extend only by the number of *new* conflicts found this round
+            if (count($newConflicts) > 0) {
+                $durationDays += count($newConflicts);
+            }
+
+            if ($loopCounter > 10) break; // safety stop
+
+        } while (count($finalSlots) < $requiredDays && count($newConflicts) > 0);
+
+        // Format conflict message
+        if (!empty($allConflictDates)) {
+            $uniqueDates = array_unique($allConflictDates);
+            sort($uniqueDates);
+
+            // Format consecutive ranges
+            $ranges = [];
+            $start = $end = null;
+            foreach($uniqueDates as $i => $date){
+                $dateObj = new \DateTime($date);
+                $nextDateObj = isset($uniqueDates[$i + 1]) ? new \DateTime($uniqueDates[$i + 1]) : null;
+
+                if (!$start) $start = $dateObj;
+
+                if ($nextDateObj && $nextDateObj->diff($dateObj)->days == 1){
+                    $end = $nextDateObj;
+                } else {
+                    if ($end) {
+                        if ($start->format('F') === $end->format('F')) {
+                            $ranges[] = $start->format('F j') . '–' . $end->format('j, Y');
+                        } else {
+                            $ranges[] = $start->format('F j, Y') . ' – ' . $end->format('F j, Y');
+                        }
+                    } else {
+                        $ranges[] = $start->format('F j, Y');
+                    }
+                    $start = $end = null;
+                }
+            }
+
+            $formattedDates = implode(', ', $ranges);
+            $extendedDays = $durationDays - $requiredDays;
+
             return response()->json([
-                'status' => 'error',
-                'message' => "You have a conflict schedule on these dates: {$formattedDates}. Please check your manual config.",
-                'conflict_dates' => array_unique($conflictDates),
+                'status' => 'warning',
+                'message' => "Conflicts detected on <strong>{$formattedDates}</strong>. We've extended the schedule by <strong>{$extendedDays} day(s)</strong> to find available slots.",
+                'conflict_dates' => $uniqueDates,
+                'total_extended_days' => $extendedDays,
+                'final_slots' => array_values($finalSlots),
             ]);
         }
 
         return response()->json([
             'status' => 'ok',
             'message' => 'No conflicting schedules found.',
+            'final_slots' => array_values($finalSlots),
         ]);
-
     }
+
+
+//     public function CheckAppointExists(Request $request){
+
+//         $user = Session::get('auth');
+//         $slots = $request->appointment_slots ?? [];
+
+//         $start_date = $request->start_date;
+//         $category = $request->category;
+//         $day_Slot = $request->day_slot;
+
+//         $conflictDates = [];
+
+//         foreach ($slots as $slot) {
+//             if (empty($slot['time_from']) || empty($slot['time_to']) || empty($slot['date'])) {
+//                 continue; // Skip invalid entries
+//             }
+
+//             try {
+//                 $date = $slot['date'];
+//                 $timeFrom = date("H:i:s", strtotime($slot['time_from']));
+//                 $timeTo = date("H:i:s", strtotime($slot['time_to']));
+
+//                 $conflict = AppointmentSchedule::where('created_by', $user->id)
+//                     ->where('facility_id', $user->facility_id)
+//                     ->where('appointed_date', $date)
+//                     ->where(function ($query) use ($timeFrom, $timeTo) {
+//                         $query->where('appointed_time', '<', $timeTo)
+//                             ->where('appointedTime_to', '>', $timeFrom);
+//                     })
+//                     ->exists();
+
+//                 if ($conflict) {
+//                     $conflictDates[] = $date;
+//                 }
+//             } catch (\Exception $e) {
+//                 // Optionally log exception
+//                 continue;
+//             }
+//         }
+
+//         if (!empty($conflictDates)) {
+//             $uniqueDates = array_unique($conflictDates);
+//             sort($uniqueDates);
+
+//             $ranges = [];
+//             $start = $end = null;
+
+//             foreach($uniqueDates as $i => $date){
+//                 $dateObj = new DateTime($date);
+//                 $nextDateObj = isset($uniqueDates[$i + 1]) ? new DateTime($uniqueDates[$i + 1]) : null;
+
+                
+//                 if (!$start) {
+//                     $start = $dateObj;
+//                 }
+
+//                 if($nextDateObj && $nextDateObj->diff($dateObj)->days == 1){
+//                      $end = $nextDateObj;
+//                 }else{
+//                     if ($end) {
+//                         if ($start->format('F') === $end->format('F')) {
+//                             $ranges[] = $start->format('F j') . '–' . $end->format('j, Y');
+//                         } else {
+//                             $ranges[] = $start->format('F j, Y') . ' – ' . $end->format('F j, Y');
+//                         }
+//                     } else {
+//                         $ranges[] = $start->format('F j, Y');
+//                     }
+//                     $start = $end = null;
+//                 }
+//             }
+
+//             $formattedDates = implode(', ', $ranges);
+            
+//             return response()->json([
+//                 'status' => 'warning',
+//                 'message' => "You've already created an appointment for <i><strong>{$formattedDates}.</strong></i>  We will skip these dates and proceed with the remaining available dates.",
+//                 'date_exists' => $formattedDates,
+//                 'conflict_dates' => array_unique($conflictDates),
+//                 'data' => $slots,
+//                 'datestart' => $date    
+
+//             ]);
+//         }
+
+//         return response()->json([
+//             'status' => 'ok',
+//             'message' => 'No conflicting schedules found.',
+//             'data' => $slots
+//         ]);
+
+//         // $slots = $request->appointment_slots ?? [];
+
+//         // $conflictDates = [];
+//         // $validSlots = [];
+
+//         // foreach ($slots as $slot) {
+//         //     if (empty($slot['time_from']) || empty($slot['time_to']) || empty($slot['date'])) {
+//         //         continue; // Skip invalid entries
+//         //     }
+
+//         //     try {
+//         //         $date = $slot['date'];
+//         //         $timeFrom = date("H:i:s", strtotime($slot['time_from']));
+//         //         $timeTo = date("H:i:s", strtotime($slot['time_to']));
+
+//         //         $conflict = AppointmentSchedule::where('created_by', $user->id)
+//         //             ->where('facility_id', $user->facility_id)
+//         //             ->where('appointed_date', $date)
+//         //             ->where(function ($query) use ($timeFrom, $timeTo) {
+//         //                 $query->where('appointed_time', '<', $timeTo)
+//         //                     ->where('appointedTime_to', '>', $timeFrom);
+//         //             })
+//         //             ->exists();
+
+//         //         if ($conflict) {
+//         //             $conflictDates[] = $date;
+//         //         } else {
+//         //             $validSlots[] = $slot; // only keep non-conflicting
+//         //         }
+//         //     } catch (\Exception $e) {
+//         //         continue;
+//         //     }
+//         // }
+            
+        
+//         // if (!empty($conflictDates)) {
+
+//         //      $formattedDates = array_map(function($date) {
+//         //             return date("F j, Y", strtotime($date));
+//         //     }, array_unique($conflictDates));
+
+//         //     $formattedDates = implode(', ', array_unique($conflictDates));
+
+//         //     return response()->json([
+//         //         'status' => 'warning', // <-- not blocking
+//         //         'message' => "You've already created an appointment for <i><strong>{$formattedDates}.</strong></i>  We will skip these dates and proceed with the remaining available dates.",
+//         //         'conflict_dates' => array_unique($conflictDates),
+//         //         'valid_slots' => $validSlots, // <-- send back slots that are safe
+//         //         'data' => $slots
+//         //     ]);
+//         // }
+
+//         // return response()->json([
+//         //     'status' => 'ok',
+//         //     'message' => 'All dates are available.',
+//         //     'valid_slots' => $validSlots ?: $slots, // all are valid
+//         //     'data' => $slots
+//         // ]);
+
+//    }
 
     public function removeconfigSched(Request $req){
         $config_sched = Cofig_schedule::where('id', $req->configId)->first();
@@ -548,7 +867,7 @@ class TelemedicineCtrl extends Controller
             $q->where('facility_id','!=',$user->facility_id);
         })
         ->find($facility_id);
-
+      
         return view('doctor.telemedicine_calendar1',[
             'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,
@@ -560,7 +879,7 @@ class TelemedicineCtrl extends Controller
     public function createAppointment(Request $request)
     {
         $user = Session::get('auth');
-
+      
         if($request->config_id){
 
             $startDate = DateTime::createFromFormat('m-d-Y', $request->startDate);
@@ -572,9 +891,20 @@ class TelemedicineCtrl extends Controller
             $departmentId = $request->department_id;
             $createdBy = $user->id;
 
+            $existDates = [];
+            if(!empty($request->exist_Date)){
+                $existDates = array_map('trim', explode(',', $request->exist_Date));
+            }
+
             while ($startDate <= $endDate) {
                 $dayOfWeek = $startDate->format('l');
-                
+                $currentDate = $startDate->format('Y-m-d');
+
+                if(in_array($currentDate, $existDates)){
+                    $startDate->modify('+1 day');
+                    continue;
+                }
+
                 if (in_array($dayOfWeek, $days)) {
                     foreach ($timeFrom[$dayOfWeek] as $index => $timeStart) {
                         $appointmentSchedule = new AppointmentSchedule();
@@ -927,6 +1257,13 @@ class TelemedicineCtrl extends Controller
     {
         $timeSlots = AppointmentSchedule::
             with([
+                'createdBy' => function ($query) {
+                    $query->select(
+                        'id',
+                        'fname',
+                        'lname'
+                    );
+                },
                 'telemedAssignedDoctor' => function ($query) {
                     $query->with(['doctor' => function ($query) {
                         $query->select(
