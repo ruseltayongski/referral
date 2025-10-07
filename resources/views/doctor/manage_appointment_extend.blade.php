@@ -310,6 +310,7 @@
                                         </div>
                                         <p id="SchedCategory"></p>
                                 </div>
+                                
 
                                 <div class="col-md-8" id="Manual-time-slot">
                                     <div class ="time-input-group">

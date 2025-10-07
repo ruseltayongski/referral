@@ -126,6 +126,18 @@
         min-width: 140px;  /* adjust as needed based on number of buttons */
     }
 
+    /* Add this to your CSS */
+    .schedule-output::-webkit-scrollbar {
+        width: 8px;
+    }
+    .schedule-output::-webkit-scrollbar-thumb {
+        background: #cce0ff;
+        border-radius: 10px;
+    }
+    .schedule-output::-webkit-scrollbar-thumb:hover {
+        background: #99c2ff;
+    }
+
     </style>
     
 @endsection
@@ -760,7 +772,6 @@
                             while(current <= endDate){
                                 const dayName = current.toLocaleString("en-US", {weekday: "long"});
                                 const formattedDate = current.toISOString().split("T")[0];
-                                console.log("dayName::", dayName);
                                 if(!dateExistsArray.includes(formattedDate)){
                                     allCollectedSlots.forEach(slot => {
                                         if(slot.day === dayName){
@@ -790,64 +801,91 @@
                                 return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
                             }
 
-                                // Create slot list grouped by date
-                                const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
-                                    const readableDate = new Date(date).toLocaleDateString("en-US", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                        weekday: "long"
-                                    });
+                            // Create slot list grouped by date
+                           const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
+                            const readableDate = new Date(date).toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                                weekday: "long"
+                            });
 
-                                    const times = slots.map(s =>
-                                        `<li style="margin-left: 15px; list-style: none;">🕒 ${formattime(s.time_from)} – ${formattime(s.time_to)}</li>`
-                                    ).join("");
+                            const times = slots.map(s =>
+                                `<span style="
+                                    display: inline-block;
+                                    margin: 3px 6px;
+                                    padding: 4px 8px;
+                                    background-color: #e7f3ff;
+                                    border: 1px solid #cce0ff;
+                                    border-radius: 6px;
+                                    font-size: 13px;
+                                ">
+                                    🕒 ${formattime(s.time_from)} – ${formattime(s.time_to)}
+                                </span>`
+                            ).join("");
 
-                                    return `
-                                        <div style="margin-bottom: 15px; background: #f9f9f9; padding: 5px; border-radius: 8px;">
-                                            <strong>${readableDate}</strong>
-                                            <ul style="margin: 5px 0; padding: 0;">${times}</ul>
-                                        </div>
-                                    `;
-                                });
-                            
-                                const twoColumnLayout = `
-                                    <div style="
-                                        display: grid;
-                                        grid-template-columns: repeat(auto-fill, minmax(48%, 1fr));
-                                        gap: 5px;
-                                        max-height: 400px;
-                                        overflow-y: auto;
-                                        font-size: 14px;
-                                        padding-right: 5px;
-                                    ">
-                                        ${formattedItems.join("")}
+                            return `
+                                <div style="
+                                    background: #fff;
+                                    border: 1px solid #e5e5e5;
+                                    border-radius: 10px;
+                                    padding: 10px 15px;
+                                    margin-bottom: 10px;
+                                    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                                ">
+                                    <div style="font-weight: 600; color: #333;">
+                                        <i class="fa fa-calendar" style="color:#007bff; margin-right:5px;"></i> ${readableDate}
                                     </div>
-                                `;
+                                    <div style="margin-top: 5px;">${times}</div>
+                                </div>
+                            `;
+                        });
 
-                            // Lobibox.alert("info", {
-                            //     msg: twoColumnLayout,
-                            //     closeButton: false,
-                            //     closable: false,
-                            // });
-                            
-                            const formattedSched = `<strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> - <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>`;
-                            $("#SchedCategory").html(`
-                            <div class="col-md-12 schedule-output text-center" style="padding: 10px; border: 1px solid #ddd; border-radius: 5px; background-color: #f9f9f9; margin-top: 10px;">
-                                    <span class="schedule-range">
-                                        <i class="fa fa-calendar"></i> <strong>Start Date:</strong> <span class="schedule-category">${formatedSchedule(startDate)}</span> <strong> - </strong> 
-                                        <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
-                                        <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
-                                        <input type='hidden' name="exist_Date" value="${dateExistsArray}">
-                                        <i class="fa fa-calendar"></i> <strong>End Date:</strong> <span class="schedule-category">${formatedSchedule(endDate)}</span>
-                                        &nbsp; <span class="schedule-category" style="font-weight: bold;"> (${ OneweekOrOneMonth })</span>
-                                    </span>
-                                    Your ${OneweekOrOneMonth} schedule can now be created
-                                    ${twoColumnLayout}
+                        const twoColumnLayout = `
+                            <div style="
+                                display: grid;
+                                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                                gap: 10px;
+                                margin-top: 15px;
+                            ">
+                                ${formattedItems.join("")}
+                            </div>
+                        `;
 
+                        $("#SchedCategory").html(`
+                            <div class="col-md-12 schedule-output text-center" 
+                                style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #fdfdfd; margin-top: 15px;">
+                                
+                                <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">
+                                    <i class="fa fa-calendar-check-o"></i> Schedule Period
+                                </div>
+                                
+                                <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
+                                <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
+                                <input type='hidden' name="exist_Date" value="${dateExistsArray}">
+
+                                <div style="background-color:#eef6ff; padding:10px 15px; border-radius:8px; display:inline-block; font-size:14px; margin-bottom: 10px;">
+                                    <strong>Start:</strong> ${formatedSchedule(startDate)} 
+                                    <strong style="margin: 0 5px;">→</strong> 
+                                    <strong>End:</strong> ${formatedSchedule(endDate)} 
+                                    <span style="font-weight:bold; color:#007bff;">(${OneweekOrOneMonth})</span>
                                 </div>
 
-                            `);
+                                <div style="color:#555; font-size:13px; margin-bottom: 10px;">
+                                    Your schedule can now be created:
+                                </div>
+
+                                <div style="
+                                    max-height: 550px; /* adjust this based on desired height for ~5 schedules */
+                                    overflow-y: auto;
+                                    padding-right: 5px;
+                                ">
+                                    ${twoColumnLayout}
+                                </div>
+
+                            </div>
+                        `);
+
                         }
 
                     })
