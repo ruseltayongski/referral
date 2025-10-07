@@ -118,6 +118,11 @@ export default {
       glasgocoma_scale: null,
       obstetric_and_gynecologic_history: null,
       pregnancy: null,
+
+      afkTimeout: null,
+      afkDialogVisible: false,
+      afkCountdown: 10,
+      afkCountdownInterval: null,
       // netSpeedMbps: null,
       // netSpeedStatus: '', // 'fast' or 'slow'
     };
@@ -127,6 +132,7 @@ export default {
     document.title = "TELEMEDICINE";
     // Change favicon
     const link = document.querySelector("link[rel~='icon']");
+    this.initAfkDetection();
     if (link) {
       link.href = this.dohLogoUrl; // Make sure logo.png is in your public folder
     } else {
@@ -244,6 +250,7 @@ export default {
     window.removeEventListener("click", this.showDivAgain);
     window.removeEventListener("beforeunload", this.preventCloseWhileUploading);
     window.removeEventListener("keydown", this.pregnantKeydown);
+    this.clearAfkTimers();
     this.stopCallTimer();
     // Remove event listener when component is destroyed
     window.removeEventListener("resize", this.handleResize);
@@ -340,6 +347,73 @@ export default {
           closeButton: false,
         });
       }
+    },
+    // AFK Detection Methods
+    initAfkDetection() {
+      // Listen for user activity
+      const reset = this.resetAfkTimer;
+      window.addEventListener("mousemove", reset);
+      window.addEventListener("keydown", reset);
+      window.addEventListener("mousedown", reset);
+      window.addEventListener("touchstart", reset);
+      this.resetAfkTimer();
+    },
+    resetAfkTimer() {
+      // If dialog is open, close it and reset countdown
+      if (this.afkDialogVisible) {
+        this.closeAfkDialog();
+      }
+      clearTimeout(this.afkTimeout);
+      this.afkTimeout = setTimeout(this.showAfkDialog, 3 * 60 * 1000); // 5 minutes
+    },
+    showAfkDialog() {
+      this.afkDialogVisible = true;
+      this.afkCountdown = 30;
+      this.afkCountdownInterval = setInterval(() => {
+        this.afkCountdown--;
+        if (this.afkCountdown <= 0) {
+          this.endCallAfk();
+        }
+      }, 1000);
+    },
+    closeAfkDialog() {
+      this.afkDialogVisible = false;
+      clearInterval(this.afkCountdownInterval);
+      this.afkCountdown = 30;
+      this.resetAfkTimer();
+    },
+    endCallAfk() {
+      clearInterval(this.afkCountdownInterval);
+      this.afkDialogVisible = false;
+      // End the call (reuse your leaveChannel method)
+      // Stop screen recording and save the file
+      if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+        this.screenRecorder.stop();
+        this.screenRecorder.onstop = () => {
+          this.saveScreenRecording(true);
+        };
+      }
+
+      // Wait for duration to be sent before closing
+      if (this.referring_md === "yes") {
+        clearInterval(this.callTimer); // Stop the timer
+        this.sendCallDuration();
+
+        // // Give more time for the request to complete
+        // setTimeout(() => {
+        //     window.top.close();
+        // }, 10000);
+      } else {
+        window.top.close();
+      }
+    },
+    clearAfkTimers() {
+      clearTimeout(this.afkTimeout);
+      clearInterval(this.afkCountdownInterval);
+      window.removeEventListener("mousemove", this.resetAfkTimer);
+      window.removeEventListener("keydown", this.resetAfkTimer);
+      window.removeEventListener("mousedown", this.resetAfkTimer);
+      window.removeEventListener("touchstart", this.resetAfkTimer);
     },
     switchCamera() {
       // console.log("Attempting to switch camera...");
@@ -1033,10 +1107,16 @@ export default {
         self.channelParameters.userCount++;
         this.isUserJoined = true;
 
-        console.log("user count: ", self.channelParameters.userCount, 
-                    "max users:", self.channelParameters.maxUsers);
+        console.log(
+          "user count: ",
+          self.channelParameters.userCount,
+          "max users:",
+          self.channelParameters.maxUsers
+        );
 
-        if (self.channelParameters.userCount >= self.channelParameters.maxUsers) {
+        if (
+          self.channelParameters.userCount >= self.channelParameters.maxUsers
+        ) {
           self.showChannelFullMessage();
           await agoraEngine.leave();
           self.channelParameters.userCount--;
@@ -1162,7 +1242,7 @@ export default {
         console.error("Error joining channel:", error);
       }
     },
-     showChannelFullMessage() {
+    showChannelFullMessage() {
       // Create an alert or message to inform user
       const fullMessage = document.createElement("div");
       fullMessage.className = "channel-full-message";
@@ -1862,6 +1942,15 @@ export default {
       @close-modal="closeFeedbackModal"
     />
     <PDFViewerModal ref="pdfViewer" :pdfUrl="PdfUrl" />
+    <!-- Place AFK dialog here, before closing fullscreen-div -->
+    <div v-if="afkDialogVisible" class="afk-overlay">
+      <div class="afk-dialog">
+        <p>You have been inactive for some time.</p>
+        <p>
+          Ending call in <b>{{ afkCountdown }}</b> seconds...
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 

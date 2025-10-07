@@ -23409,7 +23409,7 @@ var doctorFeedback = "referral/doctor/feedback";
         this.closeAfkDialog();
       }
       clearTimeout(this.afkTimeout);
-      this.afkTimeout = setTimeout(this.showAfkDialog, 2 * 60 * 1000); // 2 minutes
+      this.afkTimeout = setTimeout(this.showAfkDialog, 3 * 60 * 1000); // 3 minutes
     },
     showAfkDialog: function showAfkDialog() {
       var _this5 = this;

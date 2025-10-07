@@ -23078,7 +23078,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       latest_vital_signs: null,
       glasgocoma_scale: null,
       obstetric_and_gynecologic_history: null,
-      pregnancy: null
+      pregnancy: null,
+      afkTimeout: null,
+      afkDialogVisible: false,
+      afkCountdown: 10,
+      afkCountdownInterval: null
       // netSpeedMbps: null,
       // netSpeedStatus: '', // 'fast' or 'slow'
     };
@@ -23089,6 +23093,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     document.title = "TELEMEDICINE";
     // Change favicon
     var link = document.querySelector("link[rel~='icon']");
+    this.initAfkDetection();
     if (link) {
       link.href = this.dohLogoUrl; // Make sure logo.png is in your public folder
     } else {
@@ -23176,6 +23181,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     window.removeEventListener("click", this.showDivAgain);
     window.removeEventListener("beforeunload", this.preventCloseWhileUploading);
     window.removeEventListener("keydown", this.pregnantKeydown);
+    this.clearAfkTimers();
     this.stopCallTimer();
     // Remove event listener when component is destroyed
     window.removeEventListener("resize", this.handleResize);
@@ -23263,9 +23269,78 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }, _callee, null, [[0, 8]]);
       }))();
     },
+    // AFK Detection Methods
+    initAfkDetection: function initAfkDetection() {
+      // Listen for user activity
+      var reset = this.resetAfkTimer;
+      window.addEventListener("mousemove", reset);
+      window.addEventListener("keydown", reset);
+      window.addEventListener("mousedown", reset);
+      window.addEventListener("touchstart", reset);
+      this.resetAfkTimer();
+    },
+    resetAfkTimer: function resetAfkTimer() {
+      // If dialog is open, close it and reset countdown
+      if (this.afkDialogVisible) {
+        this.closeAfkDialog();
+      }
+      clearTimeout(this.afkTimeout);
+      this.afkTimeout = setTimeout(this.showAfkDialog, 3 * 60 * 1000); // 5 minutes
+    },
+    showAfkDialog: function showAfkDialog() {
+      var _this4 = this;
+      this.afkDialogVisible = true;
+      this.afkCountdown = 30;
+      this.afkCountdownInterval = setInterval(function () {
+        _this4.afkCountdown--;
+        if (_this4.afkCountdown <= 0) {
+          _this4.endCallAfk();
+        }
+      }, 1000);
+    },
+    closeAfkDialog: function closeAfkDialog() {
+      this.afkDialogVisible = false;
+      clearInterval(this.afkCountdownInterval);
+      this.afkCountdown = 30;
+      this.resetAfkTimer();
+    },
+    endCallAfk: function endCallAfk() {
+      var _this5 = this;
+      clearInterval(this.afkCountdownInterval);
+      this.afkDialogVisible = false;
+      // End the call (reuse your leaveChannel method)
+      // Stop screen recording and save the file
+      if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+        this.screenRecorder.stop();
+        this.screenRecorder.onstop = function () {
+          _this5.saveScreenRecording(true);
+        };
+      }
+
+      // Wait for duration to be sent before closing
+      if (this.referring_md === "yes") {
+        clearInterval(this.callTimer); // Stop the timer
+        this.sendCallDuration();
+
+        // // Give more time for the request to complete
+        // setTimeout(() => {
+        //     window.top.close();
+        // }, 10000);
+      } else {
+        window.top.close();
+      }
+    },
+    clearAfkTimers: function clearAfkTimers() {
+      clearTimeout(this.afkTimeout);
+      clearInterval(this.afkCountdownInterval);
+      window.removeEventListener("mousemove", this.resetAfkTimer);
+      window.removeEventListener("keydown", this.resetAfkTimer);
+      window.removeEventListener("mousedown", this.resetAfkTimer);
+      window.removeEventListener("touchstart", this.resetAfkTimer);
+    },
     switchCamera: function switchCamera() {
       var _this$channelParamete,
-        _this4 = this;
+        _this6 = this;
       // console.log("Attempting to switch camera...");
 
       var track = (_this$channelParamete = this.channelParameters) === null || _this$channelParamete === void 0 ? void 0 : _this$channelParamete.localVideoTrack;
@@ -23286,7 +23361,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
 
       // Find the next camera
       var currentIndex = this.availableCameras.findIndex(function (camera) {
-        return camera.deviceId === _this4.currentCameraId;
+        return camera.deviceId === _this6.currentCameraId;
       });
       var nextIndex = (currentIndex + 1) % this.availableCameras.length;
       var nextCamera = this.availableCameras[nextIndex];
@@ -23296,11 +23371,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // 🔑 Switch device on the SAME track
       track.setDevice(nextCamera.deviceId).then(function () {
         // update current camera id
-        _this4.currentCameraId = nextCamera.deviceId;
+        _this6.currentCameraId = nextCamera.deviceId;
         // console.log("Camera switch successful (no republish needed)");
 
         // 🔑 re-play the track so the new camera feed shows immediately
-        var container = document.getElementById(_this4.options.uid);
+        var container = document.getElementById(_this6.options.uid);
         if (container) {
           try {
             track.stop(); // stop old rendering
@@ -23553,7 +23628,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       });
     },
     startScreenRecording: function startScreenRecording() {
-      var _this5 = this;
+      var _this7 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
         var isSupported, screenStream, micStream, audioContext, destination, systemAudioSource, micAudioSource, combinedStream;
         return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -23619,15 +23694,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               // Combine video from screenStream and mixed audio
               combinedStream = new MediaStream([].concat(_toConsumableArray(screenStream.getVideoTracks()), _toConsumableArray(destination.stream.getAudioTracks()))); // console.log("Combined stream created:", combinedStream);
               // Initialize MediaRecorder with the combined stream
-              _this5.screenRecorder = new MediaRecorder(combinedStream, {
+              _this7.screenRecorder = new MediaRecorder(combinedStream, {
                 mimeType: "video/webm; codecs=vp8" // WebM format
               });
-              _this5.recordedChunks = [];
+              _this7.recordedChunks = [];
 
               // Collect recorded data
-              _this5.screenRecorder.ondataavailable = function (event) {
+              _this7.screenRecorder.ondataavailable = function (event) {
                 if (event.data.size > 0) {
-                  _this5.recordedChunks.push(event.data);
+                  _this7.recordedChunks.push(event.data);
                 }
               };
 
@@ -23640,7 +23715,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               });
 
               // Start recording
-              _this5.screenRecorder.start();
+              _this7.screenRecorder.start();
               //for minutes timer
               // this.startCallTimer();
               // console.log("Screen recording started with desktop and microphone audio.");
@@ -23681,21 +23756,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     saveScreenRecording: function saveScreenRecording() {
       var _arguments = arguments,
-        _this6 = this;
+        _this8 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
         var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, username, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               closeAfterUpload = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
-              if (!(_this6.recordedChunks.length > 0)) {
+              if (!(_this8.recordedChunks.length > 0)) {
                 _context3.next = 54;
                 break;
               }
-              _this6.loading = true; // Show loader
+              _this8.loading = true; // Show loader
 
               // Convert recorded chunks to a Blob
-              blob = new Blob(_this6.recordedChunks, {
+              blob = new Blob(_this8.recordedChunks, {
                 type: "video/webm"
               }); // --- Max file size check (2GB) ---
               maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
@@ -23703,27 +23778,27 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 _context3.next = 9;
                 break;
               }
-              _this6.loading = false;
+              _this8.loading = false;
               Lobibox.alert("warning", {
                 msg: "The recording is too large to upload (max 2GB). Please record a shorter session."
               });
               return _context3.abrupt("return");
             case 9:
               // Generate the filename
-              patientCode = _this6.form.code || "Unknown_Patient";
-              activityId = _this6.activity_id;
-              referring_md = _this6.form.referring_md;
-              referred = _this6.form.action_md;
+              patientCode = _this8.form.code || "Unknown_Patient";
+              activityId = _this8.activity_id;
+              referring_md = _this8.form.referring_md;
+              referred = _this8.form.action_md;
               currentDate = new Date();
               dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
-              timeStart = new Date(_this6.startTime).toLocaleTimeString("en-US", {
+              timeStart = new Date(_this8.startTime).toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
               timeEnd = currentDate.toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
               fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // Get facility name for folder (sanitize on server)
-              username = _this6.user.username || "UnknownUser";
+              username = _this8.user.username || "UnknownUser";
               chunkSize = 5 * 1024 * 1024; // Default to 5MB
               totalChunks = Math.ceil(blob.size / chunkSize);
               chunkIndex = 0;
@@ -23750,14 +23825,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               });
             case 35:
               // Update progress after each chunk
-              _this6.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
+              _this8.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
               _context3.next = 44;
               break;
             case 38:
               _context3.prev = 38;
               _context3.t0 = _context3["catch"](32);
-              _this6.loading = false;
-              _this6.uploadProgress = 0; // Reset on error
+              _this8.loading = false;
+              _this8.uploadProgress = 0; // Reset on error
               Lobibox.alert("warning", {
                 msg: "Failed to upload chunk ".concat(chunkIndex + 1, "/").concat(totalChunks, ": ") + (((_error$response = _context3.t0.response) === null || _error$response === void 0 || (_error$response = _error$response.data) === null || _error$response === void 0 ? void 0 : _error$response.message) || _context3.t0.message)
               });
@@ -23767,10 +23842,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context3.next = 22;
               break;
             case 47:
-              _this6.uploadProgress = 100; // Ensure it's 100% at the end
-              _this6.recordedChunks = []; // Clear recorded chunks to free memory
-              _this6.loading = false; // Hide loader
-              _this6.uploadProgress = 0; // Reset progress
+              _this8.uploadProgress = 100; // Ensure it's 100% at the end
+              _this8.recordedChunks = []; // Clear recorded chunks to free memory
+              _this8.loading = false; // Hide loader
+              _this8.uploadProgress = 0; // Reset progress
 
               if (closeAfterUpload) {
                 Lobibox.alert("success", {
@@ -23799,10 +23874,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     },
     startCallTimer: function startCallTimer() {
-      var _this7 = this;
+      var _this9 = this;
       this.startTime = Date.now();
       this.callTimer = setInterval(function () {
-        var elapsedTime = Date.now() - _this7.startTime;
+        var elapsedTime = Date.now() - _this9.startTime;
         var hours = Math.floor(elapsedTime / 3600000);
         var minutes = Math.floor(elapsedTime % 3600000 / 60000);
         var seconds = Math.floor(elapsedTime % 60000 / 1000);
@@ -23810,14 +23885,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         // Format the time as mm:ss:ms
 
         if (hours == 0) {
-          _this7.callDuration = "".concat(String(minutes).padStart(1, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
+          _this9.callDuration = "".concat(String(minutes).padStart(1, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
         } else {
-          _this7.callDuration = "".concat(String(hours).padStart(1, "0"), " : ").concat(String(minutes).padStart(2, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
+          _this9.callDuration = "".concat(String(hours).padStart(1, "0"), " : ").concat(String(minutes).padStart(2, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
         }
       }, 10);
     },
     startBasicCall: function startBasicCall() {
-      var _this8 = this;
+      var _this10 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
         var agoraEngine, remotePlayerContainer, localPlayerContainer, self, devices, tracksToPublish;
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
@@ -23827,15 +23902,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 mode: "rtc",
                 codec: "vp8"
               });
-              if (!_this8.channelParameters) {
-                _this8.channelParameters = {};
+              if (!_this10.channelParameters) {
+                _this10.channelParameters = {};
               }
-              _this8.channelParameters.userCount = 0;
-              _this8.channelParameters.maxUsers = 2;
+              _this10.channelParameters.userCount = 0;
+              _this10.channelParameters.maxUsers = 2;
               remotePlayerContainer = document.createElement("div");
               localPlayerContainer = document.createElement("div");
-              localPlayerContainer.id = _this8.options.uid;
-              self = _this8; // Check if camera exists before creating video track
+              localPlayerContainer.id = _this10.options.uid;
+              self = _this10; // Check if camera exists before creating video track
               // const devices = await AgoraRTC.getDevices();
               // const realCameras = devices.filter(device =>
               //     device.kind === "videoinput" &&
@@ -23869,7 +23944,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                       case 0:
                         console.log("User joined:", user.uid);
                         self.channelParameters.userCount++;
-                        _this8.isUserJoined = true;
+                        _this10.isUserJoined = true;
                         console.log("user count: ", self.channelParameters.userCount, "max users:", self.channelParameters.maxUsers);
                         if (!(self.channelParameters.userCount >= self.channelParameters.maxUsers)) {
                           _context4.next = 12;
@@ -23882,8 +23957,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                         self.channelParameters.userCount--;
                         return _context4.abrupt("return");
                       case 12:
-                        if (_this8.referring_md === "yes") {
-                          _this8.startScreenRecording();
+                        if (_this10.referring_md === "yes") {
+                          _this10.startScreenRecording();
                         }
                       case 13:
                       case "end":
@@ -24110,23 +24185,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     sendCallDuration: function sendCallDuration() {
-      var _this9 = this;
+      var _this11 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
         var duration, parts, totalMinutes, response;
         return _regeneratorRuntime().wrap(function _callee8$(_context8) {
           while (1) switch (_context8.prev = _context8.next) {
             case 0:
-              if (!_this9.isLeavingChannel) {
+              if (!_this11.isLeavingChannel) {
                 _context8.next = 2;
                 break;
               }
               return _context8.abrupt("return");
             case 2:
               // Prevent duplicate sends
-              _this9.isLeavingChannel = true;
+              _this11.isLeavingChannel = true;
 
               // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
-              duration = _this9.callDuration.replace(/\s/g, ""); // Remove spaces
+              duration = _this11.callDuration.replace(/\s/g, ""); // Remove spaces
               parts = duration.split(":").map(Number);
               totalMinutes = 0;
               if (parts.length === 2) {
@@ -24143,11 +24218,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
               _context8.prev = 8;
               _context8.next = 11;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this9.baseUrl, "/save-call-duration"), {
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this11.baseUrl, "/save-call-duration"), {
                 call_duration: totalMinutes,
                 // send as int(11)
-                tracking_id: _this9.tracking_id,
-                referral_code: _this9.referral_code
+                tracking_id: _this11.tracking_id,
+                referral_code: _this11.referral_code
               });
             case 11:
               response = _context8.sent;
@@ -24167,7 +24242,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     leaveChannel: function leaveChannel() {
-      var _this10 = this;
+      var _this12 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
         return _regeneratorRuntime().wrap(function _callee9$(_context9) {
           while (1) switch (_context9.prev = _context9.next) {
@@ -24177,23 +24252,23 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 break;
               }
               // Stop screen recording and save the file
-              if (_this10.screenRecorder && _this10.screenRecorder.state !== "inactive") {
-                _this10.screenRecorder.stop();
-                _this10.screenRecorder.onstop = function () {
-                  _this10.saveScreenRecording(true);
+              if (_this12.screenRecorder && _this12.screenRecorder.state !== "inactive") {
+                _this12.screenRecorder.stop();
+                _this12.screenRecorder.onstop = function () {
+                  _this12.saveScreenRecording(true);
                 };
               } else {
                 window.top.close();
               }
 
               // Wait for duration to be sent before closing
-              if (!(_this10.referring_md === "yes")) {
+              if (!(_this12.referring_md === "yes")) {
                 _context9.next = 8;
                 break;
               }
-              clearInterval(_this10.callTimer); // Stop the timer
+              clearInterval(_this12.callTimer); // Stop the timer
               _context9.next = 6;
-              return _this10.sendCallDuration();
+              return _this12.sendCallDuration();
             case 6:
               _context9.next = 9;
               break;
@@ -24212,18 +24287,18 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     },
     videoStreamingOnAndOff: function videoStreamingOnAndOff() {
-      var _this11 = this;
+      var _this13 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
         var devices, localPlayerContainer, newContainer;
         return _regeneratorRuntime().wrap(function _callee10$(_context10) {
           while (1) switch (_context10.prev = _context10.next) {
             case 0:
-              _this11.videoStreaming = !_this11.videoStreaming;
-              if (!_this11.videoStreaming) {
+              _this13.videoStreaming = !_this13.videoStreaming;
+              if (!_this13.videoStreaming) {
                 _context10.next = 32;
                 break;
               }
-              if (_this11.channelParameters.localVideoTrack) {
+              if (_this13.channelParameters.localVideoTrack) {
                 _context10.next = 29;
                 break;
               }
@@ -24239,30 +24314,30 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context10.next = 10;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 10:
-              _this11.channelParameters.localVideoTrack = _context10.sent;
-              localPlayerContainer = document.getElementById(_this11.options.uid);
+              _this13.channelParameters.localVideoTrack = _context10.sent;
+              localPlayerContainer = document.getElementById(_this13.options.uid);
               if (!localPlayerContainer) {
                 newContainer = document.createElement("div");
-                newContainer.id = _this11.options.uid;
+                newContainer.id = _this13.options.uid;
                 document.body.append(newContainer);
                 $(".localPlayerDiv").html(newContainer);
                 $(newContainer).addClass("localPlayerLayer");
               }
-              _this11.channelParameters.localVideoTrack.play(_this11.options.uid);
+              _this13.channelParameters.localVideoTrack.play(_this13.options.uid);
 
               // Publish the video track if we're connected
-              if (!_this11.channelParameters.localAudioTrack) {
+              if (!_this13.channelParameters.localAudioTrack) {
                 _context10.next = 17;
                 break;
               }
               _context10.next = 17;
-              return agoraEngine.publish([_this11.channelParameters.localVideoTrack]);
+              return agoraEngine.publish([_this13.channelParameters.localVideoTrack]);
             case 17:
               _context10.next = 21;
               break;
             case 19:
               // console.log("No camera detected");
-              _this11.videoStreaming = false;
+              _this13.videoStreaming = false;
               return _context10.abrupt("return");
             case 21:
               _context10.next = 27;
@@ -24271,21 +24346,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _context10.prev = 23;
               _context10.t0 = _context10["catch"](3);
               // console.warn("Error accessing camera:", error);
-              _this11.videoStreaming = false;
+              _this13.videoStreaming = false;
               return _context10.abrupt("return");
             case 27:
               _context10.next = 30;
               break;
             case 29:
               // If we already have a video track, just enable it
-              _this11.channelParameters.localVideoTrack.setEnabled(true);
+              _this13.channelParameters.localVideoTrack.setEnabled(true);
             case 30:
               _context10.next = 33;
               break;
             case 32:
               // Turning video off
-              if (_this11.channelParameters.localVideoTrack) {
-                _this11.channelParameters.localVideoTrack.setEnabled(false);
+              if (_this13.channelParameters.localVideoTrack) {
+                _this13.channelParameters.localVideoTrack.setEnabled(false);
               }
             case 33:
             case "end":
@@ -24322,16 +24397,16 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       clearTimeout(this.timeoutId);
     }),
     ringingPhoneFunc: function ringingPhoneFunc() {
-      var _this12 = this;
+      var _this14 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee11() {
         var self;
         return _regeneratorRuntime().wrap(function _callee11$(_context11) {
           while (1) switch (_context11.prev = _context11.next) {
             case 0:
               _context11.next = 2;
-              return _this12.$refs.ringingPhone.play();
+              return _this14.$refs.ringingPhone.play();
             case 2:
-              self = _this12;
+              self = _this14;
               setTimeout(function () {
                 // console.log("pause");
                 self.$refs.ringingPhone.pause();
@@ -24344,7 +24419,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }))();
     },
     submitPrescription: function submitPrescription() {
-      var _this13 = this;
+      var _this15 = this;
       if (this.prescription) {
         var updatePrescription = {
           code: this.referral_code,
@@ -24354,7 +24429,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/update"), updatePrescription).then(function (response) {
           // console.log(response);
           if (response.data === "success") {
-            _this13.prescriptionSubmitted = true;
+            _this15.prescriptionSubmitted = true;
             Lobibox.alert("success", {
               msg: "Successfully submitted prescription!"
             });
@@ -24371,7 +24446,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     },
     generatePrescription: function generatePrescription() {
-      var _this14 = this;
+      var _this16 = this;
       var getPrescription = {
         code: this.referral_code,
         form_type: this.form_type,
@@ -24382,11 +24457,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
 
           // Set the PDF URL
-          _this14.PdfUrl = "".concat(_this14.baseUrl, "/doctor/print/prescription/").concat(_this14.tracking_id, "/").concat(prescribedActivityId);
+          _this16.PdfUrl = "".concat(_this16.baseUrl, "/doctor/print/prescription/").concat(_this16.tracking_id, "/").concat(prescribedActivityId);
 
           // Show the modal using the ref method
-          _this14.$nextTick(function () {
-            _this14.$refs.pdfViewer.openModal();
+          _this16.$nextTick(function () {
+            _this16.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
@@ -24398,21 +24473,21 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       });
     },
     generateLabrequest: function generateLabrequest() {
-      var _this15 = this;
+      var _this17 = this;
       var url = "".concat(this.baseUrl, "/api/check/labresult");
       var payload = {
         activity_id: this.activity_id
       };
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
         if (response.data.id) {
-          var pdfUrl = "".concat(_this15.baseUrl, "/doctor/print/labresult/").concat(_this15.activity_id);
+          var pdfUrl = "".concat(_this17.baseUrl, "/doctor/print/labresult/").concat(_this17.activity_id);
 
           // Set the PDF URL for the modal
-          _this15.PdfUrl = pdfUrl;
+          _this17.PdfUrl = pdfUrl;
 
           // Show the PDF in the custom modal
-          _this15.$nextTick(function () {
-            _this15.$refs.pdfViewer.openModal();
+          _this17.$nextTick(function () {
+            _this17.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
@@ -26223,6 +26298,13 @@ var _hoisted_44 = {
 var _hoisted_45 = {
   "class": "col-6"
 };
+var _hoisted_46 = {
+  key: 0,
+  "class": "afk-overlay"
+};
+var _hoisted_47 = {
+  "class": "afk-dialog"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
   var _component_FormReferralPregnantComponent = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FormReferralPregnantComponent");
@@ -26446,7 +26528,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 8 /* PROPS */, ["isVisible", "code", "userId", "fetchUrl", "imageUrl", "postUrl", "onCloseModal"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PDFViewerModal, {
     ref: "pdfViewer",
     pdfUrl: $data.PdfUrl
-  }, null, 8 /* PROPS */, ["pdfUrl"])])], 64 /* STABLE_FRAGMENT */);
+  }, null, 8 /* PROPS */, ["pdfUrl"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Place AFK dialog here, before closing fullscreen-div "), $data.afkDialogVisible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "You have been inactive for some time.", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [_cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ending call in ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.afkCountdown), 1 /* TEXT */), _cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" seconds... "))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
