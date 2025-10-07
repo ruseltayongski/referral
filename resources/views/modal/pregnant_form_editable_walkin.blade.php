@@ -327,6 +327,14 @@ $reason_for_referral = \App\ReasonForReferral::get();
     </div>
     <!-- /.modal-dialog -->
 </div>
+<script>
+document.getElementById('icd10_keyword_preg_walkin').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent accidental form submission
+        searchICD10PregWalkin();
+    }
+});
+</script>
 
 <script>
     $("#clear_other_diag_pwalkin").hide();

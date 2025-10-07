@@ -294,6 +294,14 @@ $referral_reasons = \App\ReasonForReferral::get();
         </div>
     </div>
 </div>
+<script>
+document.getElementById('icd10-keyword').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent accidental form submission
+        searchICD();
+    }
+});
+</script>
 
 <script>
     $("#clear_icd_walkin").hide();

@@ -428,6 +428,14 @@ $department_id = $appoitment_sched[0]->department_id;
     <!-- /.modal-dialog -->
 </div>
 
+<script>
+document.getElementById('icd10_keyword').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent accidental form submission
+        searchICD10();
+    }
+});
+</script>
 
 <script>
     $('#clear_icd, #clear_notes, #clear_other_diag, #icd_selected').hide();

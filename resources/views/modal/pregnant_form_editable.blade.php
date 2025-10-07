@@ -474,7 +474,14 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
+<script>
+document.getElementById('icd10_keyword_pregnant').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent accidental form submission
+        searchICD10Pregnant();
+    }
+});
+</script>
 <script>
     $("#clear_icd_pregnant").hide();
     $("#clear_notes_pregnant").hide();

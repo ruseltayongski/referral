@@ -2268,7 +2268,14 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-
+<script>
+document.getElementById('icd10_keyword_pregnant_revised').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent accidental form submission
+        searchICD10PregnantRevised();
+    }
+});
+</script>
 <script>
     $(document).ready(function () {
         // Open the collapse when the form loads
