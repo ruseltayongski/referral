@@ -1,8 +1,8 @@
 <template>
     <div class="login-block" id="login_form_card">
         <div class="error">
-            <input v-model="user.username" id="username" autocomplete="off" type="text" :placeholder="'Username'" class="form-control" name="username" v-on:keyup.enter="login">
-            <input v-model="user.password" id="password" type="password" class="form-control" :placeholder="'Password'" name="password" v-on:keyup.enter="login">
+            <input v-model="user.username" id="username" autocomplete="off" type="text" :placeholder="'Username'" class="form-control input-username" name="username" v-on:keyup.enter="login">
+            <input v-model="user.password" id="password" type="password" class="form-control input-password" :placeholder="'Password'" name="password" v-on:keyup.enter="login">
             <span class="has-error" >
                 <strong class="text-danger">{{ error_message }}</strong>
             </span>
@@ -58,3 +58,25 @@
         }
     }
 </script>
+
+<style scoped>
+.input-username {
+  background: #fff url("https://i.imgur.com/u0XmBmv.png") 20px top no-repeat !important;
+  background-size: 16px 80px !important;
+}
+
+.input-username:focus {
+  background: #fff url("https://i.imgur.com/u0XmBmv.png") 20px bottom no-repeat !important;
+  background-size: 16px 80px !important;
+}
+
+.input-password {
+  background: #fff url("https://i.imgur.com/Qf83FTt.png") 20px top no-repeat !important;
+  background-size: 16px 80px !important;
+}
+
+.input-password:focus {
+  background: #fff url("https://i.imgur.com/Qf83FTt.png") 20px bottom no-repeat !important;
+  background-size: 16px 80px !important;
+}
+</style>
