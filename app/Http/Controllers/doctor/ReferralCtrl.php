@@ -156,7 +156,7 @@ class ReferralCtrl extends Controller
                         $sub->select(DB::raw(1))
                             ->from('activity')
                             ->whereColumn('activity.code', 'tracking.code')
-                            ->where('activity.status', 'upward');
+                            ->where('activity.status', 'redirected');
                     });
             })
             ->where('tracking.referred_to', $user->facility_id);
@@ -853,7 +853,7 @@ class ReferralCtrl extends Controller
                                 
                 }
             }
-
+            
             if($request->more_position) {
                 $data = $data->where(DB::raw("(SELECT count(act1.code) from activity act1 where act1.code = tracking.code and (act1.status = 'redirected' or act1.status = 'transferred'))"),$request->more_position == 5 ? ">" : "=",$request->more_position);
             }
@@ -1194,6 +1194,11 @@ class ReferralCtrl extends Controller
         })
             ->orderBy("id","desc")
             ->first();
+        $telemed_redirected = Activity::select('status')
+            ->where("code",$track->code)
+            ->where("status","redirected")
+            ->first();
+
         $patient = Patients::find($latest_activity->patient_id);
         $redirect_track = asset("doctor/referred?referredCode=").$latest_activity->code;
         $referral_accepted = [
@@ -1208,7 +1213,8 @@ class ReferralCtrl extends Controller
             "activity_id" => $latest_activity->id,
             "date_accepted" => date('M d, Y h:i A',strtotime($activity->date_referred)),
             "remarks" => $activity->remarks,
-            "redirect_track" => $redirect_track
+            "redirect_track" => $redirect_track,
+            'telemed_redirected' => $telemed_redirected->status 
         ];
         broadcast(new SocketReferralAccepted($referral_accepted));
         //end websocket
