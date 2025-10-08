@@ -650,6 +650,7 @@
                 // console.log("efective:", effective_Date, "selectedConfig:::", selectedConfig);
 
                 // console.log("selectedConfigselectedConfig::", selectedConfig);
+                 // $("#SchedCategory").css("display", false);
 
                 if(selectedConfig){
                    
@@ -660,7 +661,9 @@
                     $('.time-slots').hide().find(".time-slot").remove();
                     $("#week_time_slot").css("display", "block");
                     $('#please_select_categ').css("display", "none");
-
+                    
+                    $("#SchedCategory").css("display", "block");
+                    
                     const dayTimeMap = {};
                     let currentDay = null;
 
@@ -879,7 +882,7 @@
 
                         //     </div>
                         // `);
-                        
+
                         const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
                             const readableDate = new Date(date).toLocaleDateString("en-US", {
                                 year: "numeric",
@@ -1008,6 +1011,7 @@
                 }else{
                     $('#please_select_categ').css("display", "block");
                     $("#week_time_slot").css("display", "none");
+                    $("#SchedCategory").css("display", "none");
                 }
             }
 
@@ -1151,7 +1155,7 @@
                 { element: document.getElementById('side_Config'), showOnCheck: true },
                 // { element: document.getElementById('week_time_slot'), showOnCheck: true},
                 { element: document.getElementById('please_select_categ'), showOnCheck: true},
-                { element: document.getElementById('Manual-time-slot'), showOnCheck: false}
+                { element: document.getElementById('Manual-time-slot'), showOnCheck: false},
             ];
 
             configCheckbox.addEventListener('change', function () {
@@ -1172,9 +1176,20 @@
                     $("#week_time_slot").css("display", "none");
                     $('#Addappointment').prop('disabled', false);
 
+                    $("#SchedCategory").empty().css("display", "none");
+                    $("#effective_date").val('');
+                    $("#defaultCategorySelect").val('').trigger('change');
+
+                    $("#appointment_date").val('');
                 }else{
                     $("#week_time_slot").css("display", "none");
                     $('#Addappointment').prop('disabled', true);
+
+                    $("#SchedCategory").empty().css("display", "none");
+                    $("#effective_date").val('');
+                    $("#defaultCategorySelect").val('').trigger('change');
+
+                    $("#appointment_date").val('');
                 }
                 //Toggle visibility for each element based on checkbox state
                 elementsToToggle.forEach(({ element, showOnCheck }) => {
