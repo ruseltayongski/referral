@@ -853,8 +853,20 @@ class ReferralCtrl extends Controller
                                 
                 }
             }
-            
-            if($request->more_position) {
+           
+            if($telemedOrReferral == 1 && $request->more_position){
+                
+                // $data = $data->where(DB::raw("(SELECT count(act1.code) from activity act1 where act1.code = tracking.code and (act1.status = 'followup'))"),$request->more_position == 5 ? ">" : "=",$request->more_position);
+                $operator = ((int)$request->more_position === 5) ? '>' : '=';
+                $data = $data->whereRaw("
+                    (SELECT COUNT(*) 
+                    FROM activity act1 
+                    WHERE act1.code = tracking.code 
+                    AND LOWER(act1.status) = 'followup') {$operator} ?", 
+                    [(int)$request->more_position]
+                );
+            }
+            if($telemedOrReferral == 0 && $request->more_position) {
                 $data = $data->where(DB::raw("(SELECT count(act1.code) from activity act1 where act1.code = tracking.code and (act1.status = 'redirected' or act1.status = 'transferred'))"),$request->more_position == 5 ? ">" : "=",$request->more_position);
             }
 

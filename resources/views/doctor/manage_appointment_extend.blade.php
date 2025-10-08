@@ -283,35 +283,16 @@
                                                         </button> -->
                                                     </div>
                                                 </div>
-                                               <!-- <div class="col-md-12 d-flex align-items-center" style="padding: 0;">
-                                                <div id="viewSchedule"
-                                                    class="view-schedule"
-                                                    style="cursor:pointer; display:flex; align-items:center; gap:6px; font-weight:500; color:#007bff;"
-                                                    data-bs-toggle="popover"
-                                                    data-bs-html="true"
-                                                    data-bs-placement="right"
-                                                    title="Add Slot"
-                                                    data-bs-content="
-                                                        <label style='font-size:13px;'>Date:</label>
-                                                        <input type='date' class='form-control mb-2'>
-                                                        <label style='font-size:13px;'>Time:</label>
-                                                        <input type='time' class='form-control mb-2'>
-                                                        <button class='btn btn-sm btn-primary w-100'>Save Slot</button>
-                                                    ">
-                                                    <i class="fa fa-calendar" aria-hidden="true"></i>
-                                                    <span>View Schedule</span>
-                                                </div>
-                                            </div> -->
+                                            
                                                 <div class="col-md-6" style="padding: 0;">
                                                     <label for="slot" style="padding:0;">Slot :</label>
                                                     <input type="number" id="number_slot" name="number_slot" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
-                                        <p id="SchedCategory"></p>
+                                     
                                 </div>
-                                
-
+                              
                                 <div class="col-md-8" id="Manual-time-slot">
                                     <div class ="time-input-group">
                                         <div class="label-border">
@@ -349,10 +330,13 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <p id="SchedCategory"></p>  
+                            </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Add_Cancel_appointment"><i class="fa fa-times"></i> Cancel</button>
-                            <button type="submit" class="btn btn-success btn-sm" id="Addappointment"><i class="fa fa-send"></i> Submit</button>
+                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal" id="Add_Cancel_appointment" style="margin-top: 15px"><i class="fa fa-times"></i> Cancel</button>
+                            <button type="submit" class="btn btn-success btn-sm" id="Addappointment" style="margin-top: 15px"><i class="fa fa-send"></i> Submit</button>
                         </div>
                     </form>
                 </div>

@@ -802,7 +802,85 @@
                             }
 
                             // Create slot list grouped by date
-                           const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
+                        //    const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
+                        //     const readableDate = new Date(date).toLocaleDateString("en-US", {
+                        //         year: "numeric",
+                        //         month: "long",
+                        //         day: "numeric",
+                        //         weekday: "long"
+                        //     });
+
+                        //     const times = slots.map(s =>
+                        //         `<span style="
+                        //             display: inline-block;
+                        //             margin: 3px 6px;
+                        //             padding: 4px 8px;
+                        //             background-color: #e7f3ff;
+                        //             border: 1px solid #cce0ff;
+                        //             border-radius: 6px;
+                        //             font-size: 13px;
+                        //         ">
+                        //             🕒 ${formattime(s.time_from)} – ${formattime(s.time_to)}
+                        //         </span>`
+                        //     ).join("");
+
+                        //     return `
+                        //         <div style="
+                        //             background: #fff;
+                        //             border: 1px solid #e5e5e5;
+                        //             border-radius: 10px;
+                        //             padding: 10px 15px;
+                        //             margin-bottom: 10px;
+                        //             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                        //         ">
+                        //             <div style="font-weight: 600; color: #333;">
+                        //                 <i class="fa fa-calendar" style="color:#007bff; margin-right:5px;"></i> ${readableDate}
+                        //             </div>
+                        //             <div style="margin-top: 5px;">${times}</div>
+                        //         </div>
+                        //     `;
+                        // });
+
+                        // const slot_Schedule = `
+                        //     <div style="
+                        //         display: grid;
+                        //         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                        //         gap: 10px;
+                        //         margin-top: 15px;
+                        //     ">
+                        //         ${formattedItems.join("")}
+                        //     </div>
+                        // `;
+
+                        // $("#SchedCategory").html(`
+                        //     <div class="col-md-12 schedule-output text-center" 
+                        //         style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #fdfdfd; margin-top: 15px;">
+                                
+                        //         <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">
+                        //             <i class="fa fa-calendar-check-o"></i> Schedule Period
+                        //         </div>
+                                
+                        //         <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
+                        //         <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
+                        //         <input type='hidden' name="exist_Date" value="${dateExistsArray}">
+
+                        //         <div style="background-color:#eef6ff; padding:10px 15px; border-radius:8px; display:inline-block; font-size:14px; margin-bottom: 10px;">
+                        //             <strong>Start:</strong> ${formatedSchedule(startDate)} 
+                        //             <strong style="margin: 0 5px;">→</strong> 
+                        //             <strong>End:</strong> ${formatedSchedule(endDate)} 
+                        //             <span style="font-weight:bold; color:#007bff;">(${OneweekOrOneMonth})</span>
+                        //         </div>
+
+                        //         <div style="color:#555; font-size:13px; margin-bottom: 10px;">
+                        //             Your schedule can now be created:
+                        //         </div>
+
+                        //             ${slot_Schedule}
+
+                        //     </div>
+                        // `);
+                        
+                        const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
                             const readableDate = new Date(date).toLocaleDateString("en-US", {
                                 year: "numeric",
                                 month: "long",
@@ -813,12 +891,13 @@
                             const times = slots.map(s =>
                                 `<span style="
                                     display: inline-block;
-                                    margin: 3px 6px;
-                                    padding: 4px 8px;
+                                    margin: 2px 4px;
+                                    padding: 3px 6px;
                                     background-color: #e7f3ff;
                                     border: 1px solid #cce0ff;
-                                    border-radius: 6px;
-                                    font-size: 13px;
+                                    border-radius: 4px;
+                                    font-size: 11px;
+                                    white-space: nowrap;
                                 ">
                                     🕒 ${formattime(s.time_from)} – ${formattime(s.time_to)}
                                 </span>`
@@ -828,33 +907,71 @@
                                 <div style="
                                     background: #fff;
                                     border: 1px solid #e5e5e5;
-                                    border-radius: 10px;
-                                    padding: 10px 15px;
-                                    margin-bottom: 10px;
+                                    border-radius: 8px;
+                                    padding: 8px 10px;
                                     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+                                    min-height: 100%;
                                 ">
-                                    <div style="font-weight: 600; color: #333;">
-                                        <i class="fa fa-calendar" style="color:#007bff; margin-right:5px;"></i> ${readableDate}
+                                    <div style="
+                                        font-weight: 600; 
+                                        color: #333; 
+                                        font-size: 12px;
+                                        margin-bottom: 6px;
+                                    ">
+                                        <i class="fa fa-calendar" style="color:#007bff; margin-right:4px;"></i> ${readableDate}
                                     </div>
-                                    <div style="margin-top: 5px;">${times}</div>
+                                    <div style="
+                                        display: flex;
+                                        flex-wrap: wrap;
+                                        gap: 2px;
+                                    ">${times}</div>
                                 </div>
                             `;
                         });
 
-                        const twoColumnLayout = `
-                            <div style="
+                        const slot_Schedule = `
+                            <div class="schedule-grid-container" style="
                                 display: grid;
-                                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                                grid-template-columns: repeat(3, 1fr);
                                 gap: 10px;
                                 margin-top: 15px;
+                                width: 100%;
                             ">
                                 ${formattedItems.join("")}
                             </div>
+                            
+                            <style>
+                                .schedule-output {
+                                    max-width: 100% !important;
+                                    overflow: visible !important;
+                                }
+                                
+                                .schedule-grid-container {
+                                    width: 100%;
+                                    box-sizing: border-box;
+                                }
+                                
+                                @media (max-width: 1400px) {
+                                    .schedule-grid-container {
+                                        grid-template-columns: repeat(3, 1fr) !important;
+                                    }
+                                }
+                                @media (max-width: 992px) {
+                                    .schedule-grid-container {
+                                        grid-template-columns: repeat(2, 1fr) !important;
+                                    }
+                                }
+                                @media (max-width: 576px) {
+                                    .schedule-grid-container {
+                                        grid-template-columns: 1fr !important;
+                                    }
+                                }
+                            </style>
                         `;
 
                         $("#SchedCategory").html(`
                             <div class="col-md-12 schedule-output text-center" 
-                                style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #fdfdfd; margin-top: 15px;">
+                                style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #fdfdfd; margin-top: 15px; max-width: 100%; overflow: visible;">
                                 
                                 <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">
                                     <i class="fa fa-calendar-check-o"></i> Schedule Period
@@ -875,17 +992,11 @@
                                     Your schedule can now be created:
                                 </div>
 
-                                <div style="
-                                    max-height: 550px; /* adjust this based on desired height for ~5 schedules */
-                                    overflow-y: auto;
-                                    padding-right: 5px;
-                                ">
-                                    ${twoColumnLayout}
-                                </div>
+                                ${slot_Schedule}
 
                             </div>
                         `);
-
+                        
                         }
 
                     })
@@ -899,6 +1010,14 @@
                     $("#week_time_slot").css("display", "none");
                 }
             }
+
+                //  <div style="
+                //                     max-height: 550px; /* adjust this based on desired height for ~5 schedules */
+                //                     overflow-y: auto;
+                //                     padding-right: 5px;
+                //                 ">
+                //                     ${twoColumnLayout}
+                //                 </div>
 
             $defaultCategorySelect.on("change", categslot);
             $effectiveDate.on("change", categslot);
