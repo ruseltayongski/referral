@@ -1207,11 +1207,16 @@ class TelemedicineCtrl extends Controller
         for($i=2; $i<=$request->appointment_count; $i++) { 
             $appointedId = $request->input('appointment_id' . $i);
             $key = 'appointment_id' . $i;
-            $appointed_date = AppointmentSchedule::where('id', $appointedId)
-            ->pluck('appointed_date')
-            ->first();
+          
+        //     $appointed_date = AppointmentSchedule::where('id', $appointedId)
+        //     ->pluck('appointed_date')
+        //     ->first();
            
-           $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)
+        //    $appointment = AppointmentSchedule::where('appointed_date', $appointed_date)
+        //     ->where('created_by', $user->id)
+        //     ->delete();
+            
+        $appointment = AppointmentSchedule::where('id', $appointedId)
             ->where('created_by', $user->id)
             ->delete();
            //TelemedAssignDoctor
