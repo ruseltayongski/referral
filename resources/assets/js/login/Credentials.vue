@@ -46,16 +46,19 @@ export default {
   computed: {
     cssVariables() {
       if (
-        this.baseUrl != "https://cvchd7.com/" ||
-        this.baseUrl != "https://referral-dummy.cvchd7.com/"
+        this.baseUrl != "https://cvchd7.com" ||
+        this.baseUrl != "https://referral-dummy.cvchd7.com"
       ) {
-        console.log("based url (true): ",this.baseUrl);
+        console.log("based url (true): ", this.baseUrl);
         return {
           "--username-icon": `url('${this.baseUrl}/referral/resources/img/username-icon.png')`,
           "--password-icon": `url('${this.baseUrl}/referral/resources/img/password-icon.png')`,
         };
-      } else {
-        console.log("based url (false): ",this.baseUrl);
+      } else if (
+        this.baseUrl === "https://referral-dummy.cvchd7.com" ||
+        this.baseUrl === "https://cvchd7.com"
+      ) {
+        console.log("based url (false): ", this.baseUrl);
         return {
           "--username-icon": `url('${this.baseUrl}/resources/img/username-icon.png')`,
           "--password-icon": `url('${this.baseUrl}/resources/img/password-icon.png')`,
