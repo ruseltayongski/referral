@@ -22117,13 +22117,11 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     cssVariables: function cssVariables() {
       if (this.baseUrl === "https://referral-dummy.cvchd7.com" || this.baseUrl === "https://cvchd7.com") {
-        console.log("based url (true): ", this.baseUrl);
         return {
           "--username-icon": "url('".concat(this.baseUrl, "/resources/img/username-icon.png')"),
           "--password-icon": "url('".concat(this.baseUrl, "/resources/img/password-icon.png')")
         };
       } else {
-        console.log("based url (false): ", this.baseUrl);
         return {
           "--username-icon": "url('".concat(this.baseUrl, "/referral/resources/img/username-icon.png')"),
           "--password-icon": "url('".concat(this.baseUrl, "/referral/resources/img/password-icon.png')")
