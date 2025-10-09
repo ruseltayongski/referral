@@ -45,10 +45,17 @@ export default {
   }),
   computed: {
     cssVariables() {
-      return {
-        "--username-icon": `url('${this.baseUrl}/resources/img/username-icon.png')`,
-        "--password-icon": `url('${this.baseUrl}/resources/img/password-icon.png')`,
-      };
+        if (this.baseUrl != "https://cvchd7.com" || this.baseUrl != "https://referral-dummy.cvchd7.com"){
+            return { 
+                "--username-icon": `url('${this.baseUrl}/referral/resources/img/username-icon.png')`,
+                "--password-icon": `url('${this.baseUrl}/referral/resources/img/password-icon.png')`,
+            };
+        }else {
+            return { 
+                "--username-icon": `url('${this.baseUrl}/resources/img/username-icon.png')`,
+                "--password-icon": `url('${this.baseUrl}/resources/img/password-icon.png')`,
+            };
+        }
     },
   },
   created() {
