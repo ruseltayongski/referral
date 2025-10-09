@@ -1192,7 +1192,7 @@
                 eref_management: path + '/public/manual/E-Referral-Management.docx',
                 request_form: path + '/public/manual/Service-Request-Form.docx',
                 ndca: path + '/public/manual/NDCA-CVeHRS-healthcare-facility.doc',
-                telemed: path + '/public/manual/telemedicine-manual-as-of-June-2025.pdf',
+                telemed: path + '/public/manual/telemedicine_manual_as_of_October_2025.pdf',
                 count_doctor: 0,
                 count_gov_hosp: 0,
                 count_private_hosp: 0,
