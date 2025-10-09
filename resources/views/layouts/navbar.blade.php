@@ -1,6 +1,13 @@
 <?php
+
 $user = Session::get('auth');
 $multi_faci = Session::get('multiple_login');
+
+$facility_exclude =  \App\Facility::select('id')
+    ->whereRaw("LOWER(name) LIKE ?", ['%birthing facility%'])
+    ->pluck('id')
+    ->toArray();
+
 ?>
 <div class="navbar-header">
     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -69,7 +76,9 @@ $multi_faci = Session::get('multiple_login');
                     <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
+                    @if(!in_array($user->facility_id, $facility_exclude))
+                        <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
+                    @endif
                     <li>
                         <a href="{{ url('doctor/referral') }}?filterRef=1"  id="incoming-link">
                             <i class="fa fa-ambulance incoming_nav"></i> Incoming &nbsp;&nbsp; 
@@ -87,14 +96,16 @@ $multi_faci = Session::get('multiple_login');
                         </a>
                     </li>
                     <li class="divider"></li>
-                    <li class="dropdown-submenu">
-                        <a href="#"><i class="fa fa-table"></i> Manage Appointment</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('manage/appointment?type=upcoming') }}" data-toggle="modal"><i class="fa fa-calendar-check-o"></i>Upcoming Appointment</a></li>
-                            <li><a href="{{ url('manage/appointment?type=past') }}" data-toggle="modal"><i class="fa fa-history"></i>Past Appointment</a></li>
-                            <li><a href="{{ url('configSchedule')}}" id="configSched_Id"><i class="fa fa-table"></i> Config Schedule</a></li>
-                        </ul>
-                    </li>
+                    @if(!in_array($user->facility_id, $facility_exclude))
+                        <li class="dropdown-submenu">
+                            <a href="#"><i class="fa fa-table"></i> Manage Appointment</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('manage/appointment?type=upcoming') }}" data-toggle="modal"><i class="fa fa-calendar-check-o"></i>Upcoming Appointment</a></li>
+                                <li><a href="{{ url('manage/appointment?type=past') }}" data-toggle="modal"><i class="fa fa-history"></i>Past Appointment</a></li>
+                                <li><a href="{{ url('configSchedule')}}" id="configSched_Id"><i class="fa fa-table"></i> Config Schedule</a></li>
+                            </ul>
+                        </li>
+                    @endif
                     <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-print"></i> Reports </a>
                     <ul class="dropdown-menu">
