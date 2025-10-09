@@ -22110,8 +22110,17 @@ __webpack_require__.r(__webpack_exports__);
       },
       login_type: "",
       login_link: "",
-      error_message: ""
+      error_message: "",
+      baseUrl: window.location.origin
     };
+  },
+  computed: {
+    cssVariables: function cssVariables() {
+      return {
+        "--username-icon": "url('".concat(this.baseUrl, "/referral/public/images/username_icon.png')"),
+        "--password-icon": "url('".concat(this.baseUrl, "/referral/public/images/password_icon.png')")
+      };
+    }
   },
   created: function created() {
     this.setLoginType();
@@ -22592,21 +22601,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
 
 var _hoisted_1 = {
-  "class": "login-block",
-  id: "login_form_card"
-};
-var _hoisted_2 = {
   "class": "error"
 };
-var _hoisted_3 = {
+var _hoisted_2 = {
   "class": "has-error"
 };
-var _hoisted_4 = {
+var _hoisted_3 = {
   "class": "text-danger"
 };
-var _hoisted_5 = ["onclick"];
+var _hoisted_4 = ["onclick"];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+    "class": "login-block",
+    id: "login_form_card",
+    style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)($options.cssVariables)
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
       return _ctx.user.username = $event;
     }),
@@ -22631,12 +22640,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onKeyup: _cache[3] || (_cache[3] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withKeys)(function () {
       return $options.login && $options.login.apply($options, arguments);
     }, ["enter"]))
-  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.user.password]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.error_message), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, _ctx.user.password]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.error_message), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "submit",
     "class": "btn-submit",
     id: "login_btn",
     onclick: $options.login
-  }, " Login ", 8 /* PROPS */, _hoisted_5)])]);
+  }, " Login ", 8 /* PROPS */, _hoisted_4)])], 4 /* STYLE */);
 }
 
 /***/ }),
@@ -23634,7 +23643,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.input-username[data-v-88ba6b18] {\r\n  /* background: #fff url(\"https://i.imgur.com/u0XmBmv.png\") 20px top no-repeat !important; */\r\n  background: #fff url(\"/referral/public/images/username_icon.png\") 20px top no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\n.input-username[data-v-88ba6b18]:focus {\r\n  /* background: #fff url(\"https://i.imgur.com/u0XmBmv.png\") 20px bottom no-repeat !important; */\r\n  background: #fff url(\"/referral/public/images/username_icon.png\") 20px bottom no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\n.input-password[data-v-88ba6b18] {\r\n  /* background: #fff url(\"https://i.imgur.com/Qf83FTt.png\") 20px top no-repeat !important; */\r\n  background: #fff url(\"/referral/public/images/password_icon.png\") 20px top no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\n.input-password[data-v-88ba6b18]:focus {\r\n  /* background: #fff url(\"https://i.imgur.com/Qf83FTt.png\") 20px bottom no-repeat !important; */\r\n  background: #fff url(\"/referral/public/images/password_icon.png\") 20px bottom no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.input-username[data-v-88ba6b18] {\r\n  background: #fff var(--username-icon) 20px top no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\n.input-username[data-v-88ba6b18]:focus {\r\n  background: #fff var(--username-icon) 20px bottom no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\n.input-password[data-v-88ba6b18] {\r\n  background: #fff var(--password-icon) 20px top no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\n.input-password[data-v-88ba6b18]:focus {\r\n  background: #fff var(--password-icon) 20px bottom no-repeat !important;\r\n  background-size: 16px 80px !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="login-block" id="login_form_card">
+  <div class="login-block" id="login_form_card" :style="cssVariables">
     <div class="error">
       <input
         v-model="user.username"
@@ -41,7 +41,16 @@ export default {
     login_type: "",
     login_link: "",
     error_message: "",
+    baseUrl: window.location.origin,
   }),
+  computed: {
+    cssVariables() {
+      return {
+        "--username-icon": `url('${this.baseUrl}/referral/public/images/username_icon.png')`,
+        "--password-icon": `url('${this.baseUrl}/referral/public/images/password_icon.png')`,
+      };
+    },
+  },
   created() {
     this.setLoginType();
   },
@@ -83,26 +92,22 @@ export default {
 
 <style scoped>
 .input-username {
-  /* background: #fff url("https://i.imgur.com/u0XmBmv.png") 20px top no-repeat !important; */
-  background: #fff url("/referral/public/images/username_icon.png") 20px top no-repeat !important;
+  background: #fff var(--username-icon) 20px top no-repeat !important;
   background-size: 16px 80px !important;
 }
 
 .input-username:focus {
-  /* background: #fff url("https://i.imgur.com/u0XmBmv.png") 20px bottom no-repeat !important; */
-  background: #fff url("/referral/public/images/username_icon.png") 20px bottom no-repeat !important;
+  background: #fff var(--username-icon) 20px bottom no-repeat !important;
   background-size: 16px 80px !important;
 }
 
 .input-password {
-  /* background: #fff url("https://i.imgur.com/Qf83FTt.png") 20px top no-repeat !important; */
-  background: #fff url("/referral/public/images/password_icon.png") 20px top no-repeat !important;
+  background: #fff var(--password-icon) 20px top no-repeat !important;
   background-size: 16px 80px !important;
 }
 
 .input-password:focus {
-  /* background: #fff url("https://i.imgur.com/Qf83FTt.png") 20px bottom no-repeat !important; */
-  background: #fff url("/referral/public/images/password_icon.png") 20px bottom no-repeat !important;
+  background: #fff var(--password-icon) 20px bottom no-repeat !important;
   background-size: 16px 80px !important;
 }
 </style>
