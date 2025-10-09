@@ -22117,8 +22117,8 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     cssVariables: function cssVariables() {
       return {
-        "--username-icon": "url('".concat(this.baseUrl, "/referral/public/images/username_icon.png')"),
-        "--password-icon": "url('".concat(this.baseUrl, "/referral/public/images/password_icon.png')")
+        "--username-icon": "url('".concat(this.baseUrl, "/resources/img/username-icon.png')"),
+        "--password-icon": "url('".concat(this.baseUrl, "/resources/img/password-icon.png')")
       };
     }
   },

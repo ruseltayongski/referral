@@ -46,8 +46,8 @@ export default {
   computed: {
     cssVariables() {
       return {
-        "--username-icon": `url('${this.baseUrl}/referral/public/images/username_icon.png')`,
-        "--password-icon": `url('${this.baseUrl}/referral/public/images/password_icon.png')`,
+        "--username-icon": `url('${this.baseUrl}/resources/img/username-icon.png')`,
+        "--password-icon": `url('${this.baseUrl}/resources/img/password-icon.png')`,
       };
     },
   },
