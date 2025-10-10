@@ -769,7 +769,7 @@
                     '                                            </a>';
             },
             callADoctor(tracking_id,code,subopd_id, telemedicine) {
-                console.log("follow Up sobOpd_id", subopd_id, this.user.subopd_id, telemedicine);
+                console.log("follow Up sobOpd_id", subopd_id, this.user.subopd_id, telemedicine, "all condition", this.user.subopd_id == subopd_id && telemedicine == 1);
                 if(this.user.subopd_id == subopd_id && telemedicine == 1){
                     this.tracking_id = tracking_id
                     this.referral_code = code
@@ -778,7 +778,7 @@
                         // console.log( "ready!" );
                         $("#video-call-confirmation").modal('toggle');
                     });
-                }else{
+                }else if(telemedicine == 0){
                     this.tracking_id = tracking_id
                     this.referral_code = code
                     this.playVideoCallAudio();
@@ -860,7 +860,7 @@
                 await axios.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined).then(response => {
                     // console.log(response)
                 });
-                console.log("telemedicineFormType:", this.telemedicineFormType);
+        
                  $("#html_websocket_upward"+this.referral_code).html(this.buttonUpward(this.referral_code, this.telemedicineFormType));
             },
             cancelCall() {
@@ -952,7 +952,7 @@
                                 // remove the dynamic incoming and insert the realtime incoming
                                 let patientCode = event.payload.patient_code;
                                 let existingItem = $("#referral_incoming" + patientCode);
-                            
+                                console.log("existingItem", existingItem, 'length existing:', existingItem);
                                 if (existingItem.length > 0) {
                                     existingItem.remove();
                                 }

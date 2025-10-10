@@ -692,7 +692,7 @@ class ApiController extends Controller
 
     public function patientFollowUp(Request $request) {
         $user = Session::get('auth');
-      
+        // dd($request->all());
        
         $patient_form = null;
         $patient_id = 0;
@@ -736,7 +736,7 @@ class ApiController extends Controller
                 'date_referred' => date('Y-m-d H:i:s'),
                 'date_seen' => "0000-00-00 00:00:00",
                 'referred_from' => $tracking->referred_from,
-                'referred_to' => $tracking->referred_to,
+                'referred_to' => $request->followup_facility_telemed,
                 'sub_opdId' => $request->configId ?? null,
                 'department_id' => $tracking->department_id,
                 'referring_md' => $tracking->referring_md,
@@ -795,7 +795,8 @@ class ApiController extends Controller
             "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
             "referring_name" => Facility::find($user->facility_id)->name,
             "referred_name" => Facility::find($tracking->referred_to)->name,
-            "referred_to" => (int)$tracking->referred_to,
+            // "referred_to" => (int)$tracking->referred_to,
+            "referred_to" => (int)$request->followup_facility_telemed,
             "referred_department" => Department::find($tracking->department_id)->description,
             "referred_from" => $user->facility_id,
             "form_type" => $tracking->type,

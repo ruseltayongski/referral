@@ -588,7 +588,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         <input type="hidden" name="code" id="telemed_follow_code" value="">
                         <input type="hidden" name="followup_id" id="telemedicine_follow_id" value="">
                         <input type="hidden" class="telemedicine" name="telemedicine" value="">
-                        <input type="hidden" id="followup_facility_id" class="followup_facility_id" value="">
+                        <input type="hidden" id="followup_facility_id" name="followup_facility_telemed" class="followup_facility_id" value="">
                         <input type="hidden" id="AppointmentId" name="Appointment_id">
                         <input type="hidden" id="DoctorId" name="Doctor_id">
 
