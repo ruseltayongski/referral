@@ -166,11 +166,10 @@ export default {
           // console.log(`No slots found for date ${targetDate}`);
           return;
         }
-        
+
       const facilitySlots = allSlotsForDate.filter(slot => slot.facility_id == this.facilitySelectedId);
       // Check each slot booking status individually
         const slotStatus = facilitySlots.map(slot => {
-          console.log("skiot", slot.facility_id);
           const assignedCount = slot.telemed_assigned_doctor ? 
             slot.telemed_assigned_doctor.filter(doctor => doctor.appointment_id === slot.id).length : 0;
           
@@ -193,6 +192,9 @@ export default {
       
       // Check if all slots for this date are in the past
       const allSlotsInPast = facilitySlots.every(slot => {
+
+        // if(!slot.appointed_time) return true; bg-red if empty 
+
         const slotDateTime = new Date(`${targetDate}T${slot.appointed_time}`);
         const isPast = slotDateTime <= currentDateTime;
         // console.log(`Slot ${slot.id} time ${slot.appointed_time} is in past: ${isPast}`);

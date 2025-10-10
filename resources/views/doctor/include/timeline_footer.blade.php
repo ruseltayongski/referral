@@ -59,6 +59,7 @@ $redirected_telemed = DB::table('activity')
             <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->where('status','referred')->orderBy('id','desc')->first() ?>
             <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine({{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>
         @endif
+        <div id="html_websocket_upward{{ $row->code }}" style="display: inline;"></div>
         @if($statusExamined->status === 'examined' && $row->telemedicine)
             <button
                 class="btn btn-warning btn-xs upward-button"

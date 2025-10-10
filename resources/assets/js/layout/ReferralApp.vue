@@ -749,6 +749,17 @@
                     '            <span class="badge bg-blue" id="reco_count'+code+'">'+count_reco+'</span>\n' +
                     '        </button>';
             },
+            buttonUpward(code, type) { // newly added upward real time
+                return `
+                    <button 
+                        class="btn btn-warning btn-xs upward-button" 
+                        id="upward_button${code}" 
+                        onclick="endorseUpward('${code}', '${type}')" 
+                        type="button">
+                        <i class="fa fa-hospital-o"></i> Upward
+                    </button>
+                `;
+            },
             buttonDeparted(tracking_id) {
                 return '<a href="#transferModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-xs btn-success btn-transfer"><i class="fa fa-ambulance"></i> Depart</a>';
             },
@@ -849,6 +860,8 @@
                 await axios.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined).then(response => {
                     // console.log(response)
                 });
+                console.log("telemedicineFormType:", this.telemedicineFormType);
+                 $("#html_websocket_upward"+this.referral_code).html(this.buttonUpward(this.referral_code, this.telemedicineFormType));
             },
             cancelCall() {
                 this.$refs.audioVideo.pause();
