@@ -18,7 +18,6 @@ export default {
   },
   data() {
     return {
-      isWindowLoading: true,
       isMobileDevice: false,
       showCameraSwitch: true,
       currentCameraId: null,
@@ -129,22 +128,6 @@ export default {
     };
   },
   mounted() {
-    // Add this Promise.all to wait for all initial loading tasks
-    Promise.all([
-      this.getCameraDevices(),
-      // Add other async initialization calls here
-    ])
-      .then(() => {
-        // Add a small delay to ensure everything is rendered
-        setTimeout(() => {
-          this.isWindowLoading = false;
-        }, 1000);
-      })
-      .catch((error) => {
-        console.error("Error during initialization:", error);
-        this.isWindowLoading = false;
-      });
-
     window.addEventListener("keydown", this.pregnantKeydown);
     document.title = "TELEMEDICINE";
     // Change favicon
@@ -341,12 +324,6 @@ export default {
     },
   },
   methods: {
-    errorCaptured(err, vm, info) {
-      console.error("Error captured:", err);
-      this.isWindowLoading = false;
-      return false; // Prevent error from propagating
-    },
-
     async getCameraDevices() {
       try {
         // Get list of available video devices
@@ -1639,14 +1616,6 @@ export default {
 };
 </script>
 <template>
-  <!-- Window loader -->
-  <div v-if="isWindowLoading" class="window-loader-overlay">
-    <div class="window-loader">
-      <div class="spinner"></div>
-      <p>Loading please wait...</p>
-    </div>
-  </div>
-
   <div v-if="loading" class="loader-overlay">
     <div class="loader" style="margin-right: 20px"></div>
     <div style="width: 300px; margin-top: 20px">
