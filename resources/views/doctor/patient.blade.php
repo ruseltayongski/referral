@@ -800,11 +800,31 @@ $counter = 0;
         }
 
         if (JSON.parse(telemedicineAppoinmentSlot)) {
-            $(".patient-emergency").remove();
+            // $(".patient-emergency").remove();
         
-            setCookie('telemedicineAppointment', telemedicineAppoinmentSlot, 1);
+            // setCookie('telemedicineAppointment', telemedicineAppoinmentSlot, 1);
             
-            console.log("telemedicineAppoinmentSlot", telemedicineAppoinmentSlot);
+            // console.log("telemedicineAppoinmentSlot:", telemedicineAppoinmentSlot);
+            try {
+                let slotData = telemedicineAppoinmentSlot;
+
+                // If it's a string, parse it
+                if (typeof slotData === "string") {
+                    slotData = JSON.parse(slotData);
+                }
+
+                // If it’s still a stringified JSON (double stringified), parse again
+                if (typeof slotData === "string") {
+                    slotData = JSON.parse(slotData);
+                }
+
+                console.log("telemedicineAppoinmentSlot:", slotData);
+
+                $(".patient-emergency").remove();
+                setCookie('telemedicineAppointment', JSON.stringify(slotData), 1);
+            } catch (error) {
+                console.error("Error parsing telemedicineAppoinmentSlot:", error);
+            }
             
         }else if(appointment){
 
