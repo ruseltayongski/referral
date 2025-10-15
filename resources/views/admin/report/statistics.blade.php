@@ -423,9 +423,10 @@
         var user_facility_id = "<?php echo $user->facility_id; ?>";
 
         function statisticsData(data,request_type,facility_id,status,date_range) {
-            if(user_level === "mayor" || user_level === "dmo" || ( user_level === 'doctor' && user_facility_id !== facility_id )) {
+            //user_level === "mayor" || 
+            if(user_level === "dmo" || ( user_level === 'doctor' && user_facility_id !== facility_id )) {
                 Lobibox.alert('error', {
-                    msg: 'You are not authorized to view this data!'
+                    msg: 'You are not authorized to view this data ddddd!'
                 });
                 return;
             }
