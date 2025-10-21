@@ -67,7 +67,9 @@ $subOpd = App\SubOpd::get();
                     </button> --}}
                 </div>
             </div>
-            <h3>Config Schedule</h3>
+             <h3 class="upcoming-title">
+                <i class="fa fa-calendar"></i> Config Schedule
+            </h3>          
         </div>
     
         <!-- Table List -->

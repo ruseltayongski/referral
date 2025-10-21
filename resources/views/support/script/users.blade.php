@@ -191,6 +191,7 @@ $('#edit_other_department_select').on('change', function () {
 });
 
 function updateProfile() {
+    console.log("user_info", user_info);
     $('.user_id').val(user_id);
     $('.fname').val(user_info.fname);
     $('.mname').val(user_info.mname);
@@ -198,15 +199,16 @@ function updateProfile() {
     $('.contact').val(user_info.contact);
     $('.email').val(user_info.email);
     $('.designation').val(user_info.designation);
-    $('.department_id').val(user_info.department_id);
-    // $('.edit_other_department_select').val();
+    $('.department_id').val(user_info.department_id).trigger('change');
+    $('.edit_other_department_select').val(user_info.other_department_telemed).trigger('change');
     $('.username').val(user_info.username);
     $('.status').val(user_info.status);
     $('.level').val(user_info.level);
-    $('#editsubOpdSelect').val(user_info.subopd_id);
-   $('#other_editsubOpdSelect').val(user_info.subopd_id);
 
-   $(".edit_other_department_select option").each(function() {
+    $('#editsubOpdSelect').val(user_info.subopd_id).trigger('change');
+    $('#other_editsubOpdSelect').val(user_info.subopd_id).trigger('change');
+
+    $(".edit_other_department_select option").each(function() {
 
         if($(this).val() == user_info.department_id){
             $(this).remove();

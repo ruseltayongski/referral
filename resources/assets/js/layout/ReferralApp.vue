@@ -157,7 +157,7 @@
                     size: 'normal',
                     delay: false,
                     closeOnClick: false,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png",
                     msg: content
                 });
             },
@@ -379,7 +379,7 @@
                         delay: false,
                         title: 'New Telemedicine',
                         msg: content,
-                        img: $("#broadcasting_url").val() + "/resources/img/ro7.png",
+                        img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png",
                         sound: false
                     });
                 } else {
@@ -388,7 +388,7 @@
                         delay: false,
                         title: 'New Referral',
                         msg: content,
-                        img: $("#broadcasting_url").val() + "/resources/img/ro7.png",
+                        img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png",
                         sound: false
                     });
                 }
@@ -403,7 +403,7 @@
                     delay: false,
                     title: 'Referral Seen',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks, redirect_track, accepting_doctor_id, telemedicine, telemed_redirected) {
@@ -432,7 +432,7 @@
                     delay: false,
                     title: 'Accepted',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png",
                 });
             },
             notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id, redirect_track, telemedicine) {
@@ -472,7 +472,7 @@
                     delay: false,
                     title: 'Declined',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png",
                 });
             },
             notifyReferralCall(patient_code, count_caller, caller_date, caller_by, caller_by_facility, called_to_facility, caller_by_contact, redirect_track) {
@@ -492,7 +492,7 @@
                     delay: false,
                     title: 'Requesting a Call',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png",
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png",
                 });
             },
             notifyReferralDeparted(patient_name, departed_by, departed_by_facility, departed_date, mode_transportation, redirect_track) {
@@ -506,7 +506,7 @@
                     closeOnClick: false,
                     title: 'Referral Departed',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralArrived(patient_code, activity_id, patient_name, current_facility, arrived_date, remarks, redirect_track) {
@@ -527,7 +527,7 @@
                     delay: false,
                     title: 'Arrived',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralNotArrived(patient_code, activity_id, patient_name, current_facility, arrived_date, remarks, redirect_track) {
@@ -551,7 +551,7 @@
                     delay: false,
                     title: 'Did Not Arrive',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralAdmitted(patient_code, activity_id, patient_name, current_facility, admitted_date, redirect_track) {
@@ -571,7 +571,7 @@
                     delay: false,
                     title: 'Admitted',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralDischarged(patient_code, activity_id, patient_name, current_facility, discharged_date, remarks, redirect_track) {
@@ -591,7 +591,7 @@
                     delay: false,
                     title: 'Discharged',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
 
@@ -606,7 +606,7 @@
                     title: 'Cancelled',
                     closeOnClick: false,
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
 
@@ -632,7 +632,7 @@
                     title: 'Cancelled',
                     closeOnClick: false,
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
 
@@ -646,7 +646,7 @@
                     delay: false,
                     title: 'Cancellation Undone',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralUpdateFormFaciChanged(msg) {
@@ -655,7 +655,7 @@
                     closeOnClick: false,
                     title: 'Patient Redirected!',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralUpdateFormFaciSame(msg) {
@@ -664,7 +664,7 @@
                     closeOnClick: false,
                     title: 'Referral Form Updated!',
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyReferralQueueUpdated(patient_code, activity_id, remarks, date_queued, patient_name, queued_by, queued_by_facility, redirect_track, first_queue) {
@@ -692,7 +692,7 @@
                     title: 'Queued!',
                     closeOnClick: false,
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
             notifyNewWalkin(patient_name, referred_to, date_referred) {
@@ -705,7 +705,7 @@
                     title: 'New Walk-in Patient!',
                     closeOnClick: false,
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
 
@@ -719,7 +719,7 @@
                     title: 'New Appointment!',
                     closeOnClick: true,
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
 
@@ -733,12 +733,12 @@
                     title: 'New User Feedback!',
                     closeOnClick: true,
                     msg: msg,
-                    img: $("#broadcasting_url").val()+"/resources/img/ro7.png"
+                    img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
 
             buttonSeen(count_seen, tracking_id) {
-                return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-user-md"></i> Seen\n' +
+                return count_seen > 0 ? '<a href="#seenModal" data-toggle="modal" data-id="'+tracking_id+'" class="btn btn-success btn-xs btn-seen" style="margin-left:3px;"><i class="fa fa-eye"></i> Seen\n' +
                     '                <small class="badge bg-green-active">'+count_seen+'</small>\n' +
                     '          </a>' : '';
             },

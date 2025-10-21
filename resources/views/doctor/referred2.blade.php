@@ -234,7 +234,7 @@ $user = Session::get('auth');
                             @if($seen>0)
                                 <a href="#seenModal" data-toggle="modal"
                                    data-id="{{ $row->id }}"
-                                   class="btn btn-seen btn-xs btn-success"><i class="fa fa-user-md"></i> Seen
+                                   class="btn btn-seen btn-xs btn-success"><i class="fa fa-eye"></i> Seen
                                     @if($seen>0)
                                         <small class="badge bg-green-active" id="count_seen{{ $row->code }}">{{ $seen }}</small>
                                     @endif

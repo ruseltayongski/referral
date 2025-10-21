@@ -301,9 +301,10 @@ $department_id = $appoitment_sched[0]->department_id;
                         <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>REASON FOR REFERRAL:</b></small> <span class="text-red">*</span><br>
-                                <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required>
+                                <select name="reason_referral1" class="form-control-select select2 reason_referral1" style="width: 100%" required>
                                     <option value="">Select reason for referral</option>
-                                    <option value="-1">Other reason for referral</option>
+                                    <!-- <option value="-1">Other reason for referral</option> -->
+                                      <option value="-1">Other...</option>
                                     @foreach($reason_for_referral as $reason_referral)
                                     <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                     @endforeach
@@ -478,8 +479,12 @@ document.getElementById('icd10_keyword').addEventListener('keydown', function(ev
                 '                                <textarea class="form-control add_notes_diagnosis" name="diagnosis" style="resize: none;width: 100%;" rows="7" required></textarea>')
         }, 500);
     }
-    $('.reason_referral').on('change', function() {
+
+    let hasShownHigherLevelConfirm = false;
+    
+    $('.reason_referral1').on('change', function() {
         var value = $(this).val();
+        console.log("value:", value);
         if (value == '-1') {
             $("#other_reason_referral").html(loading);
             setTimeout(function() {
@@ -488,7 +493,34 @@ document.getElementById('icd10_keyword').addEventListener('keydown', function(ev
                     '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" rows="7" required></textarea>')
             }, 500);
             $("#other_reason_referral").show();
-        } else {
+        }
+        else if(value == 3){
+            Lobibox.confirm({
+                msg: "Are you sure you want to mark this patient as being referred for a 'Higher Level of Care' ?",
+                title: "Warning",
+                iconClass: 'glyphicon glyphicon-question-sign',
+                buttons: {
+                    yes: {
+                        'class': 'lobibox-btn lobibox-btn-yes',
+                        text: 'Yes'
+                    },
+                    no: {
+                        'class': 'lobibox-btn lobibox-btn-no',
+                        text: 'No'
+                    }
+                },
+                callback: function(lobibox, type){
+                    if(type === 'no'){
+                        // Reset the selection if the user cancels
+                        $('.reason_referral1').val('').trigger('change');
+                        
+                    }else{
+                        clearOtherReasonReferral();
+                    }
+                }
+            });
+        } 
+        else {
             clearOtherReasonReferral();
         }
     });

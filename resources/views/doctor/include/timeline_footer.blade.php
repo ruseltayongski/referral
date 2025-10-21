@@ -78,7 +78,7 @@ $redirected_upward = DB::table('activity')
             <div class="form-group">
                 <a href="#seenModal" data-toggle="modal"
                    data-id="{{ $row->id }}"
-                   class="btn btn-success btn-xs btn-seen"><i class="fa fa-user-md"></i> Seen
+                   class="btn btn-success btn-xs btn-seen"><i class="fa fa-eye"></i> Seen
                     @if($seen>0)
                         <small class="badge bg-green-active" id="count_seen{{ $row->code }}">{{ $seen }}</small>
                     @endif

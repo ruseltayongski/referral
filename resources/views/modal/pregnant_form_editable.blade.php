@@ -310,7 +310,8 @@
                                     <small class="text-success"><b>REASON FOR REFERRAL: </b></small> <span class="text-red">*</span>
                                     <select name="reason_referral1" class="form-control-select select2 reason_referral" style="width: 100%" required>
                                         <option value="">Select reason for referral</option>
-                                        <option value="-1">Other reason for referral</option>
+                                        <!-- <option value="-1">Other reason for referral</option> -->
+                                          <option value="-1">Other...</option>
                                         @foreach($reason_for_referral as $reason_referral)
                                             <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                         @endforeach
@@ -537,8 +538,35 @@ document.getElementById('icd10_keyword_pregnant').addEventListener('keydown', fu
                     '                                <textarea class="form-control" name="other_reason_referral" style="resize: none;width: 100%;" required></textarea>')
             },500);
             $("#other_reason_referral_pregnant").show();
-        }else{
+        }else if(value == 3){
+           
+            Lobibox.confirm({
+                msg: "Are you sure you want to mark this patient as being referred for a 'Higher Level of Care' ?",
+                title: "Warning",
+                iconClass: 'glyphicon glyphicon-question-sign',
+                buttons: {
+                    yes: {
+                        'class': 'lobibox-btn lobibox-btn-yes',
+                        text: 'Yes'
+                    },
+                    no: {
+                        'class': 'lobibox-btn lobibox-btn-no',
+                        text: 'No'
+                    }
+                },
+                callback: function(lobibox, type){
+                    if(type === 'no'){
+                        // Reset the selection if the user cancels
+                        $('.reason_referral').val('').trigger('change');
+                    }else{
+                        clearOtherReasonReferralPregnant();
+                    }
+                }
+            });
+        }
+        else{
             clearOtherReasonReferralPregnant();
+            hasShownHigherLevelConfirm = false;
         }
     });
 

@@ -876,7 +876,14 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span>  was {{ $act->status }} by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
+                                        <span class="txtPatient">{{ $act_name->fname }} {{ $act_name->mname }} {{ $act_name->lname }}</span> 
+                                        
+                                            @if ($act->status == 'upward')
+                                                upwarded
+                                            @else
+                                                {{ $act->status }}
+                                            @endif 
+                                        by <span class="txtDoctor">Dr. {{ $act->md_name }}</span> of <span class="txtHospital">{{ $new_facility }}</span>.
                                         <span class="remarks">Remarks: {{ $act->remarks }}</span>
                                     </td>
                                 </tr>

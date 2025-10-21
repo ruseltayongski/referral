@@ -2,7 +2,7 @@
     <div class="web-view">
         <div class="row" style="margin-top: 15px;">
             <div class="col-md-2">
-                <img src="{{ asset('resources/img/doh.png') }}" width="100">
+                <img src="{{ asset('resources/img/DOH_Logo.png') }}" width="100">
             </div>
             <div class="col-md-8">
                 <div class="align small-text" style="font-size: 10pt;width:100%;">
@@ -28,8 +28,8 @@
     <div class="mobile-view">
         <div class="row" style="margin-top: 15px;">
             <div class="col-md-4">
-                <img class="pull-left" src="{{ asset('resources/img/doh.png') }}" width="50">
-                <img class="pull-right" src="{{ asset('resources/img/f1.jpg') }}" width="50">
+                <img class="pull-left" src="{{ asset('resources/img/DOH_Logo.png') }}" width="50">
+                <!-- <img class="pull-right" src="{{ asset('resources/img/f1.jpg') }}" width="50"> -->
             </div>
             <div class="col-md-8">
                 <div class="align small-text" style="font-size: 11pt;">

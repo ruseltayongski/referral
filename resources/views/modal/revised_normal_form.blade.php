@@ -2452,9 +2452,10 @@
                                             @endif
                                         <i>Select reason for referral:</i><span class="text-red">*</span>
                                         <div class="container-referral">
-                                            <select name="reason_referral1" class="form-control-select select2 reason_referral" require>
+                                            <select name="reason_referral1" class="form-control-select select2 reason_referral3" require>
                                                 <option value="">Select reason for referral</option>
-                                                <option value="-1">Other reason for referral</option>
+                                                <!-- <option value="-1">Other reason for referral</option> -->
+                                                <option value="-1">Other... </option>
                                                 @foreach($reason_for_referral as $reason_referral)
                                                     <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
                                                 @endforeach
@@ -3610,14 +3611,40 @@ document.getElementById('icd10_keyword_normalrevised').addEventListener('keydown
 
     /**************************************************************************/
    
-    $('.reason_referral').on('change', function() {
+    $('.reason_referral3').on('change', function() {
             var value = $(this).val();
             
             if (value == -1) {
                 // Show the "Other Reason for Referral" textarea if "-1" is selected
                 // console.log("VALUE: ", value);
                 $('#other_reason_referral_div').show();
-            } else {
+            }
+            else if(value == 3){
+                Lobibox.confirm({
+                    msg: "Are you sure you want to mark this patient as being referred for a 'Higher Level of Care' ?",
+                    title: "Warning",
+                    iconClass: 'glyphicon glyphicon-question-sign',
+                    buttons: {
+                        yes: {
+                            'class': 'lobibox-btn lobibox-btn-yes',
+                            text: 'Yes'
+                        },
+                        no: {
+                            'class': 'lobibox-btn lobibox-btn-no',
+                            text: 'No'
+                        }
+                    },
+                    callback: function(lobibox, type){
+                        if(type === 'no'){
+                            // Reset the selection if the user cancels
+                            $('.reason_referral3').val('').trigger('change');
+                        }else{
+                            $('#other_reason_referral_div').hide();
+                        }
+                    }
+                });
+            }
+             else {
                 // Hide the "Other Reason for Referral" textarea if another option is selected
                 // console.log("VALUE: ", value);  
                 $('#other_reason_referral_div').hide();

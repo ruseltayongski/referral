@@ -72,8 +72,7 @@ $facility_exclude =  \App\Facility::select('id')
             <!-- Telemed Dropdown -->
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-video-camera"></i> Telemedicine
-                    <span class="caret"></span>
+                    <i class="fa fa-video-camera"></i> Telemed <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     @if(!in_array($user->facility_id, $facility_exclude))
@@ -308,9 +307,7 @@ $facility_exclude =  \App\Facility::select('id')
                         @else
                             <li class="divider"></li>
                         @endif
-                        <li>
-                            <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
-                        </li>
+                        
                         @if(Session::get('admin'))
                             <?php
                             $check_login_as = \App\User::find($user->id);
@@ -318,6 +315,9 @@ $facility_exclude =  \App\Facility::select('id')
                             <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> <?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : 'Back as Agent'; ?></a></li>
                         @endif
                     </ul>
+                </li>
+                <li>
+                    <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
                 </li>
             </ul>
         </li>
