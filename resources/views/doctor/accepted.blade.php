@@ -49,7 +49,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                                     <th>Patient Name/Code</th>
                                     <th>Date Accepted</th>
                                     <th>Current Status</th>
-                                   {{-- <th>Action</th> --}}
+                                    <th>Action</th>
                                 </tr>
                                 </thead>
                                 <tbody>

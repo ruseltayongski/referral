@@ -28,7 +28,12 @@ $redirected_telemed = DB::table('activity')
                     ->where('code', $row->code)
                     ->where('status', 'redirected')
                     ->get();
-  
+$redirected_upward = DB::table('activity')
+                    ->select('status')
+                    ->where('code', $row->code)
+                    ->where('status', 'upward')
+                    ->exists();
+
 ?>
 
 <div class="timeline-footer">
@@ -54,8 +59,8 @@ $redirected_telemed = DB::table('activity')
                 </a>
             </div>
         @endif
-    
-        @if($row->status == 'accepted' && $row->telemedicine && !$redirected_telemed )
+      
+        @if($row->status == 'accepted' && $row->telemedicine == 1 && !$redirected_upward)
             <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->where('status','referred')->orderBy('id','desc')->first() ?>
             <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine({{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>
         @endif
@@ -73,7 +78,7 @@ $redirected_telemed = DB::table('activity')
             <div class="form-group">
                 <a href="#seenModal" data-toggle="modal"
                    data-id="{{ $row->id }}"
-                   class="btn btn-success btn-xs btn-seen"><i class="fa fa-user-md"></i> Seen
+                   class="btn btn-success btn-xs btn-seen"><i class="fa fa-eye"></i> Seen
                     @if($seen>0)
                         <small class="badge bg-green-active" id="count_seen{{ $row->code }}">{{ $seen }}</small>
                     @endif

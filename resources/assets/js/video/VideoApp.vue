@@ -892,7 +892,7 @@ export default {
         size: "normal",
         delay: false,
         closeOnClick: false,
-        img: $("#broadcasting_url").val() + "/resources/img/ro7.png",
+        img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png",
         msg: content,
       });
     },
