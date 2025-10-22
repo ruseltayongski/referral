@@ -9,6 +9,15 @@
   margin: 0 auto;
 }
 
+.mytextarea1 {
+  visibility: hidden;
+  height: 0;
+}
+.send-button {
+  visibility: hidden;
+  margin-left: 5px;
+}
+
 /* Responsive iframe (PDF preview) */
 .pdf-preview {
   width: 100%;
@@ -200,6 +209,19 @@
                 statusbar: false,
                 automatic_uploads: true,
                 setup: function (editor) {
+                    // Reveal the editor once fully ready
+                    const el = document.querySelector('.send-button');
+                    if (el) {
+                        el.style.visibility = 'visible';
+                        el.style.marginLeft = '5px';
+                    }
+
+                    const el2 = document.querySelector('.mytextarea1');
+                    if (el2) {
+                        el2.style.visibility = 'visible';
+                        el2.style.height = 'auto';
+                    }
+
                     // Call button (only registered if telemedicine == 0)
                     if (telemed == 0) {
                         editor.ui.registry.addIcon('call-icon',
