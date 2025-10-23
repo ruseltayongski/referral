@@ -96,7 +96,7 @@ export default {
           this.$forceUpdate();
         });
 
-        console.log("Checked Labs:", this.checkedLaboratories);
+        // console.log("Checked Labs:", this.checkedLaboratories);
       } catch (error) {
         console.error("Error fetching lab requests:", error);
       }

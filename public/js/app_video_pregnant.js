@@ -22498,18 +22498,19 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
               _this3.$nextTick(function () {
                 _this3.$forceUpdate();
               });
-              console.log("Checked Labs:", _this3.checkedLaboratories);
-              _context3.next = 16;
+
+              // console.log("Checked Labs:", this.checkedLaboratories);
+              _context3.next = 15;
               break;
-            case 13:
-              _context3.prev = 13;
+            case 12:
+              _context3.prev = 12;
               _context3.t0 = _context3["catch"](0);
               console.error("Error fetching lab requests:", _context3.t0);
-            case 16:
+            case 15:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, null, [[0, 13]]);
+        }, _callee3, null, [[0, 12]]);
       }))();
     },
     submitForm: function submitForm() {

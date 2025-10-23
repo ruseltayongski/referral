@@ -22492,18 +22492,19 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
               _this3.$nextTick(function () {
                 _this3.$forceUpdate();
               });
-              console.log("Checked Labs:", _this3.checkedLaboratories);
-              _context3.next = 16;
+
+              // console.log("Checked Labs:", this.checkedLaboratories);
+              _context3.next = 15;
               break;
-            case 13:
-              _context3.prev = 13;
+            case 12:
+              _context3.prev = 12;
               _context3.t0 = _context3["catch"](0);
               console.error("Error fetching lab requests:", _context3.t0);
-            case 16:
+            case 15:
             case "end":
               return _context3.stop();
           }
-        }, _callee3, null, [[0, 13]]);
+        }, _callee3, null, [[0, 12]]);
       }))();
     },
     submitForm: function submitForm() {
@@ -23179,7 +23180,7 @@ var doctorFeedback = "referral/doctor/feedback";
 
                       // console.log(response);
                     })["catch"](function (error) {
-                      console.log(error);
+                      console.error(error);
                     });
                   } else if (_this3.form_version === "version2") {
                     axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(_this3.baseUrl, "/video/normal/newform/data/").concat(_this3.tracking_id)).then(function (res) {
@@ -23197,7 +23198,8 @@ var doctorFeedback = "referral/doctor/feedback";
                       _this3.obstetric_and_gynecologic_history = response.obstetric_and_gynecologic_history;
                       _this3.pregnancy = response.pregnancy;
                       if (response.age_type === "y") _this3.patient_age = response.patient_age + " Years Old";else if (response.age_type === "m") _this3.patient_age = response.patient_age + " Months Old";
-                      console.log("Form response:", response);
+
+                      // console.log("Form response:", response);
                       _this3.icd = response.icd;
                       // console.log("testing\n" + this.icd);
 

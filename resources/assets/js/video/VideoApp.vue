@@ -286,7 +286,7 @@ export default {
                   // console.log(response);
                 })
                 .catch((error) => {
-                  console.log(error);
+                  console.error(error);
                 });
             } else if (this.form_version === "version2") {
               axios
@@ -316,7 +316,7 @@ export default {
                   else if (response.age_type === "m")
                     this.patient_age = response.patient_age + " Months Old";
 
-                  console.log("Form response:", response);
+                  // console.log("Form response:", response);
                   this.icd = response.icd;
                   // console.log("testing\n" + this.icd);
 
