@@ -216,21 +216,51 @@ $user = Session::get('auth');
                                 </div>
                             @endif -->
                         </div>
-                      
                         @if($row->telemedicine)
                             @include('doctor.include.telemedicine_panel_body')
                         @else
                             @include('doctor.include.referred_panel_body')
                         @endif
+
+                        @php
+                                    
+                            $isTelemed = $row->telemedicine == 1 
+                                        && $row->referred_to == $user->facility_id 
+                                        && $row->subopd_id == $user->subopd_id;
+
+                            $isReferral = $row->telemedicine == 0 
+                                        && $row->referred_to == $user->facility_id;
+
+                        @endphp
                         <div class="panel-footer">
-                            <a data-toggle="modal" href="#referralForm"
-                               data-type="{{ $row->type }}"
-                               data-id="{{ $row->id }}"
-                               data-code="{{ $row->code }}"
-                               data-referral_status="referring"
-                               class="view_form btn btn-warning btn-xs">
-                                <i class="fa fa-folder"></i> View Form  
-                            </a>
+                            @if($isTelemed || $isReferral)
+                                <a class="btn btn-warning btn-xs view_form" href="javascript:void(0)"
+                                    data-toggle="modal"
+                                    data-code="{{ $row->code }}"
+                                    data-status="{{ $row->status }}"
+                                    data-telemed ="{{$row->telemedicine}}"
+                                    data-item="#item-{{ $row->id }}"
+                                    data-status="{{ $row->status }}"
+                                    data-referral_status="referred"
+                                    data-type="{{ $row->type }}"
+                                    data-id="{{ $row->id }}"
+                                    data-referred_from="{{ $row->referred_from }}"
+                                    data-patient_name="{{ $row->patient_name }}"
+                                    data-asigned_doctorid="{{ $row->asignedDoctorId }}"
+                                    data-backdrop="static">
+                                    <i class="fa fa-folder"></i> View Form
+                                </a>
+                            @else
+                                <a data-toggle="modal" href="#referralForm"
+                                    data-type="{{ $row->type }}"
+                                    data-id="{{ $row->id }}"
+                                    data-code="{{ $row->code }}"
+                                    data-referral_status="referring"
+                                    class="view_form btn btn-warning btn-xs">
+                                        <i class="fa fa-folder"></i> View Form  
+                                </a>
+                            @endif
+
                             @if($seen>0)
                                 <a href="#seenModal" data-toggle="modal"
                                    data-id="{{ $row->id }}"
@@ -420,6 +450,45 @@ $user = Session::get('auth');
                 });
             <?php Session::put("redirected_failed",false); ?>
         @endif
+
+        $(document).ready(function() {
+            let selectedButtonData = null; 
+            
+            $(".referral_body").html(loading); 
+            $(document).on('click', '.view_form', function () {
+            
+                selectedButtonData = $(this).data(); 
+                let telemedValue = selectedButtonData.telemed; // Get telemedicine value
+                let followupTelemed = selectedButtonData.status;
+                let privacy_not = selectedButtonData.privacy_notice; // Get status value
+                // console.log("telemedValue", telemedValue, parseInt(telemedValue) == 1);
+                 console.log("Telemedicine Value:", telemedValue, followupTelemed,privacy_not); // Debugging
+                
+                if (parseInt(telemedValue) == 1 && (followupTelemed === 'followup' || followupTelemed === 'referred' || privacy_not == "privacy")) {
+                    $('#privacyNoticeModal').modal('show');
+                }else{
+                    $('#privacyNoticeModal').modal('hide');
+                    $('#referralForm').modal('show');
+                    return;
+                }
+            }); 
+
+            $('#privacyNoticeModal').on('shown.bs.modal', function () {
+                $('#privacyCheckbox').prop('checked', false);
+                $('#acceptPrivacyBtn').prop('disabled', true);
+            });
+
+            $('#privacyCheckbox').change(function () {
+                $('#acceptPrivacyBtn').prop('disabled', !this.checked);
+            });
+
+            $('#acceptPrivacyBtn').click(function () {
+                $('#privacyNoticeModal').modal('hide');
+                setTimeout(function() {
+                    $('#referralForm').modal('show');
+                }, 500);
+            });
+        });
 
         $('body').on('click','.btn-transfer',function() {
             $(".transportation_body").html(''); //clear data

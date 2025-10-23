@@ -204,7 +204,7 @@
     @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)
         <button class="btn-sm btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
     @endif
-    
+
     @if(($referral_status == 'referred' || $referral_status == 'redirected') && $form->telemedicine == 0 || ($cur_status == 'redirected' || $cur_status == 'transferred')  && $form->telemedicine == 1 && $referral_status != 'referring')
             <button class="btn-sm btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue</button>
             <button class="btn-sm btn-info btn_call_request btn-flat btn-cal button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request <span class="badge bg-red-active call_count" data-toggle="tooltip" title=""></span> </button>

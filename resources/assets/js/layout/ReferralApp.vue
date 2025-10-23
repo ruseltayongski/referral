@@ -847,7 +847,7 @@
             prescribedCompleted(patient_code, activity_id) {
                 $("#prescribed_progress"+patient_code+activity_id).addClass("completed");
             },
-            upwardCompleted(patient_code,activity_id) {
+            upwardCompleted(patient_code,activity_id) {            
                 $("#upward_progress"+patient_code+activity_id).addClass("completed");
             },
             // labreq(request_id,activity_id){//I add this changes
@@ -860,8 +860,9 @@
                 await axios.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined).then(response => {
                     // console.log(response)
                 });
-        
-                 $("#html_websocket_upward"+this.referral_code).html(this.buttonUpward(this.referral_code, this.telemedicineFormType));
+          
+                $("#html_websocket_upward"+this.referral_code).html(this.buttonUpward(this.referral_code, this.telemedicineFormType));
+                
             },
             cancelCall() {
                 this.$refs.audioVideo.pause();
@@ -1091,8 +1092,17 @@
 
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
-                     console.log("event discharge:",event);
-                    // console.log('request_id',event.payload.request_by, 'activity id:', event.payload.activity_id);
+                    //  console.log("event discharge:",event);
+                    if(event.payload.telemedicine_status === "upward"){
+                        $("#html_websocket_upward" + event.payload.code).remove();
+                        $("#upward_button" + event.payload.code).remove();
+                    }
+                    
+                    if(event.payload.telemedicine_status === "treated"){
+                        $("#html_websocket_upward" + event.payload.code).remove();
+                        $("#upward_button" + event.payload.code).remove();
+                    }
+
                     this.telemedicine = event.payload.telemedicine;
                     if(event.payload.status == "telemedicine" || event.payload.telemedicine == 1) {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {

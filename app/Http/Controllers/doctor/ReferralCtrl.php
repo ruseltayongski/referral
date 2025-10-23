@@ -757,7 +757,6 @@ class ReferralCtrl extends Controller
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
 
         if($request->referredCode){
-            
             ParamCtrl::lastLogin();
             $data = Tracking::select(
                 'tracking.*',
@@ -777,6 +776,7 @@ class ReferralCtrl extends Controller
                 ->where('tracking.code',$request->referredCode)
                 ->orderBy('date_referred','desc')
                 ->paginate(10);
+            // dd($data);
         } else {
             $data = Activity::select(
                 'activity.status',

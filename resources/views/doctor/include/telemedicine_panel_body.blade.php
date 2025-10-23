@@ -83,6 +83,8 @@
  
     $lab_request = \App\LabRequest::where("activity_id",$referred_track->id)
         ->first(); // I am adding this condition for error messages of lab result icon
+    
+    $formtype = \App\Tracking::select('type')->where('code', $row->code)->first();
 
     //reset the variable in followup if followup not exist
     $followup_queued_track = 0;
@@ -169,7 +171,8 @@
                 data-content='<a class="btn btn-app" onclick="telemedicinePrescription(`{{ $row->id }}`,
                     `{{ $referred_prescription_hold->first()->id }}`,
                     `{{ $referred_track->code }}`,
-                    `{{ $referred_track->id }}`)" >
+                    `{{ $referred_track->id }}`,
+                    `{{ $formtype->type }}`)" >
                     <i class="fa fa-file-text-o"></i> Prescription
                     </a>&nbsp;&nbsp;
                     <a class="btn btn-app" onclick="telemedicineLabResult(`{{ $referred_track->id }}`, `{{$lab_request->laboratory_code}}`)">
@@ -359,7 +362,7 @@
                     <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}','{{$follow_treated_track}}','{{$follow_redirected_track}}','{{$follow_upward_track}}','{{$follow_followup_track}}','{{$user->facility_id}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
                     <div class="step-name">Consultation</div>
                 </div>
-                
+              
                 <div class="stepper-item stepper-item-prescription @if($follow_examined_track || $follow_prescription_track) completed @endif" id="prescribed_progress{{ $follow_track->code.$follow_track->id }}" id="lab_progress{{$lab_request->requested_by}}">
                     <div class="step-counter step-counter-prescription popoverTelemedicine"
                     data-toggle="popover"
@@ -368,7 +371,8 @@
                     data-content='<a class="btn btn-app" onclick="telemedicinePrescription(`{{$row->id}}`,
                     `{{ $follow_prescription_hold->first()->id }}`,
                     `{{ $follow_track->code }}`,     
-                    `{{ $follow_track->id }}`)" >
+                    `{{ $follow_track->id }}`,
+                    `{{ $formtype->type }}`)" >
                     <i class="fa fa-file-text-o"></i> Prescription
                     </a>&nbsp;&nbsp;
                     <a class="btn btn-app" onclick="telemedicineLabResult(`{{ $follow_track->id }}`,`{{ $lab_request->laboratory_code}}`,`{{$lab_request->requested_by}}`)">
@@ -1049,7 +1053,6 @@
         </div>
     @endif
 </div>
-
 <script>
 //--------------> adding folder list
 function FileFolder(index,sortedFiles,activity_code,activity_id,follow_id,baseUrl) {
