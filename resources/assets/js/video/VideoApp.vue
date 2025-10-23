@@ -125,7 +125,14 @@ export default {
     };
   },
   mounted() {
+    this.getCameraDevices();
+    this.getFormData();
+    this.isMobile();
     window.addEventListener("keydown", this.feedbackKeydown);
+    //this.hideDivAfterTimeout();
+    window.addEventListener("click", this.showDivAgain);
+    window.addEventListener("beforeunload", this.preventCloseWhileUploading);
+    window.addEventListener("beforeunload", this.stopCallTimer);
     document.title = "TELEMEDICINE";
     // Change favicon
     const link = document.querySelector("link[rel~='icon']");
@@ -138,93 +145,10 @@ export default {
       newLink.href = this.dohLogoUrl;
       document.head.appendChild(newLink);
     }
-
-    window.addEventListener("beforeunload", this.preventCloseWhileUploading);
-    window.addEventListener("beforeunload", this.stopCallTimer);
     // Initialize draggable div logic
     this.$nextTick(() => {
       this.initDraggableDiv();
     });
-    axios
-      .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
-      .then((res) => {
-        const response = res.data;
-        if (response.success) {
-          this.form_version = response.form_type;
-          // console.log("Form type:", this.form_version);
-
-          if (this.form_version === "version1") {
-            axios
-              .get(
-                `${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`
-              )
-              .then((res) => {
-                const response = res.data;
-                this.telemedicine = response.form.telemedicine;
-                this.form = response.form;
-                if (response.age_type === "y")
-                  this.patient_age = response.patient_age + " Years Old";
-                else if (response.age_type === "m")
-                  this.patient_age = response.patient_age + " Months Old";
-
-                this.icd = response.icd;
-                // console.log("testing\n" + this.icd);
-
-                this.file_path = response.file_path;
-                this.file_name = response.file_name;
-
-                // console.log(response);
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          } else if (this.form_version === "version2") {
-            axios
-              .get(
-                `${this.baseUrl}/video/normal/newform/data/${this.tracking_id}`
-              )
-              .then((res) => {
-                const response = res.data;
-                this.telemedicine = response.form.telemedicine;
-                this.form = response.form;
-                this.current_medication =
-                  response.personal_and_social_history.current_medications;
-                this.past_medical_history = response.past_medical_history;
-                this.personal_and_social_history =
-                  response.personal_and_social_history;
-                this.pertinent_laboratory = response.pertinent_laboratory;
-                this.review_of_system = response.review_of_system;
-                this.nutritional_status = response.nutritional_status;
-                this.latest_vital_signs = response.latest_vital_signs;
-                this.glasgocoma_scale = response.glasgocoma_scale;
-                this.obstetric_and_gynecologic_history =
-                  response.obstetric_and_gynecologic_history;
-                this.pregnancy = response.pregnancy;
-
-                if (response.age_type === "y")
-                  this.patient_age = response.patient_age + " Years Old";
-                else if (response.age_type === "m")
-                  this.patient_age = response.patient_age + " Months Old";
-
-                console.log("Form response:", response);
-                this.icd = response.icd;
-                // console.log("testing\n" + this.icd);
-
-                this.file_path = response.file_path;
-                this.file_name = response.file_name;
-              });
-          }
-        }
-      })
-      .catch((error) => {
-        console.error(
-          "Error fetching form type, defaulting to 'normal':",
-          error
-        );
-      });
-
-    //this.hideDivAfterTimeout();
-    window.addEventListener("click", this.showDivAgain);
 
     //******************************************** start here */
     // Add window resize event listener
@@ -232,7 +156,6 @@ export default {
     // Call once to set initial sizing
     // this.handleResize();
     // // Initialize camera devices
-    this.getCameraDevices();
   },
 
   beforeUnmount() {
@@ -309,7 +232,19 @@ export default {
       }
     },
   },
-  computed: {
+  // computed: {
+  //   isMobile() {
+  //     const isTabletSize =
+  //       window.innerWidth >= 600 && window.innerWidth <= 1200;
+  //     const isTabletUA =
+  //       /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet|Tab|PlayBook|Silk|Kindle|Touch/i.test(
+  //         navigator.userAgent
+  //       );
+  //     return isTabletUA || isTabletSize;
+  //   },
+  // },
+  methods: {
+    // Mobile device detection removed to always show camera switch functionality
     isMobile() {
       const isTabletSize =
         window.innerWidth >= 600 && window.innerWidth <= 1200;
@@ -317,11 +252,87 @@ export default {
         /Mobi|Android|iPhone|iPad|iPod|SM-T|Tablet|Tab|PlayBook|Silk|Kindle|Touch/i.test(
           navigator.userAgent
         );
-      return isTabletUA || isTabletSize;
+      this.isMobileDevice = isTabletUA || isTabletSize;
     },
-  },
-  methods: {
-    // Mobile device detection removed to always show camera switch functionality
+    async getFormData() {
+      axios
+        .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
+        .then((res) => {
+          const response = res.data;
+          if (response.success) {
+            this.form_version = response.form_type;
+            // console.log("Form type:", this.form_version);
+
+            if (this.form_version === "version1") {
+              axios
+                .get(
+                  `${this.baseUrl}/doctor/referral/video/normal/form/${this.tracking_id}`
+                )
+                .then((res) => {
+                  const response = res.data;
+                  this.telemedicine = response.form.telemedicine;
+                  this.form = response.form;
+                  if (response.age_type === "y")
+                    this.patient_age = response.patient_age + " Years Old";
+                  else if (response.age_type === "m")
+                    this.patient_age = response.patient_age + " Months Old";
+
+                  this.icd = response.icd;
+                  // console.log("testing\n" + this.icd);
+
+                  this.file_path = response.file_path;
+                  this.file_name = response.file_name;
+
+                  // console.log(response);
+                })
+                .catch((error) => {
+                  console.error(error);
+                });
+            } else if (this.form_version === "version2") {
+              axios
+                .get(
+                  `${this.baseUrl}/video/normal/newform/data/${this.tracking_id}`
+                )
+                .then((res) => {
+                  const response = res.data;
+                  this.telemedicine = response.form.telemedicine;
+                  this.form = response.form;
+                  this.current_medication =
+                    response.personal_and_social_history.current_medications;
+                  this.past_medical_history = response.past_medical_history;
+                  this.personal_and_social_history =
+                    response.personal_and_social_history;
+                  this.pertinent_laboratory = response.pertinent_laboratory;
+                  this.review_of_system = response.review_of_system;
+                  this.nutritional_status = response.nutritional_status;
+                  this.latest_vital_signs = response.latest_vital_signs;
+                  this.glasgocoma_scale = response.glasgocoma_scale;
+                  this.obstetric_and_gynecologic_history =
+                    response.obstetric_and_gynecologic_history;
+                  this.pregnancy = response.pregnancy;
+
+                  if (response.age_type === "y")
+                    this.patient_age = response.patient_age + " Years Old";
+                  else if (response.age_type === "m")
+                    this.patient_age = response.patient_age + " Months Old";
+
+                  // console.log("Form response:", response);
+                  this.icd = response.icd;
+                  // console.log("testing\n" + this.icd);
+
+                  this.file_path = response.file_path;
+                  this.file_name = response.file_name;
+                });
+            }
+          }
+        })
+        .catch((error) => {
+          console.error(
+            "Error fetching form type, defaulting to 'normal':",
+            error
+          );
+        });
+    },
 
     async getCameraDevices() {
       try {
@@ -1095,6 +1106,7 @@ export default {
     async startBasicCall() {
       // Create an instance of the Agora Engine
       this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+      // this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
       const agoraEngine = this.agoraEngine; // Use this reference
 
       // Setup channel parameters with user count tracking
@@ -1222,7 +1234,7 @@ export default {
         }
         await agoraEngine.publish(tracksToPublish);
         // console.log("publish success!");
-
+        // this.startRecording();
         window.onload = function () {
           self.joinVideo(
             agoraEngine,
@@ -1641,7 +1653,7 @@ export default {
               <div class="iconCall position-absolute fade-in" v-if="showDiv">
                 <div class="button-container">
                   <div
-                    v-if="!isMobile && showMic"
+                    v-if="!isMobileDevice && showMic"
                     class="tooltip-text"
                     style="background-color: #138496"
                   >
@@ -1661,7 +1673,7 @@ export default {
                 &nbsp;
                 <div class="button-container">
                   <div
-                    v-if="!isMobile && showVedio"
+                    v-if="!isMobileDevice && showVedio"
                     class="tooltip-text"
                     style="background-color: #218838"
                   >
@@ -1680,9 +1692,9 @@ export default {
                 </div>
                 &nbsp;
                 <!-- <div class="button-container" v-if="availableCameras.length > 1"> -->
-                <div class="button-container" v-if="isMobile">
+                <div class="button-container" v-if="isMobileDevice">
                   <div
-                    v-if="!isMobile && showCameraSwitch"
+                    v-if="!isMobileDevice && showCameraSwitch"
                     class="tooltip-text"
                     style="background-color: #218838"
                   >
@@ -1701,7 +1713,7 @@ export default {
                 &nbsp;
                 <div class="button-container">
                   <div
-                    v-if="!isMobile && showEndcall"
+                    v-if="!isMobileDevice && showEndcall"
                     class="tooltip-text"
                     style="background-color: #c82333"
                   >
@@ -1724,7 +1736,7 @@ export default {
                   v-if="this.user.facility_id != 63 && this.telemedicine == 1"
                 >
                   <div
-                    v-if="!isMobile && showUpward"
+                    v-if="showUpward"
                     class="tooltip-text"
                     style="background-color: #e0a800"
                   >
@@ -1743,7 +1755,7 @@ export default {
                 </div>
                 <div class="button-container" v-if="this.telemedicine == 1">
                   <div
-                    v-if="!isMobile && showPrescription"
+                    v-if="!isMobileDevice && showPrescription"
                     class="tooltip-text"
                     style="background-color: #218838"
                   >
@@ -1763,7 +1775,7 @@ export default {
                 </div>
                 <div class="button-container" v-if="this.telemedicine == 1">
                   <div
-                    v-if="!isMobile && showTooltip"
+                    v-if="!isMobileDevice && showTooltip"
                     class="tooltip-text"
                     style="background-color: #007bff"
                   >
@@ -1783,7 +1795,7 @@ export default {
                 </div>
                 <div class="button-container">
                   <div
-                    v-if="!isMobile && showTooltipFeedback"
+                    v-if="!isMobileDevice && showTooltipFeedback"
                     class="tooltip-text"
                     style="background-color: #17a2b8"
                   >
