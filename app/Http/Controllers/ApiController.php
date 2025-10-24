@@ -671,6 +671,14 @@ class ApiController extends Controller
             );
             Activity::create($activity);
 
+             $broadcast_treated = [
+                "code" => $request->code,
+                "status" => "telemedicine",
+                "telemedicine_status" => "treated"
+            ];
+
+            broadcast(new SocketReferralDischarged($broadcast_treated));
+
             return "success";
         }
         return "failed";

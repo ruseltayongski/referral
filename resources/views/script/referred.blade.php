@@ -964,25 +964,52 @@
 
     }
 
-    function telemedicinePrescription(track_id, activity_id, referred_code, referred_id) {
-        const prescriptionIsCompleted = $('#prescribed_progress'+referred_code+referred_id).hasClass('completed');
-        const url = "{{ asset('doctor/print/prescription') }}";
-        if(activity_id) {
-            window.open(`${url}/${track_id}/${activity_id}`);
-        } else if(prescriptionIsCompleted) {
-            // window.open(`${url}/${track_id}/${referred_id}?prescription_new=true`);
-             Lobibox.alert("warning",
-            {
-                msg: "No prescription has been created by the referred doctor"
-            });
-        }
-        else {
-            Lobibox.alert("warning",
-            {
-                msg: "No prescription has been created by the referred doctor"
+    function telemedicinePrescription(track_id, activity_id, referred_code, referred_id , type) {
+         console.log("Prescription type:", type);
+        const url = "{{ asset('api/video/prescription/check') }}";
+        const Prescriptionurl = "{{ asset('doctor/print/prescription') }}";
+        
+        if (activity_id) {
+            // ✅ If there's already an activity_id, open it directly
+            window.open(`${Prescriptionurl}/${track_id}/${activity_id}`);
+        } else {
+            // ✅ Otherwise, check from backend if a prescription exists or can be generated
+            const getPrescription = {
+            code: referred_code,
+            form_type: type,
+            tracking_id: track_id,
+            };
+
+            axios
+            .post(`${url}`, getPrescription)
+            .then((response) => {
+                if (response.data.status === "success") {
+                    const prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
+
+                    // ✅ Build PDF URL
+                    const PdfUrl = `${baseUrl}/doctor/print/prescription/${track_id}/${prescribedActivityId}`;
+                        console.log("Generated Prescription PDF URL:", PdfUrl);
+                
+                    if(PdfUrl){
+                        // ✅ Open PDF directly in new tab
+                        window.open(PdfUrl);
+                    }
+
+                } else {
+                    Lobibox.alert("warning", {
+                        msg: "No prescription has been created by the referred doctor!",
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Prescription check failed:", error);
+                Lobibox.alert("error", {
+                msg: "Error checking prescription. Please try again.",
+                });
             });
         }
     }
+
     //for referral discharge
     function ReferralDischargeResult(track_code, discharged, cancelled, rejected,transferred){
         console.log("track_code", track_code);
