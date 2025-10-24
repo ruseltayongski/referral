@@ -407,6 +407,7 @@
                 });
             },
             notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks, redirect_track, accepting_doctor_id, telemedicine, telemed_redirected) {
+                $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 $("#accepted_progress"+patient_code+activity_id).attr("data-actionmd", accepting_doctor_id);
                 $("#rejected_progress"+patient_code+activity_id).removeClass("bg-orange");

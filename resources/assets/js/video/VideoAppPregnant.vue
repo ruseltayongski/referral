@@ -1122,7 +1122,7 @@ export default {
           self.channelParameters.userCount--;
           return;
         } else {
-          if (this.referring_md === "yes") {
+          if (this.referring_md === "no") {
             this.startScreenRecording();
           }
         }

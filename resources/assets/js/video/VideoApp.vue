@@ -576,7 +576,7 @@ export default {
       }
 
       // Wait for duration to be sent before closing
-      if (this.referring_md === "yes") {
+      if (this.referring_md === "no") {
         clearInterval(this.callTimer); // Stop the timer
         this.sendCallDuration();
 
@@ -743,14 +743,13 @@ export default {
           return;
         }
 
-        // Generate the filename
+        // --- Generate filename ---
         const patientCode = this.form.code || "Unknown_Patient";
         const activityId = this.activity_id;
         const referring_md = this.form.referring_md;
         const referred = this.form.action_md;
-        // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
         const currentDate = new Date();
-        const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        const dateSave = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
         const timeStart = new Date(this.startTime)
           .toLocaleTimeString("en-US", { hour12: false })
           .replace(/:/g, "-");
@@ -759,14 +758,27 @@ export default {
           .replace(/:/g, "-");
 
         const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
-        // Get facility name for folder (sanitize on server)
         const username = this.user.username || "UnknownUser";
 
-        // --- Detect upload speed and set chunk size ---
-        let chunkSize = 5 * 1024 * 1024; // Default to 10MB
+        // --- Detect upload speed and set chunk size dynamically ---
+        let chunkSize = 5 * 1024 * 1024; // Default 5MB
+        if (navigator.connection) {
+          const speed = navigator.connection.downlink; // Mbps (approx)
+          console.log(`Detected network speed: ${speed} Mbps`);
+          if (speed <= 2) chunkSize = 2 * 1024 * 1024; // 2MB for slow networks
+          else if (speed >= 5)
+            chunkSize = 5 * 1024 * 1024; // 5MB for moderate networks
+          else if (speed >= 10)
+            chunkSize = 10 * 1024 * 1024; // 10MB for fast networks
+          else if (speed >= 20) chunkSize = 20 * 1024 * 1024; // 20MB for very fast networks
+        }
+        console.log(
+          `Using chunk size: ${(chunkSize / (1024 * 1024)).toFixed(1)} MB`
+        );
 
         const totalChunks = Math.ceil(blob.size / chunkSize);
 
+        // --- Upload chunks sequentially ---
         for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
           const start = chunkIndex * chunkSize;
           const end = Math.min(blob.size, start + chunkSize);
@@ -777,7 +789,7 @@ export default {
           formData.append("fileName", fileName);
           formData.append("chunkIndex", chunkIndex);
           formData.append("totalChunks", totalChunks);
-          formData.append("username", username); // <-- Add facility name
+          formData.append("username", username);
 
           try {
             await axios.post(
@@ -785,8 +797,10 @@ export default {
               formData,
               {
                 headers: { "Content-Type": "multipart/form-data" },
+                timeout: 60_000, // 60s timeout per chunk
               }
             );
+
             // Update progress after each chunk
             this.uploadProgress = Math.round(
               ((chunkIndex + 1) / totalChunks) * 100
@@ -806,10 +820,11 @@ export default {
           }
         }
 
-        this.uploadProgress = 100; // Ensure it's 100% at the end
-        this.recordedChunks = []; // Clear recorded chunks to free memory
-        this.loading = false; // Hide loader
-        this.uploadProgress = 0; // Reset progress
+        // --- Upload complete ---
+        this.uploadProgress = 100;
+        this.recordedChunks = []; // Clear memory
+        this.loading = false;
+        this.uploadProgress = 0;
 
         if (closeAfterUpload) {
           Lobibox.alert("success", {
@@ -1143,7 +1158,7 @@ export default {
           self.channelParameters.userCount--;
           return;
         } else {
-          if (this.referring_md === "yes") {
+          if (this.referring_md === "no") {
             this.startScreenRecording();
             // this.startRecording();
           }
@@ -1410,7 +1425,7 @@ export default {
         }
 
         // Wait for duration to be sent before closing
-        if (this.referring_md === "yes") {
+        if (this.referring_md === "no") {
           clearInterval(this.callTimer); // Stop the timer
           await this.sendCallDuration();
 

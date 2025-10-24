@@ -23449,7 +23449,7 @@ var doctorFeedback = "referral/doctor/feedback";
       }
 
       // Wait for duration to be sent before closing
-      if (this.referring_md === "yes") {
+      if (this.referring_md === "no") {
         clearInterval(this.callTimer); // Stop the timer
         this.sendCallDuration();
 
@@ -23607,13 +23607,13 @@ var doctorFeedback = "referral/doctor/feedback";
       var _arguments = arguments,
         _this9 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, username, chunkSize, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
+        var closeAfterUpload, blob, maxSize, patientCode, activityId, referring_md, referred, currentDate, dateSave, timeStart, timeEnd, fileName, username, chunkSize, speed, totalChunks, chunkIndex, start, end, chunk, formData, _error$response;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               closeAfterUpload = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : false;
               if (!(_this9.recordedChunks.length > 0)) {
-                _context4.next = 54;
+                _context4.next = 56;
                 break;
               }
               _this9.loading = true; // Show loader
@@ -23633,27 +23633,36 @@ var doctorFeedback = "referral/doctor/feedback";
               });
               return _context4.abrupt("return");
             case 9:
-              // Generate the filename
+              // --- Generate filename ---
               patientCode = _this9.form.code || "Unknown_Patient";
               activityId = _this9.activity_id;
               referring_md = _this9.form.referring_md;
-              referred = _this9.form.action_md; // const callDuration = this.callDuration.replace(/:/g, "-").replace(/\s+/g, "_");
+              referred = _this9.form.action_md;
               currentDate = new Date();
-              dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+              dateSave = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
               timeStart = new Date(_this9.startTime).toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
               timeEnd = currentDate.toLocaleTimeString("en-US", {
                 hour12: false
               }).replace(/:/g, "-");
-              fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm"); // Get facility name for folder (sanitize on server)
-              username = _this9.user.username || "UnknownUser"; // --- Detect upload speed and set chunk size ---
-              chunkSize = 5 * 1024 * 1024; // Default to 10MB
-              totalChunks = Math.ceil(blob.size / chunkSize);
+              fileName = "".concat(patientCode, "_").concat(activityId, "_").concat(referring_md, "_").concat(referred, "_").concat(dateSave, "_").concat(timeStart, "_").concat(timeEnd, ".webm");
+              username = _this9.user.username || "UnknownUser"; // --- Detect upload speed and set chunk size dynamically ---
+              chunkSize = 5 * 1024 * 1024; // Default 5MB
+              if (navigator.connection) {
+                speed = navigator.connection.downlink; // Mbps (approx)
+                console.log("Detected network speed: ".concat(speed, " Mbps"));
+                if (speed <= 2) chunkSize = 2 * 1024 * 1024; // 2MB for slow networks
+                else if (speed >= 5) chunkSize = 5 * 1024 * 1024; // 5MB for moderate networks
+                else if (speed >= 10) chunkSize = 10 * 1024 * 1024; // 10MB for fast networks
+                else if (speed >= 20) chunkSize = 20 * 1024 * 1024; // 20MB for very fast networks
+              }
+              console.log("Using chunk size: ".concat((chunkSize / (1024 * 1024)).toFixed(1), " MB"));
+              totalChunks = Math.ceil(blob.size / chunkSize); // --- Upload chunks sequentially ---
               chunkIndex = 0;
-            case 22:
+            case 24:
               if (!(chunkIndex < totalChunks)) {
-                _context4.next = 47;
+                _context4.next = 49;
                 break;
               }
               start = chunkIndex * chunkSize;
@@ -23664,22 +23673,23 @@ var doctorFeedback = "referral/doctor/feedback";
               formData.append("fileName", fileName);
               formData.append("chunkIndex", chunkIndex);
               formData.append("totalChunks", totalChunks);
-              formData.append("username", username); // <-- Add facility name
-              _context4.prev = 32;
-              _context4.next = 35;
+              formData.append("username", username);
+              _context4.prev = 34;
+              _context4.next = 37;
               return axios__WEBPACK_IMPORTED_MODULE_0___default().post("https://telemedapi.cvchd7.com/api/save-screen-record", formData, {
                 headers: {
                   "Content-Type": "multipart/form-data"
-                }
+                },
+                timeout: 60000 // 60s timeout per chunk
               });
-            case 35:
+            case 37:
               // Update progress after each chunk
               _this9.uploadProgress = Math.round((chunkIndex + 1) / totalChunks * 100);
-              _context4.next = 44;
+              _context4.next = 46;
               break;
-            case 38:
-              _context4.prev = 38;
-              _context4.t0 = _context4["catch"](32);
+            case 40:
+              _context4.prev = 40;
+              _context4.t0 = _context4["catch"](34);
               _this9.loading = false;
               _this9.uploadProgress = 0; // Reset on error
               Lobibox.alert("error", {
@@ -23689,16 +23699,16 @@ var doctorFeedback = "referral/doctor/feedback";
                 }
               });
               return _context4.abrupt("return");
-            case 44:
+            case 46:
               chunkIndex++;
-              _context4.next = 22;
+              _context4.next = 24;
               break;
-            case 47:
-              _this9.uploadProgress = 100; // Ensure it's 100% at the end
-              _this9.recordedChunks = []; // Clear recorded chunks to free memory
-              _this9.loading = false; // Hide loader
-              _this9.uploadProgress = 0; // Reset progress
-
+            case 49:
+              // --- Upload complete ---
+              _this9.uploadProgress = 100;
+              _this9.recordedChunks = []; // Clear memory
+              _this9.loading = false;
+              _this9.uploadProgress = 0;
               if (closeAfterUpload) {
                 Lobibox.alert("success", {
                   msg: "Your conversation has been successfully recorded and uploaded.",
@@ -23707,15 +23717,15 @@ var doctorFeedback = "referral/doctor/feedback";
                   }
                 });
               }
-              _context4.next = 55;
+              _context4.next = 57;
               break;
-            case 54:
+            case 56:
               console.error("No recorded data available to save.");
-            case 55:
+            case 57:
             case "end":
               return _context4.stop();
           }
-        }, _callee4, null, [[32, 38]]);
+        }, _callee4, null, [[34, 40]]);
       }))();
     },
     startRecording: function startRecording() {
@@ -23960,7 +23970,7 @@ var doctorFeedback = "referral/doctor/feedback";
                         self.channelParameters.userCount--;
                         return _context5.abrupt("return");
                       case 12:
-                        if (_this11.referring_md === "yes") {
+                        if (_this11.referring_md === "no") {
                           _this11.startScreenRecording();
                           // this.startRecording();
                         }
@@ -24263,7 +24273,7 @@ var doctorFeedback = "referral/doctor/feedback";
               }
 
               // Wait for duration to be sent before closing
-              if (!(_this13.referring_md === "yes")) {
+              if (!(_this13.referring_md === "no")) {
                 _context10.next = 8;
                 break;
               }

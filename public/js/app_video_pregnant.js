@@ -23940,7 +23940,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                         self.channelParameters.userCount--;
                         return _context4.abrupt("return");
                       case 12:
-                        if (_this10.referring_md === "yes") {
+                        if (_this10.referring_md === "no") {
                           _this10.startScreenRecording();
                         }
                       case 13:
