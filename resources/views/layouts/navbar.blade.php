@@ -72,7 +72,7 @@ $facility_exclude =  \App\Facility::select('id')
             <!-- Telemed Dropdown -->
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-video-camera"></i> Telemed <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $count }}</span> New</span><span class="caret"></span>
+                    <i class="fa fa-video-camera"></i> Telemed <span class="badge" style="font-size: 8pt;"><span class="count_referral">{{ $countTelemed }}</span> New</span><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
                     @if(!in_array($user->facility_id, $facility_exclude))

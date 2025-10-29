@@ -407,6 +407,32 @@ export default {
         window.top.close();
       }
     },
+    startCallTimer() {
+      // Store the start time in milliseconds
+      this.startTime = Date.now();
+
+      // Update the timer every 10 milliseconds
+      this.callTimer = setInterval(() => {
+        const elapsedTime = Date.now() - this.startTime;
+
+        // Calculate minutes, seconds, and milliseconds
+        const hours = Math.floor(elapsedTime / 3600000);
+        const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+        const seconds = Math.floor((elapsedTime % 60000) / 1000);
+
+        // Format the time as mm:ss:ms
+
+        if (hours == 0) {
+          this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(
+            seconds
+          ).padStart(2, "0")} `;
+        } else {
+          this.callDuration = `${String(hours).padStart(1, "0")} : ${String(
+            minutes
+          ).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
+        }
+      }, 10);
+    },
     clearAfkTimers() {
       clearTimeout(this.afkTimeout);
       clearInterval(this.afkCountdownInterval);
@@ -943,19 +969,19 @@ export default {
         const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
         if (blob.size > maxSize) {
           this.loading = false;
-          Lobibox.alert("warning", {
+          Lobibox.alert("error", {
             msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
           });
           return;
         }
 
-        // Generate the filename
+        // --- Generate filename ---
         const patientCode = this.form.code || "Unknown_Patient";
         const activityId = this.activity_id;
         const referring_md = this.form.referring_md;
         const referred = this.form.action_md;
         const currentDate = new Date();
-        const dateSave = currentDate.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+        const dateSave = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
         const timeStart = new Date(this.startTime)
           .toLocaleTimeString("en-US", { hour12: false })
           .replace(/:/g, "-");
@@ -964,13 +990,27 @@ export default {
           .replace(/:/g, "-");
 
         const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
-
-        // Get facility name for folder (sanitize on server)
         const username = this.user.username || "UnknownUser";
 
-        let chunkSize = 5 * 1024 * 1024; // Default to 5MB
+        // --- Detect upload speed and set chunk size dynamically ---
+        let chunkSize = 5 * 1024 * 1024; // Default 5MB
+        if (navigator.connection) {
+          const speed = navigator.connection.downlink; // Mbps (approx)
+          console.log(`Detected network speed: ${speed} Mbps`);
+          if (speed <= 2) chunkSize = 2 * 1024 * 1024; // 2MB for slow networks
+          else if (speed >= 5)
+            chunkSize = 5 * 1024 * 1024; // 5MB for moderate networks
+          else if (speed >= 10)
+            chunkSize = 10 * 1024 * 1024; // 10MB for fast networks
+          else if (speed >= 20) chunkSize = 20 * 1024 * 1024; // 20MB for very fast networks
+        }
+        console.log(
+          `Using chunk size: ${(chunkSize / (1024 * 1024)).toFixed(1)} MB`
+        );
+
         const totalChunks = Math.ceil(blob.size / chunkSize);
 
+        // --- Upload chunks sequentially ---
         for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
           const start = chunkIndex * chunkSize;
           const end = Math.min(blob.size, start + chunkSize);
@@ -981,7 +1021,7 @@ export default {
           formData.append("fileName", fileName);
           formData.append("chunkIndex", chunkIndex);
           formData.append("totalChunks", totalChunks);
-          formData.append("username", username); // <-- Add facility name
+          formData.append("username", username);
 
           try {
             await axios.post(
@@ -989,8 +1029,10 @@ export default {
               formData,
               {
                 headers: { "Content-Type": "multipart/form-data" },
+                timeout: 60_000, // 60s timeout per chunk
               }
             );
+
             // Update progress after each chunk
             this.uploadProgress = Math.round(
               ((chunkIndex + 1) / totalChunks) * 100
@@ -998,19 +1040,23 @@ export default {
           } catch (error) {
             this.loading = false;
             this.uploadProgress = 0; // Reset on error
-            Lobibox.alert("warning", {
+            Lobibox.alert("error", {
               msg:
                 `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
                 (error.response?.data?.message || error.message),
+              callback: function () {
+                window.top.close();
+              },
             });
             return;
           }
         }
 
-        this.uploadProgress = 100; // Ensure it's 100% at the end
-        this.recordedChunks = []; // Clear recorded chunks to free memory
-        this.loading = false; // Hide loader
-        this.uploadProgress = 0; // Reset progress
+        // --- Upload complete ---
+        this.uploadProgress = 100;
+        this.recordedChunks = []; // Clear memory
+        this.loading = false;
+        this.uploadProgress = 0;
 
         if (closeAfterUpload) {
           Lobibox.alert("success", {
@@ -1023,36 +1069,6 @@ export default {
       } else {
         console.error("No recorded data available to save.");
       }
-    },
-    preventCloseWhileUploading(event) {
-      if (this.loading) {
-        event.preventDefault();
-        event.returnValue =
-          "File upload in progress. Please wait until it finishes.";
-        return event.returnValue;
-      }
-    },
-    startCallTimer() {
-      this.startTime = Date.now();
-      this.callTimer = setInterval(() => {
-        const elapsedTime = Date.now() - this.startTime;
-
-        const hours = Math.floor(elapsedTime / 3600000);
-        const minutes = Math.floor((elapsedTime % 3600000) / 60000);
-        const seconds = Math.floor((elapsedTime % 60000) / 1000);
-
-        // Format the time as mm:ss:ms
-
-        if (hours == 0) {
-          this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(
-            seconds
-          ).padStart(2, "0")} `;
-        } else {
-          this.callDuration = `${String(hours).padStart(1, "0")} : ${String(
-            minutes
-          ).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
-        }
-      }, 10);
     },
     async startBasicCall() {
       const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
@@ -1122,7 +1138,7 @@ export default {
           self.channelParameters.userCount--;
           return;
         } else {
-          if (this.referring_md === "yes") {
+          if (this.referring_md === "no") {
             this.startScreenRecording();
           }
         }
@@ -1395,7 +1411,7 @@ export default {
         }
 
         // Wait for duration to be sent before closing
-        if (this.referring_md === "yes") {
+        if (this.referring_md === "no") {
           clearInterval(this.callTimer); // Stop the timer
           await this.sendCallDuration();
 
