@@ -125,15 +125,46 @@
                             <option value="outgoing" <?php if($request_type == "outgoing") echo 'selected'; ?>>Outgoing</option>
                             <option value="incoming" <?php if($request_type == "incoming") echo 'selected'; ?>>Incoming</option>
                         </select>
-                        <select name="province_id" class="form-control province" onchange="filterSidebar($(this),'muncity'), filterFacility($(this))">
+                        <!-- <select name="province_id" class="form-control province" onchange="filterSidebar($(this),'muncity'), filterFacility($(this))">
                             <option value="">Please select province</option>
                             @foreach($province_list as $row)
                                 <option value="{{ $row->id }}" <?php if($row->id == $province_id) echo 'selected'; ?>>{{ $row->description }}</option>
                             @endforeach
+                        </select> -->
+                        <select name="province_id" class="form-control province"
+                                onchange="filterSidebar($(this),'muncity'), filterFacility($(this))">
+                            <option value="">Please select province</option>
+                            @foreach($province_list as $row)
+                                @if($user && $user->level == 'capitol')
+                                    @if(strtolower($row->description) == 'cebu')
+                                        <option value="{{ $row->id }}" selected>{{ $row->description }}</option>
+                                    @endif
+                                @else
+                                    <option value="{{ $row->id }}" {{ $row->id == $province_id ? 'selected' : '' }}>
+                                        {{ $row->description }}
+                                    </option>
+                                @endif
+                            @endforeach
                         </select>
+                        @if($user && $user->level == 'capitol')
+                            <input type="hidden" name="province_id"
+                                value="{{ $province_list->where('description', 'Cebu')->first()->id ?? '' }}">
+                        @endif
                         <select name="facility_id" class="statistics_select2 facility" onchange="filterSidebar($(this),'barangay')">
                             <option value="">Please select facility</option>
+
+                            @if($user && $user->level == 'capitol')
+                                {{-- Display only Capitol facilities --}}
+                                @foreach($capitol as $facility)
+                                    <option value="{{ $facility->id }}" {{ $facility->id == $facility_id ? 'selected' : '' }}>
+                                        {{ $facility->name }}
+                                    </option>
+                                @endforeach
+                            @else
+                                {{-- For non-capitol users, keep it empty (it will be filled by JS) --}}
+                            @endif
                         </select>
+                        
                         <select name="muncity_id" class="statistics_select2 muncity" onchange="filterSidebar($(this),'barangay')">
                             <option value="">Please select municipality</option>
                         </select>
@@ -527,27 +558,77 @@
         }
 
         function filterFacility(data, province_id = null, facility_id = null) {
-            try {
-                province_id = data.val();
-            } catch(e) {
+        try {
+            province_id = data.val();
+        } catch (e) {}
 
+        // 🟩 If user is CAPITOL — don't rebuild facilities dynamically
+        if (user_level === 'capitol') {
+            // If already has facilities, just keep them
+            if ($('.facility option').length > 1) {
+                return; // Do nothing (keep current list)
             }
 
+            // If facility dropdown is empty, populate from backend list
             $('.facility').empty();
-            var $newOption = $("<option selected='selected'></option>").val("").text('Please Select Facility');
-            $('.facility').append($newOption).trigger('change');
+            $('.facility').append($("<option selected='selected'></option>").val("").text('Please Select Facility'));
 
-            var result = getFacility(province_id);
-            jQuery.each(result, function(i,val) {
+            if (Array.isArray(capitol) && capitol.length > 0) {
+                $.each(capitol, function (i, val) {
+                    $('.facility').append($('<option>', {
+                        value: val.id,
+                        text: val.name
+                    }));
+                });
+
+                // Auto-select first or keep selected
+                if (facility_id) {
+                    $('.facility').val(facility_id);
+                } else {
+                    $('.facility').val(capitol[0].id);
+                }
+            } else {
                 $('.facility').append($('<option>', {
-                    value: val.id,
-                    text : val.name
+                    value: '',
+                    text: 'No Capitol Facilities Found'
                 }));
-            });
+            }
 
-            $('.facility').val(facility_id);
+            // Disable dropdown
+            $('.facility').prop('disabled', true);
+
+            // Hidden input for form submission
+            if ($('#facility_hidden').length === 0) {
+                $('<input>', {
+                    type: 'hidden',
+                    name: 'facility_id',
+                    id: 'facility_hidden',
+                    value: $('.facility').val()
+                }).appendTo('form');
+            } else {
+                $('#facility_hidden').val($('.facility').val());
+            }
+
+            return;
         }
 
+        // 🟦 Normal users — fetch dynamically
+        $('.facility').empty();
+        var $newOption = $("<option selected='selected'></option>").val("").text('Please Select Facility');
+        $('.facility').append($newOption).trigger('change');
+
+        var result = getFacility(province_id);
+        $.each(result, function (i, val) {
+            $('.facility').append($('<option>', {
+                value: val.id,
+                text: val.name
+            }));
+        });
+
+        $('.facility').val(facility_id);
+        $('.facility').prop('disabled', false);
+        $('#facility_hidden').remove();
+    }
     </script>
 @endsection
 

@@ -47,7 +47,8 @@ class UserCtrl extends Controller
                         ->orWhere("level","opcen")
                         ->orWhere("level","bed_tracker")
                         ->orWhere("level","mayor")
-                        ->orWhere("level","dmo");
+                        ->orWhere("level","dmo")
+                        ->orWhere("level","capitol");
                     })
                 ->orderBy('lname','asc')
                 ->paginate(20);
