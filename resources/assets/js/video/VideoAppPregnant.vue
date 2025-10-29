@@ -1071,13 +1071,17 @@ export default {
       }
     },
     async startBasicCall() {
-      const agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+      // Create an instance of the Agora Engine
+      this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+      // this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
+      const agoraEngine = this.agoraEngine; // Use this reference
 
+      // Setup channel parameters with user count tracking
       if (!this.channelParameters) {
         this.channelParameters = {};
       }
-      this.channelParameters.userCount = 0;
-      this.channelParameters.maxUsers = 2;
+      this.channelParameters.userCount = 0; // Initialize user count
+      this.channelParameters.maxUsers = 2; // Maximum 2 users allowed
 
       const remotePlayerContainer = document.createElement("div");
       const localPlayerContainer = document.createElement("div");
@@ -1085,39 +1089,7 @@ export default {
 
       let self = this;
 
-      // Check if camera exists before creating video track
-      // const devices = await AgoraRTC.getDevices();
-
-      // const realCameras = devices.filter(device =>
-      //     device.kind === "videoinput" &&
-      //     device.deviceId &&
-      //     device.deviceId.trim() !== "" &&
-      //     !device.label.toLowerCase().includes("virtual")
-      // );
-
-      // const hasCamera = realCameras.length > 0;
-
-      // console.log("All devices:", devices);
-      // console.log("Detected real cameras:", realCameras);
-      // console.log("Has real camera:", hasCamera);
-
-      // if (hasCamera) {
-      //    console.log("has camera:", hasCamera);
-      //   self.channelParameters.localVideoTrack =
-      //     await AgoraRTC.createCameraVideoTrack();
-      // } else {
-      //   console.log("no camera", hasCamera);
-
-      //   Lobibox.alert("error", {
-      //     msg: "Camera is required!.",
-      //     closeButton: false,
-      //     callback: function () {
-      //       window.top.close();
-      //     },
-      //   });
-      //   return;
-      // }
-
+      // Listen for when a user joins the channel
       agoraEngine.on("user-joined", async (user) => {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
@@ -1140,36 +1112,18 @@ export default {
         } else {
           if (this.referring_md === "no") {
             this.startScreenRecording();
+            // this.startRecording();
           }
         }
       });
-
-      // Listen for when a user joins the channel
-      // agoraEngine.on("user-joined", async (user) => {
-      //   self.channelParameters.userCount++;
-      //   this.isUserJoined = true;
-      //   // Check if channel already has maximum users
-      //   if (
-      //     self.channelParameters.userCount >= self.channelParameters.maxUsers
-      //   ) {
-      //     // console.log("Channel is full! Maximum users reached.");
-      //     self.showChannelFullMessage();
-      //     // Disconnect this user since the channel is full
-      //     await agoraEngine.leave();
-      //     self.channelParameters.userCount--; // Decrement user count after leaving
-      //     return;
-      //   } else {
-      //     if (this.referring_md === "yes") {
-      //       this.startScreenRecording();
-      //     }
-      //   }
-      // });
-
+      // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
+      //agora
       agoraEngine.on("user-published", async (user, mediaType) => {
         await agoraEngine.subscribe(user, mediaType);
-        // console.log("mediaType::", mediaType);
+        // console.log("subscribe success");
+        console.log("option channel name:", this.options);
         if (mediaType === "video") {
-          // console.log("hey it works for me");
+          // Pause ringing audio when remote video is received
           if (self.$refs && self.$refs.ringingPhone) {
             self.$refs.ringingPhone.pause();
           }
@@ -1179,27 +1133,27 @@ export default {
           remotePlayerContainer.id = user.uid.toString();
 
           document.body.append(remotePlayerContainer);
-          document.querySelector(".remotePlayerDiv").innerHTML = "";
-          document
-            .querySelector(".remotePlayerDiv")
-            .append(remotePlayerContainer);
-          remotePlayerContainer.classList.add("remotePlayerLayer");
+          $(".remotePlayerDiv").html(remotePlayerContainer);
+          $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
+          $(remotePlayerContainer).addClass("remotePlayerLayer");
 
           self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
         }
 
         if (mediaType === "audio") {
-          // console.log("helo Audio");
           self.channelParameters.remoteAudioTrack = user.audioTrack;
           self.channelParameters.remoteAudioTrack.play();
         }
 
+        // Start the timer only if not already started
         if (!self.callTimer) {
-          self.startCallTimer && self.startCallTimer();
+          self.startCallTimer();
         }
       });
 
+      // Listen for users leaving the channel
       agoraEngine.on("user-left", (user) => {
+        // console.log(user.uid + " has left the channel");
         self.channelParameters.userCount = Math.max(
           0,
           self.channelParameters.userCount - 1
@@ -1207,12 +1161,15 @@ export default {
       });
 
       try {
+        // console.log("Attempting to join channel...", self.options.channel);
         await agoraEngine.join(
           self.options.appId,
           self.options.channel,
           self.options.token,
           self.options.uid
         );
+
+        // console.log("Successfully joined channel");
 
         // Create audio track
         self.channelParameters.localAudioTrack =
@@ -1225,11 +1182,8 @@ export default {
             self.channelParameters.localVideoTrack =
               await AgoraRTC.createCameraVideoTrack();
             document.body.append(localPlayerContainer);
-            document.querySelector(".localPlayerDiv").innerHTML = "";
-            document
-              .querySelector(".localPlayerDiv")
-              .append(localPlayerContainer);
-            localPlayerContainer.classList.add("localPlayerLayer");
+            $(".localPlayerDiv").html(localPlayerContainer);
+            $(localPlayerContainer).addClass("localPlayerLayer");
             self.channelParameters.localVideoTrack.play(localPlayerContainer);
           } else {
             // console.log("No camera detected");
@@ -1242,18 +1196,20 @@ export default {
         const tracksToPublish = [self.channelParameters.localAudioTrack];
         if (self.channelParameters.localVideoTrack) {
           tracksToPublish.push(self.channelParameters.localVideoTrack);
+          // Only play video if we have a track
+          self.channelParameters.localVideoTrack.play(localPlayerContainer);
         }
         await agoraEngine.publish(tracksToPublish);
-
-        // window.onload = function () {
-        //   self.joinVideo &&
-        //     self.joinVideo(
-        //       agoraEngine,
-        //       self.channelParameters,
-        //       localPlayerContainer,
-        //       self
-        //     );
-        // };
+        // console.log("publish success!");
+        // this.startRecording();
+        window.onload = function () {
+          self.joinVideo(
+            agoraEngine,
+            self.channelParameters,
+            localPlayerContainer,
+            self
+          );
+        };
       } catch (error) {
         console.error("Error joining channel:", error);
       }
