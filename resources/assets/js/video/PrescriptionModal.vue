@@ -135,8 +135,8 @@
                 <div class="modal-footer">
                     <button class="btn btn-secondary btn-sm" type="button" data-dismiss="modal">Close</button>
                     <!-- <button class="btn btn-primary btn-sm" type="button" @click="addEmptyPrescriptionBlock()"><i class="bi bi-prescription2"></i> Add Prescription</button> -->
-                    <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
-                    <button class="btn btn-success btn-sm" type="button" @click="savePrescriptions()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
+                    <button class="btn btn-success btn-sm" id="submitBtn" type="button" @click="savePrescriptions()" v-if="prescriptionSubmitted"><i class="bi bi-prescription"></i> Update Prescription</button>
+                    <button class="btn btn-success btn-sm" id="submitBtn" type="button" @click="savePrescriptions()" v-else><i class="bi bi-prescription"></i> Submit Prescription</button>
                 </div>
             </div>
         </div>
@@ -385,7 +385,8 @@
     },
     methods: {
         savePrescriptions() {
-   
+            const submitBtn = document.getElementById("submitBtn");
+            submitBtn.disabled = true;
             const prescriptionContent = CKEDITOR.instances.editor.getData();
             const combinedPrescriptions = {
                 singlePrescription: {
@@ -402,11 +403,12 @@
                 axios.post(`${this.baseUrl}/api/video/prescriptions/version2`, combinedPrescriptions)
                 .then(() => {
                     this.prescriptionSubmitted = true;
+                    submitBtn.disabled = false;
                     this.fetchPrescriptions(this.code);
 
                     // console.log('Success data:', combinedPrescriptions);
                     Lobibox.alert("success", {
-                        msg: "Prescription Prescription successfully!",
+                        msg: "Prescription Saved successfully!",
                         callback: () => {
                             $("#prescriptionModal").modal("hide");
                             // console.log("Prescription alert closed");
