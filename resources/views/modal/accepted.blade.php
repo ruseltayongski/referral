@@ -110,7 +110,7 @@
                         <label style="padding: 0px">Clinical Status</label>
                         <br />
                         <select name="clinical_status" class="form-control" >
-                            <option value="">Select option</option>
+                            <option value="" disabled selected>Select option</option>
                             <option value="asymptomatic">Asymptomatic for at least 3 days</option>
                             <option value="recovered">Recovered</option>
                             <option value="expired">Expired</option>
@@ -120,7 +120,7 @@
                         <label style="padding: 0px">Surveillance Category</label>
                         <br />
                         <select name="sur_category" class="form-control" >
-                            <option value="">Select option</option>
+                            <option value="" disabled selected>Select option</option>
                             <option value="contact_pum">Contact (PUM)</option>
                             <option value="suspect">Suspect</option>
                             <option value="probable">Probable</option>

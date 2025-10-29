@@ -14,12 +14,29 @@ $error = \Illuminate\Support\Facades\Input::get('error');
                         <span style="font-size: 12pt;"><i>as of </i></span>
                         <?php $date_range = date("m/d/Y",strtotime($date_start)).' - '.date("m/d/Y",strtotime($date_end)); ?>
                         <input type="text" class="form-control" name="date_range" value="{{ $date_range }}" id="consolidate_date_range">
-                        <select name="province_id" id="" class="form-control">
+                        <!-- <select name="province_id" id="" class="form-control">
                             <option value="">Select Province</option>
                             @foreach(\App\Province::get() as $prov)
                                 <option value="{{ $prov->id }}" <?php if($prov->id == $province_id) echo 'selected'; ?>>{{ $prov->description }}</option>
                             @endforeach
-                        </select>
+                        </select> -->
+                        @if($user && $user->level != 'capitol')
+                            {{-- 🟩 For normal users: show province dropdown --}}
+                            <select name="province_id" class="form-control">
+                                <option value="">Select Province</option>
+                                @foreach(\App\Province::get() as $prov)
+                                    <option value="{{ $prov->id }}" {{ $prov->id == $province_id ? 'selected' : '' }}>
+                                        {{ $prov->description }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        @else
+                            {{-- 🟥 For capitol users: hide or disable province filter --}}
+                            <input type="hidden" name="province_id" value="">
+                            <span class="badge bg-green" style="font-size: 12pt; margin-left: 10px;">
+                                Viewing all Capitol Facilities
+                            </span>
+                        @endif
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
                         <button type="button" class="btn btn-md btn-warning" onClick="window.location.href = '{{ asset('admin/report/top/reason_for_referral') }}'"><i class="fa fa-search"></i> View All</button>
                     </div>

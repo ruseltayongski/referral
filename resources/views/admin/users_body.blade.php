@@ -47,6 +47,7 @@
             <option value="bed_tracker" <?php if($user->level == "bed_tracker") echo 'selected'; ?>>BED TRACKER</option>
             <option value="mayor" <?php if($user->level == "mayor") echo 'selected'; ?>>Mayor</option>
             <option value="dmo" <?php if($user->level == "dmo") echo 'selected'; ?>>DMO</option>
+            <option value="capitol" <?php if($user->level == "capitol") echo 'selected'; ?>>Capitol</option>
         </select>
     </div>
     <div class="form-group">

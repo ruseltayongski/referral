@@ -989,6 +989,18 @@ class ReportCtrl extends Controller
     }
 
     public function statisticsReport(Request $request) {
+
+        $user = Session::get('auth');
+        $capitol_facility = []; 
+
+        if($user->level == "capitol") {
+            $capitol_facility = [
+                 3,4,5,7,8,11,13,14,15,16,17,20,22,26,27,28    
+            ];
+        }
+
+        $capitol = Facility::whereIn('id', $capitol_facility)->get();
+        
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -997,8 +1009,77 @@ class ReportCtrl extends Controller
             $date_end = Carbon::now()->endOfDay()->format('Y-m-d').' 23:59:59';
             $request->date_range = $date_start." - ".$date_end;
         }
-        $apiCtrl = new ApiController();
-        $data = $apiCtrl->api($request);
+
+         $data = [];
+
+        // 🟩 Handle "Capitol" level users (run for each facility)
+        if ($user->level == "capitol" && empty($request->facility_id)) {
+
+            foreach ($capitol_facility as $facility_id) {
+
+                if ($request->request_type == "incoming") {
+                    $result = DB::connection('mysql')->select("
+                        call statistics_report_incoming(
+                            '$date_start',
+                            '$date_end',
+                            '$request->province_id',
+                            '$facility_id',
+                            '$request->muncity_id',
+                            '$request->barangay_id',
+                            '$request->hospital_type'
+                        )
+                    ");
+                } else {
+                    $result = DB::connection('mysql')->select("
+                        call statistics_report_outgoing(
+                            '$date_start',
+                            '$date_end',
+                            '$request->province_id',
+                            '$facility_id',
+                            '$request->muncity_id',
+                            '$request->barangay_id',
+                            '$request->hospital_type'
+                        )
+                    ");
+                }
+
+                // Merge each facility’s result into one array
+                $data = array_merge($data, json_decode(json_encode($result), true));
+            }
+        } else {
+            $apiCtrl = new ApiController();
+            $data = $apiCtrl->api($request);
+        }
+
+        $facilityMap = Facility::pluck('name', 'id')->toArray();
+
+        foreach ($data as &$row) {
+            // Ensure array format
+            if (is_object($row)) {
+                $row = (array)$row;
+            }
+
+            $facilityId = $row['facility_id'] ?? null;
+            $row['facility_name'] = $facilityMap[$facilityId] ?? '';
+
+            // Group your statistics under 'data'
+            $row['data'] = [
+                'referred'         => $row['referred'] ?? 0,
+                'redirected'       => $row['redirected'] ?? 0,
+                'transferred'      => $row['transferred'] ?? 0,
+                'accepted'         => $row['accepted'] ?? 0,
+                'denied'           => $row['denied'] ?? 0,
+                'cancelled'        => $row['cancelled'] ?? 0,
+                'seen_only'        => $row['seen_only'] ?? 0,
+                'not_seen'         => $row['not_seen'] ?? 0,
+                'redirected_spam'  => $row['redirected_spam'] ?? 0,
+                'request_call'     => $row['request_call'] ?? 0,
+                'reco_response_time' => $row['reco_response_time'] ?? 0, // if exists
+            ];
+        }
+        unset($row);
+        // $apiCtrl = new ApiController();
+        // $data = $apiCtrl->api($request);
 
         $hospital_type_list = Facility::select("hospital_type")->whereNotNull("hospital_type")->groupBy("hospital_type")->get();
         $province_list = Province::get();
@@ -1014,7 +1095,9 @@ class ReportCtrl extends Controller
             'muncity_id' => $request->muncity_id,
             'barangay_id' => $request->barangay_id,
             'hospital_type_list' => $hospital_type_list,
-            'province_list' => $province_list
+            'province_list' => $province_list,
+            'capitol' => $capitol,
+            'user' => $user
         ]);
     }
 
@@ -1055,6 +1138,14 @@ class ReportCtrl extends Controller
     public function topIcd(Request $request) {
         $user = Session::get('auth');
         $facility_id = $user->facility_id;
+
+        $capitol_facility = [];
+        if ($user && $user->level == "capitol") {
+            $capitol_facility = [
+                 3,4,5,7,8,11,13,14,15,16,17,20,22,26,27,28 
+            ];
+        }
+
         if($request->date_range){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -1078,9 +1169,19 @@ class ReportCtrl extends Controller
                 })
                 ->leftJoin("tracking", "tracking.patient_id", "=", "activity.patient_id"); // I add this code
 
-        if($user->level != 'admin'){
-            $icd = $icd->where(empty($request->request_type) || $request->request_type == "incoming" ? "activity.referred_to" : "activity.referred_from", $facility_id);
-        }
+        if ($user->level == 'capitol') {
+            $icd = $icd->whereIn("activity.referred_to", $capitol_facility);
+        } elseif ($user->level != 'admin') {
+            $icd = $icd->where(
+                empty($request->request_type) || $request->request_type == "incoming"
+                    ? "activity.referred_to"
+                    : "activity.referred_from",
+                $facility_id
+            );
+        }        
+        // if($user->level != 'admin'){
+        //     $icd = $icd->where(empty($request->request_type) || $request->request_type == "incoming" ? "activity.referred_to" : "activity.referred_from", $facility_id);
+        // }
 
         if($request->province_id) {
            $icd = $icd->leftJoin("facility","facility.id","=","activity.referred_to")
@@ -1319,54 +1420,121 @@ class ReportCtrl extends Controller
     }
 
     //-------------------------------------------------------
-    public function topReasonForReferral(Request $request) {
-        if($request->date_range){
-            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
-            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+    // public function topReasonForReferral(Request $request) {
+    //     if($request->date_range){
+    //         $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+    //         $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+    //     } else {
+    //         $date_start = '2022-01-13 00:00:00';
+    //         $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+    //     }
+
+    //     $pregnant_form = PregnantForm::
+    //         select("reason_referral")
+    //         ->whereNotNull("reason_referral")
+    //         ->where("reason_referral","!=","-1");
+
+    //     if($request->province_id) {
+    //         $pregnant_form = $pregnant_form->leftJoin("facility","facility.id","=","pregnant_form.referred_to")
+    //             ->where("facility.province",$request->province_id);
+    //     }
+    //     $pregnant_form = $pregnant_form->whereBetween("pregnant_form.created_at",[$date_start,$date_end]);
+
+    //     $union = PatientForm::
+    //         select("reason_referral")
+    //         ->whereNotNull("reason_referral")
+    //         ->where("reason_referral","!=","-1");
+
+    //     if($request->province_id) {
+    //         $union = $union->leftJoin("facility","facility.id","=","patient_form.referred_to")
+    //             ->where("facility.province",$request->province_id);
+    //     }
+
+    //     $union = $union->whereBetween("patient_form.created_at",[$date_start,$date_end])
+    //         ->unionAll($pregnant_form);
+
+    //     $reason_for_referral = DB::table( DB::raw("({$union->toSql()}) as sub") )
+    //         ->mergeBindings($union->getQuery())
+    //         ->leftJoin("reason_referral","reason_referral.id","=","sub.reason_referral")
+    //         ->select("reason_referral.id","reason_referral.reason",DB::raw("count(reason_referral.id) as count"))
+    //         ->groupBy("reason_referral.id")
+    //         ->OrderBY(DB::raw("count(reason_referral.id)"),"desc")
+    //         ->get();
+
+    //     return view("admin.report.top_reason_for_referral",[
+    //         "reason_for_referral" => $reason_for_referral,
+    //         "date_start" => $date_start,
+    //         "date_end" => $date_end,
+    //         "province_id" => $request->province_id
+    //     ]);
+    // }
+    public function topReasonForReferral(Request $request)
+    {
+        $user = Session::get('auth');
+
+        // Define all capitol facilities (for capitol users)
+        $capitol_facility = [];
+        if ($user && $user->level == "capitol") {
+            $capitol_facility = [
+                 3,4,5,7,8,11,13,14,15,16,17,20,22,26,27,28    
+            ];
+        }
+
+        // Handle date range
+        if ($request->date_range) {
+            $date_start = date('Y-m-d', strtotime(explode(' - ', $request->date_range)[0])) . ' 00:00:00';
+            $date_end = date('Y-m-d', strtotime(explode(' - ', $request->date_range)[1])) . ' 23:59:59';
         } else {
             $date_start = '2022-01-13 00:00:00';
-            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d').' 23:59:59';
+            $date_end = Carbon::now()->endOfMonth()->format('Y-m-d') . ' 23:59:59';
         }
 
-        $pregnant_form = PregnantForm::
-            select("reason_referral")
+        // 🟩 Start PregnantForm query
+        $pregnant_form = PregnantForm::select("reason_referral")
             ->whereNotNull("reason_referral")
-            ->where("reason_referral","!=","-1");
+            ->where("reason_referral", "!=", "-1")
+            ->whereBetween("pregnant_form.created_at", [$date_start, $date_end])
+            ->leftJoin("facility", "facility.id", "=", "pregnant_form.referred_to");
 
-        if($request->province_id) {
-            $pregnant_form = $pregnant_form->leftJoin("facility","facility.id","=","pregnant_form.referred_to")
-                ->where("facility.province",$request->province_id);
-        }
-        $pregnant_form = $pregnant_form->whereBetween("pregnant_form.created_at",[$date_start,$date_end]);
-
-        $union = PatientForm::
-            select("reason_referral")
+        // 🟩 Start PatientForm query
+        $union = PatientForm::select("reason_referral")
             ->whereNotNull("reason_referral")
-            ->where("reason_referral","!=","-1");
+            ->where("reason_referral", "!=", "-1")
+            ->whereBetween("patient_form.created_at", [$date_start, $date_end])
+            ->leftJoin("facility", "facility.id", "=", "patient_form.referred_to");
 
-        if($request->province_id) {
-            $union = $union->leftJoin("facility","facility.id","=","patient_form.referred_to")
-                ->where("facility.province",$request->province_id);
+        if ($user && $user->level == "capitol") {
+            $pregnant_form->whereIn("pregnant_form.referred_to", $capitol_facility);
+            $union->whereIn("patient_form.referred_to", $capitol_facility);
+        }elseif ($request->province_id) {
+            // Default: filter by province
+            $pregnant_form->where("facility.province", $request->province_id);
+            $union->where("facility.province", $request->province_id);
         }
+        
+        $union = $union->unionAll($pregnant_form);
 
-        $union = $union->whereBetween("patient_form.created_at",[$date_start,$date_end])
-            ->unionAll($pregnant_form);
-
-        $reason_for_referral = DB::table( DB::raw("({$union->toSql()}) as sub") )
+        $reason_for_referral = DB::table(DB::raw("({$union->toSql()}) as sub"))
             ->mergeBindings($union->getQuery())
-            ->leftJoin("reason_referral","reason_referral.id","=","sub.reason_referral")
-            ->select("reason_referral.id","reason_referral.reason",DB::raw("count(reason_referral.id) as count"))
+            ->leftJoin("reason_referral", "reason_referral.id", "=", "sub.reason_referral")
+            ->select(
+                "reason_referral.id",
+                "reason_referral.reason",
+                DB::raw("count(reason_referral.id) as count")
+            )
             ->groupBy("reason_referral.id")
-            ->OrderBY(DB::raw("count(reason_referral.id)"),"desc")
+            ->orderBy(DB::raw("count(reason_referral.id)"), "desc")
             ->get();
 
-        return view("admin.report.top_reason_for_referral",[
+        return view("admin.report.top_reason_for_referral", [
             "reason_for_referral" => $reason_for_referral,
             "date_start" => $date_start,
             "date_end" => $date_end,
-            "province_id" => $request->province_id
+            "province_id" => $request->province_id,
+            "user" => $user
         ]);
     }
+
 
     public function filterTopReasonReferral(Request $request) {
         $pregnant_form = PregnantForm::

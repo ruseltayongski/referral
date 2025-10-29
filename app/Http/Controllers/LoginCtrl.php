@@ -128,6 +128,8 @@ class LoginCtrl extends Controller
                     return url('doctor');
                 else if($login->level=='dmo')
                     return url('doctor');
+                else if($login->level=='capitol')
+                    return url('doctor');
                 else{
                     Session::forget('auth');
                     return [
@@ -217,6 +219,8 @@ class LoginCtrl extends Controller
                 else if($login->level=='mayor')
                     return redirect('doctor');
                 else if($login->level=='dmo')
+                    return redirect('doctor');
+                else if($login->level=='capitol')
                     return redirect('doctor');
                 else{
                     Session::forget('auth');

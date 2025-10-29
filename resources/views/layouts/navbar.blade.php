@@ -254,6 +254,8 @@ $facility_exclude =  \App\Facility::select('id')
             <li><a href="{{ asset('vaccine/facility').'/cebu' }}">Cebu City</a></li>
             <li><a href="{{ asset('vaccine/facility').'/mandaue' }}">Mandaue City</a></li>
             <li><a href="{{ asset('vaccine/facility').'/lapu' }}">Lapu-Lapu City</a></li>
+        @elseif($user->level=="capitol")
+            @include('layouts.report_menu')                       
         @endif
         @if($user->level == 'admin')
             <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
