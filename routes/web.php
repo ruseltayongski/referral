@@ -751,3 +751,7 @@ Route::get('ckd-referral/get-patient-code/{id}', 'CKDController@getPatientCode')
 Route::get('video/normal/newform/{id}', 'doctor\NewFormCtrl@checkFormVersion');
 Route::get('video/normal/newform/data/{id}', 'doctor\NewFormCtrl@normalFormTelemedNewForm');
 Route::get('video/pregnant/newform/data/{id}', 'doctor\NewFormCtrl@pregnantFormTelemedNewForm');
+
+// //api for telemedicine app
+// Route::post('telemed/login', 'TelemedicineApiCtrl@login');
+// Route::get('telemed/test', 'TelemedicineApiCtrl@test');
