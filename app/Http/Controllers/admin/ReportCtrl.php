@@ -1051,33 +1051,35 @@ class ReportCtrl extends Controller
             $data = $apiCtrl->api($request);
         }
 
-        $facilityMap = Facility::pluck('name', 'id')->toArray();
+        if ($user->level == "capitol") {
+            $facilityMap = Facility::pluck('name', 'id')->toArray();
 
-        foreach ($data as &$row) {
-            // Ensure array format
-            if (is_object($row)) {
-                $row = (array)$row;
+            foreach ($data as &$row) {
+                // Ensure array format
+                if (is_object($row)) {
+                    $row = (array)$row;
+                }
+
+                $facilityId = $row['facility_id'] ?? null;
+                $row['facility_name'] = $facilityMap[$facilityId] ?? '';
+
+                // Group your statistics under 'data'
+                $row['data'] = [
+                    'referred'         => $row['referred'] ?? 0,
+                    'redirected'       => $row['redirected'] ?? 0,
+                    'transferred'      => $row['transferred'] ?? 0,
+                    'accepted'         => $row['accepted'] ?? 0,
+                    'denied'           => $row['denied'] ?? 0,
+                    'cancelled'        => $row['cancelled'] ?? 0,
+                    'seen_only'        => $row['seen_only'] ?? 0,
+                    'not_seen'         => $row['not_seen'] ?? 0,
+                    'redirected_spam'  => $row['redirected_spam'] ?? 0,
+                    'request_call'     => $row['request_call'] ?? 0,
+                    'reco_response_time' => $row['reco_response_time'] ?? 0, // if exists
+                ];
             }
-
-            $facilityId = $row['facility_id'] ?? null;
-            $row['facility_name'] = $facilityMap[$facilityId] ?? '';
-
-            // Group your statistics under 'data'
-            $row['data'] = [
-                'referred'         => $row['referred'] ?? 0,
-                'redirected'       => $row['redirected'] ?? 0,
-                'transferred'      => $row['transferred'] ?? 0,
-                'accepted'         => $row['accepted'] ?? 0,
-                'denied'           => $row['denied'] ?? 0,
-                'cancelled'        => $row['cancelled'] ?? 0,
-                'seen_only'        => $row['seen_only'] ?? 0,
-                'not_seen'         => $row['not_seen'] ?? 0,
-                'redirected_spam'  => $row['redirected_spam'] ?? 0,
-                'request_call'     => $row['request_call'] ?? 0,
-                'reco_response_time' => $row['reco_response_time'] ?? 0, // if exists
-            ];
+            unset($row);
         }
-        unset($row);
         // $apiCtrl = new ApiController();
         // $data = $apiCtrl->api($request);
 

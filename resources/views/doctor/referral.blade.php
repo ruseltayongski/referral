@@ -208,7 +208,7 @@ $user = Session::get('auth');
                                             <h3 class="timeline-header no-border">
                                                 <input type="hidden" id="assignedDoctor" value="{{$row->department_id}}">
                                                 <span>
-                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
+                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 <small class="status">
                                                     [ {{ $row->sex }}, {{ $row->patient_age }} ]
@@ -235,7 +235,7 @@ $user = Session::get('auth');
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
                                                 <span>
-                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
+                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
                                             </h3>
@@ -247,7 +247,7 @@ $user = Session::get('auth');
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
                                                 <span>
-                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
+                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 was <span class="text-red">{{ $row->status }}</span> by
                                                 {{ $row->referring_md }}
@@ -261,7 +261,7 @@ $user = Session::get('auth');
                                             <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">{{ $date }}</span></span>
                                             <h3 class="timeline-header no-border">
                                             <span>
-                                                <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
+                                                <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                             </span>
                                                 <small class="status">
                                                     [ {{ $row->sex }}, {{ $row->patient_age }} ]
@@ -279,7 +279,7 @@ $user = Session::get('auth');
                                             <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
                                                 <span>
-                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ $row->patient_name }}</a>
+                                                    <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 was <span class="text-green">{{ $row->status }}</span> by
                                                 <span class="text-success">
