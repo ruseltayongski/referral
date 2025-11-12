@@ -85,6 +85,7 @@
     $redirected_admitted_track = 0;
     $redirected_discharged_track = 0;
     //end reset
+
     ?>
     <script>
 
@@ -273,14 +274,14 @@
             <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
         </div>
-        <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
+        <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track || ($position_count < count($redirected_track))) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
         </div>
-        <div class="stepper-item @if($redirected_accepted_track && (!$redirected_rejected_track || !$redirected_cancelled_track)) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
+        <div class="stepper-item @if($redirected_accepted_track && (!$redirected_rejected_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track)) ) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter
                     <?php
-                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
+                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
                         echo "bg-red";
                     elseif ($redirected_cancelled_track)
                         echo "bg-yellow";
@@ -290,7 +291,7 @@
                             " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
 
                 <?php
-                if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
+                if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                 elseif ($redirected_cancelled_track)
                     echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
@@ -306,14 +307,14 @@
             </div>
             <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}">
                 <?php
-                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track))
+                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
                         echo 'Declined';
                     elseif ($redirected_cancelled_track)
                         echo 'Cancelled';
                     elseif ($redirected_queued_track && !$redirected_accepted_track)
                         echo "Queued at <br><b>" . $queue_redirected . "</b>";
                     else
-                        echo "Accepted"
+                        echo "Accepted";
                 ?>
             </div>
         </div>
