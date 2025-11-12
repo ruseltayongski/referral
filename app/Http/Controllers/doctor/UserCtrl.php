@@ -201,10 +201,11 @@ class UserCtrl extends Controller
             } 
         }
 
-        if(isset($data['signature']))
+        // Only overwrite the stored signature when a new signature was provided
+        if (isset($data['sign_type']) && ($data['sign_type'] == 'draw' || $data['sign_type'] == 'upload')) {
+            // $name is set above when processing draw/upload
             $user->signature = "public/signatures/".$name;
-        else
-            $user->signature = null;
+        }
 
         unset($data['signature'], $data['sign_type']);
         $user->update($data);

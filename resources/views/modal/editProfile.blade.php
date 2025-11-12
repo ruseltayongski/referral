@@ -363,17 +363,24 @@
 
     $('#update_btn').on('click', function(e) {  
         e.preventDefault();
-        $('#stored_sign').src = null;
         $('.loading').show();
-     
-        if(sign_type === "upload") {
+
+        // If no new signature was chosen, preserve the stored signature
+        if (typeof sign_type === 'undefined' || sign_type === null || sign_type === '') {
+            if ($('#stored_sign').length) {
+                // send existing image src so server keeps the current signature
+                $('#signature_final').val($('#stored_sign').attr('src'));
+                $('#sign_type').val('existing');
+            }
+        } else if (sign_type === "upload") {
             $('#signature_final').val(finalImage);
             $('#sign_type').val(sign_type);
-        } else if(sign_type === "draw") {
+        } else if (sign_type === "draw") {
             var data = signaturePad.toDataURL('image/png');
             $('#signature_final').val(data);
             $('#sign_type').val(sign_type);
         }
+
         $('#profile_Upload').submit();
     });
 

@@ -24,3 +24,4 @@ Route::post('check/labresult',[ApiController::class, 'checkLabResult']);
 //api for telemedicine app
 Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 Route::get('telemed/test', 'TelemedicineApiCtrl@test');
+Route::get('telemed/appointment/calendar', 'TelemedicineApiCtrl@appointmentCalendar');

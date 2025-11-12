@@ -137,7 +137,7 @@ export default {
       }
     },
     config_appointedTime(payload){
-      //console.log("config_appointedTime::", payload);
+      console.log("config_appointedTime::", payload);
       this.configTimeSlot = payload;
     },
   },
