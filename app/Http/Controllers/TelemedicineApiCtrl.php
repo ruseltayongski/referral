@@ -59,11 +59,11 @@ class TelemedicineApiCtrl extends Controller
     {
         $user = Session::get('auth');
 
-        // Get all facility IDs from appointment schedules
+        // Get all facility IDs that have appointment schedules
         $facility_ids = AppointmentSchedule::pluck('facility_id')->unique();
 
-        // Load facilities with related appointment schedules + config
-        $facilities = Facility::with([
+        // Fetch facilities with their appointment schedules and relations
+        $appointment_slot = Facility::with([
             'appointmentSchedules.telemedAssignedDoctor',
             'appointmentSchedules.configSchedule',
             'appointmentSchedules.subOpd'
@@ -71,73 +71,65 @@ class TelemedicineApiCtrl extends Controller
         ->whereHas('appointmentSchedules', function($q) use ($user) {
             $q->where('facility_id', '!=', $user->facility_id);
         })
-        ->whereIn('id', $facility_ids)
-        ->get();
+        ->findMany($facility_ids);
 
-        // $pastAppointments = [];
-        // $upcomingAppointments = [];
+        $now = now();
+        $currentMonth = $now->month;
+        $currentYear = $now->year;
+
         $slotCountByFacility = [];
 
-        $now = Carbon::now();
-        $monthStart = $now->copy()->startOfMonth();
-        $monthEnd = $now->copy()->endOfMonth();
+        foreach ($appointment_slot as $slot) {
+            $facility_id = $slot->id;
+            $facility_name = $slot->name;
+            $facility_address = $slot->address ?? 'N/A'; 
+            $schedules = $slot->appointmentSchedules;
 
-        foreach ($facilities as $facility) {
-            $facilitySlotCount = 0;
             $availableSlot = 0;
+            $totalAppointments = 0;
 
-            foreach ($facility->appointmentSchedules as $schedule) {
-                $appointmentDateTime = Carbon::parse($schedule->appointed_date . ' ' . $schedule->appointed_time);
+            foreach ($schedules as $schedule) {
+                $scheduleDateTime = \Carbon\Carbon::parse($schedule->appointed_date . ' ' . $schedule->appointed_time);
+                $countSlot = $schedule->slot ?? 0;
+                $assignedDoctorsCount = $schedule->telemedAssignedDoctor ? $schedule->telemedAssignedDoctor->count() : 0;
 
-                // $appointmentData = [
-                //     'id' => $schedule->id,
-                //     'appointed_date' => $schedule->appointed_date,
-                //     'appointed_time' => $schedule->appointed_time,
-                //     'facility_id' => $schedule->facility_id,
-                //     'facility_name' => $facility->name,
-                //     'address' => $facility->address,
-                //     'slot' => $schedule->slot,
-                // ];
+                $isCurrentMonth = (
+                    $scheduleDateTime->month === $currentMonth &&
+                    $scheduleDateTime->year === $currentYear
+                );
 
-                // Categorize appointments
-                // if ($appointmentDateTime->lt($now)) {
-                //     $pastAppointments[] = $appointmentData;
-                // } else {
-                //     $upcomingAppointments[] = $appointmentData;
-                // }
+                if ($isCurrentMonth) {
+                    // Add appointments based on assigned doctors
+                    if ($assignedDoctorsCount > 0) {
+                        $totalAppointments += $assignedDoctorsCount;
+                    }
 
-                // Count slots within current month
-                if ($appointmentDateTime->between($monthStart, $monthEnd)) {
-                    $facilitySlotCount += (int) $schedule->slot;
+                    // Add missed or past unassigned slots (as in frontend logic)
+                    if ($scheduleDateTime->isPast()) {
+                        $totalAppointments += ($countSlot - $assignedDoctorsCount);
+                    }
                 }
 
-                // If configSchedule has a max slot count, add that to availableSlot
-                if ($schedule->configSchedule && isset($schedule->configSchedule->max_slot)) {
-                    $availableSlot += (int) $schedule->configSchedule->max_slot;
+                // Available slot logic (future schedule and not full)
+                if ($scheduleDateTime->isFuture() && $assignedDoctorsCount < $countSlot) {
+                    $availableSlot += ($countSlot - $assignedDoctorsCount);
                 }
             }
 
-            // Compute remaining available slots (if total available > booked)
-            $remainingSlot = $availableSlot > 0 ? max($availableSlot - $facilitySlotCount, 0) : 0;
-
-            // Save slot summary for each facility
+            // Add facility summary
             $slotCountByFacility[] = [
-                'facility_id' => $facility->id,
-                'facility_name' => $facility->name,
-                'facility_address' => $facility->address,
-                'slot_count_this_month' => $facilitySlotCount,
-                'available_slot' => $remainingSlot,
+                'facility_id' => $facility_id,
+                'facility_name' => $facility_name,
+                'facility_address' => $facility_address,
+                'available_slot' => $availableSlot,
+                'total_appointments' => $totalAppointments,
             ];
         }
 
         return response()->json([
-            // 'pastAppointments' => $pastAppointments,
-            // 'upcomingAppointments' => $upcomingAppointments,
-            'slotCountByFacility' => $slotCountByFacility,
+            'slotCountByFacility' => $slotCountByFacility
         ]);
     }
-
-
 
     public function checkLastLogin($id)
     {
