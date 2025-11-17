@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\doctor;
 
 use App\Activity;
+use App\AppointmentSchedule;
 use App\Baby;
 use App\Department;
 use App\Events\NewReferral;
@@ -397,7 +398,7 @@ class ReferralCtrl extends Controller
 
     public static function normalForm($id,$referral_status,$form_type) {
        
-        $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
+        $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id', 'appointmentId')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
             ->where('icd.code',$track->code)->get();
@@ -426,6 +427,18 @@ class ReferralCtrl extends Controller
             ->where('patient_form.code', $track->code)->first();
 
         $form = self::normalFormData($id);
+
+        $appointmentDate = null;
+
+        if ($track->appointmentId) {
+            $appointment = AppointmentSchedule::select('appointed_date')
+                ->where('id', $track->appointmentId)
+                ->first();
+
+            if ($appointment) {
+                $appointmentDate = $appointment->appointed_date;
+            }
+        }
    
         $arr = [
             "form" => $form['form'],
@@ -527,6 +540,23 @@ class ReferralCtrl extends Controller
             })
             ->orderBy('act.date_referred','desc')
             ->first();
+
+            $appointmentDate = null;
+
+            if ($form && isset($form->tracking_id)) {
+                $appointmentId = Tracking::where('id', $id)->value('appointmentId');
+
+                if ($appointmentId) {
+                    $appointmentDate = AppointmentSchedule::where('id', $appointmentId)->first(['appointed_date', 'appointed_time']);
+
+                    $form->appointment_date = $appointmentDate
+                    ? date('F j, Y', strtotime($appointmentDate->appointed_date))
+                    : null;
+
+                    $form->appointment_time = $appointmentDate ? $appointmentDate->appointed_time : null;
+                }
+            }
+
         Session::put('date_referral', $form['date_referral']);
         $age =  ParamCtrl::getAge($form['dob']);
         $ageType = "y";
@@ -561,7 +591,7 @@ class ReferralCtrl extends Controller
     }
 
     public static function pregnantForm($id,$referral_status) {
-        $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id')->where('id', $id)->first();
+        $track = Tracking::select('code', 'status', 'referred_from as referring_fac_id', 'appointmentId')->where('id', $id)->first();
         $icd = Icd::select('icd10.code', 'icd10.description')
             ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
             ->where('icd.code',$track->code)->get();
@@ -684,6 +714,22 @@ class ReferralCtrl extends Controller
             ->leftJoin('department','department.id','=','pregnant_form.department_id')
             ->where('tracking.id',$id)
             ->first();
+
+            $appointmentDate = null;
+
+            if ($form && isset($form->tracking_id)) {
+                $appointmentId = Tracking::where('id', $id)->value('appointmentId');
+
+                if ($appointmentId) {
+                    $appointmentDate = AppointmentSchedule::where('id', $appointmentId)->first(['appointed_date', 'appointed_time']);
+
+                    $form->appointment_date = $appointmentDate
+                    ? date('F j, Y', strtotime($appointmentDate->appointed_date))
+                    : null;
+
+                    $form->appointment_time = $appointmentDate ? $appointmentDate->appointed_time : null;
+                }
+            }
 
         $baby = array();
         if(isset($form->patient_baby_id) && $form->patient_baby_id > 0)

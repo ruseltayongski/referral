@@ -6,18 +6,18 @@
             <div class="pull-right">
                 <form action="{{ asset('admin/facility') }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
-                    <div class="form-group-lg" style="margin-bottom: 10px;">
+                    <div class="form-group" style="margin-bottom: 10px;">
                         <input type="text" class="form-control" name="keyword" placeholder="Search name..." value="{{ Session::get("keyword") }}">
-                        <button type="submit" class="btn btn-success btn-lg btn-flat">
+                        <button type="submit" class="btn btn-success btn-md btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>
-                        <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-lg btn-flat">
+                        <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-md btn-flat">
                             <i class="fa fa-eye"></i> View All
                         </button>
-                        <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-lg btn-flat" onclick="FacilityBody('empty')">
+                        <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-md btn-flat" onclick="FacilityBody('empty')">
                             <i class="fa fa-hospital-o"></i> Add Facility
                         </a>
-                        <a href="{{ asset('admin/report/facility') }}" class="btn btn-warning btn-lg btn-flat" target="_blank">
+                        <a href="{{ asset('admin/report/facility') }}" class="btn btn-warning btn-md btn-flat" target="_blank">
                             <i class="fa fa-table"></i> Export
                         </a>
                     </div>

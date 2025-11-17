@@ -37,8 +37,18 @@
 @include('include.header_form', ['optionHeader' => 'referred'])<br>
 
 <table class="table table-striped form-label referral-table">
+    @if($form->telemedicine == 1)
+        <tr>
+            <td colspan="6" class="form-label">
+                Appointment Date:
+                <span class="appointedDate form-details">
+                    {{ $form->appointment_date }} {{ $form->appointment_time }}
+                </span>
+            </td>
+        </tr>
+    @endif
     <tr>
-        <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name }}</span></td>
+        <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name }} </span></td>
     </tr>
     <tr>
         <td colspan="6">Facility Contact #: <span class="referring_contact form-details">{{ $form->referring_contact }}</span></td>

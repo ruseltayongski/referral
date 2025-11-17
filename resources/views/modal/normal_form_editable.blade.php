@@ -53,10 +53,11 @@ $department = \App\Department::all();
 
 $doctor = \App\User::select('id', 'fname', 'mname', 'lname', 'contact')->get();
 
-$appoitment_sched = \App\AppointmentSchedule::select('id', 'department_id')
+$appoitment_sched = \App\AppointmentSchedule::select('id', 'department_id','appointed_date')
     ->where('id', $telemedicine_appointment_id)->get();
 
 $department_id = $appoitment_sched[0]->department_id;
+$appointed_date = $appoitment_sched[0]->appointed_date;
 
 ?>
 
@@ -108,7 +109,7 @@ $department_id = $appoitment_sched[0]->department_id;
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success"><b>NAME OF REFERRING FACILITY: </b></small><br>
-                                &nbsp;<span>{{ $myfacility->name }}</span>
+                                &nbsp;<span>{{ $myfacility->name }} </span>
                             </div>
                             <div class="col-md-4">
                                 <small class="text-success"><b>ADDRESS:</b></small><br>

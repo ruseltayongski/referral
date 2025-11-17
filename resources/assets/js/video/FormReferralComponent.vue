@@ -165,6 +165,14 @@ export default {
 <template>
   <table class="table table-striped formTable">
     <tbody>
+      <tr v-if="form.appointment_date != null">
+        <td colspan="12">
+          Appointment Date:
+          <span class="forDetails">
+            {{ form.appointment_date }} {{ form.appointment_time }}
+          </span>
+        </td>
+      </tr>
       <tr v-if="form.referring_name != null">
         <td colspan="12">
           Name of Referring Facility:

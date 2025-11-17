@@ -13,8 +13,8 @@
                     <form action="{{ asset('admin/reason-referral/search') }}" method="POST">
                         {{ csrf_field() }}
                         <input type="search" class="form-control" name="keyword" placeholder="Reason" style="width: 50%;">
-                        <button type="submit" class="btn btn-success btn-sm btn-flat"><i class="fa fa-search"></i> Search</button>
-                        <button type="button" class="btn btn-primary btn-sm btn-flat" data-toggle="modal" data-target="#add_new">
+                        <button type="submit" class="btn btn-success btn-md btn-flat"><i class="fa fa-search"></i> Search</button>
+                        <button type="button" class="btn btn-primary btn-md btn-flat" data-toggle="modal" data-target="#add_new">
                             Add New
                         </button>
                     </form>

@@ -132,7 +132,8 @@
                 <ol class="breadcrumb form-inline my-2 my-lg-0">
                     <form action="{{ asset('admin/icd/search') }}" method="GET">
                         {{ csrf_field() }}
-                        <input type="search" class="form-control" name="keyword" style="width: 45%;">
+                        <input type="search" class="form-control" name="keyword" style="width: 45%; margin-right:5px; height: 30px;">
+
                         <button type="submit" class="btn btn-success btn-sm btn-flat"><i class="fa fa-search"></i> Search</button>
                         <button type="button" class="btn btn-primary btn-sm btn-flat" href="#import_icd" data-toggle="modal">
                             <i class="fa fa-file-excel-o"></i> Import
