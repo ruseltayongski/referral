@@ -544,30 +544,46 @@
         }, 500);
     }
 
-    $('.select_facility').on('change',function() {
+   $('.select_facility').on('change', function() {
         var id = $(this).val();
         referred_facility = id;
-        if(referred_facility){
+
+        if (referred_facility) {
             var url = "{{ url('location/facility/') }}";
+
             $.ajax({
-                url: url+'/'+id,
+                url: url + '/' + id,
                 type: 'GET',
-                success: function(data){
+                success: function(data) {
                     $('.facility_address').html(data.address);
-                    $('.select_department').empty()
-                        .append($('<option>', {
-                            value: '',
-                            text : 'Select Department...'
-                        }));
-                    jQuery.each(data.departments, function(i,val){
-                        $('.select_department').append($('<option>', {
+                    var $deptSelect = $('.select_department');
+
+                    $deptSelect.empty();
+
+                    $deptSelect.append($('<option>', {
+                        value: '',
+                        text: 'Select Department...',
+                        disabled: true,
+                        selected: true
+                    }));
+
+                    $.each(data.departments, function(i, val) {
+                        $deptSelect.append($('<option>', {
                             value: val.id,
-                            text : val.description
+                            text: val.description
                         }));
                     });
+
+                    if (data.departments.length === 1) {
+                        $deptSelect.val(data.departments[0].id);  // auto-select
+                    }else {
+                        $deptSelect.val('');
+                    }
+                    $deptSelect.prop('disabled', false); 
+                                       
                     facilityForTelemedicine(data.departments);
                 },
-                error: function(error){
+                error: function(error) {
                     $('#serverModal').modal();
                 }
             });

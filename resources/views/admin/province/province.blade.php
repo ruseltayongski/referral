@@ -6,15 +6,15 @@
             <div class="pull-right">
                 <form action="{{ asset('admin/province') }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
-                    <div class="form-group-lg" style="margin-bottom: 10px;">
+                    <div class="form-group" style="margin-bottom: 10px;">
                         <input type="text" class="form-control" name="keyword" placeholder="Search province..." value="{{ Session::get("keyword") }}">
-                        <button type="submit" class="btn btn-success btn-sm btn-flat">
+                        <button type="submit" class="btn btn-success btn-md btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>
-                        <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-sm btn-flat">
+                        <button type="submit" value="view_all" name="view_all" class="btn btn-warning btn-md btn-flat">
                             <i class="fa fa-eye"></i> View All
                         </button>
-                        <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-sm btn-flat" onclick="ProvinceBody('empty')">
+                        <a href="#facility_modal" data-toggle="modal" class="btn btn-info btn-md btn-flat" onclick="ProvinceBody('empty')">
                             <i class="fa fa-hospital-o"></i> Add Province
                         </a>
                     </div>

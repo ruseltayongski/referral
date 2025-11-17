@@ -39,7 +39,7 @@ if($searchKeyword){
                             <button type="submit" class="btn btn-success btn-sm btn-flat">
                                 <i class="fa fa-search"></i> Search
                             </button>
-                            <button type="button" class="btn btn-warning" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
+                            <button type="button" class="btn btn-warning btn-sm btn-flat" onclick="refreshPage()"><i class="fa fa-eye"></i> View All</button>
                             @if($user->facility_id!=25)
                                 <a href="#users_modal" data-toggle="modal" data-id="no_id" class="btn btn-primary btn-sm btn-flat add_info">
                                     <i class="fa fa-user-plus"></i> Add User

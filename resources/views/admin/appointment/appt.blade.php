@@ -27,7 +27,7 @@ $morrow = $morrow->format('Y-m-d');
                 <form action="{{ asset('admin/appointment') }}" method="POST" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group" style="margin-bottom: 10px;">
-                        <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search...">
+                        <input type="text" class="form-control" name="appt_keyword" value="{{ $keyword }}" id="keyword" placeholder="Search..." style="width: 40%; height: 30px;">
                         <button type="submit" class="btn btn-success btn-sm btn-flat">
                             <i class="fa fa-search"></i> Search
                         </button>

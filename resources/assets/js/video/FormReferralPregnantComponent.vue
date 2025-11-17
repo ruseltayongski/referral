@@ -170,6 +170,14 @@ export default {
       <tr>
         <th colspan="12">REFERRAL RECORD</th>
       </tr>
+      <tr v-if="form.appointment_date != null">
+        <td colspan="12">
+          Appointment Date:
+          <span class="forDetails">
+            {{ form.appointment_date }} {{ form.appointment_time }}
+          </span>
+        </td>
+      </tr>
       <tr>
         <td colspan="6">Who is referring</td>
         <td colspan="6">

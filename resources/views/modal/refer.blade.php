@@ -497,7 +497,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                     <div class="form-group">
                         <label style="padding: 0px">SELECT DEPARTMENT:</label>
                         <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
-                            <option value="">Select Department...</option>
+                            <option value="" disabled selected>Select Department...</option>
                         </select>
                     </div>
                     <hr />

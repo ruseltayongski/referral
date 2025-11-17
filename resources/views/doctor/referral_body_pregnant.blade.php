@@ -29,6 +29,16 @@ $user = Session::get('auth');
 </style>
 @include('include.header_form')
 <table class="table table-striped form-label">
+    @if($form['pregnant']->telemedicine == 1)
+        <tr>
+            <td colspan="6" class="form-label">
+                Appointment Date:
+                <span class="appointedDate form-details">
+                    {{ $form['pregnant']->appointment_date }} {{ $form['pregnant']->appointment_time }}
+                </span>
+            </td>
+        </tr>
+    @endif
     <tr>
         <th colspan="4">REFERRAL RECORD</th>
     </tr>
