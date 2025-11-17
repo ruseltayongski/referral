@@ -12,16 +12,14 @@
                     <div class="container">Ex.
                         <div class="row row-circle">
                             <div class="circle1">1</div>
-                            <div class="circle2">2</div>
-                            <div class="circle3">3</div>
-                            <div class="circle4">4</div>
-                            <div class="circle5">5</div>
+                            <div class="circle3">2</div>
+                            <div class="circle4">3</div>
+                            <div class="circle5">4</div>
                         </div>
                         <div class="row row-presLabel">
                             <div class="col col-presLabel">
                                 <div class="col-Label">
                                     <span class="underline">Paracetamol</span>
-                                    <span class="underline">(Biogesic)</span>
                                     <span class="underline">500mg</span>
                                     <span class="underline">#30</span>
                                     <span class="underline">Tablet</span>

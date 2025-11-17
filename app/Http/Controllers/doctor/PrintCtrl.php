@@ -115,8 +115,14 @@ class PDFPrescription extends FPDF
         $this->Ln(4);
         $this->Setx(105);
         $this->Cell(0, 0,'PTR NO.:', 0, 1, '');
-        if(is_file($this->signature_path)) {
-            $this->Image($this->signature_path, 115, 245, 50, 0);
+
+        if (is_file($this->signature_path)) {
+            // $this->Image($this->signature_path, 105, 245, 50, 0);
+            if ($headerLength <= 13) {
+                $this->Image($this->signature_path, 105 - $headerLength, 245, 50, 0);
+            }else {
+                $this->Image($this->signature_path, 105, 245, 50, 0);
+            }    
         }
         $this->SetY(-15);
         $this->Setx(10);

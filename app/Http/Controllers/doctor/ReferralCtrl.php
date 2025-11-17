@@ -299,32 +299,61 @@ class ReferralCtrl extends Controller
     static function countReferral()
     {
         $user = Session::get('auth');
-        $count = Tracking::where('referred_to',$user->facility_id)
-        ->where('telemedicine', 0)
+
+        $count = Tracking::query()
+            ->join('activity', 'activity.code', '=', 'tracking.code')
+            ->where('tracking.referred_to', $user->facility_id)
+
             ->where(function($q){
-                $q->where('status','referred')
-                    ->orwhere('status','seen')
-                    ->orWhere('status','redirected')
-                    ->orWhere('status','transferred');
+                // Normal referrals
+                $q->where('tracking.telemedicine', 0)
+
+                // OR telemedicine referrals that are upward
+                ->orWhere(function($qq){
+                    $qq->where('tracking.telemedicine', 1)
+                        ->where('activity.status', 'upward');
+                });
             })
-            ->where(DB::raw("TIMESTAMPDIFF(MINUTE,date_referred,now())"),"<=",4320)
+
+            ->where(function($q){
+                $q->where('tracking.status', 'referred')
+                ->orWhere('tracking.status', 'seen')
+                ->orWhere('tracking.status', 'redirected')
+                ->orWhere('tracking.status', 'transferred');
+            })
+
+            ->where(DB::raw("TIMESTAMPDIFF(MINUTE, tracking.date_referred, NOW())"), "<=", 4320)
             ->count();
+
         return $count;
     }
 
     static function countTelemed()
     {
         $user = Session::get('auth');
-        $count = Tracking::where('referred_to',$user->facility_id)
-            ->where('telemedicine', 1)
+
+        $count = Tracking::query()
+            ->join('activity', 'activity.code', '=', 'tracking.code')
+            ->where('tracking.referred_to', $user->facility_id)
+            ->where('tracking.telemedicine', 1)
+
+            // ❌ Exclude: tracking.status = redirected AND activity.status = upward
             ->where(function($q){
-                $q->where('status','referred')
-                    ->orwhere('status','seen')
-                    ->orWhere('status','redirected')
-                    ->orWhere('status','transferred');
+                $q->where('tracking.status', '!=', 'redirected')    
+                ->where('activity.status', '!=', 'upward');
             })
-            ->where(DB::raw("TIMESTAMPDIFF(MINUTE,date_referred,now())"),"<=",4320)
+
+            // ✔ Allowed statuses
+            ->where(function($q){
+                $q->where('tracking.status', 'referred')
+                ->orWhere('tracking.status', 'seen')
+                ->orWhere('tracking.status', 'redirected')
+                ->orWhere('tracking.status', 'transferred');
+            })
+
+            ->where(DB::raw("TIMESTAMPDIFF(MINUTE, tracking.date_referred, NOW())"), "<=", 4320)
             ->count();
+
         return $count;
     }
 

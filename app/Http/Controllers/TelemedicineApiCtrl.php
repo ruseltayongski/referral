@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Login;
+use App\Facility;
+use App\AppointmentSchedule;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 
@@ -45,17 +48,86 @@ class TelemedicineApiCtrl extends Controller
                     'data' => $login
                 ]);
             } else {
-                return response()->json(['message' => 'not a doctor'], 403);
+                return response()->json(['message' => 'unauthorized access'], 403);
             }
         } else {
             return response()->json(['message' => 'invalid credentials'], 401);
         }
     }
 
-    public function test()
+    public function appointmentCalendar()
     {
+        $user = Session::get('auth');
+
+        // Get all facility IDs that have appointment schedules
+        $facility_ids = AppointmentSchedule::pluck('facility_id')->unique();
+
+        // Fetch facilities with their appointment schedules and relations
+        $appointment_slot = Facility::with([
+            'appointmentSchedules.telemedAssignedDoctor',
+            'appointmentSchedules.configSchedule',
+            'appointmentSchedules.subOpd'
+        ])
+        ->whereHas('appointmentSchedules', function($q) use ($user) {
+            $q->where('facility_id', '!=', $user->facility_id);
+        })
+        ->findMany($facility_ids);
+
+        $now = now();
+        $currentMonth = $now->month;
+        $currentYear = $now->year;
+
+        $slotCountByFacility = [];
+
+        foreach ($appointment_slot as $slot) {
+            $facility_id = $slot->id;
+            $facility_name = $slot->name;
+            $facility_address = $slot->address ?? 'N/A'; 
+            $schedules = $slot->appointmentSchedules;
+
+            $availableSlot = 0;
+            $totalAppointments = 0;
+
+            foreach ($schedules as $schedule) {
+                $scheduleDateTime = \Carbon\Carbon::parse($schedule->appointed_date . ' ' . $schedule->appointed_time);
+                $countSlot = $schedule->slot ?? 0;
+                $assignedDoctorsCount = $schedule->telemedAssignedDoctor ? $schedule->telemedAssignedDoctor->count() : 0;
+
+                $isCurrentMonth = (
+                    $scheduleDateTime->month === $currentMonth &&
+                    $scheduleDateTime->year === $currentYear
+                );
+
+                if ($isCurrentMonth) {
+                    // Add appointments based on assigned doctors
+                    if ($assignedDoctorsCount > 0) {
+                        $totalAppointments += $assignedDoctorsCount;
+                    }
+
+                    // Add missed or past unassigned slots (as in frontend logic)
+                    if ($scheduleDateTime->isPast()) {
+                        $totalAppointments += ($countSlot - $assignedDoctorsCount);
+                    }
+                }
+
+                // Available slot logic (future schedule and not full)
+                if ($scheduleDateTime->isFuture() && $assignedDoctorsCount < $countSlot) {
+                    $availableSlot += ($countSlot - $assignedDoctorsCount);
+                }
+            }
+
+            // Add facility summary
+            $slotCountByFacility[] = [
+                'facility_id' => $facility_id,
+                'facility_name' => $facility_name,
+                'facility_address' => $facility_address,
+                'available_slot' => $availableSlot,
+                'total_appointments' => $totalAppointments,
+            ];
+        }
+
         return response()->json([
-            'message' => 'api working'
+            'slotCountByFacility' => $slotCountByFacility
         ]);
     }
 
@@ -79,4 +151,6 @@ class TelemedicineApiCtrl extends Controller
 
         return $login->id;
     }
+
+
 }
