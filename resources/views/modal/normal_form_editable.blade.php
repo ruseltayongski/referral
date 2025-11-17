@@ -368,6 +368,7 @@ $department_id = $appoitment_sched[0]->department_id;
                                                 <img class="file-upload-image" id="file-upload-image1" src="#" />
                                                 <div class="image-title-wrap">
                                                     <b><small class="image-title" id="image-title1" style="display:block; word-wrap: break-word;"></small></b>
+                                                     <button type="button" id="normal_remove_upload1" onclick="removeOneFile(1)" class="remove-icon-btn"><i class="fa fa-trash"></i></button>
                                                     {{--<button type="button" onclick="removeFile(1)" class="remove-image"> Remove </button>--}}
                                                 </div>
                                             </div>
