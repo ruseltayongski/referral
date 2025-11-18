@@ -302,7 +302,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $facilityId = $user->facility_id;
 
-        return cache()->remember("countReferral_{$facilityId}", 1, function () use ($facilityId) {
+        return cache()->remember("countReferral_{$facilityId}", now()->addSeconds(1), function () use ($facilityId) {
 
             return Tracking::query()
                 ->join('activity', 'activity.code', '=', 'tracking.code')
@@ -334,7 +334,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $facilityId = $user->facility_id;
 
-        return cache()->remember("countTelemed_{$facilityId}", 1, function () use ($facilityId) {
+        return cache()->remember("countTelemed_{$facilityId}", now()->addSeconds(1), function () use ($facilityId) {
 
             return Tracking::query()
                 ->join('activity', 'activity.code', '=', 'tracking.code')
