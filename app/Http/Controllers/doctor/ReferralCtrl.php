@@ -296,66 +296,69 @@ class ReferralCtrl extends Controller
         ]);
     }
 
+
     static function countReferral()
     {
         $user = Session::get('auth');
+        $facilityId = $user->facility_id;
 
-        $count = Tracking::query()
-            ->join('activity', 'activity.code', '=', 'tracking.code')
-            ->where('tracking.referred_to', $user->facility_id)
+        return cache()->remember("countReferral_{$facilityId}", 1, function () use ($facilityId) {
 
-            ->where(function($q){
-                // Normal referrals
-                $q->where('tracking.telemedicine', 0)
+            return Tracking::query()
+                ->join('activity', 'activity.code', '=', 'tracking.code')
+                ->where('tracking.referred_to', $facilityId)
 
-                // OR telemedicine referrals that are upward
-                ->orWhere(function($qq){
-                    $qq->where('tracking.telemedicine', 1)
+                ->where(function($q){
+                    $q->where('tracking.telemedicine', 0)
+                    ->orWhere(function($qq){
+                        $qq->where('tracking.telemedicine', 1)
                         ->where('activity.status', 'upward');
-                });
-            })
+                    });
+                })
 
-            ->where(function($q){
-                $q->where('tracking.status', 'referred')
-                ->orWhere('tracking.status', 'seen')
-                ->orWhere('tracking.status', 'redirected')
-                ->orWhere('tracking.status', 'transferred');
-            })
+                ->whereIn('tracking.status', [
+                    'referred',
+                    'seen',
+                    'redirected',
+                    'transferred'
+                ])
 
-            ->where(DB::raw("TIMESTAMPDIFF(MINUTE, tracking.date_referred, NOW())"), "<=", 4320)
-            ->count();
-
-        return $count;
+                ->where(DB::raw("TIMESTAMPDIFF(MINUTE, tracking.date_referred, NOW())"), "<=", 4320)
+                ->count();
+        });
     }
+
 
     static function countTelemed()
     {
         $user = Session::get('auth');
+        $facilityId = $user->facility_id;
 
-        $count = Tracking::query()
-            ->join('activity', 'activity.code', '=', 'tracking.code')
-            ->where('tracking.referred_to', $user->facility_id)
-            ->where('tracking.telemedicine', 1)
+        return cache()->remember("countTelemed_{$facilityId}", 1, function () use ($facilityId) {
 
-            // ❌ Exclude: tracking.status = redirected AND activity.status = upward
-            ->where(function($q){
-                $q->where('tracking.status', '!=', 'redirected')    
-                ->where('activity.status', '!=', 'upward');
-            })
+            return Tracking::query()
+                ->join('activity', 'activity.code', '=', 'tracking.code')
+                ->where('tracking.referred_to', $facilityId)
+                ->where('tracking.telemedicine', 1)
 
-            // ✔ Allowed statuses
-            ->where(function($q){
-                $q->where('tracking.status', 'referred')
-                ->orWhere('tracking.status', 'seen')
-                ->orWhere('tracking.status', 'redirected')
-                ->orWhere('tracking.status', 'transferred');
-            })
+                // Exclude redirected + upward cases
+                ->where(function($q){
+                    $q->where('tracking.status', '!=', 'redirected')
+                    ->where('activity.status', '!=', 'upward');
+                })
 
-            ->where(DB::raw("TIMESTAMPDIFF(MINUTE, tracking.date_referred, NOW())"), "<=", 4320)
-            ->count();
+                ->whereIn('tracking.status', [
+                    'referred',
+                    'seen',
+                    'redirected',
+                    'transferred'
+                ])
 
-        return $count;
+                ->where(DB::raw("TIMESTAMPDIFF(MINUTE, tracking.date_referred, NOW())"), "<=", 4320)
+                ->count();
+        });
     }
+
 
 
     function seen($track_id) {
