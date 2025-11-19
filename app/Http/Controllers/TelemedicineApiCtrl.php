@@ -7,8 +7,10 @@ use App\User;
 use App\Login;
 use App\Facility;
 use App\AppointmentSchedule;
+use App\TelemedAssignDoctor;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
+use App\SubOpd;
 use Carbon\Carbon;
 
 class TelemedicineApiCtrl extends Controller
@@ -53,6 +55,77 @@ class TelemedicineApiCtrl extends Controller
         } else {
             return response()->json(['message' => 'invalid credentials'], 401);
         }
+    }
+    public function getSubOPD($id){
+        return SubOpd::select('description')
+                ->where('id', $id)->first()->description ?: null;
+    }
+    public function countSlotTaken($appointment_id){
+        return TelemedAssignDoctor::where('appointment_id', $appointment_id)
+                ->count();
+    }
+    public function getDoctorName($id){
+        return User::select('fname','mname','lname')
+                    ->where('id', $id)->first();
+    }
+    public function getAppointmentDetails(Request $request)
+    {
+        $facility_id = $request->id;
+        if (!$facility_id) {
+            return response()->json(['error' => 'facility id required'], 400);
+        }
+
+        // parse exclude_past query param (default true)
+        $excludePastParam = $request->query('exclude_past', '1'); // accept '1','0','true','false'
+        $excludePast = filter_var($excludePastParam, FILTER_VALIDATE_BOOLEAN);
+
+        $now = Carbon::now()->toDateTimeString();
+
+        $query = AppointmentSchedule::where('facility_id', $facility_id);
+
+        if ($excludePast) {
+            $query->whereRaw('TIMESTAMP(appointed_date, appointed_time) > ?', [$now]);
+        }
+
+        $schedules = $query->get();
+
+        if ($schedules->isEmpty()) {
+            return response()->json(['error' => 'Appointment not found'], 404);
+        }
+
+        $schedules = $schedules->filter(function ($s) {
+            return ($s->slot - self::countSlotTaken($s->id)) > 0;
+        });
+
+        $data = $schedules->map(function ($s) {  
+            $doctorName = self::getDoctorName($s->created_by);
+                return [
+                    'id' => $s->id,
+                    'configID' => $s->configId ?? null,
+                    'appointed_date' => $s->appointed_date,
+                    'date_end' => $s->date_end,
+                    'appointed_time' => $s->appointed_time,
+                    'appointedTime_to' => $s->appointedTime_to,
+                     'doctor_name' => 'Dr.' 
+                    . $doctorName->fname . ' ' 
+                    . $doctorName->mname . ' ' 
+                    . $doctorName->lname,
+                    'created_by' => $s->created_by,
+                    'facility_id' => $s->facility_id,
+                    'department_id' => $s->department_id,
+                    'opdCategory' => $s->opdCategory,
+                    'subOPDdescription' => self::getSubOPD($s->opdCategory),
+                    'code' => $s->code,
+                    'status' => $s->status,
+                    'slot' => $s->slot,
+                    'slot_available' => $s->slot - self::countSlotTaken($s->id),
+                ];
+           
+        })->groupBy('appointed_date')->map(function ($group) {
+            return $group->values();
+        })->toArray();
+
+        return response()->json(['facility_data' => $data]);
     }
 
     public function appointmentCalendar()

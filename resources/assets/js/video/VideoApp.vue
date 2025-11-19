@@ -344,7 +344,7 @@ export default {
         if (devices.length > 0) {
           this.currentCameraId = devices[0].deviceId;
           this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-          // console.log('Current camera ID:', this.currentCameraId);
+          console.log("Current camera ID:", this.currentCameraId);
         } else {
           console.warn("No cameras found");
           this.showCameraSwitch = false;
