@@ -246,11 +246,14 @@ $user = Session::get('auth');
 <div class="clearfix"></div>
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form['pregnant']->code}}"><i class="fa fa-times"></i> Close</button>
+
 <div class="pull-right">
-    @if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form['pregnant']->department_id === 5 && $user->id == $form['pregnant']->md_referring_id)
+
+@if($cur_status != 'accepted')
+    {{--@if(!($cur_status == 'referred' || $cur_status == 'redirected' || $cur_status == 'transferred' || $cur_status == 'rejected') && $form['pregnant']->department_id === 5 && $user->id == $form['pregnant']->md_referring_id)
         <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form['pregnant']->tracking_id }}','{{ $form['pregnant']->code }}','{{ $form['pregnant']->action_md }}','{{ $form['pregnant']->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
         <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
-    @endif
+    @endif--}}
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form['pregnant']->md_referring_id)
         <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif
@@ -266,8 +269,11 @@ $user = Session::get('auth');
     @elseif($form['pregnant']->getAttribute('telemedicine') == 1 && ($cur_status == 'followup' || $referral_status == 'referred'))
         <button class="btn btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
     @endif
+@endif
     <a href="{{ url('doctor/print/form').'/'.$form['pregnant']->tracking_id }}" target="_blank" class="btn-refer-pregnant btn btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 </div>
+
+
 <div class="clearfix"></div>
 
 

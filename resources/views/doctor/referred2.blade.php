@@ -377,13 +377,15 @@ $user = Session::get('auth');
         </div>
     </div>
 
-    @include('modal.accept')
     @include('modal.refer')
     @include('modal.accept_reject')
     @include('modal.seen')
     @include('modal.caller')
     @include('modal.cancel')
     @include('modal.transfer')
+    @include('modal.accept')
+    @include('modal.reject')
+    @include('modal.contact')
 
 @endsection
 

@@ -1021,6 +1021,7 @@ $user = Session::get('auth');
 <hr />
 <button class="btn btn-default btn-flat" data-dismiss="modal" id="closeReferralForm{{$form['pregnant']->code}}"><i class="fa fa-times"></i> Close</button>
 <div class="pull-right">
+@if($cur_status != 'accepted')
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form['pregnant']->md_referring_id)
         <button class="btn btn-primary btn-flat button_option edit_form_revised_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif
@@ -1035,6 +1036,7 @@ $user = Session::get('auth');
         @endif
     <button class="btn btn-success btn-flat button_option" data-toggle="modal" data-target="#acceptFormModal"><i class="fa fa-check"></i> Accept</button>
     @endif
+@endif
     <a href="{{ url('generate-pdf').'/'.$patient_id .'/'.$id . '/' . 'pregnant' }}" target="_blank" class="btn-refer-normal btn btn-sm btn-warning btn-flat"><i class="fa fa-print"></i> Print Form</a>
 </div>
 <div class="clearfix"></div>
