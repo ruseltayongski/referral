@@ -668,6 +668,7 @@ Route::get('report/exportwalkin', 'admin\ReportCtrl@exportWalkinReport');
 
 //Coordinated Referrals
 Route::match(['GET', 'POST'], 'admin/coordinated/referral', 'admin\ReportCtrl@coordinatedReferral');
+Route::match(['GET', 'POST'], 'admin/down/referral', 'admin\ReportCtrl@downReferral');
 
 // export facility list
 Route::get('admin/report/facility', 'admin\FacilityCtrl@exportAllFacilities');

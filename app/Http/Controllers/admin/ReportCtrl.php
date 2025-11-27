@@ -1804,14 +1804,18 @@ class ReportCtrl extends Controller
     public function coordinatedPluck($category, $level) {
         $pluck = Facility::
                     select('id')
-                    ->where('referral_used','yes')
-                    ->where('province',2);
+                    ->where('referral_used','yes');
 
         if($category == 'cebu_province') {
-            $pluck = $pluck->where('muncity', '!=', 63) //cebu city
+            $pluck = $pluck
+            ->where('province', 2)
+            ->where('muncity', '!=', 63) //cebu city
             ->where('muncity', '!=', 80) //mandaue city
             ->where('muncity', '!=', 76); //lapulapu city
         } 
+        else if($category == 'bohol_province') {
+            $pluck = $pluck->where('province', '=', 1);
+        }
         else if ($category == 'cebu_city') {
             $pluck = $pluck->where('muncity', 63);
         }
@@ -1903,6 +1907,29 @@ class ReportCtrl extends Controller
         $data = $this->coordinatedMappers($category, $date_start, $date_end); 
 
         return view("admin.report.coordinated_referral", [
+            "start" => $start,
+            "end" => $end,
+            "category" => $category,
+            "data" => $data
+        ]);
+    }
+
+    public function downReferral(Request $request) {
+        $category = $request->category ? $request->category : 'cebu_province';
+        if(isset($request->date_range)){
+            $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
+            $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
+        } else {
+            $date_start = Carbon::now()->startOfMonth()->format('Y-m-d').' 00:00:00';
+            $date_end = Carbon::now()->endOfDay()->format('Y-m-d').' 23:59:59';
+            $request->date_range = $date_start." - ".$date_end;
+        }
+
+        $start = \Carbon\Carbon::parse($date_start)->format('m/d/Y');
+        $end = \Carbon\Carbon::parse($date_end)->format('m/d/Y');
+        $data = $this->coordinatedMappers($category, $date_start, $date_end); 
+
+        return view("admin.report.down_referral", [
             "start" => $start,
             "end" => $end,
             "category" => $category,
