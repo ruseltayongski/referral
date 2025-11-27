@@ -90,7 +90,7 @@ class TelemedicineApiCtrl extends Controller
         $schedules = $query->get();
 
         if ($schedules->isEmpty()) {
-            return response()->json(['error' => 'Appointment not found'], 404);
+            return response()->json(['facility_data' => []], 200);
         }
 
         $schedules = $schedules->filter(function ($s) {
@@ -188,15 +188,18 @@ class TelemedicineApiCtrl extends Controller
                     $availableSlot += ($countSlot - $assignedDoctorsCount);
                 }
             }
-
+            
             // Add facility summary
-            $slotCountByFacility[] = [
-                'facility_id' => $facility_id,
-                'facility_name' => $facility_name,
-                'facility_address' => $facility_address,
-                'available_slot' => $availableSlot,
-                'total_appointments' => $totalAppointments,
-            ];
+            if ($availableSlot > 0){
+                $slotCountByFacility[] = [
+                                'facility_id' => $facility_id,
+                                'facility_name' => $facility_name,
+                                'facility_address' => $facility_address,
+                                'available_slot' => $availableSlot,
+                                'total_appointments' => $totalAppointments,
+                            ];
+            }
+         
         }
 
         return response()->json([
@@ -224,6 +227,5 @@ class TelemedicineApiCtrl extends Controller
 
         return $login->id;
     }
-
 
 }

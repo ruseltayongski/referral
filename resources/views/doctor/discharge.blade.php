@@ -51,6 +51,8 @@ $user = Session::get('auth');
                                     <th>Patient Name/Code</th>
                                     <th>Date Discharged</th>
                                     <th>File Upload</th>
+                                    <th>Action</th>
+                                    {{--<th>Type</th>--}}
                                     {{--<th>Status</th>--}}
                                     {{--<th>Record</th>--}}
                                 </tr>
@@ -101,6 +103,11 @@ $user = Session::get('auth');
                                                 class="img-thumbnail discharged-file" 
                                                 data-code="{{$row->code}}"
                                                 style="width:40px; height:40px; object-fit:cover; display:none">
+                                        </td>
+                                        <td>
+                                             <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $row->code }}">
+                                                <i class="fa fa-ambulance"></i> Down Referral<br>
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -158,6 +165,18 @@ $user = Session::get('auth');
         }, function(start, end, label) {
             console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
             // console.log("{{ $start }}");
+        });
+
+        $('body').on('click', '.btn-downRefer', function () {
+
+            let code = $(this).data('activity_code');
+            console.log("Redirect code:", code);
+
+            // Put code inside hidden input of modal
+             $("#redirected_code").val($(this).data('activity_code'));
+
+            // Show modal
+            $('#redirectedFormModal').modal('show');
         });
 
         //hiding folder image  empty files
