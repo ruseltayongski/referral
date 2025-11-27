@@ -93,6 +93,7 @@
             </ul>
         </li>
         <li><a href="{{ url('admin/coordinated/referral') }}"><i class="fa fa-hand-rock-o"></i>Coordinated Referral</a></li>
+        <li><a href="{{ url('admin/down/referral') }}"><i class="fa fa-arrow-down"></i>Down Referral</a></li>
         @endif
     </ul>
 </li>
