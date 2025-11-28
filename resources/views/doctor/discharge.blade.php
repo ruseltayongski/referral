@@ -62,6 +62,25 @@ $user = Session::get('auth');
                                     <?php
                                     $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                                     $type = ($row->type=='normal') ? 'Non-Pregnant' : 'Pregnant';
+
+                                    $activity_downrefer =  \App\Activity::select('id','status', 'referred_from', 'referred_to')
+                                            ->where('status','discharged')
+                                            ->where('code', $row->code)
+                                            ->first();
+                                    $level_facility = \App\Facility::select('id','level')
+                                         ->where('id', $activity_downrefer->referred_from)
+                                         ->first();
+                                   
+
+                                    if($level_facility->level == 3){
+                                        $allowed_levels = [2,1,'infirmary', 'RHU', 'primary_care_facility'];
+                                    }else if($level_facility->level == 2){
+                                        $allowed_levels = [1,'infirmary', 'RHU', 'primary_care_facility'];
+                                    }else if($level_facility->level == 1){
+                                        $allowed_levels = ['infirmary', 'RHU', 'primary_care_facility'];
+                                    }else{
+                                        $allowed_levels = ['infirmary', 'RHU', 'primary_care_facility'];
+                                    }
                                     ?>
                                     <tr>
                                         <td style="white-space: nowrap;">
@@ -105,7 +124,7 @@ $user = Session::get('auth');
                                                 style="width:40px; height:40px; object-fit:cover; display:none">
                                         </td>
                                         <td>
-                                             <button class="btn btn-success btn-xs btn-redirected" data-toggle="modal" data-target="#redirectedFormModal" data-activity_code="{{ $row->code }}">
+                                            <button class="btn btn-success btn-xs btn-downRefer" data-toggle="modal" data-target="#downReferralModal" data-status="downReferral" data-activity_code="{{ $row->code }}">
                                                 <i class="fa fa-ambulance"></i> Down Referral<br>
                                             </button>
                                         </td>
@@ -131,6 +150,7 @@ $user = Session::get('auth');
 
     </div>
     @include('modal.accept_reject')
+    @include('modal.refer', ['allowed_levels' => $allowed_levels]) 
 @endsection
 {{--@include('script.firebase')--}}
 @section('js')
@@ -170,13 +190,15 @@ $user = Session::get('auth');
         $('body').on('click', '.btn-downRefer', function () {
 
             let code = $(this).data('activity_code');
+            let status = $(this).data('status');
             console.log("Redirect code:", code);
+            console.log("status", status);
 
             // Put code inside hidden input of modal
-             $("#redirected_code").val($(this).data('activity_code'));
-
+             $("#downreferral_code").val(code);
+             $("#down_referral").val($(this).data('status'))
             // Show modal
-            $('#redirectedFormModal').modal('show');
+            // $('#redirectedFormModal').modal('show');
         });
 
         //hiding folder image  empty files

@@ -71,7 +71,8 @@
     $redirected_track = \App\Activity::where("code", $row->code)
         ->where(function ($query) {
             $query->where("status", "redirected")
-                ->orWhere("status", "transferred");
+                ->orWhere("status", "transferred")
+                ->orWhere("status", "downReferral");
         })
         ->get();
 
@@ -271,8 +272,16 @@
    
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
-            <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
-            <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
+            @if ($redirect_track->status == 'downReferral')
+             <div class="step-counter"><i class="fa fa-arrow-down" aria-hidden="true" style="font-size:15px;"></i></div>
+                <div class="step-name" style="font-size: 12px; margin-bottom: 10px;">
+                   {{ ucfirst(preg_replace('/([a-z])([A-Z])/', '$1 $2', $redirect_track->status)) }}
+                </div>
+            @else
+                <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
+                <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
+            @endif
+            
         </div>
         <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track || ($position_count < count($redirected_track))) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>

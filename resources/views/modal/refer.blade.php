@@ -4,10 +4,12 @@ $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
     ->where('id','!=',$user->facility_id)
     //->where('province',$user->province)
+     ->when(!empty($allowed_levels), function ($q) use ($allowed_levels) {
+        $q->whereIn('level', $allowed_levels);
+    })
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
-
 ?>
 <style>
     /* jondy changes */
@@ -442,7 +444,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <h4 class="text-green" style="font-size: 15pt;">Redirect to other facility</h4>
+                <h4 class="text-green downreferral" style="font-size: 15pt;">Redirect to other facility</h4>
                 <hr />
                 <form method="POST" action="{{ asset("doctor/referral/redirect") }}" id="redirectedForm">
                     <input type="hidden" name="code" id="redirected_code" value="">
@@ -466,6 +468,43 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
                         <button type="submit" id="redirected_submit" class="btn btn-success btn-flat"><i class="fa fa-ambulance"></i> Redirect</button>
+                    </div>
+                </form>
+                <div class="clearfix"></div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Down Referral -->
+<div class="modal fade" role="dialog" id="downReferralModal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="jim-content">
+                <h4 class="text-green downreferral" style="font-size: 15pt;">Down Referral</h4>
+                <hr />
+                <form method="POST" action="{{ asset("doctor/referral/redirect") }}" id="redirectedForm">
+                    <input type="hidden" name="code" id="downreferral_code" value="">
+                      <input type="hidden" name="downreferral" id="down_referral" value="">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label style="padding:0px;">SELECT FACILITY:</label>
+                        <select class="form-control select2 new_facility select_facility" name="facility" style="width: 100%;" required>
+                            <option value="">Select Facility...</option>
+                            @foreach($facilities as $row)
+                                <option value="{{ $row->id }}">{{ $row->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label style="padding: 0px">SELECT DEPARTMENT:</label>
+                        <select name="department" class="form-control select_department select_department_referred" style="padding: 3px" required>
+                            <option value="">Select Department...</option>
+                        </select>
+                    </div>
+                    <div class="form-fotter pull-right">
+                        <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
+                        <button type="submit" id="redirected_submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>

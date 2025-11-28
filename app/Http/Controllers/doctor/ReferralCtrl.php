@@ -1703,7 +1703,7 @@ class ReferralCtrl extends Controller
     }
 
     public function redirect(Request $req) // MyRedirect
-    {
+    {   
         $upward_referral =  self::Referral_upward($req->code);
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
@@ -1722,7 +1722,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'referring_md' => $user->id,
             'remarks' => '',
-            'status' => 'redirected'
+            'status' => $req->downreferral ? $req->downreferral : 'redirected'
         );
 
         Activity::create($data);
@@ -1735,7 +1735,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'remarks' => '',
             'referring_md' => $user->id,
-            'status' => 'redirected'
+            'status' => $req->downreferral ? $req->downreferral : 'redirected'
         ]);
 
         Activity::where('code',$track->code)->where('status','queued')->delete();
@@ -1790,7 +1790,7 @@ class ReferralCtrl extends Controller
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
-            "status" => 'redirected',
+            "status" => $req->downreferral ? $req->downreferral : 'redirected',
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
@@ -1823,7 +1823,12 @@ class ReferralCtrl extends Controller
             session()->put('for_firebase_data', $new_referral);
         }
         // return Redirect::back();
-        return redirect()->route('doctor_referred', ['filterRef' => 0]);
+        if($req->downreferral){
+            return Redirect::back();
+        }else{
+            return redirect()->route('doctor_referred', ['filterRef' => 0]);
+        }
+        
     }
 
     public function seenBy($track_id,$code)
