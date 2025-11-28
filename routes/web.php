@@ -563,6 +563,7 @@ Route::get('vaccine/allocated/{muncity_id}/{typeof_vaccine}', 'Vaccine\VaccineCo
 Route::post('vaccine/vaccine_allocated_modal', 'Vaccine\VaccineController@getVaccineAllocatedModal');
 
 Route::get('test/send', 'Vaccine\VaccineController@sendNotification');
+Route::get('test/page', 'doctor\HomeCtrl@testPage');
 Route::get('api/referral/append/{code}', 'ApiController@referralAppend');
 
 Route::match(['GET', ['POST']], 'vaccine/facility/{tri_city}', 'Vaccine\VaccineController@vaccineFacility');

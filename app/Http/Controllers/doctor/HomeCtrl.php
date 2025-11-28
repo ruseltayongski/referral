@@ -126,6 +126,10 @@ class HomeCtrl extends Controller
         ]);
     }
 
+    public function testPage() {
+        return view('doctor.test_page');
+    }
+
     public function index1()
     {
         $date_start = Carbon::now()->startOfYear();
