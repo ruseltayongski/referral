@@ -26,3 +26,4 @@ Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 Route::get('telemed/test', 'TelemedicineApiCtrl@test');
 Route::get('telemed/appointment/calendar', 'TelemedicineApiCtrl@appointmentCalendar');
 Route::get('telemed/appointment/getAppointment/{id}', 'TelemedicineApiCtrl@getAppointmentDetails');
+Route::post('addPatient/store', 'TelemedicineApiCtrl@storePatient');

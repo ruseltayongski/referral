@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use App\SubOpd;
 use Carbon\Carbon;
+use App\Patients;
 
 class TelemedicineApiCtrl extends Controller
 {
@@ -226,6 +227,61 @@ class TelemedicineApiCtrl extends Controller
         }
 
         return $login->id;
+    }
+
+    public function storePatient(Request $req)
+    {
+        // FIX: Read JSON from mobile app
+        $dataReq = json_decode($req->getContent(), true);
+
+        // Build unique ID
+        $unique = array(
+            $dataReq['fname'],
+            $dataReq['mname'],
+            $dataReq['lname'],
+            date('Ymd', strtotime($dataReq['dob'])),
+            $dataReq['brgy']
+        );
+        $unique = implode($unique);
+
+        $match = array('unique_id' => $unique);
+
+        $data = array(
+            'phic_status' => $dataReq['phic_status'],
+            'phic_id'     => isset($dataReq['phicID']) ? $dataReq['phicID'] : '',
+            'fname'       => $dataReq['fname'],
+            'mname'       => $dataReq['mname'],
+            'lname'       => $dataReq['lname'],
+            'contact'     => $dataReq['contact'],
+            'dob'         => $dataReq['dob'],
+            'sex'         => $dataReq['sex'],
+            'civil_status'=> $dataReq['civil_status'],
+            'region'      => $dataReq['region'],
+            'province'    => $dataReq['province'],
+            'muncity'     => $dataReq['muncity'],
+            'brgy'        => $dataReq['brgy'],
+            'province_others' => $dataReq['province_others'],
+            'muncity_others'  => $dataReq['muncity_others'],
+            'brgy_others'     => $dataReq['brgy_others']
+        );
+
+        $data = Patients::updateOrCreate($match, $data);
+
+        // Save to session
+        Session::put('profileSearch', [
+            'keyword' => $dataReq['fname'] . ' ' . $dataReq['lname'],
+            'region' => $dataReq['region'],
+            'province' => $dataReq['province'],
+            'muncity' => $dataReq['muncity'],
+            'brgy' => $dataReq['brgy']
+        ]);
+
+        // If sent from consultation
+        if (!empty($dataReq['from_consultation'])) {
+            return response()->json(['message' => 'Patient added successfully', 'data' => $data], 200);
+        }
+
+        return response()->json(['message' => 'Patient added successfully', 'data' => $data], 200);
     }
 
 }
