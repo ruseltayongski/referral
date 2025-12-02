@@ -1145,6 +1145,7 @@
         }
         
     }
+    
 
     function telemedicineLabResult(activity_id,lab_code) {
         const url = "{{ asset('api/check/labresult') }}";

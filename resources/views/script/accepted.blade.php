@@ -79,6 +79,21 @@
             contentType: false,
             processData: false,
             success: function (response) {
+
+                let selector = '#discharged_progress' + track_id + ' .refer-popover';
+
+                $(selector).attr('data-discharged', 1); // update
+                $(selector).attr('data-cancelled', 0);
+                $(selector).attr('data-rejected', 0);
+                $(selector).attr('data-transferred', 0);
+
+                window.dispatchEvent(new CustomEvent("refresh-refer-popovers", {
+                    detail: {
+                        track_id: track_id,
+                        discharged: $(selector).attr("data-discharged")
+                    }
+                }));
+                
                 window.location.reload(true);
             },
             error: function (xhr) {
