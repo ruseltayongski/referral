@@ -11,6 +11,7 @@
                             {{ csrf_field() }}
                             <select name="category" class="form-control" style="width:40%;">
                                 <option value="cebu_province" {{ $category == 'cebu_province' ? 'selected' : '' }}>Cebu Province</option>
+                                <option value="bohol_province" {{ $category == 'bohol_province' ? 'selected' : '' }}>Bohol Province</option>
                                 <option value="cebu_city" {{ $category == 'cebu_city' ? 'selected' : '' }}>Cebu City</option>
                                 <option value="mandaue_city" {{ $category == 'mandaue_city' ? 'selected' : '' }}>Mandaue City</option>
                                 <option value="lapulapu_city" {{ $category == 'lapulapu_city' ? 'selected' : '' }}>Lapu Lapu City</option>

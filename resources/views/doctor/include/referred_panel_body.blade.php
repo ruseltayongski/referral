@@ -319,7 +319,7 @@
         <div class="stepper-item @if($redirected_accepted_track && (!$redirected_rejected_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track)) ) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter
                     <?php
-                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
+                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected' && !$redirected_arrived_track))
                         echo "bg-red";
                     elseif ($redirected_cancelled_track)
                         echo "bg-yellow";
@@ -329,7 +329,7 @@
                             " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
 
                 <?php
-                if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
+                if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected' && !$redirected_arrived_track))
                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                 elseif ($redirected_cancelled_track)
                     echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
@@ -345,7 +345,7 @@
             </div>
             <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}">
                 <?php
-                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
+                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected' && !$redirected_arrived_track))
                         echo 'Declined';
                     elseif ($redirected_cancelled_track)
                         echo 'Cancelled';

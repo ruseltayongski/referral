@@ -457,7 +457,7 @@
             //user_level === "mayor" || 
             if(user_level === "dmo" || ( user_level === 'doctor' && user_facility_id !== facility_id )) {
                 Lobibox.alert('error', {
-                    msg: 'You are not authorized to view this data ddddd!'
+                    msg: 'You are not authorized to view this data!'
                 });
                 return;
             }
