@@ -72,10 +72,11 @@
         ->where(function ($query) {
             $query->where("status", "redirected")
                 ->orWhere("status", "transferred")
-                ->orWhere("status", "downReferral");
+                ->orWhere("status", "referred");
         })
         ->get();
-
+    
+    $referred_track_status = $redirected_track[1]->status;
     //reset the variable in redirected if redirected not exist
     $redirected_queued_track = 0;
     $redirected_accepted_track = 0;
@@ -170,11 +171,30 @@
             <div class="step-name">Admitted</div>
         </div>
         <div class="stepper-item @if($referred_discharged_track && !$referred_transferred_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
-            <a onclick="ReferralDischargeResult(`{{$referred_track->code}}`,`{{$referred_discharged_track}}`, `{{$referred_transferred_track}}`, `{{$referred_rejected_track}}`)">
+            {{--<a onclick="ReferralDischargeResult(`{{$referred_track->code}}`,`{{$referred_discharged_track}}`, `{{$referred_transferred_track}}`, `{{$referred_rejected_track}}`)">
                 <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
-            </a>
+            </a>--}}
+                <a href="#"
+                    onclick="event.preventDefault();"
+                    class="refer-popover"
+                    data-toggle="popover"
+                    data-html="true"
+                    data-code="{{ $referred_track->code }}"
+                    data-discharged="{{ $referred_discharged_track }}"
+                    data-transferred="{{ $referred_transferred_track }}"
+                    data-rejected="{{ $referred_rejected_track }}"
+                    data-cancelled="{{ $referred_cancelled_track }}"
+                    data-status="referred"
+                    data-referred_track="{{ $referred_track_status }}"
+                    data-content="">
+                    <div class="step-counter step-counter-fileresult">
+                        <i class="fa fa-clipboard" style="font-size: 15px;"></i>
+                        <i class="fa fa-check" style="font-size: 15px; color: blue;"></i>
+                    </div>
+                </a>
+
             <div class="step-name">Discharged</div>
-        </div>
+        </div>       
     </div>
     @php
         $redirectedTrack = json_decode($redirected_track, true);
@@ -182,6 +202,12 @@
 
     @endphp
 
+    <?php
+        if ($redirected_track->isNotEmpty() && $redirected_track->first()->status === 'referred') {
+            $redirected_track->shift(); // removes first index
+        }
+    ?>
+    
     @if(count($redirected_track) > 0)
     @foreach($redirected_track as $redirect_track)
 
@@ -254,6 +280,11 @@
         ->where("created_at", ">=", $redirect_track->created_at)
         ->where("status", "transferred")
         ->exists();
+  $redirected_referred_track = \App\Activity::where("code", $redirect_track->code)
+        ->orderBy('id', 'DESC') // latest
+        ->first();
+
+    $redirected_referred = $redirected_referred_track->status == "referred";
 
     $redirected_discharged_track = \App\Activity::where("code", $redirect_track->code)
         ->where("referred_from", $redirect_track->referred_to)
@@ -264,7 +295,6 @@
         $last_position_index = count($position[$position_count]) - 1; // Get the last index of the position array
         $last_position = $position[$last_position_index]; // Retrieve the last position
         $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
-        
     ?>
     
     <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>
@@ -272,16 +302,16 @@
    
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
-            @if ($redirect_track->status == 'downReferral')
-             <div class="step-counter"><i class="fa fa-arrow-down" aria-hidden="true" style="font-size:15px;"></i></div>
-                <div class="step-name" style="font-size: 12px; margin-bottom: 10px;">
-                   {{ ucfirst(preg_replace('/([a-z])([A-Z])/', '$1 $2', $redirect_track->status)) }}
-                </div>
-            @else
-                <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
-                <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
-            @endif
-            
+                 @if ($redirect_track->status == 'referred')
+                    <div class="step-counter"><i class="fa fa-share" aria-hidden="true" style="font-size:15px;"></i></div>
+                    {{-- <div class="step-name" style="font-size: 12px; margin-bottom: 10px;">
+                       
+                    </div> --}}
+                     {{ ucfirst($redirect_track->status) }}
+                @else
+                    <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
+                    <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
+                @endif
         </div>
         <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track || ($position_count < count($redirected_track))) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
@@ -345,10 +375,31 @@
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
-            <a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
-            <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
+
+        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1 || ($redirected_admitted_track && $redirected_discharged_track)) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+            {{--<a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
+                <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
+            </a> --}}
+
+             <a href="#"
+                onclick="event.preventDefault();"
+                class="refer-popover"
+                data-toggle="popover"
+                data-html="true"
+                data-code="{{ $redirect_track->code }}"
+                data-discharged="{{ $redirected_discharged_track }}"
+                data-transferred="{{ $redirected_transferred_track1 }}"
+                data-rejected="{{ $redirected_rejected_track }}"
+                data-cancelled="{{ $redirected_cancelled_track }}"
+                data-status="referred"
+                data-referred_track="{{ $position_count < count($redirected_track) && $redirect_track->status == 'referred' }}"
+                data-content="">
+                <div class="step-counter step-counter-fileresult">
+                    <i class="fa fa-clipboard" style="font-size: 15px;"></i>
+                    <i class="fa fa-check" style="font-size: 15px; color: blue;"></i>
+                </div>
             </a>
+
             <div class="step-name">Discharged</div>
         </div>
     </div>
@@ -657,7 +708,183 @@
     @endif
 </div>
 
+<div id="referPopoverContent" style="display:none;">
+    <div style="padding: 5px; width: 120px;">
+        <div class="d-flex justify-content-between align-items-center">
+
+            <!-- Down Referral -->
+            <button 
+                class="btn btn-light text-center refer-btn"
+                style="flex:1; margin-right:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                <i class="fa fa-ambulance" style="font-size:14px; color:#007bff;"></i>
+                <div style="font-size:11px; margin-top:3px;">Refer</div>
+            </button>
+
+            <!-- Discharge Result -->
+            <button 
+                class="btn btn-light text-center result-btn"
+                style="flex:1; margin-left:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                <i class="fa fa-clipboard" style="font-size:14px; color:#28a745;"></i>
+                <div style="font-size:11px; margin-top:3px;">Result</div>
+            </button>
+
+        </div>
+    </div>
+</div>
+
+<script>
+
+// @if(Session::get('incoming_refer_denied'))
+//     Lobibox.alert("error", //AVAILABLE TYPES: "error", "info", "success", "warning"
+//         {
+//             msg: "This referral was already Referred"
+//         });
+//     <?php Session::put("incoming_refer_denied",false); ?>
+// @endif
+
+$(document).on('click', '.refer-btn', function () {
+    let code = $(this).data('code');
+    let status = $(this).data('status');
+ 
+    $("#refer_code").val(code);
+    $("#refer_referral").val(status);
+
+    $('#downReferralModal').modal('show');
+});
+
+// $(function () {
+
+//     $('.refer-popover').popover({
+//         trigger: 'focus',
+//         placement: 'top',
+//         html: true,
+//         content: function () {
+
+//             let code = $(this).data('code');
+//             let status = $(this).data('status');
+//             let discharged = $(this).data('discharged');
+//             let transferred = $(this).data('transferred');
+//             let rejected = $(this).data('rejected');
+//             let cancelled = $(this).data('cancelled');
+//             let reffered_second = $(this).data('referred_track');
+//             console.log("code", code, "discharge", discharged, "transferred", transferred, "rejected", rejected, "status", status);
+//             // clone HTML   
+//             let pop = $('#referPopoverContent').clone();
+//             console.log("reffered_second", reffered_second);
+//             if(!discharged || transferred || rejected || cancelled || reffered_second){
+//                 pop.find('.refer-btn').remove();      
+//             }
+
+//             if(!discharged){
+//                 pop.find('.result-btn').remove();  
+//             }
+
+//             let hasRefer = pop.find('.refer-btn').length > 0;
+//             let hasResult = pop.find('.result-btn').length > 0;
+
+//             if(!hasRefer && !hasResult){
+//                 return "";
+//             }
+            
+//             // set dynamic data inside the "Result" button
+//             pop.find('.result-btn').attr('onclick',
+//                 `ReferralDischargeResult('${code}', '${discharged}', '${transferred}', '${rejected}')`
+//             );
+
+//             pop.find('.refer-btn')
+//             .attr('data-code', code)
+//             .attr('data-status', status);
+
+//             return pop.html();
+//         }
+//     });
+
+// });
+
+
+function refreshReferPopovers() {
+    // Destroy old popovers first
+    $('.refer-popover').popover('destroy');
+
+    // Re-initialize
+    $('.refer-popover').each(function () {
+        //  console.log('Init popover for', $(this).data('code'));
+        $(this).popover({
+            trigger: 'focus',
+            placement: 'top',
+            html: true,
+            content: function () {
+                let code = $(this).data('code');
+                let status = $(this).data('status');
+                let discharged = $(this).data('discharged');
+                let transferred = $(this).data('transferred');
+                let rejected = $(this).data('rejected');
+                let cancelled = $(this).data('cancelled');
+                let reffered_second = $(this).data('referred_track');
+
+                // console.log("discharged", discharged, "cancelled:", cancelled, "rejected", rejected);
+                // clone popover HTML template
+                let pop = $('#referPopoverContent').clone();
+                console.log("discharged", discharged);
+                // Show/hide Refer button
+                if (!discharged || (Array.isArray(discharged) && discharged.length === 0) || transferred || rejected || cancelled || reffered_second) {
+                    console.log("hellooooo");
+                    pop.find('.refer-btn').remove();
+                }
+
+                // Show/hide Result button
+                if (!discharged) {
+                    pop.find('.result-btn').remove();
+                }
+
+                // if no buttons, return empty
+                if (pop.find('.refer-btn').length === 0 && pop.find('.result-btn').length === 0) {
+                    return "";
+                }
+
+                // set dynamic onclick for Result
+                pop.find('.result-btn').attr(
+                    'onclick',
+                    `ReferralDischargeResult('${code}', '${discharged}', '${transferred}', '${rejected}')`
+                );
+
+                // set data for Refer
+                pop.find('.refer-btn')
+                    .attr('data-code', code)
+                    .attr('data-status', status);
+
+                return pop.html();
+            }
+        });
+    });
+}
+
+
+$(document).ready(function () {
+    refreshReferPopovers();
+});
+
+window.addEventListener("refresh-refer-popovers", function (e) {
+    console.log("🔥 refresh-refer-popovers event RECEIVED!", e);
+    let dischargedValue = e.detail.discharged; 
+    console.log("➡️ Discharged Value:", dischargedValue);
+
+    $('.refer-popover').each(function() {
+        console.log("code for realtime", $(this).data('code'), "e.code", e.detail.code)
+        if ($(this).data('code') === e.detail.code) {
+            $(this).attr('data-discharged', dischargedValue);
+            $(this).data('discharged', dischargedValue); 
+        }
+    });
+
+    refreshReferPopovers(); // call your function after logging
+});
+
+</script>
+
+
 <style>
+
 .toggle tr {
     display: none;
 }

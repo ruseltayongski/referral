@@ -1199,6 +1199,15 @@
                         if(event.payload.status == "discharged" && (event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility)) {
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
+
+
+                        window.dispatchEvent(new CustomEvent("refresh-refer-popovers", {
+                            detail: {
+                                discharged: 1,
+                                code: event.payload.patient_code
+                            }
+                        }));
+                        
                     }
 
                     // if(event.payload.laboratory_code){I add this changes

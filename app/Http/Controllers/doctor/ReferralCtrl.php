@@ -1714,6 +1714,13 @@ class ReferralCtrl extends Controller
             return Redirect::back();
         }
 
+        // if($req->referferral){
+        //     if($track->status=='referred') {
+        //         Session::put('incoming_refer_denied',true);
+        //         return;
+        //     } // trap if already referred 
+        // }
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1722,7 +1729,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'referring_md' => $user->id,
             'remarks' => '',
-            'status' => $req->downreferral ? $req->downreferral : 'redirected'
+            'status' => $req->referferral ? $req->referferral : 'redirected'
         );
 
         Activity::create($data);
@@ -1735,7 +1742,7 @@ class ReferralCtrl extends Controller
             'referred_to' => $req->facility,
             'remarks' => '',
             'referring_md' => $user->id,
-            'status' => $req->downreferral ? $req->downreferral : 'redirected'
+            'status' => $req->referferral ? $req->referferral : 'redirected'
         ]);
 
         Activity::where('code',$track->code)->where('status','queued')->delete();
@@ -1790,7 +1797,7 @@ class ReferralCtrl extends Controller
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
-            "status" => $req->downreferral ? $req->downreferral : 'redirected',
+            "status" => $req->referferral ? $req->referferral : 'redirected',
             "count_seen" => $count_seen,
             "count_reco" => $count_reco,
             "redirect_track" => $redirect_track,
@@ -1823,7 +1830,7 @@ class ReferralCtrl extends Controller
             session()->put('for_firebase_data', $new_referral);
         }
         // return Redirect::back();
-        if($req->downreferral){
+        if($req->referferral){
             return Redirect::back();
         }else{
             return redirect()->route('doctor_referred', ['filterRef' => 0]);

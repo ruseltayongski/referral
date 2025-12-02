@@ -4,9 +4,9 @@ $user = Session::get('auth');
 $facilities = \App\Facility::select('id','name')
     ->where('id','!=',$user->facility_id)
     //->where('province',$user->province)
-     ->when(!empty($allowed_levels), function ($q) use ($allowed_levels) {
-        $q->whereIn('level', $allowed_levels);
-    })
+    //  ->when(!empty($allowed_levels), function ($q) use ($allowed_levels) {
+    //     $q->whereIn('level', $allowed_levels);
+    // })
     ->where('status',1)
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
@@ -481,11 +481,11 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="jim-content">
-                <h4 class="text-green downreferral" style="font-size: 15pt;">Down Referral</h4>
-                <hr />
+                <!-- <h4 class="text-green downreferral" style="font-size: 15pt;">Down Referral</h4>
+                <hr /> -->
                 <form method="POST" action="{{ asset("doctor/referral/redirect") }}" id="redirectedForm">
-                    <input type="hidden" name="code" id="downreferral_code" value="">
-                      <input type="hidden" name="downreferral" id="down_referral" value="">
+                    <input type="hidden" name="code" id="refer_code" value="">
+                      <input type="hidden" name="referferral" id="refer_referral" value="">
                     {{ csrf_field() }}
                     <div class="form-group">
                         <label style="padding:0px;">SELECT FACILITY:</label>
