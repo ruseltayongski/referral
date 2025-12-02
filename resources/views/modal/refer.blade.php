@@ -875,8 +875,18 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->  
 <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase.js"></script>
+
 <script>// jondy changes
 
+    @if(Session::get('incoming_refer_denied'))
+        document.addEventListener('DOMContentLoaded', function() {
+            Lobibox.alert("error", //AVAILABLE TYPES: "error", "info", "success", "warning"
+                {
+                    msg: "This referral was already referred"
+                });
+        });
+        <?php Session::put("incoming_refer_denied",false); ?>
+    @endif
 
 //  const selector = document.getElementById("inputTypeSelector");
 //     const remarksGroup = document.getElementById("remarksGroup");

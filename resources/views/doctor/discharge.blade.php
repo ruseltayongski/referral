@@ -177,16 +177,8 @@ $user = Session::get('auth');
     $start = \Carbon\Carbon::parse($start)->format('m/d/Y');
     $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
     ?>
+
     <script>
-
-    //    @if(Session::get('incoming_refer_denied'))
-    //     Lobibox.alert("error", //AVAILABLE TYPES: "error", "info", "success", "warning"
-    //         {
-    //             msg: "This referral was already Referred"
-    //         });
-    //     <?php Session::put("incoming_refer_denied",false); ?>
-    //     @endif
-
         $('#daterange').daterangepicker({
             "startDate": "{{ $start }}",
             "endDate": "{{ $end }}",

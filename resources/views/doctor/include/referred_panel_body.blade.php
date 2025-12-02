@@ -709,7 +709,7 @@
 </div>
 
 <div id="referPopoverContent" style="display:none;">
-    <div style="padding: 5px; width: 120px;">
+    <div style="padding: 5px; width: 180px;">
         <div class="d-flex justify-content-between align-items-center">
 
             <!-- Down Referral -->
@@ -717,7 +717,7 @@
                 class="btn btn-light text-center refer-btn"
                 style="flex:1; margin-right:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
                 <i class="fa fa-ambulance" style="font-size:14px; color:#007bff;"></i>
-                <div style="font-size:11px; margin-top:3px;">Refer</div>
+                <div style="font-size:11px; margin-top:3px;">Refer other <br> facility</div>
             </button>
 
             <!-- Discharge Result -->
@@ -725,7 +725,7 @@
                 class="btn btn-light text-center result-btn"
                 style="flex:1; margin-left:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
                 <i class="fa fa-clipboard" style="font-size:14px; color:#28a745;"></i>
-                <div style="font-size:11px; margin-top:3px;">Result</div>
+                <div style="font-size:11px; margin-top:3px;">Discharged <br> Instructions</div>
             </button>
 
         </div>
@@ -733,15 +733,6 @@
 </div>
 
 <script>
-
-// @if(Session::get('incoming_refer_denied'))
-//     Lobibox.alert("error", //AVAILABLE TYPES: "error", "info", "success", "warning"
-//         {
-//             msg: "This referral was already Referred"
-//         });
-//     <?php Session::put("incoming_refer_denied",false); ?>
-// @endif
-
 $(document).on('click', '.refer-btn', function () {
     let code = $(this).data('code');
     let status = $(this).data('status');
@@ -825,9 +816,9 @@ function refreshReferPopovers() {
                 // console.log("discharged", discharged, "cancelled:", cancelled, "rejected", rejected);
                 // clone popover HTML template
                 let pop = $('#referPopoverContent').clone();
-                console.log("discharged", discharged);
+                // console.log("discharged", discharged,'transferred', transferred);
                 // Show/hide Refer button
-                if (!discharged || (Array.isArray(discharged) && discharged.length === 0) || transferred || rejected || cancelled || reffered_second) {
+                if (!discharged || (Array.isArray(discharged) && discharged.length ==='') || reffered_second) {
                     console.log("hellooooo");
                     pop.find('.refer-btn').remove();
                 }
@@ -865,10 +856,7 @@ $(document).ready(function () {
 });
 
 window.addEventListener("refresh-refer-popovers", function (e) {
-    console.log("🔥 refresh-refer-popovers event RECEIVED!", e);
     let dischargedValue = e.detail.discharged; 
-    console.log("➡️ Discharged Value:", dischargedValue);
-
     $('.refer-popover').each(function() {
         console.log("code for realtime", $(this).data('code'), "e.code", e.detail.code)
         if ($(this).data('code') === e.detail.code) {
