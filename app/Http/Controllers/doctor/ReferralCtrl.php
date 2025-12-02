@@ -1714,6 +1714,13 @@ class ReferralCtrl extends Controller
             return Redirect::back();
         }
 
+        // if($req->referferral){
+        //     if($track->status=='referred') {
+        //         Session::put('incoming_refer_denied',true);
+        //         return;
+        //     } // trap if already referred 
+        // }
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,

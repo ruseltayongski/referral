@@ -304,9 +304,10 @@
         <div class="stepper-item completed">
                  @if ($redirect_track->status == 'referred')
                     <div class="step-counter"><i class="fa fa-share" aria-hidden="true" style="font-size:15px;"></i></div>
-                    <div class="step-name" style="font-size: 12px; margin-bottom: 10px;">
-                        {{ ucfirst($redirect_track->status) }}
-                    </div>
+                    {{-- <div class="step-name" style="font-size: 12px; margin-bottom: 10px;">
+                       
+                    </div> --}}
+                     {{ ucfirst($redirect_track->status) }}
                 @else
                     <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
                     <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
@@ -732,6 +733,14 @@
 </div>
 
 <script>
+
+// @if(Session::get('incoming_refer_denied'))
+//     Lobibox.alert("error", //AVAILABLE TYPES: "error", "info", "success", "warning"
+//         {
+//             msg: "This referral was already Referred"
+//         });
+//     <?php Session::put("incoming_refer_denied",false); ?>
+// @endif
 
 $(document).on('click', '.refer-btn', function () {
     let code = $(this).data('code');
