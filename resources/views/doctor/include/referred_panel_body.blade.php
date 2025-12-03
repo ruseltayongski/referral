@@ -25,11 +25,12 @@
     //     ->where("created_at", ">=", $referred_track->created_at)
     //     ->where("status", "rejected")
     //     ->exists();
-     $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+    $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
         ->where("referred_from", $referred_track->referred_from)
         ->where("created_at", ">=", $referred_track->created_at)
         ->where("status", "rejected")
         ->exists();
+        
     $referred_cancelled_track = \App\Activity::where("code", $referred_track->code)
         ->where("referred_from", $referred_track->referred_from)
         ->where("created_at", ">=", $referred_track->created_at)
@@ -87,8 +88,7 @@
     $redirected_admitted_track = 0;
     $redirected_discharged_track = 0;
     //end reset
-
-    ?>
+    ?> 
     <script>
 
         // Initialize popover
@@ -114,7 +114,7 @@
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
         </div>
-        <div class="text-center stepper-item @if($referred_accepted_track && (!$referred_rejected_track || !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="text-center stepper-item @if($referred_accepted_track &&  $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter
                                         <?php
                                         if ($referred_cancelled_track)
@@ -152,29 +152,33 @@
             </div>
         </div>
 
-        <div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+        {{--<div class="stepper-item @if( ($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && $position_count < count($referred_track) && $referred_track->status == 'referred' && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+            <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
+            <div class="step-name">Departed</div>
+        </div> --}} 
+        <div class="stepper-item @if(($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) &&  $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
             <div class="step-name">Departed</div>
         </div>
-        <div class="stepper-item @if($referred_arrived_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item @if($referred_arrived_track && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter {{ $referred_notarrived_track && !$referred_arrived_track && !$referred_rejected_track && !$referred_cancelled_track? 'bg-red' : '' }}" id="notarrived_progress{{ $referred_track->code.$referred_track->id }}">
-                {!! $referred_notarrived_track && !$referred_arrived_track && !$referred_rejected_track && !$referred_cancelled_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
+                {!! $referred_notarrived_track && $position_count < count($referred_track) && $referred_track->status == 'referred' &&(!$referred_arrived_track || !$referred_rejected_track || !$referred_cancelled_track) ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
                 '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>' !!}</div>
-            @if($referred_notarrived_track && !$referred_arrived_track && !$referred_rejected_track && !$referred_cancelled_track)
+            @if($referred_notarrived_track && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_arrived_track || !$referred_rejected_track || !$referred_cancelled_track))
             <div class="step-name not_arrived">Not Arrived</div>
             @else
             <div class="step-name" id="arrived_name{{ $referred_track->code.$referred_track->id }}">Arrived</div>
             @endif
         </div>
-        <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-        <div class="stepper-item @if($referred_discharged_track && !$referred_transferred_track && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
-            {{--<a onclick="ReferralDischargeResult(`{{$referred_track->code}}`,`{{$referred_discharged_track}}`, `{{$referred_transferred_track}}`, `{{$referred_rejected_track}}`)">
+        <div class="stepper-item @if($referred_discharged_track && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_transferred_track && !$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
+            <a onclick="ReferralDischargeResult(`{{$referred_track->code}}`,`{{$referred_discharged_track}}`, `{{$referred_transferred_track}}`, `{{$referred_rejected_track}}`)">
                 <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
-            </a>--}}
-                <a href="#"
+            </a>
+               {{-- <a href="#"
                     onclick="event.preventDefault();"
                     class="refer-popover"
                     data-toggle="popover"
@@ -191,7 +195,7 @@
                         <i class="fa fa-clipboard" style="font-size: 15px;"></i>
                         <i class="fa fa-check" style="font-size: 15px; color: blue;"></i>
                     </div>
-                </a>
+                </a> --}}
 
             <div class="step-name">Discharged</div>
         </div>       
@@ -375,13 +379,13 @@
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-
+                
         <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1 || ($redirected_admitted_track && $redirected_discharged_track)) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
-            {{--<a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
+            <a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
                 <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
-            </a> --}}
+            </a> 
 
-             <a href="#"
+             {{--<a href="#"
                 onclick="event.preventDefault();"
                 class="refer-popover"
                 data-toggle="popover"
@@ -398,7 +402,7 @@
                     <i class="fa fa-clipboard" style="font-size: 15px;"></i>
                     <i class="fa fa-check" style="font-size: 15px; color: blue;"></i>
                 </div>
-            </a>
+            </a> --}}
 
             <div class="step-name">Discharged</div>
         </div>
@@ -817,8 +821,9 @@ function refreshReferPopovers() {
                 // clone popover HTML template
                 let pop = $('#referPopoverContent').clone();
                 // console.log("discharged", discharged,'transferred', transferred);
+                console.log("reffered_second", reffered_second);
                 // Show/hide Refer button
-                if (!discharged || (Array.isArray(discharged) && discharged.length ==='') || reffered_second) {
+                if (!discharged || (Array.isArray(discharged) && discharged.length ==='') || transferred || reffered_second) {
                     console.log("hellooooo");
                     pop.find('.refer-btn').remove();
                 }

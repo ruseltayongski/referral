@@ -731,7 +731,7 @@
                     <div class="step-counter step-counter-referral"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
                     <div class="step-name">Admitted</div>
                 </div>
-                <div class="stepper-item @if($redirected_discharged_track && !$redirected_transferred_track) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+                <div class="stepper-item @if($redirected_discharged_track && (!$redirected_transferred_track && !$redirected_cancelled_track && !$redirected_rejected_track)) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter step-counter-referral"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
                     <div class="step-name">Discharged</div>
                 </div>
