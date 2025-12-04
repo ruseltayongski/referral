@@ -25,12 +25,13 @@
     //     ->where("created_at", ">=", $referred_track->created_at)
     //     ->where("status", "rejected")
     //     ->exists();
-    $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+    
+    $referred_redirected_track = \App\Activity::where("code", $referred_track->code) // I add this
         ->where("referred_from", $referred_track->referred_from)
         ->where("created_at", ">=", $referred_track->created_at)
-        ->where("status", "rejected")
+        ->where("status", "redirected")
         ->exists();
-        
+
     $referred_cancelled_track = \App\Activity::where("code", $referred_track->code)
         ->where("referred_from", $referred_track->referred_from)
         ->where("created_at", ">=", $referred_track->created_at)
@@ -76,6 +77,33 @@
                 ->orWhere("status", "referred");
         })
         ->get();
+
+    $secondTransferred = false;
+
+    if (count($redirected_track) >= 2) {
+        $secondPositionItem = $redirected_track[1]; // index 1 = second item
+
+        if ($secondPositionItem->status === 'transferred') {
+            $secondTransferred = true;
+        }
+    }
+
+    if($secondTransferred){
+            $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+                ->where("referred_from", $referred_track->referred_to)
+                ->where("created_at", ">=", $referred_track->created_at)
+                ->where("status", "rejected")
+                ->exists();
+    }else{
+         $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+                ->where("referred_from", $referred_track->referred_from)
+                ->where("created_at", ">=", $referred_track->created_at)
+                ->where("status", "rejected")
+                ->exists();
+    }
+
+    // $count_referred = $referred_track ? 0 : 0;
+
     
     $referred_track_status = $redirected_track[1]->status;
     //reset the variable in redirected if redirected not exist
@@ -88,6 +116,12 @@
     $redirected_admitted_track = 0;
     $redirected_discharged_track = 0;
     //end reset
+
+    if(!$referred_track_status){
+        $last_position_count_referred = $referred_track ? 0 : 0;
+    }
+     
+    
     ?> 
     <script>
 
@@ -174,28 +208,31 @@
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-        <div class="stepper-item @if($referred_discharged_track && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_transferred_track && !$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
-            <a onclick="ReferralDischargeResult(`{{$referred_track->code}}`,`{{$referred_discharged_track}}`, `{{$referred_transferred_track}}`, `{{$referred_rejected_track}}`)">
+       
+        <div class="stepper-item @if($position_count == $count_referred  && $referred_discharged_track && (!$referred_redirected_track && !$referred_transferred_track && !$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="discharged_progress{{ $referred_track->code.$referred_track->id }}">
+            {{-- <a onclick="ReferralDischargeResult(`{{$referred_track->code}}`,`{{$referred_discharged_track}}`, `{{$referred_transferred_track}}`, `{{$referred_rejected_track}}`)">
                 <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
-            </a>
-               {{-- <a href="#"
-                    onclick="event.preventDefault();"
-                    class="refer-popover"
-                    data-toggle="popover"
-                    data-html="true"
-                    data-code="{{ $referred_track->code }}"
-                    data-discharged="{{ $referred_discharged_track }}"
-                    data-transferred="{{ $referred_transferred_track }}"
-                    data-rejected="{{ $referred_rejected_track }}"
-                    data-cancelled="{{ $referred_cancelled_track }}"
-                    data-status="referred"
-                    data-referred_track="{{ $referred_track_status }}"
-                    data-content="">
-                    <div class="step-counter step-counter-fileresult">
-                        <i class="fa fa-clipboard" style="font-size: 15px;"></i>
-                        <i class="fa fa-check" style="font-size: 15px; color: blue;"></i>
-                    </div>
-                </a> --}}
+            </a> --}}
+            <a href="#"
+                onclick="event.preventDefault();"
+                class="refer-popover"
+                data-toggle="popover"
+                data-html="true"
+                data-code="{{ $referred_track->code }}"
+                data-discharged="{{ $referred_discharged_track && !$referred_rejected_track && !$referred_cancelled_track}}"
+                data-transferred="{{ $referred_transferred_track }}"
+                data-rejected="{{ $referred_rejected_track }}"
+                data-cancelled="{{ $referred_cancelled_track }}"
+                data-position="{{$position_count}}"
+                data-last_position="{{$last_position_count_referred}}"
+                data-status="referred"
+                data-referred_track="{{ $referred_track_status }}"
+                data-content="">
+                <div class="step-counter step-counter-fileresult">
+                    <i class="fa fa-clipboard" style="font-size: 15px;"></i>
+                    <i class="fa fa-check" style="font-size: 15px; color: blue;"></i>
+                </div>
+            </a> 
 
             <div class="step-name">Discharged</div>
         </div>       
@@ -238,11 +275,12 @@
     //     ->where("created_at", ">=", $redirect_track->created_at)
     //     ->where("status", "rejected")
     //     ->exists();
-    $redirected_rejected_track = \App\Activity::where("code", $redirect_track->code)
+    
+    $redirected_redirected_track = \App\Activity::where("code", $redirect_track->code)
         ->where("referred_to", $redirect_track->referred_to)
         ->where("created_at", ">=", $redirect_track->created_at)
-        ->where("status", "rejected")
-        ->exists();
+        ->where("status", "redirected")
+        ->exists();   
     $redirected_cancelled_track = \App\Activity::where("code", $redirect_track->code)
         ->where("referred_from", $redirect_track->referred_from)
         ->where("created_at", ">=", $redirect_track->created_at)
@@ -296,9 +334,32 @@
         ->where("status", "discharged")
         ->exists();
 
+    $transferredtoReject = false;
+
+    if ($redirect_track->status == 'transferred') {
+            $transferredtoReject = true;
+        }
+    
+    if($transferredtoReject){
+         $redirected_rejected_track = \App\Activity::where("code", $redirect_track->code)
+            ->where("referred_to", $redirect_track->referred_to)
+            ->where("created_at", ">=", $redirect_track->created_at)
+            ->where("status", "rejected")
+            ->exists();
+    }else{
+         $redirected_rejected_track = \App\Activity::where("code", $redirect_track->code)
+            ->where("referred_to", $redirect_track->referred_to)
+            ->where("created_at", ">=", $redirect_track->created_at)
+            ->where("status", "rejected")
+            ->exists();
+    }
+
+
         $last_position_index = count($position[$position_count]) - 1; // Get the last index of the position array
         $last_position = $position[$last_position_index]; // Retrieve the last position
         $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
+    
+        $last_position_count = count($redirected_track);
     ?>
     
     <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>
@@ -379,21 +440,24 @@
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-                
-        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1 || ($redirected_admitted_track && $redirected_discharged_track)) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
-            <a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
+    
+        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1 || ($position_count == count($redirected_track) && $redirected_admitted_track && $redirected_discharged_track) || ($redirected_transferred_track1 && $redirected_discharged_track && !$redirected_rejected_track)) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+            {{--<a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
                 <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
-            </a> 
-
-             {{--<a href="#"
+            </a> --}}
+            <a href="#"
                 onclick="event.preventDefault();"
                 class="refer-popover"
                 data-toggle="popover"
                 data-html="true"
                 data-code="{{ $redirect_track->code }}"
-                data-discharged="{{ $redirected_discharged_track }}"
-                data-transferred="{{ $redirected_transferred_track1 }}"
+                data-discharged="{{ $redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track}}"
+                data-transferred="{{$position_count < count($redirected_track) && $redirect_track->status == 'transferred' }}"
                 data-rejected="{{ $redirected_rejected_track }}"
+                data-redirected_redirected="{{$redirected_redirected_track}}"
+                data-position="{{$position_count}}"
+                data-last_position="{{$last_position_count}}"
+                data-status_track="{{$redirect_track->status}}"
                 data-cancelled="{{ $redirected_cancelled_track }}"
                 data-status="referred"
                 data-referred_track="{{ $position_count < count($redirected_track) && $redirect_track->status == 'referred' }}"
@@ -402,7 +466,7 @@
                     <i class="fa fa-clipboard" style="font-size: 15px;"></i>
                     <i class="fa fa-check" style="font-size: 15px; color: blue;"></i>
                 </div>
-            </a> --}}
+            </a>
 
             <div class="step-name">Discharged</div>
         </div>
@@ -815,16 +879,28 @@ function refreshReferPopovers() {
                 let transferred = $(this).data('transferred');
                 let rejected = $(this).data('rejected');
                 let cancelled = $(this).data('cancelled');
+                let redirected_redirected = $(this).data('redirected_redirected');
                 let reffered_second = $(this).data('referred_track');
-
+                let status_track = $(this).data('status_track');
+                let position = $(this).data('position');
+                let last_position = $(this).data('last_position');
+                console.log("last position", last_position, "position", position);
+                console.log("condition",  position === 6);
                 // console.log("discharged", discharged, "cancelled:", cancelled, "rejected", rejected);
                 // clone popover HTML template
                 let pop = $('#referPopoverContent').clone();
-                // console.log("discharged", discharged,'transferred', transferred);
-                console.log("reffered_second", reffered_second);
+                 console.log('refer position::', !discharged && position == 0 );
+                //  console.log("trans refe dis", transferred , "reedirected",redirected_redirected ,"discharged", !discharged, "all condition", transferred && redirected_redirected && !discharged);
+                //  console.log("position:",position == 3);
+                 
                 // Show/hide Refer button
-                if (!discharged || (Array.isArray(discharged) && discharged.length ==='') || transferred || reffered_second) {
+                // if (!discharged || (Array.isArray(discharged) && discharged.length ==='') || reffered_second || (transferred && discharged && redirected_redirected) || (position && status_track == "redirected" && !discharged)) {
+                //     console.log("hellooooo");
+                //     pop.find('.refer-btn').remove();
+                // }
+                if (discharged && position === last_position) {
                     console.log("hellooooo");
+                }else{
                     pop.find('.refer-btn').remove();
                 }
 

@@ -51,7 +51,7 @@ $user = Session::get('auth');
                                     <th>Patient Name/Code</th>
                                     <th>Date Discharged</th>
                                     <th>File Upload</th>
-                                    {{-- <th>Action</th> --}}
+                                     <th>Action</th> 
                                     {{--<th>Type</th>--}}
                                     {{--<th>Status</th>--}}
                                     {{--<th>Record</th>--}}
@@ -123,11 +123,11 @@ $user = Session::get('auth');
                                                 data-code="{{$row->code}}"
                                                 style="width:40px; height:40px; object-fit:cover; display:none">
                                         </td>
-                                        {{--<td>
+                                        <td>
                                             <button class="btn btn-primary btn-xs btn-downRefer" data-toggle="modal" data-target="#downReferralModal" data-status="referred" data-activity_code="{{ $row->code }}">
                                                 <i class="fa fa-ambulance"></i> Refer<br>
                                             </button>
-                                        </td> --}}
+                                        </td> 
                                     </tr>
                                 @endforeach
                                 </tbody>

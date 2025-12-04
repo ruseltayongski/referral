@@ -709,6 +709,15 @@ select.form-control.input-sm {
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-4 col-sm-6">
+                                 <div class="form-group">
+                                    <label>Status:</label>
+                                    <select class="form-control status" name="status" required>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
