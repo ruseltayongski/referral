@@ -83,7 +83,7 @@
     if (count($redirected_track) >= 2) {
         $secondPositionItem = $redirected_track[1]; // index 1 = second item
 
-        if ($secondPositionItem->status === 'transferred') {
+        if ($secondPositionItem->status === 'transferred' || $secondPositionItem->status === 'referred') {
             $secondTransferred = true;
         }
     }
