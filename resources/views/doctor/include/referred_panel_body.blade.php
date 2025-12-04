@@ -148,7 +148,7 @@
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
         </div>
-        <div class="text-center stepper-item @if($referred_accepted_track &&  $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="text-center stepper-item @if($referred_accepted_track && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter
                                         <?php
                                         if ($referred_cancelled_track)
@@ -190,21 +190,21 @@
             <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
             <div class="step-name">Departed</div>
         </div> --}} 
-        <div class="stepper-item @if(($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) &&  $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item @if(($referred_travel_track || $referred_arrived_track || $referred_notarrived_track) && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
             <div class="step-name">Departed</div>
         </div>
-        <div class="stepper-item @if($referred_arrived_track && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item @if($referred_arrived_track && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="arrived_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter {{ $referred_notarrived_track && !$referred_arrived_track && !$referred_rejected_track && !$referred_cancelled_track? 'bg-red' : '' }}" id="notarrived_progress{{ $referred_track->code.$referred_track->id }}">
-                {!! $referred_notarrived_track && $position_count < count($referred_track) && $referred_track->status == 'referred' &&(!$referred_arrived_track || !$referred_rejected_track || !$referred_cancelled_track) ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
+                {!! $referred_notarrived_track && $position_count < count($referred_track) && (!$referred_arrived_track || !$referred_rejected_track || !$referred_cancelled_track) ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
                 '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>' !!}</div>
-            @if($referred_notarrived_track && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_arrived_track || !$referred_rejected_track || !$referred_cancelled_track))
+            @if($referred_notarrived_track && (!$referred_arrived_track || !$referred_rejected_track || !$referred_cancelled_track))
             <div class="step-name not_arrived">Not Arrived</div>
             @else
             <div class="step-name" id="arrived_name{{ $referred_track->code.$referred_track->id }}">Arrived</div>
             @endif
         </div>
-        <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && $position_count < count($referred_track) && $referred_track->status == 'referred' && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
+        <div class="stepper-item @if(($referred_admitted_track || $referred_discharged_track) && !$referred_rejected_track && !$referred_cancelled_track) completed @endif" id="admitted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
@@ -336,13 +336,15 @@
 
     $transferredtoReject = false;
 
-    if ($redirect_track->status == 'transferred') {
+    if ($redirect_track->status == 'transferred' || $redirect_track->status == 'referred' || $redirect_track->status == 'redirected') 
+        {
             $transferredtoReject = true;
         }
+
     
     if($transferredtoReject){
          $redirected_rejected_track = \App\Activity::where("code", $redirect_track->code)
-            ->where("referred_to", $redirect_track->referred_to)
+            ->where("referred_from", $redirect_track->referred_from)
             ->where("created_at", ">=", $redirect_track->created_at)
             ->where("status", "rejected")
             ->exists();
@@ -354,13 +356,12 @@
             ->exists();
     }
 
+    $last_position_index = count($position[$position_count]) - 1; // Get the last index of the position array
+    $last_position = $position[$last_position_index]; // Retrieve the last position
+    $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
 
-        $last_position_index = count($position[$position_count]) - 1; // Get the last index of the position array
-        $last_position = $position[$last_position_index]; // Retrieve the last position
-        $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
-    
-        $last_position_count = count($redirected_track);
-    ?>
+    $last_position_count = count($redirected_track);
+?>
     
     <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>
     <input type="hidden" id="pass_to_vue_facility" value="{{ end($referredFromArray)  }}">
