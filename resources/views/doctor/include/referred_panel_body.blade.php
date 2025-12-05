@@ -356,6 +356,11 @@
             ->exists();
     }
 
+    $transfer_referred = false;
+    if($redirect_track->status == 'transferred' && $redirect_track->status == 'referred'){
+        $transfer_referred = true;
+    }
+
     $last_position_index = count($position[$position_count]) - 1; // Get the last index of the position array
     $last_position = $position[$last_position_index]; // Retrieve the last position
     $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
@@ -373,7 +378,7 @@
                     {{-- <div class="step-name" style="font-size: 12px; margin-bottom: 10px;">
                        
                     </div> --}}
-                     {{ ucfirst($redirect_track->status) }}
+                    {{ ucfirst($redirect_track->status) }}
                 @else
                     <div class="step-counter"><i class="fa fa-arrow-right" aria-hidden="true" style="font-size:15px;"></i></div>
                     <div class="step-name">{{ ucfirst($redirect_track->status) }}</div>
@@ -386,7 +391,16 @@
         <div class="stepper-item @if($redirected_accepted_track && (!$redirected_rejected_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track)) ) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter
                     <?php
-                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected' && !$redirected_arrived_track))
+                    if (
+                        $redirected_rejected_track && 
+                        ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') &&
+                        $redirected_track[$position_count]->status != 'transferred'
+                        // !($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track) &&
+                        // (!isset($redirected_track[$position_count]) || (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred'))
+                        // (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred')
+                        // $redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred'
+                        // !$redirected_admitted_track
+                    )
                         echo "bg-red";
                     elseif ($redirected_cancelled_track)
                         echo "bg-yellow";
@@ -394,42 +408,45 @@
                         echo "bg-orange";
                     ?>
                             " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
-
                 <?php
-                if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected' && !$redirected_arrived_track))
+                if (
+                    $redirected_rejected_track && 
+                    ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') &&
+                    $redirected_track[$position_count]->status != 'transferred'
+                )
                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                 elseif ($redirected_cancelled_track)
                     echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
-                elseif ($redirected_queued_track && !$redirected_accepted_track)
+                elseif ($redirected_queued_track && ($redirect_track->status == 'redirected' || $position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
                     echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
                 else
                     echo '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>';
                 ?>
-
-
-                {{-- {!! $redirected_rejected_track || $redirected_cancelled_track ? '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>' : 
-                       ($redirected_queued_track && !$redirected_accepted_track? '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>' : '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>')  !!} --}}
             </div>
             <div class="step-name text-center" id="rejected_name{{ $redirect_track->code.$redirect_track->id }}">
                 <?php
-                    if ($redirected_rejected_track && (!$redirected_accepted_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track) && $redirect_track->status == 'redirected' && !$redirected_arrived_track))
+                    if (
+                        $redirected_rejected_track && 
+                        ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') &&
+                        $redirected_track[$position_count]->status != 'transferred'
+                    )
                         echo 'Declined';
                     elseif ($redirected_cancelled_track)
                         echo 'Cancelled';
                     elseif ($redirected_queued_track && !$redirected_accepted_track)
-                        echo "Queued at <br><b>" . $queue_redirected . "</b>";
+                        echo "Queued at <br><b>" . $queue_redirected . "</b>";      
                     else
                         echo "Accepted";
                 ?>
             </div>
         </div>
-        <div class="stepper-item @if( ($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
+        <div class="stepper-item @if( (($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track) || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred')) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
             <!--!-Sample Only--! -->
             <div class="step-name">Departed</div>
         </div>
-        <div class="stepper-item @if($redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track ) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
-            <div class="step-counter {{ $redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track ? "bg-red" : "" }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
+        <div class="stepper-item @if($redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred')) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
+            <div class="step-counter {{ $redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
                 '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px"></i>' !!}</div>
             @if($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track)
             <div class="step-name not_arrived">Not Arrived</div>
@@ -437,12 +454,12 @@
             <div class="step-name" id="arrived_name{{ $redirect_track->code.$redirect_track->id }}">Arrived</div>
             @endif
         </div>
-        <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_rejected_track ) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
+        <div class="stepper-item @if(($redirected_admitted_track || $redirected_discharged_track) && !$redirected_rejected_track || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred')) completed @endif" id="admitted_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-bed" aria-hidden="true" style="font-size: 15px;"></i></div>
             <div class="step-name">Admitted</div>
         </div>
-    
-        <div class="stepper-item @if($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1 || ($position_count == count($redirected_track) && $redirected_admitted_track && $redirected_discharged_track) || ($redirected_transferred_track1 && $redirected_discharged_track && !$redirected_rejected_track)) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
+        <div class="stepper-item @if(($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track && !$redirected_transferred_track1 || ($position_count == count($redirected_track) && $redirected_admitted_track && $redirected_discharged_track) || ($redirected_transferred_track1 && $redirected_discharged_track && !$redirected_rejected_track)) && 
+                    !(isset($redirected_track[$position_count+1]) && $redirected_track[$position_count]->status == 'transferred') || (!isset($redirected_track[$position_count+1]) && $redirected_discharged_track && ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred'))) completed @endif" id="discharged_progress{{ $redirect_track->code.$redirect_track->id }}">
             {{--<a onclick="ReferralDischargeResult(`{{$redirect_track->code}}`,`{{$redirected_discharged_track}}`, `{{$redirected_cancelled_track}}`, `{{$redirected_rejected_track}}`, `{{$redirected_transferred_track1}}`)">
                 <div class="step-counter step-counter-fileresult"><i class="fa fa-clipboard" aria-hidden="true" style="font-size: 15px;"></i><i class="fa fa-check" style="font-size: 15px; color: blue;"></i></div>
             </a> --}}
@@ -452,7 +469,7 @@
                 data-toggle="popover"
                 data-html="true"
                 data-code="{{ $redirect_track->code }}"
-                data-discharged="{{ $redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track}}"
+                data-discharged="{{($redirected_discharged_track && !$redirected_cancelled_track && !$redirected_rejected_track) && !(isset($redirected_track[$position_count+1]) && $redirected_track[$position_count]->status == 'transferred') || (!isset($redirected_track[$position_count+1]) && $redirected_discharged_track && ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred'))}}"
                 data-transferred="{{$position_count < count($redirected_track) && $redirect_track->status == 'transferred' }}"
                 data-rejected="{{ $redirected_rejected_track }}"
                 data-redirected_redirected="{{$redirected_redirected_track}}"
@@ -782,12 +799,12 @@
         <div class="d-flex justify-content-between align-items-center">
 
             <!-- Down Referral -->
-            <button 
+            <!-- <button 
                 class="btn btn-light text-center refer-btn"
                 style="flex:1; margin-right:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
                 <i class="fa fa-ambulance" style="font-size:14px; color:#007bff;"></i>
                 <div style="font-size:11px; margin-top:3px;">Refer other <br> facility</div>
-            </button>
+            </button> -->
 
             <!-- Discharge Result -->
             <button 
