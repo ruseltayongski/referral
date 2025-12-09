@@ -709,6 +709,7 @@ class PatientCtrl extends Controller
         }
     }
 
+    //.............................................Warning Do not delete this function ...........................................................!
     // public function referPatient1(Request $req, $type)
     // {
     //     $user = Session::get('auth');

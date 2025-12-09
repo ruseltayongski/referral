@@ -1927,8 +1927,8 @@ class ApiController extends Controller
                     'username' => $username
                 );
 
-                //$url = self::fileUploadUrl().'file_upload.php';
-                $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
+                $url = self::fileUploadUrl().'file_upload.php';
+                // $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
                 $ch = curl_init($url);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

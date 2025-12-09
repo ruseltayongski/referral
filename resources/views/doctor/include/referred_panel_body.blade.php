@@ -812,22 +812,29 @@
     <div style="padding: 5px; width: 180px;">
         <div class="d-flex justify-content-between align-items-center">
 
-            <!-- Down Referral -->
             <button 
-                class="btn btn-light text-center refer-btn"
-                style="flex:1; margin-right:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                <i class="fa fa-ambulance" style="font-size:14px; color:#007bff;"></i>
-                <div style="font-size:11px; margin-top:3px;">Refer other <br> facility</div>
+                class="btn btn-sm btn-light close-popover-btn"
+                style="position:absolute; top:-6px; right:-6px; border-radius:50%; padding:2px 6px; font-size:12px; line-height:1;">
+                ×
             </button>
 
-            <!-- Discharge Result -->
-            <button 
-                class="btn btn-light text-center result-btn"
-                style="flex:1; margin-left:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
-                <i class="fa fa-clipboard" style="font-size:14px; color:#28a745;"></i>
-                <div style="font-size:11px; margin-top:3px;">Discharged <br> Instructions</div>
-            </button>
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Down Referral -->
+                <button 
+                    class="btn btn-light text-center refer-btn"
+                    style="flex:1; margin-right:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                    <i class="fa fa-ambulance" style="font-size:14px; color:#007bff;"></i>
+                    <div style="font-size:11px; margin-top:3px;">Refer other <br> facility</div>
+                </button>
 
+                <!-- Discharge Result -->
+                <button 
+                    class="btn btn-light text-center result-btn"
+                    style="flex:1; margin-left:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
+                    <i class="fa fa-clipboard" style="font-size:14px; color:#28a745;"></i>
+                    <div style="font-size:11px; margin-top:3px;">Discharged <br> Instructions</div>
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -843,55 +850,6 @@ $(document).on('click', '.refer-btn', function () {
     $('#downReferralModal').modal('show');
 });
 
-// $(function () {
-
-//     $('.refer-popover').popover({
-//         trigger: 'focus',
-//         placement: 'top',
-//         html: true,
-//         content: function () {
-
-//             let code = $(this).data('code');
-//             let status = $(this).data('status');
-//             let discharged = $(this).data('discharged');
-//             let transferred = $(this).data('transferred');
-//             let rejected = $(this).data('rejected');
-//             let cancelled = $(this).data('cancelled');
-//             let reffered_second = $(this).data('referred_track');
-//             console.log("code", code, "discharge", discharged, "transferred", transferred, "rejected", rejected, "status", status);
-//             // clone HTML   
-//             let pop = $('#referPopoverContent').clone();
-//             console.log("reffered_second", reffered_second);
-//             if(!discharged || transferred || rejected || cancelled || reffered_second){
-//                 pop.find('.refer-btn').remove();      
-//             }
-
-//             if(!discharged){
-//                 pop.find('.result-btn').remove();  
-//             }
-
-//             let hasRefer = pop.find('.refer-btn').length > 0;
-//             let hasResult = pop.find('.result-btn').length > 0;
-
-//             if(!hasRefer && !hasResult){
-//                 return "";
-//             }
-            
-//             // set dynamic data inside the "Result" button
-//             pop.find('.result-btn').attr('onclick',
-//                 `ReferralDischargeResult('${code}', '${discharged}', '${transferred}', '${rejected}')`
-//             );
-
-//             pop.find('.refer-btn')
-//             .attr('data-code', code)
-//             .attr('data-status', status);
-
-//             return pop.html();
-//         }
-//     });
-
-// });
-
 
 function refreshReferPopovers() {
     // Destroy old popovers first
@@ -901,9 +859,10 @@ function refreshReferPopovers() {
     $('.refer-popover').each(function () {
         //  console.log('Init popover for', $(this).data('code'));
         $(this).popover({
-            trigger: 'focus',
+            trigger: 'click',
             placement: 'top',
             html: true,
+            container: 'body',
             content: function () {
                 let code = $(this).data('code');
                 let status = $(this).data('status');
@@ -962,6 +921,13 @@ function refreshReferPopovers() {
         });
     });
 }
+
+$(document).on('click', '.close-popover-btn', function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    $('.refer-popover').popover('hide'); // closes all
+});
 
 
 $(document).ready(function () {
