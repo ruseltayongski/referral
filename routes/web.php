@@ -212,6 +212,9 @@ Route::post('doctor/patient/update', 'doctor\PatientCtrl@updatePatient');
 Route::post('doctor/patient/refer/walkin/{type}', 'doctor\PatientCtrl@referPatientWalkin');
 Route::post('doctor/patient/refer/{type}', 'doctor\PatientCtrl@referPatient');
 
+//.............................................Warning Do not delete this route ...........................................................!
+//Route::post('doctor/patient/refer1/{type}', 'doctor\PatientCtrl@referPatient1');
+
 Route::get('doctor/accepted', 'doctor\PatientCtrl@accepted');
 Route::post('doctor/accepted', 'doctor\PatientCtrl@searchAccepted');
 
@@ -621,6 +624,8 @@ Route::post('admin/icd/checkIfExistICD', 'admin\IcdCtrl@checkIfExistICD');
 
 Route::get('doctor/referral/edit_info/{id}/{form_type}/{referral_status}', 'doctor\ReferralCtrl@editInfo');
 Route::post('doctor/referral/edit', 'doctor\ReferralCtrl@editForm');
+// for local server file attachment
+Route::post('doctor/referral1/edit', 'doctor\ReferralCtrl@editForm1');
 
 Route::post('doctor/referral/undo_cancel', 'doctor\ReferralCtrl@undoCancel');
 Route::post('file_upload', 'ApiController@fileUpload');
@@ -726,6 +731,10 @@ Route::get('/api/video/labresults/{id}', 'ApiController@getPatientLabRequests');
 Route::match(['GET','POST'],'/revised/referral', 'doctor\NewFormCtrl@index');
 Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@redirect_referral_info')->name('redirect-referral-info');
 Route::match(['GET','POST'],'submit-referral/{type}', 'doctor\NewFormCtrl@saveReferral')->name('submit-referral');
+
+//.............................................Warning Do not delete this route ...........................................................!
+// Route::match(['GET','POST'],'submit-referral1/{type}', 'doctor\NewFormCtrl@saveReferral1')->name('submit-referral1');
+
 Route::get('/generate-pdf/{patient_id}/{track_id}/{form_type}', 'doctor\PrintNewFormCtrl@generatePdf')->name('generate-pdf');
 Route::post('/update-referral/{patient_id}/{id}/{type}/{status}', 'doctor\NewFormCtrl@updateReferral')->name('update-referral');
 Route::get('show-choose-version', 'doctor\NewFormCtrl@view_choose_versionModal')->name('show-choose-version');

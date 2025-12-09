@@ -102,6 +102,19 @@
                 ->exists();
     }
 
+    $secondrejected = null;
+
+     if (count($redirected_track) >= 2) {
+
+        $secondrejected = $redirected_track[1]; 
+        
+        if($secondrejected->status == "redirected"){
+            
+            $secondrejected = 'redirected';
+        }
+
+     }
+
     // $count_referred = $referred_track ? 0 : 0;
 
     
@@ -148,10 +161,11 @@
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
         </div>
+       
         <div class="text-center stepper-item @if($referred_accepted_track && (!$referred_rejected_track && !$referred_cancelled_track)) completed @endif" id="accepted_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter
                                         <?php
-                                        if ($referred_cancelled_track)
+                                        if ($referred_cancelled_track && $secondrejected != 'redirected')
                                             echo "bg-yellow";
                                         elseif ($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
                                             echo "bg-red";
@@ -162,7 +176,7 @@
                                         ?>
             " id="rejected_progress{{ $referred_track->code.$referred_track->id }}"><span id="queue_number{{ $referred_track->code }}">
                     <?php
-                    if ($referred_cancelled_track)
+                    if ($referred_cancelled_track && $secondrejected != 'redirected')
                         echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
                     elseif ($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
                         echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';                        
@@ -174,7 +188,7 @@
                 </span></div>
             <div class="text-center step-name" id="rejected_name{{ $referred_track->code.$referred_track->id }}">
                 <?php
-                if ($referred_cancelled_track)
+                if ($referred_cancelled_track && $secondrejected != 'redirected')
                     echo 'Cancelled';
                 elseif ($referred_rejected_track && (!$referred_accepted_track || !$referred_cancelled_track))
                     echo 'Declined';
@@ -799,12 +813,12 @@
         <div class="d-flex justify-content-between align-items-center">
 
             <!-- Down Referral -->
-            <!-- <button 
+            <button 
                 class="btn btn-light text-center refer-btn"
                 style="flex:1; margin-right:5px; padding:8px; border:1px solid #ddd; border-radius:6px;">
                 <i class="fa fa-ambulance" style="font-size:14px; color:#007bff;"></i>
                 <div style="font-size:11px; margin-top:3px;">Refer other <br> facility</div>
-            </button> -->
+            </button>
 
             <!-- Discharge Result -->
             <button 

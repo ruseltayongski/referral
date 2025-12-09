@@ -514,6 +514,7 @@ class PatientCtrl extends Controller
         $user_code = str_pad($user->facility_id, 3, 0, STR_PAD_LEFT);
         $code = date('ymd') . '-' . $user_code . '-' . date('His') . "$user->facility_id" . "$user->id";
         $unique_id = "$patient_id-$user->facility_id-" . date('ymdHis');
+
         if ($type === 'normal') {
         
             Patients::where('id', $patient_id)
@@ -707,6 +708,229 @@ class PatientCtrl extends Controller
             Session::put("refer_patient", true);
         }
     }
+
+    // public function referPatient1(Request $req, $type)
+    // {
+    //     $user = Session::get('auth');
+    //     $telemed_assigned_id = null;
+     
+    //     // Log::info("Files Received1212: ", $_FILES["file_upload"]["name"]);
+    //     // return;
+    //     if ($req->telemedicine) {
+
+    //         if($req->appointmentId){
+    //             $telemed_assigned = new TelemedAssignDoctor();
+    //             $telemed_assigned->appointment_id = $req->appointmentId;
+    //             $telemed_assigned->subopd_id = $req->configId;
+    //             $telemed_assigned->doctor_id = $user->id;
+    //             $telemed_assigned->save();
+    //             $asigned_doctorId = $configTimeSlot->id;
+    //             $telemed_assigned_id = $telemed_assigned->id;
+    //         } 
+    //     }
+
+    //     $patient_id = $req->patient_id;
+    //     $user_code = str_pad($user->facility_id, 3, 0, STR_PAD_LEFT);
+    //     $code = date('ymd') . '-' . $user_code . '-' . date('His') . "$user->facility_id" . "$user->id";
+    //     $unique_id = "$patient_id-$user->facility_id-" . date('ymdHis');
+    //     if ($type === 'normal') {
+        
+    //         Patients::where('id', $patient_id)
+    //             ->update([
+    //                 'sex' => $req->patient_sex,
+    //                 'civil_status' => $req->civil_status,
+    //                 'phic_status' => $req->phic_status,
+    //                 'phic_id' => $req->phic_id
+    //             ]);
+
+    //         $data = array(
+    //             'unique_id' => $unique_id,
+    //             'code' => $code,
+    //             'referring_facility' => $user->facility_id,
+    //             'referred_to' => $req->referred_facility,
+    //             'department_id' => $req->referred_department,
+    //             'covid_number' => $req->covid_number,
+    //             'refer_clinical_status' => $req->clinical_status,
+    //             'refer_sur_category' => $req->sur_category,
+    //             'time_referred' => date('Y-m-d H:i:s'),
+    //             'time_transferred' => '',
+    //             'patient_id' => $patient_id,
+    //             'case_summary' => $req->case_summary,
+    //             'reco_summary' => trim($req->reco_summary),
+    //             'diagnosis' => $req->diagnosis,
+    //             'referring_md' => $user->id,
+    //             'referred_md' => ($req->reffered_md ? $req->reffered_md : ($req->reffered_md_telemed ? $req->reffered_md_telemed : '')),
+    //             'reason_referral' => $req->reason_referral1,
+    //             'other_reason_referral' => $req->other_reason_referral,
+    //             'other_diagnoses' => $req->other_diagnosis,
+    //         );
+
+    //         $form = PatientForm::create($data);
+
+    //         $file_paths = "";
+    //         if ($_FILES["file_upload"]["name"]) {
+
+    //             $from_upload_server = ApiController::fileUpload2($req);
+    //             $urls = [];
+
+    //             foreach($from_upload_server as $file){
+    //                 if (isset($file['url'])) {
+
+    //                     $fullUrl = $file['url'];
+    //                     $urls[] = $fullUrl;
+    //                 }
+    //             }
+
+    //             $file_paths = implode("|", $urls);
+    //         }
+    //         $form->file_path = $file_paths;
+    //         $form->save();
+
+    //         foreach ($req->icd_ids as $i) {
+    //             $icd = new Icd();
+    //             $icd->code = $form->code;
+    //             $icd->icd_id = $i;
+    //             $icd->save();
+    //         }
+
+    //         //if($req->referred_facility == 790 && $user->id == 1687) {
+    //         if ($req->referred_facility == 790 || $req->referred_facility == 23) {
+    //             $patient = Patients::find($patient_id);
+    //             // $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname) . ' ' . strtoupper($patient->mname[0]) . '. ' . ucfirst($patient->lname) : ucfirst($patient->fname) . ' ' . ucfirst($patient->lname);
+    //             $this->referred_patient_data = array(
+    //                 "age" => (string) ParamCtrl::getAge($patient->dob),
+    //                 "chiefComplaint" => $req->case_summary,
+    //                 "department" => (string) Department::find($req->referred_department)->description,
+    //                 "patient" => ucfirst($patient->fname).' '.ucfirst($patient->mname).''.ucfirst($patient->lname),
+    //                 "sex" => (string) $patient->sex,
+    //                 "referring_hospital" => (string) Facility::find($user->facility_id)->name,
+    //                 "referred_to" => (string)$req->referred_facility,
+    //                 "date_referred" => (string) $form->created_at,
+    //                 "userid" => $user->id,
+    //                 "patient_code" => $form->code,
+    //                 "files_response" => $from_upload_server
+    //             );
+    //             ApiController::notifierPushNotification($this->referred_patient_data);
+    //         } //push notification for cebu south medical center
+
+    //         session()->forget('profileSearch.telemedicine');
+    //         self::addTracking($code, $patient_id, $user, $req, $type, $form->id,'refer', $telemed_assigned_id);
+    //     } else if ($type === 'pregnant') {
+        
+    //         $baby = array(
+    //             'fname' => ($req->baby_fname) ? $req->baby_fname : '',
+    //             'mname' => ($req->baby_mname) ? $req->baby_mname : '',
+    //             'lname' => ($req->baby_lname) ? $req->baby_lname : '',
+    //             'dob' => ($req->baby_dob) ? $req->baby_dob : '',
+    //             'civil_status' => 'Single'
+    //         );
+    //         $baby_id = self::storeBabyAsPatient($baby, $patient_id);
+
+    //         $baby2 = Baby::updateOrCreate([
+    //             'baby_id' => $baby_id,
+    //             'mother_id' => $patient_id
+    //         ], [
+    //             'weight' => ($req->baby_weight) ? $req->baby_weight : '',
+    //             'gestational_age' => ($req->baby_gestational_age) ? $req->baby_gestational_age : ''
+    //         ]);
+
+    //         $baby2->birth_date = ($req->baby_dob) ? $req->baby_dob : '';
+    //         $baby2->save();
+
+    //         $data = array(
+    //             'unique_id' => $unique_id,
+    //             'code' => $code,
+    //             'referring_facility' => ($user->facility_id) ? $user->facility_id : '',
+    //             'referred_by' => ($user->id) ? $user->id : '',
+    //             'record_no' => ($req->record_no) ? $req->record_no : '',
+    //             'referred_date' => date('Y-m-d H:i:s'),
+    //             'referred_to' => ($req->referred_facility) ? $req->referred_facility : '',
+    //             'department_id' => ($req->referred_department) ? $req->referred_department : '',
+    //             'covid_number' => $req->covid_number,
+    //             'refer_clinical_status' => $req->clinical_status,
+    //             'refer_sur_category' => $req->sur_category,
+    //             'health_worker' => ($req->health_worker) ? $req->health_worker : '',
+    //             'patient_woman_id' => $patient_id,
+    //             'woman_reason' => ($req->woman_reason) ? $req->woman_reason : '',
+    //             'woman_major_findings' => ($req->woman_major_findings) ? $req->woman_major_findings : '',
+    //             'woman_before_treatment' => ($req->woman_before_treatment) ? $req->woman_before_treatment : '',
+    //             'woman_before_given_time' => ($req->woman_before_given_time) ? $req->woman_before_given_time : '',
+    //             'woman_during_transport' => ($req->woman_during_treatment) ? $req->woman_during_treatment : '',
+    //             'woman_transport_given_time' => ($req->woman_during_given_time) ? $req->woman_during_given_time : '',
+    //             'woman_information_given' => ($req->woman_information_given) ? $req->woman_information_given : '',
+    //             'patient_baby_id' => $baby_id,
+    //             'baby_reason' => ($req->baby_reason) ? $req->baby_reason : '',
+    //             'baby_major_findings' => ($req->baby_major_findings) ? $req->baby_major_findings : '',
+    //             'baby_last_feed' => ($req->baby_last_feed) ? $req->baby_last_feed : '',
+    //             'baby_before_treatment' => ($req->baby_before_treatment) ? $req->baby_before_treatment : '',
+    //             'baby_before_given_time' => ($req->baby_before_given_time) ? $req->baby_before_given_time : '',
+    //             'baby_during_transport' => ($req->baby_during_treatment) ? $req->baby_during_treatment : '',
+    //             'baby_transport_given_time' => ($req->baby_during_given_time) ? $req->baby_during_given_time : '',
+    //             'baby_information_given' => ($req->baby_information_given) ? $req->baby_information_given : '',
+    //             'notes_diagnoses' => $req->notes_diagnosis,
+    //             'reason_referral' => $req->reason_referral1,
+    //             'other_reason_referral' => $req->other_reason_referral,
+    //             'other_diagnoses' => $req->other_diagnosis,
+    //         );
+    //         $form = PregnantForm::create($data);
+
+    //         $file_paths = "";
+
+    //         if ($_FILES["file_upload"]["name"]) {
+    //             $from_upload_server = ApiController::fileUpload2($req);
+    //             $urls = [];
+
+    //             foreach($from_upload_server as $file){
+    //                 if (isset($file['url'])) {
+
+    //                     $fullUrl = $file['url'];
+    //                     $urls[] =  $fullUrl;
+    //                 }
+    //             }
+
+    //             $file_paths = implode("|", $urls);
+    //         }
+    //         $form->file_path = $file_paths;
+    //         $form->save();
+
+    //         foreach ($req->icd_ids as $i) {
+    //             $icd = new Icd();
+    //             $icd->code = $form->code;
+    //             $icd->icd_id = $i;
+    //             $icd->save();
+    //         }
+
+    //         //if($req->referred_facility == 790 && $user->id == 1687) {
+    //         if ($req->referred_facility == 790 || $req->referred_facility == 23) {
+    //             $patient = Patients::find($patient_id);
+    //             // $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname) . ' ' . strtoupper($patient->mname[0]) . '. ' . ucfirst($patient->lname) : ucfirst($patient->fname) . ' ' . ucfirst($patient->lname);
+    //             $this->referred_patient_data = array(
+    //                 "age" =>(string) ParamCtrl::getAge($patient->dob),
+    //                 "chiefComplaint" => $req->woman_major_findings,
+    //                 "department" => (string) Department::find($req->referred_department)->description,
+    //                 "patient" => ucfirst($patient->fname).' '.ucfirst($patient->mname).''.ucfirst($patient->lname),
+    //                 "sex" => (string) $patient->sex,
+    //                 "referring_hospital" => (string) Facility::find($user->facility_id)->name,
+    //                 "referred_to" => (string)$req->referred_facility,
+    //                 "date_referred" => (string) $form->created_at,
+    //                 "userid" => $user->id,
+    //                 "patient_code" => $form->code,
+    //                 "files_response" => $from_upload_server
+    //             );
+                
+    //             ApiController::notifierPushNotification($this->referred_patient_data);
+
+    //         } //push notification for cebu south medical center
+    //         session()->forget('profileSearch.telemedicine');
+    //         self::addTracking($code, $patient_id, $user, $req, $type, $form->id,null,$telemed_assigned_id);
+    //     }
+
+    //     if ($req->referred_facility == 790 || $req->referred_facility == 23) {
+    //         return $this->referred_patient_data;
+    //     } else {
+    //         Session::put("refer_patient", true);
+    //     }
+    // }
 
     function referPatientWalkin(Request $req, $type)
     {

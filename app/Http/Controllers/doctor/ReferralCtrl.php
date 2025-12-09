@@ -407,23 +407,55 @@ class ReferralCtrl extends Controller
             ->where('icd.code',$track->code)->get();
 
         $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
-
         //        $path = self::securedFile($file_link);
         //        $file_name = basename($path);
-
+   
         $path = [];
         $file_name = [];
+        $local_base = "http://192.168.110.109:8000";
 
         if($file_link != null && $file_link != "") {
-            $explode = explode("|",$file_link);
-            foreach($explode as $link) {
-                $path_tmp = self::securedFile($link);
-                if($path_tmp != '') {
-                    array_push($path, $path_tmp);
-                    array_push($file_name, basename($path_tmp));
+
+            $explode = explode("|", $file_link);
+
+            foreach($explode as $link){
+                if(str_starts_with($link, '/storage/')) {
+
+                    $full_url = $local_base . $link;
+                    
+                    $path[] = $full_url;
+                    $file_name[] = basename($link);
+
+                }else{
+                    $path_tmp = self::securedFile($link);
+                    if($path_tmp != '') {
+                        array_push($path, $path_tmp);
+                        array_push($file_name, basename($path_tmp));
+                    }
                 }
             }
+
         }
+
+
+        // if($file_link != null && $file_link != "") {
+        //     $explode = explode("|",$file_link);
+        //     foreach($explode as $link) {
+        //         $path_tmp = self::securedFile($link);
+        //         if($path_tmp != '') {
+        //             array_push($path, $path_tmp);
+        //             array_push($file_name, basename($path_tmp));
+        //         }
+        //     }
+        // }
+
+        // if(!empty($file_link)) {
+        //     $explode = explode("|", $file_link);
+        //     foreach($explode as $link) {
+        //         $path[] = $link; // full URL
+        //         $file_name[] = basename($link); // filename only
+        //     }
+        // }
 
         $reason = ReasonForReferral::select("reason_referral.reason","reason_referral.id")
             ->join('patient_form', 'patient_form.reason_referral', 'reason_referral.id')
@@ -604,16 +636,41 @@ class ReferralCtrl extends Controller
         $path = [];
         $file_name = [];
 
+        $local_base = "http://192.168.110.109:8000";
+
         if($file_link != null && $file_link != "") {
-            $explode = explode("|",$file_link);
-            foreach($explode as $link) {
-                $path_tmp = self::securedFile($link);
-                if($path_tmp != '') {
-                    array_push($path, $path_tmp);
-                    array_push($file_name, basename($path_tmp));
+
+            $explode = explode("|", $file_link);
+
+            foreach($explode as $link){
+                if(str_starts_with($link, '/storage/')) {
+
+                    $full_url = $local_base . $link;
+                    
+                    $path[] = $full_url;
+                    $file_name[] = basename($link);
+
+                }else{
+                    $path_tmp = self::securedFile($link);
+                    if($path_tmp != '') {
+                        array_push($path, $path_tmp);
+                        array_push($file_name, basename($path_tmp));
+                    }
                 }
             }
+
         }
+
+        // if($file_link != null && $file_link != "") {
+        //     $explode = explode("|",$file_link);
+        //     foreach($explode as $link) {
+        //         $path_tmp = self::securedFile($link);
+        //         if($path_tmp != '') {
+        //             array_push($path, $path_tmp);
+        //             array_push($file_name, basename($path_tmp));
+        //         }
+        //     }
+        // }
 
         $reason = ReasonForReferral::select("reason_referral.id", "reason_referral.reason")
             ->join('pregnant_form', 'pregnant_form.reason_referral', 'reason_referral.id')
@@ -2440,6 +2497,7 @@ class ReferralCtrl extends Controller
         }
     }
 
+    //for edge cloud filet attachment  warning... don't delete 
     public static function editForm(Request $req)
     {
         $user = Session::get('auth');
@@ -2664,7 +2722,7 @@ class ReferralCtrl extends Controller
         }
         unset($data_update['file_cleared']);
 
-//        echo $data->file_path . "<br>";
+        //echo $data->file_path . "<br>";
 
         unset($data_update['file_upload']);
         unset($data_update['username']);
@@ -2694,7 +2752,376 @@ class ReferralCtrl extends Controller
         }
 
         if($old_facility != $req->referred_to) {
-//            Seen::where('tracking_id',$tracking->id)->delete();
+            //Seen::where('tracking_id',$tracking->id)->delete();
+
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $old_facility,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => "Patient's referral form was updated and was redirected to another facility. ".$updated_remarks,
+                'status' => "rejected"
+            );
+            Activity::create($data2);
+
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $req->referred_to,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => "Patient's referral form was updated and has been redirected to this facility. ".$updated_remarks,
+                'status' => "redirected"
+            );
+            Activity::create($data2);
+
+            $new_data = array(
+                'date_referred' => $date,
+                'date_arrived' => '',
+                'date_seen' => '',
+                // 'action_md' => $user->id,
+                'action_md' => $req->referred_md,
+                'department_id' => $req->department_id,
+                'referred_to' => $req->referred_to,
+                'referring_md' => $user->id,
+                'status' => 'redirected'
+            );
+            $tracking->update($new_data);
+        } else {
+            $data2 = array(
+                'code' => $track,
+                'patient_id' => $tracking->patient_id,
+                'date_referred' => $date,
+                'referred_from' => $tracking->referred_from,
+                'referred_to' => $req->referred_to,
+                'department_id' => $req->department_id,
+                'referring_md' => $user->id,
+                'action_md' => $user->id,
+                'remarks' => $updated_remarks,
+                'status' => "form_updated"
+            );
+            Activity::create($data2);
+
+            $new_data = array(
+                'department_id' => $req->department_id,
+            );
+            $tracking->update($new_data);
+        }
+        unset($data_update['old_facility']);
+
+        $data_update["department_id"] = $req->department_id;
+        $data->update($data_update);
+        Session::put('referral_update_save',true);
+        Session::put('update_message','Successfully updated referral form!');
+
+        $patient = Patients::find($tracking->patient_id);
+        $date = date('Y-m-d H:i:s');
+        $count_seen = Seen::where('tracking_id',$tracking->id)->count();
+        $count_reco = Feedback::where("code",$track)->count();
+        $count_activity = Activity::where("code",$track)
+            ->where(function($query){
+                $query->where("status","redirected");
+            })
+            ->groupBy("code")
+            ->count();
+        $latest_activity = Activity::where("code",$track)->orderBy("id","desc")->first();
+        $tracking = Tracking::where('id', $id)->first();
+        $redirect_track = asset("doctor/referred?referredCode=").$track;
+
+        $update = [
+            "patient_code" => $track,
+            "patient_name" => ucfirst($patient->fname).' '.$patient->mname.' '.ucfirst($patient->lname),
+            "activity_id" => $latest_activity->id,
+            "referring_md" => ucfirst($user->fname).' '.ucfirst($user->lname),
+            "referring_name" => Facility::find($user->facility_id)->name,
+            "update_date" => date('M d, Y h:i A',strtotime($date)),
+            "referred_to" => $latest_activity->referred_to,
+            "referred_name" => Facility::find($latest_activity->referred_to)->name,
+            "referred_department" => Department::where('id',$tracking->department_id)->first()->description,
+            "referred_from" => $user->facility_id,
+            "form_type" => $tracking->type,
+            "tracking_id" => $tracking->id,
+            "patient_sex" => $patient->sex,
+            "age" => ParamCtrl::getAge($patient->dob),
+            "status" => $tracking->status,
+            "count_activity" => $count_activity,
+            "count_seen" => $count_seen,
+            "count_reco" => $count_reco,
+            "old_facility" => $old_facility,
+            "faci_changed" => ($old_facility == $latest_activity->referred_to) ? false : true,
+            "redirect_track" => $redirect_track,
+            "notif_type" => "update form"
+        ];
+
+        broadcast(new SocketReferralUpdate($update));
+        return redirect()->back();
+    }
+    
+    // For local server file attachment warning dont delete...
+    public static function editForm1(Request $req)
+    {
+        $user = Session::get('auth');
+        $id = $req->id;
+        $old_facility = (int) $req->old_facility;
+
+        $tracking = Tracking::where('id', $id)->first();
+
+        if($tracking->status == 'rejected') {
+            Session::put('ignore_edit',true);
+            return redirect()->back();
+        }
+
+        $track = $tracking->code;
+
+        $updated = '';
+        $date = date('Y-m-d H:i:s');
+
+        $form_type = $req->form_type;
+        $dob = date('Y-m-d h:i:s', strtotime($req->baby_dob));
+        $data = '';
+
+        $data_update = $req->all();
+
+        /* FACILITY AND DEPARTMENT */
+        if($old_facility != $req->referred_to)
+            $updated .= "Referred facility, Department";
+
+        if($form_type === 'normal') {
+            $data = PatientForm::where('code', $track)->first();
+
+            /* DIAGNOSIS NOTES */
+            if(($data->diagnosis !== $req->diagnosis) || $req->notes_diag_cleared)
+                $updated .= ", Diagnosis Notes";
+
+            if($req->notes_diag_cleared)
+                $data->update(['diagnosis' => NULL]);
+            unset($data_update['notes_diag_cleared']);
+
+            /* TIME OF REFERRAL WILL CHANGE IF FACILITY IS UPDATED/CHANGED */
+            if($old_facility != $req->referred_to)
+                $data->update(['time_referred' => date('Y-m-d H:i:s')]);
+        }
+        else if($form_type === 'pregnant') {
+            $data = PregnantForm::where('code', $track)->first();
+            $baby_id = $req->baby_id;
+            $match = Patients::where('id', $baby_id)->first();
+            $tracking->update(['action_md' => $req->referred_md]);
+            if($old_facility != $req->referred_to)
+                $data->update(['referred_date' => date('Y-m-d H:i:s')]);
+
+            $baby = array(
+                "fname" => $req->baby_fname,
+                "mname" => $req->baby_mname,
+                "lname" => $req->baby_lname,
+                "dob" => $dob
+            );
+            if(isset($match)) {
+                $match->update($baby);
+            } else {
+                $baby_id = PatientCtrl::storeBabyAsPatient($baby,$req->mother_id);
+            }
+
+            $match = Baby::where("baby_id", $baby_id)->first();
+
+            if(isset($match)) {
+                if((isset($match->weight) && $match->weight != $req->baby_weight) || (isset($match->gestational_age) && $match->gestational_age != $req->baby_gestational_age) || (isset($match->birth_date) && $match->birth_date != $dob))
+                    $updated .= ", Baby's Information";
+                $match->weight = ($req->baby_weight) ? $req->baby_weight : '';
+                $match->gestational_age = ($req->baby_gestational_age) ? $req->baby_gestational_age : '';
+                $match->birth_date = $dob;
+                $match->save();
+            } else {
+                $updated .= ", Baby's Information";
+                $b = new Baby();
+                $b->baby_id = $baby_id;
+                $b->mother_id = $req->mother_id;
+                $b->weight = ($req->baby_weight) ? $req->baby_weight : '';
+                $b->gestational_age = ($req->baby_gestational_age) ? $req->baby_gestational_age : '';
+                $b->birth_date = $dob;
+                $b->save();
+            }
+            unset($data_update['referred_md']);
+            unset($data_update['baby_fname']);
+            unset($data_update['baby_mname']);
+            unset($data_update['baby_lname']);
+            unset($data_update['baby_dob']);
+            unset($data_update['baby_weight']);
+            unset($data_update['baby_gestational_age']);
+            unset($data_update['baby_id']);
+            unset($data_update['mother_id']);
+
+            if($req->notes_diag_cleared == "true")
+                $data->update(['notes_diagnoses' => NULL]);
+
+            unset($data_update['notes_diag_cleared']);
+
+            $woman_before_given_time = date('Y-m-d h:i:s', strtotime($req->woman_before_given_time));
+            $woman_transport_given_time = date('Y-m-d h:i:s', strtotime($req->woman_transport_given_time));
+            $baby_last_feed = date('Y-m-d h:i:s', strtotime($req->baby_last_feed));
+            $baby_before_given_time = date('Y-m-d h:i:s', strtotime($req->baby_before_given_time));
+            $baby_transport_given_time = date('Y-m-d h:i:s', strtotime($req->baby_transport_given_time));
+            $baby_reason = ($req->baby_reason == null) ? 'None' : $req->baby_reason;
+            $baby_information_given = ($req->baby_information_given == null) ? '' : $req->baby_information_given;
+
+            if(isset($data->woman_reaso) && $data->woman_reason != $req->woman_reason)
+                $updated .= ", Mother's main reason for referral";
+            if(isset($data->woman_major_findings) && $data->woman_major_findings != $req->woman_major_findings)
+                $updated .= ", Mother's major findings";
+            if(isset($data->woman_before_treatment) && $data->woman_before_treatment != $req->woman_before_treatment)
+                $updated .= ", Mother's treatment given before referral";
+            if($data->woman_before_given_time != '0000-00-00 00:00:00' && $data->woman_before_given_time != $woman_before_given_time)
+                $updated .= ", Mother's treament time before referral";
+            if(isset($data->woman_during_transport) && $data->woman_during_transport != $req->woman_during_transport)
+                $updated .= ", Mother's treatment given during transport";
+            if($data->woman_transport_given_time != '0000-00-00 00:00:00' && $data->woman_transport_given_time != $woman_transport_given_time)
+                $updated .= ", Mother's treatment time during transport";
+            if(($data->notes_diagnoses != $req->notes_diagnoses) || $req->notes_diag_cleared)
+                $updated .= ", Diagnosis Notes";
+            if(isset($data->baby_reason) && $data->baby_reason != $baby_reason)
+                $updated .= ", Baby's main reason for referral";
+            if(isset($data->baby_major_findings) && $data->baby_major_findings != $req->baby_major_findings)
+                $updated .= ", Baby's major findings";
+            if($data->baby_last_feed != '0000-00-00 00:00:00' && $data->baby_last_feed != $baby_last_feed)
+                $updated .= ", Baby's last feeding time";
+            if(isset($data->baby_before_treatment) && $data->baby_before_treatment != $req->baby_before_treatment)
+                $updated .= ", Baby's treatment given before referral";
+            if($data->baby_before_given_time != '0000-00-00 00:00:00' && $data->baby_before_given_time != $baby_before_given_time)
+                $updated .= ", Baby's treatment time before referral";
+            if(isset($data->baby_during_transport) && $data->baby_during_transport != $req->baby_during_transport)
+                $updated .= ", Baby's treatment given during transport";
+            if($data->baby_transport_given_time != '0000-00-00 00:00:00' && $data->baby_transport_given_time != $baby_transport_given_time)
+                $updated .= ", Baby's treatment time during transport";
+            if((isset($data->woman_information_given) && $data->woman_information_given != $req->woman_information_given) || (isset($data->baby_information_given) && $data->baby_information_given !== $baby_information_given))
+                $updated .= ", Information given about the reason of referral";
+
+            $data_update['patient_baby_id'] = $baby_id;
+            $data_update['woman_before_given_time'] = ($req->woman_before_given_time) ? $woman_before_given_time : '';
+            $data_update['woman_transport_given_time'] = ($req->woman_transport_given_time) ? $woman_transport_given_time : '';
+            $data_update['baby_last_feed'] = ($req->baby_last_feed) ? $baby_last_feed : '';
+            $data_update['baby_before_given_time'] = ($req->baby_before_given_time) ? $baby_before_given_time : '';
+            $data_update['baby_transport_given_time'] = ($req->baby_transport_given_time) ? $baby_transport_given_time : '';
+        }
+
+        /* COVID NUMBER, CLINICAL STATUS AND SURVEILLANCE CATEGORY */
+        if($data->covid_number !== $req->covid_number)
+            $updated .= ", Covid Number";
+
+        if($data->refer_clinical_status !== $req->refer_clinical_status)
+            $updated .= ", Covid Clinical Status";
+
+        if($data->refer_sur_category !== $req->refer_sur_category)
+            $updated .= ", Covid Surveillance Category";
+
+        /* CASE SUMMARY AND SUMMARY OF RECO */
+        if($data->case_summary !== $req->case_summary)
+            $updated .= ", Case summary";
+
+        if($data->reco_summary !== $req->reco_summary)
+            $updated .= ", Summary of ReCo";
+
+
+        /* DIAGNOSIS THAT IS NOT AN ICD CODE */
+        if(($data->other_diagnoses !== $req->other_diagnoses) || $req->other_diag_cleared)
+            $updated .= ", Diagnosis";
+
+        if($req->other_diag_cleared == "true") {
+            $data->update(['other_diagnoses' => NULL]);
+        }
+        unset($data_update['other_diag_cleared']);
+
+
+        /* ICD DIAGNOSIS */
+        if($req->icd_cleared === 'true')
+            Icd::where('code', $track)->delete();
+        unset($data_update['icd_cleared']);
+
+        $updated_icd = false;
+        foreach($req->icd_ids as $i) {
+            $value = Icd::where('code', $track)->where('icd_id', $i)->first();
+            if(!isset($value)) {
+                $icd = new Icd();
+                $icd->code = $track;
+                $icd->icd_id = $i;
+                $icd->save();
+                $updated_icd = true;
+            }
+        }
+        unset($data_update['icd_ids']);
+        if($updated_icd) {
+            $updated .= ", ICD-10 Diagnosis";
+        }
+
+        /* FILE ATTACHMENT */
+        if($req->file_cleared == "true") {
+            $data->update([
+                'file_path' => ""
+            ]);
+        }
+
+        $file_paths = $data->file_path;
+        $old_file = $file_paths;
+        
+        if($_FILES["file_upload"]["name"]) {
+            $from_upload_server = ApiController::fileUpload2($req);
+            $urls = [];
+
+            foreach($from_upload_server as $file){
+                if (isset($file['url'])) {
+
+                    $fullUrl = $file['url'];
+                    $urls[] = $fullUrl;
+                }
+            }
+
+            $file_paths = implode("|", $urls);
+        }
+        $data->update([
+            'file_path' => $file_paths
+        ]);
+
+        if($req->file_cleared == "true" || $old_file != $data->file_path) {
+            $updated .= ", File Attachment";
+        }
+        unset($data_update['file_cleared']);
+
+        //echo $data->file_path . "<br>";
+
+        unset($data_update['file_upload']);
+        unset($data_update['username']);
+        unset($data_update['id']);
+        unset($data_update['referral_status']);
+        unset($data_update['form_type']);
+
+
+        /* REASON FOR REFERRAL */
+        $reason_referral = (int) $req->reason_referral;
+        if(($data->reason_referral !== $reason_referral) || ($data->other_reason_referral !== $req->other_reason_referral))
+            $updated .= ", Reason for Referral";
+        $data_update['other_reason_referral'] = isset($req->other_reason_referral) ? $req->other_reason_referral : null;
+
+        if($updated[0] === ',')
+            $updated = substr($updated, 2, strlen($updated));
+
+        $updated_remarks = "";
+        if($updated !== "") {
+            $updated_remarks .= "Updated fields: " . $updated;
+        }
+
+        $latest_activity = Activity::select('status')->where('code',$tracking->code)->orderBy('id','desc')->first()->status;
+        if($latest_activity == 'accepted') {
+            Session::put('already_accepted',true);
+            return redirect()->back();
+        }
+
+        if($old_facility != $req->referred_to) {
+        //Seen::where('tracking_id',$tracking->id)->delete();
 
             $data2 = array(
                 'code' => $track,

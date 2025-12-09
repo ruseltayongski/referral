@@ -194,7 +194,7 @@
                 <form action="{{url('submit-referral/normal')}}" method="POST" class="form-submit revised_normal_form">
                     <div class="jim-content">
                         @include('include.header_form')
-
+            
                         <div class="form-group-sm form-inline">
                             {{ csrf_field() }}
                             <input type="hidden" name="telemedicine" class="telemedicine" value="">

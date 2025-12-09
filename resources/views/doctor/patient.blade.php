@@ -1239,6 +1239,78 @@ $counter = 0;
         });
     });
 
+    //.............................................Warning Do not delete this submission ...........................................................!
+    // $('.normal_form').on('submit', function(e) {
+    //     e.preventDefault();
+    //     $('.loading').show();
+    //     $('.btn-submit').attr('disabled', true);
+     
+    //     // const formData = new FormData(this);
+
+    //     // const activFiles =  fileInfoArray.filter(file => file && !file.removed);
+
+    //     // formData.delete('file_upload[]');
+
+    //     // activFiles.forEach(fileInfo => {
+    //     //     if(fileInfo.file){
+    //     //         formData.append('file_upload[]', fileInfo.file);
+    //     //     }
+    //     // });
+    //     // console.log("remaining file to upload", formData);
+    //     form_type = '#normalFormModal';
+    //     department_id = $('.select_department_normal').val();
+    //     department_name = $('.select_department_normal option:selected').html();
+    //     telemed = $('.telemedicine').val();
+
+    //     $(this).ajaxSubmit({
+    //         url: "{{ url('doctor/patient/refer1/normal') }}",
+    //         type: 'POST',
+    //         success: function(data) {
+    //             console.log(data);
+                
+    //             if (typeof data === "string" && data.trim() === 'consultation_rejected'){
+    //                 $('.loading').hide();
+    //                 $('#pregnantModal').modal('hide');
+    //                 $('#normalFormModal').modal('hide');
+    //                 Lobibox.alert("error", {
+    //                     msg: "This appointment schedule is not available because it is fully booked. Please select another schedule from the calendar."
+    //                 });
+    //                 return;
+    //             }
+    //             //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+    //             if (data.referred_to == 790 || data.referred_to == 23) {
+    //                 var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+    //                 data.age = parseInt(data.age);
+    //                 sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+    //                 $('.loading').hide();
+    //                 $('#pregnantModal').modal('hide');
+    //                 $('#normalFormModal').modal('hide');
+    //                 $('.btn-submit').attr('disabled', false);
+    //                 Lobibox.alert("success", {
+    //                     msg: "Successfully referred the patient!"
+    //                 });
+    //             } //push notification for CCMD
+    //             else {
+    //                 $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+    //             }
+    //         }
+    //         /*,
+    //         error: function(XMLHttpRequest, textStatus, errorThrown) {
+    //             console.log(XMLHttpRequest);
+    //             console.log(textStatus);
+    //             console.log(errorThrown);
+    //             $('.loading').hide();
+    //             $('#pregnantModal').modal('hide');
+    //             $('#normalFormModal').modal('hide');
+    //             $('.btn-submit').attr('disabled',false);
+    //             Lobibox.notify('error', {
+    //                 title: "Error",
+    //                 msg: "Status: " + textStatus+" Error: " + errorThrown
+    //             });
+    //         }*/
+    //     });
+    // });
+
     $('.normal_form_walkin').on('submit',  function(e)  {
         e.preventDefault();
         $('.loading').show();
@@ -1307,6 +1379,52 @@ $counter = 0;
             
         });
 
+        //.............................................Warning Do not delete this submission ...........................................................!
+        // $('.revised_normal_form').on('submit',function(e){
+        //     e.preventDefault();
+        //     $('.loading').show();
+        //     $('.btn-submit').attr('disabled',true);
+        //     form_type = '#revisednormalFormModal';
+        //     telemed = $('.telemedicine').val();
+        //     department_id = $('.select_department_normal').val();
+        //     department_name = $('.select_department_normal option:selected').html();
+        //     $(this).ajaxSubmit({
+        //         url: "{{ url('submit-referral1/normal') }}",
+        //         type: 'POST',
+        //         success: function(data) {
+        //             console.log(data);
+        //             if (typeof data === "string" && data.trim() === 'consultation_rejected') {
+        //                 $('.loading').hide();
+        //                 $('#revisedpregnantModal').modal('hide');
+        //                 $('#revisednormalFormModal').modal('hide');
+        //                 Lobibox.alert("error",
+        //                 {
+        //                     msg: "This appoinment schedule is not available, please select other schedule in the calendar."
+        //                 });
+        //                 return;
+        //             }
+        //             //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+        //             if(data.referred_to == 790 || data.referred_to == 23) {
+        //                 var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
+        //                 data.age = parseInt(data.age);
+        //                 sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+        //                 $('.loading').hide();
+        //                 $('#revisedpregnantModal').modal('hide');
+        //                 $('#revisednormalFormModal').modal('hide');
+        //                 $('.btn-submit').attr('disabled',false);
+        //                 Lobibox.alert("success",
+        //                     {
+        //                         msg: "Successfully referred the patient!"
+        //                     });
+        //             } //push notification for CCMD
+        //             else {
+        //                 // $(location).attr('href', "{{ asset('doctor/referred') }}");
+        //                  $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+        //             }
+        //         }
+        //         });
+        // });
+
         $('.revised_pregnant_form').on('submit', function(e){
             e.preventDefault();
             $('.loading').show();
@@ -1350,6 +1468,51 @@ $counter = 0;
                     }
                 });
         });
+
+        //.............................................Warning Do not delete this submission ...........................................................!
+        //  $('.revised_pregnant_form').on('submit', function(e){
+        //     e.preventDefault();
+        //     $('.loading').show();
+        //     form_type = '#revisedpregnantFormModal';
+        //     sex = 'Female';
+        //     telemed = $('.telemedicine').val();
+        //     console.log("revised Telemed", telemed);
+        //     reason = $('.woman_information_given').val();
+        //     department_id = $('.select_department_pregnant').val();
+        //     department_name = $('.select_department_pregnant :selected').text();
+        //     $(this).ajaxSubmit({
+        //             url: "{{ url('submit-referral1/pregnant') }}",
+        //             type: 'POST',
+        //             success: function(data){
+        //                 console.log("patient", data);
+        //                 if(data.referred_to == 790 || data.referred_to == 23) {
+        //                 data.age = parseInt(data.age);
+        //                 var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+        //                 sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+        //                 $('.loading').hide();
+        //                 $('#pregnantModal').modal('hide');
+        //                 $('#revisedpregnantFormModal').modal('hide');
+        //                 $('.btn-submit').attr('disabled',false);
+        //                 Lobibox.alert("success",
+        //                     {
+        //                         msg: "Successfully referred the patient!"
+        //                     });
+        //             } else {
+        //                 // $('.loading').hide(); // Hide loading animation on success
+        //                 setTimeout(function(){
+        //                     // $(location).attr('href', "{{ asset('doctor/referred') }}");
+        //                      $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+        //                 }, 500);
+        //             }
+        //             },
+        //             error: function(xhr, status, error) {
+        //                 console.error("Error: ", error);
+        //                 console.error("Response: ", xhr.responseText);
+        //                 $('#serverModal').modal();
+        //                 $('.loading').hide(); // Hide loading animation on error
+        //             }
+        //         });
+        // });
 
         $('.choose_version').on('submit', function(e){
             e.preventDefault();
@@ -1427,6 +1590,52 @@ $counter = 0;
         });
 
     });
+
+ //.............................................Warning Do not delete this submission ...........................................................!
+    // $('.pregnant_form').on('submit', function(e) {
+    //     e.preventDefault();
+    //     $('.loading').show();
+    //     form_type = '#pregnantFormModal';
+    //     sex = 'Female';
+    //     reason = $('.woman_information_given').val();
+    //     department_id = $('.select_department_pregnant').val();
+    //     department_name = $('.select_department_pregnant :selected').text();
+    //     telemed = $('.telemedicine').val();
+    //     $(this).ajaxSubmit({
+    //         url: "{{ url('doctor/patient/refer1/pregnant') }}",
+    //         type: 'POST',
+    //         success: function(data) {
+    //             console.log("patient", data);
+    //             //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+    //             if (data.referred_to == 790 || data.referred_to == 23) {
+    //                 data.age = parseInt(data.age);
+    //                 var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+    //                 sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+    //                 $('.loading').hide();
+    //                 $('#pregnantModal').modal('hide');
+    //                 $('#pregnantFormModal').modal('hide');
+    //                 $('.btn-submit').attr('disabled', false);
+    //                 Lobibox.alert("success", {
+    //                     msg: "Successfully referred the patient!"
+    //                 });
+    //             } else {
+    //                 $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+    //             }
+    //         }
+    //         /*,
+    //                     error: function(XMLHttpRequest, textStatus, errorThrown){
+    //                         $('.loading').hide();
+    //                         $('#pregnantModal').modal('hide');
+    //                         $('#pregnantFormModal').modal('hide');
+    //                         $('.btn-submit').attr('disabled',false);
+    //                         Lobibox.notify('error', {
+    //                             title: "Error",
+    //                             msg: "Status: " + textStatus+" Error: " + errorThrown
+    //                         });
+    //                     }*/
+    //     });
+
+    // });
 
     $('.pregnant_form_walkin').on('submit', function(e) {
         e.preventDefault();

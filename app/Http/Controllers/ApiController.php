@@ -1914,99 +1914,6 @@ class ApiController extends Controller
         return 'http://180.232.110.32/';
     }
 
-    // public static function fileUploadManual($tempPath, $type, $fileName, $username)
-    // {
-    //     $data = array(
-    //         'file_upload' => curl_file_create($tempPath, $type, $fileName),
-    //         'username'    => $username,
-    //     );
-
-    //     $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
-
-    //     $ch = curl_init($url);
-    //     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
-    //     curl_setopt($ch, CURLOPT_POST, 1);
-    //     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    //     curl_setopt($ch, CURLOPT_VERBOSE, true);
-    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    //     curl_exec($ch);
-
-    //     if (curl_errno($ch)) {
-    //         throw new \Exception(curl_error($ch));
-    //     }
-
-    //     curl_close($ch);
-    // }
-
-    // public static function fileUploadManual($file, $username)
-    // {
-    //     $originalName = $file->getClientOriginalName();
-    //     $mimeType = $file->getMimeType();
-    //     $tempName = uniqid() . '_' . $originalName;
-
-    //     // Save the uploaded file to a temporary path (manually)
-    //     $tempPath = storage_path('app/temp/' . $tempName);
-    //     $file->move(storage_path('app/temp'), $tempName);
-
-    //     // Recreate a CURLFile using the new path
-    //     $data = array(
-    //         'file_upload' => curl_file_create($tempPath, $mimeType, $originalName),
-    //         'username'    => $username,
-    //     );
-
-    //     $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
-
-    //     $ch = curl_init($url);
-    //     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-    //     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    //     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: multipart/form-data']);
-    //     curl_setopt($ch, CURLOPT_POST, 1);
-    //     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    //     curl_exec($ch);
-
-    //     if (curl_errno($ch)) {
-    //         throw new \Exception(curl_error($ch));
-    //     }
-
-    //     curl_close($ch);
-
-    //     // Clean up temp file
-    //     if (file_exists($tempPath)) {
-    //         unlink($tempPath);
-    //     }
-    // }
-
-    public static function fileUploadManual($file, $username){
-
-        foreach ($files as $file) {
-            if ($file->isValid()) {
-                $username = $user->username;
-
-                // Generate a unique name for storing
-                $originalName = $file->getClientOriginalName();
-                $extension = $file->getClientOriginalExtension();
-                $uniqueName = uniqid() . '_' . time() . '.' . $extension;
-
-                // Create directory path
-                $folderPath = storage_path("app/public/uploads/{$username}");
-                if (!file_exists($folderPath)) {
-                    mkdir($folderPath, 0755, true);
-                }
-
-                // Move file and track the path
-                $file->move($folderPath, $uniqueName);
-
-                // Store relative URL for file reference (e.g., for browser access or future download)
-                $relativePath = "storage/uploads/{$username}/{$uniqueName}";
-                $file_paths[] = $relativePath;
-            }
-        }
-
-
-    }
-
     public static function fileUpload(Request $request) {
         $username = Session::get('auth')->username;
         for($i = 0; $i < count(array_filter($_FILES["file_upload"]["tmp_name"])); $i++) {
@@ -2036,6 +1943,45 @@ class ApiController extends Controller
                 curl_close($ch);
             }
         }
+    }
+
+    public static function fileUploadUrl2(){
+        return 'http://192.168.110.109:8000/';
+    }
+
+    public static function fileUpload2(Request $request) {
+        $username = Session::get('auth')->username;
+        for($i = 0; $i < count(array_filter($_FILES["file_upload"]["tmp_name"])); $i++) {
+            $filePath = $_FILES['file_upload']['tmp_name'][$i];
+            if(!empty($filePath) && isset($filePath)) {
+                $type=$_FILES['file_upload']['type'][$i];
+                $fileName = $_FILES['file_upload']['name'][$i];
+
+                $data = array(
+                    'file_upload' => curl_file_create($filePath, $type, $fileName),
+                    'username' => $username
+                );
+
+                //$url = self::fileUploadUrl().'file_upload.php';
+                $url = 'http://192.168.110.109:8000/api/upload-file';
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                $response = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    $results[] = ['error' => curl_error($ch)];
+                } else {
+                    $results[] = json_decode($response, true);
+                }
+                curl_close($ch);
+            }
+        }
+
+        return $results;
     }
 
     public function apiReferPatient(Request $req)

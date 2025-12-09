@@ -1137,7 +1137,6 @@ class NewFormCtrl extends Controller
 
     public function saveReferral(Request $request, $type)
     {
-  
         $user = Session::get('auth');
         if($request->telemedicine) {
             $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id',$request->appointmentId)->where('doctor_id',$request->doctorId)->first();
@@ -1346,6 +1345,223 @@ class NewFormCtrl extends Controller
             Session::put("refer_patient",true);
         }
     }
+    //.............................................Warning Do not delete this function ...........................................................!
+    // public function saveReferral1(Request $request, $type)
+    // {
+    //     dd($request->all());
+    //     $user = Session::get('auth');
+    //     if($request->telemedicine) {
+    //         $telemedAssignDoctor = TelemedAssignDoctor::where('appointment_id',$request->appointmentId)->where('doctor_id',$request->doctorId)->first();
+    //         if($telemedAssignDoctor->appointment_by) {
+    //             return 'consultation_rejected';
+    //         }
+    //         $telemedAssignDoctor->appointment_by = $user->id;
+    //         $telemedAssignDoctor->save();
+    //     }
+
+    //     $patient_id = $request->patient_id;
+    //     $user_code = str_pad($user->facility_id,3,0,STR_PAD_LEFT);
+    //     $code = date('ymd').'-'.$user_code.'-'.date('His')."$user->facility_id"."$user->id";
+    //     $unique_id = "$patient_id-$user->facility_id-".date('ymdHis');
+
+    //     if ($type == "normal"){
+         
+    //         Patients::where('id',$patient_id)
+    //         ->update([
+    //             'sex' => $request->patient_sex,
+    //             'civil_status' => $request->civil_status,
+    //             'phic_status' => $request->phic_status,
+    //             'phic_id' => $request->phic_id
+    //         ]);
+
+    //         $data = array(
+    //             'unique_id' => $unique_id,
+    //             'code' => $code,
+    //             'referring_facility' => $user->facility_id,
+    //             'referred_to' => $request->referred_facility,
+    //             'department_id' => $request->referred_department,
+    //             'covid_number' => $request->covid_number,
+    //             'refer_clinical_status' => $request->clinical_status,
+    //             'refer_sur_category' => $request->sur_category,
+    //             'time_referred' => date('Y-m-d H:i:s'),
+    //             'time_transferred' => '',
+    //             'patient_id' => $patient_id,
+    //             'case_summary' => $request->case_summary,
+    //             'reco_summary' => $request->reco_summary,
+    //             'diagnosis' => $request->diagnosis,
+    //             'referring_md' => $user->id,
+    //             'referred_md' => ($request->reffered_md) ? $request->reffered_md: 0,
+    //             'reason_referral' => $request->reason_referral1,
+    //             'other_reason_referral' => $request->other_reason_referral,
+    //             'other_diagnoses' => $request->other_diagnosis,
+    //         );
+
+    //         $form = PatientForm::updateOrCreate( ['unique_id' => $unique_id],$data);
+        
+    //         $file_paths = "";
+    //         if($_FILES["file_upload"]["name"]) {
+    //             $from_upload_server = ApiController::fileUpload2($request);
+    //             $urls = [];
+
+    //             foreach($from_upload_server as $file){
+    //                 if (isset($file['url'])) {
+
+    //                     $fullUrl = $file['url'];
+    //                     $urls[] = $fullUrl;
+    //                 }
+    //             }
+
+    //             $file_paths = implode("|", $urls);
+    //         }
+           
+    //         $form->file_path = $file_paths;
+    //         $form->save();
+
+    //         foreach($request->icd_ids as $i) {
+    //             $icd = new Icd();
+    //             $icd->code = $form->code;
+    //             $icd->icd_id = $i;
+    //             $icd->save();
+    //         }
+
+    //         //if($req->referred_facility == 790 && $user->id == 1687) {
+    //         if($request->referred_facility == 790 || $request->referred_facility == 23) {
+    //             $patient = Patients::find($patient_id);
+    //             $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
+    //             $this->referred_patient_data = array(
+    //                 "age" => (int)ParamCtrl::getAge($patient->dob),
+    //                 "chiefComplaint" => $request->case_summary,
+    //                 "department" => Department::find($request->referred_department)->description,
+    //                 "patient" => $patient_name,
+    //                 "sex" => $patient->sex,
+    //                 "referring_hospital" => Facility::find($user->facility_id)->name,
+    //                 "referred_to" => $request->referred_facility,
+    //                 "date_referred" => $form->created_at,
+    //                 "userid" => $user->id,
+    //                 "patient_code" => $form->code,
+    //                 "files_response" => $from_upload_server
+    //             );
+    //             ApiController::notifierPushNotification($this->referred_patient_data);
+    //         }//push notification for cebu south medical center
+    //         self::newFormSave($request);
+    //         self::addTracking($code,$patient_id,$user,$request,$type,$form->id,'refer');
+         
+    //     }else if ($type == "pregnant") {
+    //         $baby = array(
+    //             'fname' => ($request->baby_fname) ? $request->baby_fname: '',
+    //             'mname' => ($request->baby_mname) ? $request->baby_mname: '',
+    //             'lname' => ($request->baby_lname) ? $request->baby_lname: '',
+    //             'dob' => ($request->baby_dob) ? $request->baby_dob: '',
+    //             'civil_status' => 'Single'
+    //         );
+    //         $baby_id = self::storeBabyAsPatient($baby,$patient_id);
+
+    //         $baby2 = Baby::updateOrCreate([
+    //             'baby_id' => $baby_id,
+    //             'mother_id' => $patient_id
+    //         ],[
+    //             'weight' => ($request->baby_weight) ? $request->baby_weight:'',
+    //             'gestational_age' => ($request->baby_gestational_age) ? $request->baby_gestational_age: ''
+    //         ]);
+
+    //         $baby2->birth_date = ($request->baby_dob) ? $request->baby_dob : '';
+    //         $baby2->save();
+           
+
+    //         $data = array(
+    //             'unique_id' => $unique_id,
+    //             'code' => $code,
+    //             'referring_facility' => ($user->facility_id) ? $user->facility_id: '',
+    //             'referred_by' => ($user->id) ? $user->id: '',
+    //             'record_no' => ($request->record_no) ? $request->record_no: '',
+    //             'referred_date' => date('Y-m-d H:i:s'),
+    //             'referred_to' => ($request->referred_facility) ? $request->referred_facility: '',
+    //             'department_id' => ($request->referred_department) ? $request->referred_department:'',
+    //             'covid_number' => $request->covid_number,
+    //             'refer_clinical_status' => $request->clinical_status,
+    //             'refer_sur_category' => $request->sur_category,
+    //             'health_worker' => ($request->health_worker) ? $request->health_worker: '',
+    //             'patient_woman_id' => $patient_id,
+    //             'woman_reason' => ($request->woman_reason) ? $request->woman_reason: '',
+    //             'woman_major_findings' => ($request->woman_major_findings) ? $request->woman_major_findings: '',
+    //             'woman_before_treatment' => ($request->woman_before_treatment) ? $request->woman_before_treatment: '',
+    //             'woman_before_given_time' => ($request->woman_before_given_time) ? $request->woman_before_given_time: '',
+    //             'woman_during_transport' => ($request->woman_during_treatment) ? $request->woman_during_treatment: '',
+    //             'woman_transport_given_time' => ($request->woman_during_given_time) ? $request->woman_during_given_time: '',
+    //             'woman_information_given' => ($request->woman_information_given) ? $request->woman_information_given: '',
+    //             'patient_baby_id' => $baby_id,
+    //             'baby_reason' => ($request->baby_reason) ? $request->baby_reason: '',
+    //             'baby_major_findings' => ($request->baby_major_findings) ? $request->baby_major_findings: '',
+    //             'baby_last_feed' => ($request->baby_last_feed) ? $request->baby_last_feed: '',
+    //             'baby_before_treatment' => ($request->baby_before_treatment) ? $request->baby_before_treatment: '',
+    //             'baby_before_given_time' => ($request->baby_before_given_time) ? $request->baby_before_given_time: '',
+    //             'baby_during_transport' => ($request->baby_during_treatment) ? $request->baby_during_treatment: '',
+    //             'baby_transport_given_time' => ($request->baby_during_given_time) ? $request->baby_during_given_time: '',
+    //             'baby_information_given' => ($request->baby_information_given) ? $request->baby_information_given: '',
+    //             'notes_diagnoses' => $request->notes_diagnosis,
+    //             'reason_referral' => $request->reason_referral1,
+    //             'other_reason_referral' => $request->other_reason_referral,
+    //             'other_diagnoses' => $request->other_diagnosis,
+    //         );
+    //         $form = PregnantForm::create($data);
+
+    //         $file_paths = "";
+
+    //         if ($_FILES["file_upload"]["name"]) {
+    //            $from_upload_server = ApiController::fileUpload2($request);
+    //             $urls = [];
+
+    //             foreach($from_upload_server as $file){
+    //                 if (isset($file['url'])) {
+
+    //                     $fullUrl = $file['url'];
+    //                     $urls[] = $fullUrl;
+    //                 }
+    //             }
+
+    //             $file_paths = implode("|", $urls);
+    //         }
+    //         $form->file_path = $file_paths;
+    //         $form->save();
+
+    //         foreach ($request->icd_ids as $i) {
+    //             $icd = new Icd();
+    //             $icd->code = $form->code;
+    //             $icd->icd_id = $i;
+    //             $icd->save();
+    //         }
+           
+
+    //         if($request->referred_facility == 790 || $request->referred_facility == 23) {
+    //             $patient = Patients::find($patient_id);
+    //           //  $patient_name = isset($patient->mname[0]) ? ucfirst($patient->fname).' '.strtoupper($patient->mname[0]).'. '.ucfirst($patient->lname) : ucfirst($patient->fname).' '.ucfirst($patient->lname);
+    //             $this->referred_patient_data = array(
+    //                 "age" => (int)ParamCtrl::getAge($patient->dob),
+    //                 "chiefComplaint" => $request->case_summary,
+    //                 "department" => Department::find($request->referred_department)->description,
+    //                 "patient" => $patient_name,
+    //                 "sex" => $patient->sex,
+    //                 "referring_hospital" => Facility::find($user->facility_id)->name,
+    //                 "referred_to" => $request->referred_facility,
+    //                 "date_referred" => $form->created_at,
+    //                 "userid" => $user->id,
+    //                 "patient_code" => $form->code,
+    //                 "files_response" => $from_upload_server
+    //             );
+    //             ApiController::notifierPushNotification($this->referred_patient_data);
+    //         }
+            
+    //         self::newFormSave($request);
+    //         self::newFormPregnant($request);
+    //         self::addTracking($code,$patient_id,$user,$request,$type,$form->id);
+    //     }
+    //     if($request->referred_facility == 790 || $request->referred_facility == 23) {
+    //         return $this->referred_patient_data;
+    //     } else {
+    //         Session::put("refer_patient",true);
+    //     }
+    // }
+
     public static function pregnantFormTelemedNewForm($id){
         $track = Tracking::select('status', 'type')->where('id', $id)->first();
         Session::put('telemed', true);
@@ -1580,20 +1796,28 @@ class NewFormCtrl extends Controller
             ->where('icd.code',$track->code)->get();
       
         $file_link = (PatientForm::select('file_path')->where('code', $track->code)->first())->file_path;
-
         //        $path = self::securedFile($file_link);
         //        $file_name = basename($path);
 
         $path = [];
         $file_name = [];
+        $local_base = "http://192.168.110.109:8000";
 
         if($file_link != null && $file_link != "") {
             $explode = explode("|",$file_link);
             foreach($explode as $link) {
-                $path_tmp = ReferralCtrl::securedFile($link);
-                if($path_tmp != '') {
-                    array_push($path, $path_tmp);
-                    array_push($file_name, basename($path_tmp));
+
+                if(str_starts_with($link, '/storage/')){
+                    $full_url = $local_base . $link;
+                    
+                    $path[] = $full_url;
+                    $file_name[] = basename($link);
+                }else{
+                    $path_tmp = ReferralCtrl::securedFile($link);
+                    if($path_tmp != '') {
+                        array_push($path, $path_tmp);
+                        array_push($file_name, basename($path_tmp));
+                    }
                 }
             }
         }
@@ -1619,7 +1843,7 @@ class NewFormCtrl extends Controller
         $obstetetric_parity_date = ObstetricAndGynecologicHistory::select( DB::raw("DATE_FORMAT(parity_lnmp, '%M %d, %Y %h:%i %p') as parity_lnmp"),
         DB::raw("DATE_FORMAT(parity_edc, '%M %d, %Y %h:%i %p') as parity_edc"),
         )->where('patient_id', $patient_id)->first();
-
+       
         $arr = [
             "form" => $form['form'],
             "id" => $id,
