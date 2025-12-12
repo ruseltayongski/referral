@@ -745,7 +745,7 @@ class ApiController extends Controller
                 'date_seen' => "0000-00-00 00:00:00",
                 'referred_from' => $tracking->referred_from,
                 'referred_to' => $request->followup_facility_telemed,
-                'sub_opdId' => $request->configId ?? null,
+                'sub_opdId' => $request->opdSubId ?? null,
                 'department_id' => $tracking->department_id,
                 'referring_md' => $tracking->referring_md,
                 'action_md' => $user->id,

@@ -483,7 +483,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
             <div class="jim-content">
                 <!-- <h4 class="text-green downreferral" style="font-size: 15pt;">Down Referral</h4>
                 <hr /> -->
-                <form method="POST" action="{{ asset("doctor/referral/redirect") }}" id="redirectedForm">
+                <form method="POST" action="{{ asset("doctor/referral/redirect") }}" id="redirectedFormDown">
                     <input type="hidden" name="code" id="refer_code" value="">
                       <input type="hidden" name="referferral" id="refer_referral" value="">
                     {{ csrf_field() }}
@@ -504,7 +504,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                     </div>
                     <div class="form-fotter pull-right">
                         <button class="btn btn-default btn-flat" data-dismiss="modal"><i class="fa fa-times"></i> Close</button>
-                        <button type="submit" id="redirected_submit" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
+                        <button type="submit" id="redirected_submit_down" class="btn btn-success btn-flat"><i class="fa fa-check"></i> Submit</button>
                     </div>
                 </form>
                 <div class="clearfix"></div>
@@ -636,6 +636,8 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         <input type="hidden" name="configDate" id="configDate">
                         <input type="hidden" name="configtimefrom" id="configTimefrom">
                         <input type="hidden" name="configtimeto" id="configTimeto">
+
+                        <input type="hidden" name="opdSubId" id="OPD_SubId">
 
                         {{ csrf_field() }}
                         <div class="form-group">

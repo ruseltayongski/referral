@@ -254,14 +254,16 @@ $user = Session::get('auth');
         <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form['pregnant']->tracking_id }}','{{ $form['pregnant']->code }}','{{ $form['pregnant']->action_md }}','{{ $form['pregnant']->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
         <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
     @endif--}}
+    
     @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form['pregnant']->md_referring_id)
         <button class="btn btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="pregnant" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif
     @if($cur_status == 'cancelled' && $user->id == $form['pregnant']->md_referring_id)
     <button class="btn btn-danger btn-flat button_option undo_cancel_btn" data-toggle="modal" data-target="#undoCancelModal" data-id="{{ $id }}"><i class="fa fa-times"></i> Undo Cancel</button>
     @endif
+         
             
-    @if(($referral_status == 'referred' || $referral_status == 'redirected') && $form['pregnant']->getAttribute('telemedicine') == 0 || ($cur_status == 'redirected' || $cur_status == 'transferred') && $form['pregnant']->getAttribute('telemedicine') == 1)
+    @if(($referral_status == 'referred' || $referral_status == 'redirected') && $form['pregnant']->getAttribute('telemedicine') == 0 || ($cur_status == 'redirected' || $cur_status == 'transferred') && $form['pregnant']->getAttribute('telemedicine') == 1 && $form['pregnant']->referred_facility_id == $user->facility_id )
             <button class="btn btn-primary btn-flat queuebtn" data-toggle="modal" data-target="#queueModal" data-id="{{ $id }}"><i class="fa fa-pencil"></i> Update Queue </button>
             <button class="btn btn-info btn_call_request btn-flat btn-call button_option" data-toggle="modal" data-target="#sendCallRequest"><i class="fa fa-phone"></i> Call Request</button>
             <button class="btn btn-danger btn-flat button_option" data-toggle="modal" data-target="#rejectModal"><i class="fa fa-line-chart"></i> Recommend to Redirect</button>

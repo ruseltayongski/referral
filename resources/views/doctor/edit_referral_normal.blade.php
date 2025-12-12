@@ -149,6 +149,7 @@ $facilities = \App\Facility::select('id','name')
             <input type="hidden" name="referral_status" value="{{ $referral_status }}">
             <input type="hidden" name="form_type" value="normal">
             <input type="hidden" name="username" value="{{ $username }}">
+            
             <div class="row">
                 <div class="col-md-12">
                     <small class="text-success"><b>NAME OF REFERRING FACILITY: </b></small><span class="referring_name">{{ $form->referring_name }}</span>
@@ -169,9 +170,9 @@ $facilities = \App\Facility::select('id','name')
 
             <div class="row">
                 <div class="col-md-4">
-                    <small class="text-success"><b>REFERRED TO: </b></small> &nbsp;<span class="text-red">*</span><br>
+                    <small class="text-success"><b>REFERRED TO: {{ $form->telemedicine }}={{ $form->status }}</b></small> &nbsp;<span class="text-red">*</span><br>
                     <input type="hidden" name="old_facility" value="{{ $form->referred_fac_id }}">
-                    <select name="referred_to" class="select2 edit_facility_normal form-control" required>
+                    <select name="referred_to" class="select2 edit_facility_normal form-control" required  {{ $form->telemedicine == 1 && ($form->status == 'referred' || $form->status == 'followup') ? 'disabled' : '' }}>
                         <option value="">Select Facility...</option>
                         @foreach($facilities as $row)
                             @if($row->id == $form->referred_fac_id)
@@ -184,7 +185,7 @@ $facilities = \App\Facility::select('id','name')
                 </div>
                 <div class="col-md-4">
                     <small class="text-success"><b>DEPARTMENT: </b></small> <span class="text-red">*</span><br>
-                    <select name="department_id" class="form-control edit_department_normal" style="width: 100%;" required>
+                    <select name="department_id" class="form-control edit_department_normal" style="width: 100%;" required {{ $form->telemedicine == 1 && ($form->status == 'referred' || $form->status == 'followup') ? 'disabled' : '' }}>
                         <option value="">Select Option</option>
                     </select>
                 </div>

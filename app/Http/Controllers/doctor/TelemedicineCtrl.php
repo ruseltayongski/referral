@@ -863,13 +863,13 @@ class TelemedicineCtrl extends Controller
         $facility_id = AppointmentSchedule::pluck('facility_id');
         
         $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule','appointmentSchedules.subOpd'])
-        ->whereHas('appointmentSchedules', function($q) use ($user){
+        ->whereHas('appointmentSchedules', function($q) use ($user) {
             $q->where('facility_id','!=',$user->facility_id);
         })
         ->find($facility_id);
         
         return view('doctor.telemedicine_calendar1',[
-            'appointment_sched' => $appointment_sched,
+            // 'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,
             // 'appointment_config' => $config,
             'user' => $user

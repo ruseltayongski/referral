@@ -398,7 +398,7 @@ class PatientCtrl extends Controller
     public function addTracking($code, $patient_id, $user, $req, $type, $form_id, $status = '', $telemed_assign_id)
     {
         // Log::info('A new form was created.', ['wasRecently:' => $req->all()]);
-        $subOPD_Id = (int) $req->configId;
+        $subOPD_Id = (int) $req->opdSubId;
         $match = array(
             'code' => $code
         );

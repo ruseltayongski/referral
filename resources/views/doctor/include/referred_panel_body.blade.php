@@ -910,8 +910,10 @@ function refreshReferPopovers() {
                     activity_id = activity_id[position]?.id; 
                 }
                 
+                console.log("position", position, "last position", last_position);
+
                 if (discharged && position === last_position) {
-                
+                    
                 }else{
                     pop.find('.refer-btn').remove();
                 }

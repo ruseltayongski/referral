@@ -38,6 +38,8 @@ export default {
         day: "day",
       },
       events: [],
+      slotInfo: {},
+      AppointmentDept: {}
     };
   },
   props: {
@@ -48,12 +50,16 @@ export default {
       type: Array,
       default: () => [], // Ensure it's an empty array by default
     },
+    user: {
+      type: Object,
+    },
   },
   watch: {
     facilitySelectedId: async function (payload, old) {
        $('.loading').show();
       try {
         this.events = await this.__appointmentScheduleDate(payload);
+        this.buildEventsFromSlots();
         this.updateCalendarEvents();
 
         this.$nextTick(() => {
@@ -67,10 +73,147 @@ export default {
     },
   },
   mounted() {
+    this.buildEventsFromSlots();
     this.ini_events($("#external-events div.external-event"));
     this.generateCalendar();
   },
   methods: {
+    getBookedSlotsForDate(date) {
+      const targetDate = moment(date).format("YYYY-MM-DD");
+      const bookedSlots = [];
+
+      this.appointmentSlot.forEach(appointment => {
+        if (!appointment.appointment_schedules) return;
+
+        appointment.appointment_schedules.forEach(slot => {
+          // Check date AND booking
+          if (
+            slot.appointed_date === targetDate &&
+            slot.telemed_assigned_doctor &&
+            slot.telemed_assigned_doctor.length > 0
+          ) {
+            bookedSlots.push(slot);
+          }
+        });
+      });
+
+      return bookedSlots;
+    },
+    // buildEventsFromSlots(dateselected) {
+    //   if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
+
+    //   this.events = this.appointmentSlot.flatMap(appointment =>
+    //     appointment.appointment_schedules
+    //       .filter(slot => slot.facility_id === this.facilitySelectedId)
+    //       .map(slot => {
+
+    //         if(slot.appointed_date == dateselected){
+    //            console.log("appointment data hello", slot);
+
+    //         }
+           
+    //         const assignedCount = slot.telemed_assigned_doctor?.length || 0;
+    //         const isFull = assignedCount >= slot.slot;
+    //         const inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
+    //         if (isFull || inPast) {
+    //           return null; // will be filtered out later
+    //         }
+
+    //         // this will display the data appointment 
+    //         return {
+    //           title: slot.sub_opd?.description || '',
+    //           start: slot.appointed_date,
+    //           className: ['sub-opd-label'],
+    //           appointmentId: slot.id || null,
+    //           timefrom: slot.appointed_time,
+    //           tiemto: slot.appointedTime_to,
+    //           created_by: + 'Dr.' + slot.created_by.fname + '' + slot.created_by.lname,
+    //           telemed_assigned_doctor: slot.telemed_assigned_doctor || [],
+    //           isFull,
+    //           inPast
+    //         };
+    //   })
+    //   ).filter(event => event !== null); // remove skipped slots
+    // },
+    buildEventsFromSlots(dateselected) {
+        if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
+
+        const slotsForDate = [];
+
+        // Collect all slots for the selected date
+        this.appointmentSlot.forEach(appointment => {
+            appointment.appointment_schedules
+                .filter(slot => slot.facility_id === this.facilitySelectedId)
+                .forEach(slot => {
+                    const assignedCount = slot.telemed_assigned_doctor?.length || 0;
+                    const isFull = assignedCount >= slot.slot;
+                    const inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
+
+                    if (!inPast) {
+                        slotsForDate.push(slot);
+                    }
+                });
+        });
+
+        // Group slots by department AND appointment date
+        const groupedByDeptAndDate = {};
+
+        slotsForDate.forEach(slot => {
+            const deptName = slot.sub_opd?.description || 'Unknown';
+            const dateKey = slot.appointed_date; // group by exact date
+            const key = `${deptName}_${dateKey}`;
+
+            if (!groupedByDeptAndDate[key]) {
+                groupedByDeptAndDate[key] = {
+                    deptName: deptName,
+                    date: dateKey,
+                    slots: []
+                };
+            }
+
+            groupedByDeptAndDate[key].slots.push({
+                id: slot.id,
+                appointment_date: slot.appointed_date,
+                appointedTime: slot.appointed_time,
+                appointedTimeTo: slot.appointedTime_to,
+                createdBy: `Dr. ${slot.created_by.fname} ${slot.created_by.lname}`,
+                assignedDoctors: slot.telemed_assigned_doctor || [],
+                opdCategory: slot.opdCategory,
+                departmentId: slot.department_id,
+                slot: (Number(slot.slot) || 0) - (slot.telemed_assigned_doctor?.length || 0)
+            });
+        });
+
+        // console.log("Grouped slots by department and date:", groupedByDeptAndDate);
+
+        // Convert to events for the calendar
+        this.AppointmentDept = groupedByDeptAndDate;
+
+        // this.events = Object.values(groupedByDeptAndDate).map(item => ({
+        //     title: item.deptName,
+        //     start: item.date,
+        //     className: ["sub-opd-label", "with-pin"]
+        // }));
+
+      this.events = Object.entries(groupedByDeptAndDate).map(
+          ([key, group]) => {
+              const slotsArray = group.slots; // this is the array we want
+
+              // Check if any slot in this department-date group has the current user assigned
+              const isUserBooked = slotsArray.some(slot => 
+                  slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id)
+              );
+
+              // console.log("is user booked?", slotsArray);
+
+              return {
+                  title: group.deptName,
+                  start: group.date,
+                  className: ["sub-opd-label", isUserBooked ? "with-pin" : null],
+              };
+          }
+      );
+    },
     ini_events(ele) {
       ele.each(function () {
         var eventObject = {
@@ -85,6 +228,7 @@ export default {
       });
     },
     async generateCalendar() {
+      let selectedAppointment = {}
       let self = this;
       this.calendar = $("#calendar").fullCalendar({
         dayRender: this.dayRenderFunction.bind(this),
@@ -93,9 +237,18 @@ export default {
         header: self.header,
         buttonText: self.buttonText,
         events: this.events,
-        editable: true,
-        droppable: true,
-        drop: this.handleDrop,
+        editable: false,
+        eventClick: async (info) => {
+          const event = info.event || info;
+         
+          const clickedDate = moment(event.start).format("YYYY-MM-DD");
+          this.buildEventsFromSlots(clickedDate);
+
+          const deptKey = event.title + '_' + clickedDate;
+
+          const filterredSlots =  this.AppointmentDept[deptKey] || [];
+          this.$emit("appointedTime", filterredSlots);
+          },
       });
     },
     scrollToHighlightedDate(){
@@ -123,6 +276,37 @@ export default {
       }
     },
     dayRenderFunction(date, cell) {
+      const targetDate = date.format("YYYY-MM-DD");
+      const bookedSlots = this.getBookedSlotsForDate(date)
+      const info = this.slotInfo[targetDate];
+
+      if (info) {
+        if (info.fullyBooked || info.inPast) {
+          // Red background for fully booked or past dates
+          cell.css("background-color", "#dd4b39");
+          cell.find(".fc-day-number").show(); // keep the date number visible
+        } else {
+          // Green background for available dates
+          cell.css("background-color", "#32b77a");
+          cell.addClass("add-cursor-pointer");
+        }
+      }
+
+      if (bookedSlots.length > 0) {
+        // Build tooltip text
+        const tooltipText = bookedSlots
+          .map(slot => {
+            // const assignment = slot.telemed_assigned_doctor[0]; // the booking record
+            return `Booked Slot\nTime: ${slot.appointed_time}\n`;
+          })
+          .join("\n\n");
+
+        // Add tooltip
+        cell.attr("title", tooltipText);
+
+        // Add a class to mark this day as booked
+        $(cell).addClass('fc-daybooked');
+      }
      
       var eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
@@ -135,91 +319,199 @@ export default {
     },
     eventRenderFunction(event, element) {
      
-      let currentDateTime = new Date(); // get the current date and time
-      this.$nextTick(() => {
-          const targetDate = event.start.format("YYYY-MM-DD");
-        const targetTd = $(
-          ".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']"
-        );
-        const targetdrag = $(
-          ".fc-draggable[data-date='" + event.start.format("YYYY-MM-DD") + "']"
-        );
-        const targetGrid = $(".fc-day-grid-event");
-        const dateString = targetTd.attr("data-date");
-        let timeslot = null;
+      // let currentDateTime = new Date(); // get the current date and time
+      // this.$nextTick(() => {
+      //   const targetDate = event.start.format("YYYY-MM-DD");
+      //   const targetTd = $(
+      //     ".fc-day[data-date='" + event.start.format("YYYY-MM-DD") + "']"
+      //   );
+      //   const targetdrag = $(
+      //     ".fc-draggable[data-date='" + event.start.format("YYYY-MM-DD") + "']"
+      //   );
+      //   const targetGrid = $(".fc-day-grid-event");
+      //   const dateString = targetTd.attr("data-date");
+      //   let timeslot = null;
 
-       const allSlotsForDate = [];
+      //  const allSlotsForDate = [];
+      //   this.appointmentSlot.forEach(appointment => {
+      //     if (appointment.appointment_schedules && appointment.appointment_schedules.length > 0) {
+      //       const slotsOnDate = appointment.appointment_schedules.filter(
+      //         slot => slot.appointed_date === targetDate
+      //       );
+            
+      //       if (slotsOnDate.length > 0) {
+      //         allSlotsForDate.push(...slotsOnDate);
+      //       }
+      //     }
+      //   });
+      //     // console.log(`All slots for ${targetDate}:`, allSlotsForDate);
+
+      //   if (allSlotsForDate.length === 0) {
+      //     // console.log(`No slots found for date ${targetDate}`);
+      //     return;
+      //   }
+
+      // const facilitySlots = allSlotsForDate.filter(slot => slot.facility_id == this.facilitySelectedId);
+      // // Check each slot booking status individually
+      //   const slotStatus = facilitySlots.map(slot => {
+      //     const assignedCount = slot.telemed_assigned_doctor ? 
+      //       slot.telemed_assigned_doctor.filter(doctor => doctor.appointment_id === slot.id).length : 0;
+          
+      //     const isSlotFull = assignedCount >= slot.slot;
+          
+      //     // console.log(`Slot ID ${slot.id}, Time: ${slot.appointed_time}, Assigned: ${assignedCount}/${slot.slot}, Full: ${isSlotFull}`);
+          
+      //     return {
+      //       id: slot.id,
+      //       time: slot.appointed_time,
+      //       assigned: assignedCount,
+      //       capacity: slot.slot,
+      //       isFull: isSlotFull
+      //     };
+      //   });
+
+      //  // Check if ALL slots are fully booked
+      // const allSlotsFullyBooked = slotStatus.every(slot => slot.isFull);
+      // // console.log(`All slots fully booked for ${targetDate}: ${allSlotsFullyBooked}`);
+      
+      // // Check if all slots for this date are in the past
+      // const allSlotsInPast = facilitySlots.every(slot => {
+
+      //   // if(!slot.appointed_time) return true; bg-red if empty 
+
+      //   const slotDateTime = new Date(`${targetDate}T${slot.appointed_time}`);
+      //   const isPast = slotDateTime <= currentDateTime;
+      //   // console.log(`Slot ${slot.id} time ${slot.appointed_time} is in past: ${isPast}`);
+      //   return isPast;
+      // });
+
+      // this.slotInfo[targetDate] = {
+      //   fullyBooked: allSlotsFullyBooked,
+      //   inPast: allSlotsInPast,
+      //   slots: slotStatus
+      // };
+
+      // // console.log(`All slots in past for ${targetDate}: ${allSlotsInPast}`);
+      // if (allSlotsFullyBooked || allSlotsInPast) {
+      //   targetTd.css("background-color", "#dd4b39"); // not available color red
+      //   // targetTd.css("border-color", "#dd4b39");
+      // } else {
+        
+      //   targetTd.css("background-color", "rgb(50, 183, 122)"); // available color green
+      //   targetdrag.css("border-color", "#00a65a");
+      // }
+      //   // targetGrid.remove();
+      //   // $(".fc-day-grid-event").not(".sub-opd-event").remove();
+      //   targetTd.find(".fc-day-grid-event").not(".fc-event-container").remove(); 
+
+      //   targetTd.addClass("add-cursor-pointer");
+      //   // $(".fc-content").remove();
+      //      targetTd.find(".fc-content").remove();
+
+
+      // });
+      this.$nextTick(() => {
+        const slotData = event.extendedProps || {};
+        const inPastOrFull = slotData.inPast || slotData.isFull;
+        const today = moment().startOf('day');
+
+        const targetDate = moment(event.start).format("YYYY-MM-DD");
+        const targetTd = $(".fc-day[data-date='" + targetDate + "']");
+
+        // Determine if the event is past or fully booked
+        // const inPast = slotData.inPast || moment(event.start).isBefore(today);
+        // const isFull = slotData.isFull || (slotData.telemed_assigned_doctor?.length >= slotData.slot);
+
+        // Trap: past or fully booked → red, no sub-OPD labels
+        // if (inPast || isFull) {
+        //   element.find('.sub-opd-label').remove();
+        //   element.css({
+        //     'background-color': '#dd4b39',
+        //     'border-color': '#dd4b39'
+        //   });
+        //   // Stop further processing for unavailable slots
+        //   return;
+        // }
+        if(inPastOrFull) {
+          targetTd.css({
+            'background-color': '#dd4b39',
+            'border-color': '#dd4b39'
+          });
+
+          // Hide sub-OPD labels in this event
+          element.find('.sub-opd-label').remove();
+
+          return;
+        }
+
+        // --- Existing functionality for available slots ---
+
+        // Clean old events in the cell
+        // const targetDate = moment(event.start).format("YYYY-MM-DD");
+        // const targetTd = $(".fc-day[data-date='" + targetDate + "']");
+        const targetGrid = $(".fc-day-grid-event");
+
+        targetTd.find(".fc-day-grid-event").not(".fc-event-container").remove();
+        targetTd.addClass("add-cursor-pointer");
+        targetTd.find(".fc-content").remove();
+
+        // Render sub-OPD labels
+        element.addClass('sub-opd-label');
+        element.css({
+          'background-color': '', // default, green comes from CSS
+          'border-color': ''
+        });
+
+        // Optional: tooltip showing booked slots
+        if (slotData.telemed_assigned_doctor?.length > 0) {
+          const tooltipText = `Booked: ${slotData.telemed_assigned_doctor.length}/${slotData.slot || 'N/A'}`;
+          element.attr('title', tooltipText);
+        }
+
+        // Optional: store slot status for other parts of your calendar
+        const allSlotsForDate = [];
         this.appointmentSlot.forEach(appointment => {
           if (appointment.appointment_schedules && appointment.appointment_schedules.length > 0) {
             const slotsOnDate = appointment.appointment_schedules.filter(
               slot => slot.appointed_date === targetDate
             );
-            
-            if (slotsOnDate.length > 0) {
-              allSlotsForDate.push(...slotsOnDate);
-            }
+            if (slotsOnDate.length > 0) allSlotsForDate.push(...slotsOnDate);
           }
         });
-          // console.log(`All slots for ${targetDate}:`, allSlotsForDate);
 
-        if (allSlotsForDate.length === 0) {
-          // console.log(`No slots found for date ${targetDate}`);
-          return;
-        }
+        if (allSlotsForDate.length > 0) {
+          const facilitySlots = allSlotsForDate.filter(slot => slot.facility_id == this.facilitySelectedId);
+          const slotStatus = facilitySlots.map(slot => {
+            const assignedCount = slot.telemed_assigned_doctor?.length || 0;
+            const isSlotFull = assignedCount >= slot.slot;
+            return {
+              id: slot.id,
+              time: slot.appointed_time,
+              assigned: assignedCount,
+              capacity: slot.slot,
+              isFull: isSlotFull
+            };
+          });
 
-      const facilitySlots = allSlotsForDate.filter(slot => slot.facility_id == this.facilitySelectedId);
-      // Check each slot booking status individually
-        const slotStatus = facilitySlots.map(slot => {
-          const assignedCount = slot.telemed_assigned_doctor ? 
-            slot.telemed_assigned_doctor.filter(doctor => doctor.appointment_id === slot.id).length : 0;
-          
-          const isSlotFull = assignedCount >= slot.slot;
-          
-          // console.log(`Slot ID ${slot.id}, Time: ${slot.appointed_time}, Assigned: ${assignedCount}/${slot.slot}, Full: ${isSlotFull}`);
-          
-          return {
-            id: slot.id,
-            time: slot.appointed_time,
-            assigned: assignedCount,
-            capacity: slot.slot,
-            isFull: isSlotFull
+          const allSlotsFullyBooked = slotStatus.every(slot => slot.isFull);
+          const allSlotsInPast = facilitySlots.every(slot => {
+            const slotDateTime = new Date(`${targetDate}T${slot.appointed_time}`);
+            return slotDateTime <= new Date();
+          });
+
+          this.slotInfo[targetDate] = {
+            fullyBooked: allSlotsFullyBooked,
+            inPast: allSlotsInPast,
+            slots: slotStatus
           };
-        });
-
-       // Check if ALL slots are fully booked
-      const allSlotsFullyBooked = slotStatus.every(slot => slot.isFull);
-      // console.log(`All slots fully booked for ${targetDate}: ${allSlotsFullyBooked}`);
-      
-      // Check if all slots for this date are in the past
-      const allSlotsInPast = facilitySlots.every(slot => {
-
-        // if(!slot.appointed_time) return true; bg-red if empty 
-
-        const slotDateTime = new Date(`${targetDate}T${slot.appointed_time}`);
-        const isPast = slotDateTime <= currentDateTime;
-        // console.log(`Slot ${slot.id} time ${slot.appointed_time} is in past: ${isPast}`);
-        return isPast;
-      });
-
-      // console.log(`All slots in past for ${targetDate}: ${allSlotsInPast}`);
-      if (allSlotsFullyBooked || allSlotsInPast) {
-        targetTd.css("background-color", "#dd4b39"); // not available color red
-        // targetTd.css("border-color", "#dd4b39");
-      } else {
-        
-        targetTd.css("background-color", "rgb(50, 183, 122)"); // available color green
-        targetdrag.css("border-color", "#00a65a");
-      }
-        targetGrid.remove();
-        targetTd.addClass("add-cursor-pointer");
-        $(".fc-content").remove();
-
+        }
       });
     },
     async dayClickFunction(date, allDay, jsEvent, view) {
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
+
       //Config Appointment
       let AppointedDates = [];
       let configId = null;
@@ -228,7 +520,7 @@ export default {
 
       const clickedDate = moment(date._d).format("YYYY-MM-DD");
       const clickedDay = document.querySelector(`.fc-day[data-date='${clickedDate}']`);
-
+    
       const hasSlot = this.appointmentSlot.some(appointment =>
         appointment.appointment_schedules &&
         appointment.appointment_schedules.some(sched => sched.appointed_date === clickedDate)
@@ -299,7 +591,7 @@ export default {
           facility_id: params.facility_id,
         };
 
-        const response = await this.__appointmentScheduleHours(responseBody);
+        const response = this.__appointmentScheduleHours(responseBody);
         this.$emit("appointedTime", response.data);
         PassconfigId = null;
         
@@ -418,41 +710,139 @@ export default {
 </script>
 
 <style>
-/* .selected-green-slot{
- box-shadow: inset 0 0 0 3px #007bff;
+.sub-opd-label {
+  cursor: pointer !important;
+}
+
+.sub-opd-label:hover::after {
+  position: absolute;
+  background: #333;
+  color: #fff;
+  padding: 4px 8px;
   border-radius: 4px;
-} */
-
-/* Highlight the selected date professionally */
-.fc-day.selected-date-indicator {
-  background-color: rgb(0, 166, 90) !important; 
-  box-shadow: inset 0 0 0 2px #007bff52, 0 2px 6px rgba(0, 123, 255, 0.048);
-  position: relative;
-  transition: all 0.3s ease;
-  transform: scale(1.02);
+  font-size: 12px;
+  white-space: nowrap;
+  transform: translateY(-110%);
+  z-index: 9999;
 }
 
-/* Add a small checkmark for visual confirmation */
-.fc-day.selected-date-indicator::after {
-    content: "✔";
-    position: absolute;
-    top: 4px;
-    right: 6px;
-    font-size: 14px;
-    background-color: white;
-    border-radius: 50%;
-    padding: 2px 4px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-}
-
-/* Smooth hover animation for better UX */
-.fc-day.selected-date-indicator:hover {
-  cursor: pointer;
-  transform: scale(1.02);
-  transition: transform 0.2s ease;
-}
 .page-header {
   margin: 10px 0 0 0;
   font-size: 22px;
+}
+
+/* ======== CALENDAR BORDERS ======== */
+/* Force borders on all calendar cells */
+/* .fc-day,
+.fc-day-top {
+  border: 1px solid #ddd !important;
+} */
+
+/* Ensure table borders are visible */
+/* .fc-view-container .fc-view table {
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+} */
+
+.fc-view-container .fc-view td,
+.fc-view-container .fc-view th {
+  border: 1px solid #ddd !important;
+}
+
+/* Keep borders visible even with background colors */
+.fc-day[style*="background-color"] {
+  border: 1px solid #ddd !important;
+  box-sizing: border-box;
+}
+
+/* ======== SELECTED DATE INDICATOR ======== */
+.fc-day.selected-date-indicator {
+  background-color: rgb(0, 166, 90) !important;
+  box-shadow: inset 0 0 0 2px #007bff52, 0 2px 6px rgba(0, 123, 255, 0.048);
+  outline-offset: -3px;
+  box-sizing: border-box;
+  position: relative;
+  transform: scale(1.00);
+  border: 1px solid #ddd !important; /* Ensure border remains */
+}
+
+.fc-day.selected-date-indicator:hover {
+  cursor: pointer;
+  transform: scale(1.00);
+  transition: transform 0.2s ease;
+}
+
+/* ======== SUB-OPD LABELS ======== */
+.fc-day {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+.sub-opd-container {
+  display: flex !important;
+  flex-direction: column !important;
+  margin-top: 35px !important;
+  padding: 0 4px !important;
+  gap: 3px !important;
+  position: relative !important;
+  z-index: 1000 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  overflow: visible;
+}
+
+.sub-opd-label {
+  background-color: rgb(0, 166, 90) !important;
+  color: white !important;
+  padding: 4px 6px !important;
+  border-radius: 3px !important;
+  text-align: center !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;
+  white-space: nowrap !important;
+  font-size: 10px !important;
+  line-height: 1.3 !important;
+  display: block !important;
+  min-height: 18px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.fc-day .sub-opd-container,
+.fc-day .sub-opd-label {
+  max-height: none !important;
+  height: auto !important;
+}
+
+.fc-day.add-cursor-pointer .sub-opd-container {
+  position: relative;
+  z-index: 2;
+}
+
+/* ======== CALENDAR EVENT BORDERS ======== */
+.calendar-event {
+  border-right: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+}
+
+/* Make sure booked days also show borders */
+.fc-daybooked {
+  border: 1px solid #ddd !important;
+}
+
+.fc-event {
+  border: none !important;
+}
+
+.with-pin .fc-title:after {
+  content: "📌";
+  float: right;
+  margin-left: 6px;
+
+  background: #ffffff;
+  padding: 2px 2px;
+  border-radius: 6px;
+  font-size: 1em;
+  border: 1px solid #ddd;
 }
 </style>

@@ -27,6 +27,7 @@
         <appointment-calendar
           :facilitySelectedId="facilitySelectedId"
           :appointmentSlot="appointment_slot"
+          :user="user"
           @appointedTime="appointedTime"
           @config_appointedTime="config_appointedTime"
           @day-click-date="handleDayClickdate"
@@ -127,17 +128,15 @@ export default {
       this.facilitySelectedId = payload;
     },
     appointedTime(payload) {
-      console.log("appointedTime::", payload);
       this.appointedTimes = payload;
 
-        if (payload && payload.length > 0) {
-          this.$nextTick(() => {
+      if (payload && payload.length > 0) {
+        this.$nextTick(() => {
           this.focusAppointmentTimeSidebar();
         });
       }
     },
     config_appointedTime(payload){
-      console.log("config_appointedTime::", payload);
       this.configTimeSlot = payload;
     },
   },

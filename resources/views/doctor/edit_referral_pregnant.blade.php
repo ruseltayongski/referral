@@ -193,7 +193,7 @@ $facilities = \App\Facility::select('id','name')
             <div class="col-md-6">
                 <small class="text-success"><b>REFERRED TO: </b></small><br>
                 <input type="hidden" name="old_facility" value="{{ $form['pregnant']->referred_facility_id }}">
-                <select name="referred_to" class="select2 edit_facility_pregnant form-control" required>
+                <select name="referred_to" class="select2 edit_facility_pregnant form-control" required {{ $form['pregnant']->telemedicine == 1 && ($form['pregnant']->status == 'referred' || $form['pregnant']->status == 'followup') ? 'disabled' : '' }}>
                     <option value="">Select Facility...</option>
                     @foreach($facilities as $row)
                         <option data-name="{{ $row->name }}" value="{{ $row->id }}">{{ $row->name }}</option>
@@ -203,7 +203,7 @@ $facilities = \App\Facility::select('id','name')
             </div>
             <div class="col-md-4">
                 <small class="text-success"><b>DEPARTMENT: </b></small><br>&emsp;
-                <select name="department_id" class="form-control-select edit_department_pregnant" required>
+                <select name="department_id" class="form-control-select edit_department_pregnant" required {{ $form['pregnant']->telemedicine == 1 && ($form['pregnant']->status == 'referred' || $form['pregnant']->status == 'followup') ? 'disabled' : '' }}>
                     <option value="">Select Department...</option>
                 </select>
                 {{--<span class="department_name">{{ $form['pregnant']->department }}</span>--}}

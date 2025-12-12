@@ -504,6 +504,7 @@ class ReferralCtrl extends Controller
             'tracking.action_md',
             'tracking.referring_md',
             'tracking.telemedicine',
+            'tracking.status',
             'patient_form.code as code',
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             'patients.dob as dob',
@@ -702,6 +703,7 @@ class ReferralCtrl extends Controller
             DB::raw("'$id' as tracking_id"),
             'tracking.action_md',
             'tracking.telemedicine', // I add this a piece of code for accessing telemedicine
+            'tracking.status',
             'tracking.referring_md',
             'pregnant_form.patient_baby_id',
             'pregnant_form.code',
