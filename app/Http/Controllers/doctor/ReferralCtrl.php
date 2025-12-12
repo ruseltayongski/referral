@@ -1567,7 +1567,7 @@ class ReferralCtrl extends Controller
         broadcast(new SocketReferralAdmitted($new_admitted));
     }
 
-    public function discharge(Request $req, $track_id)
+    public function discharge(Request $req, $track_id)// mydischarged
     {
         // Log::info("Raw Files Data render:", $_FILES["file_upload"]["name"]);
         // return;
@@ -1640,6 +1640,19 @@ class ReferralCtrl extends Controller
             ->first();
         $redirect_track = asset("doctor/referred?referredCode=").$track->code;
 
+        
+        $realtime_files = [];
+      
+        if ($file_paths) {
+            $files = explode("|", $file_paths);
+            foreach ($files as $file) {
+                $file = trim($file);
+                if ($file && strtolower($file) !== "null" && strtolower($file) !== "undefined") {
+                    $realtime_files[] = self::securedFile($file);
+                }
+            }
+        }
+
         $new_discharged = [
             "patient_name" => ucfirst($patient->fname).' '.ucfirst($patient->lname),
             "current_facility" => Facility::find($user->facility_id)->name,
@@ -1648,7 +1661,7 @@ class ReferralCtrl extends Controller
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
             "remarks" => $req->remarks,
-            'lab_result' => $file_paths,
+            'lab_result' => $realtime_files,
             "redirect_track" => $redirect_track,
             "status" => "discharged"
         ];
@@ -1656,10 +1669,11 @@ class ReferralCtrl extends Controller
         broadcast(new SocketReferralDischarged($new_discharged));
     }
 
-    public function getDischargeFiles($track_code){
+    public function getDischargeFiles($track_code, $activityId){
 
         $file_link = (Activity::select('lab_result')->where("code", $track_code)
                 ->where("status", "discharged")
+                ->where('id', $activityId)
                 ->first())->lab_result;
 
         $path = [];
@@ -1960,7 +1974,7 @@ class ReferralCtrl extends Controller
     public function callerByList($track_id)
     {
         $data = \App\Tracking::select(
-            \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as user_md"),
+            \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lnFame) as user_md"),
             DB::raw("DATE_FORMAT(activity.created_at,'%M %d, %Y %h:%i %p') as date_call"),
             "users.contact"
         )
@@ -2500,6 +2514,7 @@ class ReferralCtrl extends Controller
     //for edge cloud filet attachment  warning... don't delete 
     public static function editForm(Request $req)
     {
+        
         $user = Session::get('auth');
         $id = $req->id;
         $old_facility = (int) $req->old_facility;

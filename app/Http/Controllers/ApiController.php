@@ -1911,7 +1911,7 @@ class ApiController extends Controller
     }
 
     public static function fileUploadUrl(){
-        return 'http://180.232.110.32/';
+        return 'http://180.232.110.44/';
     }
 
     public static function fileUpload(Request $request) {

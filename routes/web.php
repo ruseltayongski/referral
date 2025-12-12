@@ -175,7 +175,7 @@ Route::post('doctor/referral/arrive/{track_id}', 'doctor\ReferralCtrl@arrive'); 
 Route::post('doctor/referral/archive/{track_id}', 'doctor\ReferralCtrl@archive'); //if patient is archived
 Route::post('doctor/referral/admit/{track_id}', 'doctor\ReferralCtrl@admit'); //if patient is admitted
 Route::post('doctor/referral/discharge/{track_id}', 'doctor\ReferralCtrl@discharge'); //if patient is discharge
-Route::get('/get-discharge-files/{track_code}', 'doctor\ReferralCtrl@getDischargeFiles');
+Route::get('/get-discharge-files/{track_code}/{activity_id}','doctor\ReferralCtrl@getDischargeFiles')->name('discharge.files');
 
 Route::post('doctor/referral/transfer', 'doctor\ReferralCtrl@transfer'); //if patient is discharge
 Route::post('doctor/referral/redirect', 'doctor\ReferralCtrl@redirect'); //if patient is discharge

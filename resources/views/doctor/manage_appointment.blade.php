@@ -358,7 +358,6 @@
     </div>
 
     <!-- My Update Appointment Version -->
-
     <div class="modal fade" role="dialog" id="updateConfirmationModal" data-backdrop="static" data-keyboard="false" aria-labelledby="addAppointmentModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -816,86 +815,8 @@
                                 return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
                             }
 
-                            // Create slot list grouped by date
-                        //    const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
-                        //     const readableDate = new Date(date).toLocaleDateString("en-US", {
-                        //         year: "numeric",
-                        //         month: "long",
-                        //         day: "numeric",
-                        //         weekday: "long"
-                        //     });
+                            const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
 
-                        //     const times = slots.map(s =>
-                        //         `<span style="
-                        //             display: inline-block;
-                        //             margin: 3px 6px;
-                        //             padding: 4px 8px;
-                        //             background-color: #e7f3ff;
-                        //             border: 1px solid #cce0ff;
-                        //             border-radius: 6px;
-                        //             font-size: 13px;
-                        //         ">
-                        //             🕒 ${formattime(s.time_from)} – ${formattime(s.time_to)}
-                        //         </span>`
-                        //     ).join("");
-
-                        //     return `
-                        //         <div style="
-                        //             background: #fff;
-                        //             border: 1px solid #e5e5e5;
-                        //             border-radius: 10px;
-                        //             padding: 10px 15px;
-                        //             margin-bottom: 10px;
-                        //             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-                        //         ">
-                        //             <div style="font-weight: 600; color: #333;">
-                        //                 <i class="fa fa-calendar" style="color:#007bff; margin-right:5px;"></i> ${readableDate}
-                        //             </div>
-                        //             <div style="margin-top: 5px;">${times}</div>
-                        //         </div>
-                        //     `;
-                        // });
-
-                        // const slot_Schedule = `
-                        //     <div style="
-                        //         display: grid;
-                        //         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-                        //         gap: 10px;
-                        //         margin-top: 15px;
-                        //     ">
-                        //         ${formattedItems.join("")}
-                        //     </div>
-                        // `;
-
-                        // $("#SchedCategory").html(`
-                        //     <div class="col-md-12 schedule-output text-center" 
-                        //         style="padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #fdfdfd; margin-top: 15px;">
-                                
-                        //         <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px;">
-                        //             <i class="fa fa-calendar-check-o"></i> Schedule Period
-                        //         </div>
-                                
-                        //         <input type='hidden' name="startDate" value="${formatedSchedule(startDate)}">
-                        //         <input type='hidden' name="endDate" value="${formatedSchedule(endDate)}">
-                        //         <input type='hidden' name="exist_Date" value="${dateExistsArray}">
-
-                        //         <div style="background-color:#eef6ff; padding:10px 15px; border-radius:8px; display:inline-block; font-size:14px; margin-bottom: 10px;">
-                        //             <strong>Start:</strong> ${formatedSchedule(startDate)} 
-                        //             <strong style="margin: 0 5px;">→</strong> 
-                        //             <strong>End:</strong> ${formatedSchedule(endDate)} 
-                        //             <span style="font-weight:bold; color:#007bff;">(${OneweekOrOneMonth})</span>
-                        //         </div>
-
-                        //         <div style="color:#555; font-size:13px; margin-bottom: 10px;">
-                        //             Your schedule can now be created:
-                        //         </div>
-
-                        //             ${slot_Schedule}
-
-                        //     </div>
-                        // `);
-
-                        const formattedItems = Object.entries(groupedSlots).map(([date, slots]) => {
                             const readableDate = new Date(date).toLocaleDateString("en-US", {
                                 year: "numeric",
                                 month: "long",
@@ -1337,47 +1258,6 @@
                 $('#add-appointment').prop('disabled', true);
             }
 
-            // let shownDepartments = new Set();
-
-            // $('.alert-department').each(function() {
-            //     var departmentName = $(this).data('department');
-            //     var subdescription = $(this).data('subopd');
-
-            //     console.log("departmentName", departmentName, subdescription);
-
-            //     if(!subdescription || departmentName && !shownDepartments.has(departmentName)){
-
-            //         shownDepartments.add(departmentName);
-
-            //         Lobibox.alert('error', {
-            //             msg: 'Only the Opd Department is allowed to create appointments.',
-            //             closeOnEsc: true,
-            //             closeButton: true,
-            //             callback: function() {
-            //                 $('#addAppointmentModal').modal('hide');
-            //                 $('#updateConfirmationModal').modal('hide');
-            //                 $('#deleteConfirmationModal').modal('hide');
-            //             }
-            //         });
-
-            //         $('#add-appointment').prop('disabled', true);
-            //     }
-           
-            // });
-            // shownDepartments.clear();
-
-            // $('#addAppointmentModal').on('show.bs.modal', function () {
-            //     var departmentName = $('.alert-department').data('department');
-            //     console.log("department name::", departmentName);
-
-            //     if(departmentName){
-            //         $(this).modal('hide');
-            //         Lobibox.alert('error', {
-            //             msg: 'Only the Opd Department is allowed to create appointments. Department: ' + departmentName + ' is not allowed.',
-            //         });
-            //     }
-            // });
-
             $('#deleteConfirmationModal').on('hidden.bs.modal', function () {
                location.reload();
             });
@@ -1393,18 +1273,6 @@
                 // console.log('my appointed Id:asdasd',data);
 
                 $('#update_additionalTimeContainer').empty();//to empty the previous  generate form
-                
-                // if(data && data.length > 0){
-                //     data.forEach(function(appointment){   
-                //         // $('#update_department_id').val(appointment.department.description);
-                //         // $('#update_facility_id').val(appointment.facility_id).trigger('change');
-                //         $('#appointed_date').val(appointment.appointed_date);
-                //         let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
-                //         updateAddTimeInput(appointment,doctorAssigned);
-                //     });
-                // }else{
-                //     console.log('No appointments found.');
-                // }
                 
                 if (data && data.length > 0) {
                     const now = new Date();
@@ -1562,32 +1430,6 @@
         }
 
         //--------------------------------------------------------------
-        // var query_doctor_store = [];
-        //     $(document).ready(function() {
-        //         var facility_id = $(`#id`).val();
-        //         console.log(facility_id);
-        //         if(facility_id) {
-        //             $.get("{{ url('get-doctors').'/' }}" + facility_id, function (result) {
-        //                 query_doctor_store = result;
-        //                 const current_appointment_count = $(".appointment_count").val();
-        //                 for(var i=1; i<=current_appointment_count; i++) {
-        //                     $(`.available_doctor${i}`).html('');
-        //                     $(`.available_doctor${i}`).append($('<option>', {
-        //                         value: "",
-        //                         text: "Select Doctors"
-        //                     }));
-        //                     $.each(query_doctor_store, function (index, userData) {
-        //                         $(`.available_doctor${i}`).append($('<option>', {
-        //                             value: userData.id,
-        //                             text: "Dr. "+userData.fname + ' ' + userData.lname
-        //                         }));
-
-        //                     });
-        //                 }
-        //             });
-        //         }
-        //     });
-
         $(document).ready(function() {
             var facility_id = $(`#id`).val();
             // console.log(facility_id);
@@ -1988,22 +1830,27 @@
         
         function checkConflict(slotIndex, fromTime, toTime) {
             console.log("Checking conflict for slotIndex:", slotIndex, "fromTime:", fromTime, "toTime:", toTime);
-            for (let i = 0; i < appointmentSlot.length; i++) {
-                if (i === slotIndex) continue; // Skip checking against itself for updates
-                // console.log("Comparing with slot:", i, "slot index:", slotIndex);
-                const slot = appointmentSlot[i];
-                const timeOverlap = (fromTime < slot.to && toTime > slot.from);
+            console.log("appointment data here", appointmentSlot.length);
+            // if(appointmentSlot.length == slotIndex){
+                
+            // }else{
+                for (let i = 0; i < appointmentSlot.length; i++) {
+                    if (i === slotIndex) continue; // Skip checking against itself for updates
+                    // console.log("Comparing with slot:", i, "slot index:", slotIndex);
+                    const slot = appointmentSlot[i];
+                    const timeOverlap = (fromTime < slot.to && toTime > slot.from);
 
-                if (timeOverlap) {
-                    // console.log("conflict appointmentSlot", appointmentSlot);
-                    return {
-                        hasConflict: true,
-                        message: `Time slot ${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} conflicts with existing appointment ${slot.from.toLocaleTimeString()} - ${slot.to.toLocaleTimeString()}`
-                    };
+                    if (timeOverlap) {
+                        // console.log("conflict appointmentSlot", appointmentSlot);
+                        return {
+                            hasConflict: true,
+                            message: `Time slot ${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} conflicts with existing appointment ${slot.from.toLocaleTimeString()} - ${slot.to.toLocaleTimeString()}`
+                        };
 
+                    }
                 }
-            }
-  
+            //}
+            
             return { hasConflict: false };
         }
         
@@ -2045,7 +1892,9 @@
                 appointmentSlot.push(newSlot);
             
             }
-              console.log("total update slot", appointmentSlot);
+            
+            console.log("total update slot", appointmentSlot);
+            
             return true;
         }
 

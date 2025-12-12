@@ -1011,19 +1011,29 @@
     }
 
     //for referral discharge
-    function ReferralDischargeResult(track_code, discharged, cancelled, rejected,transferred){
+    function ReferralDischargeResult(track_code, discharged, cancelled, rejected,transferred, activity_id, files_path){
         console.log("track_code", track_code);
         $("#DischargeModal").remove();
-        const url = "{{ asset('get-discharge-files') }}";
-    
+        const baseUrl = "{{ url('/get-discharge-files') }}";
+        let realtimefiles = [];
         if(discharged && !cancelled && !rejected && !transferred){
-
             $.ajax({
-                url: `${url}/${track_code}`, // Endpoint URL
+                url: `${baseUrl}/${track_code}/${activity_id}`,  // build correctly in JS
                 type: "GET",
                 dataType: "json",
                 success: function(files) {
-                    console.log("Files received:", files);
+                    //real time data from websocket
+                    if (typeof files_path === "string") {
+                        realtimefiles = files_path
+                            .replace(/^files\s+/i, "") // remove "files " prefix if exists
+                            .split(",")          // split by comma
+                            .map(f => f.trim())  // trim whitespace
+                            .filter(f => f && f.toLowerCase() !== "null" && f.toLowerCase() !== "undefined");
+                    }
+
+                    if ((!files || !Array.isArray(files) || files.length === 0) && Array.isArray(realtimefiles) && realtimefiles.length > 0) {
+                         files = realtimefiles; 
+                    }
 
                     if (!files || !Array.isArray(files) || files.length === 0) {
                         Lobibox.alert("error", {
@@ -1047,7 +1057,7 @@
                             iconSrc = '{{ asset("resources/img/document_icon.png") }}';
                         } else if (['xls', 'xlsx'].includes(fileExtension)) {
                             iconSrc = '{{ asset("resources/img/sheet_icon.png") }}';
-                        } else if (['png', 'jpg', 'jpeg', 'gif'].includes(fileExtension)) {
+                        } else if (['png', 'jpg', 'jpeg', 'gif','jfif'].includes(fileExtension)) {
                             iconSrc = '{{ asset("resources/img/fileImage.png") }}';
                         } else {
                             iconSrc = '{{ asset("resources/img/default_file_icon.png") }}';

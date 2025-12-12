@@ -56,7 +56,7 @@
     $('#dischargeForm').on('submit',function(e){
 
             e.preventDefault();
-            
+            $('.loading').show();
             const reindexedFiles = fileInfoArray.map((fileInfo, index) => ({
                 ...fileInfo,
                 pos: index + 1
@@ -79,7 +79,8 @@
             contentType: false,
             processData: false,
             success: function (response) {
-
+                console.log("response", response);
+                $('.loading').hide();
                 // let selector = '#discharged_progress' + track_id + ' .refer-popover';
 
                 // $(selector).attr('data-discharged', 1); // update
