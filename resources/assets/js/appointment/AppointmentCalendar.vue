@@ -198,7 +198,7 @@ export default {
       this.events = Object.entries(groupedByDeptAndDate).map(
           ([key, group]) => {
               const slotsArray = group.slots; // this is the array we want
-
+               this.slotInfo = slotsArray;
               // Check if any slot in this department-date group has the current user assigned
               const isUserBooked = slotsArray.some(slot => 
                   slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id)
@@ -246,7 +246,7 @@ export default {
 
           const deptKey = event.title + '_' + clickedDate;
 
-          const filterredSlots =  this.AppointmentDept[deptKey] || [];
+          const filterredSlots =  this.AppointmentDept[deptKey] || []; 
           this.$emit("appointedTime", filterredSlots);
           },
       });
@@ -276,19 +276,41 @@ export default {
       }
     },
     dayRenderFunction(date, cell) {
+      console.log("this slotInfo:", this.slotInfo);
       const targetDate = date.format("YYYY-MM-DD");
+      console.log("Rendering date:", targetDate);
       const bookedSlots = this.getBookedSlotsForDate(date)
-      const info = this.slotInfo[targetDate];
+
+      let info = null;
+
+      if (Array.isArray(this.slotInfo)) {
+        // slotInfo is an array → use find
+        info = this.slotInfo.find(
+          slot => slot.appointment_date === targetDate
+        );
+      } else if (this.slotInfo && typeof this.slotInfo === "object") {
+        // slotInfo is an object keyed by date
+        info = this.slotInfo[targetDate];
+      }
+
+      // console.log("Slot info for",info);
 
       if (info) {
-        if (info.fullyBooked || info.inPast) {
+        const dateKey = Object.keys(this.slotInfo)
+         .find(key => key.includes("-"));
+
+        console.log("my date key",dateKey);
+         const { fullyBooked, inPast } = info;
+          console.log("fullyBooked:", fullyBooked, "inPast:", inPast);
+        if (fullyBooked || inPast) {
           // Red background for fully booked or past dates
+          console.log("is this fulll");
           cell.css("background-color", "#dd4b39");
           cell.find(".fc-day-number").show(); // keep the date number visible
         } else {
           // Green background for available dates
-          cell.css("background-color", "#32b77a");
-          cell.addClass("add-cursor-pointer");
+          // cell.css("background-color", "#32b77a");
+          // cell.addClass("add-cursor-pointer");
         }
       }
 
@@ -311,12 +333,13 @@ export default {
       var eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
-
+      console.log("Events on", targetDate, ":", eventsOnDate);
       if (eventsOnDate.length > 0) {
-        cell.css("background-color", "green");
-        cell.addClass("add-cursor-pointer");
+        // cell.css("background-color", "green");
+        // cell.addClass("add-cursor-pointer");
       }
     },
+
     eventRenderFunction(event, element) {
      
       // let currentDateTime = new Date(); // get the current date and time
