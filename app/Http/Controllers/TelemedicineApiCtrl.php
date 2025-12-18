@@ -152,7 +152,8 @@ class TelemedicineApiCtrl extends Controller
         $currentYear = $now->year;
 
         $slotCountByFacility = [];
-
+        $groupedByDeptAndDate = [];
+        
         foreach ($appointment_slot as $slot) {
             $facility_id = $slot->id;
             $facility_name = $slot->name;
@@ -163,6 +164,10 @@ class TelemedicineApiCtrl extends Controller
             $totalAppointments = 0;
 
             foreach ($schedules as $schedule) {
+                $deptName = $schedule->subOpd->description;
+                $dateKey = $schedule->appointed_date;
+                $key = $deptName.'_'.$dateKey;
+
                 $scheduleDateTime = \Carbon\Carbon::parse($schedule->appointed_date . ' ' . $schedule->appointed_time);
                 $countSlot = $schedule->slot ?? 0;
                 $assignedDoctorsCount = $schedule->telemedAssignedDoctor ? $schedule->telemedAssignedDoctor->count() : 0;
@@ -188,6 +193,31 @@ class TelemedicineApiCtrl extends Controller
                 if ($scheduleDateTime->isFuture() && $assignedDoctorsCount < $countSlot) {
                     $availableSlot += ($countSlot - $assignedDoctorsCount);
                 }
+
+                if (!isset($groupedByDeptAndDate[$key])) {
+                $groupedByDeptAndDate[$key] = [
+                        'facility_id' => $facility_id,
+                        'department' => $deptName,
+                        'date' => $dateKey,
+                        'slots' => []
+                    ];
+                }
+
+                // APPEND to the slots array instead of overwriting
+                $groupedByDeptAndDate[$key]['slots'][] = [
+                    'appointed_time' => $schedule->appointed_time,
+                    'appointedTime_to' => $schedule->appointedTime_to,
+                    'created_by' => $schedule->createdBy
+                        ? [
+                            'fname' => $schedule->createdBy->fname,
+                            'lname' => $schedule->createdBy->lname
+                        ]
+                        : null,
+                    'telemed_assigned_doctor' => $schedule->telemedAssignedDoctor,
+                    'opdCategory' => $schedule->opdCategory,
+                    'department_id' => $schedule->sub_opd_id,
+                    'slot' => (int)$schedule->slot - $schedule->telemedAssignedDoctor->count()
+                ];
             }
             
             // Add facility summary
@@ -200,11 +230,11 @@ class TelemedicineApiCtrl extends Controller
                                 'total_appointments' => $totalAppointments,
                             ];
             }
-         
         }
 
         return response()->json([
-            'slotCountByFacility' => $slotCountByFacility
+            'slotCountByFacility' => $slotCountByFacility,
+            'groupedByDeptAndDate' => array_values($groupedByDeptAndDate)
         ]);
     }
 
