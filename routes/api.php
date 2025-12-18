@@ -20,6 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 //Route::get('/laboratories', [ApiController::class, 'laboratoryList']);
 Route::apiResource('laboratories', 'ApiController');
+Route::post('icd10/search/{keyword}', 'TelemedicineApiCtrl@searchIcd10');
 Route::post('check/labresult',[ApiController::class, 'checkLabResult']);
 //api for telemedicine app
 Route::post('telemed/login', 'TelemedicineApiCtrl@login');

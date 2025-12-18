@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Hash;
 use App\SubOpd;
 use Carbon\Carbon;
 use App\Patients;
+use App\Province;
+use App\Muncity;
+use App\Barangay;
+use App\Icd10;
 
 class TelemedicineApiCtrl extends Controller
 {
@@ -266,6 +270,12 @@ class TelemedicineApiCtrl extends Controller
         );
 
         $data = Patients::updateOrCreate($match, $data);
+        $patient_add = implode(', ', array_filter([
+            $dataReq['region'] ?? '',
+                Province::where('id', $dataReq['province'])->value('description'),
+                Muncity::where('id', $dataReq['muncity'])->value('description'),
+                Barangay::where('id', $dataReq['brgy'])->value('description'),
+        ]));
 
         // Save to session
         Session::put('profileSearch', [
@@ -278,10 +288,26 @@ class TelemedicineApiCtrl extends Controller
 
         // If sent from consultation
         if (!empty($dataReq['from_consultation'])) {
-            return response()->json(['message' => 'Patient added successfully', 'data' => $data], 200);
+            return response()->json(['message' => 'Patient added successfully', 'data' => $data, 'address' => $patient_add], 200);
         }
 
-        return response()->json(['message' => 'Patient added successfully', 'data' => $data], 200);
+        return response()->json(['message' => 'Patient added successfully', 'data' => $data, 'address' => $patient_add], 200);
+    }
+
+ 
+    public function searchIcd10(Request $request, $keyword){
+        if(!$keyword){
+            return response()->json([]);
+        }
+
+        $icd = Icd10::where("description","like","%$keyword%")
+                    ->orWhere("code","like","%$keyword%")
+                    ->get();
+
+        return response()->json([
+            'icd' => $icd,
+            'icd_keyword' => $keyword
+        ]);
     }
 
 }
