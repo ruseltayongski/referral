@@ -862,12 +862,45 @@ class TelemedicineCtrl extends Controller
         
         $facility_id = AppointmentSchedule::pluck('facility_id');
         
-        $appointment_slot = Facility::with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule','appointmentSchedules.subOpd'])
+        $appointment_slot = Facility::select('id','facility_code','name')->with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule','appointmentSchedules.subOpd'])
         ->whereHas('appointmentSchedules', function($q) use ($user) {
             $q->where('facility_id','!=',$user->facility_id);
         })
         ->find($facility_id);
-        
+
+        $now = Carbon::now();
+
+        $appointment_slot = $appointment_slot->map(function ($facility) use ($now) {
+            $filteredSchedules = $facility->appointmentSchedules
+              ->groupBy('appointed_date')
+              ->flatMap(function ($schedulesByDate, $date) use ($now) {
+                
+                    $dateCarbon = Carbon::parse($date);
+                   
+                    if ($dateCarbon->lt($now->toDateString())) {
+                        return collect();
+                    }
+
+                    if($dateCarbon->isToday()){
+                        $allPast = $schedulesByDate->every(function ($schedule) use ($now) {
+                            return Carbon::parse($schedule->appointedTime_to)->lte($now);
+                        });
+                        
+                        return $allPast ? collect() : $schedulesByDate;
+                    }
+                     // Future date → KEEP ALL
+                    return $schedulesByDate;
+              })
+              ->values();
+
+                $facility->setRelation('appointmentSchedules', $filteredSchedules);
+                return $facility;
+        })
+        ->filter(function ($facility){
+            return $facility->appointmentSchedules->isNotEmpty();
+        })
+        ->values();
+       
         return view('doctor.telemedicine_calendar1',[
             // 'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,

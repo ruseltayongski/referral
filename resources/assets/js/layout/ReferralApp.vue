@@ -406,7 +406,7 @@
                     img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png"
                 });
             },
-            notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks, redirect_track, accepting_doctor_id, telemedicine, telemed_redirected) {
+            notifyReferralAccepted(patient_name, accepting_doctor, accepting_facility_name, activity_id, patient_code, tracking_id, date_accepted, remarks, redirect_track, accepting_doctor_id, telemedicine, telemed_redirected, referred_from) {
                 $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 $("#accepted_progress"+patient_code+activity_id).addClass("completed");
                 $("#accepted_progress"+patient_code+activity_id).attr("data-actionmd", accepting_doctor_id);
@@ -415,7 +415,8 @@
                 $("#follow_queue_number"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>") // for follow 2nd position more
                 $("#queue_number"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>")// add this for referred 1st position
                 $("#icon_progress"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
-                if(telemedicine == 0 || (telemedicine == 1 && telemed_redirected == "redirected")){
+                console.log("referred condition", referred_from == this.user.facility_id, "referred from", referred_from, "user facility", this.user.facility_id);
+                if(telemedicine == 0 && parseInt(referred_from) == parseInt(this.user.facility_id) || (telemedicine == 1 && telemed_redirected == "redirected" && parseInt(referred_from) == parseInt(this.user.facility_id))){
                     $("#html_websocket_departed"+patient_code).html(this.buttonDeparted(tracking_id));
                 }
                 $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle toggle" style="display: table-row;">\n' +
@@ -1045,7 +1046,7 @@
                 .listen('SocketReferralAccepted', (event) => {
                     console.log("accepted for: ", event);
                     if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) { // adding or and condition only
-                        this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id,event.payload.telemedicine,event.payload.telemed_redirected)
+                        this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id,event.payload.telemedicine,event.payload.telemed_redirected,event.payload.facility_referred)
                     }
                 });
 
