@@ -99,42 +99,9 @@ export default {
 
       return bookedSlots;
     },
-    // buildEventsFromSlots(dateselected) {
-    //   if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
-
-    //   this.events = this.appointmentSlot.flatMap(appointment =>
-    //     appointment.appointment_schedules
-    //       .filter(slot => slot.facility_id === this.facilitySelectedId)
-    //       .map(slot => {
-
-    //         if(slot.appointed_date == dateselected){
-    //            console.log("appointment data hello", slot);
-
-    //         }
-           
-    //         const assignedCount = slot.telemed_assigned_doctor?.length || 0;
-    //         const isFull = assignedCount >= slot.slot;
-    //         const inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
-    //         if (isFull || inPast) {
-    //           return null; // will be filtered out later
-    //         }
-
-    //         // this will display the data appointment 
-    //         return {
-    //           title: slot.sub_opd?.description || '',
-    //           start: slot.appointed_date,
-    //           className: ['sub-opd-label'],
-    //           appointmentId: slot.id || null,
-    //           timefrom: slot.appointed_time,
-    //           tiemto: slot.appointedTime_to,
-    //           created_by: + 'Dr.' + slot.created_by.fname + '' + slot.created_by.lname,
-    //           telemed_assigned_doctor: slot.telemed_assigned_doctor || [],
-    //           isFull,
-    //           inPast
-    //         };
-    //   })
-    //   ).filter(event => event !== null); // remove skipped slots
-    // },
+    getFirstAvailableDate(){
+      console.log("date appointment:",this.AppointmentDept);
+    },  
     buildEventsFromSlots(dateselected) {
         if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
 
@@ -148,9 +115,14 @@ export default {
                     const assignedCount = slot.telemed_assigned_doctor?.length || 0;
                     const isFull = assignedCount >= slot.slot;
                     const inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
+                    const maxSlot = Number(slot.slot) || 0;
+                    const available = maxSlot - assignedCount;
 
                     if (!inPast) {
-                        slotsForDate.push(slot);
+                        slotsForDate.push({
+                            ...slot,
+                           isAvailable: available > 0,
+                        });
                     }
                 });
         });
@@ -162,12 +134,14 @@ export default {
             const deptName = slot.sub_opd?.description || 'Unknown';
             const dateKey = slot.appointed_date; // group by exact date
             const key = `${deptName}_${dateKey}`;
+            const Available = slot.isAvailable
 
             if (!groupedByDeptAndDate[key]) {
                 groupedByDeptAndDate[key] = {
                     deptName: deptName,
                     date: dateKey,
-                    slots: []
+                    slots: [],
+                    isAvailable: Available
                 };
             }
 
@@ -184,16 +158,8 @@ export default {
             });
         });
 
-        // console.log("Grouped slots by department and date:", groupedByDeptAndDate);
-
         // Convert to events for the calendar
-        this.AppointmentDept = groupedByDeptAndDate;
-
-        // this.events = Object.values(groupedByDeptAndDate).map(item => ({
-        //     title: item.deptName,
-        //     start: item.date,
-        //     className: ["sub-opd-label", "with-pin"]
-        // }));
+      this.AppointmentDept = groupedByDeptAndDate;
 
       this.events = Object.entries(groupedByDeptAndDate).map(
           ([key, group]) => {
@@ -203,6 +169,7 @@ export default {
               const isUserBooked = slotsArray.some(slot => 
                   slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id)
               );
+              const hasAvailable = group.slots.some(s => s.isAvailable);
 
               // console.log("is user booked?", slotsArray);
               const start = moment(group.date, 'YYYY-MM-DD', true);
@@ -211,7 +178,9 @@ export default {
               return {
                   title: group.deptName,
                   start: start.format('YYYY-MM-DD'),
-                  className: ["sub-opd-label", isUserBooked ? "with-pin" : null],
+                  className: ["sub-opd-label", isUserBooked ? "with-pin" : null,
+                     hasAvailable ? "sub-opd-label" : "slot-full",
+                  ],
               };
           }
       ).filter(Boolean);
@@ -254,36 +223,24 @@ export default {
       });
     },
     scrollToHighlightedDate(){
-      // const highlightedCell = document.querySelector(
-      //   ".fc-day[style*='background-color: rgb(221, 75, 57)'], " + // red slots
-      //   ".fc-day[style*='background-color: rgb(0, 166, 90)']"      // green slots
-      // );
-
-      const greenSlot = document.querySelector(
-        ".fc-day[style*='background-color: rgb(50, 183, 122)']" 
-      );
-
-      const redSlot = document.querySelector(
-        ".fc-day[style*='background-color: rgb(221, 75, 57)']" 
-      );
-
-      const targetCell = greenSlot || redSlot;
-
-      if(targetCell) {
-        targetCell.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-          inline: "nearest"
+       this.$nextTick(() => {
+          const availableCell = document.querySelector(
+            ".fc-day-grid-event.sub-opd-label"
+          );
+          
+          if (availableCell) {
+            availableCell.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+          }
         });
-      }
     },
     dayRenderFunction(date, cell) {
       const targetDate = date.format("YYYY-MM-DD");
-      console.log("Rendering date:", targetDate);
       const bookedSlots = this.getBookedSlotsForDate(date)
 
       let info = null;
-      console.log("my slot info:", this.slotInfo);
       if (Array.isArray(this.slotInfo)) {
         // slotInfo is an array → use find
         info = this.slotInfo.find(
@@ -329,7 +286,6 @@ export default {
       var eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
-      console.log("Events on", targetDate, ":", eventsOnDate);
       if (eventsOnDate.length > 0) {
         // cell.css("background-color", "green");
         // cell.addClass("add-cursor-pointer");

@@ -1347,6 +1347,10 @@ class ReferralCtrl extends Controller
             ->where("code",$track->code)
             ->where("status","redirected")
             ->first();
+        $facility_referred = Activity::where("code",$track->code)
+            ->where("status", "referred")
+            ->orderBy("created_at", "asc")
+            ->first();  
 
         $patient = Patients::find($latest_activity->patient_id);
         $redirect_track = asset("doctor/referred?referredCode=").$latest_activity->code;
@@ -1356,6 +1360,7 @@ class ReferralCtrl extends Controller
             "accepting_doctor" => ucfirst($user->fname).' '.ucfirst($user->lname),
             "accepting_facility_name" => Facility::find($user->facility_id)->name,
             "referred_from" => $latest_activity->referred_from,
+            "facility_referred" => $facility_referred->referred_from,
             "patient_code" => $latest_activity->code,
             "tracking_id" => $track_id,
             "telemedicine" => $track->telemedicine,

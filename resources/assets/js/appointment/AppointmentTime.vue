@@ -118,7 +118,19 @@ export default {
       const displayHour = hour % 12 || 12;
       return `${displayHour}:${minutes} ${ampm}`;
     },
-    
+    isSlotPast(slot){
+        const now = new Date()
+        const slotDateTime = new Date(
+            `${slot.appointment_date}T${slot.appointedTime}`
+        );
+        
+        const today =
+          now.getFullYear() + '-' +
+          String(now.getMonth() + 1).padStart(2, '0') + '-' +
+          String(now.getDate()).padStart(2, '0');
+
+        return slot.appointment_date === today && slotDateTime <= now;
+    },  
     formatTimeRange(timeFrom, timeTo) {
       return `${this.formatTime(timeFrom)} - ${this.formatTime(timeTo)}`;
     },
@@ -254,9 +266,9 @@ export default {
                   class="time-slot-item"
                   :class="{ 
                     'selected': selectedAppointmentTime === slot.id,
-                    'disabled': slot.slot <= 0 
+                    'disabled': isSlotPast(slot) || slot.slot <= 0 
                   }"
-                  @click="slot.slot > 0 ? selectTimeSlot(slot) : null"
+                  @click="(!isSlotPast(slot) && slot.slot > 0) ? selectTimeSlot(slot) : null"
                 >
                   <div class="time-slot-content">
                     <input 
@@ -265,7 +277,7 @@ export default {
                       :value="slot.id"
                       v-model="selectedAppointmentTime"
                       class="hours_radio"
-                      :disabled="slot.slot <= 0"
+                      :disabled="isSlotPast(slot) || slot.slot <= 0"
                       @change="selectTimeSlot(slot)"
                     />
                     <label :for="'slot_' + slot.id" class="time-slot-label">
