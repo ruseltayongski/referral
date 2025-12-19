@@ -28,3 +28,5 @@ Route::get('telemed/test', 'TelemedicineApiCtrl@test');
 Route::get('telemed/appointment/calendar', 'TelemedicineApiCtrl@appointmentCalendar');
 Route::get('telemed/appointment/getAppointment/{id}', 'TelemedicineApiCtrl@getAppointmentDetails');
 Route::post('addPatient/store', 'TelemedicineApiCtrl@storePatient');
+Route::post('doctor/refer/{type}', 'TelemedicineApiCtrl@referPatient');
+Route::get('reasons_for_referral', 'TelemedicineApiCtrl@getReasonForReferral');
