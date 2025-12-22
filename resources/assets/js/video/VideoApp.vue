@@ -1529,29 +1529,34 @@ export default {
         code: this.referral_code,
         form_type: this.form_type,
         tracking_id: this.tracking_id,
+        referring_md: this.form.referring_md,
       };
-
+      
       axios
         .post(`${this.baseUrl}/api/video/prescription/check`, getPrescription)
         .then((response) => {
           if (response.data.status === "success") {
             const prescribedActivityId =
               response.data.prescriptions[0].prescribed_activity_id;
+              if (!response.data.signature) {
+                return Lobibox.alert("error", {
+                  msg: this.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !",
+                });
+              }
+              // Set the PDF URL
+              this.PdfUrl = `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`;
 
-            // Set the PDF URL
-            this.PdfUrl = `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`;
-
-            // Show the modal using the ref method
-            this.$nextTick(() => {
-              this.$refs.pdfViewer.openModal();
-            });
-          } else {
-            Lobibox.alert("error", {
-              msg: "No added prescription!",
-            });
-          }
-        })
-        .catch((error) => {
+              // Show the modal using the ref method
+              this.$nextTick(() => {
+                this.$refs.pdfViewer.openModal();
+              });
+              } else {
+                Lobibox.alert("error", {
+                  msg: "No added prescription!",
+                });
+              }
+          })
+          .catch((error) => {
           console.error(error);
         });
     },
@@ -1559,12 +1564,20 @@ export default {
       const url = `${this.baseUrl}/api/check/labresult`;
       const payload = {
         activity_id: this.activity_id,
+        referring_md: this.form.referring_md,
       };
 
       axios
         .post(url, payload)
         .then((response) => {
           if (response.data.id) {
+          
+            if (!response.data.signature) {
+                return Lobibox.alert("error", {
+                  msg: this.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !",
+                });
+              }
+              
             const pdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
 
             // Set the PDF URL for the modal
@@ -1576,7 +1589,7 @@ export default {
             });
           } else {
             Lobibox.alert("error", {
-              msg: "No lab request has been created by the referred doctor",
+              msg: "No lab request has been created by the referring doctor",
             });
           }
         })

@@ -3,7 +3,7 @@
     <div class="custom-modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Document Viewer</h5>
+          <h5 class="modal-title"> {{ modalTitle }}</h5>
           <button type="button" class="close" @click="closeModal">
             <span>&times;</span>
           </button>
@@ -38,12 +38,19 @@ export default {
   },
   data() {
     return {
-      visible: false
+      visible: false,
+      modalTitle: 'PDF VIEWER',
     };
   },
   methods: {
     openModal() {
       this.visible = true;
+
+      if(this.pdfUrl.includes("prescription")){
+        this.modalTitle = "PRESCRIPTION";
+      }else {
+        this.modalTitle = "LAB REQUEST";
+      }
     },
     closeModal() {
       this.visible = false;

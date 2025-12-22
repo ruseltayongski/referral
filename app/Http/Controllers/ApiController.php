@@ -253,6 +253,10 @@ class ApiController extends Controller
     }
 
     public function checkPrescription(Request $request) {
+        
+        $referringMd = User::find($request->referring_md);
+        $signature = $referringMd->signature;
+        
         $prescriptionStatus = Activity::where("code", $request->code)
             ->whereIn("status", ['prescription', 'followup'])
             ->latest()
@@ -272,9 +276,9 @@ class ApiController extends Controller
             $prescriptions = PrescribedPrescription::where("code", $request->code)
                 ->where("prescribed_activity_id", $prescriptionStatus->id)
                 ->get();
-    
+
             if ($prescriptions->isNotEmpty()) {
-                return response()->json(['status' => 'success', 'prescriptions' => $prescriptions]);
+                return response()->json(['status' => 'success', 'prescriptions' => $prescriptions, 'signature' => $signature]);
             }
         } 
         return response()->json(['status' => 'failed', 'message' => 'No prescriptions found.']);
@@ -2812,7 +2816,17 @@ class ApiController extends Controller
     }
 
     public function checkLabResult(Request $request) {
-        return labRequest::where('activity_id', $request->activity_id)->first();
+        
+        $referringMd = User::find($request->referring_md);
+        $signature = $referringMd->signature;
+        
+        $labRequest= labRequest::where('activity_id', $request->activity_id)->first();
+
+        return response()->json([
+            'id' => $labRequest,
+            'signature' => $signature
+        ]);
+        // return labRequest::where('activity_id', $request->activity_id)->first();
     }
     // ------------------ PRESCRIPTION USING CKEditor -----------
 
