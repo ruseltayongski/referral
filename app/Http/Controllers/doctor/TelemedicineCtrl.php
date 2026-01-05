@@ -900,6 +900,12 @@ class TelemedicineCtrl extends Controller
             return $facility->appointmentSchedules->isNotEmpty();
         })
         ->values();
+        if (request()->wantsJson()) {
+            return response()->json([
+                'user' => $user,
+                'appointment_slot' => $appointment_slot,
+            ]);
+        }
        
         return view('doctor.telemedicine_calendar1',[
             // 'appointment_sched' => $appointment_sched,
