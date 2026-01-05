@@ -452,7 +452,8 @@
                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                 elseif ($redirected_cancelled_track)
                     echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
-                elseif ($redirected_queued_track && ($redirect_track->status == 'redirected' || $position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
+                // elseif ($redirected_queued_track && ($redirect_track->status == 'redirected' || $position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
+                elseif ($redirected_queued_track && !$redirected_accepted_track)
                     echo '<i class="fa fa-hourglass-half" aria-hidden="true" style="font-size:15px;"></i>';
                 else
                     echo '<i class="fa fa-thumbs-up" aria-hidden="true" style="font-size:15px;"></i>';

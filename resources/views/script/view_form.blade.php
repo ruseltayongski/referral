@@ -11,8 +11,6 @@
         let referral_status = "referring";
         // Validate required data
         if (!form_id) {
-            console.error('Form ID is required');
-            alert('Error: Form ID is missing');
             return;
         }
         
