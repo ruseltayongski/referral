@@ -334,7 +334,7 @@ class TelemedicineApiCtrl extends Controller
             return response()->json(['message' => 'Patient added successfully', 'data' => $data, 'address' => $patient_add], 200);
         }
 
-        return response()->json(['message' => 'Patient added successfully', 'data' => $data, 'address' => $patient_add], 200);
+        return response()->json(['message' => 'Patient added successfully', 'data' => $data, 'address' => $patient_add, 'reason_for_referral' => self::getReasonForReferral()], 200);
     }
 
  
