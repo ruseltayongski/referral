@@ -77,7 +77,7 @@ class ReferralCtrl extends Controller
         $start = Carbon::now()->startOfYear()->format('m/d/Y');
         $end = Carbon::now()->endOfDay()->format('m/d/Y');
         $user = Session::get('auth');
- 
+        
         $allowedDepartments = explode(',', $settings->other_department_telemed);
         $telemedOrReferral = $request->filterRef;
 
