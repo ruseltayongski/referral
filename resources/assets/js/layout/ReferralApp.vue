@@ -345,11 +345,11 @@
                                 files = files.map(normalizeUrl);
                                 startIndex = localIndex;
                             } else {
-                                console.warn("data-files attribute is missing or empty.");
+                                // console.warn("data-files attribute is missing or empty.");
                                 return;
                             }
                         } catch (e) {
-                            console.error("Invalid JSON in data-files:", filesAttr, e);
+                            // console.error("Invalid JSON in data-files:", filesAttr, e);
                             return;
                         }
                     }
@@ -438,7 +438,7 @@
                 $("#follow_queue_number"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>") // for follow 2nd position more
                 $("#queue_number"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>")// add this for referred 1st position
                 $("#icon_progress"+patient_code+activity_id).html("<i class=\"fa fa-thumbs-up\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>"); //I add this icon jondy
-                console.log("referred condition", referred_from == this.user.facility_id, "referred from", referred_from, "user facility", this.user.facility_id);
+                // console.log("referred condition", referred_from == this.user.facility_id, "referred from", referred_from, "user facility", this.user.facility_id);
                 if(telemedicine == 0 && parseInt(referred_from) == parseInt(this.user.facility_id) || (telemedicine == 1 && telemed_redirected == "redirected" && parseInt(referred_from) == parseInt(this.user.facility_id))){
                     $("#html_websocket_departed"+patient_code).html(this.buttonDeparted(tracking_id));
                 }
@@ -794,7 +794,6 @@
                     '                                            </a>';
             },
             callADoctor(tracking_id,code,subopd_id, telemedicine) {
-                console.log("follow Up sobOpd_id", subopd_id, this.user.subopd_id, telemedicine, "all condition", this.user.subopd_id == subopd_id && telemedicine == 1);
                 if(this.user.subopd_id == subopd_id && telemedicine == 1){
                     this.tracking_id = tracking_id
                     this.referral_code = code
@@ -843,17 +842,17 @@
                         // 🟩 Poll for window close and unset acceptedBy
                         const interval = setInterval(() => {
                             if (newWindow.closed) {
-                            clearInterval(interval);
-                            let callData = JSON.parse(localStorage.getItem(key) || '{}');
-                            if (callData.acceptedBy === this.user.id) {
-                                delete callData.acceptedBy;
-                            }
-                            if (!callData.startedBy && !callData.acceptedBy) {
-                                localStorage.removeItem(key);
-                            } else {
-                                localStorage.setItem(key, JSON.stringify(callData));
-                            }
-                            console.log('Accepting doctor closed window – updated', callData);
+                                clearInterval(interval);
+                                let callData = JSON.parse(localStorage.getItem(key) || '{}');
+                                if (callData.acceptedBy === this.user.id) {
+                                    delete callData.acceptedBy;
+                                }
+                                if (!callData.startedBy && !callData.acceptedBy) {
+                                    localStorage.removeItem(key);
+                                } else {
+                                    localStorage.setItem(key, JSON.stringify(callData));
+                                }
+                
                             }
                         }, 1000);
                     }
@@ -902,7 +901,7 @@
 
                     // If both fields are empty -> you can re-trigger call
                     if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
-                    console.log(`Both sides cleared – can trigger call for ${tId}`);
+                    // console.log(`Both sides cleared – can trigger call for ${tId}`);
                     // your callADoctor logic here
                     } else {
                     console.log(`Active call state changed for ${tId}`, sharedActive);
@@ -931,7 +930,7 @@
             this.increment_referral = this.count_referral
             Echo.join('new_referral')
                 .listen('NewReferral', (event) => {
-                    console.log("newly incoming::", event);
+                    // console.log("newly incoming::", event);
                     
                     const subOpdIdInt = parseInt(event.payload.subOpdId, 10);
 
@@ -959,8 +958,8 @@
                     if (!shouldDisplay) {
                         return; // Exit early if this event doesn't match current filter
                     }
-                    console.log("transferred condition", this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred');
-                    console.log("passto facility", this.passToVueFacility, 'referred facility',  event.payload.referred_to, "referred from", event.payload.referred_from, "referred from track", event.payload.referred_from_track, "count_referred_from", event.payload.count_referred_from);
+                    // console.log("transferred condition", this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred');
+                    // console.log("passto facility", this.passToVueFacility, 'referred facility',  event.payload.referred_to, "referred from", event.payload.referred_from, "referred from track", event.payload.referred_from_track, "count_referred_from", event.payload.count_referred_from);
 
                     if (this.user.facility_id === event.payload.referred_to || (event.payload.status === 'transferred' && (this.passToVueFacility === event.payload.referred_to || this.passToVueFacility === event.payload.referred_from || event.payload.count_referred_from === event.payload.referred_from))) {
                         this.playAudio(event.payload.telemedicine, subOpdIdInt);
@@ -980,7 +979,7 @@
                                 // remove the dynamic incoming and insert the realtime incoming
                                 let patientCode = event.payload.patient_code;
                                 let existingItem = $("#referral_incoming" + patientCode);
-                                console.log("existingItem", existingItem, 'length existing:', existingItem);
+                               
                                 if (existingItem.length > 0) {
                                     existingItem.remove();
                                 }
@@ -1076,8 +1075,6 @@
 
             Echo.join('referral_accepted')
                 .listen('SocketReferralAccepted', (event) => {
-                    console.log("accepted for: ", event);
-                    console.log("accepted referre", event.payload.referred_from, "oass to vue", this.passToVueFacility )
                     if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id || (event.payload.referred_to === this.passToVueFacility && event.payload.telemedicine === 1)) { // adding or and condition only
                         this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id,event.payload.telemedicine,event.payload.telemed_redirected,event.payload.facility_referred)
                     }
@@ -1147,7 +1144,6 @@
                             this.activity_id = event.payload.activity_id;
                             
                             const openedTrackingId = localStorage.getItem("telemedicine_tracking_id");
-                            console.log("openedTrackingId", openedTrackingId);
                             if(this.activeCallWindows.has(event.payload.tracking_id) || this.activeCallWindows.has(openedTrackingId)){
                                 const existingWindow = this.activeCallWindows.get(event.payload.tracking_id);   
                                 const AcceptingWindow = this.activeCallWindows.get(openedTrackingId);
@@ -1206,21 +1202,20 @@
 
                             const tId = event.payload.tracking_id;
                             const sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
-                                console.log("working");
+                                
                             if (event.payload.referred_to === 63) {
-                                console.log("walay action md");
                                 if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
                                     this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
                                 } else {
-                                    console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                                    // console.log(`Skipping callADoctor – already in active call for ${tId}`);
                                 }
                             } 
                             else if (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id) {
-                                console.log("accepted md");
+                                // console.log("accepted md");
                                 if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
                                     this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
                                 } else {
-                                    console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                                    // console.log(`Skipping callADoctor – already in active call for ${tId}`);
                                 }
                             }
                         }
@@ -1230,9 +1225,6 @@
                         }
 
                         if(event.payload.status == "discharged" && (event.payload.referred_from === this.user.facility_id || event.payload.referred_from === this.passToVueFacility)) {
-
-                            console.log("path get", event.payload);
-
                             this.notifyReferralDischarged(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                         }
 
