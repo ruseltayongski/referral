@@ -108,7 +108,7 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
-    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }} {{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->id }}<br><br> {{ $referred_trackFollowSubOpdId->count() > 0 && isset($referred_trackFollowSubOpdId->sub_opdId) ? '(' . ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) . ')' : '' }}</small> <br>
+    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}<br><br> {{ $referred_trackFollowSubOpdId->count() > 0 && isset($referred_trackFollowSubOpdId->sub_opdId) ? '(' . ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) . ')' : '' }}</small> <br>
     
     <br>
     <div class="stepper-wrapper">
