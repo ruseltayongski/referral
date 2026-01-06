@@ -108,7 +108,7 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
-    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }} <br><br> {{ $referred_trackFollowSubOpdId->count() > 0 && isset($referred_trackFollowSubOpdId->sub_opdId) ? '(' . ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) . ')' : '' }}</small> <br>
+    <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }} {{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->id }}<br><br> {{ $referred_trackFollowSubOpdId->count() > 0 && isset($referred_trackFollowSubOpdId->sub_opdId) ? '(' . ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) . ')' : '' }}</small> <br>
     
     <br>
     <div class="stepper-wrapper">
@@ -584,8 +584,8 @@
 
      @php
         $redirectedTrack = json_decode($redirected_track, true);
-        $referredFromArray = array_column($redirectedTrack, 'referred_from');
-
+        $referredFromArray = null;          
+            
     @endphp
 
     @if(count($redirected_track) > 0)
@@ -593,6 +593,15 @@
             <?php
             $queue_redirected = \App\Activity::where('code',$redirect_track->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
             $position_count++;
+            
+            $count_transfer = \App\Activity::where('code',$redirect_track->code)->where("status", "arrived")->count();
+
+            if($count_transfer == 1){
+                $referredFromArray = array_column($redirectedTrack, 'referred_to');  
+            }else{
+                $referredFromArray = array_column($redirectedTrack, 'referred_from');  
+            }
+          
             $redirected_seen_track = \App\Seen::where("code",$redirect_track->code)
                 ->where("facility_id",$redirect_track->referred_to)
                 ->where("created_at",">=",$redirect_track->created_at)
@@ -661,12 +670,13 @@
                 ->exists();
             ?>
             <!-- Start changes -->
-            <small class="label position-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name }}</small><br>
+            <small class="label position-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>
             <input type="hidden" id="pass_to_vue_facility" value="{{ end($referredFromArray)  }}">
             <div class="stepper-wrapper">
                 <div class="stepper-item completed">
                     <div class="step-counter  step-counter-referral"><i class="fa fa-share" aria-hidden="true"></i></div>
-                    <div class="step-name">{{ count($redirected_track) > 1 ? 'Redirected' : 'Referred' }}</div>
+                    {{-- <div class="step-name">{{ count($redirected_track) > 1 ? 'Redirected' : 'Referred' }}</div> --}} 
+                    <div class="step-name">{{ $redirect_track->status }}</div>
                 </div>
                 <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
                     <div class="step-counter step-counter-referral"><i class="fa fa-eye" aria-hidden="true"></i></div>

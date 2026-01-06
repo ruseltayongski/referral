@@ -352,7 +352,7 @@ $user = Session::get('auth');
                                @endif
                             @endif
 
-                            <a data-toggle="modal" href="#EmrForm" 
+                            <a data-toggle="modal" href="#" 
                                data-patient="{{ $row->patient_id }}"
                                data-code="{{ $row->code }}"
                                data-emr="10"

@@ -1281,6 +1281,8 @@ class ReferralCtrl extends Controller
             "referred_from" => $activity->referred_from, //
             "patient_code" => $activity->code, //
             "date_rejected" => date('M d, Y h:i A',strtotime($activity->created_at)), //
+            "telemed" => $track->telemedicine,
+            "referred_to" => $track->referred_to,
             "remarks" => $activity->remarks, //
             "activity_id" => $latest_referred_or_redirected->id,
             "redirect_track" => $redirect_track
@@ -1360,6 +1362,7 @@ class ReferralCtrl extends Controller
             "accepting_doctor" => ucfirst($user->fname).' '.ucfirst($user->lname),
             "accepting_facility_name" => Facility::find($user->facility_id)->name,
             "referred_from" => $latest_activity->referred_from,
+            "referred_to" => $latest_activity->referred_to,
             "facility_referred" => $facility_referred->referred_from,
             "patient_code" => $latest_activity->code,
             "tracking_id" => $track_id,
@@ -1427,6 +1430,8 @@ class ReferralCtrl extends Controller
             "caller_by_facility" => $caller_by_facility,
             "caller_date" => date('M d, Y h:i A',strtotime($activity->created_at)),
             "called_to" => $activity->referred_from,
+            "called_from" => $track->referred_to,
+            "telemed" => $track->telemedicine,
             "called_to_facility" => $called_to_facility,
             "count_caller" => $count_caller,
             "redirect_track" => $redirect_track
@@ -1474,6 +1479,8 @@ class ReferralCtrl extends Controller
             "patient_code" => $track->code,
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
+            "referred_to" => $latest_activity->referred_to,
+            "telemed" => $track->telemedicine,
             "remarks" => $req->remarks,
             "redirect_track" => $redirect_track
         ];
@@ -1520,6 +1527,8 @@ class ReferralCtrl extends Controller
             "arrived_date" => date('M d, Y h:i A',strtotime($date)),
             "patient_code" => $track->code,
             "activity_id" => $latest_activity->id,
+            "referred_to" => $track->referred_to,
+            "telemed" => $track->telemedicine,
             "referred_from" => $latest_activity->referred_from,
             "remarks" => $req->remarks,
             "redirect_track" => $redirect_track
@@ -1712,7 +1721,7 @@ class ReferralCtrl extends Controller
         return $referral_upward;
     }
 
-    public function transfer(Request $req) {
+    public function transfer(Request $req) {// my transfer
         
         $upward_referral =  self::Referral_upward($req->code);
         $user = Session::get('auth');
@@ -1749,6 +1758,13 @@ class ReferralCtrl extends Controller
         );
         $track->update($new_data);
 
+        $count_transfer  = Activity::where('code',$track->code)->where("status", "arrived")->count();
+        $count_referred_from = null; 
+
+        if($count_transfer === 1 && $track->telemedicine === 1){
+            $count_referred_from = Activity::where('code',$track->code)->where("status", "arrived")->value('referred_from');
+        }
+
         //websocket
         $patient = Patients::find($track->patient_id);
         $count_seen = Seen::where('tracking_id',$track->id)->count();
@@ -1762,12 +1778,15 @@ class ReferralCtrl extends Controller
             "referred_to" => (int)$req->facility,
             "referred_department" => Department::find($req->department)->description,
             "referred_from" => $user->facility_id,
+            "referred_from_track" => $track->referred_from,
+            "count_referred_from" => $count_referred_from,
             "form_type" => $track->type,
             "tracking_id" => $track->id,
             "referred_date" => date('M d, Y h:i A'),
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
             "patient_code" => $req->code,
+            "remarks" =>  $req->remarks,
             "status" => "transferred",
             'telemedicine' => $upward_referral->status ? 0 : $track->telemedicine,
             "count_seen" => $count_seen,
@@ -1950,6 +1969,8 @@ class ReferralCtrl extends Controller
             "seen_by_facility" => Facility::find($user->facility_id)->name,//
             "referring_name" => Facility::find($tracking->referred_to)->name,
             "referring_facility_id" => (int)$tracking->referred_from,
+            "referred_facility_id" => (int)$tracking->referred_to,
+            "telemed" => $tracking->telemedicine,
             "referred_date" => date('M d, Y h:i A'),
             "patient_sex" => $patient->sex,
             "age" => ParamCtrl::getAge($patient->dob),
@@ -1981,7 +2002,7 @@ class ReferralCtrl extends Controller
     public function callerByList($track_id)
     {
         $data = \App\Tracking::select(
-            \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lnFame) as user_md"),
+            \DB::raw("concat('Dr. ',users.fname,' ',users.mname,' ',users.lname) as user_md"),
             DB::raw("DATE_FORMAT(activity.created_at,'%M %d, %Y %h:%i %p') as date_call"),
             "users.contact"
         )
@@ -3378,6 +3399,8 @@ class ReferralCtrl extends Controller
             "queued_by" => ucfirst($user->fname).' '.ucfirst($user->lname),
             "queued_by_facility" => Facility::find($user->facility_id)->name,
             "referred_from" => $activity->referred_from,
+            "referred_to" => $activity->referred_to,
+            "telemed" => $track->telemedicine,
             "date_queued" => date('M d, Y h:i A',strtotime($activity->created_at)),
             "remarks" => $activity->remarks,
             "redirect_track" => $redirect_track,

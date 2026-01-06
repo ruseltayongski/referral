@@ -393,6 +393,29 @@
                     });
                 }
             },
+            notifyTransferred(patient_name, referring_md, referring_name, redirect_track,patient_code, date_transferred,remarks){
+             
+                          $("#prepend_from_websocket"+patient_code).prepend('<tr class="toggle toggle" style="display: table-row;">\n' +
+                    '                                                            <td>'+date_transferred+'</td>\n' +
+                    '                                                            <td>\n' +
+                    '                                                                <span class="txtPatient">'+patient_name+'</span>  was transferred by <span class="txtDoctor">Dr. '+referring_md+'</span> of <span class="txtHospital">'+referring_name+'</span>.\n' +
+                    '                                                                <span class="remarks">Remarks: '+remarks+'</span>\n' +
+                    '                                                            </td>\n' +
+                    '                                                        </tr>');
+
+                 let content = patient_name+' was transferred by Dr. '+referring_md+' of '+referring_name + '<br><br>\n' +
+                    '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
+                    '           <i class=\'fa fa-stethoscope\'></i> Track\n' +
+                    '       </a>';
+                
+                Lobibox.notify('success', {
+                    delay: false,
+                    title: 'Transferred',
+                    msg: content,
+                    img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png",
+                    sound: false
+                });
+            },
             notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
                 $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 let msg = patient_name+' was seen by Dr. '+seen_by+' of '+seen_by_facility + '<br><br>\n' +
@@ -936,8 +959,10 @@
                     if (!shouldDisplay) {
                         return; // Exit early if this event doesn't match current filter
                     }
+                    console.log("transferred condition", this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred');
+                    console.log("passto facility", this.passToVueFacility, 'referred facility',  event.payload.referred_to, "referred from", event.payload.referred_from, "referred from track", event.payload.referred_from_track, "count_referred_from", event.payload.count_referred_from);
 
-                    if(this.user.facility_id === event.payload.referred_to || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred')) {
+                    if (this.user.facility_id === event.payload.referred_to || (event.payload.status === 'transferred' && (this.passToVueFacility === event.payload.referred_to || this.passToVueFacility === event.payload.referred_from || event.payload.count_referred_from === event.payload.referred_from))) {
                         this.playAudio(event.payload.telemedicine, subOpdIdInt);
                         this.increment_referral++;
                         if($("#referral_page_check").val()) {
@@ -1008,7 +1033,14 @@
                                 $('.timeline').prepend(content);
                             
                         }
-                        this.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track,event.payload.subOpdId,event.payload.telemedicine)
+
+                        if(event.payload.status === "transferred"){
+                            this.notifyTransferred(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track,event.payload.patient_code, event.payload.referred_date,event.payload.remarks);
+                        }else{
+                            this.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track,event.payload.subOpdId,event.payload.telemedicine);
+                        }
+                        
+
                     }
                 });
 
@@ -1037,7 +1069,7 @@
             Echo.join('referral_seen')
                 .listen('SocketReferralSeen', (event) => {
                     $("#count_seen"+event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
-                    if(event.payload.referring_facility_id === this.passToVueFacility || event.payload.referring_facility_id === this.user.facility_id) {
+                    if(event.payload.referring_facility_id === this.passToVueFacility || event.payload.referring_facility_id === this.user.facility_id || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.telemed === 1)) {
                         this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track)
                     }
                 });
@@ -1045,21 +1077,22 @@
             Echo.join('referral_accepted')
                 .listen('SocketReferralAccepted', (event) => {
                     console.log("accepted for: ", event);
-                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) { // adding or and condition only
+                    console.log("accepted referre", event.payload.referred_from, "oass to vue", this.passToVueFacility )
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id || (event.payload.referred_to === this.passToVueFacility && event.payload.telemedicine === 1)) { // adding or and condition only
                         this.notifyReferralAccepted(event.payload.patient_name, event.payload.accepting_doctor, event.payload.accepting_facility_name, event.payload.activity_id, event.payload.patient_code, event.payload.tracking_id ,event.payload.date_accepted, event.payload.remarks, event.payload.redirect_track, event.payload.accepting_doctor_id,event.payload.telemedicine,event.payload.telemed_redirected,event.payload.facility_referred)
                     }
                 });
 
             Echo.join('referral_rejected')
                 .listen('SocketReferralRejected', (event) => {
-                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from  === this.user.facility_id) { // adding or and condition only
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from  === this.user.facility_id || (this.passToVueFacility === event.payload.referred_to && event.payload.telemed === 1)) { // adding or and condition only
                         this.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine)
                     }
                 });
 
             Echo.join('referral_call')
                 .listen('SocketReferralCall', (event) => { // adding or and condition only
-                    if(event.payload.called_to === this.passToVueFacility || event.payload.called_to === this.user.facility_id) {
+                    if(event.payload.called_from === this.passToVueFacility || event.payload.called_to === this.passToVueFacility || event.payload.called_to === this.user.facility_id || (event.payload.called_from === this.passToVueFacility && event.payload.telemed === 1)) {
                         this.notifyReferralCall(event.payload.patient_code, event.payload.count_caller, event.payload.caller_date, event.payload.caller_by, event.payload.caller_by_facility, event.payload.called_to_facility, event.payload.caller_by_contact, event.payload.redirect_track)
                     }
                 });
@@ -1073,14 +1106,14 @@
 
             Echo.join('referral_arrived')
                 .listen('SocketReferralArrived', (event) => { // adding or and condition only
-                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id || (this.passToVueFacility === event.payload.referred_to && event.payload.telemed === 1)) {
                         this.notifyReferralArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                     }
                 });
 
             Echo.join('referral_not_arrived')
                 .listen('SocketReferralNotArrived', (event) => {
-                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id) {
+                    if(event.payload.referred_from === this.passToVueFacility || event.payload.referred_from === this.user.facility_id || (event.payload.referred_to === this.passToVueFacility && event.payload.telemed === 1)) {
                         this.notifyReferralNotArrived(event.payload.patient_code, event.payload.activity_id, event.payload.patient_name, event.payload.current_facility, event.payload.arrived_date, event.payload.remarks, event.payload.redirect_track)
                     }
                 });
@@ -1094,7 +1127,6 @@
 
             Echo.join('referral_discharged')
                 .listen('SocketReferralDischarged', (event) => {
-                    //  console.log("event discharge:",event);
                     if(event.payload.telemedicine_status === "upward"){
                         $("#html_websocket_upward" + event.payload.code).remove();
                         $("#upward_button" + event.payload.code).remove();
@@ -1464,8 +1496,8 @@
                         }
                     }
                     else if(event.payload.notif_type === "queue patient") {
-                        // console.log("que at::", event.payload);
-                        if(event.payload.referred_from === this.user.facility_id) {
+                        //console.log("que at::", event.payload);
+                        if(event.payload.referred_from === this.user.facility_id || this.passToVueFacility === event.payload.referred_from) {
                             this.notifyReferralQueueUpdated(event.payload.patient_code, event.payload.activity_id, event.payload.remarks, event.payload.date_queued, event.payload.patient_name, event.payload.queued_by, event.payload.queued_by_facility, event.payload.redirect_track, event.payload.first_queue);
                         }
                     }

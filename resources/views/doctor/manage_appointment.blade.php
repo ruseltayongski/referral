@@ -1829,27 +1829,22 @@
         let appointmentSlot = [];
         
         function checkConflict(slotIndex, fromTime, toTime) {
-            console.log("Checking conflict for slotIndex:", slotIndex, "fromTime:", fromTime, "toTime:", toTime);
-            console.log("appointment data here", appointmentSlot.length);
-            // if(appointmentSlot.length == slotIndex){
-                
-            // }else{
-                for (let i = 0; i < appointmentSlot.length; i++) {
-                    if (i === slotIndex) continue; // Skip checking against itself for updates
-                    // console.log("Comparing with slot:", i, "slot index:", slotIndex);
-                    const slot = appointmentSlot[i];
-                    const timeOverlap = (fromTime < slot.to && toTime > slot.from);
+            console.log("slotIndex", slotIndex, "number appointmentSlot", appointmentSlot.length);
+            for (let i = 0; i < appointmentSlot.length; i++) {
+                if (i === slotIndex) continue; // Skip checking against itself for updates
+                // console.log("Comparing with slot:", i, "slot index:", slotIndex);
+                const slot = appointmentSlot[i];
+                const timeOverlap = (fromTime < slot.to && toTime > slot.from);
 
-                    if (timeOverlap) {
-                        // console.log("conflict appointmentSlot", appointmentSlot);
-                        return {
-                            hasConflict: true,
-                            message: `Time slot ${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} conflicts with existing appointment ${slot.from.toLocaleTimeString()} - ${slot.to.toLocaleTimeString()}`
-                        };
+                if (timeOverlap) {
+                    // console.log("conflict appointmentSlot", appointmentSlot);
+                    return {
+                        hasConflict: true,
+                        message: `Time slot ${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} conflicts with existing appointment ${slot.from.toLocaleTimeString()} - ${slot.to.toLocaleTimeString()}`
+                    };
 
-                    }
                 }
-            //}
+            }
             
             return { hasConflict: false };
         }
@@ -1887,7 +1882,10 @@
             if (OrigslotIndex < appointmentSlot.length) {
                 // Update existing slot
                 appointmentSlot[OrigslotIndex] = newSlot;
-            } else {
+            }else if(slotIndex === appointmentSlot.length){
+                appointmentSlot.push(newSlot);
+            }
+             else {
                 // Add new slot
                 appointmentSlot.push(newSlot);
             
