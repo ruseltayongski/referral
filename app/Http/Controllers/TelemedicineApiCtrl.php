@@ -24,9 +24,12 @@ use App\Barangay;
 use App\Icd10;
 use App\Tracking;
 use App\Icd;
+use App\Baby;
+use App\PregnantForm;
 use App\Department;
 use App\PatientForm;
 use App\ReasonForReferral;
+use App\Http\Controllers\doctor\PatientCtrl;  
 
 class TelemedicineApiCtrl extends Controller
 {
@@ -619,6 +622,145 @@ class TelemedicineApiCtrl extends Controller
                                           ucfirst($patient_name->mname) . ' ' .
                                           ucfirst($patient_name->lname),
                     ],
+                ], 201);
+            }else if ($type === 'pregnant') {
+
+                /* =========================
+                * STORE BABY AS PATIENT
+                * ========================= */
+                $baby = [
+                    'fname' => $json['baby_fname'] ?? '',
+                    'mname' => $json['baby_mname'] ?? '',
+                    'lname' => $json['baby_lname'] ?? '',
+                    'dob'   => $json['baby_dob'] ?? '',
+                    'civil_status' => 'Single'
+                ];
+
+                $baby_id = PatientCtrl::storeBabyAsPatient($baby, $patient_id);
+
+                Baby::updateOrCreate(
+                    [
+                        'baby_id'   => $baby_id,
+                        'mother_id' => $patient_id
+                    ],
+                    [
+                        'weight'           => $json['baby_weight'] ?? '',
+                        'gestational_age'  => $json['baby_gestational_age'] ?? '',
+                        'birth_date'       => $json['baby_dob'] ?? ''
+                    ]
+                );
+
+                /* =========================
+                * CREATE PREGNANT FORM
+                * ========================= */
+                $form = PregnantForm::create([
+                    'unique_id'                => $unique_id,
+                    'code'                     => $code,
+                    'referring_facility'       => $user->facility_id,
+                    'referred_by'              => $user->id,
+                    'record_no'                => $json['record_no'] ?? '',
+                    'referred_date'            => date('Y-m-d H:i:s'),
+                    'referred_to'              => $referred_facility,
+                    'department_id'            => $referred_department,
+                    'covid_number'             => $json['covid_number'] ?? null,
+                    'refer_clinical_status'    => $json['clinical_status'] ?? null,
+                    'refer_sur_category'       => $json['sur_category'] ?? null,
+
+                    'patient_woman_id'         => $patient_id,
+                    'woman_reason'             => $json['woman_reason'] ?? '',
+                    'woman_major_findings'     => $json['woman_major_findings'] ?? '',
+                    'woman_before_treatment'   => $json['woman_before_treatment'] ?? '',
+                    'woman_before_given_time'  => $json['woman_before_given_time'] ?? '',
+                    'woman_during_transport'   => $json['woman_during_treatment'] ?? '',
+                    'woman_transport_given_time'=> $json['woman_during_given_time'] ?? '',
+                    'woman_information_given'  => $json['woman_information_given'] ?? '',
+
+                    'patient_baby_id'          => $baby_id,
+                    'baby_reason'              => $json['baby_reason'] ?? '',
+                    'baby_major_findings'      => $json['baby_major_findings'] ?? '',
+                    'baby_last_feed'           => $json['baby_last_feed'] ?? '',
+                    'baby_before_treatment'    => $json['baby_before_treatment'] ?? '',
+                    'baby_before_given_time'   => $json['baby_before_given_time'] ?? '',
+                    'baby_during_transport'    => $json['baby_during_treatment'] ?? '',
+                    'baby_transport_given_time'=> $json['baby_during_given_time'] ?? '',
+                    'baby_information_given'   => $json['baby_information_given'] ?? '',
+
+                    'notes_diagnoses'          => $json['notes_diagnosis'] ?? '',
+                    'reason_referral'          => $json['reason_referral1'] ?? '',
+                    'other_reason_referral'    => $json['other_reason_referral'] ?? '',
+                    'other_diagnoses'          => $json['other_diagnosis'] ?? '',
+                ]);
+
+                /* =========================
+                * FILE UPLOAD
+                * ========================= */
+                $file_paths = '';
+                if ($req->hasFile('file_upload')) {
+                    foreach ($req->file('file_upload') as $file) {
+                        $filename = $file->getClientOriginalName();
+                        $file->storeAs('uploads/' . $user->username, $filename);
+                        $file_paths .= ApiController::fileUploadUrl() . $user->username . '/' . $filename . '|';
+                    }
+                    $file_paths = rtrim($file_paths, '|');
+                }
+                $form->file_path = $file_paths;
+                $form->save();
+
+                /* =========================
+                * ICD CODES
+                * ========================= */
+                if (!empty($json['icd_ids']) && is_array($json['icd_ids'])) {
+                    foreach ($json['icd_ids'] as $icd_id) {
+                        Icd::create([
+                            'code'   => $form->code,
+                            'icd_id' => $icd_id
+                        ]);
+                    }
+                }
+
+                /* =========================
+                * PUSH NOTIFICATION
+                * ========================= */
+                if ($referred_facility == 790 || $referred_facility == 23) {
+                    $patient = Patients::find($patient_id);
+
+                    $referred_patient_data = [
+                        'age' => (string) ParamCtrl::getAge($patient->dob),
+                        'chiefComplaint' => $json['woman_major_findings'] ?? '',
+                        'department' => Department::find($referred_department)->description ?? null,
+                        'patient' => ucfirst($patient->fname).' '.ucfirst($patient->mname).' '.ucfirst($patient->lname),
+                        'sex' => (string) $patient->sex,
+                        'referring_hospital' => Facility::find($user->facility_id)->name ?? null,
+                        'referred_to' => (string) $referred_facility,
+                        'date_referred' => (string) $form->created_at,
+                        'userid' => $user->id,
+                        'patient_code' => $form->code
+                    ];
+
+                    ApiController::notifierPushNotification($referred_patient_data);
+                }
+
+                self::addTracking(
+                    $code,
+                    $patient_id,
+                    $user,
+                    $json,
+                    $type,
+                    $form->id,
+                    'refer',
+                    $telemed_assigned_id
+                );
+
+                DB::commit();
+
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Pregnant patient referred successfully',
+                    'data'    => [
+                        'form_id' => $form->id,
+                        'code'    => $form->code,
+                        'push'    => $referred_patient_data
+                    ]
                 ], 201);
             }
 
