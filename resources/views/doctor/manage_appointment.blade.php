@@ -241,7 +241,7 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-
+                        
                         <tbody>
                             @foreach($appointment_schedule as $row)
                                 @php 
@@ -267,16 +267,19 @@
                                             {{ $remainingSlots }}
                                         </span>
                                     </td>
+                                    
                                     <td>
                                         <div class="btn-group" role="group">
-                                            @if($type === 'upcoming')
+                                            @if($type === 'upcoming' && $row->created_by == $user->id)
                                                 <button class="btn btn-primary btn-sm" title="Edit" onclick="UpdateModal({{ $row->id }})" style="margin-right: 4px;">
                                                     <i class="fa fa-pencil"></i>
                                                 </button>
                                             @endif
+                                            @if($row->created_by == $user->id)
                                             <button class="btn btn-danger btn-sm" title="Delete" onclick="DeleteModal({{ $row->id }})">
                                                 <i class="fa fa-trash"></i>
                                             </button>
+                                            @endif
 
                                             @if($row->configId)
                                                 <button class="btn btn-info btn-sm" title="View Schedule" data-toggle="modal" data-target="#scheduleModal{{$row->id}}">

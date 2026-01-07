@@ -88,7 +88,7 @@ class TelemedicineCtrl extends Controller
 
             // Apply facility filter for all users
             $query->where('facility_id', $facility);
-            $query->where('created_by', $user->id);
+            // $query->where('created_by', $user->id);
             
             if($type === 'upcoming'){
                 // $query->where('appointed_date', '>=', Carbon::now()->format('Y-m-d'));
