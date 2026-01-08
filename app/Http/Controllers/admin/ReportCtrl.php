@@ -1013,9 +1013,17 @@ class ReportCtrl extends Controller
          $data = [];
 
         // 🟩 Handle "Capitol" level users (run for each facility)
-        if ($user->level == "capitol" && empty($request->facility_id)) {
+        if ($user->level === "capitol") {
+            if (empty($request->facility_id)) {
+                $facilityIds = $capitol_facility;
+            } else {
+                if (!in_array($request->facility_id, $capitol_facility)) {
+                    abort(403, 'Unauthorized facility access');
+                }
+                $facilityIds = [$request->facility_id];
+            }
 
-            foreach ($capitol_facility as $facility_id) {
+            foreach ($facilityIds as $facility_id) {
 
                 if ($request->request_type == "incoming") {
                     $result = DB::connection('mysql')->select("
