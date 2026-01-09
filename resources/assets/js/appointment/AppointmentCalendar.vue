@@ -22,9 +22,9 @@ export default {
   name: "AppointmentCalendar",
   data() {
     return {
+      selectedAppointmentKey: null,
       calendar: null,
       previouslyClickedDay: null,
-      dateSelected: null,
       appointedParams:{} ,
       header: {
         left: "prev,next today",
@@ -102,7 +102,7 @@ export default {
     getFirstAvailableDate(){
       console.log("date appointment:",this.AppointmentDept);
     },  
-    buildEventsFromSlots(dateselected) {
+    buildEventsFromSlots(dateselected,titleOpd,deptKey) {
         if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
 
         const slotsForDate = [];
@@ -154,7 +154,8 @@ export default {
                 assignedDoctors: slot.telemed_assigned_doctor || [],
                 opdCategory: slot.opdCategory,
                 departmentId: slot.department_id,
-                slot: (Number(slot.slot) || 0) - (slot.telemed_assigned_doctor?.length || 0)
+                slot: (Number(slot.slot) || 0) - (slot.telemed_assigned_doctor?.length || 0),
+                isAvailable: slot.isAvailable 
             });
         });
 
@@ -169,6 +170,11 @@ export default {
               const isUserBooked = slotsArray.some(slot => 
                   slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id)
               );
+              
+              console.log("sampllle", group);
+              const userclickedKey = `${group.deptName}_${group.date}`;
+              const isSelected = userclickedKey === deptKey;
+              console.log("is selected", isSelected);
               const hasAvailable = group.slots.some(s => s.isAvailable);
 
               // console.log("is user booked?", slotsArray);
@@ -178,9 +184,12 @@ export default {
               return {
                   title: group.deptName,
                   start: start.format('YYYY-MM-DD'),
-                  className: ["sub-opd-label", isUserBooked ? "with-pin" : null,
-                     hasAvailable ? "sub-opd-label" : "slot-full",
-                  ],
+                  className: [
+                    "sub-opd-label",
+                    !hasAvailable && "slot-full",
+                    isUserBooked && "with-pin",
+                    isSelected && "with-pin-left"
+                  ].filter(Boolean)
               };
           }
       ).filter(Boolean);
@@ -211,11 +220,16 @@ export default {
         editable: false,
         eventClick: async (info) => {
           const event = info.event || info;
-         
           const clickedDate = moment(event.start).format("YYYY-MM-DD");
-          this.buildEventsFromSlots(clickedDate);
-
+          console.log("event asasd", event.title);
+          
           const deptKey = event.title + '_' + clickedDate;
+          this.selectedAppointmentKey = deptKey;
+
+          this.buildEventsFromSlots(clickedDate,event.title,deptKey);
+
+          this.calendar.fullCalendar("removeEvents");
+          this.calendar.fullCalendar("addEventSource", this.events);
 
           const filterredSlots =  this.AppointmentDept[deptKey] || []; 
           this.$emit("appointedTime", filterredSlots);
@@ -819,5 +833,34 @@ export default {
   border-radius: 6px;
   font-size: 1em;
   border: 1px solid #ddd;
+}
+
+/* .with-pin-left .fc-title:before {
+  content: "";
+  float: left;
+  margin-left: 6px;
+
+  background: #ffffff;
+  padding: 2px 2px;
+  border-radius: 6px;
+  font-size: 1em;
+  border: 1px solid #ddd;
+
+} */
+
+ .with-pin-left .fc-title::before {
+  content: "";
+  display: inline-block;
+  float: left;
+
+  margin-left: 6px;
+  width: 14px;
+  height: 14px;
+
+  background: url("/referral/public/images/cursor.png") no-repeat center;
+  background-size: contain;
+  padding: 1px 1px;
+  border-radius: 6px;
+  font-size: 1em;
 }
 </style>
