@@ -15,7 +15,7 @@
                         <select name="facility_category" id="" class="form-control">
                             <option value="">Select Facility</option>
                             @foreach($data as $facility => $reasons)
-                            <option value="{{ $facility }}">{{ $facility }}</option>
+                                <option value="{{ $facility }}">{{ $facility }}</option>
                             @endforeach
                         </select>
                         <button type="submit" class="btn btn-md btn-info"><i class="fa fa-search"></i> Filter</button>
