@@ -906,7 +906,6 @@ class TelemedicineCtrl extends Controller
                 'appointment_slot' => $appointment_slot,
             ]);
         }
-       
         return view('doctor.telemedicine_calendar1',[
             // 'appointment_sched' => $appointment_sched,
             'appointment_slot' => $appointment_slot,

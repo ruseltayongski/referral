@@ -82,9 +82,7 @@ export default {
   },
   computed: {
     AvailableSlot() {
-      // let totalSlots = 0;  // Total number of slots
-      // let assignedSlots = 0; // Slots that have been assigned
-      // let expiredSlots  = 0;
+
       let availableSlots = 0;
 
       const now = new Date();
@@ -92,15 +90,20 @@ export default {
       if (this.appointment && this.appointment.appointment_schedules) {
         this.appointment.appointment_schedules.forEach((sched) => {
           const countslot = sched.slot || 0;
+
           const scheduleDateTime = new Date(
             `${sched.appointed_date}T${sched.appointed_time}`
           );
 
+          const activveAssignedDoctors = sched.telemed_assigned_doctor.filter(
+            doctor => doctor.rebook != 1
+          );
+
           if (
             scheduleDateTime > now &&
-            sched.telemed_assigned_doctor.length < countslot
+            activveAssignedDoctors.length < countslot
           ) {
-            availableSlots += countslot - sched.telemed_assigned_doctor.length;
+            availableSlots += countslot - activveAssignedDoctors.length;
           }
         });
       }
@@ -120,6 +123,10 @@ export default {
             `${sched.appointed_date}T${sched.appointed_time}`
           );
 
+           const activveAssignedDoctors = sched.telemed_assigned_doctor.filter(
+            doctor => doctor.rebook != 1
+          );
+
           const isCurrentMonth =
             scheduleDateTime.getMonth() === currentMonth &&
             scheduleDateTime.getFullYear() === currentYear;
@@ -127,14 +134,14 @@ export default {
           if (isCurrentMonth) {
             if (
               sched.telemed_assigned_doctor &&
-              sched.telemed_assigned_doctor.length > 0
+              activveAssignedDoctors.length > 0
             ) {
-              totalAppointments += sched.telemed_assigned_doctor.length;
+              totalAppointments += activveAssignedDoctors.length;
             }
 
             if (scheduleDateTime < now) {
               totalAppointments +=
-                countSlot - (sched.telemed_assigned_doctor.length || 0);
+                countSlot - (activveAssignedDoctors.length || 0);
             }
           }
         });

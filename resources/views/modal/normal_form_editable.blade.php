@@ -14,7 +14,6 @@ $telemed_config_time = json_decode(json_decode($appointmentParam, true), true)[0
 $telemed_subOpdId = json_decode(json_decode($appointmentParam, true), true)[0]['subOpdId'] ?? json_decode($appointmentParam, true)[0]['subOpdId'];
 
 $telemed_departmentId = json_decode(json_decode($appointmentParam, true), true)[0]['departmentId'] ?? json_decode($appointmentParam, true)[0]['departmentId'];
-
 if(is_string($telemed_config_time) && strpos($telemed_config_time, '-') !== false){
     [$timeFrom, $timeTo] = explode('-', $telemed_config_time);
 }else{

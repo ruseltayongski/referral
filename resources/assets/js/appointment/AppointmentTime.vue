@@ -39,6 +39,7 @@ export default {
       showAppointmentTime: false,
       base: $("#broadcasting_url").val(),
       followUpReferredId: 0,
+      followDeclined: null,
       followUpCode: null,
       configSelectedTime: null,
       configOpdcategory: null,
@@ -81,6 +82,7 @@ export default {
     if (telemedicineFollowUp) {
       this.followUpReferredId = telemedicineFollowUp[0].referred_id;
       console.log(this.followUpReferredId);
+      this.followDeclined = telemedicineFollowUp[0].Lateststatus;
       this.followUpCode = telemedicineFollowUp[0].code;
     }
   },
@@ -136,9 +138,13 @@ export default {
     },
     
     selectTimeSlot(slot) {
+      console.log("my sloe sched", slot);
       this.selectedAppointmentTime = slot.id;
-      this.selectedAppointmentDoctor = slot.assignedDoctors.length > 0 
-        ? slot.assignedDoctors[0].id 
+      // this.selectedAppointmentDoctor = slot.assignedDoctors.length > 0 
+      //   ? slot.assignedDoctors[0].id 
+      //   : null;
+      this.selectedAppointmentDoctor = slot.createdId.length > 0 
+        ? slot.createdId
         : null;
     },
     
@@ -183,6 +189,7 @@ export default {
       }
      
       if (this.followUpReferredId) {
+        console.log("AppointmentDoctor", this.selectedAppointmentDoctor, opdSubcateg);
         const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
@@ -196,7 +203,17 @@ export default {
         $("#configTimefrom").val(timeFrom);
         $("#configTimeto").val(timeTo);
         $("#OPD_SubId").val(parseInt(opdSubcateg));
-        $("#followup_header").html("Follow Up Patient");
+
+        console.log("follow declined:",this.followDeclined);
+        if(this.followDeclined){
+          $("#rebookAppoitment").val(this.followDeclined);
+          $("#followup_header").html("Rebook Appointment");
+          $("#fileUploadGroup").remove();
+          $("#followUpHr").remove();
+        }else{
+          $("#followup_header").html("Follow Up Patient");
+        }
+        
         $("#telemedicineFollowupFormModal").modal("show");
       } else {
         let appointment = null;

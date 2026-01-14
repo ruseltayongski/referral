@@ -718,6 +718,20 @@
         }
     }
 
+    function telemedicineRebook(code,accepted,referred_id){
+        console.log("code sattt", code,accepted,referred_id);
+
+        if(!accepted){
+            const appointment = {
+                code: code,
+                referred_id: referred_id,
+                Lateststatus: 'declined',
+            }
+
+            window.location.href = `{{ asset('doctor/appointment/calendar') }}?appointmentKey=${generateAppointmentKey(255)}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
+        }
+    }
+
     function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward,ownfacility,referred_to) { // I am adding  alreadyTreated and  alreadyUpward
         $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
         $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy

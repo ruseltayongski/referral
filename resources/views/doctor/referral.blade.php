@@ -168,8 +168,8 @@ $user = Session::get('auth');
                             @foreach($data as $row)
                                 <?php
                                 $type = ($row->type=='normal') ? 'normal-section':'pregnant-section';
-                                $type = ($row->status=='referred' || $row->status=='redirected' || $row->status=='transferred' || $row->status=='followup') ? $type : 'read-section';
-                                $icon = ($row->status=='referred' || $row->status=='redirected' || $row->status=='followup') ? 'fa-ambulance' : 'fa-eye';
+                                $type = ($row->status=='referred' || $row->status=='redirected' || $row->status=='transferred' || $row->status=='followup' || $row->status=='rebooked') ? $type : 'read-section';
+                                $icon = ($row->status=='referred' || $row->status=='redirected' || $row->status=='followup' || $row->status=='rebooked') ? 'fa-ambulance' : 'fa-eye';
                                 $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
                                 $date = date('M d, Y h:i A',strtotime($row->date_referred));
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
@@ -368,6 +368,10 @@ $user = Session::get('auth');
             $.post(`${$("#broadcasting_url").val()}/api/video/examined`, updateExamined, function(response) {
                 localStorage.setItem("telemedicine_tracking_id", tracking_id);
                 console.log(response)
+                if(response === "success"){
+                    $("#examined_progress"+referral_code+activity_id).addClass("completed");
+                    $("#prescribed_progress"+patient_code+activity_id).addClass("completed");
+                }
             })
         }
 

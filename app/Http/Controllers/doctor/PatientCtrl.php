@@ -431,12 +431,6 @@ class PatientCtrl extends Controller
 
         $tracking = Tracking::updateOrCreate($match, $track);
 
-        if($telemed_assign_id){
-            $telemed_assign = TelemedAssignDoctor::where('id', $telemed_assign_id)->first();
-            $telemed_assign->tracking_id = $tracking->id;
-            $telemed_assign->save();
-        }
-
         $activity = array(
             'code' => $code,
             'patient_id' => $patient_id,
@@ -451,7 +445,14 @@ class PatientCtrl extends Controller
             'remarks' => ($req->reason) ? $req->reason : '',
             'status' => 'referred'
         );
-        Activity::create($activity);
+        $act = Activity::create($activity);
+
+        if($telemed_assign_id){
+            $telemed_assign = TelemedAssignDoctor::where('id', $telemed_assign_id)->first();
+            $telemed_assign->tracking_id = $tracking->id;
+            $telemed_assign->created_by  = $act->id;
+            $telemed_assign->save();
+        }
 
         if ($status == 'walkin') {
             $activity['date_seen'] = date('Y-m-d H:i:s');
@@ -502,7 +503,7 @@ class PatientCtrl extends Controller
             if($req->appointmentId){
                 $telemed_assigned = new TelemedAssignDoctor();
                 $telemed_assigned->appointment_id = $req->appointmentId;
-                $telemed_assigned->subopd_id = $req->configId;
+                $telemed_assigned->subopd_id = $req->opdSubId;
                 $telemed_assigned->doctor_id = $user->id;
                 $telemed_assigned->save();
                 $asigned_doctorId = $configTimeSlot->id;

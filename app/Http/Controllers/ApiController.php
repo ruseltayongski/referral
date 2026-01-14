@@ -107,7 +107,8 @@ class ApiController extends Controller
                 $query->where("status","referred")
                     ->orWhere("status","redirected")
                     ->orWhere("status","transferred")
-                    ->orWhere("status","followup");
+                    ->orWhere("status","followup")
+                    ->orWhere("status","rebooked");
             })
                 ->orderBy("id","desc")
                 ->first();
@@ -704,33 +705,14 @@ class ApiController extends Controller
 
     public function patientFollowUp(Request $request) {
         $user = Session::get('auth');
-        // dd($request->all());
        
         $patient_form = null;
         $patient_id = 0;
         
         $tracking = Tracking::where("code",$request->code)->first();
+     
         $tracking->status = 'followup';
         $tracking->save();
-
-        if($request->telemedicine){
-            
-            if($request->configId){
-
-                $telemedAssigned = new TelemedAssignDoctor();
-                $telemedAssigned->subopd_id = $request->configId;
-                $telemedAssigned->appointment_id = $request->Appointment_id;
-                $telemedAssigned->doctor_id = $user->id;
-                $telemedAssigned->save();
-                
-            }else{
-                
-                $telemedAssignDoctor = new TelemedAssignDoctor();
-                $telemedAssignDoctor->appointment_id = $request->Appointment_id;
-                $telemedAssignDoctor->doctor_id = $user->id;
-                $telemedAssignDoctor->save();
-            }
-        }
 
         if($tracking->type == 'normal') {
             $patient_form = PatientForm::where("code",$request->code)->first();
@@ -753,10 +735,49 @@ class ApiController extends Controller
                 'department_id' => $tracking->department_id,
                 'referring_md' => $tracking->referring_md,
                 'action_md' => $user->id,
-                'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks  : 'patient follow up',
-                'status' => 'followup'
+                'remarks' => $request->filled('followremarks') ? $request->followremarks  : 'patient follow up',
+                'status' => $request->rebookAppoitment ? 'rebooked' :'followup'
             );
-            Activity::create($activity);
+            $latest_activity = Activity::create($activity);
+
+            if($request->telemedicine){
+        
+                // if($request->configId){
+
+                //     $telemedAssigned = new TelemedAssignDoctor();
+                //     $telemedAssigned->subopd_id = $request->configId;
+                //     $telemedAssigned->appointment_id = $request->Appointment_id;
+                //     $telemedAssigned->doctor_id = $user->id;
+                //     $telemedAssigned->save();
+                    
+                // }else{
+                    
+                //     $telemedAssignDoctor = new TelemedAssignDoctor();
+                //     $telemedAssignDoctor->appointment_id = $request->Appointment_id;
+                //     $telemedAssignDoctor->doctor_id = $user->id;
+                //     $telemedAssignDoctor->save();
+                // }
+
+                $telemedAssignDoctor = new TelemedAssignDoctor();
+                $telemedAssignDoctor->appointment_id = $request->Appointment_id;
+                $telemedAssignDoctor->doctor_id = $user->id;
+                $telemedAssignDoctor->created_by = $latest_activity->id;
+                $telemedAssignDoctor->save();
+            }
+
+            // if($request->rebookAppoitment){
+            //     $data = array(
+            //         'tracking_id' => $tracking->id,
+            //         'code' => $request->code,
+            //         'facility_id' => $tracking->referred_to,
+            //         'user_md' => $user->id
+            //     );
+            //     Tracking::find($tracking->id)->update([
+            //         "date_seen" => date("Y-m-d H:i:s")
+            //     ]);
+
+            //     Seen::create($data);
+            // }
         }
 
 

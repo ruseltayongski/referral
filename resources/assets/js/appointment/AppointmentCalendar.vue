@@ -106,12 +106,13 @@ export default {
         if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
 
         const slotsForDate = [];
-
+        console.log("dateselected", dateselected);
         // Collect all slots for the selected date
         this.appointmentSlot.forEach(appointment => {
             appointment.appointment_schedules
                 .filter(slot => slot.facility_id === this.facilitySelectedId)
                 .forEach(slot => {
+
                     const assignedCount = slot.telemed_assigned_doctor?.length || 0;
                     const isFull = assignedCount >= slot.slot;
                     const inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
@@ -150,11 +151,12 @@ export default {
                 appointment_date: slot.appointed_date,
                 appointedTime: slot.appointed_time,
                 appointedTimeTo: slot.appointedTime_to,
+                createdId: slot.created_by.id,
                 createdBy: `Dr. ${slot.created_by.fname} ${slot.created_by.lname}`,
                 assignedDoctors: slot.telemed_assigned_doctor || [],
                 opdCategory: slot.opdCategory,
                 departmentId: slot.department_id,
-                slot: (Number(slot.slot) || 0) - (slot.telemed_assigned_doctor?.length || 0),
+                slot: (Number(slot.slot) || 0) - (slot.telemed_assigned_doctor.filter( doctor => doctor.rebook != 1)?.length || 0),  
                 isAvailable: slot.isAvailable 
             });
         });
@@ -168,13 +170,11 @@ export default {
                this.slotInfo = group;
               // Check if any slot in this department-date group has the current user assigned
               const isUserBooked = slotsArray.some(slot => 
-                  slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id)
+                  slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id && doc.rebook === 0)
               );
               
-              console.log("sampllle", group);
               const userclickedKey = `${group.deptName}_${group.date}`;
               const isSelected = userclickedKey === deptKey;
-              console.log("is selected", isSelected);
               const hasAvailable = group.slots.some(s => s.isAvailable);
 
               // console.log("is user booked?", slotsArray);
@@ -221,11 +221,8 @@ export default {
         eventClick: async (info) => {
           const event = info.event || info;
           const clickedDate = moment(event.start).format("YYYY-MM-DD");
-          console.log("event asasd", event.title);
-          
           const deptKey = event.title + '_' + clickedDate;
           this.selectedAppointmentKey = deptKey;
-
           this.buildEventsFromSlots(clickedDate,event.title,deptKey);
 
           this.calendar.fullCalendar("removeEvents");
@@ -500,6 +497,8 @@ export default {
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
+
+      console.log("date selected", date);
 
       //Config Appointment
       let AppointedDates = [];
@@ -848,19 +847,32 @@ export default {
 
 } */
 
- .with-pin-left .fc-title::before {
-  content: "";
-  display: inline-block;
-  float: left;
-
-  margin-left: 6px;
-  width: 14px;
-  height: 14px;
-
-  background: url("/referral/public/images/cursor.png") no-repeat center;
-  background-size: contain;
-  padding: 1px 1px;
-  border-radius: 6px;
-  font-size: 1em;
+.with-pin-left {
+  display: inline-flex;         /* allow text + icon to be flexed */
+  flex-wrap: wrap;              /* let items wrap if needed */
+  align-items: center;          /* vertical center alignment */
+  gap: 4px;                     /* space between icon and text */
 }
+
+.with-pin-left .fc-title::before {
+  content: "";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  float: left;
+  width: 18px;
+  height: 18px;
+
+  background-color: #ffffff;
+  background-image: url("/referral/public/images/cursor.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+
 </style>

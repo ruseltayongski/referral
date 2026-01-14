@@ -120,7 +120,7 @@ class ReferralCtrl extends Controller
                         code, sub_opdId, referred_to,
                         ROW_NUMBER() OVER (PARTITION BY code ORDER BY created_at DESC, id DESC) as rn
                     FROM activity
-                    WHERE status IN ('followup', 'referred')
+                    WHERE status IN ('followup', 'referred','rebooked')
                 ) as a1
             "))
             ->select('code', 'sub_opdId', 'referred_to')
@@ -254,7 +254,8 @@ class ReferralCtrl extends Controller
                     ->orwhere('tracking.status','transferred')
                     ->orwhere('tracking.status','archived')
                     ->orwhere('tracking.status','cancelled')
-                    ->orWhere('tracking.status','followup');
+                    ->orWhere('tracking.status','followup')
+                    ->orWhere('tracking.status','rebooked');
             });
         }
 
@@ -474,7 +475,13 @@ class ReferralCtrl extends Controller
                 $appointmentDate = $appointment->appointed_date;
             }
         }
-   
+
+        $latesActivityId = null;
+        if($form['form']->telemedicine === 1){
+            $latesAct = Activity::where('code', $form['form']->code)->orderBy('id', 'desc')
+                      ->first();
+            $latesActivityId = $latesAct->id;
+        }
         $arr = [
             "form" => $form['form'],
             "id" => $id,
@@ -486,6 +493,7 @@ class ReferralCtrl extends Controller
             "file_name" => $file_name,
             "referral_status" => $referral_status,
             "cur_status" => $track->status,
+            "latestIdAct" => $latesActivityId,
             "referring_fac_id" => $track->referring_fac_id,
             "form_type" => $form_type
         ];
@@ -1242,9 +1250,18 @@ class ReferralCtrl extends Controller
             return;
         } // trap if already accepted or rejected
 
+        if($req->latest_id_act){
+            $telemedDoctor = TelemedAssignDoctor::where("created_by", $req->latest_id_act)->first();
+
+            if($telemedDoctor){  // check if it exists
+                $telemedDoctor->rebook = 1;
+                $telemedDoctor->save();
+            }
+        }
+
         Tracking::where('id',$track_id)
             ->update([
-                'status' => 'rejected',
+                'status' => $track->telemedicine ? 'declined' : 'rejected',
                 'action_md' => $user->id
             ]);
         $track = Tracking::find($track_id);
@@ -1268,7 +1285,8 @@ class ReferralCtrl extends Controller
             $query->where("status","referred")
                 ->orWhere("status","redirected")
                 ->orWhere("status","transferred")
-                ->orWhere("status","followup");
+                ->orWhere("status","followup")
+                ->orWhere("status","rebooked");
         })
             ->orderBy("id","desc")
             ->first();
@@ -1283,6 +1301,7 @@ class ReferralCtrl extends Controller
             "date_rejected" => date('M d, Y h:i A',strtotime($activity->created_at)), //
             "telemed" => $track->telemedicine,
             "referred_to" => $track->referred_to,
+            "status" => $track->telemedicine ? 'declined' : 'rejected',
             "remarks" => $activity->remarks, //
             "activity_id" => $latest_referred_or_redirected->id,
             "redirect_track" => $redirect_track
@@ -1341,7 +1360,8 @@ class ReferralCtrl extends Controller
             $query->where("status","referred")
                 ->orWhere("status","redirected")
                 ->orWhere("status","transferred")
-                ->orWhere("status","followup");
+                ->orWhere("status","followup")
+                ->orWhere("status","rebooked");
         })
             ->orderBy("id","desc")
             ->first();
@@ -1650,7 +1670,8 @@ class ReferralCtrl extends Controller
         $latest_activity = Activity::where("code",$track->code)->where(function($query) {
             $query->where("status","referred")
                 ->orWhere("status","redirected")
-                ->orWhere("status","transferred");
+                ->orWhere("status","transferred")
+                ->orWhere("status","rebooked");
         })
             ->orderBy("id","desc")
             ->first();
@@ -1957,7 +1978,8 @@ class ReferralCtrl extends Controller
             $query->where("status","referred")
                 ->orWhere("status","redirected")
                 ->orWhere("status","transferred")
-                ->orWhere("status","followup");
+                ->orWhere("status","followup")
+                ->orWhere("status","rebooked");
         })
         ->orderBy("id","desc")
         ->first();
