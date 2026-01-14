@@ -10,11 +10,15 @@
                         <form action="{{ asset('admin/coordinated/referral') }}" style="margin-top:20px;display:flex;" id="myForm" method="POST" class="form-inline">
                             {{ csrf_field() }}
                             <select name="category" class="form-control" style="width:40%;">
+                                @if($user && $user->level == 'capitol')
+                                    <option value="capitol" {{ $category == 'capitol' ? 'selected' : '' }}> Capitol </option>
+                                @else
                                 <option value="cebu_province" {{ $category == 'cebu_province' ? 'selected' : '' }}>Cebu Province</option>
                                 <option value="bohol_province" {{ $category == 'bohol_province' ? 'selected' : '' }}>Bohol Province</option>
                                 <option value="cebu_city" {{ $category == 'cebu_city' ? 'selected' : '' }}>Cebu City</option>
                                 <option value="mandaue_city" {{ $category == 'mandaue_city' ? 'selected' : '' }}>Mandaue City</option>
                                 <option value="lapulapu_city" {{ $category == 'lapulapu_city' ? 'selected' : '' }}>Lapu Lapu City</option>
+                                @endif
                             </select>
                             <div class="form-group-sm" style="margin-bottom: 10px;display:flex;width:100%;">
                                 <input type="text" class="form-control" name="date_range" value="{{ $start.' - '.$end }}" id="date_range" style="width: 40%;height:35px;">

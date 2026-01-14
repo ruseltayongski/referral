@@ -1013,9 +1013,17 @@ class ReportCtrl extends Controller
          $data = [];
 
         // 🟩 Handle "Capitol" level users (run for each facility)
-        if ($user->level == "capitol" && empty($request->facility_id)) {
+        if ($user->level === "capitol") {
+            if (empty($request->facility_id)) {
+                $facilityIds = $capitol_facility;
+            } else {
+                if (!in_array($request->facility_id, $capitol_facility)) {
+                    abort(403, 'Unauthorized facility access');
+                }
+                $facilityIds = [$request->facility_id];
+            }
 
-            foreach ($capitol_facility as $facility_id) {
+            foreach ($facilityIds as $facility_id) {
 
                 if ($request->request_type == "incoming") {
                     $result = DB::connection('mysql')->select("
@@ -1273,7 +1281,7 @@ class ReportCtrl extends Controller
     }
     //--------------------------------added code for declined
    public function getDeclinedRemarks($status, $level, $date_start, $date_end){
-
+    //dd($status,$level,$date_start,$date_end);
 //---------------------------------------------------------------------------------->
         // $data = Activity::query();
     
@@ -1305,10 +1313,10 @@ class ReportCtrl extends Controller
             ->whereBetween('created_at', [$date_start, $date_end])
             ->select('remarks', 'created_at')
             ->get();
-
+        // dd($remarksData);
         $groupRemarks = [];
         $threshold = 2;
-
+        
         foreach($remarksData as $remarksData){
             $remark = $remarksData->remarks;
             $grouped = false;
@@ -1317,6 +1325,7 @@ class ReportCtrl extends Controller
                 if(levenshtein($remark, $group['remark']) <= $threshold){
                     $group['count']++;
                     $group['remarks'][] = $remarksData;
+                    
                     // Track the most frequent remark within each group
                     if(isset($group['remark_frequency'][$remark])){
                         $group['remark_frequency'][$remark]++;
@@ -1348,6 +1357,7 @@ class ReportCtrl extends Controller
         $groupRemarks = array_filter($groupRemarks, function ($group) {
             return $group['count'] > 1;
         });
+       
         //descending order  take the highest count 
         usort($groupRemarks, function($as, $bs){
             return $bs['count'] <=> $as['count'];
@@ -1361,19 +1371,21 @@ class ReportCtrl extends Controller
         }, array_slice($groupRemarks, 0, 10));
        
         // $result1 = array_slice($groupRemarks, 0, 10);
- 
+       
         return $result;
     }
 
     public function populateLevel($level){
         $facility = Facility::select("id","level");
-
+        
         if ($level == 2) {
             $facility = $facility->where('level', '2')->where('id', '!=', 24);
         } elseif ($level == 3) {
             $facility = $facility->where('level', '3')->where('id', '!=', 24);
         } elseif ($level == 5) {
             $facility = $facility->where('id', '=', 24);
+        } elseif ($level == 6) {
+            $facility = $facility->whereIn('id', [3,4,5,7,8,11,13,14,15,16,17,20,22,26,27,28]);
         } else {
             return "Invalid level";
         }
@@ -1382,20 +1394,35 @@ class ReportCtrl extends Controller
     }   
 
     public function getDeclinedHolder($date_start, $date_end){
-        
-        $facilityLevel2 = $this->getDeclinedRemarks("rejected", $this->populateLevel(2), $date_start, $date_end);
-        $facilityLevel3 = $this->getDeclinedRemarks("rejected", $this->populateLevel(3), $date_start, $date_end);
-        $vecenteSottoFacility = $this->getDeclinedRemarks("rejected", $this->populateLevel(5), $date_start, $date_end);
 
-        return [
-            "Level2" =>  $facilityLevel2,
-            "Level3" =>  $facilityLevel3,
-            "Vecente Sotto" => $vecenteSottoFacility,
-        ];
+        $user = Session::get('auth');
+
+        if($user && $user->level === 'capitol'){
+            $capitol = $this->getDeclinedRemarks("rejected", $this->populateLevel(6), $date_start, $date_end);
+            // dd($facilityLevel3);
+            return [
+                "capitol" => $capitol
+            ];
+            
+        }else{
+
+           $facilityLevel2 = $this->getDeclinedRemarks("rejected", $this->populateLevel(2), $date_start, $date_end);
+            $facilityLevel3 = $this->getDeclinedRemarks("rejected", $this->populateLevel(3), $date_start, $date_end);
+            $vecenteSottoFacility = $this->getDeclinedRemarks("rejected", $this->populateLevel(5), $date_start, $date_end);
+
+              // dd($facilityLevel3);
+            return [
+                "Level2" =>  $facilityLevel2,
+                "Level3" =>  $facilityLevel3,
+                "Vecente Sotto" => $vecenteSottoFacility
+            ];
+            
+        }
     }
 
     public function topReasonForDeclined(Request $request) {
         // Log::info('Request Dataadsasdasd22: ', $request->all());
+        $user = Session::get('auth');
 
         if($request->date_range){
             $dates = explode(' - ', $request->date_range);
@@ -1418,6 +1445,7 @@ class ReportCtrl extends Controller
             'date_start' => $date_start,
             'date_end' => $date_end,
             'selected_category' => $selectedFacility,
+            'user' => $user
         ]);
     }
 
@@ -1804,7 +1832,7 @@ class ReportCtrl extends Controller
     public function coordinatedPluck($category, $level) {
         $pluck = Facility::
                     select('id')
-                    ->where('referral_used','yes');
+                    ->where('referral_used','yes');  
 
         if($category == 'cebu_province') {
             $pluck = $pluck
@@ -1824,6 +1852,9 @@ class ReportCtrl extends Controller
         }
         else if ($category == 'lapulapu_city') {
             $pluck = $pluck->where('muncity', 76);
+        }
+        else if ($category == 'capitol') {
+            $pluck->whereIn('id', [3,4,5,7,8,11,13,14,15,16,17,20,22,26,27,28]);
         }
         else {
             return 'error in category';
@@ -1849,6 +1880,7 @@ class ReportCtrl extends Controller
     }
 
     public function coordinatedMappers($category, $date_start, $date_end) {
+        
         $categoryOptions = ["rhu", 1, 2, 3];
         $categoryColumn = ["rhu" => "RHU", 1 => "LEVEL 1", 2 => "LEVEL 2", 3 => "LEVEL 3"];
         $mappers = [];
@@ -1892,7 +1924,11 @@ class ReportCtrl extends Controller
     }
 
     public function coordinatedReferral(Request $request) {
+        $user = Session::get('auth');
         $category = $request->category ? $request->category : 'cebu_province';
+        if ($user && $user->role === 'capitol') {
+            $category = 'capitol';
+        }
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -1910,7 +1946,8 @@ class ReportCtrl extends Controller
             "start" => $start,
             "end" => $end,
             "category" => $category,
-            "data" => $data
+            "data" => $data,
+            'user' => $user
         ]);
     }
 
