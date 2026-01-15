@@ -179,6 +179,7 @@ class PatientCtrl extends Controller
         $data = array(
             'phic_status' => $req->phic_status,
             'phic_id' => ($req->phicID) ? $req->phicID : '',
+            'national_id' => ($req->nationalID) ? $req->nationalID : '',
             'fname' => $req->fname,
             'mname' => $req->mname,
             'lname' => $req->lname,
