@@ -61,7 +61,7 @@ $redirected_upward = DB::table('activity')
         @endif
       
         @if($row->status == 'accepted' && $row->telemedicine == 1 && !$redirected_upward)
-            <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->where('status','referred')->orderBy('id','desc')->first() ?>
+            <?php $latestReferredActivity = \App\Activity::where('code',$row->code)->whereIn('status', ['referred','rebooked','followup'])->orderBy('id','desc')->first() ?>
             <button class="btn-xs  bg-success btn-flat" id="telemedicine" onclick="openTelemedicine({{ $row->id }}, '{{ $row->code }}', '{{ $row->type }}', {{ $row->action_md_id }}, {{ $latestReferredActivity->id }});"><i class="fa fa-camera"></i> Join</button>
         @endif
         <div id="html_websocket_upward{{ $row->code }}" style="display: inline;"></div>

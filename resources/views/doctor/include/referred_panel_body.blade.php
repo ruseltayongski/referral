@@ -95,17 +95,17 @@
     }
 
     if($secondTransferred){
-            $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
-                ->where("referred_from", $referred_track->referred_to)
-                ->where("created_at", ">=", $referred_track->created_at)
-                ->where("status", "rejected")
-                ->exists();
+        $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+            ->where("referred_from", $referred_track->referred_to)
+            ->where("created_at", ">=", $referred_track->created_at)
+            ->where("status", "rejected")
+            ->exists();
     }else{
-         $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
-                ->where("referred_from", $referred_track->referred_from)
-                ->where("created_at", ">=", $referred_track->created_at)
-                ->where("status", "rejected")
-                ->exists();
+        $referred_rejected_track = \App\Activity::where("code", $referred_track->code)
+            ->where("referred_from", $referred_track->referred_from)
+            ->where("created_at", ">=", $referred_track->created_at)
+            ->where("status", "rejected")
+            ->exists();
     }
 
     $secondrejected = null;
@@ -401,6 +401,7 @@
     $last_referred_from = $redirect_tracks[$last_position_index]->referred_from;
 
     $last_position_count = count($redirected_track);
+
 ?>
     
     <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>

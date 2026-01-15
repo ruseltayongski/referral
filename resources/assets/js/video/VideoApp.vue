@@ -35,6 +35,7 @@ export default {
       isUserJoined: false,
       telemedicine: null,
       form_version: null,
+      normal_formType: null,
       //feedback
       feedbackUrl: baseUrlfeedback,
       doctorfeedback: doctorFeedback,
@@ -75,7 +76,7 @@ export default {
         // Pass your temp token here.
         token: null,
       },
-
+    
       form: {},
       patient_age: "",
       file_path: [],
@@ -279,7 +280,8 @@ export default {
 
                   this.icd = response.icd;
                   // console.log("testing\n" + this.icd);
-
+                  console.log("form type", response);
+                  this.normal_formType = response.form_type;
                   this.file_path = response.file_path;
                   this.file_name = response.file_name;
 
@@ -316,7 +318,7 @@ export default {
                   else if (response.age_type === "m")
                     this.patient_age = response.patient_age + " Months Old";
 
-                  // console.log("Form response:", response);
+                  //console.log("Form response:", response);
                   this.icd = response.icd;
                   // console.log("testing\n" + this.icd);
 
@@ -1149,6 +1151,24 @@ export default {
           "max users:",
           self.channelParameters.maxUsers
         );
+        //console.log("it is work the normal 2");
+        //  if(this.normal_formType === "normal"){
+        //     console.log("it is work the normal 1");
+            // console.log("activity id", this.referral_code, 'actID:', this.activity_id);
+            // $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed");
+            // $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed");
+            // console.log("examine progress", $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed"));
+            // console.log("priscribe progress", $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed"));
+            // if (window.opener && !window.opener.closed) {
+            //     window.opener.$(
+            //       "#examined_progress" + this.referral_code + this.activity_id
+            //     ).addClass("completed");
+
+            //     window.opener.$(
+            //       "#prescribed_progress" + this.referral_code + this.activity_id
+            //     ).addClass("completed");
+            // }
+          // }
 
         if (
           self.channelParameters.userCount >= self.channelParameters.maxUsers

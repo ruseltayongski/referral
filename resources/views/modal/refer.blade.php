@@ -424,6 +424,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                 <hr />
                 <form method="post" id="rejectForm">
                     {{ csrf_field() }}
+                     <input type="hidden" name="latest_id_act" id="latest_activity_id">
                     <div class="form-group">
                         <label style="padding:0px;">REASON FOR REDIRECTION:</label>
                         <textarea class="form-control reject_reason" rows="5" style="resize: none;" name="remarks" required></textarea>
@@ -631,6 +632,8 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                         <input type="hidden" id="AppointmentId" name="Appointment_id">
                         <input type="hidden" id="DoctorId" name="Doctor_id">
 
+                        <input type="hidden" id="rebookAppoitment" name="rebookAppoitment">
+
                         <input type="hidden" id="configId" name="configId">
                         <input type="hidden" name="configAppointmentId" id="configAppointmentId">
                         <input type="hidden" name="configDate" id="configDate">
@@ -676,7 +679,7 @@ $(document).keydown(function(event) { //this will close modal of press the keybo
                                 </div>
                             </div>
                         </div>
-                        <hr />
+                        <hr id="followUpHr" />
                         <div class="form-fotter pull-right">
                             <button class="btn btn-default btn-flat" data-dismiss="modal" id="close_telemedbtn"><i class="fa fa-times"></i> Close</button>
                             <button type="submit" id="followup_submit_telemedicine" class="btn btn-success btn-flat"><i class="fa fa-upload" aria-hidden="true"></i> Submit</button>
