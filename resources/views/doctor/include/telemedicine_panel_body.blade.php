@@ -142,12 +142,6 @@
             ->exists();
     }
 
-    // $referred_declined_track = \App\Activity::where("code",$referred_track->code)
-    //     ->where("referred_to",$referred_track->referred_to)
-    //     ->where("created_at",">=",$referred_track->created_at)
-    //     ->where("status","declined")
-    //     ->exists();
-
     //reset the variable in followup if followup not exist
     $followup_queued_track = 0;
     $followup_accepted_track = 0;
@@ -213,7 +207,7 @@
                 <?php
                 if(!$refer_followUp && $referred_cancelled_track && !$referred_accepted_track)
                     echo 'Cancelled';
-                elseif(!$refer_followUp &&  $referred_declined_track)
+                elseif(!$refer_followUp && $referred_declined_track)
                     echo 'Declined';
                 elseif(!$refer_followUp  && $referred_queued_track && !$referred_accepted_track)
                     echo 'Queued at <br> <b>'. $queue_referred.'</b>';
@@ -235,7 +229,7 @@
             </div>
         </div>
         <div class="stepper-item @if($referred_examined_track && !$referred_declined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}','{{$referred_treated_track}}','{{$referred_redirected_track}}','{{$referred_upward_track}}','{{$referred_followup_track}}','{{$user->facility_id}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}','{{$referred_treated_track}}','{{$referred_redirected_track}}','{{$referred_upward_track}}','{{$referred_followup_track}}','{{$user->facility_id}}','{{$referred_declined_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
             <div class="step-name">Consultation</div>
             {{$followup_track[0]->status != "followup"}}
         </div>
@@ -455,7 +449,7 @@
                     </div>
                 </div>
                 <div class="stepper-item @if($follow_examined_track && $followup_track[$position_count]->status != 'rebooked') completed @endif" id="examined_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}','{{$follow_treated_track}}','{{$follow_redirected_track}}','{{$follow_upward_track}}','{{$follow_followup_track}}','{{$user->facility_id}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}','{{$follow_treated_track}}','{{$follow_redirected_track}}','{{$follow_upward_track}}','{{$follow_followup_track}}','{{$user->facility_id}}','{{$follow_declined_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
                     <div class="step-name">Consultation</div>
                 </div>
               
@@ -510,7 +504,7 @@
 
                     <!-- jondy changes in treated -->
                     <div class="stepper-item stepper-item-treated_new @if($follow_treated_track && !$follow_followup_track && !$follow_upward_track) completed @endif" id="treated_progress{{ $follow_track->code.$follow_track->id }}">
-                        <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $follow_upward_track }}','{{ $follow_examined_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}','{{$follow_followup_track}}','{{$user->facility_id}}','{{ $follow_track->referred_to }}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                        <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $follow_upward_track }}','{{ $follow_examined_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}','{{$follow_followup_track}}','{{$user->facility_id}}','{{ $follow_track->referred_to }}','{{referred_declined_track}}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
                         <div class="step-name step-name-treated_new">Treated</div>
                     </div>
                     <!-- end of changes treated-->

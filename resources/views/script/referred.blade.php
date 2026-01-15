@@ -41,12 +41,12 @@
         }
     }
 
-    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack,ownfacility,referred_from) { // I add this FollowTrack
+    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack,ownfacility,referred_from,declined) { // I add this FollowTrack
         const prescriptionIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed'); // nag add ko ani kay para sa error messages kung ikaduha siya click para sa already treated
         const examPatientCompleted = document.getElementById(`examined_progress${code}${referred_id}`).classList.contains('completed');
-
+        console.log("declined:", declined);
         if(ownfacility == referred_from){
             Lobibox.alert("error",
                 {
@@ -66,7 +66,13 @@
                 {
                     msg: "This tracking area has already been followed!"
                 });
-        }else if(treatedIsCompleted && alreadyTreated){//error messages para sa pag click ikaduha sa treated icon
+        }else if(declined){
+             Lobibox.alert("error",
+                {
+                    msg: "This tracking area has already been declined!"
+                });
+        }
+        else if(treatedIsCompleted && alreadyTreated){//error messages para sa pag click ikaduha sa treated icon
             Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been treated!"
@@ -863,7 +869,7 @@
         $("#telemedicineFollowupFormModal").modal('show');
     }
 
-    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility,telemedicine) {
+    function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility,telemedicine,declined) {
 
         if(telemedicine === 0){
            
@@ -941,6 +947,11 @@
                 Lobibox.alert("error",
                     {
                         msg: "You cannot Consult unless the user accept your Appointment!"
+                    });
+            }else if(declined){
+                   Lobibox.alert("error",
+                    {
+                        msg: "You cannot Consult since this is rejected!"
                     });
             }
             else if(alreadyReferred || alreadyupward || upwardIsCompleted ){// I am adding this condition for consultation tracking icon condition
