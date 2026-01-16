@@ -25,6 +25,9 @@
                         <th>Date Referred</th>
                         <th>Turn around time not accepted</th>
                         <th>Issue and Concern</th>
+                        @if($user->facility_id === 63)
+                            <!-- <th width="5%">Video Call</th> -->
+                        @endif
                         <th width="20%">Action</th>
                     </tr>
                    
@@ -69,6 +72,12 @@
                                     <strong class="text-red">=> {{ $issue->issue }}</strong><br><br>
                                 @endforeach
                             </td>
+                            <?php
+                                    
+                            ?>
+                            @if($user->facility_id === 63)
+                                <!-- <td class="text-center"><button class="btn-xs  bg-success btn-flat" id="referral_video_call" onclick="telemedicineExamined({{ $row->tracking_id }}, '{{ $row->code }}',null,null,null,'{{ $row->type }}');"><i class="fa fa-camera"></i> Call</button></td> -->
+                            @endif
                             <td width="20%">
                                 <?php
                                     $monitoring_not_accepted = \App\Monitoring::select("monitoring.remarks","monitoring.created_at",\Illuminate\Support\Facades\DB::raw("CONCAT(users.fname,' ',users.mname,' ',users.lname) as agent_name"))->where("monitoring.code","=",$row->code)

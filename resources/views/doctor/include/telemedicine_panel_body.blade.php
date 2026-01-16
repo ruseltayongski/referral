@@ -231,7 +231,6 @@
         <div class="stepper-item @if($referred_examined_track && !$referred_declined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}','{{$referred_treated_track}}','{{$referred_redirected_track}}','{{$referred_upward_track}}','{{$referred_followup_track}}','{{$user->facility_id}}','{{$referred_declined_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
             <div class="step-name">Consultation</div>
-            {{$followup_track[0]->status != "followup"}}
         </div>
         <div class="stepper-item stepper-item-prescription @if(!$referred_declined_track &&($referred_examined_track || $referred_prescription_track)) completed @endif" id="prescribed_progress{{ $referred_track->code.$referred_track->id }}">
             <div class="step-counter step-counter-prescription popoverTelemedicine" 

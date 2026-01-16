@@ -870,7 +870,7 @@
     }
 
     function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility,telemedicine,declined) {
-
+        console.log("tracking_id from the 30 minutes", tracking_id);
         if(telemedicine === 0){
            
             console.log("please trigger this ")
