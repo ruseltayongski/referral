@@ -52,6 +52,10 @@ $status = session::get('status');
                         <td>PhilHealth ID :<br /> <small class="text-info"><em>(If applicable)</em></small></td>
                         <td><input type="text" name="phicID" class="phicID form-control" disabled value="" /></td>
                     </tr>
+                     <tr>
+                        <td>National ID :<br /> <small class="text-info"><em>(If applicable)</em></small></td>
+                        <td><input type="text" name="nationalID" class="nationalID form-control" /></td>
+                    </tr>
                     <tr class="has-group">
                         <td>First Name :</td>
                         <td><input type="text" name="fname" class="fname form-control" required /> </td>
