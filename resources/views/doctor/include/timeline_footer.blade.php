@@ -14,6 +14,9 @@
         align-items: center;
         justify-content: center;
     }
+    .timeline-footer {
+        position: relative;
+    }
 </style>
 
 <?php
@@ -38,9 +41,10 @@ $redirected_upward = DB::table('activity')
 
 <div class="timeline-footer">
     <div class="form-inline">
+         <div class="form-group">
         {{--@if( ($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred') && $user->department_id == $row->department_id )--}}
         @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status == 'transferred' || $row->status == 'followup')
-            <div class="form-group">
+            <!-- <div class="form-group"> -->
                 <a class="btn btn-warning btn-xs view_form" href="javascript:void(0)"
                    data-toggle="modal"
                    data-code="{{ $row->code }}"
@@ -57,7 +61,7 @@ $redirected_upward = DB::table('activity')
                    data-backdrop="static">
                     <i class="fa fa-folder"></i> View Form
                 </a>
-            </div>
+            <!-- </div> -->
         @endif
       
         @if($row->status == 'accepted' && $row->telemedicine == 1 && !$redirected_upward)
@@ -75,7 +79,7 @@ $redirected_upward = DB::table('activity')
             </button>
         @endif
         @if($seen > 0)
-            <div class="form-group">
+            <!-- <div class="form-group"> -->
                 <a href="#seenModal" data-toggle="modal"
                    data-id="{{ $row->id }}"
                    class="btn btn-success btn-xs btn-seen"><i class="fa fa-eye"></i> Seen
@@ -83,10 +87,10 @@ $redirected_upward = DB::table('activity')
                         <small class="badge bg-green-active" id="count_seen{{ $row->code }}">{{ $seen }}</small>
                     @endif
                 </a>
-            </div>
+            <!-- </div> -->
         @endif
         @if($caller_md > 0)
-            <div class="form-group">
+            <!-- <div class="form-group"> -->
                 <a href="#callerModal" data-toggle="modal"
                    data-id="{{ $row->id }}"
                    class="btn btn-primary btn-xs btn-caller"><i class="fa fa-phone"></i> Caller
@@ -94,7 +98,7 @@ $redirected_upward = DB::table('activity')
                         <small class="badge bg-blue-active">{{ $caller_md }}</small>
                     @endif
                 </a>
-            </div>
+            <!-- </div> -->
         @endif
         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                 data-target="#feedbackModal"
@@ -133,6 +137,7 @@ $redirected_upward = DB::table('activity')
                 <span class="badge2 red">NO OPD SUB DEPARTMENT</span>
             @endif
         @endif --}}
+        </div>
     </div>
 </div>
 
@@ -154,7 +159,7 @@ $redirected_upward = DB::table('activity')
                 "form_type" : form_tpe,
                 "referred_to" : referred_to
             };
-            console.log("json data:", json);
+            // console.log("json data:", json);
             $.post(url,json,function(){});
             var windowName = 'NewWindow'; // Name of the new window
             var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)

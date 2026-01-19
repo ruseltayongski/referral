@@ -29,7 +29,17 @@ $user = Session::get('auth');
             display: none;
             visibility: hidden;
         }
-
+        .text-warning {
+            /* background-color: red; */
+         
+        }
+        .status {
+            /* background-color: red; */
+            font-size: 15px;
+        }
+        .date_activity{
+            margin-left: 5px;
+        }
         @media only screen and (max-width: 720px) {
             .file-upload {
                 background-color: #ffffff;
@@ -42,17 +52,29 @@ $user = Session::get('auth');
                 display: none;
                 visibility: hidden;
             }
-
+            .status {
+                font-size: 15px;
+            }
+            .name-patient {
+                font-size: 20px;
+            }
+            .time {
+                font-size: 14px;
+            }
             .mobile-view {
                 display: block;
                 visibility: visible;
             }
         }
+           .name-patient {
+                font-size: 20px;
+            }
 
         .time {
-            margin-top: 30px;
+            margin-top: 5px;
+            align-items: end;
+            display: flex;
         }
-
         .badge-overlay {
             position: absolute;
             left: 0%;
@@ -103,6 +125,14 @@ $user = Session::get('auth');
         }
         .badge2 .timeline-footer {
             position: relative; 
+        }
+        .stamp-img {
+            position: absolute;
+            top: -20px; /* Adjusted position */
+            right: -50px; /* Adjusted position */
+            width: 80px; /* Compact size */
+            height: 60px; /* Compact size */
+            /* transform: rotate(+0deg); Angled like a stamp */
         }
         .top-right-badge {
             position: absolute;
@@ -204,10 +234,9 @@ $user = Session::get('auth');
                                     @if($row->status == 'referred' || $row->status == 'seen' || $row->status == 'redirected' || $row->status=='followup')
                                         <i class="fa fa-ambulance bg-blue-active"></i>
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
-                                            <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                             <h3 class="timeline-header no-border">
                                                 <input type="hidden" id="assignedDoctor" value="{{$row->department_id}}">
-                                                <span>
+                                                <span class="name-patient">
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 <small class="status">
@@ -227,26 +256,35 @@ $user = Session::get('auth');
                                                     <h5 class="text-red pull-right-queue">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
                                                 @endif
                                             </h3> <!-- time line for #referred #seen #redirected -->
+                                  
+                                            <h3 class="timeline-header no-border">
+                                            <span class="time"><i class="icon fa {{ $icon }}"></i><span class="date_activity">{{ $date }}</span>
+                                            @if ($row->form_type === "version2")
+                                                <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                            @endif
+                                            </span>
+                                            </h3>
                                             @include('doctor.include.timeline_footer')
                                         </div>
                                     @elseif($row->status=='rejected')
                                         <i class="fa fa-user-times bg-maroon"></i>
                                         <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
-                                                <span>
+                                                <span class="name-patient">
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
+                                            </h3>
+                                            <h3 class="timeline-header no-border">
+                                                <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
                                             </h3>
                                             @include('doctor.include.timeline_footer')
                                         </div>
                                     @elseif($row->status=='cancelled')
                                         <i class="fa fa-ban bg-red"></i>
                                         <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
-                                                <span>
+                                                <span class="name-patient">
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 was <span class="text-red">{{ $row->status }}</span> by
@@ -254,13 +292,15 @@ $user = Session::get('auth');
                                                 <br><br>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
+                                            <h3 class="timeline-header no-border">
+                                                <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                            </h3>
                                         </div>
                                     @elseif($row->status == 'transferred')
                                         <i class="fa fa-ambulance bg-blue-active"></i>
                                         <div class="timeline-item {{ $type }}" id="item-{{ $row->id }}">
-                                            <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">{{ $date }}</span></span>
                                             <h3 class="timeline-header no-border">
-                                            <span>
+                                            <span class="name-patient">
                                                 <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                             </span>
                                                 <small class="status">
@@ -271,14 +311,16 @@ $user = Session::get('auth');
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
                                                 <span class="facility">{{ $row->facility_name }}</span>
                                             </h3> <!-- time line for #referred #seen #redirected -->
+                                            <h3 class="timeline-header no-border">
+                                                <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                            </h3>
                                             @include('doctor.include.timeline_footer')
                                         </div>
                                     @else
                                         <i class="fa fa-user-plus bg-olive"></i>
                                         <div class="timeline-item">
-                                            <span class="time"><i class="fa fa-calendar"></i> {{ $date }}</span>
                                             <h3 class="timeline-header no-border">
-                                                <span>
+                                                <span class="name-patient">
                                                     <a href="{{ asset("doctor/referred")."?referredCode=".$row->code }}" target="_blank">{{ ucwords(strtolower($row->patient_name)) }}</a>
                                                 </span>
                                                 was <span class="text-green">{{ $row->status }}</span> by
@@ -286,6 +328,9 @@ $user = Session::get('auth');
                                                     Dr. {{ $row->action_md }}
                                                 </span>
                                                 <br><br>
+                                                <h3 class="timeline-header no-border">
+                                                   <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                                </h3>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
                                         </div>

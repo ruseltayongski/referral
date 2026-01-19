@@ -826,13 +826,13 @@ export default {
 .with-pin .fc-title:after {
   content: "📌";
   float: right;
-  margin-left: 6px;
+  margin-left: 2px;
 
-  background: #ffffff;
+  background: transparent;
   padding: 2px 2px;
   border-radius: 6px;
-  font-size: 1em;
-  border: 1px solid #ddd;
+  font-size: clamp(0.1em, 1.5vw, 14px);
+  border: 1px solid transparent;
 }
 
 /* .with-pin-left .fc-title:before {
@@ -853,14 +853,21 @@ export default {
   display: inline-block;
   float: left;
 
-  margin-left: 6px;
-  width: 14px;
-  height: 14px;
+  margin-left: 2px;
+  width: clamp(0.25px, 1vw, 14px);
+  height: clamp(0.25px, 1vw, 14px);
 
   background: url("/referral/public/images/cursor.png") no-repeat center;
   background-size: contain;
   padding: 1px 1px;
   border-radius: 6px;
-  font-size: 1em;
+  font-size: clamp(0.1em, 1.5vw, 14px);
+}
+.fc-title {
+  font-size: clamp(0.25em, 1.5vw, 14px);
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  min-width: 0;
 }
 </style>
