@@ -45,6 +45,10 @@
         <input type="text" class="form-control" value="@if(isset($data->phic_id)){{ $data->phic_id }}@endif" autofocus name="phic_id">
     </div>
     <div class="form-group">
+        <label>National ID:</label>
+        <input type="text" class="form-control" value="@if(isset($data->national_id)){{ $data->national_id }}@endif" autofocus name="national_id">
+    </div>
+    <div class="form-group">
         <label>First Name:</label>
         <input type="hidden" name="old_fname" value="@if(isset($data->fname)){{ $data->fname }}@endif">
         <input type="text" class="form-control" value="@if(isset($data->fname)){{ $data->fname }}@endif" name="fname" required>

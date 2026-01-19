@@ -22983,6 +22983,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // New variable for formatted time
       startTime: null,
       // Store the exact start time
+      pregnantType: null,
       showAudio: false,
       showVedio: false,
       showEndcall: false,
@@ -23111,7 +23112,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         if (_this.form_version === "version1") {
           axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(_this.baseUrl, "/doctor/referral/video/pregnant/form/").concat(_this.tracking_id)).then(function (res) {
             var response = res.data;
-            console.log("Form response:", response);
+            _this.pregnantType = response.form_type;
+            console.log("Form response:", response.form_type);
             console.log("Form response:", response);
             // console.log("testing");
             // console.log(response);
@@ -23935,11 +23937,16 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                         self.channelParameters.userCount--;
                         return _context4.abrupt("return");
                       case 12:
+                        console.log("my pregnant type", _this10.pregnantType);
                         if (_this10.referring_md === "no") {
+                          if (_this10.pregnantType) {
+                            $("#examined_progress" + _this10.referral_code + _this10.activity_id).addClass("completed");
+                            $("#prescribed_progress" + _this10.referral_code + _this10.activity_id).addClass("completed");
+                          }
                           _this10.startScreenRecording();
                           // this.startRecording();
                         }
-                      case 13:
+                      case 14:
                       case "end":
                         return _context4.stop();
                     }

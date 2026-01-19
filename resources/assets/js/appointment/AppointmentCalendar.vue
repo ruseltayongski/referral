@@ -39,7 +39,10 @@ export default {
       },
       events: [],
       slotInfo: {},
-      AppointmentDept: {}
+      AppointmentDept: {},
+      DeptCount:{},
+      dateSelected: null,
+      selectedDeptKey: null
     };
   },
   props: {
@@ -61,8 +64,9 @@ export default {
         this.events = await this.__appointmentScheduleDate(payload);
         this.buildEventsFromSlots();
         this.updateCalendarEvents();
-
+        
         this.$nextTick(() => {
+          $('.with-pin-left').removeClass('with-pin-left');
           this.scrollToHighlightedDate();
         });
        } catch (error) {
@@ -106,17 +110,19 @@ export default {
         if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
 
         const slotsForDate = [];
-
         // Collect all slots for the selected date
         this.appointmentSlot.forEach(appointment => {
             appointment.appointment_schedules
                 .filter(slot => slot.facility_id === this.facilitySelectedId)
                 .forEach(slot => {
+
                     const assignedCount = slot.telemed_assigned_doctor?.length || 0;
                     const isFull = assignedCount >= slot.slot;
                     const inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
                     const maxSlot = Number(slot.slot) || 0;
                     const available = maxSlot - assignedCount;
+
+                    console.log("total slot", slot);
 
                     if (!inPast) {
                         slotsForDate.push({
@@ -150,48 +156,47 @@ export default {
                 appointment_date: slot.appointed_date,
                 appointedTime: slot.appointed_time,
                 appointedTimeTo: slot.appointedTime_to,
+                createdId: slot.created_by.id,
                 createdBy: `Dr. ${slot.created_by.fname} ${slot.created_by.lname}`,
                 assignedDoctors: slot.telemed_assigned_doctor || [],
                 opdCategory: slot.opdCategory,
                 departmentId: slot.department_id,
-                slot: (Number(slot.slot) || 0) - (slot.telemed_assigned_doctor?.length || 0),
+                slot: (Number(slot.slot) || 0) - (slot.telemed_assigned_doctor.filter( doctor => doctor.rebook != 1)?.length || 0),  
                 isAvailable: slot.isAvailable 
             });
         });
 
         // Convert to events for the calendar
       this.AppointmentDept = groupedByDeptAndDate;
-
+      
       this.events = Object.entries(groupedByDeptAndDate).map(
           ([key, group]) => {
-              const slotsArray = group.slots; // this is the array we want
-               this.slotInfo = group;
-              // Check if any slot in this department-date group has the current user assigned
-              const isUserBooked = slotsArray.some(slot => 
-                  slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id)
-              );
-              
-              console.log("sampllle", group);
-              const userclickedKey = `${group.deptName}_${group.date}`;
-              const isSelected = userclickedKey === deptKey;
-              console.log("is selected", isSelected);
-              const hasAvailable = group.slots.some(s => s.isAvailable);
+            const slotsArray = group.slots; // this is the array we want
+              this.slotInfo = group;
+            // Check if any slot in this department-date group has the current user assigned
+            const isUserBooked = slotsArray.some(slot => 
+                slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id && doc.rebook === 0)
+            );
+            console.log("this.selectedDeptKey", this.selectedDeptKey);
+            const userclickedKey = `${group.deptName}_${group.date}`;
+            const isSelected = userclickedKey === this.selectedDeptKey;
+            const hasAvailable = group.slots.some(s => s.isAvailable);
 
-              // console.log("is user booked?", slotsArray);
-              const start = moment(group.date, 'YYYY-MM-DD', true);
-              if(!start.isValid()) return null;
-
-              return {
-                  title: group.deptName,
-                  start: start.format('YYYY-MM-DD'),
-                  className: [
-                    "sub-opd-label",
-                    !hasAvailable && "slot-full",
-                    isUserBooked && "with-pin",
-                    isSelected && "with-pin-left"
-                  ].filter(Boolean)
-              };
-          }
+            // console.log("is user booked?", slotsArray);
+            const start = moment(group.date, 'YYYY-MM-DD', true);
+            if(!start.isValid()) return null;
+            
+            return {
+                title: group.deptName,
+                start: start.format('YYYY-MM-DD'),
+                className: [
+                  "sub-opd-label",
+                  !hasAvailable && "slot-full",
+                  isUserBooked && "with-pin",
+                  isSelected && "with-pin-left"
+                ].filter(Boolean)
+            };
+        }
       ).filter(Boolean);
     },
     ini_events(ele) {
@@ -213,7 +218,11 @@ export default {
       this.calendar = $("#calendar").fullCalendar({
         dayRender: this.dayRenderFunction.bind(this),
         eventRender: this.eventRenderFunction.bind(this),
-        dayClick: this.dayClickFunction.bind(this),
+        dayClick: function(date, allDay, jsEvent, view) {
+          // Grab the deptKey somehow, maybe from a selected department in your UI
+          const deptKey = self.selectedAppointmentKey; // you set this somewhere when user selects a department
+          self.dayClickFunction(date, allDay, jsEvent, view, deptKey);
+        },
         header: self.header,
         buttonText: self.buttonText,
         events: this.events,
@@ -221,11 +230,10 @@ export default {
         eventClick: async (info) => {
           const event = info.event || info;
           const clickedDate = moment(event.start).format("YYYY-MM-DD");
-          console.log("event asasd", event.title);
-          
           const deptKey = event.title + '_' + clickedDate;
           this.selectedAppointmentKey = deptKey;
-
+          console.log("event info", event);
+          this.selectedDeptKey = deptKey;
           this.buildEventsFromSlots(clickedDate,event.title,deptKey);
 
           this.calendar.fullCalendar("removeEvents");
@@ -241,7 +249,6 @@ export default {
           const availableCell = document.querySelector(
             ".fc-day-grid-event.sub-opd-label"
           );
-          
           if (availableCell) {
             availableCell.scrollIntoView({
               behavior: "smooth",
@@ -307,6 +314,8 @@ export default {
     },
 
     eventRenderFunction(event, element) {
+
+      // console.log("dept count 111", this.DeptCount, "event data render", event);
      
       // let currentDateTime = new Date(); // get the current date and time
       // this.$nextTick(() => {
@@ -403,9 +412,14 @@ export default {
         const slotData = event.extendedProps || {};
         const inPastOrFull = slotData.inPast || slotData.isFull;
         const today = moment().startOf('day');
-
+        const selected_date =  event.start._i;
         const targetDate = moment(event.start).format("YYYY-MM-DD");
         const targetTd = $(".fc-day[data-date='" + targetDate + "']");
+        // console.log("date selected in render:", this.dateSelected);
+     
+        // if(this.DeptCount === 1 && selected_date === this.dateSelected){
+        //   element.addClass("with-pin-left"); 
+        // }
 
         // Determine if the event is past or fully booked
         // const inPast = slotData.inPast || moment(event.start).isBefore(today);
@@ -496,141 +510,197 @@ export default {
         }
       });
     },
-    async dayClickFunction(date, allDay, jsEvent, view) {
+    // async dayClickFunction(date, allDay, jsEvent, view) {
+    //   const eventsOnDate = this.events.filter(function (event) {
+    //     return moment(event.start).isSame(date, "day");
+    //   });
+      
+    //   //Config Appointment
+    //   let AppointedDates = [];
+    //   let configId = null;
+    //   let apointmentId = null;
+    //   let ScheduleIds = [];
+
+    //   const clickedDate = moment(date._d).format("YYYY-MM-DD");
+    //   const clickedDay = document.querySelector(`.fc-day[data-date='${clickedDate}']`);
+    
+    //   const hasSlot = this.appointmentSlot.some(appointment =>
+    //     appointment.appointment_schedules &&
+    //     appointment.appointment_schedules.some(sched => sched.appointed_date === clickedDate)
+    //   );
+
+    //   console.log("click date", clickedDate);
+
+    //   if(!hasSlot){
+    //     return;
+    //   }
+    //    // Check if it's a green slot (available date)
+    //   const isGreenSlot =
+    //     clickedDay &&
+    //     window.getComputedStyle(clickedDay).backgroundColor === "rgb(50, 183, 122)";
+
+    //   // Remove previously selected highlight (keep others intact)
+    //   if (this.previouslyClickedDay && this.previouslyClickedDay !== clickedDay) {
+    //     this.previouslyClickedDay.classList.remove("selected-date-indicator");
+    //   }
+
+    //   // If available slot, mark it as selected
+    //   if (isGreenSlot) {
+    //     clickedDay.classList.add("selected-date-indicator");
+    //     this.previouslyClickedDay = clickedDay;
+    //   }
+
+    //   const clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', { weekday: 'long' });
+    //   this.appointmentSlot.forEach((appointment) => {
+    //     appointment.appointment_schedules.forEach((sched) => {
+    //       // Check if schedule matches the facility and has a valid configId
+    //       if (this.facilitySelectedId === sched.facility_id && sched.configId) {
+    //         const startDate = new Date(sched.appointed_date);
+    //         const endDate = new Date(sched.date_end);
+    //         const daysSched = sched.config_schedule.days.split('|');
+
+    //         // Check if clicked date is within range and matches the schedule's day
+    //         if (new Date(clickedDate) >= startDate && new Date(clickedDate) <= endDate && daysSched.includes(clickedDayName)) {
+    //           ScheduleIds.push(sched.id);
+
+    //           // Process the first matched schedule
+    //           if (sched.id === ScheduleIds[0]) {
+    //             configId = sched.configId;
+    //             apointmentId = sched.id;
+
+    //             // Iterate through all dates in the range to build AppointedDates
+    //             let currentDate = new Date(startDate);
+    //             while (currentDate <= endDate) {
+    //               const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    //               if (daysSched.includes(currentDayName)) {
+    //                 AppointedDates.push(moment(currentDate).format("YYYY-MM-DD"));
+    //               }
+    //               currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+    //             }
+    //           }
+    //         }
+    //       }
+    //     });
+    //   });
+
+    //   let dateselect = date._d.toISOString().split('T')[0];
+    //   let PassconfigId = null;
+    //   let parameterDate = null;
+     
+    //   let params = JSON.parse(JSON.stringify(eventsOnDate))[0];
+
+    //   let isManualAppointment = eventsOnDate.length > 0;
+    //   if (isManualAppointment) {  //Manual Appointment
+    //     const responseBody = {
+    //       selected_date: params.start,
+    //       facility_id: params.facility_id,
+    //     };
+
+    //     const response = this.__appointmentScheduleHours(responseBody);
+    //     this.$emit("appointedTime", response.data);
+    //     PassconfigId = null;
+        
+    //     if(params.start === dateselect){
+    //       parameterDate = params.start;
+    //       this.$emit("manual-click-date", parameterDate);
+    //     }
+    //   }
+      
+    //   //Config Appointment
+    //     const appointedData = await this.__appointmentScheduleDate(
+    //       null,
+    //       date._d,
+    //       AppointedDates,
+    //       configId,
+    //       apointmentId,
+    //     );
+
+    //     if (appointedData) {
+
+    //       this.appointedParams = appointedData; // Update state if needed elsewhere
+    //       // console.log("appointedData config params", appointedData);
+
+    //       const responseBody1 = {
+    //         selected_date:  appointedData.start && !isNaN(new Date(appointedData.start)) ? new Date(appointedData.start).toISOString().split('T')[0] : '',
+    //         facility_id: appointedData.facility_id,
+    //         configId: appointedData.configId,
+    //         appointedId:appointedData.appointedId,
+    //       };
+
+    //       const response1 = await this.__appointmentConfigHours(responseBody1);
+    //       this.$emit("config_appointedTime", response1.data);
+    //       const configsched = Object.values(response1.data)[0];
+
+    //       if(AppointedDates.includes(dateselect)){
+    //         // console.log("list of matched date:", AppointedDates);
+    //          PassconfigId = configsched.configId;
+    //       }
+    //         //console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
+    //     }else{
+    //         PassconfigId = null;
+    //         // console.log("not matched", parameterDate);
+    //     }
+        
+    //    this.$emit("day-click-date", PassconfigId);
+    //    if (parameterDate) {
+    //       this.$emit("manual-click-date", parameterDate);
+    //     } else {
+    //       this.$emit("manual-click-date", null);
+    //     }
+    // },
+     async dayClickFunction(date, allDay, jsEvent, view, deptKey) {
       const eventsOnDate = this.events.filter(function (event) {
         return moment(event.start).isSame(date, "day");
       });
 
-      //Config Appointment
-      let AppointedDates = [];
-      let configId = null;
-      let apointmentId = null;
-      let ScheduleIds = [];
-
       const clickedDate = moment(date._d).format("YYYY-MM-DD");
       const clickedDay = document.querySelector(`.fc-day[data-date='${clickedDate}']`);
-    
-      const hasSlot = this.appointmentSlot.some(appointment =>
-        appointment.appointment_schedules &&
-        appointment.appointment_schedules.some(sched => sched.appointed_date === clickedDate)
-      );
 
-      if(!hasSlot){
-        return;
-      }
-       // Check if it's a green slot (available date)
-      const isGreenSlot =
-        clickedDay &&
-        window.getComputedStyle(clickedDay).backgroundColor === "rgb(50, 183, 122)";
+      const deptObjects = Object.values(this.AppointmentDept);
 
-      // Remove previously selected highlight (keep others intact)
-      if (this.previouslyClickedDay && this.previouslyClickedDay !== clickedDay) {
-        this.previouslyClickedDay.classList.remove("selected-date-indicator");
-      }
+      const uniqueDates = [
+        ...new Set(deptObjects.map(d => d.date))
+      ];
 
-      // If available slot, mark it as selected
-      if (isGreenSlot) {
-        clickedDay.classList.add("selected-date-indicator");
-        this.previouslyClickedDay = clickedDay;
-      }
+      if(uniqueDates.includes(clickedDate)){
+         const uniqueDeptCount = new Set(
+            deptObjects.map(d => d.deptName)
+          ).size;
 
-      const clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', { weekday: 'long' });
-      this.appointmentSlot.forEach((appointment) => {
-        appointment.appointment_schedules.forEach((sched) => {
-          // Check if schedule matches the facility and has a valid configId
-          if (this.facilitySelectedId === sched.facility_id && sched.configId) {
-            const startDate = new Date(sched.appointed_date);
-            const endDate = new Date(sched.date_end);
-            const daysSched = sched.config_schedule.days.split('|');
-
-            // Check if clicked date is within range and matches the schedule's day
-            if (new Date(clickedDate) >= startDate && new Date(clickedDate) <= endDate && daysSched.includes(clickedDayName)) {
-              ScheduleIds.push(sched.id);
-
-              // Process the first matched schedule
-              if (sched.id === ScheduleIds[0]) {
-                configId = sched.configId;
-                apointmentId = sched.id;
-
-                // Iterate through all dates in the range to build AppointedDates
-                let currentDate = new Date(startDate);
-                while (currentDate <= endDate) {
-                  const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
-                  if (daysSched.includes(currentDayName)) {
-                    AppointedDates.push(moment(currentDate).format("YYYY-MM-DD"));
-                  }
-                  currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-                }
-              }
-            }
-          }
-        });
-      });
-
-      let dateselect = date._d.toISOString().split('T')[0];
-      let PassconfigId = null;
-      let parameterDate = null;
-     
-      let params = JSON.parse(JSON.stringify(eventsOnDate))[0];
-
-      let isManualAppointment = eventsOnDate.length > 0;
-      if (isManualAppointment) {  //Manual Appointment
-        const responseBody = {
-          selected_date: params.start,
-          facility_id: params.facility_id,
-        };
-
-        const response = this.__appointmentScheduleHours(responseBody);
-        this.$emit("appointedTime", response.data);
-        PassconfigId = null;
-        
-        if(params.start === dateselect){
-          parameterDate = params.start;
-          this.$emit("manual-click-date", parameterDate);
-        }
-      }
-      
-      //Config Appointment
-        const appointedData = await this.__appointmentScheduleDate(
-          null,
-          date._d,
-          AppointedDates,
-          configId,
-          apointmentId,
+        const deptNameSet = new Set(
+            deptObjects.map(d => d.deptName)
         );
+        const deptName = Array.from(deptNameSet)[0];
 
-        if (appointedData) {
+        if(uniqueDeptCount >= 2){
 
-          this.appointedParams = appointedData; // Update state if needed elsewhere
-          // console.log("appointedData config params", appointedData);
-
-          const responseBody1 = {
-            selected_date:  appointedData.start && !isNaN(new Date(appointedData.start)) ? new Date(appointedData.start).toISOString().split('T')[0] : '',
-            facility_id: appointedData.facility_id,
-            configId: appointedData.configId,
-            appointedId:appointedData.appointedId,
-          };
-
-          const response1 = await this.__appointmentConfigHours(responseBody1);
-          this.$emit("config_appointedTime", response1.data);
-          const configsched = Object.values(response1.data)[0];
-
-          if(AppointedDates.includes(dateselect)){
-            // console.log("list of matched date:", AppointedDates);
-             PassconfigId = configsched.configId;
-          }
-            //console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
-        }else{
-            PassconfigId = null;
-            // console.log("not matched", parameterDate);
+          Lobibox.alert("warning",
+          {
+              msg: "Please select specific Sub opd department.!"
+          });
+          return;
         }
-        
-       this.$emit("day-click-date", PassconfigId);
-       if (parameterDate) {
-          this.$emit("manual-click-date", parameterDate);
-        } else {
-          this.$emit("manual-click-date", null);
+        this.DeptCount = uniqueDeptCount;
+        if(uniqueDeptCount === 1){
+          // const deptkey = deptName+ '_' + clickedDate;
+          const deptKey = `${deptName}_${clickedDate}`;
+          this.selectedDeptKey = deptKey;
+          this.dateSelected = clickedDate;
+
+          console.log("for only one", this.AppointmentDept[deptKey]);
+          this.$emit("appointedTime", this.AppointmentDept[deptKey] || []);  
+
+          this.buildEventsFromSlots(
+            this.dateSelected,
+            deptName,
+            this.selectedDeptKey
+          );
         }
+      }
+
+      this.calendar.fullCalendar("removeEvents");
+      this.calendar.fullCalendar("addEventSource", this.events);
+
     },
     updateCalendarEvents() {
       this.calendar.fullCalendar("removeEvents");
@@ -848,18 +918,32 @@ export default {
 
 } */
 
- .with-pin-left .fc-title::before {
+.with-pin-left {
+  display: inline-flex;         /* allow text + icon to be flexed */
+  flex-wrap: wrap;              /* let items wrap if needed */
+  align-items: center;          /* vertical center alignment */
+  gap: 4px;                     /* space between icon and text */
+}
+
+.with-pin-left .fc-title::before {
   content: "";
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
   float: left;
 
   margin-left: 2px;
-  width: clamp(0.25px, 1vw, 14px);
-  height: clamp(0.25px, 1vw, 14px);
+  width: clamp(0.1em, 1.5vw, 14px);
+  height: clamp(0.1em, 1.5vw, 14px);
 
-  background: url("/referral/public/images/cursor.png") no-repeat center;
-  background-size: contain;
-  padding: 1px 1px;
+  background-color: #ffffff;
+  background-image: url("/referral/public/images/cursor.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 12px 12px;
+
+  border: 1px solid #ddd;
   border-radius: 6px;
   font-size: clamp(0.1em, 1.5vw, 14px);
 }
@@ -870,4 +954,6 @@ export default {
   word-break: break-word;
   min-width: 0;
 }
+
+
 </style>

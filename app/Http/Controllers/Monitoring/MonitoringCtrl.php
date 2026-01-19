@@ -20,6 +20,7 @@ class MonitoringCtrl extends Controller
     }
 
     public function monitoring(Request $request){
+        $user = Session::get('auth');
         if(isset($request->date_range)){
             $date_start = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[0])).' 00:00:00';
             $date_end = date('Y-m-d',strtotime(explode(' - ',$request->date_range)[1])).' 23:59:59';
@@ -29,11 +30,12 @@ class MonitoringCtrl extends Controller
         }
 
         $pending_activity = \DB::connection('mysql')->select("call monitoring('$date_start','$date_end')");
-
+        
         return view('monitoring.monitoring',[
             "pending_activity" => $pending_activity,
             "date_start" => $date_start,
-            "date_end" => $date_end
+            "date_end" => $date_end,
+            "user" => $user
         ]);
     }
 

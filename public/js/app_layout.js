@@ -22325,6 +22325,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     notifyReferralSeen: function notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
       $("#seen_progress" + patient_code + activity_id).addClass("completed");
+      console.log("seenn progress:", $("#seen_progress" + patient_code + activity_id).addClass("completed"));
       var msg = patient_name + ' was seen by Dr. ' + seen_by + ' of ' + seen_by_facility + '<br><br>\n' + '       <a href="' + redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
       Lobibox.notify('info', {
         delay: false,
@@ -22355,11 +22356,130 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png"
       });
     },
+    // notifyReferralDeclined(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id, redirect_track, telemedicine){
+    //     $("#accepted_progress"+patient_code+activity_id).addClass("completed");
+    //     let rejected_process_element = $("#rejected_progress"+patient_code+activity_id);
+    //     rejected_process_element.removeClass("bg-orange");
+    //     rejected_process_element.addClass("bg-red");
+    //     let first_btnContainer = $(`#declined_btn_first${patient_code}${activity_id}`);
+    //     const isAlready = Number(first_btnContainer.data("isAlreadyPosition")) === 0;
+    //     let last_btnContainer = null;
+    //     if(isAlready){
+    //         last_btnContainer = $('[id^="declined_btn_last'+patient_code+'"]').filter(function() {
+    //             return $(this).data('is-last-position') == 0;  // 0 means it IS the last position
+    //         }).first();
+    //     }
+    //     console.log("first container", first_btnContainer);
+    //     console.log("last container", last_btnContainer);
+    //     console.log("sample first alreadyPosition", first_btnContainer.data("isAlreadyPosition"));
+    //     console.log('last position',last_btnContainer.attr("data-is-last-position")); 
+    //     const isLast = Number(last_btnContainer.attr("data-is-last-position")) === 0;
+    //     console.log("alreadyPosition:", isAlready);
+    //     console.log("lastPosition:", isLast);
+    //     // ❌ block if already has other position
+    //     if (isAlready) {
+    //         console.log("⛔ Already exists in another position");
+    //         return;
+    //     }else{
+    //         console.log("working");
+    //         first_btnContainer.html(`
+    //             <button class="rebook-btn"
+    //                     type="button"
+    //                     onclick="telemedicineRebook('${patient_code}', false, '${activity_id}')">
+    //                 <i class="fa fa-repeat"></i> Rebook
+    //             </button>
+    //         `).show();
+    //         console.log("✅ Rebook button displayed:",first_btnContainer);   
+    //     }
+    //     // ❌ block if not last position
+    //     if (!isLast) {
+    //         console.log("⛔ Not last step, no rebook button");
+    //         return;
+    //     }else{
+    //         last_btnContainer.html(`
+    //             <button class="rebook-btn"
+    //                     type="button"
+    //                     onclick="telemedicineRebook('${patient_code}', false, '${activity_id}')">
+    //                 <i class="fa fa-repeat"></i> Rebook
+    //             </button>
+    //         `).show();
+    //         console.log("✅ Rebook button displayed:",last_btnContainer);
+    //     }
+    //     let msg = patient_name+' was declined by Dr. '+rejected_by+' of '+rejected_by_facility + '<br><br>\n' +
+    //         '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
+    //         '           <i class=\'fa fa-stethoscope\'></i> Track\n' +
+    //         '       </a>';
+    //     Lobibox.notify('error', {
+    //         delay: false,
+    //         title: 'Declined',
+    //         msg: msg,
+    //         img: $("#broadcasting_url").val()+"/resources/img/DOH_Logo.png",
+    //     });
+    // },
+    notifyReferralDeclined: function notifyReferralDeclined(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id, redirect_track, telemedicine) {
+      $("#accepted_progress" + patient_code + activity_id).addClass("completed");
+      var rejected_process_element = $("#rejected_progress" + patient_code + activity_id);
+      rejected_process_element.removeClass("bg-orange");
+      rejected_process_element.addClass("bg-red");
+      var refericonContainer = $("#queue_number" + patient_code + activity_id);
+      var followiconContainer = $("#follow_queue_number" + patient_code + activity_id);
+      console.log("refer icon", refericonContainer);
+      console.log("follow icon", followiconContainer);
+      if (!rejected_process_element.length) {
+        console.error("❌ Rejected progress element not found", patient_code, activity_id);
+        return;
+      }
+      var declinedIcon = '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
+      if (refericonContainer.length && !refericonContainer.is(':empty')) {
+        console.log("it works");
+        console.log("HTML before:", refericonContainer.html());
+        refericonContainer.html(declinedIcon);
+      } else if (followiconContainer.length) {
+        console.log("it works follow");
+        console.log("follow HTML before:", followiconContainer.html());
+        followiconContainer.html(declinedIcon);
+      } else {
+        console.error("❌ No icon container found", patient_code, activity_id);
+      }
+      var firstContainer = $("#declined_btn_first".concat(patient_code).concat(activity_id));
+      var hasFollowup = Number(firstContainer.data("hasFollowup")) === 1;
+      var lastContainer = $("[id^=\"declined_btn_last".concat(patient_code, "\"]")).filter(function () {
+        return Number($(this).data("isLastPosition")) === 1;
+      }).first();
+      console.log("hasFollowup:", hasFollowup);
+      console.log("lastContainer:", lastContainer);
+
+      // 🔴 CASE 1: No follow-ups yet → FIRST position gets rebook
+      if (!hasFollowup && firstContainer.length) {
+        firstContainer.html("\n                        <button class=\"rebook-btn\"\n                                type=\"button\"\n                                onclick=\"telemedicineRebook('".concat(patient_code, "', false, '").concat(activity_id, "')\">\n                            <i class=\"fa fa-repeat\"></i> Rebook\n                        </button>\n                    ")).show();
+        console.log("✅ Rebook on FIRST position");
+        // return;
+      }
+
+      // 🔴 CASE 2: Follow-ups exist → ONLY LAST gets rebook
+      if (lastContainer.length) {
+        // clear all last containers first
+        $("[id^=\"declined_btn_last".concat(patient_code, "\"]")).empty();
+        lastContainer.html("\n                        <button class=\"rebook-btn\"\n                                type=\"button\"\n                                onclick=\"telemedicineRebook('".concat(patient_code, "', false, '").concat(activity_id, "')\">\n                            <i class=\"fa fa-repeat\"></i> Rebook\n                        </button>\n                    ")).show();
+        console.log("✅ Rebook on LAST position");
+      }
+      var declinedButtonName = '';
+      $("#rejected_name" + patient_code + activity_id).html("Declined");
+      $("#prepend_from_websocket" + patient_code).prepend('' + '<tr>\n' + '                                                    <td>' + date_rejected + '</td>\n' + '                                                    <td>\n' + '                                                        <span class="txtDoctor">' + rejected_by + '</span> of <span class="txtHospital">' + rejected_by_facility + '</span> declined <span class="txtPatient">' + patient_name + '</span>.\n' + '                                                        <span class="remarks">Remarks: ' + remarks + '</span>\n' + '                                                        <br>\n' + declinedButtonName + '                                                     </td>\n' + '                                                </tr>');
+      var msg = patient_name + ' was declined by Dr. ' + rejected_by + ' of ' + rejected_by_facility + '<br><br>\n' + '       <a href="' + redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
+      Lobibox.notify('error', {
+        delay: false,
+        title: 'Declined',
+        msg: msg,
+        img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png"
+      });
+    },
     notifyReferralRejected: function notifyReferralRejected(patient_code, date_rejected, rejected_by, rejected_by_facility, patient_name, remarks, activity_id, redirect_track, telemedicine) {
       $("#accepted_progress" + patient_code + activity_id).addClass("completed");
       var rejected_process_element = $("#rejected_progress" + patient_code + activity_id);
       rejected_process_element.removeClass("bg-orange");
       rejected_process_element.addClass("bg-red");
+      $("#icon_progress" + patient_code + activity_id).html("<i class=\"fa fa-thumbs-down\" aria-hidden=\"true\" style=\"font-size:15px;\"></i>");
       var redirectButtonName = "";
       if (telemedicine)
         // redirectButtonName = '<button class="btn btn-success btn-xs btn-redirected" onclick="consultToOtherFacilities(\'' + patient_code + '\')">\n' +
@@ -22636,10 +22756,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       // console.log("Video call started at:", new Date());
     },
     examinedCompleted: function examinedCompleted(patient_code, activity_id) {
-      $("#examined_progress" + patient_code + activity_id).addClass("completed");
+      $("#examined_progress" + patient_code + activity_id).addClass("completed"); // working
     },
     prescribedCompleted: function prescribedCompleted(patient_code, activity_id) {
-      $("#prescribed_progress" + patient_code + activity_id).addClass("completed");
+      $("#prescribed_progress" + patient_code + activity_id).addClass("completed"); //working
     },
     upwardCompleted: function upwardCompleted(patient_code, activity_id) {
       $("#upward_progress" + patient_code + activity_id).addClass("completed");
@@ -22807,7 +22927,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     Echo.join('referral_rejected').listen('SocketReferralRejected', function (event) {
       if (event.payload.referred_from === _this4.passToVueFacility || event.payload.referred_from === _this4.user.facility_id || _this4.passToVueFacility === event.payload.referred_to && event.payload.telemed === 1) {
         // adding or and condition only
-        _this4.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine);
+
+        if (event.payload.status === "declined") {
+          _this4.notifyReferralDeclined(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine);
+        } else {
+          _this4.notifyReferralRejected(event.payload.patient_code, event.payload.date_rejected, event.payload.rejected_by, event.payload.rejected_by_facility, event.payload.patient_name, event.payload.remarks, event.payload.activity_id, event.payload.redirect_track, event.payload.telemedicine);
+        }
       }
     });
     Echo.join('referral_call').listen('SocketReferralCall', function (event) {

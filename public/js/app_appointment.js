@@ -22191,7 +22191,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       },
       events: [],
       slotInfo: {},
-      AppointmentDept: {}
+      AppointmentDept: {},
+      DeptCount: {},
+      dateSelected: null,
+      selectedDeptKey: null
     };
   },
   props: {
@@ -22224,6 +22227,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               this.buildEventsFromSlots();
               this.updateCalendarEvents();
               this.$nextTick(function () {
+                $('.with-pin-left').removeClass('with-pin-left');
                 _this.scrollToHighlightedDate();
               });
               _context.next = 13;
@@ -22275,7 +22279,6 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       var _this2 = this;
       if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
       var slotsForDate = [];
-
       // Collect all slots for the selected date
       this.appointmentSlot.forEach(function (appointment) {
         appointment.appointment_schedules.filter(function (slot) {
@@ -22287,6 +22290,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           var inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
           var maxSlot = Number(slot.slot) || 0;
           var available = maxSlot - assignedCount;
+          console.log("total slot", slot);
           if (!inPast) {
             slotsForDate.push(_objectSpread(_objectSpread({}, slot), {}, {
               isAvailable: available > 0
@@ -22316,11 +22320,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           appointment_date: slot.appointed_date,
           appointedTime: slot.appointed_time,
           appointedTimeTo: slot.appointedTime_to,
+          createdId: slot.created_by.id,
           createdBy: "Dr. ".concat(slot.created_by.fname, " ").concat(slot.created_by.lname),
           assignedDoctors: slot.telemed_assigned_doctor || [],
           opdCategory: slot.opdCategory,
           departmentId: slot.department_id,
-          slot: (Number(slot.slot) || 0) - (((_slot$telemed_assigne2 = slot.telemed_assigned_doctor) === null || _slot$telemed_assigne2 === void 0 ? void 0 : _slot$telemed_assigne2.length) || 0),
+          slot: (Number(slot.slot) || 0) - (((_slot$telemed_assigne2 = slot.telemed_assigned_doctor.filter(function (doctor) {
+            return doctor.rebook != 1;
+          })) === null || _slot$telemed_assigne2 === void 0 ? void 0 : _slot$telemed_assigne2.length) || 0),
           isAvailable: slot.isAvailable
         });
       });
@@ -22337,13 +22344,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         var isUserBooked = slotsArray.some(function (slot) {
           var _slot$assignedDoctors;
           return (_slot$assignedDoctors = slot.assignedDoctors) === null || _slot$assignedDoctors === void 0 ? void 0 : _slot$assignedDoctors.some(function (doc) {
-            return doc.doctor_id === _this2.user.id;
+            return doc.doctor_id === _this2.user.id && doc.rebook === 0;
           });
         });
-        console.log("sampllle", group);
+        console.log("this.selectedDeptKey", _this2.selectedDeptKey);
         var userclickedKey = "".concat(group.deptName, "_").concat(group.date);
-        var isSelected = userclickedKey === deptKey;
-        console.log("is selected", isSelected);
+        var isSelected = userclickedKey === _this2.selectedDeptKey;
         var hasAvailable = group.slots.some(function (s) {
           return s.isAvailable;
         });
@@ -22383,7 +22389,11 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this3.calendar = $("#calendar").fullCalendar({
                 dayRender: _this3.dayRenderFunction.bind(_this3),
                 eventRender: _this3.eventRenderFunction.bind(_this3),
-                dayClick: _this3.dayClickFunction.bind(_this3),
+                dayClick: function dayClick(date, allDay, jsEvent, view) {
+                  // Grab the deptKey somehow, maybe from a selected department in your UI
+                  var deptKey = self.selectedAppointmentKey; // you set this somewhere when user selects a department
+                  self.dayClickFunction(date, allDay, jsEvent, view, deptKey);
+                },
                 header: self.header,
                 buttonText: self.buttonText,
                 events: _this3.events,
@@ -22396,15 +22406,16 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                         case 0:
                           event = info.event || info;
                           clickedDate = moment(event.start).format("YYYY-MM-DD");
-                          console.log("event asasd", event.title);
                           deptKey = event.title + '_' + clickedDate;
                           _this3.selectedAppointmentKey = deptKey;
+                          console.log("event info", event);
+                          _this3.selectedDeptKey = deptKey;
                           _this3.buildEventsFromSlots(clickedDate, event.title, deptKey);
                           _this3.calendar.fullCalendar("removeEvents");
                           _this3.calendar.fullCalendar("addEventSource", _this3.events);
                           filterredSlots = _this3.AppointmentDept[deptKey] || [];
                           _this3.$emit("appointedTime", filterredSlots);
-                        case 10:
+                        case 11:
                         case "end":
                           return _context2.stop();
                       }
@@ -22486,6 +22497,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     },
     eventRenderFunction: function eventRenderFunction(event, element) {
       var _this4 = this;
+      // console.log("dept count 111", this.DeptCount, "event data render", event);
+
       // let currentDateTime = new Date(); // get the current date and time
       // this.$nextTick(() => {
       //   const targetDate = event.start.format("YYYY-MM-DD");
@@ -22581,8 +22594,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         var slotData = event.extendedProps || {};
         var inPastOrFull = slotData.inPast || slotData.isFull;
         var today = moment().startOf('day');
+        var selected_date = event.start._i;
         var targetDate = moment(event.start).format("YYYY-MM-DD");
         var targetTd = $(".fc-day[data-date='" + targetDate + "']");
+        // console.log("date selected in render:", this.dateSelected);
+
+        // if(this.DeptCount === 1 && selected_date === this.dateSelected){
+        //   element.addClass("with-pin-left"); 
+        // }
 
         // Determine if the event is past or fully booked
         // const inPast = slotData.inPast || moment(event.start).isBefore(today);
@@ -22674,141 +22693,171 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         }
       });
     },
-    dayClickFunction: function dayClickFunction(date, allDay, jsEvent, view) {
+    // async dayClickFunction(date, allDay, jsEvent, view) {
+    //   const eventsOnDate = this.events.filter(function (event) {
+    //     return moment(event.start).isSame(date, "day");
+    //   });
+    //   //Config Appointment
+    //   let AppointedDates = [];
+    //   let configId = null;
+    //   let apointmentId = null;
+    //   let ScheduleIds = [];
+    //   const clickedDate = moment(date._d).format("YYYY-MM-DD");
+    //   const clickedDay = document.querySelector(`.fc-day[data-date='${clickedDate}']`);
+    //   const hasSlot = this.appointmentSlot.some(appointment =>
+    //     appointment.appointment_schedules &&
+    //     appointment.appointment_schedules.some(sched => sched.appointed_date === clickedDate)
+    //   );
+    //   console.log("click date", clickedDate);
+    //   if(!hasSlot){
+    //     return;
+    //   }
+    //    // Check if it's a green slot (available date)
+    //   const isGreenSlot =
+    //     clickedDay &&
+    //     window.getComputedStyle(clickedDay).backgroundColor === "rgb(50, 183, 122)";
+    //   // Remove previously selected highlight (keep others intact)
+    //   if (this.previouslyClickedDay && this.previouslyClickedDay !== clickedDay) {
+    //     this.previouslyClickedDay.classList.remove("selected-date-indicator");
+    //   }
+    //   // If available slot, mark it as selected
+    //   if (isGreenSlot) {
+    //     clickedDay.classList.add("selected-date-indicator");
+    //     this.previouslyClickedDay = clickedDay;
+    //   }
+    //   const clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', { weekday: 'long' });
+    //   this.appointmentSlot.forEach((appointment) => {
+    //     appointment.appointment_schedules.forEach((sched) => {
+    //       // Check if schedule matches the facility and has a valid configId
+    //       if (this.facilitySelectedId === sched.facility_id && sched.configId) {
+    //         const startDate = new Date(sched.appointed_date);
+    //         const endDate = new Date(sched.date_end);
+    //         const daysSched = sched.config_schedule.days.split('|');
+    //         // Check if clicked date is within range and matches the schedule's day
+    //         if (new Date(clickedDate) >= startDate && new Date(clickedDate) <= endDate && daysSched.includes(clickedDayName)) {
+    //           ScheduleIds.push(sched.id);
+    //           // Process the first matched schedule
+    //           if (sched.id === ScheduleIds[0]) {
+    //             configId = sched.configId;
+    //             apointmentId = sched.id;
+    //             // Iterate through all dates in the range to build AppointedDates
+    //             let currentDate = new Date(startDate);
+    //             while (currentDate <= endDate) {
+    //               const currentDayName = currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+    //               if (daysSched.includes(currentDayName)) {
+    //                 AppointedDates.push(moment(currentDate).format("YYYY-MM-DD"));
+    //               }
+    //               currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
+    //             }
+    //           }
+    //         }
+    //       }
+    //     });
+    //   });
+    //   let dateselect = date._d.toISOString().split('T')[0];
+    //   let PassconfigId = null;
+    //   let parameterDate = null;
+    //   let params = JSON.parse(JSON.stringify(eventsOnDate))[0];
+    //   let isManualAppointment = eventsOnDate.length > 0;
+    //   if (isManualAppointment) {  //Manual Appointment
+    //     const responseBody = {
+    //       selected_date: params.start,
+    //       facility_id: params.facility_id,
+    //     };
+    //     const response = this.__appointmentScheduleHours(responseBody);
+    //     this.$emit("appointedTime", response.data);
+    //     PassconfigId = null;
+    //     if(params.start === dateselect){
+    //       parameterDate = params.start;
+    //       this.$emit("manual-click-date", parameterDate);
+    //     }
+    //   }
+    //   //Config Appointment
+    //     const appointedData = await this.__appointmentScheduleDate(
+    //       null,
+    //       date._d,
+    //       AppointedDates,
+    //       configId,
+    //       apointmentId,
+    //     );
+    //     if (appointedData) {
+    //       this.appointedParams = appointedData; // Update state if needed elsewhere
+    //       // console.log("appointedData config params", appointedData);
+    //       const responseBody1 = {
+    //         selected_date:  appointedData.start && !isNaN(new Date(appointedData.start)) ? new Date(appointedData.start).toISOString().split('T')[0] : '',
+    //         facility_id: appointedData.facility_id,
+    //         configId: appointedData.configId,
+    //         appointedId:appointedData.appointedId,
+    //       };
+    //       const response1 = await this.__appointmentConfigHours(responseBody1);
+    //       this.$emit("config_appointedTime", response1.data);
+    //       const configsched = Object.values(response1.data)[0];
+    //       if(AppointedDates.includes(dateselect)){
+    //         // console.log("list of matched date:", AppointedDates);
+    //          PassconfigId = configsched.configId;
+    //       }
+    //         //console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
+    //     }else{
+    //         PassconfigId = null;
+    //         // console.log("not matched", parameterDate);
+    //     }
+    //    this.$emit("day-click-date", PassconfigId);
+    //    if (parameterDate) {
+    //       this.$emit("manual-click-date", parameterDate);
+    //     } else {
+    //       this.$emit("manual-click-date", null);
+    //     }
+    // },
+    dayClickFunction: function dayClickFunction(date, allDay, jsEvent, view, deptKey) {
       var _this5 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var eventsOnDate, AppointedDates, configId, apointmentId, ScheduleIds, clickedDate, clickedDay, hasSlot, isGreenSlot, clickedDayName, dateselect, PassconfigId, parameterDate, params, isManualAppointment, responseBody, response, appointedData, responseBody1, response1, configsched;
+        var eventsOnDate, clickedDate, clickedDay, deptObjects, uniqueDates, uniqueDeptCount, deptNameSet, deptName, _deptKey;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) switch (_context4.prev = _context4.next) {
             case 0:
               eventsOnDate = _this5.events.filter(function (event) {
                 return moment(event.start).isSame(date, "day");
-              }); //Config Appointment
-              AppointedDates = [];
-              configId = null;
-              apointmentId = null;
-              ScheduleIds = [];
+              });
               clickedDate = moment(date._d).format("YYYY-MM-DD");
               clickedDay = document.querySelector(".fc-day[data-date='".concat(clickedDate, "']"));
-              hasSlot = _this5.appointmentSlot.some(function (appointment) {
-                return appointment.appointment_schedules && appointment.appointment_schedules.some(function (sched) {
-                  return sched.appointed_date === clickedDate;
-                });
-              });
-              if (hasSlot) {
-                _context4.next = 10;
+              deptObjects = Object.values(_this5.AppointmentDept);
+              uniqueDates = _toConsumableArray(new Set(deptObjects.map(function (d) {
+                return d.date;
+              })));
+              if (!uniqueDates.includes(clickedDate)) {
+                _context4.next = 14;
                 break;
               }
+              uniqueDeptCount = new Set(deptObjects.map(function (d) {
+                return d.deptName;
+              })).size;
+              deptNameSet = new Set(deptObjects.map(function (d) {
+                return d.deptName;
+              }));
+              deptName = Array.from(deptNameSet)[0];
+              if (!(uniqueDeptCount >= 2)) {
+                _context4.next = 12;
+                break;
+              }
+              Lobibox.alert("warning", {
+                msg: "Please select specific Sub opd department.!"
+              });
               return _context4.abrupt("return");
-            case 10:
-              // Check if it's a green slot (available date)
-              isGreenSlot = clickedDay && window.getComputedStyle(clickedDay).backgroundColor === "rgb(50, 183, 122)"; // Remove previously selected highlight (keep others intact)
-              if (_this5.previouslyClickedDay && _this5.previouslyClickedDay !== clickedDay) {
-                _this5.previouslyClickedDay.classList.remove("selected-date-indicator");
+            case 12:
+              _this5.DeptCount = uniqueDeptCount;
+              if (uniqueDeptCount === 1) {
+                // const deptkey = deptName+ '_' + clickedDate;
+                _deptKey = "".concat(deptName, "_").concat(clickedDate);
+                _this5.selectedDeptKey = _deptKey;
+                _this5.dateSelected = clickedDate;
+                console.log("for only one", _this5.AppointmentDept[_deptKey]);
+                _this5.$emit("appointedTime", _this5.AppointmentDept[_deptKey] || []);
+                _this5.buildEventsFromSlots(_this5.dateSelected, deptName, _this5.selectedDeptKey);
               }
-
-              // If available slot, mark it as selected
-              if (isGreenSlot) {
-                clickedDay.classList.add("selected-date-indicator");
-                _this5.previouslyClickedDay = clickedDay;
-              }
-              clickedDayName = new Date(clickedDate).toLocaleDateString('en-US', {
-                weekday: 'long'
-              });
-              _this5.appointmentSlot.forEach(function (appointment) {
-                appointment.appointment_schedules.forEach(function (sched) {
-                  // Check if schedule matches the facility and has a valid configId
-                  if (_this5.facilitySelectedId === sched.facility_id && sched.configId) {
-                    var startDate = new Date(sched.appointed_date);
-                    var endDate = new Date(sched.date_end);
-                    var daysSched = sched.config_schedule.days.split('|');
-
-                    // Check if clicked date is within range and matches the schedule's day
-                    if (new Date(clickedDate) >= startDate && new Date(clickedDate) <= endDate && daysSched.includes(clickedDayName)) {
-                      ScheduleIds.push(sched.id);
-
-                      // Process the first matched schedule
-                      if (sched.id === ScheduleIds[0]) {
-                        configId = sched.configId;
-                        apointmentId = sched.id;
-
-                        // Iterate through all dates in the range to build AppointedDates
-                        var currentDate = new Date(startDate);
-                        while (currentDate <= endDate) {
-                          var currentDayName = currentDate.toLocaleDateString('en-US', {
-                            weekday: 'long'
-                          });
-                          if (daysSched.includes(currentDayName)) {
-                            AppointedDates.push(moment(currentDate).format("YYYY-MM-DD"));
-                          }
-                          currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
-                        }
-                      }
-                    }
-                  }
-                });
-              });
-              dateselect = date._d.toISOString().split('T')[0];
-              PassconfigId = null;
-              parameterDate = null;
-              params = JSON.parse(JSON.stringify(eventsOnDate))[0];
-              isManualAppointment = eventsOnDate.length > 0;
-              if (isManualAppointment) {
-                //Manual Appointment
-                responseBody = {
-                  selected_date: params.start,
-                  facility_id: params.facility_id
-                };
-                response = _this5.__appointmentScheduleHours(responseBody);
-                _this5.$emit("appointedTime", response.data);
-                PassconfigId = null;
-                if (params.start === dateselect) {
-                  parameterDate = params.start;
-                  _this5.$emit("manual-click-date", parameterDate);
-                }
-              }
-
-              //Config Appointment
-              _context4.next = 23;
-              return _this5.__appointmentScheduleDate(null, date._d, AppointedDates, configId, apointmentId);
-            case 23:
-              appointedData = _context4.sent;
-              if (!appointedData) {
-                _context4.next = 35;
-                break;
-              }
-              _this5.appointedParams = appointedData; // Update state if needed elsewhere
-              // console.log("appointedData config params", appointedData);
-              responseBody1 = {
-                selected_date: appointedData.start && !isNaN(new Date(appointedData.start)) ? new Date(appointedData.start).toISOString().split('T')[0] : '',
-                facility_id: appointedData.facility_id,
-                configId: appointedData.configId,
-                appointedId: appointedData.appointedId
-              };
-              _context4.next = 29;
-              return _this5.__appointmentConfigHours(responseBody1);
-            case 29:
-              response1 = _context4.sent;
-              _this5.$emit("config_appointedTime", response1.data);
-              configsched = Object.values(response1.data)[0];
-              if (AppointedDates.includes(dateselect)) {
-                // console.log("list of matched date:", AppointedDates);
-                PassconfigId = configsched.configId;
-              }
-              //console.log("AppointedDates::", AppointedDates, 'dateselect',dateselect);
-              _context4.next = 36;
-              break;
-            case 35:
-              PassconfigId = null;
-              // console.log("not matched", parameterDate);
-            case 36:
-              _this5.$emit("day-click-date", PassconfigId);
-              if (parameterDate) {
-                _this5.$emit("manual-click-date", parameterDate);
-              } else {
-                _this5.$emit("manual-click-date", null);
-              }
-            case 38:
+            case 14:
+              _this5.calendar.fullCalendar("removeEvents");
+              _this5.calendar.fullCalendar("addEventSource", _this5.events);
+            case 16:
             case "end":
               return _context4.stop();
           }
@@ -22960,9 +23009,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   },
   computed: {
     AvailableSlot: function AvailableSlot() {
-      // let totalSlots = 0;  // Total number of slots
-      // let assignedSlots = 0; // Slots that have been assigned
-      // let expiredSlots  = 0;
       var availableSlots = 0;
       var now = new Date();
       // Step 1: Sum all slots from appointment_schedules
@@ -22970,8 +23016,11 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         this.appointment.appointment_schedules.forEach(function (sched) {
           var countslot = sched.slot || 0;
           var scheduleDateTime = new Date("".concat(sched.appointed_date, "T").concat(sched.appointed_time));
-          if (scheduleDateTime > now && sched.telemed_assigned_doctor.length < countslot) {
-            availableSlots += countslot - sched.telemed_assigned_doctor.length;
+          var activveAssignedDoctors = sched.telemed_assigned_doctor.filter(function (doctor) {
+            return doctor.rebook != 1;
+          });
+          if (scheduleDateTime > now && activveAssignedDoctors.length < countslot) {
+            availableSlots += countslot - activveAssignedDoctors.length;
           }
         });
       }
@@ -22986,13 +23035,16 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         this.appointment.appointment_schedules.forEach(function (sched) {
           var countSlot = sched.slot || 0;
           var scheduleDateTime = new Date("".concat(sched.appointed_date, "T").concat(sched.appointed_time));
+          var activveAssignedDoctors = sched.telemed_assigned_doctor.filter(function (doctor) {
+            return doctor.rebook != 1;
+          });
           var isCurrentMonth = scheduleDateTime.getMonth() === currentMonth && scheduleDateTime.getFullYear() === currentYear;
           if (isCurrentMonth) {
-            if (sched.telemed_assigned_doctor && sched.telemed_assigned_doctor.length > 0) {
-              totalAppointments += sched.telemed_assigned_doctor.length;
+            if (sched.telemed_assigned_doctor && activveAssignedDoctors.length > 0) {
+              totalAppointments += activveAssignedDoctors.length;
             }
             if (scheduleDateTime < now) {
-              totalAppointments += countSlot - (sched.telemed_assigned_doctor.length || 0);
+              totalAppointments += countSlot - (activveAssignedDoctors.length || 0);
             }
           }
         });
@@ -23138,6 +23190,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       showAppointmentTime: false,
       base: $("#broadcasting_url").val(),
       followUpReferredId: 0,
+      followDeclined: null,
       followUpCode: null,
       configSelectedTime: null,
       configOpdcategory: null,
@@ -23155,6 +23208,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     if (telemedicineFollowUp) {
       this.followUpReferredId = telemedicineFollowUp[0].referred_id;
       console.log(this.followUpReferredId);
+      this.followDeclined = telemedicineFollowUp[0].Lateststatus;
       this.followUpCode = telemedicineFollowUp[0].code;
     }
   },
@@ -23219,8 +23273,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       return "".concat(this.formatTime(timeFrom), " - ").concat(this.formatTime(timeTo));
     },
     selectTimeSlot: function selectTimeSlot(slot) {
+      console.log("my sloe sched", slot);
       this.selectedAppointmentTime = slot.id;
-      this.selectedAppointmentDoctor = slot.assignedDoctors.length > 0 ? slot.assignedDoctors[0].id : null;
+      // this.selectedAppointmentDoctor = slot.assignedDoctors.length > 0 
+      //   ? slot.assignedDoctors[0].id 
+      //   : null;
+      this.selectedAppointmentDoctor = slot.createdId.length > 0 ? slot.createdId : null;
     },
     getDoctorName: function getDoctorName(slot) {
       if (slot.assignedDoctors && slot.assignedDoctors.length > 0) {
@@ -23264,6 +23322,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return;
       }
       if (this.followUpReferredId) {
+        console.log("AppointmentDoctor", this.selectedAppointmentDoctor, opdSubcateg);
         var _String$split = String(configtime || "00:00-23:59").split('-'),
           _String$split2 = _slicedToArray(_String$split, 2),
           timeFrom = _String$split2[0],
@@ -23280,7 +23339,15 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         $("#configTimefrom").val(timeFrom);
         $("#configTimeto").val(timeTo);
         $("#OPD_SubId").val(parseInt(opdSubcateg));
-        $("#followup_header").html("Follow Up Patient");
+        console.log("follow declined:", this.followDeclined);
+        if (this.followDeclined) {
+          $("#rebookAppoitment").val(this.followDeclined);
+          $("#followup_header").html("Rebook Appointment");
+          $("#fileUploadGroup").remove();
+          $("#followUpHr").remove();
+        } else {
+          $("#followup_header").html("Follow Up Patient");
+        }
         $("#telemedicineFollowupFormModal").modal("show");
       } else {
         var appointment = null;
@@ -23748,7 +23815,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.sub-opd-label {\r\n  cursor: pointer !important;\n}\n.sub-opd-label:hover::after {\r\n  position: absolute;\r\n  background: #333;\r\n  color: #fff;\r\n  padding: 4px 8px;\r\n  border-radius: 4px;\r\n  font-size: 12px;\r\n  white-space: nowrap;\r\n  transform: translateY(-110%);\r\n  z-index: 9999;\n}\n.page-header {\r\n  margin: 10px 0 0 0;\r\n  font-size: 22px;\n}\r\n\r\n/* ======== CALENDAR BORDERS ======== */\r\n/* Force borders on all calendar cells */\r\n/* .fc-day,\r\n.fc-day-top {\r\n  border: 1px solid #ddd !important;\r\n} */\r\n\r\n/* Ensure table borders are visible */\r\n/* .fc-view-container .fc-view table {\r\n  border-collapse: separate !important;\r\n  border-spacing: 0 !important;\r\n} */\n.fc-view-container .fc-view td,\r\n.fc-view-container .fc-view th {\r\n  border: 1px solid #ddd !important;\n}\r\n\r\n/* Keep borders visible even with background colors */\n.fc-day[style*=\"background-color\"] {\r\n  border: 1px solid #ddd !important;\r\n  box-sizing: border-box;\n}\r\n\r\n/* ======== SELECTED DATE INDICATOR ======== */\n.fc-day.selected-date-indicator {\r\n  background-color: rgb(0, 166, 90) !important;\r\n  box-shadow: inset 0 0 0 2px #007bff52, 0 2px 6px rgba(0, 123, 255, 0.048);\r\n  outline-offset: -3px;\r\n  box-sizing: border-box;\r\n  position: relative;\r\n  transform: scale(1.00);\r\n  border: 1px solid #ddd !important; /* Ensure border remains */\n}\n.fc-day.selected-date-indicator:hover {\r\n  cursor: pointer;\r\n  transform: scale(1.00);\r\n  transition: transform 0.2s ease;\n}\r\n\r\n/* ======== SUB-OPD LABELS ======== */\n.fc-day {\r\n  position: relative !important;\r\n  overflow: visible !important;\n}\n.sub-opd-container {\r\n  display: flex !important;\r\n  flex-direction: column !important;\r\n  margin-top: 35px !important;\r\n  padding: 0 4px !important;\r\n  gap: 3px !important;\r\n  position: relative !important;\r\n  z-index: 1000 !important;\r\n  visibility: visible !important;\r\n  pointer-events: auto !important;\r\n  overflow: visible;\n}\n.sub-opd-label {\r\n  background-color: rgb(0, 166, 90) !important;\r\n  color: white !important;\r\n  padding: 4px 6px !important;\r\n  border-radius: 3px !important;\r\n  text-align: center !important;\r\n  font-weight: 600 !important;\r\n  box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;\r\n  white-space: nowrap !important;\r\n  font-size: 10px !important;\r\n  line-height: 1.3 !important;\r\n  display: block !important;\r\n  min-height: 18px !important;\r\n  opacity: 1 !important;\r\n  visibility: visible !important;\n}\n.fc-day .sub-opd-container,\r\n.fc-day .sub-opd-label {\r\n  max-height: none !important;\r\n  height: auto !important;\n}\n.fc-day.add-cursor-pointer .sub-opd-container {\r\n  position: relative;\r\n  z-index: 2;\n}\r\n\r\n/* ======== CALENDAR EVENT BORDERS ======== */\n.calendar-event {\r\n  border-right: 1px solid #ddd;\r\n  border-left: 1px solid #ddd;\n}\r\n\r\n/* Make sure booked days also show borders */\n.fc-daybooked {\r\n  border: 1px solid #ddd !important;\n}\n.fc-event {\r\n  border: none !important;\n}\n.with-pin .fc-title:after {\r\n  content: \"📌\";\r\n  float: right;\r\n  margin-left: 2px;\r\n\r\n  background: transparent;\r\n  padding: 2px 2px;\r\n  border-radius: 6px;\r\n  font-size: clamp(0.1em, 1.5vw, 14px);\r\n  border: 1px solid transparent;\n}\r\n\r\n/* .with-pin-left .fc-title:before {\r\n  content: \"\";\r\n  float: left;\r\n  margin-left: 6px;\r\n\r\n  background: #ffffff;\r\n  padding: 2px 2px;\r\n  border-radius: 6px;\r\n  font-size: 1em;\r\n  border: 1px solid #ddd;\r\n\r\n} */\n.with-pin-left .fc-title::before {\r\n  content: \"\";\r\n  display: inline-block;\r\n  float: left;\r\n\r\n  margin-left: 2px;\r\n  width: clamp(0.25px, 1vw, 14px);\r\n  height: clamp(0.25px, 1vw, 14px);\r\n\r\n  background: url(\"/referral/public/images/cursor.png\") no-repeat center;\r\n  background-size: contain;\r\n  padding: 1px 1px;\r\n  border-radius: 6px;\r\n  font-size: clamp(0.1em, 1.5vw, 14px);\n}\n.fc-title {\r\n  font-size: clamp(0.25em, 1.5vw, 14px);\r\n  white-space: normal;\r\n  overflow-wrap: break-word;\r\n  word-break: break-word;\r\n  min-width: 0;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.sub-opd-label {\r\n  cursor: pointer !important;\n}\n.sub-opd-label:hover::after {\r\n  position: absolute;\r\n  background: #333;\r\n  color: #fff;\r\n  padding: 4px 8px;\r\n  border-radius: 4px;\r\n  font-size: 12px;\r\n  white-space: nowrap;\r\n  transform: translateY(-110%);\r\n  z-index: 9999;\n}\n.page-header {\r\n  margin: 10px 0 0 0;\r\n  font-size: 22px;\n}\r\n\r\n/* ======== CALENDAR BORDERS ======== */\r\n/* Force borders on all calendar cells */\r\n/* .fc-day,\r\n.fc-day-top {\r\n  border: 1px solid #ddd !important;\r\n} */\r\n\r\n/* Ensure table borders are visible */\r\n/* .fc-view-container .fc-view table {\r\n  border-collapse: separate !important;\r\n  border-spacing: 0 !important;\r\n} */\n.fc-view-container .fc-view td,\r\n.fc-view-container .fc-view th {\r\n  border: 1px solid #ddd !important;\n}\r\n\r\n/* Keep borders visible even with background colors */\n.fc-day[style*=\"background-color\"] {\r\n  border: 1px solid #ddd !important;\r\n  box-sizing: border-box;\n}\r\n\r\n/* ======== SELECTED DATE INDICATOR ======== */\n.fc-day.selected-date-indicator {\r\n  background-color: rgb(0, 166, 90) !important;\r\n  box-shadow: inset 0 0 0 2px #007bff52, 0 2px 6px rgba(0, 123, 255, 0.048);\r\n  outline-offset: -3px;\r\n  box-sizing: border-box;\r\n  position: relative;\r\n  transform: scale(1.00);\r\n  border: 1px solid #ddd !important; /* Ensure border remains */\n}\n.fc-day.selected-date-indicator:hover {\r\n  cursor: pointer;\r\n  transform: scale(1.00);\r\n  transition: transform 0.2s ease;\n}\r\n\r\n/* ======== SUB-OPD LABELS ======== */\n.fc-day {\r\n  position: relative !important;\r\n  overflow: visible !important;\n}\n.sub-opd-container {\r\n  display: flex !important;\r\n  flex-direction: column !important;\r\n  margin-top: 35px !important;\r\n  padding: 0 4px !important;\r\n  gap: 3px !important;\r\n  position: relative !important;\r\n  z-index: 1000 !important;\r\n  visibility: visible !important;\r\n  pointer-events: auto !important;\r\n  overflow: visible;\n}\n.sub-opd-label {\r\n  background-color: rgb(0, 166, 90) !important;\r\n  color: white !important;\r\n  padding: 4px 6px !important;\r\n  border-radius: 3px !important;\r\n  text-align: center !important;\r\n  font-weight: 600 !important;\r\n  box-shadow: 0 1px 3px rgba(0,0,0,0.2) !important;\r\n  white-space: nowrap !important;\r\n  font-size: 10px !important;\r\n  line-height: 1.3 !important;\r\n  display: block !important;\r\n  min-height: 18px !important;\r\n  opacity: 1 !important;\r\n  visibility: visible !important;\n}\n.fc-day .sub-opd-container,\r\n.fc-day .sub-opd-label {\r\n  max-height: none !important;\r\n  height: auto !important;\n}\n.fc-day.add-cursor-pointer .sub-opd-container {\r\n  position: relative;\r\n  z-index: 2;\n}\r\n\r\n/* ======== CALENDAR EVENT BORDERS ======== */\n.calendar-event {\r\n  border-right: 1px solid #ddd;\r\n  border-left: 1px solid #ddd;\n}\r\n\r\n/* Make sure booked days also show borders */\n.fc-daybooked {\r\n  border: 1px solid #ddd !important;\n}\n.fc-event {\r\n  border: none !important;\n}\n.with-pin .fc-title:after {\r\n  content: \"📌\";\r\n  float: right;\r\n  margin-left: 2px;\r\n\r\n  background: transparent;\r\n  padding: 2px 2px;\r\n  border-radius: 6px;\r\n  font-size: clamp(0.1em, 1.5vw, 14px);\r\n  border: 1px solid transparent;\n}\r\n\r\n/* .with-pin-left .fc-title:before {\r\n  content: \"\";\r\n  float: left;\r\n  margin-left: 6px;\r\n\r\n  background: #ffffff;\r\n  padding: 2px 2px;\r\n  border-radius: 6px;\r\n  font-size: 1em;\r\n  border: 1px solid #ddd;\r\n\r\n} */\n.with-pin-left {\r\n  display: inline-flex;         /* allow text + icon to be flexed */\r\n  flex-wrap: wrap;              /* let items wrap if needed */\r\n  align-items: center;          /* vertical center alignment */\r\n  gap: 4px;                     /* space between icon and text */\n}\n.with-pin-left .fc-title::before {\r\n  content: \"\";\r\n  display: inline-flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  float: left;\r\n\r\n  margin-left: 2px;\r\n  width: clamp(0.1em, 1.5vw, 14px);\r\n  height: clamp(0.1em, 1.5vw, 14px);\r\n\r\n  background-color: #ffffff;\r\n  background-image: url(\"/referral/public/images/cursor.png\");\r\n  background-repeat: no-repeat;\r\n  background-position: center;\r\n  background-size: 12px 12px;\r\n\r\n  border: 1px solid #ddd;\r\n  border-radius: 6px;\r\n  font-size: clamp(0.1em, 1.5vw, 14px);\n}\n.fc-title {\r\n  font-size: clamp(0.25em, 1.5vw, 14px);\r\n  white-space: normal;\r\n  overflow-wrap: break-word;\r\n  word-break: break-word;\r\n  min-width: 0;\n}\r\n\r\n\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

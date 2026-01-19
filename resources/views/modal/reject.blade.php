@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-body text-center">
-                <p class="text-danger text-bold" style="font-size: 1.3em;padding: 3px;">Are you sure you want to recommend to redirect to other facility?</p>
+                <p class="text-danger text-bold" style="font-size: 1.3em;padding: 3px;" id="rejectMsg">Are you sure you want to recommend to redirect to other facility?</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default btn-sm" data-dismiss="modal"><i class="fa fa-times"></i> No</button>
@@ -11,3 +11,16 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<script>
+$('#rejectModal').on('show.bs.modal', function (e) {
+    let latestIdAct = $(e.relatedTarget).data('latest-id-act');
+    $('#latest_activity_id').val(latestIdAct);
+
+    if(latestIdAct){
+        $('#rejectMsg').html('Are you sure you want to Decline this tracaking position')
+    }
+    
+});
+
+</script>

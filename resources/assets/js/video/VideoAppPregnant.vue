@@ -29,6 +29,7 @@ export default {
       callTimer: null,
       callDuration: "00:00:000", // New variable for formatted time
       startTime: null, // Store the exact start time
+      pregnantType: null,
       showAudio: false,
       showVedio: false,
       showEndcall: false,
@@ -168,7 +169,8 @@ export default {
               )
               .then((res) => {
                 const response = res.data;
-                console.log("Form response:", response);
+                this.pregnantType = response.form_type;
+                console.log("Form response:", response.form_type);
                 console.log("Form response:", response);
                 // console.log("testing");
                 // console.log(response);
@@ -1110,7 +1112,13 @@ export default {
           self.channelParameters.userCount--;
           return;
         } else {
+          console.log("my pregnant type", this.pregnantType);
           if (this.referring_md === "no") {
+              if(this.pregnantType){
+                $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed");
+                $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed");
+              }
+              
             this.startScreenRecording();
             // this.startRecording();
           }
