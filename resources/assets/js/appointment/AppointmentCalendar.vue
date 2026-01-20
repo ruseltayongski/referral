@@ -933,19 +933,19 @@ export default {
 
   float: left;
 
-  margin-left: 2px;
-  width: clamp(0.1em, 1.5vw, 14px);
-  height: clamp(0.1em, 1.5vw, 14px);
+  /* margin-left: 2px; */
+  width: clamp(0.25em, 1.5vw, 12px);
+  height: clamp(0.25em, 1.5vw, 12px);
 
-  background-color: #ffffff;
+  background-color: transparent;
   background-image: url("/referral/public/images/cursor.png");
   background-repeat: no-repeat;
   background-position: center;
   background-size: 12px 12px;
 
-  border: 1px solid #ddd;
+  border: 1px solid transparent;
   border-radius: 6px;
-  font-size: clamp(0.1em, 1.5vw, 14px);
+  font-size: clamp(0.25em, 1.5vw, 12px);
 }
 .fc-title {
   font-size: clamp(0.25em, 1.5vw, 14px);

@@ -56,7 +56,7 @@ $user = Session::get('auth');
                 font-size: 15px;
             }
             .name-patient {
-                font-size: 20px;
+                font-size: 22px;
             }
             .time {
                 font-size: 14px;
@@ -66,9 +66,9 @@ $user = Session::get('auth');
                 visibility: visible;
             }
         }
-           .name-patient {
-                font-size: 20px;
-            }
+        .name-patient {
+            font-size: 22px;
+        }
 
         .time {
             margin-top: 5px;
@@ -128,8 +128,8 @@ $user = Session::get('auth');
         }
         .stamp-img {
             position: absolute;
-            top: -20px; /* Adjusted position */
-            right: -50px; /* Adjusted position */
+            top: 90px; /* Adjusted position */
+            right: 2px; /* Adjusted position */
             width: 80px; /* Compact size */
             height: 60px; /* Compact size */
             /* transform: rotate(+0deg); Angled like a stamp */
