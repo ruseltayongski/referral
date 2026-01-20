@@ -1161,6 +1161,7 @@
                                 }
 
                                 let type = event.payload.form_type;
+                                console.log("form type", event.payload);
                                 type = type=='normal' ? 'normal-section':'pregnant-section';
                                 let referral_type = (type=='normal-section') ? 'normal':'pregnant';
                                 let content = '<li id="referral_incoming'+event.payload.patient_code+'">' +
@@ -1173,9 +1174,13 @@
                                     '           </span>'+
                                     '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was <span class="text-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
                                     '        <h3 class="timeline-header no-border">' +
-                                    '           <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.referred_date+'</span></span></h3>\n' +
+                                    '           <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.referred_date+'</span></span></h3>\n' + 
+                                     (event.payload.form_version === 'version2'
+                                        ? '           <img class="stamp-img" src="/referral/public/new_version_stamp.png" alt="PNG Image">\n'
+                                        : ''
+                                    ) +
                                     '        <div class="timeline-footer">\n';
-
+                
                                 /*if(my_department_id==data.department_id) {*/
                                 let telemedText = (parseInt(event.payload.telemedicine) == 1)
                                     ? '<h5 class="text-red blink_new_referral pull-right">New Telemed</h5>'
