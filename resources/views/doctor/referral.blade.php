@@ -277,6 +277,9 @@ $user = Session::get('auth');
                                             </h3>
                                             <h3 class="timeline-header no-border">
                                                 <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                                 @if ($row->form_type === "version2")
+                                                    <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                                @endif
                                             </h3>
                                             @include('doctor.include.timeline_footer')
                                         </div>
@@ -294,6 +297,9 @@ $user = Session::get('auth');
                                             </h3>
                                             <h3 class="timeline-header no-border">
                                                 <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                                 @if ($row->form_type === "version2")
+                                                    <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                                @endif
                                             </h3>
                                         </div>
                                     @elseif($row->status == 'transferred')
@@ -313,6 +319,9 @@ $user = Session::get('auth');
                                             </h3> <!-- time line for #referred #seen #redirected -->
                                             <h3 class="timeline-header no-border">
                                                 <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                                 @if ($row->form_type === "version2")
+                                                    <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                                @endif
                                             </h3>
                                             @include('doctor.include.timeline_footer')
                                         </div>
@@ -330,6 +339,9 @@ $user = Session::get('auth');
                                                 <br><br>
                                                 <h3 class="timeline-header no-border">
                                                    <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
+                                                    @if ($row->form_type === "version2")
+                                                        <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                                    @endif
                                                 </h3>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
