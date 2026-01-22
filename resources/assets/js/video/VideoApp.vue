@@ -36,6 +36,8 @@ export default {
       telemedicine: null,
       form_version: null,
       normal_formType: null,
+      channelUserCount: null,
+      channelUserMax: null,
       //feedback
       feedbackUrl: baseUrlfeedback,
       doctorfeedback: doctorFeedback,
@@ -68,6 +70,7 @@ export default {
       referral_code: this.getUrlVars()["code"],
       referring_md: this.getUrlVars()["referring_md"],
       activity_id: this.getUrlVars()["activity_id"],
+      opcen_facility: this.getUrlVars()["opcen_facility"],
       options: {
         // Pass your App ID here.
         appId: "0fc02f6b7ce04fbcb1991d71df2dbe0d",
@@ -227,6 +230,7 @@ export default {
   },
   watch: {
     isUserJoined() {
+      console.log("opcen facility", this.opcen_facility)
       if (this.isUserJoined) {
         this.$refs.ringingPhone.pause();
         this.startCallTimer();
@@ -363,7 +367,6 @@ export default {
 
     switchCamera() {
       // console.log("Attempting to switch camera...");
-
       const track = this.channelParameters?.localVideoTrack;
       if (!track || track.isClosed) {
         Lobibox.alert("error", {
@@ -1169,7 +1172,8 @@ export default {
             //     ).addClass("completed");
             // }
           // }
-
+        this.channelUserCount = self.channelParameters.userCount;
+        this.channelUserMax = self.channelParameters.maxUsers;
         if (
           self.channelParameters.userCount >= self.channelParameters.maxUsers
         ) {
@@ -1190,6 +1194,7 @@ export default {
         await agoraEngine.subscribe(user, mediaType);
         // console.log("subscribe success");
         console.log("option channel name:", this.options);
+
         if (mediaType === "video") {
           // Pause ringing audio when remote video is received
           if (self.$refs && self.$refs.ringingPhone) {
@@ -1781,7 +1786,7 @@ export default {
                 &nbsp;
                 <div
                   class="button-container"
-                  v-if="this.user.facility_id != 63 && this.telemedicine == 1"
+                  v-if="this.user.facility_id != 63 && this.telemedicine == 1 && this.opcen_facility != 63"
                 >
                   <div
                     v-if="showUpward"
@@ -1801,7 +1806,7 @@ export default {
                     <i class="bi-hospital"></i>
                   </button>
                 </div>
-                <div class="button-container" v-if="this.telemedicine == 1">
+                <div class="button-container" v-if="this.telemedicine == 1 && this.opcen_facility != 63">
                   <div
                     v-if="!isMobileDevice && showPrescription"
                     class="tooltip-text"
@@ -1821,7 +1826,7 @@ export default {
                     <i class="bi bi-prescription"></i>
                   </button>
                 </div>
-                <div class="button-container" v-if="this.telemedicine == 1">
+                <div class="button-container" v-if="this.telemedicine == 1 && this.opcen_facility != 63">
                   <div
                     v-if="!isMobileDevice && showTooltip"
                     class="tooltip-text"

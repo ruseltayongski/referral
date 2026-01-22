@@ -1697,6 +1697,7 @@ class ReferralCtrl extends Controller
             "patient_code" => $track->code,
             "activity_id" => $latest_activity->id,
             "referred_from" => $latest_activity->referred_from,
+            "department" => $latest_activity->department_id,
             "remarks" => $req->remarks,
             'lab_result' => $realtime_files,
             "redirect_track" => $redirect_track,
@@ -1846,6 +1847,7 @@ class ReferralCtrl extends Controller
             'referred_from' => $user->facility_id,
             'referred_to' => $req->facility,
             'referring_md' => $user->id,
+            'department_id' => $track->telemedicine == 1 ? $req->department : '',
             'remarks' => '',
             'status' => $req->referferral ? $req->referferral : 'redirected'
         );

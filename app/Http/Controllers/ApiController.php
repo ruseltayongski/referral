@@ -232,8 +232,12 @@ class ApiController extends Controller
                             ->first();
 
         $subOpd_id = $latest_subOpd_id->sub_opdId;
-
-        $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
+        if((int)$request->opcen_facility === 63){
+            $doctorCaller = "711 Agent";
+        }else{
+            $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
+        }
+   
         $call = [
             "tracking_id" => $request->tracking_id,
             "code" => $request->code,
@@ -242,10 +246,13 @@ class ApiController extends Controller
             "trigger_by" => (int)$request->trigger_by,
             // "status" => "telemedicine",
             "telemedicine" => $tracking->telemedicine,
+            "status_track" => (int)$request->opcen_referred_to ? $tracking->status : '',
             "doctorCaller" => $doctorCaller,
             "form_type" => $request->form_type,
             "activity_id" => $request->activity_id ? $request->activity_id : $tracking->activity_id,
             "referred_to" => (int)$tracking->action_md ? (int)$request->referred_to : 63,
+            "opcen_facility_call_to" => (int)$request->opcen_referred_to,
+            "filter_department" => (int)$request->departmentId,
             "referred_from" => (int)$request->referred_from,
             "subopd_id" => $subOpd_id,
             "first_referring_md" => $referring_md_Status->referring_md
