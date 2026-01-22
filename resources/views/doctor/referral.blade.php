@@ -11,6 +11,7 @@ $user = Session::get('auth');
             color: #ff8456;
         }
         .blink_new_referral {
+            margin-top: 31px !important;
             animation: blinkMe 2s linear infinite;
         }
         @keyframes blinkMe {
@@ -60,10 +61,17 @@ $user = Session::get('auth');
             }
             .time {
                 font-size: 14px;
-            }
+            }   
             .mobile-view {
                 display: block;
                 visibility: visible;
+            }
+            .queued_badge {
+                color: green;
+                margin-top: -10px !important;
+            }
+            .stamp-img {
+                top: 90px !important;
             }
         }
         .name-patient {
@@ -253,7 +261,7 @@ $user = Session::get('auth');
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
                                                 <span class="facility">{{ $row->facility_name }}</span>
                                                 @if(count($queue) > 0)
-                                                    <h5 class="text-red pull-right-queue">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
+                                                    <h5 class="text-red pull-right-queue queued_badge">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
                                                 @endif
                                             </h3> <!-- time line for #referred #seen #redirected -->
                                   
