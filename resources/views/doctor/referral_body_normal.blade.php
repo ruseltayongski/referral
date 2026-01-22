@@ -102,6 +102,9 @@
         <td colspan="3">PhilHealth #: <span class="phic_id form-details">{{ $form->phic_id }}</span></td>
     </tr>
     <tr>
+        <td colspan="6">National ID: <span class="covid_number form-details">{{ $form->national_id }}</span></td>
+    </tr>
+    <tr>
         <td colspan="6">Covid Number: <span class="covid_number form-details">{{ $form->covid_number }}</span></td>
     </tr>
     <tr>

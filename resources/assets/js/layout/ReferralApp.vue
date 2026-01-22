@@ -99,6 +99,7 @@
                 activity_id: Number,
                 activeCallWindows: new Map(),
                 activeCalls: new Map(),
+                opcen_facility: null,
             }
         },
         methods: {
@@ -969,7 +970,9 @@
                     '                                                <i class="fa fa-stethoscope"></i> Track\n' +
                     '                                            </a>';
             },
-            callADoctor(tracking_id,code,subopd_id, telemedicine) {
+            callADoctor(tracking_id,code,subopd_id, telemedicine, status) {
+
+                console.log("call doctor status", status);
                 if(this.user.subopd_id == subopd_id && telemedicine == 1){
                     this.tracking_id = tracking_id
                     this.referral_code = code
@@ -978,7 +981,7 @@
                         // console.log( "ready!" );
                         $("#video-call-confirmation").modal('toggle');
                     });
-                }else if(telemedicine == 0){
+                }else if(telemedicine == 0 || (telemedicine == 1 && (status == "redirected" || status == "examined"))){
                     this.tracking_id = tracking_id
                     this.referral_code = code
                     this.playVideoCallAudio();
@@ -997,7 +1000,7 @@
                     //const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
                     const referring_md_status = 'no'
                     // console.log("referring_md_status", referring_md_status);
-                    let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}`
+                    let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}&opcen_facility=${this.opcen_facility}`
                     let newWindow = window.open(url, windowName, windowFeatures);
                     if (newWindow && newWindow.outerWidth) {
                         // If the window was successfully opened, attempt to maximize it
@@ -1320,9 +1323,9 @@
                         $("#html_websocket_upward" + event.payload.code).remove();
                         $("#upward_button" + event.payload.code).remove();
                     }
-
+                    console.log("status for exam", event.payload.status_track);
                     this.telemedicine = event.payload.telemedicine;
-                    if(event.payload.status == "telemedicine" || event.payload.telemedicine == 1) {
+                    if(event.payload.status == "telemedicine" || (event.payload.telemedicine == 1 && event.payload.status_track != "examined" && event.payload.status_track != "redirected")) {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
                             // console.log("callAdoctor", event);
                             this.action_md = event.payload.action_md;
@@ -1347,7 +1350,7 @@
                                 }
                                 
                             }
-
+                            console.log("call a doctor", event);
                             if(openedTrackingId){
                                 return;
                             }
@@ -1367,12 +1370,13 @@
                                 this.upwardCompleted(event.payload.code, event.payload.activity_id)
                             }
                         }
-                    }else {
+                    }else{
                         this.action_md = event.payload.action_md;
                         this.doctorCaller = event.payload.doctorCaller;
                         this.telemedicineFormType = event.payload.form_type;
                         this.activity_id = event.payload.activity_id;
-                  
+                        this.opcen_facility = event.payload.referred_to;
+                        console.log("call data event", event.payload);
                         // if(event.payload.referred_to === this.user.facility_id && (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id)) {
 
                         //     const tId = event.payload.tracking_id;
@@ -1384,28 +1388,59 @@
                         //           console.log(`Skipping callADoctor – already in active call for ${tId}`);
                         //     }
                         // }
-
-                        if (event.payload.referred_to === this.user.facility_id) {
+                        // if (event.payload.referred_to === this.user.facility_id) {
 
                             const tId = event.payload.tracking_id;
                             const sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
+                            console.log("faciltiydirect", event.payload.opcen_facility_call_to,this.user.facility_id, "department", event.payload.filter_department,this.user.department_id)
+                            if(event.payload.opcen_facility_call_to === this.user.facility_id && event.payload.filter_department === this.user.department_id){
+                                 console.log("please work on this");
+                                // if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                                //     this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
+                                // } else {
+                                //     // console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                                // }
+                                const openedTrackingId = localStorage.getItem("referral_tracking_id");
+                                if(this.activeCallWindows.has(event.payload.tracking_id) || this.activeCallWindows.has(openedTrackingId)){
+                                    const existingWindow = this.activeCallWindows.get(event.payload.tracking_id);   
+                                    const AcceptingWindow = this.activeCallWindows.get(openedTrackingId);
+                                    // Check if the window is still open and valid
+                                    if (existingWindow && !existingWindow.closed || (AcceptingWindow && !AcceptingWindow.closed)) {
+                                        //console.log("Call already active for tracking_id event:", event.payload.tracking_id);
+                                        // Optionally focus the existing window
+                                        existingWindow.focus();
+                                        
+                                        return; // Prevent opening a new call
+                                    } else {
+                                        // Window was closed, remove from tracking
+                                        this.activeCallWindows.delete(event.payload.tracking_id);
+                                    }
+                                    
+                                }
+                                console.log("call a doctor", event);
+                                if(openedTrackingId){
+                                    return;
+                                }
                                 
-                            if (event.payload.referred_to === 63) {
-                                if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
-                                    this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
-                                } else {
-                                    // console.log(`Skipping callADoctor – already in active call for ${tId}`);
-                                }
-                            } 
-                            else if (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id) {
-                                // console.log("accepted md");
-                                if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
-                                    this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
-                                } else {
-                                    // console.log(`Skipping callADoctor – already in active call for ${tId}`);
-                                }
+                                this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine,event.payload.status_track);
                             }
-                        }
+                            // else if (event.payload.referred_to === 63) {
+                            //     console.log("please work my sample facility id");
+                            //     if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                            //         this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
+                            //     } else {
+                            //         // console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                            //     }
+                            // } 
+                            // else if (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id) {
+                            //     // console.log("accepted md");
+                            //     if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
+                            //         this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
+                            //     } else {
+                            //         // console.log(`Skipping callADoctor – already in active call for ${tId}`);
+                            //     }
+                            // }
+                        //}
                        
                         if(event.payload.referred_from === 0){
                             return;

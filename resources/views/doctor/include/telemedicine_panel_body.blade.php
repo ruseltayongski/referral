@@ -392,6 +392,7 @@
                 <div class="stepper-item @if($follow_seen_track || $follow_accepted_track || $follow_rejected_track) completed @endif" id="seen_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter"><i class="fa fa-eye" aria-hidden="true"></i></div>
                     <div class="step-name">Seen</div>
+                    {{$followup_track[$position_count]->status}}
                 </div>
                 <div class="text-center stepper-item @if($follow_accepted_track || $follow_rejected_track) completed @endif" data-actionmd="" id="accepted_progress{{ $follow_track->code.$follow_track->id }}">
                     <div class="step-counter
@@ -503,7 +504,7 @@
 
                     <!-- jondy changes in treated -->
                     <div class="stepper-item stepper-item-treated_new @if($follow_treated_track && !$follow_followup_track && !$follow_upward_track) completed @endif" id="treated_progress{{ $follow_track->code.$follow_track->id }}">
-                        <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $follow_upward_track }}','{{ $follow_examined_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}','{{$follow_followup_track}}','{{$user->facility_id}}','{{ $follow_track->referred_to }}','{{referred_declined_track}}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
+                        <div class="step-counter-treated_new" onclick="telemedicineTreatedPatient('{{ $follow_upward_track }}','{{ $follow_examined_track }}','{{ $follow_treated_track }}','{{ $follow_track->code }}','{{ $follow_track->id }}','{{$follow_followup_track}}','{{$user->facility_id}}','{{ $follow_track->referred_to }}','{{$followup_track[$position_count]->status}}')"><i class="fa fa-heart" aria-hidden="true"></i></div>
                         <div class="step-name step-name-treated_new">Treated</div>
                     </div>
                     <!-- end of changes treated-->
