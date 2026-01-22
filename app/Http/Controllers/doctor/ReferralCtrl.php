@@ -520,6 +520,7 @@ class ReferralCtrl extends Controller
             'patients.civil_status as patient_status',
             'patients.phic_status',
             'patients.phic_id',
+            'patients.national_id',
             'patient_form.covid_number',
             'patient_form.refer_clinical_status',
             'patient_form.refer_sur_category',

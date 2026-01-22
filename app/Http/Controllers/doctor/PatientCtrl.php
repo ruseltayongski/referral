@@ -197,7 +197,7 @@ class PatientCtrl extends Controller
         );
 
         Patients::updateOrCreate($match, $data);
-
+      
         $data = array(
             'keyword' => $req->fname . ' ' . $req->lname,
             'region' => $req->region,
@@ -496,7 +496,7 @@ class PatientCtrl extends Controller
     {
         $user = Session::get('auth');
         $telemed_assigned_id = null;
-     
+             
         // Log::info("Files Received1212: ", $_FILES["file_upload"]["name"]);
         // return;
         if ($req->telemedicine) {
@@ -523,8 +523,8 @@ class PatientCtrl extends Controller
                 ->update([
                     'sex' => $req->patient_sex,
                     'civil_status' => $req->civil_status,
-                    'phic_status' => $req->phic_status,
-                    'phic_id' => $req->phic_id
+                    // 'phic_status' => $req->phic_status,
+                    // 'phic_id' => $req->phic_id
                 ]);
 
             $data = array(
