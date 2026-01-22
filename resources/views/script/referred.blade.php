@@ -41,12 +41,11 @@
         }
     }
 
-    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack,ownfacility,referred_from,declined) { // I add this FollowTrack
+    function telemedicineTreatedPatient(alreadyUpward, examinedPatient,alreadyTreated,code,referred_id, followTrack,ownfacility,referred_from,declined_status) { // I add this FollowTrack
         const prescriptionIsCompleted = $('#prescribed_progress'+code+referred_id).hasClass('completed');
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
         const treatedIsCompleted = $('#treated_progress'+code+referred_id).hasClass('completed'); // nag add ko ani kay para sa error messages kung ikaduha siya click para sa already treated
         const examPatientCompleted = document.getElementById(`examined_progress${code}${referred_id}`).classList.contains('completed');
-        console.log("declined:", declined);
         if(ownfacility == referred_from){
             Lobibox.alert("error",
                 {
@@ -66,7 +65,7 @@
                 {
                     msg: "This tracking area has already been followed!"
                 });
-        }else if(declined){
+        }else if(declined_status === "rebooked"){
              Lobibox.alert("error",
                 {
                     msg: "This tracking area has already been declined!"
@@ -870,7 +869,7 @@
     }
 
     function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility,telemedicine,declined) {
-
+        console.log("tracking_id from the 30 minutes", tracking_id);
         if(telemedicine === 0){
            
             console.log("please trigger this ")

@@ -455,8 +455,11 @@
         background-position: 0 -15px;
         }
 
-        body {
+        html, body {
             background: url('{{ asset('resources/img/backdrop.png') }}'), -webkit-gradient(radial, center center, 0, center center, 460, from(#ccc), to(#ddd));
+            background-repeat: repeat;
+            overflow-x: hidden;
+            background-size: auto;
         }
         .loading {
             background: rgba(255, 255, 255, 0.9) url('{{ asset('resources/img/loading.gif')}}') no-repeat center;

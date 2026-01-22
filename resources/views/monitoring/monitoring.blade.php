@@ -25,6 +25,9 @@
                         <th>Date Referred</th>
                         <th>Turn around time not accepted</th>
                         <th>Issue and Concern</th>
+                       {{-- @if($user->facility_id === 63)
+                            <th width="5%">Video Call</th>
+                        @endif --}}
                         <th width="20%">Action</th>
                     </tr>
                    
@@ -69,6 +72,15 @@
                                     <strong class="text-red">=> {{ $issue->issue }}</strong><br><br>
                                 @endforeach
                             </td>
+                            <?php
+                                $activity_latest = \App\Activity::where("code",$row->code)->orderBy('updated_at', 'desc')->first();
+                                $track = \App\Tracking::where("code", $row->code)->first();
+                            ?>
+                           {{-- <td class="text-center">
+                                @if(Session::get('auth')->level == 'opcen' && ($track->telemedicine === 0 || ($track->telemedicine === 1 && $track->status === "redirected")))
+                                    <button class="btn-xs  bg-success btn-flat" id="referral_video_call" onclick="opcenVideoCallToDoctor('{{ $row->tracking_id }}', '{{ $row->code }}','{{ $track->type }}','{{$activity_latest->id}}','{{$activity_latest->referred_to}}','{{$activity_latest->department_id}}');"><i class="fa fa-camera"></i> Call</button>
+                                @endif
+                            </td> --}}
                             <td width="20%">
                                 <?php
                                     $monitoring_not_accepted = \App\Monitoring::select("monitoring.remarks","monitoring.created_at",\Illuminate\Support\Facades\DB::raw("CONCAT(users.fname,' ',users.mname,' ',users.lname) as agent_name"))->where("monitoring.code","=",$row->code)
@@ -129,7 +141,6 @@
 
 
 @endsection
-
 @section('js')
     <script>
         //Date range picker
@@ -161,6 +172,77 @@
                     $(".monitoring_remark").html(result);
                 },500);
             })
+        }
+
+
+        function opcenVideoCallToDoctor(tracking_id,code,form_tpe,activity_id,referred_to,department_id){
+            
+            var url = "<?php echo asset('api/video/call'); ?>";
+            var json = {
+                "_token" : "<?php echo csrf_token(); ?>",
+                "tracking_id" : tracking_id,
+                "code" : code,
+                "trigger_by" : "{{ $user->id }}",
+                "opcen_facility" : {{ $user->facility_id }},
+                "form_type" : form_tpe,
+                "activity_id" : activity_id,
+                "opcen_referred_to" : referred_to,
+                "departmentId" : department_id
+            };
+            console.log("json data:", json);
+            $.post(url,json,function(){});
+            var windowName = 'NewWindow'; // Name of the new window
+            var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
+            let videourl = "{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id+"&opcen_facility={{ $user->facility_id }}";
+
+            let newWindow = window.open(videourl, windowName, windowFeatures);
+            if (newWindow && newWindow.outerWidth) {
+                newWindow.moveTo(0, 0);
+                newWindow.resizeTo(screen.availWidth, screen.availHeight);
+            }
+           
+            const checkWindowClosed = setInterval(() => {
+                if (newWindow && newWindow.closed) {
+                    console.log("Referral window closed, removing tracking_id...");
+                    localStorage.removeItem("referral_tracking_id");
+                    clearInterval(checkWindowClosed); // Stop checking once closed
+                }
+            }, 1000)
+
+            localStorage.setItem("referral_tracking_id", tracking_id);
+           
+            // if (newWindow && newWindow.outerWidth) {
+            //     // If the window was successfully opened, attempt to maximize it
+            //     newWindow.moveTo(0, 0);
+            //     newWindow.resizeTo(screen.availWidth, screen.availHeight);
+
+                
+            //      // 🟩 Add call state to localStorage (mark startedBy)
+            //     const key = 'activeCall_' + tracking_id;
+            //     let callData = JSON.parse(localStorage.getItem(key) || '{}');
+            //     callData.tracking_id = tracking_id;
+            //     callData.startedBy = "{{ $user->id }}"; // referring doctor
+            //     localStorage.setItem(key, JSON.stringify(callData));
+
+            //     // 🟩 Poll for window close and unset startedBy
+            //     const interval = setInterval(() => {
+            //         if (newWindow.closed) {
+            //             clearInterval(interval);
+            //             let callData = JSON.parse(localStorage.getItem(key) || '{}');
+            //             if (callData.startedBy === "{{ $user->id }}") {
+            //                 delete callData.startedBy;
+            //             }
+            //             if (!callData.startedBy && !callData.acceptedBy) {
+            //                 localStorage.removeItem(key);
+            //             } else {
+            //                 localStorage.setItem(key, JSON.stringify(callData));
+            //             }
+            //             console.log('Referring doctor closed window – updated', callData);
+            //         }
+            //     }, 1000);
+            // }
+
+
         }
     </script>
 @endsection
