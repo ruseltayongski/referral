@@ -80,6 +80,11 @@ export default {
     this.buildEventsFromSlots();
     this.ini_events($("#external-events div.external-event"));
     this.generateCalendar();
+
+    document.documentElement.style.setProperty(
+      '--base-url',
+      window.location.origin
+    );
   },
   methods: {
     getBookedSlotsForDate(date) {
@@ -121,8 +126,6 @@ export default {
                     const inPast = moment(slot.appointed_date).isBefore(moment().startOf('day'));
                     const maxSlot = Number(slot.slot) || 0;
                     const available = maxSlot - assignedCount;
-
-                    console.log("total slot", slot);
 
                     if (!inPast) {
                         slotsForDate.push({
@@ -177,7 +180,7 @@ export default {
             const isUserBooked = slotsArray.some(slot => 
                 slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id && doc.rebook === 0)
             );
-            console.log("this.selectedDeptKey", this.selectedDeptKey);
+            console.log("is user book?", isUserBooked);
             const userclickedKey = `${group.deptName}_${group.date}`;
             const isSelected = userclickedKey === this.selectedDeptKey;
             const hasAvailable = group.slots.some(s => s.isAvailable);
@@ -232,7 +235,6 @@ export default {
           const clickedDate = moment(event.start).format("YYYY-MM-DD");
           const deptKey = event.title + '_' + clickedDate;
           this.selectedAppointmentKey = deptKey;
-          console.log("event info", event);
           this.selectedDeptKey = deptKey;
           this.buildEventsFromSlots(clickedDate,event.title,deptKey);
 
@@ -657,21 +659,30 @@ export default {
       const clickedDay = document.querySelector(`.fc-day[data-date='${clickedDate}']`);
 
       const deptObjects = Object.values(this.AppointmentDept);
-
       const uniqueDates = [
-        ...new Set(deptObjects.map(d => d.date))
+          ...new Set(
+            deptObjects
+              .map(d => d.date)
+              .filter(date => date != null)
+              .filter(date => date == clickedDate  
+              ) // removes null AND undefined
+          )
       ];
-
+    
       if(uniqueDates.includes(clickedDate)){
          const uniqueDeptCount = new Set(
-            deptObjects.map(d => d.deptName)
+            deptObjects
+            .filter(d => d.date === clickedDate)
+            .map(d => d.deptName)
           ).size;
-
+       
         const deptNameSet = new Set(
-            deptObjects.map(d => d.deptName)
+            deptObjects
+            .filter(d => d.date === clickedDate)
+            .map(d => d.deptName)
         );
-        const deptName = Array.from(deptNameSet)[0];
-
+        const deptName =  [...deptNameSet][0];
+ 
         if(uniqueDeptCount >= 2){
 
           Lobibox.alert("warning",
@@ -686,8 +697,6 @@ export default {
           const deptKey = `${deptName}_${clickedDate}`;
           this.selectedDeptKey = deptKey;
           this.dateSelected = clickedDate;
-
-          console.log("for only one", this.AppointmentDept[deptKey]);
           this.$emit("appointedTime", this.AppointmentDept[deptKey] || []);  
 
           this.buildEventsFromSlots(
@@ -938,10 +947,15 @@ export default {
   height: clamp(0.25em, 1.5vw, 12px);
 
   background-color: transparent;
-  background-image: url("/referral/public/images/cursor.png");
+  
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 12px 12px;
+  background-size: contain;
+    /* SVG cursor icon */
+  background-image: url("data:image/svg+xml;utf8,\
+    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>\
+    <path fill='white' d='M32 0v480l144-144 64 176 96-32-64-176h176L32 0z'/>\
+    </svg>");
 
   border: 1px solid transparent;
   border-radius: 6px;
