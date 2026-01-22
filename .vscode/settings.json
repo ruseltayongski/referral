@@ -1,0 +1,10 @@
+{
+    "vue.autoInsert.bracketSpacing": false,
+    "vue.codeActions.askNewComponentName": false,
+    "vue.editor.reactivityVisualization": true,
+    "vue.editor.templateInterpolationDecorators": false,
+    "vue.format.script.enabled": false,
+    "vue.format.style.enabled": false,
+    "vue.format.template.enabled": false,
+    "vue.format.template.initialIndent": false
+}

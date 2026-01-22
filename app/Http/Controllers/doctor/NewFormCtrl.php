@@ -2258,7 +2258,8 @@ class NewFormCtrl extends Controller
             "count_reco" => 0,
             "redirect_track" => $redirect_track,
             "telemedicine" => $req->telemedicine,
-            "position" => 0 //default for first referred
+            "position" => 0, //default for first referred
+            "form_version" => 'version2'
         ];
     
         broadcast(new NewReferral($new_referral));

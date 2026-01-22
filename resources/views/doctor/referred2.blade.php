@@ -52,6 +52,21 @@ $user = Session::get('auth');
             .not_arrived {
                 font-size: 8px;
             }
+            .referral-stamp {
+                position: relative;      /* no overlap */
+                top: 0;
+                right: auto;             /* reset absolute right */
+                margin-left: auto;       /* keep on the right */
+                margin-right: 30px;       /* pull inward so it’s visible */
+                margin-bottom: 5px;
+                width: 45px;
+            }
+
+            .stamp-img {
+                width: 45px;
+                height: auto;
+                display: block;
+            }
         }
         .panel-heading {
             position: relative; /* Ensure proper positioning */

@@ -483,7 +483,7 @@ class PatientCtrl extends Controller
             "status" => "referred",
             "count_reco" => 0,
             "redirect_track" => $redirect_track,
-            "position" => 0, //default for first referred
+            "position" => 0, 
             "subOpdId" => $subOPD_Id,
             'telemedicine' => $req->telemedicine,
         ];
