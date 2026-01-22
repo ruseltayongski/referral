@@ -428,8 +428,8 @@
                     <?php
                     if (
                         $redirected_rejected_track && 
-                        ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') &&
-                        $redirected_track[$position_count]->status != 'transferred'
+                        ($position_count <= count($redirected_track) && $redirect_track->status == 'redirected') &&
+                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_accepted_track
                         // !($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track) &&
                         // (!isset($redirected_track[$position_count]) || (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred'))
                         // (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred')
@@ -446,8 +446,8 @@
                 <?php
                 if (
                         $redirected_rejected_track && 
-                        ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') &&
-                        $redirected_track[$position_count]->status != 'transferred'
+                        ($position_count <= count($redirected_track) && $redirect_track->status == 'redirected') &&
+                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_accepted_track
                 )
                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                 elseif ($redirected_cancelled_track)
@@ -463,8 +463,8 @@
                 <?php
                     if (
                         $redirected_rejected_track && 
-                        ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') &&
-                        $redirected_track[$position_count]->status != 'transferred'
+                        ($position_count <= count($redirected_track) && $redirect_track->status == 'redirected') &&
+                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_accepted_track
                     )
                         echo 'Declined';
                     elseif ($redirected_cancelled_track)
