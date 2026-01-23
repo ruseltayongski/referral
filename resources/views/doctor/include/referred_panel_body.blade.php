@@ -428,7 +428,6 @@
         <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track || ($position_count < count($redirected_track))) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
-            {{$position_count}} {{count($redirected_track)}} {{$redirect_track->status}} 
         </div>
         <div class="stepper-item @if($redirected_accepted_track && (!$redirected_rejected_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track)) ) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter
@@ -436,8 +435,8 @@
                     if (
                         ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                            ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
-                        $redirected_track[$position_count]->status != 'transferred')
+                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_cancelled_track)
                         // !($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track) &&
                         // (!isset($redirected_track[$position_count]) || (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred'))
                         // (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred')
@@ -453,10 +452,10 @@
                             " id="rejected_progress{{ $redirect_track->code.$redirect_track->id }}">
                 <?php
                 if (
-                       ($redirected_rejected_track && 
+                        ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                            ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
-                        $redirected_track[$position_count]->status != 'transferred')
+                            ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_cancelled_track)
                 )
                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                 elseif ($redirected_cancelled_track)
@@ -473,8 +472,8 @@
                     if (
                          ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                            ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
-                        $redirected_track[$position_count]->status != 'transferred')
+                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_cancelled_track)
                     )
                         echo 'Declined';
                     elseif ($redirected_cancelled_track)
