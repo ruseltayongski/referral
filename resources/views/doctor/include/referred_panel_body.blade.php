@@ -436,7 +436,7 @@
                         ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
                           ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
-                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_cancelled_track)
+                        $redirected_track[$position_count]->status != 'transferred')
                         // !($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track) &&
                         // (!isset($redirected_track[$position_count]) || (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred'))
                         // (isset($redirected_track[$position_count]) && $redirected_track[$position_count]->status == 'transferred')
@@ -444,7 +444,7 @@
                         // !$redirected_admitted_track
                     )
                         echo "bg-red";
-                    elseif ($redirected_cancelled_track)
+                    elseif ($redirected_cancelled_track && $position_count < count($redirected_track))
                         echo "bg-yellow";
                     elseif ($redirected_queued_track && !$redirected_accepted_track)
                         echo "bg-orange";
@@ -455,10 +455,10 @@
                         ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
                             ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
-                        $redirected_track[$position_count]->status != 'transferred' && !$redirected_cancelled_track)
+                        $redirected_track[$position_count]->status != 'transferred')
                 )
                     echo '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
-                elseif ($redirected_cancelled_track)
+                elseif ($redirected_cancelled_track && $position_count < count($redirected_track))
                     echo '<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>';
                 // elseif ($redirected_queued_track && ($redirect_track->status == 'redirected' || $position_count < count($redirected_track) && $redirect_track->status == 'redirected'))
                 elseif ($redirected_queued_track && !$redirected_accepted_track)
@@ -476,7 +476,7 @@
                         $redirected_track[$position_count]->status != 'transferred' && !$redirected_cancelled_track)
                     )
                         echo 'Declined';
-                    elseif ($redirected_cancelled_track)
+                    elseif ($redirected_cancelled_track && $position_count < count($redirected_track))
                         echo 'Cancelled';
                     elseif ($redirected_queued_track && !$redirected_accepted_track)
                         echo "Queued at <br><b>" . $queue_redirected . "</b>";      
