@@ -428,7 +428,6 @@
         <div class="stepper-item @if($redirected_seen_track || $redirected_accepted_track || $redirected_rejected_track || ($position_count < count($redirected_track))) completed @endif" id="seen_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-eye" aria-hidden="true" style="font-size:15px;"></i></div>
             <div class="step-name">Seen</div>
-            {{$position_count}} {{count($redirected_track)}}
         </div>
         <div class="stepper-item @if($redirected_accepted_track && (!$redirected_rejected_track || !$redirected_cancelled_track) || ($position_count < count($redirected_track)) ) completed @endif" id="accepted_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter
