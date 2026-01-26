@@ -471,7 +471,7 @@ $user = Session::get('auth');
         @if(Session::get('redirected_already'))
             Lobibox.alert("info",
                 {
-                    msg: "This is to inform users that the patient has already been redirected to the referring doctor"
+                    msg: "The patient was already redirected to the referring doctor"
                 });
             <?php Session::put("redirected_already",false); ?>
         @endif
