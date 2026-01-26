@@ -468,6 +468,14 @@ $user = Session::get('auth');
             <?php Session::put("redirected_failed",false); ?>
         @endif
 
+        @if(Session::get('redirected_already'))
+            Lobibox.alert("info",
+                {
+                    msg: "This is to inform users that the patient has already been redirected to the referring doctor"
+                });
+            <?php Session::put("redirected_already",false); ?>
+        @endif
+
         $(document).ready(function() {
             let selectedButtonData = null; 
             
