@@ -157,7 +157,7 @@
 
     </script>
 
-    <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
+    <small class="label bg-blue label-responsive">{{ $position[$position_count].' position - '.\App\Facility::find($referred_track->referred_to)->name }}</small><br>
     <div class="stepper-wrapper">
         <div class="stepper-item completed">
             <div class="step-counter"><i class="fa fa-share" aria-hidden="true" style="font-size: 15px;"></i></div>
@@ -403,7 +403,7 @@
 
 ?>
     
-    <small class="label bg-blue">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>
+    <small class="label bg-blue label-responsive">{{ $position[$position_count].' position - '.\App\Facility::find($redirect_track->referred_to)->name}}</small><br>
     <input type="hidden" id="pass_to_vue_facility" value="{{ end($referredFromArray)  }}">
    
     <div class="stepper-wrapper">
@@ -993,5 +993,21 @@ window.addEventListener("refresh-refer-popovers", function (e) {
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
+
+.label-responsive {
+    display: inline-block;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    padding: 6px 8px;
+}
+
+@media(max-width: 768px) {
+    .label-responsive {
+        font-size: 12px;
+        padding: 4px 6px;
+    }
+}
 
 </style>
