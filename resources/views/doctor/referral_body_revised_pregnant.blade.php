@@ -20,7 +20,7 @@ $user = Session::get('auth');
         border-radius: 50%;
         display: inline-block;
     }
-    #glasgow_table_1, tr td:nth-child(1) {width: 35%;}
+    #glasgow_table_1 tr td:nth-child(1) {width: 35%;}
     #glasgow_table_2 tr td:nth-child(2) {width: 35%;}  
 
     .mobile-view {
@@ -77,6 +77,14 @@ $user = Session::get('auth');
         <td colspan="2">Referred To: <span class="referred_name form-details">{{ $form['pregnant']->referred_facility }}</span></td>
         <td colspan="4">Department: <span class="department_name form-details">{{ $form['pregnant']->department }}</span></td>
     </tr>
+    <tr>
+        <td colspan="2">PhilHealth status: <span class="phic_status form-details">{{ $form['pregnant']->phic_status }}</span></td>
+        <td colspan="4">PhilHealth #: <span class="phic_id form-details">{{ $form['pregnant']->phic_id }}</span></td>
+    </tr>
+    <tr>
+        <td colspan="4">National ID: <span class="covid_number form-details">{{ $form['pregnant']->national_id }}</span></td>
+    </tr>
+
     <tr>
         <td colspan="4">Covid Number: <span class="covid_number form-details">{{ $form['pregnant']->covid_number }}</span></td>
     </tr>

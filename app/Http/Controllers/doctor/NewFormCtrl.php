@@ -1158,8 +1158,8 @@ class NewFormCtrl extends Controller
             ->update([
                 'sex' => $request->patient_sex,
                 'civil_status' => $request->civil_status,
-                'phic_status' => $request->phic_status,
-                'phic_id' => $request->phic_id
+                // 'phic_status' => $request->phic_status,
+                // 'phic_id' => $request->phic_id
             ]);
 
             $data = array(
@@ -1683,6 +1683,9 @@ class NewFormCtrl extends Controller
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
             'patients.sex',
             'patients.civil_status',
+            'patients.phic_status',
+            'patients.phic_id',
+            'patients.national_id',
             DB::raw("if(
                 patients.brgy,
                 concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),

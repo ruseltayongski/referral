@@ -741,6 +741,9 @@ class ReferralCtrl extends Controller
             DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as woman_name'),
             DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS woman_age"),
             'patients.sex',
+            'patients.phic_status',
+            'patients.phic_id',
+            'patients.national_id',
             DB::raw("if(
                 patients.brgy,
                 concat(patients.region,', ',province.description,', ',muncity.description,', ',barangay.description),
