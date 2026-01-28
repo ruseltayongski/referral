@@ -467,7 +467,7 @@ class TelemedicineApiCtrl extends Controller
    public function referPatient(Request $req, $type)
     {
         // Decode JSON payload manually
-        $json = json_decode($req->getContent(), true);
+        $json = $req->all();
         // return $json;
         $user = (object) [
             'id' => $json['referring_md'] ?? null,
@@ -481,12 +481,25 @@ class TelemedicineApiCtrl extends Controller
 
 
         // Validate required fields
-        if (!$user->id || !$user->facility_id || !$patient_id || !$referred_facility) {
+        // if (!$user->id || !$user->facility_id || !$patient_id || !$referred_facility) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'referring_md, referring_facility, patient_id and referred_facility are required'
+        //     ], 422);
+        // }
+
+        if (
+            !isset($json['referring_md']) ||
+            !isset($json['referring_facility']) ||
+            !isset($json['patient_id']) ||
+            !isset($json['referred_facility'])
+        ) {
             return response()->json([
                 'status' => false,
                 'message' => 'referring_md, referring_facility, patient_id and referred_facility are required'
             ], 422);
         }
+
 
         $telemed_assigned_id = null;
         $referred_patient_data = null;
