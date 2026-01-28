@@ -1828,9 +1828,14 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('Y-m-d H:i:s');
         $track = Tracking::where("code",$req->code)->first();
-    
+
         if(!$track) {
             Session::put('redirected_failed',true);
+            return Redirect::back();
+        }
+
+        if($track->status === "redirected"){
+            Session::put('redirected_already',true);
             return Redirect::back();
         }
 

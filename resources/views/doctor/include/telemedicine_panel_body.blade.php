@@ -133,14 +133,19 @@
             ->exists();
     }
 
-    if($last_position_count === 0 && $position_count === 0){
-        
+    if($position_count === 0){
         $referred_declined_track = \App\Activity::where("code",$referred_track->code)
             ->where("referred_from",$referred_track->referred_from)
             ->where("created_at",">=",$referred_track->created_at)
             ->where("status","declined")
             ->exists();
     }
+
+    // $referred_declined_track = \App\Activity::where("code",$referred_track->code)
+    //     ->where("referred_from",$referred_track->referred_from)
+    //     ->where("created_at",">=",$referred_track->created_at)
+    //     ->where("status","declined")
+    //     ->exists();
 
     //reset the variable in followup if followup not exist
     $followup_queued_track = 0;
@@ -182,7 +187,7 @@
             <?php
                 if(!$refer_followUp && $referred_cancelled_track && !$referred_accepted_track)
                     echo "bg-yellow";
-                elseif(!$refer_followUp && $referred_declined_track)
+                elseif($referred_declined_track && (!$referred_accepted_track || !$referred_cancelled_track))
                     echo "bg-red";
                 elseif(!$refer_followUp && $referred_queued_track && !$referred_accepted_track)
                     echo "bg-orange";
@@ -191,7 +196,7 @@
              id="rejected_progress{{ $referred_track->code.$referred_track->id }}"
             ><div id="queue_number{{ $referred_track->code.$referred_track->id }}">
                 <?php
-                    if(!$refer_followUp && $referred_declined_track)
+                    if($referred_declined_track && (!$referred_accepted_track || !$referred_cancelled_track))
                         echo'<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
                     elseif(!$refer_followUp && $referred_cancelled_track && !$referred_accepted_track)
                         echo'<i class="fa fa-times" aria-hidden="true" style="font-size:15px;"></i>' ;      
@@ -207,7 +212,7 @@
                 <?php
                 if(!$refer_followUp && $referred_cancelled_track && !$referred_accepted_track)
                     echo 'Cancelled';
-                elseif(!$refer_followUp && $referred_declined_track)
+                elseif($referred_declined_track && (!$referred_accepted_track || !$referred_cancelled_track))
                     echo 'Declined';
                 elseif(!$refer_followUp  && $referred_queued_track && !$referred_accepted_track)
                     echo 'Queued at <br> <b>'. $queue_referred.'</b>';
