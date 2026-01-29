@@ -68,6 +68,13 @@ $user = Session::get('auth');
         <td colspan="2">Department: <span class="department_name form-details">{{ $form['pregnant']->department }}</span></td>
     </tr>
     <tr>
+        <td colspan="2">PhilHealth status: <span class="phic_status form-details">{{ $form['pregnant']->phic_status }}</span></td>
+        <td colspan="2">PhilHealth #: <span class="phic_id form-details">{{ $form['pregnant']->phic_id }}</span></td>
+    </tr>
+    <tr>
+        <td colspan="4">National ID: <span class="covid_number form-details">{{ $form['pregnant']->national_id }}</span></td>
+    </tr>
+    <tr>
         <td colspan="4">Covid Number: <span class="covid_number form-details">{{ $form['pregnant']->covid_number }}</span></td>
     </tr>
     <tr>
