@@ -366,10 +366,26 @@
         ->orderBy('id','asc')
         ->get();
 
-    // $redirected_get_track = \App\Activity::where("code", $redirect_track->code)
-    //     ->where("status", "redirected")
-    //     ->get();
-    // dd($redirected_get_track);
+ $activities = \App\Activity::where('code', $redirect_track->code)
+    ->orderBy('id') // or created_at
+    ->pluck('status')
+    ->toArray();
+
+    $maxConsecutive = 0;
+    $currentCount = 0;
+
+    foreach ($activities as $status) {
+        if ($status === 'redirected') {
+            $currentCount++;
+            $maxConsecutive = max($maxConsecutive, $currentCount);
+        } else {
+            $currentCount = 0; // reset when different status appears
+        }
+    }
+
+    // if no consecutive redirected, return no value
+    $redirected_count = $maxConsecutive >= 2 ? $maxConsecutive : null;
+
     
     // $redirected_discharged_actId = $redirected_discharged_actId->slice(1)->values();
 
@@ -494,10 +510,13 @@
                 ?>
             </div>
         </div>
-        <div class="stepper-item  @if( (($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track) || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred')) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
+        <div class="stepper-item @if( (($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track) && ($position_count != $redirected_count) || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred'))) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
             <!--!-Sample Only--! -->
             <div class="step-name">Departed</div>
+            <!-- {{$redirected_track[$position_count]->status}} -->
+            <!-- {{$redirected_rejected_track}} {{$redirected_redirected_track}} -->
+             <!-- {{$redirected_count}} -->
         </div>
         <div class="stepper-item @if($redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred')) completed @endif" id="arrived_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter {{ $redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track ? 'bg-red' : '' }}" id="notarrived_progress{{ $redirect_track->code.$redirect_track->id }}">{!! $redirected_notarrived_track && !$redirected_rejected_track && !$redirected_cancelled_track ? '<i class="fa fa-ambulance" aria-hidden="true" style="font-size: 15px;"></i>&nbsp;<i class="fa fa-cloud" aria-hidden="true" style="font-size: 10px;"></i>' :
