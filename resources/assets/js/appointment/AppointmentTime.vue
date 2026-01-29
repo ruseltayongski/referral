@@ -138,7 +138,7 @@ export default {
     },
     
     selectTimeSlot(slot) {
-      console.log("my sloe sched", slot);
+      // console.log("my sloe sched", slot);
       this.selectedAppointmentTime = slot.id;
       // this.selectedAppointmentDoctor = slot.assignedDoctors.length > 0 
       //   ? slot.assignedDoctors[0].id 
@@ -302,14 +302,14 @@ export default {
                         <span class="time-range">
                           {{ formatTimeRange(slot.appointedTime, slot.appointedTimeTo) }}
                         </span>
-                        <span class="slot-count" v-if="slot.slot">
-                          ({{ slot.slot }} slot {{ slot.slot > 1 ? 's' : '' }})
-                        </span>
                       </div>
                       <div class="doctor-info">
                         <i class="fa fa-user-md"></i>
                         <span class="doctor-name">{{ getDoctorName(slot) }}</span>
                       </div>
+                        <span class="slot-count" v-if="slot.slot">
+                          {{ slot.slot }} slot{{ slot.slot > 1 ? "'s" : "" }} available
+                        </span>
                     </label>
                   </div>
                 </div>
@@ -415,8 +415,8 @@ export default {
 
 .slot-count {
   font-size: 13px;
-  color: #666;
-  font-weight: normal;
+  color: #00a65a;
+  font-weight: bold;
 }
 
 .doctor-info {
@@ -432,6 +432,7 @@ export default {
 }
 
 .doctor-name {
+  font-size: 13px;
   font-style: italic;
 }
 

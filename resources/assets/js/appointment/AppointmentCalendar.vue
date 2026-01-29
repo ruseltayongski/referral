@@ -108,9 +108,9 @@ export default {
 
       return bookedSlots;
     },
-    getFirstAvailableDate(){
-      console.log("date appointment:",this.AppointmentDept);
-    },  
+    // getFirstAvailableDate(){
+    //   console.log("date appointment:",this.AppointmentDept);
+    // },  
     buildEventsFromSlots(dateselected,titleOpd,deptKey) {
         if (!this.appointmentSlot || this.appointmentSlot.length === 0) return;
 
@@ -180,7 +180,7 @@ export default {
             const isUserBooked = slotsArray.some(slot => 
                 slot.assignedDoctors?.some(doc => doc.doctor_id === this.user.id && doc.rebook === 0)
             );
-            console.log("is user book?", isUserBooked);
+            // console.log("is user book?", isUserBooked);
             const userclickedKey = `${group.deptName}_${group.date}`;
             const isSelected = userclickedKey === this.selectedDeptKey;
             const hasAvailable = group.slots.some(s => s.isAvailable);
@@ -276,8 +276,8 @@ export default {
 
       // console.log("Slot info for",info);
 
-      if (info) {
-         console.log("my sllot of available", info);
+      // if (info) {
+      //    console.log("my sllot of available", info);
         // if (fullyBooked || inPast) {
         //   // Red background for fully booked or past dates
         //   console.log("is this fulll");
@@ -288,7 +288,7 @@ export default {
         //   // cell.css("background-color", "#32b77a");
         //   // cell.addClass("add-cursor-pointer");
         // }
-      }
+      // }
 
       if (bookedSlots.length > 0) {
         // Build tooltip text
