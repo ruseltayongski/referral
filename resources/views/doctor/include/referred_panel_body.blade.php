@@ -457,7 +457,7 @@
                     if (
                         ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred' && !$redirected_accepted_track) || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
                         $redirected_track[$position_count]->status != 'transferred') || 
                         ($redirected_redirected_track && ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') && ($redirected_track[$position_count]->status != 'transferred' && $redirected_track[$position_count]->status != 'referred'))
                         // !($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track) &&
@@ -1002,5 +1002,21 @@ window.addEventListener("refresh-refer-popovers", function (e) {
     cursor: pointer;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   }
+
+.label-responsive {
+    display: inline-block;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    padding: 6px 8px;
+}
+
+@media(max-width: 768px) {
+    .label-responsive {
+        font-size: 12px;
+        padding: 4px 6px;
+    }
+}
 
 </style>
