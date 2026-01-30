@@ -477,7 +477,7 @@
                 if (
                         ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                            ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                            ($position_count < count($redirected_track) && $redirect_track->status == 'referred' && !$redirected_accepted_track) || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
                         $redirected_track[$position_count]->status != 'transferred') ||
                         ($redirected_redirected_track && ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') && ($redirected_track[$position_count]->status != 'transferred' && $redirected_track[$position_count]->status != 'referred'))
                 )
@@ -496,7 +496,7 @@
                     if (
                          ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred' && !$redirected_accepted_track) || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
                         $redirected_track[$position_count]->status != 'transferred') ||
                         ($redirected_redirected_track && ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') && ($redirected_track[$position_count]->status != 'transferred' && $redirected_track[$position_count]->status != 'referred'))
                     )
