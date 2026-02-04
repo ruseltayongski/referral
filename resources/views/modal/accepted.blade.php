@@ -192,12 +192,11 @@
 </div>--}}
 
 <script>
-
 // var upload_pos = 2;
 var upload_count = 0;
 let fileInfoArray = [];
 let fileQueue = [];
-let isProcessing = false;
+let isProcessing = false;  
 
 function readUrl(input, pos) {
     if (input.files && input.files.length > 0) {
