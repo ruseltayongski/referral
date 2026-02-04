@@ -1956,6 +1956,37 @@ class ApiController extends Controller
         }
     }
 
+       public static function fileUpload_Mobile(Request $request, $username) {
+        // $username = Session::get('auth')->username;
+        for($i = 0; $i < count(array_filter($_FILES["file_upload"]["tmp_name"])); $i++) {
+            $filePath = $_FILES['file_upload']['tmp_name'][$i];
+            if(!empty($filePath) && isset($filePath)) {
+                $type=$_FILES['file_upload']['type'][$i];
+                $fileName = $_FILES['file_upload']['name'][$i];
+
+                $data = array(
+                    'file_upload' => curl_file_create($filePath, $type, $fileName),
+                    'username' => $username
+                );
+
+                $url = self::fileUploadUrl().'file_upload.php';
+                // $url = 'https://fileupload.user.edgecloudph.com/file_upload.php';
+                $ch = curl_init($url);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_HTTPHEADER,array('Content-Type: multipart/form-data'));
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_exec($ch);
+                //Check for errors.
+                if(curl_errno($ch)){
+                    throw new Exception(curl_error($ch));
+                }
+                curl_close($ch);
+            }
+        }
+    }
+
     public static function fileUploadUrl2(){
         return 'http://192.168.110.109:8000/';
     }

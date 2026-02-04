@@ -2285,6 +2285,7 @@ document.getElementById('icd10_keyword_pregnant_revised').addEventListener('keyd
         $("#collapse_reason_referral_pregnant").collapse('show');
         $("#collapse_vital_signs_pregnant").collapse('show');
         $("#collapse_medication_pregnant").collapse('show');
+        $("#collapse_glasgow_pregnant").collapse('show');
 
         // Ensure button toggle works properly
         $(".btn[data-target='#patient_treatment_give_time']").on("click", function () {
@@ -2302,6 +2303,9 @@ document.getElementById('icd10_keyword_pregnant_revised').addEventListener('keyd
         $(".btn[data-target='#collapse_reason_referral_pregnant']").on("click", function () {
             $("#collapse_reason_referral_pregnant").collapse("toggle");
         });
+        $(".btn[data-target='#collapse_glasgow_pregnant']").on("click", function () {
+            $("#collapse_glasgow_pregnant").collapse("toggle");
+        });  
        
     });
 </script>
