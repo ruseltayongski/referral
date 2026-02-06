@@ -953,11 +953,7 @@ export default {
   background-size: contain;
   
     /* SVG cursor icon */
-  background-image: url("data:image/svg+xml;utf8,\
-    <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>\
-    <path fill='white' d='M32 0v480l144-144 64 176 96-32-64-176h176L32 0z'/>\
-    </svg>");
-
+  background-image: url("data:image/svg+xml;utf8,\<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>\<path fill='white' d='M32 0v480l144-144 64 176 96-32-64-176h176L32 0z'/>\</svg>");
   border: 1px solid transparent;
   border-radius: 6px;
   font-size: clamp(0.25em, 1.5vw, 12px);

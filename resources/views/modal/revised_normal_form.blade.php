@@ -2537,6 +2537,7 @@ document.getElementById('icd10_keyword_normalrevised').addEventListener('keydown
         $("#collapse_reason_referral").collapse('show');
         $("#collapse_vital_signs").collapse('show');
         $("#collapse_medication").collapse('show');
+        $("#collapse_glasgow").collapse('show');
 
         // Ensure button toggle works properly
         $(".btn[data-target='#collapse_illness_history_normal']").on("click", function () {
@@ -2550,6 +2551,9 @@ document.getElementById('icd10_keyword_normalrevised').addEventListener('keydown
         });
         $(".btn[data-target='#collapse_medication']").on("click", function () {
             $("#collapse_medication").collapse("toggle");
+        });
+        $(".btn[data-target='#collapse_glasgow']").on("click", function () {
+            $("#collapse_glasgow").collapse("toggle");
         });
         $(".btn[data-target='#collapse_reason_referral']").on("click", function () {
             $("#collapse_reason_referral").collapse("toggle");
