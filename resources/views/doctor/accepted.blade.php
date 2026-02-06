@@ -262,7 +262,7 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
         @if(Session::get('transferred_already'))
             Lobibox.alert("info",
                 {
-                    msg: "Patient was already transferred by the referred doctor"
+                    msg: "The patient has already been transferred by the referred doctor."
                 });
             <?php Session::put("transferred_already",false); ?>
         @endif

@@ -1128,7 +1128,7 @@ export default {
       this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
       // this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
       const agoraEngine = this.agoraEngine; // Use this reference
-
+      const joinedUsers = new Set();
       // Setup channel parameters with user count tracking
       if (!this.channelParameters) {
         this.channelParameters = {};
@@ -1139,7 +1139,6 @@ export default {
       const remotePlayerContainer = document.createElement("div");
       const localPlayerContainer = document.createElement("div");
       localPlayerContainer.id = this.options.uid;
-
       let self = this;
 
       // Listen for when a user joins the channel
@@ -1147,43 +1146,36 @@ export default {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
         this.isUserJoined = true;
-
+       joinedUsers.add(user.uid);
         console.log(
           "user count: ",
           self.channelParameters.userCount,
           "max users:",
           self.channelParameters.maxUsers
         );
-        //console.log("it is work the normal 2");
-        //  if(this.normal_formType === "normal"){
-        //     console.log("it is work the normal 1");
-            // console.log("activity id", this.referral_code, 'actID:', this.activity_id);
-            // $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed");
-            // $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed");
-            // console.log("examine progress", $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed"));
-            // console.log("priscribe progress", $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed"));
-            // if (window.opener && !window.opener.closed) {
-            //     window.opener.$(
-            //       "#examined_progress" + this.referral_code + this.activity_id
-            //     ).addClass("completed");
-
-            //     window.opener.$(
-            //       "#prescribed_progress" + this.referral_code + this.activity_id
-            //     ).addClass("completed");
-            // }
-          // }
         this.channelUserCount = self.channelParameters.userCount;
         this.channelUserMax = self.channelParameters.maxUsers;
-        if (
-          self.channelParameters.userCount >= self.channelParameters.maxUsers
-        ) {
+        // if (
+        //   self.channelParameters.userCount >= self.channelParameters.maxUsers
+        // ) {
+        //   self.showChannelFullMessage();
+        //   await agoraEngine.leave();
+        //   self.channelParameters.userCount--;
+        //   return;
+        // } else {
+        //   if (this.referring_md === "no") {
+        //     this.startScreenRecording();
+        //     // this.startRecording();
+        //   }
+        // }
+        console.log("number users", joinedUsers.size);
+        if (joinedUsers.size > 2) {
+          console.log("hello leave this call")
           self.showChannelFullMessage();
           await agoraEngine.leave();
-          self.channelParameters.userCount--;
-          return;
-        } else {
+        }else{
           if (this.referring_md === "no") {
-            this.startScreenRecording();
+              this.startScreenRecording();
             // this.startRecording();
           }
         }
@@ -1194,7 +1186,7 @@ export default {
         await agoraEngine.subscribe(user, mediaType);
         // console.log("subscribe success");
         console.log("option channel name:", this.options);
-
+    
         if (mediaType === "video") {
           // Pause ringing audio when remote video is received
           if (self.$refs && self.$refs.ringingPhone) {
@@ -1227,6 +1219,7 @@ export default {
       // Listen for users leaving the channel
       agoraEngine.on("user-left", (user) => {
         // console.log(user.uid + " has left the channel");
+         joinedUsers.delete(user.uid);
         self.channelParameters.userCount = Math.max(
           0,
           self.channelParameters.userCount - 1
@@ -1235,13 +1228,14 @@ export default {
 
       try {
         // console.log("Attempting to join channel...", self.options.channel);
-        await agoraEngine.join(
+        const localUid = await agoraEngine.join(
           self.options.appId,
           self.options.channel,
           self.options.token,
           self.options.uid
         );
-
+        joinedUsers.add(localUid);
+        console.log("number users", joinedUsers.size);
         // console.log("Successfully joined channel");
 
         // Create audio track

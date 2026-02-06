@@ -25,9 +25,9 @@
                         <th>Date Referred</th>
                         <th>Turn around time not accepted</th>
                         <th>Issue and Concern</th>
-                       {{-- @if($user->facility_id === 63)
+                        <!-- @if($user->facility_id === 63)
                             <th width="5%">Video Call</th>
-                        @endif --}}
+                        @endif  -->
                         <th width="20%">Action</th>
                     </tr>
                    
@@ -76,11 +76,11 @@
                                 $activity_latest = \App\Activity::where("code",$row->code)->orderBy('updated_at', 'desc')->first();
                                 $track = \App\Tracking::where("code", $row->code)->first();
                             ?>
-                           {{-- <td class="text-center">
+                            <!-- <td class="text-center">
                                 @if(Session::get('auth')->level == 'opcen' && ($track->telemedicine === 0 || ($track->telemedicine === 1 && $track->status === "redirected")))
                                     <button class="btn-xs  bg-success btn-flat" id="referral_video_call" onclick="opcenVideoCallToDoctor('{{ $row->tracking_id }}', '{{ $row->code }}','{{ $track->type }}','{{$activity_latest->id}}','{{$activity_latest->referred_to}}','{{$activity_latest->department_id}}');"><i class="fa fa-camera"></i> Call</button>
                                 @endif
-                            </td> --}}
+                            </td>  -->
                             <td width="20%">
                                 <?php
                                     $monitoring_not_accepted = \App\Monitoring::select("monitoring.remarks","monitoring.created_at",\Illuminate\Support\Facades\DB::raw("CONCAT(users.fname,' ',users.mname,' ',users.lname) as agent_name"))->where("monitoring.code","=",$row->code)
@@ -174,7 +174,6 @@
             })
         }
 
-
         function opcenVideoCallToDoctor(tracking_id,code,form_tpe,activity_id,referred_to,department_id){
             
             var url = "<?php echo asset('api/video/call'); ?>";
@@ -210,39 +209,6 @@
             }, 1000)
 
             localStorage.setItem("referral_tracking_id", tracking_id);
-           
-            // if (newWindow && newWindow.outerWidth) {
-            //     // If the window was successfully opened, attempt to maximize it
-            //     newWindow.moveTo(0, 0);
-            //     newWindow.resizeTo(screen.availWidth, screen.availHeight);
-
-                
-            //      // 🟩 Add call state to localStorage (mark startedBy)
-            //     const key = 'activeCall_' + tracking_id;
-            //     let callData = JSON.parse(localStorage.getItem(key) || '{}');
-            //     callData.tracking_id = tracking_id;
-            //     callData.startedBy = "{{ $user->id }}"; // referring doctor
-            //     localStorage.setItem(key, JSON.stringify(callData));
-
-            //     // 🟩 Poll for window close and unset startedBy
-            //     const interval = setInterval(() => {
-            //         if (newWindow.closed) {
-            //             clearInterval(interval);
-            //             let callData = JSON.parse(localStorage.getItem(key) || '{}');
-            //             if (callData.startedBy === "{{ $user->id }}") {
-            //                 delete callData.startedBy;
-            //             }
-            //             if (!callData.startedBy && !callData.acceptedBy) {
-            //                 localStorage.removeItem(key);
-            //             } else {
-            //                 localStorage.setItem(key, JSON.stringify(callData));
-            //             }
-            //             console.log('Referring doctor closed window – updated', callData);
-            //         }
-            //     }, 1000);
-            // }
-
-
         }
     </script>
 @endsection
