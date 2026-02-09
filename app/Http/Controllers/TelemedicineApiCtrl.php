@@ -803,171 +803,308 @@ class TelemedicineApiCtrl extends Controller
         ]);
     }
 
-    public function getTrackerDetailsTest(){
-        $dummyTracker = [
-            [
-                'patientName' => 'Jennifer Martinez',
-                'age' => 29,
-                'address' => '123 Main St, Cityville',
-                'patientGender' => 'Male',
-                'patient_contact_number' => '+1234567890',
-                'referred_by' => 'Dr. Sarah Chen',
-                'patientCode' => 'P001',
-                'activities' => [
-                    [
-                        'date' => '15 Nov',
-                        'time' => '09:45',
-                        'info' => 'Referred to Central Medical Center by Dr. Sarah Chen from Community Health Clinic for specialized cardiac evaluation',
-                        'remarks' => 'Patient referred for specialist consultation',
-                        'patientName' => 'Jennifer Martinez',
-                    ],
-                    [
-                        'date' => '10 Nov',
-                        'time' => '14:30',
-                        'info' => 'Follow-up consultation at Community Health Clinic',
-                        'remarks' => 'Regular checkup completed',
-                        'patientName' => 'Jennifer Martinez',
-                    ],
-                    [
-                        'date' => '5 Nov',
-                        'time' => '11:00',
-                        'info' => 'Initial cardiac screening at Community Health Clinic',
-                        'remarks' => 'Preliminary tests conducted',
-                        'patientName' => 'Jennifer Martinez',
-                    ],
-                ],
-            ],
-            [
-                'patientName' => 'Michael Thompson',
-                'address' => '456 Oak Ave, Townsville',
-                'age' => 45,
-                'patientGender' => 'Male',
-                'patient_contact_number' => '+1987654321',
-                'referred_by' => 'Dr. Sarah Chen',
-                'patientCode' => 'P002',
-                'activities' => [
-                    [
-                        'date' => '15 Nov',
-                        'time' => '08:30',
-                        'info' => "Admitted to Emergency Department at St. Mary's Hospital with acute symptoms",
-                        'remarks' => 'Emergency admission processed',
-                        'patientName' => 'Michael Thompson',
-                    ],
-                    [
-                        'date' => '12 Nov',
-                        'time' => '10:15',
-                        'info' => 'Routine checkup at Family Clinic',
-                        'remarks' => 'Preventive care visit',
-                        'patientName' => 'Michael Thompson',
-                    ],
-                ],
-            ],
-            [
-                'patientName' => 'Angela Rodriguez',
-                'address' => '789 Pine Rd, Villagetown',
-                'age' => 34,
-                'patientGender' => 'Female',
-                'patient_contact_number' => '+1122334455',
-                'referred_by' => 'Dr. Sarah Chen',
-                'patientCode' => 'P003',
-                'activities' => [
-                    [
-                        'date' => '14 Nov',
-                        'time' => '16:20',
-                        'info' => 'Discharged from Regional Hospital Level 2 after successful post-operative recovery',
-                        'remarks' => 'Patient discharged with follow-up instructions',
-                        'patientName' => 'Angela Rodriguez',
-                    ],
-                    [
-                        'date' => '8 Nov',
-                        'time' => '07:00',
-                        'info' => 'Surgery performed at Regional Hospital Level 2',
-                        'remarks' => 'Procedure completed successfully',
-                        'patientName' => 'Angela Rodriguez',
-                    ],
-                    [
-                        'date' => '1 Nov',
-                        'time' => '13:45',
-                        'info' => 'Pre-operative consultation and preparation',
-                        'remarks' => 'Surgery scheduled',
-                        'patientName' => 'Angela Rodriguez',
-                    ],
-                ],
-            ],
-            [
-                'patientName' => 'Robert Kim',
-                'address' => '321 Cedar St, Hamletburg',
-                'age' => 41,
-                'patientGender' => 'Male',
-                'patient_contact_number' => '+1223344556',
-                'referred_by' => 'Dr. Sarah Chen',
-                'patientCode' => 'P004',
-                'activities' => [
-                    [
-                        'date' => '14 Nov',
-                        'time' => '14:15',
-                        'info' => 'Examined by Dr. James Wilson at Downtown Medical Plaza for routine annual physical examination',
-                        'remarks' => 'Annual checkup completed',
-                        'patientName' => 'Robert Kim',
-                    ],
-                ],
-            ],
-            [
-                'patientName' => 'Patricia Brown',
-                'address' => '654 Spruce Ln, Boroughcity',
-                'age' => 37,
-                'patientGender' => 'Female',
-                'patient_contact_number' => '+1334455667',
-                'referred_by' => 'Dr. Sarah Chen',
-                'patientCode' => 'P005',
-                'activities' => [
-                    [
-                        'date' => '14 Nov',
-                        'time' => '11:00',
-                        'info' => 'Underwent laboratory tests at Diagnostic Center including blood work and imaging studies',
-                        'remarks' => 'Lab results pending',
-                        'patientName' => 'Patricia Brown',
-                    ],
-                    [
-                        'date' => '7 Nov',
-                        'time' => '09:30',
-                        'info' => 'Initial consultation at Diagnostic Center',
-                        'remarks' => 'Tests ordered',
-                        'patientName' => 'Patricia Brown',
-                    ],
-                ],
-            ],
-            [
-                'patientName' => 'David Lee',
-                'address' => '987 Willow Dr, Metroville',
-                'age' => 50,
-                'patientGender' => 'Male',
-                'patient_contact_number' => '+1445566778',
-                'referred_by' => 'Dr. Sarah Chen',
-                'patientCode' => 'P006',
-                'activities' => [
-                    [
-                        'date' => '13 Nov',
-                        'time' => '15:45',
-                        'info' => 'Prescribed medication by Dr. Amanda Foster at Wellness Clinic for chronic condition management',
-                        'remarks' => 'Prescription issued',
-                        'patientName' => 'David Lee',
-                    ],
-                    [
-                        'date' => '6 Nov',
-                        'time' => '10:00',
-                        'info' => 'Follow-up for chronic condition management',
-                        'remarks' => 'Condition stable',
-                        'patientName' => 'David Lee',
-                    ],
-                ],
-            ],
-        ];
+    public function getTrackerDetailsTest($facility_id){
 
-        return response()->json([
-            'success' => true,
-            'data' => $dummyTracker
-        ]);
+        if(!$facility_id) {
+            $facility_id = 810;
+        }
+        
+        $start = Carbon::now()->startOfYear()->format('m/d/Y');
+        $end = Carbon::now()->endOfDay()->format('m/d/Y');
+
+        // $telemedOrReferral=1;
+
+            $rows = Activity::select(
+                'activity.status as info',      // For activity status
+                'activity.remarks as r',            // Remarks column
+                'activity.code',               // Patient code
+                'activity.created_at',         // Date/time
+                'activity.sub_opdId as subOPD_id',         // Sub OPD ID
+                'tracking.*',                  // Tracking info if needed
+                'patients.region',
+                'province.description as province_name',
+                'muncity.description as muncity_name',
+                'barangay.description as barangay_name',
+                DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
+                DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
+                DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
+                'facility.name as facility_name',
+                'patients.sex',
+                'patients.contact',
+                'patients.address as patient_address',
+                'patients.id as patient_id'
+            )
+            ->leftJoin('patients','patients.id','=','activity.patient_id')
+            ->leftJoin('tracking','tracking.code','=','activity.code')
+            ->leftJoin('facility','facility.id','=','activity.referred_to')
+            ->leftJoin('province', 'province.id', '=', 'patients.province')
+            ->leftJoin('muncity', 'muncity.id', '=', 'patients.muncity')
+            ->leftJoin('barangay', 'barangay.id', '=', 'patients.brgy')
+            ->leftJoin(
+                'users',
+                'users.id',
+                '=',
+                DB::raw("IF(activity.referring_md, activity.referring_md, activity.action_md)")
+            )
+            ->where('activity.referred_from', $facility_id)
+            ->orderBy('patients.id')
+            ->orderBy('activity.created_at');
+
+            // if($telemedOrReferral !== null && $telemedOrReferral == 1) {
+                $currentDoctorSubopdId = 1;
+
+                $doctorIds = DB::table('users')
+                    ->where('subopd_id', $currentDoctorSubopdId)
+                    ->pluck('id');
+
+                $trackingIds = DB::table('telemed_assign_doctor')
+                    ->whereIn('doctor_id', $doctorIds)
+                    ->pluck('tracking_id')
+                    ->unique()
+                    ->toArray();
+
+                $rows = $rows->where('tracking.telemedicine', 1)
+                    ->whereIn('tracking.id', $trackingIds)
+                    ->whereNotExists(function ($q) {
+                        $q->select(DB::raw(1))
+                        ->from('activity')
+                        ->whereRaw('activity.code = tracking.code')
+                        ->where('activity.status', 'redirected');
+                    });
+            // }
+
+            $start_date = Carbon::parse($start)->startOfDay();
+            $end_date = Carbon::parse($end)->endOfDay();
+
+            $rows = $rows->whereBetween('activity.created_at',[$start_date,$end_date]);
+
+            $rows = $rows->get();
+
+            $response = $rows
+                ->groupBy('patient_id')
+                ->map(function ($patientRows) {
+
+                    $first = $patientRows->first();
+                    $patient_address = implode(', ', array_filter([
+                        $first->region,
+                        $first->province_name,
+                        $first->muncity_name,
+                        $first->barangay_name,
+                    ]));
+
+                    $position = 0;
+                    $patientRows = $patientRows->map(function ($row) use (&$position) {
+                        $includePosition =
+                            ($row->info === 'referred' && $position === 0) ||
+                            in_array($row->info, ['followup', 'upward']);
+
+                        if ($includePosition) {
+                            $position++;
+                            $row->positioning = $position;
+                        } else {
+                            $row->positioning = null;
+                        }
+
+                        return $row;
+                    });
+
+                   $activities = $patientRows
+                    ->where('code', $first->code)
+                    ->map(function ($row) {
+                        return [
+                            'date' => optional($row->created_at)->format('d M Y'),
+                            'time' => optional($row->created_at)->format('H:i'),
+                            'info' => $row->info,
+                            'remarks' => $row->r,
+                            'positioning' => $row->positioning, 
+                            'patientName' => $row->patient_name,
+                            'referring_md' => $row->referring_md,
+                            'action_md' => $row->action_md,
+                            'referred_to' => $row->facility_name,
+                            'sub_opdId' => $row->subOPD_id,
+                        ];
+                    })->values();
+
+                // 3️⃣ Return patient-level info with activities
+                return [
+                    'patientName' => $first->patient_name,
+                    'age' => $first->age,
+                    'address' => $patient_address,
+                    'patientGender' => $first->sex,
+                    'patient_contact_number' => $first->contact,
+                    'referred_by' => $first->referring_md,
+                    'patientCode' => $first->code,
+                    'type' => $first->type,
+                    'activities' => $activities, // ✅ positioning is included in each activity
+                ];
+            })
+            ->values();
+            return response()->json($response);
+
+        // $dummyTracker = [
+        //     [
+        //         'patientName' => 'Jennifer Martinez',
+        //         'age' => 29,
+        //         'address' => '123 Main St, Cityville',
+        //         'patientGender' => 'Male',
+        //         'patient_contact_number' => '+1234567890',
+        //         'referred_by' => 'Dr. Sarah Chen',
+        //         'patientCode' => 'P001',
+        //         'activities' => [
+        //             [
+        //                 'date' => '15 Nov',
+        //                 'time' => '09:45',
+        //                 'info' => 'Referred to Central Medical Center by Dr. Sarah Chen from Community Health Clinic for specialized cardiac evaluation',
+        //                 'remarks' => 'Patient referred for specialist consultation',
+        //                 'patientName' => 'Jennifer Martinez',
+        //             ],
+        //             [
+        //                 'date' => '10 Nov',
+        //                 'time' => '14:30',
+        //                 'info' => 'Follow-up consultation at Community Health Clinic',
+        //                 'remarks' => 'Regular checkup completed',
+        //                 'patientName' => 'Jennifer Martinez',
+        //             ],
+        //             [
+        //                 'date' => '5 Nov',
+        //                 'time' => '11:00',
+        //                 'info' => 'Initial cardiac screening at Community Health Clinic',
+        //                 'remarks' => 'Preliminary tests conducted',
+        //                 'patientName' => 'Jennifer Martinez',
+        //             ],
+        //         ],
+        //     ],
+        //     [
+        //         'patientName' => 'Michael Thompson',
+        //         'address' => '456 Oak Ave, Townsville',
+        //         'age' => 45,
+        //         'patientGender' => 'Male',
+        //         'patient_contact_number' => '+1987654321',
+        //         'referred_by' => 'Dr. Sarah Chen',
+        //         'patientCode' => 'P002',
+        //         'activities' => [
+        //             [
+        //                 'date' => '15 Nov',
+        //                 'time' => '08:30',
+        //                 'info' => "Admitted to Emergency Department at St. Mary's Hospital with acute symptoms",
+        //                 'remarks' => 'Emergency admission processed',
+        //                 'patientName' => 'Michael Thompson',
+        //             ],
+        //             [
+        //                 'date' => '12 Nov',
+        //                 'time' => '10:15',
+        //                 'info' => 'Routine checkup at Family Clinic',
+        //                 'remarks' => 'Preventive care visit',
+        //                 'patientName' => 'Michael Thompson',
+        //             ],
+        //         ],
+        //     ],
+        //     [
+        //         'patientName' => 'Angela Rodriguez',
+        //         'address' => '789 Pine Rd, Villagetown',
+        //         'age' => 34,
+        //         'patientGender' => 'Female',
+        //         'patient_contact_number' => '+1122334455',
+        //         'referred_by' => 'Dr. Sarah Chen',
+        //         'patientCode' => 'P003',
+        //         'activities' => [
+        //             [
+        //                 'date' => '14 Nov',
+        //                 'time' => '16:20',
+        //                 'info' => 'Discharged from Regional Hospital Level 2 after successful post-operative recovery',
+        //                 'remarks' => 'Patient discharged with follow-up instructions',
+        //                 'patientName' => 'Angela Rodriguez',
+        //             ],
+        //             [
+        //                 'date' => '8 Nov',
+        //                 'time' => '07:00',
+        //                 'info' => 'Surgery performed at Regional Hospital Level 2',
+        //                 'remarks' => 'Procedure completed successfully',
+        //                 'patientName' => 'Angela Rodriguez',
+        //             ],
+        //             [
+        //                 'date' => '1 Nov',
+        //                 'time' => '13:45',
+        //                 'info' => 'Pre-operative consultation and preparation',
+        //                 'remarks' => 'Surgery scheduled',
+        //                 'patientName' => 'Angela Rodriguez',
+        //             ],
+        //         ],
+        //     ],
+        //     [
+        //         'patientName' => 'Robert Kim',
+        //         'address' => '321 Cedar St, Hamletburg',
+        //         'age' => 41,
+        //         'patientGender' => 'Male',
+        //         'patient_contact_number' => '+1223344556',
+        //         'referred_by' => 'Dr. Sarah Chen',
+        //         'patientCode' => 'P004',
+        //         'activities' => [
+        //             [
+        //                 'date' => '14 Nov',
+        //                 'time' => '14:15',
+        //                 'info' => 'Examined by Dr. James Wilson at Downtown Medical Plaza for routine annual physical examination',
+        //                 'remarks' => 'Annual checkup completed',
+        //                 'patientName' => 'Robert Kim',
+        //             ],
+        //         ],
+        //     ],
+        //     [
+        //         'patientName' => 'Patricia Brown',
+        //         'address' => '654 Spruce Ln, Boroughcity',
+        //         'age' => 37,
+        //         'patientGender' => 'Female',
+        //         'patient_contact_number' => '+1334455667',
+        //         'referred_by' => 'Dr. Sarah Chen',
+        //         'patientCode' => 'P005',
+        //         'activities' => [
+        //             [
+        //                 'date' => '14 Nov',
+        //                 'time' => '11:00',
+        //                 'info' => 'Underwent laboratory tests at Diagnostic Center including blood work and imaging studies',
+        //                 'remarks' => 'Lab results pending',
+        //                 'patientName' => 'Patricia Brown',
+        //             ],
+        //             [
+        //                 'date' => '7 Nov',
+        //                 'time' => '09:30',
+        //                 'info' => 'Initial consultation at Diagnostic Center',
+        //                 'remarks' => 'Tests ordered',
+        //                 'patientName' => 'Patricia Brown',
+        //             ],
+        //         ],
+        //     ],
+        //     [
+        //         'patientName' => 'David Lee',
+        //         'address' => '987 Willow Dr, Metroville',
+        //         'age' => 50,
+        //         'patientGender' => 'Male',
+        //         'patient_contact_number' => '+1445566778',
+        //         'referred_by' => 'Dr. Sarah Chen',
+        //         'patientCode' => 'P006',
+        //         'activities' => [
+        //             [
+        //                 'date' => '13 Nov',
+        //                 'time' => '15:45',
+        //                 'info' => 'Prescribed medication by Dr. Amanda Foster at Wellness Clinic for chronic condition management',
+        //                 'remarks' => 'Prescription issued',
+        //                 'patientName' => 'David Lee',
+        //             ],
+        //             [
+        //                 'date' => '6 Nov',
+        //                 'time' => '10:00',
+        //                 'info' => 'Follow-up for chronic condition management',
+        //                 'remarks' => 'Condition stable',
+        //                 'patientName' => 'David Lee',
+        //             ],
+        //         ],
+        //     ],
+        // ];
+
+        // return response()->json([
+        //     'success' => true,
+        //     'data' => $dummyTracker
+        // ]);
     }
 
 }
