@@ -1077,7 +1077,7 @@ export default {
       this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
       // this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
       const agoraEngine = this.agoraEngine; // Use this reference
-
+      const joinedUsers = new Set();
       // Setup channel parameters with user count tracking
       if (!this.channelParameters) {
         this.channelParameters = {};
@@ -1096,7 +1096,7 @@ export default {
         console.log("User joined:", user.uid);
         self.channelParameters.userCount++;
         this.isUserJoined = true;
-
+        joinedUsers.add(user.uid);
         console.log(
           "user count: ",
           self.channelParameters.userCount,
@@ -1104,22 +1104,33 @@ export default {
           self.channelParameters.maxUsers
         );
 
-        if (
-          self.channelParameters.userCount >= self.channelParameters.maxUsers
-        ) {
+        // if (
+        //   self.channelParameters.userCount >= self.channelParameters.maxUsers
+        // ) {
+        //   self.showChannelFullMessage();
+        //   await agoraEngine.leave();
+        //   self.channelParameters.userCount--;
+        //   return;
+        // } else {
+        //   console.log("my pregnant type", this.pregnantType);
+        //   if (this.referring_md === "no") {
+        //       if(this.pregnantType){
+        //         $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed");
+        //         $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed");
+        //       }
+              
+        //     this.startScreenRecording();
+        //     // this.startRecording();
+        //   }
+        // }
+         console.log("number users", joinedUsers.size);
+        if (joinedUsers.size > 2) {
+          console.log("hello leave this call")
           self.showChannelFullMessage();
           await agoraEngine.leave();
-          self.channelParameters.userCount--;
-          return;
-        } else {
-          console.log("my pregnant type", this.pregnantType);
+        }else{
           if (this.referring_md === "no") {
-              if(this.pregnantType){
-                $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed");
-                $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed");
-              }
-              
-            this.startScreenRecording();
+              this.startScreenRecording();
             // this.startRecording();
           }
         }
@@ -1170,13 +1181,14 @@ export default {
 
       try {
         // console.log("Attempting to join channel...", self.options.channel);
-        await agoraEngine.join(
+        const localUid = await agoraEngine.join(
           self.options.appId,
           self.options.channel,
           self.options.token,
           self.options.uid
         );
-
+        joinedUsers.add(localUid);
+        console.log("number users", joinedUsers.size);
         // console.log("Successfully joined channel");
 
         // Create audio track

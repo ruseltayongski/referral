@@ -366,10 +366,26 @@
         ->orderBy('id','asc')
         ->get();
 
-    // $redirected_get_track = \App\Activity::where("code", $redirect_track->code)
-    //     ->where("status", "redirected")
-    //     ->get();
-    // dd($redirected_get_track);
+ $activLatest = \App\Activity::where('code', $redirect_track->code)
+    ->orderBy('id') // or created_at
+    ->pluck('status')
+    ->toArray();
+
+    $maxConsecutive = 0;
+    $currentCount = 0;
+
+    foreach ($activLatest as $status) {
+        if ($status === 'redirected') {
+            $currentCount++;
+            $maxConsecutive = max($maxConsecutive, $currentCount);
+        } else {
+            $currentCount = 0; // reset when different status appears
+        }
+    }
+
+    // if no consecutive redirected, return no value
+    $redirected_count = $maxConsecutive >= 2 ? $maxConsecutive + 1 : null;
+
     
     // $redirected_discharged_actId = $redirected_discharged_actId->slice(1)->values();
 
@@ -441,7 +457,7 @@
                     if (
                         ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred' && !$redirected_accepted_track) || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
                         $redirected_track[$position_count]->status != 'transferred') || 
                         ($redirected_redirected_track && ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') && ($redirected_track[$position_count]->status != 'transferred' && $redirected_track[$position_count]->status != 'referred'))
                         // !($redirected_notarrived_track && !$redirected_arrived_track && !$redirected_rejected_track && !$redirected_cancelled_track) &&
@@ -461,7 +477,7 @@
                 if (
                         ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                            ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                            ($position_count < count($redirected_track) && $redirect_track->status == 'referred' && !$redirected_accepted_track) || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
                         $redirected_track[$position_count]->status != 'transferred') ||
                         ($redirected_redirected_track && ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') && ($redirected_track[$position_count]->status != 'transferred' && $redirected_track[$position_count]->status != 'referred'))
                 )
@@ -480,7 +496,7 @@
                     if (
                          ($redirected_rejected_track && 
                         (($position_count < count($redirected_track) && $redirect_track->status == 'redirected') || ($position_count == count($redirected_track) && $redirect_track->status == 'redirected') ||
-                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred') || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
+                          ($position_count < count($redirected_track) && $redirect_track->status == 'referred' && !$redirected_accepted_track) || ($position_count == count($redirected_track) && $redirect_track->status == 'referred')) &&
                         $redirected_track[$position_count]->status != 'transferred') ||
                         ($redirected_redirected_track && ($position_count < count($redirected_track) && $redirect_track->status == 'redirected') && ($redirected_track[$position_count]->status != 'transferred' && $redirected_track[$position_count]->status != 'referred'))
                     )
@@ -494,7 +510,7 @@
                 ?>
             </div>
         </div>
-        <div class="stepper-item  @if( (($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track) || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred')) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
+        <div class="stepper-item @if( (($redirected_travel_track || $redirected_arrived_track || $redirected_notarrived_track) && !$redirected_rejected_track && !$redirected_cancelled_track) && ($position_count != $redirected_count) || ($redirected_track[$position_count]->status == 'transferred' || $redirected_track[$position_count]->status == 'referred'))) completed @endif" id="departed_progress{{ $redirect_track->code.$redirect_track->id }}">
             <div class="step-counter"><i class="fa fa-paper-plane fa-rotate-90" aria-hidden="true"></i></div>
             <!--!-Sample Only--! -->
             <div class="step-name">Departed</div>
@@ -895,14 +911,14 @@ $(document).on('click', '.refer-btn', function () {
 function refreshReferPopovers() {
     // Destroy old popovers first
     $('.refer-popover').popover('destroy');
+
     // Re-initialize
     $('.refer-popover').each(function () {
         //  console.log('Init popover for', $(this).data('code'));
         $(this).popover({
-            trigger: 'click',
+            trigger: 'focus',
             placement: 'top',
             html: true,
-            container: 'body',
             content: function () {
                 let code = $(this).data('code');
                 let status = $(this).data('status');
@@ -910,30 +926,15 @@ function refreshReferPopovers() {
                 let transferred = $(this).data('transferred');
                 let rejected = $(this).data('rejected');
                 let cancelled = $(this).data('cancelled');
-                let redirected_redirected = $(this).data('redirected_redirected');
                 let reffered_second = $(this).data('referred_track');
-                let status_track = $(this).data('status_track');
-                let position = $(this).data('position');
-                let last_position = $(this).data('last_position');
 
-                let lab_result = $(this).data('lab_result');
-
-                let activity_id = $(this).data('discharged_actid');
+                // console.log("discharged", discharged, "cancelled:", cancelled, "rejected", rejected);
                 // clone popover HTML template
-                console.log("real time activity_id", activity_id);
                 let pop = $('#referPopoverContent').clone();
-
-                console.log("lab_result attachment:", lab_result);
-
-                if(Array.isArray(activity_id)){  
-                    activity_id = activity_id[position]?.id; 
-                }
-                
-                console.log("position", position, "last position", last_position);
-
-                if (discharged && position === last_position) {
-                    
-                }else{
+                // console.log("discharged", discharged,'transferred', transferred);
+                // Show/hide Refer button
+                if (!discharged || (Array.isArray(discharged) && discharged.length ==='') || reffered_second) {
+                    console.log("hellooooo");
                     pop.find('.refer-btn').remove();
                 }
 
@@ -950,7 +951,7 @@ function refreshReferPopovers() {
                 // set dynamic onclick for Result
                 pop.find('.result-btn').attr(
                     'onclick',
-                    `ReferralDischargeResult('${code}', '${discharged}','${cancelled}','${rejected}','${transferred}', '${activity_id }','${lab_result}')`
+                    `ReferralDischargeResult('${code}', '${discharged}', '${transferred}', '${rejected}')`
                 );
 
                 // set data for Refer
@@ -964,28 +965,18 @@ function refreshReferPopovers() {
     });
 }
 
-$(document).on('click', '.close-popover-btn', function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    $('.refer-popover').popover('hide'); // closes all
-});
-
 
 $(document).ready(function () {
     refreshReferPopovers();
 });
 
 window.addEventListener("refresh-refer-popovers", function (e) {
-    console.log('e', e.detail);
     let dischargedValue = e.detail.discharged; 
     $('.refer-popover').each(function() {
-        
+        console.log("code for realtime", $(this).data('code'), "e.code", e.detail.code)
         if ($(this).data('code') === e.detail.code) {
             $(this).attr('data-discharged', dischargedValue);
             $(this).data('discharged', dischargedValue); 
-            $(this).data('lab_result', e.detail.lab_result);
-            $(this).data('discharged_actid', e.detail.activity_id); 
         }
     });
 

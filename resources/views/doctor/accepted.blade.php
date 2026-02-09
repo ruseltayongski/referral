@@ -259,6 +259,14 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
             "opens" : "left"
         });
 
+        @if(Session::get('transferred_already'))
+            Lobibox.alert("info",
+                {
+                    msg: "The patient has already been transferred by the referred doctor."
+                });
+            <?php Session::put("transferred_already",false); ?>
+        @endif
+
         function openTelemedicine(tracking_id, code, action_md, referring_md, type) {
             var url = "<?php echo asset('api/video/call'); ?>";
             var json = {

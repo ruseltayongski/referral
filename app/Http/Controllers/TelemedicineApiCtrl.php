@@ -464,7 +464,7 @@ class TelemedicineApiCtrl extends Controller
 
 
 
-   public function referPatient(Request $req, $type)
+    public function referPatient(Request $req, $type)
     {
         // Decode JSON payload manually
         $json = $req->all();
@@ -533,7 +533,8 @@ class TelemedicineApiCtrl extends Controller
                     'phic_status'  => $json['phic_status'] ?? null,
                     'phic_id'      => $json['phic_id'] ?? null,
                 ]);
-               
+
+
                 $form = PatientForm::create([
                     'unique_id'             => $unique_id,
                     'code'                  => $code,
@@ -560,18 +561,35 @@ class TelemedicineApiCtrl extends Controller
                 /* =========================
                 * FILE UPLOAD
                 * ========================= */
-                $file_paths = '';
-                    if ($req->hasFile('file_upload')) {
-                        $files = $req->file('file_upload');
-                        foreach ($files as $file) {
-                            $filename = $file->getClientOriginalName();
-                            $file->storeAs('uploads/' . $user->username, $filename);
-                            $file_paths .= ApiController::fileUploadUrl() . $user->username . '/' . $filename . '|';
-                        }
-                        $file_paths = rtrim($file_paths, '|');
+
+                $file_paths = "";
+
+                // Check if files exist in the request
+                if($req->hasFile('file_upload')) {
+                    $username = $user->username;
+                    ApiController::fileUpload_Mobile($req, $username);
+                    $files = $req->file('file_upload');
+                    
+                    // Handle both single file and array of files
+                    if(!is_array($files)) {
+                        $files = [$files];
                     }
-                    $form->file_path = $file_paths;
-                    $form->save();
+                    
+                    for($i = 0; $i < count($files); $i++) {
+                        $file = $files[$i];
+                        if($file && $file->isValid()) {
+                            $file_paths .= ApiController::fileUploadUrl().$username."/".$file->getClientOriginalName();
+                            if($i + 1 != count($files)) {
+                                $file_paths .= "|";
+                            }
+                        }
+                    }
+                }
+
+
+                $form->file_path = $file_paths;
+                $form->save();
+
 
                 /* =========================
                 * ICD CODES
@@ -632,8 +650,8 @@ class TelemedicineApiCtrl extends Controller
                         'code'    => $form->code,
                         'push'    => $referred_patient_data,
                         'patient_name' => ucfirst($patient_name->fname) . ' ' .
-                                          ucfirst($patient_name->mname) . ' ' .
-                                          ucfirst($patient_name->lname),
+                                        ucfirst($patient_name->mname) . ' ' .
+                                        ucfirst($patient_name->lname),
                     ],
                 ], 201);
             }else if ($type === 'pregnant') {
@@ -707,17 +725,35 @@ class TelemedicineApiCtrl extends Controller
                 /* =========================
                 * FILE UPLOAD
                 * ========================= */
-                $file_paths = '';
-                if ($req->hasFile('file_upload')) {
-                    foreach ($req->file('file_upload') as $file) {
-                        $filename = $file->getClientOriginalName();
-                        $file->storeAs('uploads/' . $user->username, $filename);
-                        $file_paths .= ApiController::fileUploadUrl() . $user->username . '/' . $filename . '|';
+
+                $file_paths = "";
+
+                // Check if files exist in the request
+                if($req->hasFile('file_upload')) {
+                    $username = $user->username;
+                    ApiController::fileUpload_Mobile($req, $username);
+                    $files = $req->file('file_upload');
+                    
+                    // Handle both single file and array of files
+                    if(!is_array($files)) {
+                        $files = [$files];
                     }
-                    $file_paths = rtrim($file_paths, '|');
+                    
+                    for($i = 0; $i < count($files); $i++) {
+                        $file = $files[$i];
+                        if($file && $file->isValid()) {
+                            $file_paths .= ApiController::fileUploadUrl().$username."/".$file->getClientOriginalName();
+                            if($i + 1 != count($files)) {
+                                $file_paths .= "|";
+                            }
+                        }
+                    }
                 }
+
+
                 $form->file_path = $file_paths;
                 $form->save();
+
 
                 /* =========================
                 * ICD CODES
@@ -794,7 +830,6 @@ class TelemedicineApiCtrl extends Controller
             ], 500);
         }
     }
-
     public function getReasonForReferral(){
         $reasons = ReasonForReferral::all();
 

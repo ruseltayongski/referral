@@ -276,6 +276,7 @@
                             ?>
                             @foreach($data as $row)
                                 <?php
+                                    $seen_count = $row['data']['seen_only'];
                                     $left_sum = 0;
                                     $right_sum = 0;
                                     $count++;
@@ -341,8 +342,9 @@
                                         <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','denied','{{ $date_range }}')">{{ $row['data']['denied'] }}</span>
                                         <br><br>
                                     </td>
+                                   
                                     <td width="10%">
-                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','seen_only','{{ $date_range }}')">{{ $row['data']['seen_only'] }}</span>
+                                        <span class="text-blue" style="font-size: 15pt;" onclick="statisticsData($(this),'{{ $request_type }}','{{ $row['facility_id'] }}','seen_only','{{ $date_range }}')">{{ $seen_count }}</span>
                                         <br><br>
                                     </td>
                                     <td width="10%">
@@ -480,7 +482,7 @@
             $("span").css("background-color","");
             data.css("background-color","yellow");
             var url = "<?php echo asset('api/individual'); ?>"+"?request_type="+request_type+"&facility_id="+facility_id+"&status="+status+"&date_range="+date_range;
-            //console.log(url);
+        
             $.get(url,function(result){
                 setTimeout(function(){
                     $(".statistics-title").append('<span class="badge bg-yellow data_count">'+result.length+'</span>');

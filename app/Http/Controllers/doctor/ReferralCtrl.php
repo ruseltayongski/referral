@@ -1468,7 +1468,7 @@ class ReferralCtrl extends Controller
         $user = Session::get('auth');
         $date = date('M d, Y h:i A');
         $track = Tracking::find($track_id);
-
+       
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
@@ -1754,6 +1754,11 @@ class ReferralCtrl extends Controller
         $date = date('Y-m-d H:i:s');
 
         $track = Tracking::where('id',$req->transfer_tracking_id)->first();
+        if($track->status == "transferred"){
+           Session::put('transferred_already',true);
+            return Redirect::back();
+        }
+
         $data = array(
             'code' => $track->code,
             'patient_id' => $track->patient_id,
