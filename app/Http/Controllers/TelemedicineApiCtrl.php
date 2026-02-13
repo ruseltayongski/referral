@@ -1142,4 +1142,87 @@ class TelemedicineApiCtrl extends Controller
         // ]);
     }
 
+    public function registerPatient(Request $req) {
+        try {
+            
+            $dataReq = json_decode($req->getContent(), true);
+            // Build unique ID
+            $unique = array(
+                $dataReq['first_name'],
+                $dataReq['middle_name'] ?? '',
+                $dataReq['last_name'],
+                date('Ymd', strtotime($dataReq['birth_date'])),
+                $dataReq['barangay']
+            );
+            $unique = implode($unique);
+
+            $match = array('unique_id' => $unique);
+
+            // $data = array(
+            //     'phic_status' => $dataReq['phic_status'],
+            //     'phic_id'     => isset($dataReq['phicID']) ? $dataReq['phicID'] : '',
+            //     'fname'       => $dataReq['fname'],
+            //     'mname'       => $dataReq['mname'],
+            //     'lname'       => $dataReq['lname'],
+            //     'contact'     => $dataReq['contact'],
+            //     'dob'         => $dataReq['dob'],
+            //     'sex'         => $dataReq['sex'],
+            //     'civil_status'=> $dataReq['civil_status'],
+            //     'region'      => $dataReq['region'],
+            //     'province'    => $dataReq['province'],
+            //     'muncity'     => $dataReq['muncity'],
+            //     'brgy'        => $dataReq['brgy'],
+            //     'province_others' => $dataReq['province_others'],
+            //     'muncity_others'  => $dataReq['muncity_others'],
+            //     'brgy_others'     => $dataReq['brgy_others']
+            // );
+            
+            $data = array(
+                'phic_status'  => $dataReq['philhealth_status'],
+                'phic_id'      => $dataReq['philhealth_id'] ?? '',
+                'fname'        => $dataReq['first_name'],
+                'mname'        => $dataReq['middle_name'] ?? '',
+                'lname'        => $dataReq['last_name'],
+                'contact'      => $dataReq['contact_number'],
+                'dob'          => $dataReq['birth_date'],
+                'sex'          => $dataReq['sex'],
+                'civil_status' => $dataReq['civil_status'],
+                'region'       => $dataReq['region'],
+                'province'     => $dataReq['province'],
+                'muncity'      => $dataReq['municipality_city'],
+                'brgy'         => $dataReq['barangay'],
+            );
+
+            $data = Patients::updateOrCreate($match, $data);
+            $patient_add = implode(', ', array_filter([
+                $dataReq['region'] ?? '',
+                    Province::where('id', $dataReq['province'])->value('description'),
+                    Muncity::where('id', $dataReq['muncity'])->value('description'),
+                    Barangay::where('id', $dataReq['brgy'])->value('description'),
+            ]));
+
+            // Save to session
+            Session::put('profileSearch', [
+                'keyword' => $dataReq['fname'] . ' ' . $dataReq['lname'],
+                'region' => $dataReq['region'],
+                'province' => $dataReq['province'],
+                'muncity' => $dataReq['muncity'],
+                'brgy' => $dataReq['brgy']
+            ]);
+
+            // ✅ Always return JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'Patient registered successfully.',
+                'data'    => $json
+            ], 201);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

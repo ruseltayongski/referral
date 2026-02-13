@@ -118,6 +118,7 @@
                                             <i class="bx bx-images"></i>
                                             <h4>Telemedicine</h4>
                                             <p>Allows patients to connect with healthcare professionals via video calls, phone calls.</p>
+                                            <button class="btn btn-primary" style="margin-top: 10px;" onclick="window.location.href='/referral/register'">Register</button>
                                         </div>
                                     </div>
                                 </div>

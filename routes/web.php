@@ -766,3 +766,8 @@ Route::get('video/pregnant/newform/data/{id}', 'doctor\NewFormCtrl@pregnantFormT
 // //api for telemedicine app
 // Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 // Route::get('telemed/test', 'TelemedicineApiCtrl@test');
+
+// Simple route to display the registration form (no controller)
+Route::get('/register', function () {
+    return view('auth.register');
+});
