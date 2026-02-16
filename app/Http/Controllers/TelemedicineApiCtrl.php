@@ -1142,87 +1142,124 @@ class TelemedicineApiCtrl extends Controller
         // ]);
     }
 
-    public function registerPatient(Request $req) {
+    public function registerPatient(Request $req)
+    {
         try {
-            
-            $dataReq = json_decode($req->getContent(), true);
-            // Build unique ID
-            $unique = array(
+            // ✅ Validate before touching anything
+            // If using AJAX/JSON, $req->all() still works — Laravel
+            // auto-parses application/json content type
+            $req->validate([
+                'first_name'        => 'required|string|max:100',
+                'middle_name'       => 'nullable|string|max:100',
+                'last_name'         => 'required|string|max:100',
+                'birth_date'        => 'required|date',
+                'email'             => 'required|email|unique:users,email',
+                'username'          => 'required|string|unique:users,username',
+                'password'          => 'required|string|min:8',
+                'philhealth_status' => 'required|string',
+                'contact_number'    => 'required|string',
+                'sex'               => 'required|string',
+                'civil_status'      => 'required|string',
+                'region'            => 'required',
+                'province'          => 'required',
+                'municipality_city' => 'required',
+                'barangay'          => 'required',
+            ]);
+
+            // ✅ Use $req->all() — no more manual json_decode
+            $dataReq = $req->all();
+
+            $unique = implode([
                 $dataReq['first_name'],
                 $dataReq['middle_name'] ?? '',
                 $dataReq['last_name'],
                 date('Ymd', strtotime($dataReq['birth_date'])),
-                $dataReq['barangay']
-            );
-            $unique = implode($unique);
-
-            $match = array('unique_id' => $unique);
-
-            // $data = array(
-            //     'phic_status' => $dataReq['phic_status'],
-            //     'phic_id'     => isset($dataReq['phicID']) ? $dataReq['phicID'] : '',
-            //     'fname'       => $dataReq['fname'],
-            //     'mname'       => $dataReq['mname'],
-            //     'lname'       => $dataReq['lname'],
-            //     'contact'     => $dataReq['contact'],
-            //     'dob'         => $dataReq['dob'],
-            //     'sex'         => $dataReq['sex'],
-            //     'civil_status'=> $dataReq['civil_status'],
-            //     'region'      => $dataReq['region'],
-            //     'province'    => $dataReq['province'],
-            //     'muncity'     => $dataReq['muncity'],
-            //     'brgy'        => $dataReq['brgy'],
-            //     'province_others' => $dataReq['province_others'],
-            //     'muncity_others'  => $dataReq['muncity_others'],
-            //     'brgy_others'     => $dataReq['brgy_others']
-            // );
-            
-            $data = array(
-                'phic_status'  => $dataReq['philhealth_status'],
-                'phic_id'      => $dataReq['philhealth_id'] ?? '',
-                'fname'        => $dataReq['first_name'],
-                'mname'        => $dataReq['middle_name'] ?? '',
-                'lname'        => $dataReq['last_name'],
-                'contact'      => $dataReq['contact_number'],
-                'dob'          => $dataReq['birth_date'],
-                'sex'          => $dataReq['sex'],
-                'civil_status' => $dataReq['civil_status'],
-                'region'       => $dataReq['region'],
-                'province'     => $dataReq['province'],
-                'muncity'      => $dataReq['municipality_city'],
-                'brgy'         => $dataReq['barangay'],
-            );
-
-            $data = Patients::updateOrCreate($match, $data);
-            $patient_add = implode(', ', array_filter([
-                $dataReq['region'] ?? '',
-                    Province::where('id', $dataReq['province'])->value('description'),
-                    Muncity::where('id', $dataReq['muncity'])->value('description'),
-                    Barangay::where('id', $dataReq['brgy'])->value('description'),
-            ]));
-
-            // Save to session
-            Session::put('profileSearch', [
-                'keyword' => $dataReq['fname'] . ' ' . $dataReq['lname'],
-                'region' => $dataReq['region'],
-                'province' => $dataReq['province'],
-                'muncity' => $dataReq['muncity'],
-                'brgy' => $dataReq['brgy']
+                $dataReq['barangay'],
             ]);
 
-            // ✅ Always return JSON
+            $patient = Patients::updateOrCreate(
+                ['unique_id' => $unique],
+                [
+                    'phic_status'  => $dataReq['philhealth_status'],
+                    'phic_id'      => $dataReq['philhealth_id'] ?? '',
+                    'fname'        => $dataReq['first_name'],
+                    'mname'        => $dataReq['middle_name'] ?? '',
+                    'lname'        => $dataReq['last_name'],
+                    'contact'      => $dataReq['contact_number'],
+                    'dob'          => $dataReq['birth_date'],
+                    'sex'          => $dataReq['sex'],
+                    'civil_status' => $dataReq['civil_status'],
+                    'region'       => $dataReq['region'],
+                    'province'     => $dataReq['province'],
+                    'muncity'      => $dataReq['municipality_city'],
+                    'brgy'         => $dataReq['barangay'],
+                ]
+            );
+
+            // ✅ Capture user — email is sent inside this method
+            $user = $this->patientAddAsUser($dataReq);
+
+            // ✅ Fixed session keys
+            Session::put('profileSearch', [
+                'keyword'  => $dataReq['first_name'] . ' ' . $dataReq['last_name'],
+                'region'   => $dataReq['region'],
+                'province' => $dataReq['province'],
+                'muncity'  => $dataReq['municipality_city'],
+                'brgy'     => $dataReq['barangay'],
+            ]);
+
             return response()->json([
-                'success' => true,
-                'message' => 'Patient registered successfully.',
-                'data'    => $json
+                'success'               => true,
+                'message'               => 'Patient registered. Please check your email to verify your account.',
+                'data'                  => $patient,
+                'requires_verification' => true,
             ], 201);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $e->errors(),
+            ], 422);
 
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    public function patientAddAsUser(array $req)
+    {
+        // ✅ Match on email — names are not unique identifiers
+        $user = User::updateOrCreate(
+            ['email' => $req['email']],
+            [
+                'level'                    => User::LEVEL_PATIENT,
+                'status'                   => 'active',
+                'fname'                    => $req['first_name'],
+                'mname'                    => $req['middle_name'] ?? '',
+                'lname'                    => $req['last_name'],
+                'contact'                  => $req['contact_number'],
+                'email'                    => $req['email'],
+                'designation'              => 'Patient',
+                'department_id'            => 0,
+                'other_department_telemed' => 0,
+                'subopd_id'                => 0,
+                'username'                 => $req['username'],
+                'password'                 => bcrypt($req['password']),
+                'muncity'                  => $req['municipality_city'], // ← fixed
+                'province'                 => $req['province'],
+            ]
+        );
+
+        // ✅ THIS is where the verification email is actually triggered
+        // wasRecentlyCreated prevents resending on updateOrCreate updates
+        if ($user->wasRecentlyCreated) {
+            $user->sendEmailVerificationNotification();
+        }
+
+        return $user;
     }
 
 }

@@ -767,7 +767,34 @@ Route::get('video/pregnant/newform/data/{id}', 'doctor\NewFormCtrl@pregnantFormT
 // Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 // Route::get('telemed/test', 'TelemedicineApiCtrl@test');
 
-// Simple route to display the registration form (no controller)
+// Guests only — logged-in users have no reason to register again
 Route::get('/register', function () {
     return view('auth.register');
+})->middleware('guest');
+
+
+// Email verification routes — all require login
+Route::group(['middleware' => 'auth'], function () {
+
+    // "Please verify your email" notice page
+    Route::get('/email/verify', 'Auth\VerificationController@show')
+        ->name('verification.notice');
+
+    // ✅ {hash} is required — this was the broken route before
+    Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')
+        ->name('verification.verify')
+        ->middleware('signed');
+
+    // Resend verification email
+    Route::post('/email/resend', 'Auth\VerificationController@resend')
+        ->name('verification.resend')
+        ->middleware('throttle:6,1');
+
+});
+
+
+// All routes here require login AND verified email
+Route::group(['middleware' => ['auth', 'verified']], function () {
+    Route::get('/telemedicine/dashboard', 'TelemedicineController@index');
+    // Add all other patient-protected routes here
 });
