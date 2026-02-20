@@ -23,10 +23,31 @@ use PHPMailer\PHPMailer\SMTP;
 
 class LoginCtrl extends Controller
 {
+    private function resolveSessionRedirect($login)
+    {
+        if (!$login) {
+            return null;
+        }
+
+        if ($login->level === 'Patient') {
+            if (!empty($login->email_verified_at)) {
+                return redirect('doctor');
+            }
+
+            Session::forget('auth');
+            return null;
+        }
+
+        return redirect($login->level);
+    }
+
     public function index()
     {
         if($login = Session::get('auth')){
-            return redirect($login->level);
+            $redirect = $this->resolveSessionRedirect($login);
+            if ($redirect) {
+                return $redirect;
+            }
         }
 
         return view('login');
@@ -35,7 +56,10 @@ class LoginCtrl extends Controller
     public function index2()
     {
         if($login = Session::get('auth')){
-            return redirect($login->level);
+            $redirect = $this->resolveSessionRedirect($login);
+            if ($redirect) {
+                return $redirect;
+            }
         }
 
         return view('login2');
@@ -46,7 +70,10 @@ class LoginCtrl extends Controller
         #return session()->getId();
         #return storage_path('framework/sessions');
         if($login = Session::get('auth')){
-            return redirect($login->level);
+            $redirect = $this->resolveSessionRedirect($login);
+            if ($redirect) {
+                return $redirect;
+            }
         }
 
         return view('login3');
@@ -130,6 +157,15 @@ class LoginCtrl extends Controller
                     return url('doctor');
                 else if($login->level=='capitol')
                     return url('doctor');
+                else if($login->level=='Patient' && !empty($login->email_verified_at))
+                    return url('doctor');
+                else if(empty($login->email_verified_at) && $login->level=='Patient'){
+                    Session::forget('auth');
+                    return [
+                        "error_notif" => true,
+                        "error_msg" => "Please verify your email address to access the system."
+                    ];
+                }
                 else{
                     Session::forget('auth');
                     return [

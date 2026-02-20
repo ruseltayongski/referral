@@ -1197,7 +1197,7 @@ class TelemedicineApiCtrl extends Controller
             );
 
             // ✅ Capture user — email is sent inside this method
-            $user = $this->patientAddAsUser($dataReq);
+            $user = $this->patientAddAsUser($dataReq, $unique);
 
             // ✅ Fixed session keys
             Session::put('profileSearch', [
@@ -1229,9 +1229,10 @@ class TelemedicineApiCtrl extends Controller
         }
     }
 
-    public function patientAddAsUser(array $req)
+    public function patientAddAsUser(array $req, $unique_id)
     {
         // ✅ Match on email — names are not unique identifiers
+        $patient_id = Patients::select('id')->where('unique_id', $unique_id)->first();
         $user = User::updateOrCreate(
             ['email' => $req['email']],
             [
@@ -1250,6 +1251,7 @@ class TelemedicineApiCtrl extends Controller
                 'password'                 => bcrypt($req['password']),
                 'muncity'                  => $req['municipality_city'], // ← fixed
                 'province'                 => $req['province'],
+                'patient_id'               => $patient_id->id ?? null,
             ]
         );
 

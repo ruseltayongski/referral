@@ -260,7 +260,7 @@ $facility_exclude =  \App\Facility::select('id')
         @if($user->level == 'admin')
             <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
         @endif
-        @if(!$multi_faci && $user->level != 'vaccine')
+        @if(!$multi_faci && $user->level != 'vaccine' && $user->level != 'Patient')
             {{--<li><a href="{{ asset('public/manual/Ereferral-User-Manual.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o"></i> E-REFERRAL Manual </a></li>--}}
             <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> BAS</a></li>
             @if($user->level == 'admin')
@@ -293,6 +293,7 @@ $facility_exclude =  \App\Facility::select('id')
                     </ul>
                 </li>
                 @endif
+                @if($user->level != 'Patient')
                 <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-gear"></i> Settings </a>
                     <ul class="dropdown-menu">
@@ -318,6 +319,16 @@ $facility_exclude =  \App\Facility::select('id')
                         @endif
                     </ul>
                 </li>
+                @endif
+                @if($user->level == 'Patient')
+                    <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+                    <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
+                    <li>    
+                         <a href="{{ url('doctor/referred') }}?filterRef=1">
+                            <i class="fa fa-ambulance outgoing_nav"></i> Outgoing &nbsp;&nbsp; 
+                        </a>
+                     </li>
+                @endif
                 <li>
                     <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
                 </li>

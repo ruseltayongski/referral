@@ -6,9 +6,10 @@
                     <td align="center">
                         <table border="0" cellpadding="0" cellspacing="0">
                             <tr>
-                                <td>
-                                    <a href="{{ $url }}" class="button button-{{ $color or 'blue' }}" target="_blank">{{ $slot }}</a>
-                                </td>
+                            <a href="{{ $url }}" class="button button-{{ $color ?? 'primary' }}" target="_blank" rel="noopener" 
+                                style="background-color: #0056b3; border: 18px solid #0056b3; color: #ffffff; text-decoration: none; display: inline-block; border-radius: 3px;">
+                                {{ $slot }}
+                            </a>
                             </tr>
                         </table>
                     </td>

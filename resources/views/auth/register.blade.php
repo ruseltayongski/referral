@@ -289,6 +289,26 @@
             transition: all 0.3s;
         }
 
+        .btn-submit .btn-loader {
+            display: none;
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        .btn-submit.loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-submit.loading .btn-loader {
+            display: inline-block;
+        }
+
         .btn-submit:hover {
             background: #1a8a82;
             transform: translateY(-1px);
@@ -548,6 +568,66 @@
                 padding: 14px 12px 24px 12px;
             }
         }
+
+        /* === Custom Alert Styles === */
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #20b2aa 0%, #1a8a82 100%);
+            color: white;
+            padding: 30px 40px;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            z-index: 9999;
+            min-width: 300px;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .custom-alert h2 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
+
+        .custom-alert p {
+            margin: 10px 0 20px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .custom-alert button {
+            background: white;
+            color: #20b2aa;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .custom-alert button:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 <body>
     <div class="container">
@@ -723,7 +803,10 @@
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-submit" id="sign_up_btn">SIGN UP</button>
+                        <button type="submit" class="btn-submit" id="sign_up_btn">
+                            <span class="btn-loader" aria-hidden="true"></span>
+                            <span class="btn-text">SIGN UP</span>
+                        </button>
                     </div>
                 </form>
             </div>
@@ -731,9 +814,32 @@
     </div>
 
     <script>
+        // Custom Alert Function
+        function showCustomAlert(message, title = 'Success', callback = null) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'custom-alert';
+            alertDiv.innerHTML = `
+                <h2>${title}</h2>
+                <p>${message}</p>
+                <button onclick="this.parentElement.remove();">OK</button>
+            `;
+            document.body.appendChild(alertDiv);
+            
+            alertDiv.querySelector('button').addEventListener('click', function() {
+                if (callback) callback();
+            });
+        }
+
         const agree_terms = document.querySelector('input[name="agree_terms"]');
         const agree_data = document.querySelector('input[name="agree_data"]');
         const sign_up_btn = document.getElementById('sign_up_btn');
+        const signUpBtnText = sign_up_btn.querySelector('.btn-text');
+
+        function setRegisterLoading(isLoading) {
+            sign_up_btn.classList.toggle('loading', isLoading);
+            sign_up_btn.disabled = isLoading || !(agree_terms.checked && agree_data.checked);
+            signUpBtnText.textContent = isLoading ? 'REGISTERING...' : 'SIGN UP';
+        }
 
         sign_up_btn.disabled = true;
 
@@ -746,6 +852,7 @@
 
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            setRegisterLoading(true);
             const formData = new FormData(this);
 
             // Convert to plain object (or use FormData directly)
@@ -767,7 +874,7 @@
                 const result = await response.json();
 
                 if (response.ok) {
-                    alert('Registration successful!');
+                    showCustomAlert('Registration successful!\nPlease check your email for verification instructions.', 'Welcome!');
                     // window.location.href = '/referral/login';   // redirect on success
                 } else {
                     // Show validation errors
@@ -778,12 +885,15 @@
                             // optionally show under each field
                         });
                     }
-                    alert(result.message || 'Registration failed.');
+                    console.log("message:", result.error);
+                    showCustomAlert(result.message || 'Registration failed.', 'Error');
                 }
 
             } catch (error) {
                 console.error('Network error:', error);
-                alert('Something went wrong. Please try again.');
+                showCustomAlert('Something went wrong. Please try again.', 'Error');
+            } finally {
+                setRegisterLoading(false);
             }
         });
                 

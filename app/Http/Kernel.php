@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'chief' => Chief::class,
         'support' => Support::class,
         'admin' => Admin::class,
-        'eoc_region' => EocRegion::class
+        'eoc_region' => EocRegion::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
     ];
 }

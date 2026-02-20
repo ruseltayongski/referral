@@ -18,6 +18,15 @@ class HomeCtrl extends Controller
     public function index()
     {
         if($login = Session::get('auth')){
+            if ($login->level === 'Patient') {
+                if (!empty($login->email_verified_at)) {
+                    return redirect('doctor');
+                }
+
+                Session::forget('auth');
+                return redirect('login');
+            }
+
             return redirect($login->level);
         }else{
             Session::flush();

@@ -21,6 +21,8 @@ use App\FacilityAssign;
 
 
 Route::get('/', 'HomeCtrl@index');
+Route::redirect('Patient', 'login');
+Route::redirect('patient', 'login');
 
 Route::match(['GET', 'POST'], 'logout', 'LogoutCtrl@logout');
 Route::get('check/session', 'LogoutCtrl@checkSession');
@@ -767,34 +769,32 @@ Route::get('video/pregnant/newform/data/{id}', 'doctor\NewFormCtrl@pregnantFormT
 // Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 // Route::get('telemed/test', 'TelemedicineApiCtrl@test');
 
-// Guests only — logged-in users have no reason to register again
+// Registration (guests only)
 Route::get('/register', function () {
     return view('auth.register');
 })->middleware('guest');
 
 
-// Email verification routes — all require login
+// Notice and resend REQUIRE auth
 Route::group(['middleware' => 'auth'], function () {
 
-    // "Please verify your email" notice page
     Route::get('/email/verify', 'Auth\VerificationController@show')
         ->name('verification.notice');
 
-    // ✅ {hash} is required — this was the broken route before
-    Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')
-        ->name('verification.verify')
-        ->middleware('signed');
-
-    // Resend verification email
     Route::post('/email/resend', 'Auth\VerificationController@resend')
         ->name('verification.resend')
         ->middleware('throttle:6,1');
-
 });
 
 
-// All routes here require login AND verified email
+// ✅ Verify route does NOT require auth — can verify while logged out
+Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')
+    ->name('verification.verify');
+
+
+// Protected routes (requires login + verified email)
 Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/telemedicine/dashboard', 'TelemedicineController@index');
-    // Add all other patient-protected routes here
+    // ... other protected routes
 });
+    
