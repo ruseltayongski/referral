@@ -960,7 +960,6 @@ class TelemedicineApiCtrl extends Controller
                         ];
                     })->values();
 
-                // 3️⃣ Return patient-level info with activities
                 return [
                     'patientName' => $first->patient_name,
                     'age' => $first->age,
@@ -1145,9 +1144,7 @@ class TelemedicineApiCtrl extends Controller
     public function registerPatient(Request $req)
     {
         try {
-            // ✅ Validate before touching anything
-            // If using AJAX/JSON, $req->all() still works — Laravel
-            // auto-parses application/json content type
+
             $req->validate([
                 'first_name'        => 'required|string|max:100',
                 'middle_name'       => 'nullable|string|max:100',
@@ -1166,7 +1163,7 @@ class TelemedicineApiCtrl extends Controller
                 'barangay'          => 'required',
             ]);
 
-            // ✅ Use $req->all() — no more manual json_decode
+   
             $dataReq = $req->all();
 
             $unique = implode([
@@ -1196,10 +1193,8 @@ class TelemedicineApiCtrl extends Controller
                 ]
             );
 
-            // ✅ Capture user — email is sent inside this method
             $user = $this->patientAddAsUser($dataReq, $unique);
 
-            // ✅ Fixed session keys
             Session::put('profileSearch', [
                 'keyword'  => $dataReq['first_name'] . ' ' . $dataReq['last_name'],
                 'region'   => $dataReq['region'],
@@ -1231,7 +1226,7 @@ class TelemedicineApiCtrl extends Controller
 
     public function patientAddAsUser(array $req, $unique_id)
     {
-        // ✅ Match on email — names are not unique identifiers
+  
         $patient_id = Patients::select('id')->where('unique_id', $unique_id)->first();
         $user = User::updateOrCreate(
             ['email' => $req['email']],
@@ -1255,8 +1250,6 @@ class TelemedicineApiCtrl extends Controller
             ]
         );
 
-        // ✅ THIS is where the verification email is actually triggered
-        // wasRecentlyCreated prevents resending on updateOrCreate updates
         if ($user->wasRecentlyCreated) {
             $user->sendEmailVerificationNotification();
         }

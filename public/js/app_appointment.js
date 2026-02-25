@@ -23308,19 +23308,22 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         });
         return;
       }
-
-      // Pass the selected slot data to proceedAppointment
-      this.proceedAppointment(null,
-      // configtime
-      selectedSlot.appointment_date,
-      // configDate
-      selectedSlot.id,
-      // appointmentId
-      null,
-      // configId
-      selectedSlot.opdCategory,
-      // opdSubcateg
-      selectedSlot.departmentId);
+      if (this.user.level == 'Patient') {
+        console.log("users_data", this.user);
+      } else {
+        // Pass the selected slot data to proceedAppointment
+        this.proceedAppointment(null,
+        // configtime
+        selectedSlot.appointment_date,
+        // configDate
+        selectedSlot.id,
+        // appointmentId
+        null,
+        // configId
+        selectedSlot.opdCategory,
+        // opdSubcateg
+        selectedSlot.departmentId);
+      }
     },
     proceedAppointment: function proceedAppointment(configtime, configDate, appointmentId, configId, opdSubcateg, departmentId) {
       if (!configId && !this.selectedAppointmentTime || configId && !configtime) {
