@@ -214,7 +214,7 @@ class BedTrackerCtrl extends Controller
                             END
                         ")
                     ->whereIn("hospital_type", ["government", "private", "doh_hospital"]);
-                    
+
         if($province_select)
             $facilities = $facilityQuery->where("province",$province_select);
         if($facility_select)
@@ -281,7 +281,7 @@ class BedTrackerCtrl extends Controller
                 ($f->icu_covid_occupied ?? 0);
 
             $icu_total =
-                $er_occupied +
+                $icu_occupied +
                 ($f->icu_non_vacant ?? 0) +
                 ($f->icu_covid_vacant ?? 0);
 
