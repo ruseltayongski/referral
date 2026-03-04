@@ -769,3 +769,7 @@ Route::get('video/pregnant/newform/data/{id}', 'doctor\NewFormCtrl@pregnantFormT
 // //api for telemedicine app
 // Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 // Route::get('telemed/test', 'TelemedicineApiCtrl@test');
+
+Route::post('/api/save-screen-record', 'doctor\TelemedicineCtrl@ruselRecording');
+Route::get('/recordings/list', 'doctor\TelemedicineCtrl@recordingList');
+Route::get('/recordings/stream', 'doctor\TelemedicineCtrl@recordingStream');

@@ -2914,7 +2914,9 @@ $facility_address = \App\Http\Controllers\LocationCtrl::facilityAddress($myfacil
                                         <option value="">Select reason for referral</option>
                                         <option value="-1">Other reason for referral</option>
                                         @foreach($reason_for_referral as $reason_referral)
-                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            @if($reason_referral->id != 3)
+                                                <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                            @endif
                                         @endforeach
                                     </select><br><br>
                                         <div id="other_reason_referral"></div>
