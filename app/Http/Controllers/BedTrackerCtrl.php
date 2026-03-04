@@ -82,8 +82,13 @@ class BedTrackerCtrl extends Controller
         ]);
     }
 
-    public function bed($facility_id){
+    public function bed($facility_id, Request $request){
         $facility = Facility::find($facility_id);
+
+        if ($request->expectsJson()) {
+            return response()->json($facility);
+        }
+
         return view('bed_tracker.bed_in_facility',[
             "facility" => $facility
         ]);
@@ -176,7 +181,7 @@ class BedTrackerCtrl extends Controller
         return Facility::select("id","name")
                 ->where("province",$province_id)
                 ->where(function($q){
-                    $q->where("hospital_type","government")->orWhere("hospital_type","private");
+                    $q->where("hospital_type","government")->orWhere("hospital_type","private")->orWhere("hospital_type","doh_hospital");
                 })
                 ->orderBy("name","asc")
                 ->get();
@@ -190,4 +195,141 @@ class BedTrackerCtrl extends Controller
         return view('bed_tracker.excel');
     }
 
+    public function dashboard(Request $request){
+
+        $province_select = $request->province;
+        $facility_select = $request->facility;
+
+        $province = Province::get();
+        $facilityQuery = Facility::query()
+                    ->orderByRaw("
+                            CASE 
+                                WHEN level = '3' THEN 1
+                                WHEN level = '2' THEN 2
+                                WHEN level = '1' THEN 3
+                                WHEN level = 'RHU' THEN 4
+                                WHEN level = 'infirmary' THEN 5
+                                WHEN level = 'primary_care_facility' THEN 6
+                                ELSE 7
+                            END
+                        ")
+                    ->whereIn("hospital_type", ["government", "private", "doh_hospital"]);
+                    
+        if($province_select)
+            $facilities = $facilityQuery->where("province",$province_select);
+        if($facility_select)
+            $facilities = $facilityQuery->where("id",$facility_select);
+
+        $facilities = $facilityQuery->selectRaw('
+            facility.*,
+            (
+                (
+                    COALESCE(beds_non_occupied,0) + COALESCE(beds_covid_occupied,0) +
+                    COALESCE(emergency_room_non_occupied,0) + COALESCE(emergency_room_covid_occupied,0) +
+                    COALESCE(icu_non_occupied,0) + COALESCE(icu_covid_occupied,0) +
+                    COALESCE(isolation_non_occupied,0) + COALESCE(isolation_covid_occupied,0) +
+                    COALESCE(mechanical_used_covid,0) + COALESCE(mechanical_used_non,0)
+                )
+                +
+                (
+                    COALESCE(beds_non_vacant,0) + COALESCE(beds_covid_vacant,0) +
+                    COALESCE(emergency_room_non_vacant,0) + COALESCE(emergency_room_covid_vacant,0) +
+                    COALESCE(icu_non_vacant,0) + COALESCE(icu_covid_vacant,0) +
+                    COALESCE(isolation_non_vacant,0) + COALESCE(isolation_covid_vacant,0) +
+                    COALESCE(mechanical_vacant_non,0) + COALESCE(mechanical_vacant_covid,0)
+                )
+            ) as total_beds,
+
+            (
+                COALESCE(beds_non_occupied,0) + COALESCE(beds_covid_occupied,0) +
+                COALESCE(emergency_room_non_occupied,0) + COALESCE(emergency_room_covid_occupied,0) +
+                COALESCE(icu_non_occupied,0) + COALESCE(icu_covid_occupied,0) +
+                COALESCE(isolation_non_occupied, 0) + COALESCE( isolation_covid_occupied,0) +
+                COALESCE(mechanical_used_covid,0) + COALESCE (mechanical_used_non, 0)
+            ) as total_occupied,
+
+            (
+                COALESCE(beds_non_vacant,0) + COALESCE(beds_covid_vacant,0) +
+                COALESCE(emergency_room_non_vacant,0) + COALESCE(emergency_room_covid_vacant,0) +
+                COALESCE(icu_non_vacant,0) + COALESCE(icu_covid_vacant,0) +
+                COALESCE(isolation_non_vacant,0) + COALESCE(isolation_covid_vacant, 0)+
+                COALESCE(mechanical_vacant_non, 0) + COALESCE(mechanical_vacant_covid, 0)
+            ) as total_vacant
+        ')->get();
+
+        foreach ($facilities as $f) {
+            $f->occupancy_percentage =
+                $f->total_beds > 0
+                    ? round(($f->total_occupied / $f->total_beds) * 100)
+                    : 0;
+
+            $er_occupied =
+                ($f->emergency_room_non_occupied ?? 0) +
+                ($f->emergency_room_covid_occupied ?? 0);
+
+            $er_total =
+                $er_occupied +
+                ($f->emergency_room_non_vacant ?? 0) +
+                ($f->emergency_room_covid_vacant ?? 0);
+
+            $f->er_percentage = $er_total > 0
+                ? round(($er_occupied / $er_total) * 100)
+                : 0;
+
+            $icu_occupied =
+                ($f->icu_non_occupied ?? 0) +
+                ($f->icu_covid_occupied ?? 0);
+
+            $icu_total =
+                $er_occupied +
+                ($f->icu_non_vacant ?? 0) +
+                ($f->icu_covid_vacant ?? 0);
+
+            $f->icu_percentage = $icu_total > 0
+                ? round(($icu_occupied / $icu_total) * 100)
+                : 0;
+
+
+            $isolation_percentage = $f->isolation_total > 0 
+                ? round(($f->isolation_occupied / $f->isolation_total) * 100)
+                : 0;
+            }
+
+        return view('bed_tracker.dashboard',[
+            'province' => $province,
+            'facilities' => $facilities,
+            'province_select' => $province_select,
+            'facility_select' => $facility_select, 
+        ]);
+    }
+
+    public function filter(Request $request){
+        $province_select = $request->province;
+        $facility_select = $request->facility;
+    
+        return $province_select.' '.$facility_select;
+
+        $facility = Facility::where(function($q){
+                $q->where("hospital_type","government")->orWhere("hospital_type","private")->orWhere("hospital_type","doh_hospital");
+            })
+            ->where("referral_used","yes")
+            ->when($province_select, function($q) use ($province_select) {
+                $q->where("province", $province_select);
+            })
+            ->when($facility_select, function($q) use ($facility_select) {
+                $q->where("id", $facility_select);
+            })
+            ->orderBy("province","asc")
+            ->orderBy("name","asc");
+
+        if($province_select)
+            $facility = $facility->where("province",$province_select);
+        if($facility)
+            $facility = $facility->where("id",$facility_select);
+
+        $facility = $facility->get();
+        Session::put('bed_facility',$facility);
+
+        return response()->json(['status' => 'success']);
+    }
 }

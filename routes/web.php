@@ -520,6 +520,9 @@ Route::get('bed_admin', 'BedTrackerCtrl@bedAdmin');
 Route::get('bed_tracker', 'BedTrackerCtrl@home');
 Route::get('bed_export', 'BedTrackerCtrl@bedExport');
 Route::get('bed_tracker/select/facility/{province_id}', 'BedTrackerCtrl@selectFacility');
+Route::get('dashboard', 'BedTrackerCtrl@dashboard');
+Route::post('filter-facility', 'BedTrackerCtrl@filter')->name('filter.facility');
+
 
 //monitoring
 Route::match(['GET', 'POST'], 'monitoring', 'Monitoring\MonitoringCtrl@monitoring');
