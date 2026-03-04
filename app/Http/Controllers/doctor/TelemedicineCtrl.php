@@ -28,7 +28,8 @@ class TelemedicineCtrl extends Controller
 {
     public function index(Request $req)
     {
-        return view('doctor.video-call', ['referral_type'=>$req->form_type]);
+
+        return view('doctor.video-call', ['referral_type'=>$req->form_type,'telemedicine'=>$req->telemed]);
     }
 
     public function manageAppointment(Request $req)

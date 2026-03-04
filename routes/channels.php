@@ -11,6 +11,14 @@
 |
 */
 
+Broadcast::channel('video-call.{code}', function ($user, $code) {
+    return [
+        'id' => $user->id,
+        'name' => $user->fname . ' ' . $user->lname,
+        'patient_code' => $code,
+    ];
+});
+
 Broadcast::channel('chat', function ($user) {
     return $user;
 });

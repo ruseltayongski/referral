@@ -1142,4 +1142,96 @@ class TelemedicineApiCtrl extends Controller
         // ]);
     }
 
+    public function fallbackLockVideoCall(Request $request){
+        $patientCode = $request->patient_code;
+        $userId = $request->user_id;
+        DB::beginTransaction();
+
+        try {
+            $activeCount = DB::table('video_call_sessions')
+                ->where('patient_code', $request->patient_code)
+                ->where('status', $request->status)
+                ->where('refer_status', $request->refer_status)
+                ->where('created_at', '>=', now()->subMinutes(10))
+                ->lockForUpdate()
+                ->count();
+
+            if ($activeCount >= 1) {
+                DB::rollBack();
+                return response()->json([
+                    'otherJoined' => true,
+                    'message' => 'Call already active'
+                ]);
+            }
+
+            DB::table('video_call_sessions')->insert([
+                'patient_code' => $patientCode,
+                'refer_status' => $request->refer_status,
+                'status'       => $request->status,
+                'user_id' => $userId,
+                'facility_id' => $request->facility_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'otherJoined' => false,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error'   => true,
+                'message' => $e->getMessage(), // 👈 tells you exactly what failed
+                'line'    => $e->getLine(),
+            ]);
+        }
+
+    }
+
+    public function saveOnboardUser(){
+        $patientCode = $request->patient_code;
+        $userId = $request->user_id;
+        DB::beginTransaction();
+
+        try {
+               DB::table('video_call_sessions')->insert([
+                'patient_code' => $patientCode,
+                'refer_status' => $request->refer_status,
+                'status'       => $request->status,
+                'user_id' => $userId,
+                'facility_id' => $request->facility_id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'error'   => true,
+                'message' => $e->getMessage(),
+                'line'    => $e->getLine(),
+            ]);
+        }
+    }
+
+    public function VideoCallLeave(Request $req){
+        DB::table('video_call_sessions')
+            ->where('patient_code', $req->patient_code)
+            ->where('user_id', $req->user_id)
+            ->update(['status' => $req->status]);
+
+
+        return response()->json([
+            'message' => 'Leave recorded'
+        ]);
+    }
 }

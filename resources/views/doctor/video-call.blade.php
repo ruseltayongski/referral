@@ -14,10 +14,14 @@
         <script src="{{ asset('resources/assets/js/jquery.min.js?v='.date('mdHis')) }}"></script>
         <script src="{{ asset('resources/assets/bootstrap-4.6.2-dist/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('resources/plugin/Lobibox/Lobibox.js') }}?v=2"></script>
-        @if($referral_type == 'normal')
-        <script src="{{ asset('public/js/app_video.js?version=').date('YmdHis') }}" defer></script>
-        @elseif($referral_type == 'pregnant')
-        <script src="{{ asset('public/js/app_video_pregnant.js?version=').date('YmdHis') }}" defer></script>
+        @if($telemedicine == 1)
+            @if($referral_type == 'normal')
+                <script src="{{ asset('public/js/app_video.js?version=').date('YmdHis') }}" defer></script>
+            @else
+                <script src="{{ asset('public/js/app_video_pregnant.js?version=').date('YmdHis') }}" defer></script>
+            @endif
+        @else
+            <script src="{{ asset('public/js/app_video_opcen.js?version=').date('YmdHis') }}" defer></script>
         @endif
         <!-- Font awesome -->
         <link href="{{ asset('resources/assets/css/font-awesome.min.css') }}" rel="stylesheet">
@@ -45,16 +49,24 @@
         @include('layouts.app_script')
         @include('script.feedback')        
     </head>
+    
     <body>
         <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
-        @if($referral_type == 'normal')
-            <div id="app_video">
-                <video-app :user="{{ Session::get('auth') }}"></video-app>
-            </div>
-        @elseif($referral_type == 'pregnant')
-            <div id="app_video_pregnant">
-                <video-app-pregnant :user="{{ Session::get('auth') }}"></video-app-pregnant>
+        @if($telemedicine == 1)
+            @if($referral_type == 'normal')
+                <div id="app_video">
+                    <video-app :user="{{ Session::get('auth') }}"></video-app>
+                </div>
+            @else
+                <div id="app_video_pregnant">
+                    <video-app-pregnant :user="{{ Session::get('auth') }}"></video-app-pregnant>
+                </div>
+            @endif
+        @else
+            <div id="app_video_opcen">
+                <video-app-opcen :user="{{ Session::get('auth') }}"></video-app-opcen>
             </div>
         @endif
+    
     </body>
 </html>

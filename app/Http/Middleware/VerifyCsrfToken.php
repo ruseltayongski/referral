@@ -30,5 +30,6 @@ class VerifyCsrfToken extends BaseVerifier
         'api/telemedicine/clear-call',
         '/save-screen-record',
         'save-screen-record',
+        'api/video/leave/user',
     ];
 }

@@ -727,6 +727,11 @@ Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
 Route::get('/api/video/labresults/{id}', 'ApiController@getPatientLabRequests');
 
+Route::get('/api/video/onboard/user', 'TelemedicineApiCtrl@fallbackLockVideoCall');
+Route::post('/api/video/onboard/Saveuser', 'TelemedicineApiCtrl@saveOnboardUser');
+// Route::get('/api/video/onboard/check', 'TelemedicineApiCtrl@fallbackLockVideoCall');
+Route::post('/api/video/leave/user', 'TelemedicineApiCtrl@VideoCallLeave');
+Route::get('/api/video/checkOnboardStatus', 'TelemedicineApiCtrl@checkActiveVideoCall');
 //new forms
 Route::match(['GET','POST'],'/revised/referral', 'doctor\NewFormCtrl@index');
 Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@redirect_referral_info')->name('redirect-referral-info');
