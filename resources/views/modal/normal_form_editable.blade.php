@@ -105,6 +105,8 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                         <input type="hidden" name="opdSubId" value="{{$telemed_subOpdId}}">
                         <input type="hidden" name="ckd_id" id="ckd_id" value="">
                         <br>
+                       
+                        @if($user->level !== "Patient")
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success"><b>NAME OF REFERRING FACILITY: </b></small><br>
@@ -119,7 +121,8 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                                 &nbsp;<span>Dr. {{ $user->fname }} {{ $user->mname }} {{ $user->lname }}</span>
                             </div>
                         </div><br>
-
+                        @endif
+                
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success"><b>DATE/TIME REFERRED (ReCo):</b></small><br>
@@ -161,6 +164,7 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                                 @endforeach
                                 </select> --}}
                             </div>
+ 
                             <div class="col-md-4">
                                 <small class="text-success"><b>DEPARTMENT:</b></small> <span class="text-red">*</span><br>
                                 @if($appointmentParam)
@@ -224,6 +228,7 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                         </div>
 
                         <br>
+                        @if($user->level !== "Patient")
                         <div class="row">
                             <div class="col-md-4">
                                 <small class="text-success"><b>COVID NUMBER</b></small><br>
@@ -251,7 +256,8 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                                 </select>
                             </div>
                         </div><br>
-
+                        
+                        @endif
                         <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>CASE SUMMARY:</b> <i>(pertinent Hx/PE, including meds, labs, course etc.)</i></small> <span class="text-red">*</span><br />

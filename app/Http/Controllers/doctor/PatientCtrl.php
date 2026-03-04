@@ -69,6 +69,32 @@ class PatientCtrl extends Controller
     {
         ParamCtrl::lastLogin();
         $session = Session::get('profileSearch');
+        
+        // Check if patient_id is passed in the request (for Patient level users)
+        $patient_id = request('patient_id');
+        
+        if ($patient_id) {
+            // Populate the patient list with the specific patient data
+            $patient = Patients::find($patient_id);
+            
+            if ($patient) {
+                // Create a session to filter by this specific patient
+                $data = array(
+                    'keyword' => $patient->fname . ' ' . $patient->lname,
+                    'region' => $patient->region,
+                    'province' => $patient->province,
+                    'muncity' => $patient->muncity,
+                    'brgy' => $patient->brgy,
+                    'province_others' => $patient->province_others ?? '',
+                    'muncity_others' => $patient->muncity_others ?? '',
+                    'brgy_others' => $patient->brgy_others ?? '',
+                    'telemedicine' => $session['telemedicine'] ?? null
+                );
+                Session::put('profileSearch', $data);
+                $session = $data;
+            }
+        }
+        
         if (isset($session)) {
             $keyword = $session['keyword'];
             $reg = $session['region'];
@@ -131,36 +157,42 @@ class PatientCtrl extends Controller
         }
 
         $source = 'referral';
-        $data = Patients::where(function ($q) use ($keyword) {
-            $q->where('lname', "like", "%" . $keyword . "%")
-                ->orWhere('fname', 'like', "%" . $keyword . "%")
-                ->orWhereRaw("concat(fname,' ',lname) like '%$keyword%'");
-        })
-            ->where('region', $reg)
-            ->where('province', $prov)
-            ->where('muncity', $mun)
-            ->where('brgy', $brgy)
-            ->orderBy('lname', 'asc');
+        
+        // If patient_id is provided, filter directly by patient_id
+        if ($patient_id) {
+            $data = Patients::where('id', $patient_id)->orderBy('lname', 'asc');
+        } else {
+            $data = Patients::where(function ($q) use ($keyword) {
+                $q->where('lname', "like", "%" . $keyword . "%")
+                    ->orWhere('fname', 'like', "%" . $keyword . "%")
+                    ->orWhereRaw("concat(fname,' ',lname) like '%$keyword%'");
+            })
+                ->where('region', $reg)
+                ->where('province', $prov)
+                ->where('muncity', $mun)
+                ->where('brgy', $brgy)
+                ->orderBy('lname', 'asc');
 
-        if ($prov_others) {
-            $data = $data->where('province_others', $prov_others);
-        }
-        if ($mun_others) {
-            $data = $data->where('muncity_others', $mun_others);
-        }
-        if ($brgy_others) {
-            $data = $data->where('brgy_others', $brgy_others);
+            if ($prov_others) {
+                $data = $data->where('province_others', $prov_others);
+            }
+            if ($mun_others) {
+                $data = $data->where('muncity_others', $mun_others);
+            }
+            if ($brgy_others) {
+                $data = $data->where('brgy_others', $brgy_others);
+            }
         }
 
          $data = $data->paginate(15);
-         Session::put('telemed',  $session['telemedicine']);
+         Session::put('telemed',  $session['telemedicine'] ?? null);
          
         return view('doctor.patient', [
             'title' => 'Patient List',
             'data' => $data,
             'province' => Province::get(),
             'source' => $source,
-            'telemedicine' => $session['telemedicine'],
+            'telemedicine' => $session['telemedicine'] ?? null,
         ]);
     }
 

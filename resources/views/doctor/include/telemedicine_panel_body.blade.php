@@ -6,7 +6,6 @@
     $position_count = 0;
     $referred_track = \App\Activity::where("code",$row->code)->where("status","referred")->first();
     $declined_track = \App\Activity::where("code",$row->code) ->orderBy('updated_at', 'desc')->first();
-    $referred_trackFollowSubOpdId = \App\Activity::where("code",$row->code)->where("status","referred")->first();
     
     $queue_referred = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
     $referred_seen_track = \App\Seen::where("code",$referred_track->code)
@@ -169,7 +168,8 @@
     $redirected_discharged_track = 0;
     //end reset
     ?>
-    <small class="label position-blue label-responsive">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}<br><br> {{ $referred_trackFollowSubOpdId->count() > 0 && isset($referred_trackFollowSubOpdId->sub_opdId) ? '(' . ucwords(strtoupper(\App\SubOpd::find($referred_trackFollowSubOpdId->sub_opdId)->description)) . ')' : '' }}</small> <br>
+  
+    <small class="label position-blue label-responsive">{{ $position[$position_count].' appointment - '.\App\Facility::find($referred_track->referred_to)->name }}<br><br> {{ isset($referred_track->sub_opdId) && $referred_track->sub_opdId ? '(' . ucwords(strtoupper(\App\SubOpd::find($referred_track->sub_opdId)->description ?? 'Patient')) . ')' : '' }}</small> <br>
     
     <br>
     <div class="stepper-wrapper">
@@ -386,7 +386,7 @@
 
             ?>
     
-            <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }} <br><br>  {{ $subOpd_follow->count() > 0 && isset($subOpd_follow[0]->sub_opdId) && $subOpd_follow[0]->sub_opdId ? '(' . ucwords(strtoupper(\App\SubOpd::find($subOpd_follow[0]->sub_opdId)->description)) . ')' : '' }}</small> <br>
+            <small class="label position-blue">{{ $position[$position_count].' appointment - '.\App\Facility::find($follow_track->referred_to)->name }} <br><br>  {{ $subOpd_follow->count() > 0 && isset($subOpd_follow[0]->sub_opdId) && $subOpd_follow[0]->sub_opdId ? '(' . ucwords(strtoupper(\App\SubOpd::find($subOpd_follow[0]->sub_opdId)->description ?? 'Patient')) . ')' : '' }}</small> <br>
     
             <br>
             <div class="stepper-wrapper">

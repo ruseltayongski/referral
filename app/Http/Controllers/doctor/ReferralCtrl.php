@@ -107,7 +107,7 @@ class ReferralCtrl extends Controller
         )
             ->join('patients','patients.id','=','tracking.patient_id')
             // ->join('activity', 'activity.code', '=', 'tracking.code')
-            ->join('facility','facility.id','=','tracking.referred_from')
+            ->leftJoin('facility','facility.id','=','tracking.referred_from')
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as action','action.id','=','tracking.action_md');
             
@@ -117,16 +117,19 @@ class ReferralCtrl extends Controller
             $latestActivitySub = DB::table(DB::raw("
                 (
                     SELECT 
-                        code, sub_opdId, referred_to,
+                        code, sub_opdId, referred_to, referred_from,
                         ROW_NUMBER() OVER (PARTITION BY code ORDER BY created_at DESC, id DESC) as rn
                     FROM activity
                     WHERE status IN ('followup', 'referred','rebooked')
                 ) as a1
             "))
-            ->select('code', 'sub_opdId', 'referred_to')
+            ->select('code', 'sub_opdId', 'referred_to', 'referred_from')
             ->where('rn', 1)
-            ->where('sub_opdId', $user->subopd_id)
-            ->where('referred_to', $user->facility_id);
+            ->where('referred_to', $user->facility_id)
+            ->where(function($q) use ($user) {
+                $q->where('sub_opdId', $user->subopd_id)
+                  ->orWhere('referred_from', 0); // Include patient-doctor referrals
+            });
 
             $matchingSubOpdCodes = $latestActivitySub->pluck('code');
 
@@ -562,7 +565,7 @@ class ReferralCtrl extends Controller
         )
             ->join('patients','patients.id','=','patient_form.patient_id')
             ->join('tracking','tracking.form_id','=','patient_form.id')
-            ->join('facility','facility.id','=','tracking.referred_from')
+            ->leftJoin('facility','facility.id','=','tracking.referred_from')
             ->join('facility as ff','ff.id','=','tracking.referred_to')
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as u','u.id','=','patient_form.referred_md')
@@ -945,7 +948,15 @@ class ReferralCtrl extends Controller
                 ->leftJoin('facility','facility.id','=','activity.referred_to')
                 ->leftJoin('tracking','tracking.code','=','activity.code')
                 ->leftJoin('users','users.id','=',DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
-                ->where('activity.referred_from',$user->facility_id);
+                ->where(function($query) use ($user) {
+                    // Check if referred_from is 0, then use patient_id
+                    $query->where(function($q) use ($user) {
+                        $q->where('tracking.referred_from', 0)
+                          ->where('tracking.patient_id', $user->facility_id);
+                    })
+                    // OR use the normal referred_from logic
+                    ->orWhere('activity.referred_from', $user->facility_id);
+                });
 
             if(!$request->has('filterRef')){
                 $lastTelemed = session('last_filterRef', 0);

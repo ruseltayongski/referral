@@ -259,7 +259,7 @@ $user = Session::get('auth');
                                                 </span> to
                                                 <span class="text-danger">{{ $department }}</span>
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
-                                                <span class="facility">{{ $row->facility_name }}</span>
+                                                <span class="facility">{{ $row->referred_from == 0 ? 'Patient-Doctor Referral' : ($row->facility_name ?? 'Unknown Facility') }}</span>
                                                 @if(count($queue) > 0)
                                                     <h5 class="text-red pull-right-queue queued_badge">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
                                                 @endif
@@ -323,7 +323,7 @@ $user = Session::get('auth');
                                                 was <span class="text-blue">{{ $row->status }}</span> to
                                                 <span class="text-danger">{{ $department }}</span>
                                                 by <span class="text-warning">{{ $row->referring_md }}</span> of
-                                                <span class="facility">{{ $row->facility_name }}</span>
+                                                <span class="facility">{{ $row->referred_from == 0 ? 'Patient-Doctor Referral' : ($row->facility_name ?? 'Unknown Facility') }}</span>
                                             </h3> <!-- time line for #referred #seen #redirected -->
                                             <h3 class="timeline-header no-border">
                                                 <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>

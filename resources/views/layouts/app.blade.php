@@ -56,6 +56,23 @@
     @yield('css')
     <style>
 
+        .mobile-view {
+            display: none;
+            visibility: hidden;
+        }
+
+        @media only screen and (max-width: 720px) {
+            .web-view {
+                display: none;
+                visibility: hidden;
+            }
+
+            .mobile-view {
+                display: block;
+                visibility: visible;
+            }
+        }
+
     /* Full Screen Modal Styles */
         .modal-fullscreen {
             padding: 0 !important;

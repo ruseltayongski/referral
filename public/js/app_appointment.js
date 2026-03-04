@@ -22043,6 +22043,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppointmentFacility_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppointmentFacility.vue */ "./resources/assets/js/appointment/AppointmentFacility.vue");
 /* harmony import */ var _AppointmentCalendar_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppointmentCalendar.vue */ "./resources/assets/js/appointment/AppointmentCalendar.vue");
 /* harmony import */ var _AppointmentTime_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./AppointmentTime.vue */ "./resources/assets/js/appointment/AppointmentTime.vue");
+/* harmony import */ var _TelemedicineConsultationForm_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./TelemedicineConsultationForm.vue */ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue");
+
 
 
 
@@ -22052,7 +22054,8 @@ var baseUrlgetConfig = "".concat(window.baseUrl, "/doctor/getconfigappointment")
   components: {
     AppointmentFacility: _AppointmentFacility_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
     AppointmentCalendar: _AppointmentCalendar_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    AppointmentTime: _AppointmentTime_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    AppointmentTime: _AppointmentTime_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
+    TelemedicineConsultationForm: _TelemedicineConsultationForm_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   props: ["user", "appointment_slot", "appointment_config"],
   data: function data() {
@@ -22062,7 +22065,9 @@ var baseUrlgetConfig = "".concat(window.baseUrl, "/doctor/getconfigappointment")
       configTimeSlot: [],
       appointmentclickDate: null,
       manualDate: null,
-      selectedDate: null
+      selectedDate: null,
+      appointmentData: {},
+      patientData: {}
     };
   },
   mounted: function mounted() {},
@@ -22132,6 +22137,45 @@ var baseUrlgetConfig = "".concat(window.baseUrl, "/doctor/getconfigappointment")
     },
     config_appointedTime: function config_appointedTime(payload) {
       this.configTimeSlot = payload;
+    },
+    handlePatientBookingProceed: function handlePatientBookingProceed(payload) {
+      // Populate appointment data for the telemedicine form
+      this.appointmentData = payload.appointmentData;
+
+      // Fetch patient data if patient_id exists
+      if (payload.user && payload.user.patient_id) {
+        this.fetchPatientData(payload.user.patient_id);
+      } else {
+        // Open modal immediately if no patient_id
+        this.openTelemedicineModal();
+      }
+    },
+    fetchPatientData: function fetchPatientData(patientId) {
+      var _this4 = this;
+      var baseUrl = $("#broadcasting_url").val() || window.location.origin;
+      var url = "".concat(baseUrl, "/doctor/patient/info/").concat(patientId);
+      $.ajax({
+        url: url,
+        type: 'GET',
+        success: function success(response) {
+          console.log('Patient data fetched:', response);
+          _this4.patientData = response;
+          _this4.openTelemedicineModal();
+        },
+        error: function error(_error) {
+          console.error('Error fetching patient data:', _error);
+          Lobibox.notify('error', {
+            msg: 'Failed to load patient information'
+          });
+          // Open modal anyway with available data
+          _this4.openTelemedicineModal();
+        }
+      });
+    },
+    openTelemedicineModal: function openTelemedicineModal() {
+      this.$nextTick(function () {
+        window.dispatchEvent(new Event('telemedicine:request-open'));
+      });
     }
   }
 });
@@ -23308,8 +23352,8 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         });
         return;
       }
-      if (this.user.level == 'Patient') {
-        console.log("users_data", this.user);
+      if (this.user.level == "Patient") {
+        this.proceedToPatientBooking(this.user);
       } else {
         // Pass the selected slot data to proceedAppointment
         this.proceedAppointment(null,
@@ -23323,6 +23367,31 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         selectedSlot.opdCategory,
         // opdSubcateg
         selectedSlot.departmentId);
+      }
+    },
+    proceedToPatientBooking: function proceedToPatientBooking(user) {
+      console.log("Proceeding to patient booking for user:", user);
+      var selectedSlot = this.getSelectedSlot();
+      if (selectedSlot) {
+        // Prepare appointment data
+        var appointmentData = {
+          facility_id: this.facilitySelectedId,
+          appointmentId: selectedSlot.id,
+          appointment_date: selectedSlot.appointment_date,
+          appointedTime: selectedSlot.appointedTime,
+          appointedTimeTo: selectedSlot.appointedTimeTo,
+          doctorId: this.selectedAppointmentDoctor,
+          opdCategory: selectedSlot.opdCategory,
+          departmentId: selectedSlot.departmentId,
+          createdBy: selectedSlot.createdBy,
+          action_md: selectedSlot.createdId || selectedSlot.action_md || selectedSlot.actionMd || null
+        };
+
+        // Emit event to parent with user and appointment data
+        this.$emit('patient-booking-proceed', {
+          user: user,
+          appointmentData: appointmentData
+        });
       }
     },
     proceedAppointment: function proceedAppointment(configtime, configDate, appointmentId, configId, opdSubcateg, departmentId) {
@@ -23382,7 +23451,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             departmentId: parseInt(departmentId)
           };
         }
-        window.location.href = "".concat(this.base, "/doctor/patient?appointmentKey=").concat(this.generateAppointmentKey(255), "&appointment=").concat(encodeURIComponent(JSON.stringify([appointment])));
+
+        // Check if user level is Patient and add patient_id to URL
+        var url = "".concat(this.base, "/doctor/patient?appointmentKey=").concat(this.generateAppointmentKey(255), "&appointment=").concat(encodeURIComponent(JSON.stringify([appointment])));
+        if (this.user && this.user.level === 'Patient' && this.user.patient_id) {
+          url += "&patient_id=".concat(this.user.patient_id);
+        }
+        window.location.href = url;
       }
     },
     generateAppointmentKey: function generateAppointmentKey(length) {
@@ -23393,6 +23468,480 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         key += characters.charAt(randomIndex);
       }
       return key;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=script&lang=js":
+/*!******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=script&lang=js ***!
+  \******************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  name: 'TelemedicineConsultationForm',
+  props: {
+    user: {
+      type: Object,
+      "default": function _default() {
+        return {};
+      }
+    },
+    appointmentData: {
+      type: Object,
+      "default": function _default() {
+        return {};
+      }
+    },
+    patientData: {
+      type: Object,
+      "default": function _default() {
+        return {};
+      }
+    }
+  },
+  data: function data() {
+    return {
+      formData: {
+        date_time_referred: '',
+        appointment_datetime: '',
+        patient_name: '',
+        patient_address: '',
+        referred_to_address: '',
+        referred_to: '',
+        department: '',
+        doctor_name: '',
+        age: '',
+        sex: '',
+        civil_status: '',
+        case_summary: '',
+        opdSubId: ''
+      },
+      facilities: [],
+      departments: [],
+      // File uploads
+      uploadedFiles: [],
+      privacyChecked: false,
+      privacyAccepted: false,
+      requestOpenHandler: null,
+      formModalShowHandler: null,
+      formModalHiddenHandler: null
+    };
+  },
+  computed: {
+    appointmentFieldsLocked: function appointmentFieldsLocked() {
+      return !!(this.formData.referred_to || this.formData.department);
+    },
+    selectedFacilityAddress: function selectedFacilityAddress() {
+      var _this = this;
+      var facility = this.facilities.find(function (f) {
+        return f.id === _this.formData.referred_to;
+      });
+      return facility ? facility.address : '';
+    },
+    logoPath: function logoPath() {
+      // Try to get base URL from broadcasting_url input or use window origin
+      var baseUrl = typeof $ !== 'undefined' && $("#broadcasting_url").length ? $("#broadcasting_url").val() : window.location.origin;
+      return "".concat(baseUrl, "/resources/img/doh.png");
+    },
+    addFileImagePath: function addFileImagePath() {
+      var baseUrl = typeof $ !== 'undefined' && $("#broadcasting_url").length ? $("#broadcasting_url").val() : window.location.origin;
+      return "".concat(baseUrl, "/resources/img/add_file.png");
+    }
+  },
+  mounted: function mounted() {
+    this.initializeForm();
+    this.setupPrivacyGuards();
+  },
+  beforeUnmount: function beforeUnmount() {
+    if (this.requestOpenHandler) {
+      window.removeEventListener('telemedicine:request-open', this.requestOpenHandler);
+    }
+    if (typeof $ !== 'undefined') {
+      $('#telemedicineFormModal').off('show.bs.modal.telemedPrivacy');
+      $('#telemedicineFormModal').off('hidden.bs.modal.telemedPrivacy');
+    }
+  },
+  watch: {
+    appointmentData: {
+      handler: function handler(newData) {
+        if (newData && Object.keys(newData).length > 0) {
+          // Populate form fields from appointment data
+          if (newData.facility_id) {
+            this.formData.referred_to = newData.facility_id;
+          }
+          if (newData.departmentId) {
+            this.formData.department = newData.departmentId;
+          }
+          this.formData.appointment_datetime = this.formatAppointmentDateTime(newData);
+          this.formData.doctor_name = newData.doctor_name || newData.createdBy || '';
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    'formData.referred_to': {
+      handler: function handler() {
+        this.formData.referred_to_address = this.selectedFacilityAddress;
+      }
+    },
+    user: {
+      handler: function handler(newUser) {
+        if (newUser && Object.keys(newUser).length > 0) {
+          this.populateUserData(newUser);
+        }
+      },
+      deep: true,
+      immediate: true
+    },
+    patientData: {
+      handler: function handler(newData) {
+        if (newData && Object.keys(newData).length > 0) {
+          this.populatePatientData(newData);
+        }
+      },
+      deep: true,
+      immediate: true
+    }
+  },
+  methods: {
+    setupPrivacyGuards: function setupPrivacyGuards() {
+      var _this2 = this;
+      this.requestOpenHandler = function () {
+        _this2.showPrivacyNotice();
+      };
+      window.addEventListener('telemedicine:request-open', this.requestOpenHandler);
+      if (typeof $ !== 'undefined') {
+        this.formModalShowHandler = function (event) {
+          if (!_this2.privacyAccepted) {
+            event.preventDefault();
+            _this2.showPrivacyNotice();
+          }
+        };
+        this.formModalHiddenHandler = function () {
+          _this2.privacyAccepted = false;
+          _this2.privacyChecked = false;
+        };
+        $('#telemedicineFormModal').on('show.bs.modal.telemedPrivacy', this.formModalShowHandler);
+        $('#telemedicineFormModal').on('hidden.bs.modal.telemedPrivacy', this.formModalHiddenHandler);
+      }
+    },
+    showPrivacyNotice: function showPrivacyNotice() {
+      this.privacyChecked = false;
+      this.privacyAccepted = false;
+      if (typeof $ !== 'undefined' && $('#telemedicinePrivacyNoticeModal').length) {
+        $('#telemedicinePrivacyNoticeModal').modal('show');
+      }
+    },
+    closePrivacyNotice: function closePrivacyNotice() {
+      if (typeof $ !== 'undefined' && $('#telemedicinePrivacyNoticeModal').length) {
+        $('#telemedicinePrivacyNoticeModal').modal('hide');
+      }
+    },
+    acceptPrivacyNotice: function acceptPrivacyNotice() {
+      this.privacyAccepted = true;
+      this.closePrivacyNotice();
+      this.$nextTick(function () {
+        if (typeof $ !== 'undefined' && $('#telemedicineFormModal').length) {
+          $('#telemedicineFormModal').modal('show');
+        }
+      });
+    },
+    initializeForm: function initializeForm() {
+      // Set date/time
+      var now = new Date();
+      var options = {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      };
+      this.formData.date_time_referred = now.toLocaleDateString('en-US', options);
+
+      // Populate user data if available
+      if (this.user && Object.keys(this.user).length > 0) {
+        this.populateUserData(this.user);
+      }
+
+      // Load facilities and departments from backend
+      this.loadFacilities();
+      this.loadDepartments();
+    },
+    loadFacilities: function loadFacilities() {
+      var _this3 = this;
+      var baseUrl = typeof $ !== 'undefined' && $("#broadcasting_url").length ? $("#broadcasting_url").val() : window.location.origin;
+      var url = "".concat(baseUrl, "/iMkiW5YcHA6D9Gd7BuTteeQPVx4a1UxK");
+      $.ajax({
+        url: url,
+        type: 'GET',
+        success: function success(response) {
+          var list = Array.isArray(response) ? response : response.data || response.facilities || [];
+          _this3.facilities = list;
+          _this3.formData.referred_to_address = _this3.selectedFacilityAddress;
+        },
+        error: function error(_error) {
+          console.error('Failed to load facilities:', _error);
+        }
+      });
+    },
+    formatAppointmentDateTime: function formatAppointmentDateTime(appointment) {
+      if (!appointment || !appointment.appointment_date) {
+        return '';
+      }
+      try {
+        // Parse the appointment date
+        var dateStr = appointment.appointment_date;
+        var timeFrom = appointment.appointedTime || '';
+        var timeTo = appointment.appointedTimeTo || '';
+
+        // Create a Date object from the date string
+        var appointmentDate = new Date(dateStr);
+
+        // Format the date like DATE/TIME REFERRED using toLocaleDateString
+        var options = {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        };
+        var formattedDate = appointmentDate.toLocaleDateString('en-US', options);
+
+        // Add time if available
+        if (timeFrom) {
+          var formattedFrom = this.formatTime12Hour(timeFrom, dateStr);
+          var formattedTo = timeTo ? this.formatTime12Hour(timeTo, dateStr) : '';
+          var timeRange = formattedTo ? "".concat(formattedFrom, " - ").concat(formattedTo) : formattedFrom;
+          return "".concat(formattedDate, ", ").concat(timeRange);
+        }
+        return formattedDate;
+      } catch (error) {
+        console.error('Error formatting appointment date:', error);
+        return appointment.appointment_date;
+      }
+    },
+    formatTime12Hour: function formatTime12Hour(timeStr, dateStr) {
+      if (!timeStr) {
+        return '';
+      }
+      // If already formatted with AM/PM, return as-is
+      if (/am|pm/i.test(timeStr)) {
+        return timeStr;
+      }
+      var dateTime = dateStr ? "".concat(dateStr, "T").concat(timeStr) : "1970-01-01T".concat(timeStr);
+      var dt = new Date(dateTime);
+      if (Number.isNaN(dt.getTime())) {
+        return timeStr;
+      }
+      return dt.toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      });
+    },
+    loadDepartments: function loadDepartments() {
+      var _this4 = this;
+      var baseUrl = typeof $ !== 'undefined' && $("#broadcasting_url").length ? $("#broadcasting_url").val() : window.location.origin;
+      var url = "".concat(baseUrl, "/XO2XFSiDX2PdHyLbq9WNHhA95vy3Fdld");
+      $.ajax({
+        url: url,
+        type: 'GET',
+        success: function success(response) {
+          var list = Array.isArray(response) ? response : response.data || response.departments || [];
+          _this4.departments = list;
+        },
+        error: function error(_error2) {
+          console.error('Failed to load departments:', _error2);
+        }
+      });
+    },
+    populateUserData: function populateUserData(user) {
+      // Set patient name from user data
+      if (user.fname || user.lname) {
+        this.formData.patient_name = "".concat(user.fname || '', " ").concat(user.mname || '', " ").concat(user.lname || '').trim();
+      }
+
+      // Set patient address if available
+      if (user.address) {
+        this.formData.patient_address = user.address;
+      }
+
+      // Set age if available
+      if (user.age) {
+        this.formData.age = user.age;
+      }
+
+      // Set sex if available
+      if (user.sex) {
+        this.formData.sex = user.sex;
+      }
+
+      // Set civil status if available
+      if (user.civil_status) {
+        this.formData.civil_status = user.civil_status;
+      }
+    },
+    populatePatientData: function populatePatientData(patient) {
+      // Populate from database patient record
+      // The API returns pre-formatted fields: patient_name, address, age
+      if (patient.patient_name) {
+        this.formData.patient_name = patient.patient_name;
+      } else if (patient.fname || patient.lname) {
+        this.formData.patient_name = "".concat(patient.fname || '', " ").concat(patient.mname || '', " ").concat(patient.lname || '').trim();
+      }
+
+      // Use pre-formatted address from API
+      if (patient.address) {
+        this.formData.patient_address = patient.address;
+      }
+
+      // Use pre-calculated age from API
+      if (patient.age) {
+        this.formData.age = patient.age.toString();
+      }
+
+      // Set sex
+      if (patient.sex) {
+        this.formData.sex = patient.sex;
+      }
+
+      // Set civil status
+      if (patient.civil_status) {
+        this.formData.civil_status = patient.civil_status;
+      }
+    },
+    submitForm: function submitForm() {
+      var _this5 = this;
+      var formData = new FormData();
+
+      // Append all form fields
+      Object.keys(this.formData).forEach(function (key) {
+        formData.append(key, _this5.formData[key] || '');
+      });
+
+      // Ensure case summary is included
+      if (typeof formData.set === 'function') {
+        formData.set('case_summary', this.formData.case_summary || '');
+      } else {
+        formData.append('case_summary', this.formData.case_summary || '');
+      }
+
+      // return;
+      // Append IDs and appointment context
+      var patientId = this.patientData && this.patientData.id || this.user && this.user.patient_id || '';
+      var patientCode = this.patientData && (this.patientData.patient_code || this.patientData.code) || this.user && this.user.patient_code || '';
+      var referredFacilityId = this.appointmentData.facility_id || this.formData.referred_to || '';
+      var referredDepartmentId = this.formData.department || this.appointmentData.departmentId || '';
+      var referredMd = this.appointmentData.action_md || this.appointmentData.actionMd || 0;
+      var referringMd = this.user.id || 0;
+      var reasonReferral = -1;
+      var referringFacility = this.user && this.user.facility_id || 0;
+      var configId = parseInt(this.appointmentData.opdCategory) || 0;
+      formData.append('reason_referral1', reasonReferral);
+      formData.append('patient_id', patientId);
+      formData.append('patient_code', patientCode);
+      formData.append('referring_md', referringMd);
+      formData.append('referring_facility', referringFacility);
+      formData.append('referred_facility', referredFacilityId);
+      formData.append('referred_department', referredDepartmentId);
+      formData.append('reffered_md', referredMd);
+      formData.append('other_reason_referral', 'Telemedicine Patient Booked Appointment');
+      formData.append('other_diagnosis', 'For Patient Consultation');
+      formData.append('appointmentId', this.appointmentData.appointmentId || '');
+      formData.append('telemedicine', 1);
+      formData.append('configId', configId);
+      formData.append('opdSubId', configId || 0);
+      // return;
+      // Append files
+      this.uploadedFiles.forEach(function (file) {
+        formData.append('file_upload[]', file.file);
+      });
+
+      // Submit to backend
+      var baseUrl = typeof $ !== 'undefined' && $("#broadcasting_url").length ? $("#broadcasting_url").val() : window.location.origin;
+      var url = "".concat(baseUrl, "/api/doctor/refer/normal");
+      $.ajax({
+        url: url,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function success(response) {
+          Lobibox.notify('success', {
+            msg: 'Referral submitted successfully.'
+          });
+          _this5.closeModal();
+        },
+        error: function error(_error3) {
+          console.error('Referral submit error:', _error3);
+          Lobibox.notify('error', {
+            msg: 'Failed to submit referral. Please try again.'
+          });
+        }
+      });
+    },
+    closeModal: function closeModal() {
+      $('#telemedicineFormModal').modal('hide');
+    },
+    onLogoError: function onLogoError(event) {
+      // Hide the image if it fails to load
+      event.target.style.display = 'none';
+    },
+    triggerFileInput: function triggerFileInput() {
+      this.$refs.fileInput.click();
+    },
+    handleFileUpload: function handleFileUpload(event) {
+      var _this6 = this;
+      var files = Array.from(event.target.files);
+      files.forEach(function (file) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          var fileObj = {
+            file: file,
+            name: file.name,
+            preview: _this6.getFilePreview(file, e.target.result)
+          };
+          _this6.uploadedFiles.push(fileObj);
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+    truncateFileName: function truncateFileName(fileName) {
+      var maxLength = 12;
+      return fileName.length > maxLength ? fileName.substring(0, maxLength) + '...' : fileName;
+    },
+    getFilePreview: function getFilePreview(file, dataUrl) {
+      if (file.type.startsWith('image/')) {
+        return dataUrl;
+      }
+      return this.getIconSrc(file.type);
+    },
+    getIconSrc: function getIconSrc(fileType) {
+      var baseUrl = typeof $ !== 'undefined' && $("#broadcasting_url").length ? $("#broadcasting_url").val() : window.location.origin;
+      if (fileType === 'application/pdf') {
+        return "".concat(baseUrl, "/resources/img/pdf_icon.png");
+      } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        return "".concat(baseUrl, "/resources/img/document_icon.png");
+      } else if (fileType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        return "".concat(baseUrl, "/resources/img/sheet_icon.png");
+      } else {
+        return "".concat(baseUrl, "/resources/img/file_icon.png");
+      }
+    },
+    removeFile: function removeFile(index) {
+      this.uploadedFiles.splice(index, 1);
+    },
+    removeAllFiles: function removeAllFiles() {
+      this.uploadedFiles = [];
     }
   }
 });
@@ -23440,6 +23989,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_appointment_facility = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("appointment-facility");
   var _component_appointment_calendar = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("appointment-calendar");
   var _component_appointment_time = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("appointment-time");
+  var _component_telemedicine_consultation_form = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("telemedicine-consultation-form");
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[0] || (_cache[0] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", {
     "class": "page-header"
   }, "Select Facility", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [$props.appointment_slot ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
@@ -23469,8 +24019,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     appointmentclickDate: $data.appointmentclickDate,
     "selected-date": $data.selectedDate,
     manualDate: $data.manualDate,
-    user: $props.user
-  }, null, 8 /* PROPS */, ["facilitySelectedId", "appointedTimes", "configTimeSlot", "appointmentclickDate", "selected-date", "manualDate", "user"])])])])], 64 /* STABLE_FRAGMENT */);
+    user: $props.user,
+    onPatientBookingProceed: $options.handlePatientBookingProceed
+  }, null, 8 /* PROPS */, ["facilitySelectedId", "appointedTimes", "configTimeSlot", "appointmentclickDate", "selected-date", "manualDate", "user", "onPatientBookingProceed"])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Telemedicine Consultation Form Modal "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_telemedicine_consultation_form, {
+    user: $props.user,
+    appointmentData: $data.appointmentData,
+    patientData: $data.patientData
+  }, null, 8 /* PROPS */, ["user", "appointmentData", "patientData"])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -23703,6 +24258,607 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true":
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* binding */ render)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+
+var _hoisted_1 = {
+  "class": "modal fade",
+  role: "dialog",
+  id: "telemedicinePrivacyNoticeModal",
+  "data-backdrop": "static",
+  "data-keyboard": "false"
+};
+var _hoisted_2 = {
+  "class": "modal-dialog modal-lg",
+  role: "document"
+};
+var _hoisted_3 = {
+  "class": "modal-content"
+};
+var _hoisted_4 = {
+  "class": "modal-header"
+};
+var _hoisted_5 = {
+  "class": "modal-body",
+  style: {
+    "max-height": "800px",
+    "overflow-y": "auto"
+  }
+};
+var _hoisted_6 = {
+  "class": "checkbox"
+};
+var _hoisted_7 = {
+  "class": "modal-footer"
+};
+var _hoisted_8 = ["disabled"];
+var _hoisted_9 = {
+  "class": "modal fade",
+  role: "dialog",
+  id: "telemedicineFormModal",
+  "data-backdrop": "static",
+  "data-keyboard": "false"
+};
+var _hoisted_10 = {
+  "class": "modal-dialog modal-lg",
+  role: "document"
+};
+var _hoisted_11 = {
+  "class": "modal-content"
+};
+var _hoisted_12 = {
+  "class": "modal-body",
+  style: {
+    "padding": "0"
+  }
+};
+var _hoisted_13 = {
+  style: {
+    "text-align": "center",
+    "padding": "15px",
+    "border-bottom": "2px solid #ccc"
+  }
+};
+var _hoisted_14 = {
+  style: {
+    "display": "flex",
+    "align-items": "center",
+    "justify-content": "center",
+    "gap": "15px"
+  }
+};
+var _hoisted_15 = ["src"];
+var _hoisted_16 = {
+  "class": "row",
+  style: {
+    "margin-bottom": "15px"
+  }
+};
+var _hoisted_17 = {
+  "class": "col-md-4"
+};
+var _hoisted_18 = {
+  style: {
+    "background": "white",
+    "padding": "6px 10px",
+    "min-height": "30px"
+  }
+};
+var _hoisted_19 = {
+  "class": "col-md-4"
+};
+var _hoisted_20 = {
+  style: {
+    "background": "white",
+    "padding": "6px 10px",
+    "min-height": "30px"
+  }
+};
+var _hoisted_21 = {
+  "class": "col-md-4"
+};
+var _hoisted_22 = {
+  style: {
+    "background": "white",
+    "padding": "6px 10px",
+    "min-height": "30px"
+  }
+};
+var _hoisted_23 = {
+  "class": "row",
+  style: {
+    "margin-bottom": "15px"
+  }
+};
+var _hoisted_24 = {
+  "class": "col-md-4"
+};
+var _hoisted_25 = ["disabled"];
+var _hoisted_26 = ["value"];
+var _hoisted_27 = {
+  "class": "col-md-4"
+};
+var _hoisted_28 = ["disabled"];
+var _hoisted_29 = ["value"];
+var _hoisted_30 = {
+  "class": "col-md-4"
+};
+var _hoisted_31 = ["disabled"];
+var _hoisted_32 = {
+  "class": "row",
+  style: {
+    "margin-bottom": "15px"
+  }
+};
+var _hoisted_33 = {
+  "class": "col-md-4"
+};
+var _hoisted_34 = {
+  "class": "col-md-4"
+};
+var _hoisted_35 = {
+  "class": "col-md-4"
+};
+var _hoisted_36 = {
+  "class": "row",
+  style: {
+    "margin-bottom": "15px"
+  }
+};
+var _hoisted_37 = {
+  "class": "col-md-4"
+};
+var _hoisted_38 = {
+  "class": "col-md-4"
+};
+var _hoisted_39 = ["disabled"];
+var _hoisted_40 = {
+  "class": "col-md-4"
+};
+var _hoisted_41 = ["disabled"];
+var _hoisted_42 = {
+  "class": "row",
+  style: {
+    "margin-bottom": "15px"
+  }
+};
+var _hoisted_43 = {
+  "class": "col-md-12"
+};
+var _hoisted_44 = {
+  "class": "row",
+  style: {
+    "margin-bottom": "15px"
+  }
+};
+var _hoisted_45 = {
+  "class": "col-md-12"
+};
+var _hoisted_46 = {
+  "class": "file-upload-container",
+  style: {
+    "display": "flex",
+    "flex-wrap": "wrap",
+    "gap": "15px"
+  }
+};
+var _hoisted_47 = {
+  "class": "file-upload"
+};
+var _hoisted_48 = {
+  "class": "file-upload-content",
+  style: {
+    "position": "relative",
+    "border": "2px solid #28a745",
+    "border-radius": "4px",
+    "padding": "10px"
+  }
+};
+var _hoisted_49 = ["src"];
+var _hoisted_50 = {
+  "class": "image-title-wrap",
+  style: {
+    "margin-top": "8px"
+  }
+};
+var _hoisted_51 = ["title"];
+var _hoisted_52 = ["onClick"];
+var _hoisted_53 = {
+  "class": "col-md-3",
+  style: {
+    "flex": "0 0 auto"
+  }
+};
+var _hoisted_54 = {
+  "class": "file-upload"
+};
+var _hoisted_55 = ["src"];
+var _hoisted_56 = {
+  "class": "row"
+};
+var _hoisted_57 = {
+  "class": "col-md-12 text-right"
+};
+function render(_ctx, _cache, $props, $setup, $data, $options) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "close",
+    onClick: _cache[0] || (_cache[0] = function () {
+      return $options.closePrivacyNotice && $options.closePrivacyNotice.apply($options, arguments);
+    }),
+    "aria-label": "Close"
+  }, _cache[20] || (_cache[20] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "aria-hidden": "true"
+  }, "×", -1 /* HOISTED */)])), _cache[21] || (_cache[21] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
+    "class": "modal-title"
+  }, "Privacy Notice", -1 /* HOISTED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<p data-v-183c8533>This Privacy Policy will enable you to better understand how DOHCVCHD collects, processes, retains and uses your data. We hope you read through the policy.</p><p class=\"notice_category\" data-v-183c8533>Statement of Policy</p><p data-v-183c8533>The DOHCVCHD is the regional arm in Central Visayas of the Department of Health. It is the principal health agency in the country and is responsible for the enforcement of laws on health, ensuring access to basic public health services and quality health care, and regulation of health facilities, goods and services.</p><p data-v-183c8533>Guided by the Data Privacy Principles, we collect, process, retain, use and share your data when you visit our office premises, avail of our services and systems, file for applications/renewals, submit requests and inquiries, lodge complaints, or when it is necessary in the performance of our statutory and regulatory mandates, including the operation of health information services, and implementation of disease surveillance and response initiatives, among others, subject to your consent or when expressly allowed by law.</p><p data-v-183c8533>The DOHCVCHD faithfully adheres to the requirements of the Data Privacy Act, its implementing rules, and the regulations promulgated by the National Privacy Commission. We highly value the security of your data and your rights as data subjects.</p><p class=\"notice_category\" data-v-183c8533>Collection and Use of Data</p><p data-v-183c8533>Data is collected when the DOHCVCHD performs its governmental functions such as, but not limited to, provision of technical assistance to government and private partners, disease surveillance and health events response per Republic Act No. 11332 and related statutes, management of public health information systems, enforcement of regulatory authority (e.g. receipt of applications of health facilities), handling of complaints, and operations of health and laboratory services. Data is also collected when you avail of our programs and services such as the E-health Referral System and the DOHCVCHD Telemedicine, provided you have granted your consent.</p><p data-v-183c8533>The manner by which these data is collected may be through the access of online portals, filling out of forms and information sheets, e-mail or in person through our receiving officers, and recording in the closed circuit television (CCTV) systems for office transactions. The online systems may require you of your name, address, contact information and birthday.</p><p data-v-183c8533>The data shall be used for regulation, surveillance, analysis, policy formulation and guidance, health emergency and response efforts, provision of appropriate technical assistance, clarification of questions, conduct of investigation, identification and communication, safety and security, and continual service improvement.</p><p data-v-183c8533>At all times, the data we collect shall be equal to the requirements needed to fulfill an intended purpose. The collection and use of data shall always be guided by the principles of transparency, legitimate purpose and proportionality.</p><p class=\"notice_category\" data-v-183c8533>Data Sharing</p><p data-v-183c8533>Data collected by DOHCVCHD is shared with the DOH Central Office, local government units, and other operating partners when required by laws and government regulation, particularly on management of public health information systems, and surveillance of notifiable diseases abd health events, among others. In all other instances, the DOHCVCHD executes a Data Sharing Agreement following the requirements of the NPC to ensure that your data is protected from unlawful uses and disclosures.</p><p class=\"notice_category\" data-v-183c8533>Data Retention, Protection and Disposition</p><p data-v-183c8533>For the services and systems available to the public, the DOHCVCHD may necessarily store and retain your data as part of its inherent and operational functions, without prejudice to the enforcement of the relevant rights of data subjects.</p><p data-v-183c8533>Data collected are retained depending on the nature of the data being handled. Physical data are retained by the respective end-users or program managers through proper record filing and keeping. Electronic data which passes through online systems are saved in our local and cloud servers using encryption, firewall, or similar security features. It may also require entering a One-Time Password (OTP) as an added layer of protection. Access to these data is granted only to select personnel, all of whom are required to execute a Non-Disclosure Agreement.</p><p data-v-183c8533>The DOHCVCHD does not warrant a foolproof or 100% breach-free data system. However, it commits to continually update its security features, review existing data protection policies, coordinate with the NPC for any data incidents, and keep you informed in all stages.</p><p data-v-183c8533>The data subject may request for the deletion of his/her data, subject to the provisions of the data privacy act. As such, upon the data subject’s request or when necessitated by the circumstances, the DOHCVCHD shall fully dispose of the data retained in the most prompt manner. The length of time in the retention and subsequent disposition of data, as the case may be, shall be in accordance with the records retention and disposition schedule of the National Archives of the Philippines and pertinent internal office protocols, taking into account the legitimate purpose(s) of the collection. When applicable, data shall be returned to the data owners. At all times, the data subject shall be informed that the data has been deleted and disposed of by issuing a certification to such effect.</p><p class=\"notice_category\" data-v-183c8533>Data Subject&#39;s Rights</p><p data-v-183c8533>Pursuant to the DPA, the data subject is entitled to the following rights:</p><p data-v-183c8533><strong data-v-183c8533>Right to be informed:</strong><br data-v-183c8533>The data subject has a right to be informed whether personal data pertaining to him or her shall be, are being, or have been processed, including the existence of automated decision-making and profiling. <br data-v-183c8533>The data subject shall be notified and furnished with information indicated hereunder before the entry of his or her personal data into the processing system of the personal information controller, or at the next practical opportunity: <br data-v-183c8533>Description of the personal data to be entered into the system; <br data-v-183c8533>Purposes for which they are being or will be processed, including processing for direct marketing, profiling or historical, statistical or scientific purpose; <br data-v-183c8533>Basis of processing, when processing is not based on the consent of the data subject; <br data-v-183c8533>Scope and method of the personal data processing; <br data-v-183c8533>Methods utilized for automated access, if the same is allowed by the data subject, and the extent to which such access is authorized, including meaningful information about the logic involved, as well as the significance and the envisaged consequences of such processing for the data subject; <br data-v-183c8533>The identity and contact details of the personal data controller or its representative; <br data-v-183c8533>The period for which the information will be stored; and <br data-v-183c8533>The existence of their rights as data subjects, including the right to access, correction, and object to the processing, as well as the right to lodge a complaint before the Commission. Right to object. The data subject shall have the right to object to the processing of his or her personal data, including processing for direct marketing, automated processing or profiling. The data subject shall also be notified and given an opportunity to withhold consent to the processing in case of changes or any amendment to the information supplied or declared to the data subject in the preceding paragraph. </p><p data-v-183c8533>When the data subject objects or withholds consent, the personal information controller shall no longer process the personal data, unless:</p><p data-v-183c8533>The personal data is needed pursuant to a subpoena; <br data-v-183c8533>The collection and processing are for obvious purposes, including, when it is necessary for the performance of or in relation to a contract or service to which the data subject is a party, or when necessary or desirable in the context of an employer-employee relationship between the collector and the data subject; or <br data-v-183c8533>The information is being collected and processed as a result of a legal obligation.</p><p data-v-183c8533>Right to access. The data subject has the right to reasonable access, upon demand, the following:</p><p data-v-183c8533>Contents of his or her personal data that were processed; <br data-v-183c8533>Sources from which personal data were obtained; <br data-v-183c8533>Names and addresses of recipients of the personal data; <br data-v-183c8533>Manner by which such data were processed; <br data-v-183c8533>Reasons for the disclosure of the personal data to recipients, if any; <br data-v-183c8533>Information on automated processes where the data will, or is likely to, be made as the sole basis for any decision that significantly affects or will affect the data subject; <br data-v-183c8533>Date when his or her personal data concerning the data subject were last accessed and modified; and The designation, name or identity, and address of the personal information controller.</p><p data-v-183c8533>Right to rectification. The data subject has the right to dispute the inacuracy or error in the personal data and have the personal information controller correct it immediately and accordingly, unless the request is vexatious or otherwise unreasonable. If the personal data has been corrected, the personal information controller shall ensure the accessibility of both the new and retracted information and the simultaneous receipt of the new and retracted information by the intended recipients thereof: Provided, That recipients or third parties who have previously received such processed personal shall be informed of its inaccuracy and its rectification, upon reasonable request of the data subject. Right to erasure or blocking. The data subject shall have the right to suspend, withdraw or order the blocking, removal or destruction of his or her personal data from the personal information controller’s filing system. <br data-v-183c8533>This right may be exercised upon discovery and substantial proof of any of the following: <br data-v-183c8533>The personal data is incomplete, outdated, false, or unlawfully obtained; <br data-v-183c8533>The personal data is being used for purpose not authorized by the data subject; <br data-v-183c8533>The personal data is no longer necessary for the purposes for which they were collected; <br data-v-183c8533>The data subject withdraws consent or objects to the processing, and there is no other legal ground or overriding legitimate interest for the processing; <br data-v-183c8533>The personal data concerns private information that is prejudicial to data subject, unless justified by freedom of speech, of expression, or of the press or otherwise authorized; <br data-v-183c8533>The processing is unlawful; <br data-v-183c8533>The personal information controller or personal information processor violated the rights of the data subject. <br data-v-183c8533>The personal information controller may notify third parties who have previously received such processed personal information <br data-v-183c8533>Right to damages. The data subject shall be indemnified for any damages sustained due to such inaccurate, incomplete, outdated, false, unlawfully obtained or unauthorized use of personal data, taking into account any violation of his or her rights and freedoms as data subject. </p><p class=\"notice_category\" data-v-183c8533>Responsibility of Data Subjects</p><p data-v-183c8533>As we commit to ensuring the best service to our clients, data subjects are concomitantly urged to be circumspect and vigilant that the online systems it is accessing is legitimate and valid. If unsure, you may call or coordinate with our office through the client feedback information provided herein.</p><h4 data-v-183c8533>Client Feedback</h4><p data-v-183c8533>For requests, questions, complaints, or reports of any data breach or incidents, you may contact our Data Protection Officer through the following contact information:</p><strong data-v-183c8533>Name :</strong> Data Protection Officer <br data-v-183c8533><strong data-v-183c8533>Title/Office :</strong> Legal Section/Data Protection Office <br data-v-183c8533><strong data-v-183c8533>Contact No. :</strong> (032) 260-9740 loc. 104 <br data-v-183c8533><strong data-v-183c8533>Email :</strong> legal@ro7.doh.gov.ph ", 40)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "checkbox",
+    id: "privacyCheckbox",
+    "onUpdate:modelValue": _cache[1] || (_cache[1] = function ($event) {
+      return $data.privacyChecked = $event;
+    })
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $data.privacyChecked]]), _cache[22] || (_cache[22] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, "I have read and accept the Privacy Statement", -1 /* HOISTED */))])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-default",
+    onClick: _cache[2] || (_cache[2] = function () {
+      return $options.closePrivacyNotice && $options.closePrivacyNotice.apply($options, arguments);
+    })
+  }, "Close"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-primary",
+    disabled: !$data.privacyChecked,
+    onClick: _cache[3] || (_cache[3] = function () {
+      return $options.acceptPrivacyNotice && $options.acceptPrivacyNotice.apply($options, arguments);
+    })
+  }, "I Accept", 8 /* PROPS */, _hoisted_8)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Header Section "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    src: $options.logoPath,
+    alt: "DOH Logo",
+    style: {
+      "height": "60px"
+    },
+    onError: _cache[4] || (_cache[4] = function () {
+      return $options.onLogoError && $options.onLogoError.apply($options, arguments);
+    })
+  }, null, 40 /* PROPS, NEED_HYDRATION */, _hoisted_15), _cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div data-v-183c8533><div style=\"font-size:11px;font-weight:normal;\" data-v-183c8533>Republic of the Philippines</div><div style=\"font-size:11px;font-weight:bold;\" data-v-183c8533>DEPARTMENT OF HEALTH</div><div style=\"font-size:11px;font-weight:bold;\" data-v-183c8533>CENTRAL VISAYA&#39;S CENTER FOR HEALTH DEVELOPMENT</div><div style=\"font-size:10px;\" data-v-183c8533>Osmeña Boulevard, Cebu City</div><div style=\"font-size:10px;\" data-v-183c8533>Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109</div><div style=\"font-size:10px;\" data-v-183c8533>Official Website: http://www.ro7.doh.gov.ph Email Address: dohro7@gmail.com</div></div>", 1))]), _cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
+    style: {
+      "color": "#17a2b8",
+      "margin": "10px 0 5px 0",
+      "font-size": "18px",
+      "font-weight": "bold"
+    }
+  }, "Clinical Telemedicine Consultation", -1 /* HOISTED */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    onSubmit: _cache[19] || (_cache[19] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
+      return $options.submitForm && $options.submitForm.apply($options, arguments);
+    }, ["prevent"])),
+    style: {
+      "padding": "20px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Appointment Details "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_cache[26] || (_cache[26] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, "APPOINTMENT DATE/TIME", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formData.appointment_datetime), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [_cache[27] || (_cache[27] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, "NAME OF DOCTOR/CONSULTANT", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formData.doctor_name), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_cache[28] || (_cache[28] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, "ADDRESS", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.formData.referred_to_address), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Referred To Section "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [_cache[30] || (_cache[30] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("REFERRED TO "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+      return $data.formData.referred_to = $event;
+    }),
+    disabled: $options.appointmentFieldsLocked,
+    required: ""
+  }, [_cache[29] || (_cache[29] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+    value: ""
+  }, "Select facility...", -1 /* HOISTED */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.facilities, function (facility) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
+      key: facility.id,
+      value: facility.id
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(facility.name), 9 /* TEXT, PROPS */, _hoisted_26);
+  }), 128 /* KEYED_FRAGMENT */))], 8 /* PROPS */, _hoisted_25), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.formData.referred_to]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [_cache[32] || (_cache[32] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("DEPARTMENT "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+      return $data.formData.department = $event;
+    }),
+    disabled: $options.appointmentFieldsLocked,
+    required: ""
+  }, [_cache[31] || (_cache[31] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+    value: ""
+  }, "Select option", -1 /* HOISTED */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.departments, function (dept) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
+      key: dept.id,
+      value: dept.id
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(dept.description), 9 /* TEXT, PROPS */, _hoisted_29);
+  }), 128 /* KEYED_FRAGMENT */))], 8 /* PROPS */, _hoisted_28), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.formData.department]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_30, [_cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, "ADDRESS", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[7] || (_cache[7] = function ($event) {
+      return $options.selectedFacilityAddress = $event;
+    }),
+    disabled: $options.appointmentFieldsLocked,
+    readonly: ""
+  }, null, 8 /* PROPS */, _hoisted_31), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $options.selectedFacilityAddress]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Patient Basic Information "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_32, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_33, [_cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("DATE/TIME REFERRED (ReCo) "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[8] || (_cache[8] = function ($event) {
+      return $data.formData.date_time_referred = $event;
+    }),
+    readonly: ""
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formData.date_time_referred]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_34, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("NAME OF PATIENT "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[9] || (_cache[9] = function ($event) {
+      return $data.formData.patient_name = $event;
+    }),
+    readonly: ""
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formData.patient_name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [_cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, "ADDRESS", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[10] || (_cache[10] = function ($event) {
+      return $data.formData.patient_address = $event;
+    }),
+    readonly: ""
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formData.patient_address]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Demographics "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [_cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("AGE "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[11] || (_cache[11] = function ($event) {
+      return $data.formData.age = $event;
+    }),
+    readonly: ""
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formData.age]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_38, [_cache[39] || (_cache[39] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("SEX "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[12] || (_cache[12] = function ($event) {
+      return $data.formData.sex = $event;
+    }),
+    disabled: $options.appointmentFieldsLocked,
+    readonly: ""
+  }, _cache[38] || (_cache[38] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+    value: ""
+  }, "Select option", -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+    value: "Male"
+  }, "Male", -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+    value: "Female"
+  }, "Female", -1 /* HOISTED */)]), 8 /* PROPS */, _hoisted_39), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.formData.sex]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("CIVIL STATUS "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "class": "form-control input-sm",
+    "onUpdate:modelValue": _cache[13] || (_cache[13] = function ($event) {
+      return $data.formData.civil_status = $event;
+    }),
+    disabled: $options.appointmentFieldsLocked,
+    readonly: ""
+  }, _cache[40] || (_cache[40] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<option value=\"\" data-v-183c8533>Select option</option><option value=\"Single\" data-v-183c8533>Single</option><option value=\"Married\" data-v-183c8533>Married</option><option value=\"Divorced\" data-v-183c8533>Divorced</option><option value=\"Separated\" data-v-183c8533>Separated</option><option value=\"Widowed\" data-v-183c8533>Widowed</option>", 6)]), 8 /* PROPS */, _hoisted_41), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $data.formData.civil_status]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Case Summary "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [_cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "3px"
+    }
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" CHIEF COMPLAINTS "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "font-style": "italic",
+      "font-weight": "normal"
+    }
+  }, "(symptoms, duration, comorbidities, medicine taken, allergies etc.)"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    style: {
+      "color": "red"
+    }
+  }, "*")], -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("textarea", {
+    "class": "form-control",
+    "onUpdate:modelValue": _cache[14] || (_cache[14] = function ($event) {
+      return $data.formData.case_summary = $event;
+    }),
+    rows: "5",
+    style: {
+      "resize": "none",
+      "font-size": "12px"
+    },
+    required: ""
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.formData.case_summary]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" File Attachments "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [_cache[44] || (_cache[44] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-size": "11px",
+      "font-weight": "bold",
+      "margin-bottom": "5px"
+    }
+  }, "FILE ATTACHMENTS", -1 /* HOISTED */)), $data.uploadedFiles.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
+    type: "button",
+    "class": "btn btn-md btn-danger",
+    onClick: _cache[15] || (_cache[15] = function () {
+      return $options.removeAllFiles && $options.removeAllFiles.apply($options, arguments);
+    }),
+    style: {
+      "margin-bottom": "10px"
+    }
+  }, "Remove All Files")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[45] || (_cache[45] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Uploaded Files "), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.uploadedFiles, function (file, index) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: 'file-' + index,
+      "class": "col-md-3",
+      style: {
+        "flex": "0 0 auto"
+      }
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+      "class": "file-upload-image",
+      src: file.preview,
+      style: {
+        "width": "100%",
+        "height": "120px",
+        "object-fit": "contain"
+      }
+    }, null, 8 /* PROPS */, _hoisted_49), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
+      "class": "image-title",
+      style: {
+        "display": "block",
+        "word-wrap": "break-word",
+        "font-size": "10px"
+      },
+      title: file.name
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.truncateFileName(file.name)), 9 /* TEXT, PROPS */, _hoisted_51)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      type: "button",
+      "class": "btn btn-danger btn-xs",
+      onClick: function onClick($event) {
+        return $options.removeFile(index);
+      },
+      style: {
+        "margin-top": "5px"
+      }
+    }, _toConsumableArray(_cache[43] || (_cache[43] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      "class": "fa fa-trash"
+    }, null, -1 /* HOISTED */)])), 8 /* PROPS */, _hoisted_52)])])])]);
+  }), 128 /* KEYED_FRAGMENT */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Upload Area "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "text-center image-upload-wrap",
+    style: {
+      "cursor": "pointer",
+      "padding": "20px",
+      "border": "2px dashed #ccc",
+      "border-radius": "4px"
+    },
+    onClick: _cache[17] || (_cache[17] = function ($event) {
+      return $options.triggerFileInput();
+    })
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    ref: "fileInput",
+    type: "file",
+    onChange: _cache[16] || (_cache[16] = function () {
+      return $options.handleFileUpload && $options.handleFileUpload.apply($options, arguments);
+    }),
+    accept: "image/*,application/pdf,.doc,.docx",
+    multiple: "",
+    style: {
+      "display": "none"
+    }
+  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    src: $options.addFileImagePath,
+    style: {
+      "width": "50%",
+      "height": "50%"
+    }
+  }, null, 8 /* PROPS */, _hoisted_55)])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Form Actions "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_56, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_57, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-default",
+    onClick: _cache[18] || (_cache[18] = function () {
+      return $options.closeModal && $options.closeModal.apply($options, arguments);
+    }),
+    style: {
+      "margin-right": "5px"
+    }
+  }, _cache[46] || (_cache[46] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "fa fa-times"
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Close ")])), _cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "submit",
+    "class": "btn btn-success"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "fa fa-check"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Submit ")], -1 /* HOISTED */))])])], 32 /* NEED_HYDRATION */)])])])])], 64 /* STABLE_FRAGMENT */);
+}
+
+/***/ }),
+
 /***/ "./resources/assets/js/appointment/api/index.js":
 /*!******************************************************!*\
   !*** ./resources/assets/js/appointment/api/index.js ***!
@@ -23851,6 +25007,30 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
 ___CSS_LOADER_EXPORT___.push([module.id, "\n.time-slot-item.disabled[data-v-3c340b3a] {\r\n  border-color: #dc3545;\r\n  background-color: #fff5f5;\r\n  cursor: not-allowed;\r\n  opacity: 0.7;\n}\n.time-slot-item.disabled[data-v-3c340b3a]:hover {\r\n  border-color: #dc3545;\r\n  box-shadow: none;\n}\n.time-slot-item.disabled .hours_radio[data-v-3c340b3a] {\r\n  cursor: not-allowed;\n}\n.time-slot-item.disabled .time-slot-label[data-v-3c340b3a] {\r\n  cursor: not-allowed;\r\n  color: #999;\n}\n.appointment-time-list[data-v-3c340b3a] {\r\n  padding: 10px;\n}\n.time-slot-item[data-v-3c340b3a] {\r\n  margin-bottom: 10px;\r\n  border: 2px solid #e0e0e0;\r\n  border-radius: 8px;\r\n  padding: 12px;\r\n  cursor: pointer;\r\n  transition: all 0.3s ease;\r\n  background-color: #fff;\n}\n.time-slot-item[data-v-3c340b3a]:hover {\r\n  border-color: #00a65a;\r\n  box-shadow: 0 2px 8px rgba(0, 166, 90, 0.1);\n}\n.time-slot-item.selected[data-v-3c340b3a] {\r\n  border-color: #00a65a;\r\n  background-color: #f0f9f4;\r\n  box-shadow: 0 2px 8px rgba(0, 166, 90, 0.2);\n}\n.time-slot-content[data-v-3c340b3a] {\r\n  display: flex;\r\n  align-items: flex-start;\r\n  gap: 10px;\n}\n.hours_radio[data-v-3c340b3a] {\r\n  margin-top: 5px;\r\n  transform: scale(1.5);\r\n  cursor: pointer;\r\n  accent-color: #00a65a;\r\n  flex-shrink: 0;\n}\n.time-slot-label[data-v-3c340b3a] {\r\n  flex: 1;\r\n  cursor: pointer;\r\n  margin: 0;\r\n  font-weight: normal;\n}\n.time-info[data-v-3c340b3a] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 8px;\r\n  margin-bottom: 6px;\n}\n.time-range[data-v-3c340b3a] {\r\n  font-size: 16px;\r\n  font-weight: 600;\r\n  color: #333;\n}\n.slot-count[data-v-3c340b3a] {\r\n  font-size: 13px;\r\n  color: #00a65a;\r\n  font-weight: bold;\n}\n.doctor-info[data-v-3c340b3a] {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 6px;\r\n  color: #666;\r\n  font-size: 14px;\n}\n.doctor-info i[data-v-3c340b3a] {\r\n  color: #00a65a;\n}\n.doctor-name[data-v-3c340b3a] {\r\n  font-size: 13px;\r\n  font-style: italic;\n}\n.page-header[data-v-3c340b3a] {\r\n  margin: 10px 0 0 0;\r\n  font-size: 22px;\n}\n.no-slots-message[data-v-3c340b3a] {\r\n  min-height: 100px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.box[data-v-3c340b3a] {\r\n  margin-bottom: 0;\n}\n.box-body[data-v-3c340b3a] {\r\n  padding: 0;\n}\r\n", ""]);
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css":
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0__);
+// Imports
+
+var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
+// Module
+___CSS_LOADER_EXPORT___.push([module.id, "\n.input-sm[data-v-183c8533] {\r\n  height: 30px;\r\n  font-size: 12px;\r\n  padding: 5px 10px;\n}\nlabel[data-v-183c8533] {\r\n  display: block;\r\n  margin-bottom: 3px;\n}\n.file-upload-box[data-v-183c8533] {\r\n  width: 120px;\r\n  height: 120px;\r\n  border: 2px dashed #ccc;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  position: relative;\r\n  background-color: #f9f9f9;\r\n  transition: all 0.3s;\n}\n.file-upload-box[data-v-183c8533]:hover {\r\n  border-color: #28a745;\r\n  background-color: #f0f9f4;\n}\n.file-upload-box.uploaded[data-v-183c8533] {\r\n  border-style: solid;\r\n  border-color: #28a745;\r\n  background-color: #fff;\n}\n.modal-body[data-v-183c8533] {\r\n  max-height: 100vh;\r\n  overflow-y: auto;\n}\n.table[data-v-183c8533] {\r\n  font-size: 12px;\n}\n.form-control[data-v-183c8533]:focus {\r\n  border-color: #17a2b8;\r\n  box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -24238,6 +25418,36 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentTime_vue_vue_type_style_index_0_id_3c340b3a_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css":
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
+/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_style_index_0_id_183c8533_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css */ "./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css");
+
+            
+
+var options = {};
+
+options.insert = "head";
+options.singleton = false;
+
+var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_style_index_0_id_183c8533_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"], options);
+
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_style_index_0_id_183c8533_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_1__["default"].locals || {});
 
 /***/ }),
 
@@ -24689,6 +25899,37 @@ if (false) {}
 
 /***/ }),
 
+/***/ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue":
+/*!**************************************************************************!*\
+  !*** ./resources/assets/js/appointment/TelemedicineConsultationForm.vue ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _TelemedicineConsultationForm_vue_vue_type_template_id_183c8533_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true */ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true");
+/* harmony import */ var _TelemedicineConsultationForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TelemedicineConsultationForm.vue?vue&type=script&lang=js */ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=script&lang=js");
+/* harmony import */ var _TelemedicineConsultationForm_vue_vue_type_style_index_0_id_183c8533_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css */ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css");
+/* harmony import */ var C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./node_modules/vue-loader/dist/exportHelper.js */ "./node_modules/vue-loader/dist/exportHelper.js");
+
+
+
+
+;
+
+
+const __exports__ = /*#__PURE__*/(0,C_xampp_htdocs_referral_node_modules_vue_loader_dist_exportHelper_js__WEBPACK_IMPORTED_MODULE_3__["default"])(_TelemedicineConsultationForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_1__["default"], [['render',_TelemedicineConsultationForm_vue_vue_type_template_id_183c8533_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render],['__scopeId',"data-v-183c8533"],['__file',"resources/assets/js/appointment/TelemedicineConsultationForm.vue"]])
+/* hot reload */
+if (false) {}
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (__exports__);
+
+/***/ }),
+
 /***/ "./resources/assets/js/appointment/App.vue?vue&type=script&lang=js":
 /*!*************************************************************************!*\
   !*** ./resources/assets/js/appointment/App.vue?vue&type=script&lang=js ***!
@@ -24769,6 +26010,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=script&lang=js":
+/*!**************************************************************************************************!*\
+  !*** ./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=script&lang=js ***!
+  \**************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./TelemedicineConsultationForm.vue?vue&type=script&lang=js */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=script&lang=js");
+ 
+
+/***/ }),
+
 /***/ "./resources/assets/js/appointment/AppointmentApp.vue?vue&type=template&id=215abd78":
 /*!******************************************************************************************!*\
   !*** ./resources/assets/js/appointment/AppointmentApp.vue?vue&type=template&id=215abd78 ***!
@@ -24833,6 +26090,22 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true":
+/*!********************************************************************************************************************!*\
+  !*** ./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true ***!
+  \********************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   render: () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_template_id_183c8533_scoped_true__WEBPACK_IMPORTED_MODULE_0__.render)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_template_id_183c8533_scoped_true__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!../../../../node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/templateLoader.js??ruleSet[1].rules[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=template&id=183c8533&scoped=true");
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/appointment/AppointmentApp.vue?vue&type=style&index=0&id=215abd78&lang=css":
 /*!********************************************************************************************************!*\
   !*** ./resources/assets/js/appointment/AppointmentApp.vue?vue&type=style&index=0&id=215abd78&lang=css ***!
@@ -24868,6 +26141,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_AppointmentTime_vue_vue_type_style_index_0_id_3c340b3a_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/AppointmentTime.vue?vue&type=style&index=0&id=3c340b3a&scoped=true&lang=css");
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css":
+/*!**********************************************************************************************************************************!*\
+  !*** ./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css ***!
+  \**********************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_dist_cjs_js_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_10_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_TelemedicineConsultationForm_vue_vue_type_style_index_0_id_183c8533_scoped_true_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader/dist/cjs.js!../../../../node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!../../../../node_modules/vue-loader/dist/stylePostLoader.js!../../../../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!../../../../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css */ "./node_modules/style-loader/dist/cjs.js!./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./resources/assets/js/appointment/TelemedicineConsultationForm.vue?vue&type=style&index=0&id=183c8533&scoped=true&lang=css");
 
 
 /***/ }),

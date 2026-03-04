@@ -234,7 +234,7 @@ $user = Session::get('auth');
                         @if($row->telemedicine)
                             @include('doctor.include.telemedicine_panel_body')
                         @else
-                            @include('doctor.include.referred_panel_body')
+                            @include('doctor.include.referred_panel_bdy')
                         @endif
 
                         @php

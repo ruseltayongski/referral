@@ -7,6 +7,7 @@ use App\Activity;
 use App\Tracking;
 use App\Icd;
 use App\LabRequest;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\doctor\ReferralCtrl;
@@ -1141,6 +1142,7 @@ class PrintCtrl extends Controller
         $patient_address = $data->patient_address;
         $referring_address = $data->referring_address;
         $referred_address = $data->referred_address;
+        $user_level = User::select('level')->where('id', $data->referring_md)->first();
 
         $pdf = new Fpdf();
         $x = ($pdf->w) - 20;
@@ -1157,10 +1159,11 @@ class PrintCtrl extends Controller
         $pdf->SetFont('Arial', '', 10);
         $pdf->MultiCell(0, 7, self::black($pdf, "Patient Code: ") . self::orange($pdf, $data->code, "Patient Code :"), 0, 'L');
         $pdf->Ln(5);
-        $pdf->MultiCell(0, 7, self::black($pdf, "Name of Referring Facility: ") . self::orange($pdf, $data->referring_name, "Name of Referring Facility:"), 0, 'L');
-        $pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $data->referring_contact, "Facility Contact #:"), 0, 'L');
-        $pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referring_address, "Address:"), 0, 'L');
-
+        if($user_level->level != 'Patient'){
+            $pdf->MultiCell(0, 7, self::black($pdf, "Name of Referring Facility: ") . self::orange($pdf, $data->referring_name, "Name of Referring Facility:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Facility Contact #: ") . self::orange($pdf, $data->referring_contact, "Facility Contact #:"), 0, 'L');
+            $pdf->MultiCell(0, 7, self::black($pdf, "Address: ") . self::orange($pdf, $referring_address, "Address:"), 0, 'L');
+        }
 
         $pdf->MultiCell($x / 2, 7, self::black($pdf, "Referred to: ") . self::orange($pdf, $data->referred_name, "Referred to:"), 0, 'L');
         $y = $pdf->getY();
@@ -1212,8 +1215,7 @@ class PrintCtrl extends Controller
         $pdf->SetFont('Arial', 'I', 10);
         $pdf->MultiCell(0, 5, $data->case_summary, 0, 'L');
         $pdf->Ln();
-
-        $pdf->MultiCell(0, 7, self::black($pdf, "Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), 0, 'L');
+        if($user_level->level != 'Patient'){$pdf->MultiCell(0, 7, self::black($pdf, "Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist): "), 0, 'L');}   
         $pdf->SetTextColor(102, 56, 0);
         $pdf->SetFont('Arial', 'I', 10);
         $pdf->MultiCell(0, 5, $data->reco_summary, 0, 'L');
@@ -1272,11 +1274,12 @@ class PrintCtrl extends Controller
             $pdf->MultiCell(0, 5, $data->other_reason_referral, 0, 'L');
             $pdf->Ln();
         }
-
+       
+        if($user_level->level != 'Patient') {
         $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referring MD/HCW: ") . self::orange($pdf, $data->md_referring, "Name of referring MD/HCW:"), 0, 'L');
         $pdf->MultiCell($x / 2, 7, self::black($pdf, "Contact # of referring MD/HCW: ") . self::orange($pdf, $data->referring_md_contact, "Contact # of referring MD/HCW:"), 0, 'L');
         $pdf->MultiCell($x / 2, 7, self::black($pdf, "Name of referred MD/HCW- Mobile Contact # (ReCo): ") . self::orange($pdf, $data->md_referred, "Name of referred MD/HCW- Mobile Contact # (ReCo):"), 0, 'L');
-
+        }
         $pdf->Output();
 
         exit;

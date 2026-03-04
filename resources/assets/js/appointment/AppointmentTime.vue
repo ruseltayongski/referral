@@ -168,11 +168,10 @@ export default {
         });
         return;
       }
-
-      if (this.user.level == 'Patient'){
-        console.log("users_data", this.user);
-      }else{
         
+      if (this.user.level =="Patient") {
+        this.proceedToPatientBooking(this.user);
+      }else{
         // Pass the selected slot data to proceedAppointment
         this.proceedAppointment(
           null, // configtime
@@ -183,9 +182,35 @@ export default {
           selectedSlot.departmentId
         );
       }
+    
 
     },
     
+    proceedToPatientBooking(user) {
+      console.log("Proceeding to patient booking for user:", user);
+      
+      const selectedSlot = this.getSelectedSlot();
+      
+      if (selectedSlot) {
+        // Prepare appointment data
+        const appointmentData = {
+          facility_id: this.facilitySelectedId,
+          appointmentId: selectedSlot.id,
+          appointment_date: selectedSlot.appointment_date,
+          appointedTime: selectedSlot.appointedTime,
+          appointedTimeTo: selectedSlot.appointedTimeTo,
+          doctorId: this.selectedAppointmentDoctor,
+          opdCategory: selectedSlot.opdCategory,
+          departmentId: selectedSlot.departmentId,
+          createdBy: selectedSlot.createdBy,
+          action_md: selectedSlot.createdId || selectedSlot.action_md || selectedSlot.actionMd || null
+        };
+        
+        // Emit event to parent with user and appointment data
+        this.$emit('patient-booking-proceed', { user, appointmentData });
+      }
+    },
+
     proceedAppointment(configtime, configDate, appointmentId, configId, opdSubcateg, departmentId) { 
       if ((!configId && !this.selectedAppointmentTime) || (configId && !configtime)) {
         Lobibox.alert("error", {
@@ -244,11 +269,18 @@ export default {
           };
         }
 
-        window.location.href = `${
+        // Check if user level is Patient and add patient_id to URL
+        let url = `${
           this.base
         }/doctor/patient?appointmentKey=${this.generateAppointmentKey(
           255
         )}&appointment=${encodeURIComponent(JSON.stringify([appointment]))}`;
+        
+        if (this.user && this.user.level === 'Patient' && this.user.patient_id) {
+          url += `&patient_id=${this.user.patient_id}`;
+        }
+        
+        window.location.href = url;
       }
     },
     

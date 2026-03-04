@@ -48,13 +48,13 @@
         </tr>
     @endif
     <tr>
-        <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name }} </span></td>
+        <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name ?? 'Patient-Doctor Referral' }} </span></td>
     </tr>
     <tr>
-        <td colspan="6">Facility Contact #: <span class="referring_contact form-details">{{ $form->referring_contact }}</span></td>
+        <td colspan="6">Facility Contact #: <span class="referring_contact form-details">{{ $form->referring_contact ?? 'N/A' }}</span></td>
     </tr>
     <tr>
-        <td colspan="6">Address: <span class="referring_address form-details">{{ $form->referring_address }}</span></td>
+        <td colspan="6">Address: <span class="referring_address form-details">{{ $form->referring_address ?? 'N/A' }}</span></td>
     </tr>
     <tr>
         <td colspan="3">Referred to: <span class="referred_name form-details">{{ $form->referred_name }}</span></td>
@@ -104,6 +104,7 @@
     <tr>
         <td colspan="6">National ID: <span class="covid_number form-details">{{ $form->national_id }}</span></td>
     </tr>
+    @if($user->level != 'Patient')
     <tr>
         <td colspan="6">Covid Number: <span class="covid_number form-details">{{ $form->covid_number }}</span></td>
     </tr>
@@ -113,6 +114,7 @@
     <tr>
         <td colspan="6">Surveillance Category: <span class="surveillance_category form-details" style="text-transform: capitalize;">{{ $form->refer_sur_category }}</span></td>
     </tr>
+    @endif
     <tr>
         <td colspan="6">
             Case Summary (pertinent Hx/PE, including meds, labs, course etc.):
@@ -120,6 +122,7 @@
             <span class="case_summary form-details">{!! nl2br($form->case_summary) !!}</span>
         </td>
     </tr>
+    @if($user->level != 'Patient')
     <tr>
         <td colspan="6">
             Summary of ReCo (pls. refer to ReCo Guide in Referring Patients Checklist):
@@ -127,6 +130,7 @@
             <span class="reco_summary form-details">{!! nl2br($form->reco_summary) !!}</span>
         </td>
     </tr>
+    @endif
     @if(isset($icd[0]))
         <tr>
             <td colspan="6">
@@ -189,6 +193,7 @@
             </td>
         </tr>
     @endif
+    @if($user->level != 'Patient')
     <tr>
         <td colspan="6">
             Name of referring MD/HCW: <span class="referring_md form-details">{{ $form->md_referring }}</span>
@@ -202,6 +207,7 @@
     <tr>
         <td colspan="6">Name of referred MD/HCW- Mobile Contact # (ReCo): <span class="referred_md form-details">{{ $form->md_referred }}</span></td>
     </tr>
+    @endif
 </table>
 <hr />
 
@@ -214,7 +220,7 @@
         <button class="btn-sm bg-success btn-flat" id="telemedicine" onclick="openTelemedicine('{{ $form->tracking_id }}','{{ $form->code }}','{{ $form->action_md }}','{{ $form->referring_md }}');"><i class="fa fa-camera"></i> Telemedicine</button>
         <a href="{{ url('doctor/print/prescription').'/'.$id }}" target="_blank" type="button" style="color: black;" class="btn btn-sm bg-warning btn-flat" id="prescription"><i class="fa fa-file-zip-o"></i> Prescription</a>
     @endif--}}
-    @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id)
+    @if(($cur_status == 'transferred' || $cur_status == 'referred' || $cur_status == 'redirected') && $user->id == $form->md_referring_id && $user->level != 'Patient')
         <button class="btn-sm btn-primary btn-flat button_option edit_form_btn" data-toggle="modal" data-target="#editReferralForm" data-id="{{ $id }}" data-type="normal" data-referral_status="{{ $referral_status }}"><i class="fa fa-edit"></i> Edit Form</button>
     @endif
     @if($cur_status == 'cancelled' && $user->id == $form->md_referring_id)

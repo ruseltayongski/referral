@@ -42,16 +42,25 @@
           :selected-date="selectedDate"
           :manualDate ="manualDate"
           :user="user"
+          @patient-booking-proceed="handlePatientBookingProceed"
         ></appointment-time>
       </div>
     </div>
   </div>
+
+  <!-- Telemedicine Consultation Form Modal -->
+  <telemedicine-consultation-form
+    :user="user"
+    :appointmentData="appointmentData"
+    :patientData="patientData"
+  ></telemedicine-consultation-form>
   
 </template>
 <script>
 import AppointmentFacility from "./AppointmentFacility.vue";
 import AppointmentCalendar from "./AppointmentCalendar.vue";
 import AppointmentTime from "./AppointmentTime.vue";
+import TelemedicineConsultationForm from "./TelemedicineConsultationForm.vue";
 
 let baseUrlgetConfig = `${window.baseUrl}/doctor/getconfigappointment`;
 export default {
@@ -60,6 +69,7 @@ export default {
     AppointmentFacility,
     AppointmentCalendar,
     AppointmentTime,
+    TelemedicineConsultationForm,
   },
   props: ["user", "appointment_slot", "appointment_config"],
   data() {
@@ -70,6 +80,8 @@ export default {
       appointmentclickDate: null,
       manualDate: null,
       selectedDate: null,
+      appointmentData: {},
+      patientData: {},
     };
   },
   mounted() {},
@@ -138,6 +150,47 @@ export default {
     },
     config_appointedTime(payload){
       this.configTimeSlot = payload;
+    },
+    handlePatientBookingProceed(payload) {
+      // Populate appointment data for the telemedicine form
+      this.appointmentData = payload.appointmentData;
+      
+      // Fetch patient data if patient_id exists
+      if (payload.user && payload.user.patient_id) {
+        this.fetchPatientData(payload.user.patient_id);
+      } else {
+        // Open modal immediately if no patient_id
+        this.openTelemedicineModal();
+      }
+    },
+    
+    fetchPatientData(patientId) {
+      const baseUrl = $("#broadcasting_url").val() || window.location.origin;
+      const url = `${baseUrl}/doctor/patient/info/${patientId}`;
+      
+      $.ajax({
+        url: url,
+        type: 'GET',
+        success: (response) => {
+          console.log('Patient data fetched:', response);
+          this.patientData = response;
+          this.openTelemedicineModal();
+        },
+        error: (error) => {
+          console.error('Error fetching patient data:', error);
+          Lobibox.notify('error', {
+            msg: 'Failed to load patient information'
+          });
+          // Open modal anyway with available data
+          this.openTelemedicineModal();
+        }
+      });
+    },
+    
+    openTelemedicineModal() {
+      this.$nextTick(() => {
+        window.dispatchEvent(new Event('telemedicine:request-open'));
+      });
     },
   },
 
