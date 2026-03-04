@@ -134,6 +134,10 @@ export default {
       // netSpeedStatus: '', // 'fast' or 'slow'
       allowJoining: true,
       activeRecoNotifications: {},
+      recordedChunks: [],
+      screenRecorder: null,
+      recordingCanvas: null,
+      recordingAnimFrame: null,
     };
   },
   mounted() {
@@ -165,11 +169,6 @@ export default {
       newLink.href = this.dohLogoUrl;
       document.head.appendChild(newLink);
     }
-
-    // Automatically start screen recording when the component is mounted
-    //  if (this.referring_md === "yes") {
-    //     this.startScreenRecording();
-    //   }
 
     window.addEventListener("beforeunload", this.preventCloseWhileUploading);
     window.addEventListener("beforeunload", this.stopCallTimer);
@@ -1115,123 +1114,111 @@ export default {
     },
     async startScreenRecording() {
       try {
-        // Check for browser compatibility
-        const isSupported =
-          !!navigator.mediaDevices.getDisplayMedia &&
-          !!navigator.mediaDevices.getUserMedia;
-        if (!isSupported) {
-          Lobibox.alert("error", {
-            msg: "Your browser does not support screen recording with microphone audio. Please use the latest version of Chrome, Edge, or Firefox.",
-            closeButton: false,
-          });
+        this.recordedChunks = [];
+
+        const canvas = document.createElement("canvas");
+        canvas.width = 1280;
+        canvas.height = 720;
+        this.recordingCanvas = canvas;
+        const ctx = canvas.getContext("2d");
+
+        // ✅ Helper: find video element inside a container
+        const getVideoEl = (containerId) => {
+          const container = document.getElementById(containerId);
+          if (!container) {
+            console.warn(`⚠️ Container #${containerId} not found`);
+            return null;
+          }
+          const video = container.querySelector("video");
+          if (!video) console.warn(`⚠️ No <video> inside #${containerId}`);
+          return video;
+        };
+
+        // ✅ Verify at least remote video exists before starting
+        const remoteVideo = getVideoEl(this.channelParameters.remoteUid);
+        if (!remoteVideo) {
+          console.error("❌ Remote video element not found. Aborting recording.");
           return;
         }
 
-        // Inform the user about permissions
-        // console.log("Requesting permissions for screen and microphone...");
+        console.log("🎥 Remote video element found:", remoteVideo);
+        console.log("🎥 Remote video readyState:", remoteVideo.readyState);
 
-        // Request screen capture with system audio
-        const screenStream = await navigator.mediaDevices.getDisplayMedia({
-          video: true,
-          audio: true, // Request system audio
-        });
+        const drawFrame = () => {
+          ctx.fillStyle = "#000";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // console.log("Screen stream obtained:", screenStream);
+          const remoteVid = getVideoEl(this.channelParameters.remoteUid);
+          if (remoteVid && remoteVid.readyState >= 2) {
+            ctx.drawImage(remoteVid, 0, 0, canvas.width * 0.75, canvas.height);
+          }
 
-        // Request microphone access
-        const micStream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            echoCancellation: true, // Reduce echo
-            noiseSuppression: true, // Reduce background noise
-            sampleRate: 44100, // Set sample rate for better quality
-          },
-        });
+          const localVid = getVideoEl(this.options.uid);
+          if (localVid && localVid.readyState >= 2) {
+            const pipW = canvas.width * 0.25;
+            const pipH = canvas.height * 0.25;
+            ctx.drawImage(
+              localVid,
+              canvas.width - pipW - 10,
+              canvas.height - pipH - 10,
+              pipW,
+              pipH
+            );
+          }
 
-        // console.log("Microphone stream obtained:", micStream);
+          this.recordingAnimFrame = requestAnimationFrame(drawFrame);
+        };
 
-        // Debugging: Log audio tracks from microphone
-        micStream.getAudioTracks().forEach((track) => {
-          // console.log("Microphone track:", track);
-        });
+        drawFrame();
 
-        // Create an AudioContext for mixing audio
-        const audioContext = new AudioContext();
-        const destination = audioContext.createMediaStreamDestination();
+        // ---- Audio mix ----
+        const audioCtx = new AudioContext();
+        const destination = audioCtx.createMediaStreamDestination();
 
-        // Connect system audio to the AudioContext
-        if (screenStream.getAudioTracks().length > 0) {
-          const systemAudioSource =
-            audioContext.createMediaStreamSource(screenStream);
-          systemAudioSource.connect(destination);
-        } else {
-          console.warn("No system audio track found in screen stream.");
-        }
-
-        // Connect microphone audio to the AudioContext
-        if (micStream.getAudioTracks().length > 0) {
-          const micAudioSource =
-            audioContext.createMediaStreamSource(micStream);
-          micAudioSource.connect(destination);
-        } else {
-          console.warn("No microphone audio track found.");
-        }
-
-        // Combine video from screenStream and mixed audio
-        const combinedStream = new MediaStream([
-          ...screenStream.getVideoTracks(), // Desktop video
-          ...destination.stream.getAudioTracks(), // Mixed audio (system + microphone)
-        ]);
-
-        // console.log("Combined stream created:", combinedStream);
-
-        // Initialize MediaRecorder with the combined stream
-        this.screenRecorder = new MediaRecorder(combinedStream, {
-          mimeType: "video/webm; codecs=vp8", // WebM format
-        });
-        this.recordedChunks = [];
-
-        // Collect recorded data
-        this.screenRecorder.ondataavailable = (event) => {
-          if (event.data.size > 0) {
-            this.recordedChunks.push(event.data);
+        const addAudioTrack = (track) => {
+          if (!track) return;
+          try {
+            const source = audioCtx.createMediaStreamSource(new MediaStream([track]));
+            source.connect(destination);
+            console.log("🔊 Audio track connected:", track.label);
+          } catch (e) {
+            console.warn("⚠️ Failed to connect audio track:", e);
           }
         };
 
-        // Debugging: Monitor video and audio tracks for lag
-        combinedStream.getTracks().forEach((track) => {
-          // console.log(`Track kind: ${track.kind}, readyState: ${track.readyState}`);
-          track.onended = () => console.log(`Track ended: ${track.kind}`);
-        });
+        addAudioTrack(this.channelParameters.localAudioTrack?.getMediaStreamTrack());
+        addAudioTrack(this.channelParameters.remoteAudioTrack?.getMediaStreamTrack());
 
-        // Start recording
-        this.screenRecorder.start();
-        //for minutes timer
-        // this.startCallTimer();
-        // console.log("Screen recording started with desktop and microphone audio.");
+        // ---- Combine ----
+        const videoStream = canvas.captureStream(30);
+        destination.stream.getAudioTracks().forEach((t) => videoStream.addTrack(t));
+
+        console.log("🎞️ Stream tracks:", videoStream.getTracks().map(t => `${t.kind}:${t.label}`));
+
+        const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
+          ? "video/webm;codecs=vp9,opus"
+          : "video/webm;codecs=vp8,opus";
+
+        this.screenRecorder = new MediaRecorder(videoStream, { mimeType });
+
+        this.screenRecorder.ondataavailable = (event) => {
+          console.log("📦 Chunk received, size:", event.data?.size);
+          if (event.data && event.data.size > 0) {
+            this.recordedChunks.push(event.data);
+            console.log("✅ Total chunks:", this.recordedChunks.length);
+          } else {
+            console.warn("⚠️ Empty chunk — canvas may not be drawing");
+          }
+        };
+
+        this.screenRecorder.onstart = () => console.log("▶️ MediaRecorder started");
+        this.screenRecorder.onerror = (e) => console.error("❌ MediaRecorder error:", e);
+
+        this.screenRecorder.start(5000);
+        console.log("✅ Recording started. State:", this.screenRecorder.state);
+
       } catch (error) {
-        console.error("Error starting screen recording:", error);
-
-        // Handle permission denial or other errors
-        if (error.name === "NotAllowedError") {
-          Lobibox.alert("warning", {
-            msg: "Screen recording permissions were denied. Please allow access to your screen and microphone.",
-            closeButton: false,
-          });
-        } else if (error.name === "NotFoundError") {
-          Lobibox.alert("warning", {
-            msg: "No screen or microphone devices found. Please ensure your devices are connected and try again.",
-            closeButton: false,
-          });
-        }
-        //  else {
-        //   Lobibox.alert("error", {
-        //     msg: "An unexpected error occurred while starting screen recording. Please try again.",
-        //     closeButton: false,
-        //     callback: function () {
-        //       window.top.close();
-        //     },
-        //   });
-        // }
+        console.error("❌ Error starting recording:", error);
       }
     },
     async saveScreenRecording(closeAfterUpload = false) {
@@ -1301,7 +1288,7 @@ export default {
 
           try {
             await axios.post(
-              "https://telemedapi.cvchd7.com/api/save-screen-record",
+              $("#broadcasting_url").val()+"/api/save-screen-record",
               formData,
               {
                 headers: { "Content-Type": "multipart/form-data" },
@@ -1371,57 +1358,24 @@ export default {
         // self.channelParameters.userCount++;
         this.isUserJoined = true;
         joinedUsers.add(user.uid);
-        // console.log(
-        //   "user count: ",
-        //   self.channelParameters.userCount,
-        //   "max users:",
-        //   self.channelParameters.maxUsers
-        // );
 
-        // if (
-        //   self.channelParameters.userCount >= self.channelParameters.maxUsers
-        // ) {
-        //   self.showChannelFullMessage();
-        //   await agoraEngine.leave();
-        //   self.channelParameters.userCount--;
-        //   return;
-        // } else {
-        //   console.log("my pregnant type", this.pregnantType);
-        //   if (this.referring_md === "no") {
-        //       if(this.pregnantType){
-        //         $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed");
-        //         $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed");
-        //       }
-              
-        //     this.startScreenRecording();
-        //     // this.startRecording();
-        //   }
-        // }
-
-        // console.log("number users", joinedUsers.size);
-        // if (joinedUsers.size > 2) {
-        //   console.log("hello leave this call")
-        //   self.showChannelFullMessage();
-        //   await agoraEngine.leave();
-        // }else{
-        //   if (this.referring_md === "no") {
-        //       this.startScreenRecording();
-        //   }
-        // }
         if (this.referring_md === "no") {
             if(this.pregnantType){
               $("#examined_progress"+this.referral_code+this.activity_id).addClass("completed");
               $("#prescribed_progress"+this.referral_code+this.activity_id).addClass("completed");
             }
-            
-            this.startScreenRecording();
+        }
+        else {
+            // ✅ Wait for video element to be ready, then start recording
+            setTimeout(() => {
+                if (!self.screenRecorder || self.screenRecorder.state === "inactive") {
+                    self.startScreenRecording();
+                }
+            }, 1500); // small delay so <video> elements are in the DOM
         }
 
       });
 
-      // if (this.referring_md === "no") {
-      //     //this.startScreenRecording();
-      // }
       // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
       //agora
       agoraEngine.on("user-published", async (user, mediaType) => {
@@ -1645,62 +1599,53 @@ export default {
         return false;
       }
     },
-    // async leaveChannel() {
-    //   if (confirm("Are you sure you want to leave this channel?")) {
-    //     this.handleBeforeUnload();
-    //     // Stop screen recording and save the file
-    //     if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
-    //       this.screenRecorder.stop();
-    //       this.screenRecorder.onstop = () => {
-    //         this.saveScreenRecording(true);
-    //       };
-    //     } else {
-    //       window.top.close();
-    //     }
-
-    //     // Wait for duration to be sent before closing
-    //     if (this.referring_md === "no") {
-    //       clearInterval(this.callTimer);
-    //       await this.sendCallDuration();
-    //     } else {
-    //       window.top.close();
-    //     }
-    //   }
-    // },
     async leaveChannel() {
-      if (!confirm("Are you sure you want to leave this channel?")) return;
+      if (confirm("Are you sure you want to leave this channel?")) {
+        if (this.referring_md === "yes") {
+            await this.stopAndSaveRecording();
+        }
+        else {
+            window.top.close();
+        }
+      }
+    },
+    async stopAndSaveRecording() {
+      return new Promise((resolve) => {
+        if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+          console.log("🛑 Stopping recorder, state:", this.screenRecorder.state);
 
-      // Send the leave payload
-      this.handleBeforeUnload();
+          // Flush any remaining data
+          this.screenRecorder.requestData();
 
-      // Stop call timer if applicable
-      if (this.callTimer) clearInterval(this.callTimer);
+          this.screenRecorder.onstop = async () => {
+            console.log("🎬 Recorder stopped. Total chunks:", this.recordedChunks.length);
+            cancelAnimationFrame(this.recordingAnimFrame);
+            await this.handleAfterStop();
+            resolve();
+          };
 
-      // Function to close the window safely after a small delay
-      const closeWindow = () => setTimeout(() => window.top.close(), 200);
-
-      // Handle screen recording
-      if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
-        this.screenRecorder.onstop = async () => {
-          // Save recording first
-          await this.saveScreenRecording(true);
-
-          // If call duration needs to be sent, send it after recording is saved
-          if (this.referring_md === "no") {
-            await this.sendCallDuration();
-          }
-
-          closeWindow();
-        };
-        this.screenRecorder.stop(); // triggers onstop
-      } else {
-        // No screen recording
-        if (this.referring_md === "no") {
-          // Send call duration first
-          await this.sendCallDuration();
-          closeWindow();
+          this.screenRecorder.stop();
         } else {
-          closeWindow();
+          console.warn("⚠️ Recorder not active, skipping save.");
+          this.handleAfterStop().then(resolve);
+        }
+      });
+    },
+    async handleAfterStop() {
+      if (this.referring_md === "no") {
+        clearInterval(this.callTimer);
+        const hasDuration = await this.sendCallDuration();
+        if (this.recordedChunks.length > 0) {
+          await this.saveScreenRecording(true);
+        } else {
+          console.warn("No recorded chunks — skipping upload.");
+          window.top.close();
+        }
+      } else {
+        if (this.recordedChunks.length > 0) {
+          await this.saveScreenRecording(true);
+        } else {
+          window.top.close();
         }
       }
     },

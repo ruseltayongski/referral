@@ -272,7 +272,7 @@ export default {
         <tbody>
           <tr class="bg-gray">
             <td colspan="6" class="padded-header">
-              <strong>WOMAN fdgsdfgdf</strong>
+              <strong>WOMAN</strong>
             </td>
           </tr>
           <tr class="padded-row">

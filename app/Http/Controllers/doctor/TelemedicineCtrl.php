@@ -23,6 +23,7 @@ use Prophecy\Exception\Doubler\ReturnByReferenceException;
 use DateTime;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\ConsultationReportExport;
+use Illuminate\Support\Facades\Storage;
 
 class TelemedicineCtrl extends Controller
 {
@@ -1842,6 +1843,465 @@ class TelemedicineCtrl extends Controller
                 ->get(['id', 'fname', 'lname']);
 
         return $doctors;
+    }
+
+    public function ruselRecording(Request $request) {
+        $request->validate([
+            'video'       => 'required|file',
+            'fileName'    => 'required|string',
+            'chunkIndex'  => 'required|integer',
+            'totalChunks' => 'required|integer',
+            'username'    => 'required|string',
+        ]);
+
+        $fileName    = $request->input('fileName');
+        $chunkIndex  = (int) $request->input('chunkIndex');
+        $totalChunks = (int) $request->input('totalChunks');
+        $username    = preg_replace('/[^a-zA-Z0-9_\-]/', '_', $request->input('username'));
+
+        // ---- Save chunk ----
+        $chunkDir  = "recordings/temp/{$fileName}";
+        $chunkFile = "{$chunkDir}/chunk_{$chunkIndex}";
+
+        Storage::disk('local')->put(
+            $chunkFile,
+            file_get_contents($request->file('video')->getRealPath())
+        );
+
+        // ---- Count saved chunks ----
+        $savedChunks = count(Storage::disk('local')->files($chunkDir));
+
+        if ($savedChunks < $totalChunks) {
+            return response()->json([
+                'message' => "Chunk {$chunkIndex} received. ({$savedChunks}/{$totalChunks})"
+            ], 200);
+        }
+
+        $finalDir      = "recordings/{$username}";
+        $finalPath     = "{$finalDir}/{$fileName}";
+        $finalFullPath = storage_path("app/{$finalPath}");
+        $chunkDirFull  = storage_path("app/{$chunkDir}");
+
+        // Ensure output directory exists
+        if (!file_exists(storage_path("app/{$finalDir}"))) {
+            mkdir(storage_path("app/{$finalDir}"), 0775, true);
+        }
+
+        $finalStream = fopen($finalFullPath, 'wb');
+
+        if (!$finalStream) {
+            return response()->json(['message' => 'Cannot write final file.'], 500);
+        }
+
+        // ---- Write chunks in order ----
+        for ($i = 0; $i < $totalChunks; $i++) {
+            $partPath = "{$chunkDirFull}/chunk_{$i}";
+
+            if (!file_exists($partPath)) {
+                fclose($finalStream);
+                return response()->json([
+                    'message' => "Missing chunk {$i}. Assembly failed."
+                ], 500);
+            }
+
+            $partStream = fopen($partPath, 'rb');
+            stream_copy_to_stream($partStream, $finalStream);
+            fclose($partStream);
+        }
+
+        fclose($finalStream);
+
+        $finalSize = filesize($finalFullPath);
+
+        // ---- Clean up temp chunks ----
+        Storage::disk('local')->deleteDirectory($chunkDir);
+
+        return response()->json([
+            'message' => 'Recording saved successfully.',
+            'path'    => $finalPath,
+            'size'    => $finalSize,
+        ], 200);
+    }
+
+    public function recordingList()
+    {
+        $recordingsPath = storage_path('app/recordings');
+        $recordings = [];
+
+        if (is_dir($recordingsPath)) {
+            $userFolders = array_filter(glob($recordingsPath . '/*'), 'is_dir');
+
+            foreach ($userFolders as $userFolder) {
+                $username = basename($userFolder);
+                if ($username === 'temp') continue;
+
+                $files = glob($userFolder . '/*.webm');
+
+                foreach ($files as $file) {
+                    $fileName   = basename($file);
+                    $fileSize   = filesize($file);
+                    $fileSizeMB = round($fileSize / (1024 * 1024), 2);
+                    $fileDate   = date('Y-m-d H:i:s', filemtime($file));
+
+                    $parts = explode('_', pathinfo($fileName, PATHINFO_FILENAME));
+
+                    $recordings[] = [
+                        'username'     => $username,
+                        'file_name'    => $fileName,
+                        'patient_code' => $parts[0] ?? 'N/A',
+                        'activity_id'  => $parts[1] ?? 'N/A',
+                        'referring_md' => $parts[2] ?? 'N/A',
+                        'referred_to'  => $parts[3] ?? 'N/A',
+                        'date'         => $parts[4] ?? 'N/A',
+                        'time_start'   => isset($parts[5]) ? str_replace('-', ':', $parts[5]) : 'N/A',
+                        'time_end'     => isset($parts[6]) ? str_replace('-', ':', $parts[6]) : 'N/A',
+                        'size_mb'      => $fileSizeMB,
+                        'created_at'   => $fileDate,
+                        'stream_url'   => url('/recordings/stream') . '?username=' . urlencode($username) . '&file=' . urlencode($fileName),
+                    ];
+                }
+            }
+        }
+
+        usort($recordings, fn($a, $b) => strtotime($b['created_at']) - strtotime($a['created_at']));
+
+        $totalCount = count($recordings);
+        $totalSize  = round(array_sum(array_column($recordings, 'size_mb')), 2);
+
+        ob_start();
+        ?>
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Video Recordings</title>
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+
+                body {
+                    font-family: Arial, sans-serif;
+                    background: #f4f6f9;
+                    color: #333;
+                    padding: 20px;
+                }
+
+                h1 { font-size: 22px; margin-bottom: 5px; color: #2c3e50; }
+
+                .summary { margin-bottom: 15px; font-size: 14px; color: #555; }
+                .summary span { font-weight: bold; color: #2c3e50; }
+
+                .search-bar { margin-bottom: 15px; }
+                .search-bar input {
+                    padding: 8px 12px;
+                    width: 300px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    font-size: 14px;
+                }
+
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    background: #fff;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+                    font-size: 13px;
+                }
+
+                thead tr { background: #2c3e50; color: #fff; text-align: left; }
+                thead th {
+                    padding: 11px 12px;
+                    white-space: nowrap;
+                    cursor: pointer;
+                    user-select: none;
+                }
+                thead th:hover { background: #3d5166; }
+
+                tbody tr:nth-child(even) { background: #f9f9f9; }
+                tbody tr:hover { background: #eaf3fb; }
+
+                td {
+                    padding: 9px 12px;
+                    border-bottom: 1px solid #eee;
+                    vertical-align: middle;
+                }
+
+                .badge {
+                    display: inline-block;
+                    padding: 2px 8px;
+                    border-radius: 10px;
+                    font-size: 11px;
+                    font-weight: bold;
+                }
+
+                .badge-blue  { background: #d0e8ff; color: #1a6fb3; }
+                .badge-green { background: #d4f5e2; color: #1a7a42; }
+
+                .size-col { text-align: right; }
+
+                .file-link {
+                    color: #1a6fb3;
+                    text-decoration: none;
+                    font-size: 11px;
+                    word-break: break-all;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 4px;
+                }
+                .file-link:hover {
+                    text-decoration: underline;
+                    color: #0d4a8a;
+                }
+                .file-link .play-icon {
+                    font-size: 14px;
+                    flex-shrink: 0;
+                }
+
+                .no-data {
+                    text-align: center;
+                    padding: 40px;
+                    color: #999;
+                    font-size: 15px;
+                }
+
+                .footer {
+                    margin-top: 15px;
+                    font-size: 12px;
+                    color: #aaa;
+                    text-align: right;
+                }
+
+                /* Video player modal */
+                .modal-overlay {
+                    display: none;
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.85);
+                    z-index: 9999;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }
+                .modal-overlay.active { display: flex; }
+
+                .modal-box {
+                    background: #1a1a1a;
+                    border-radius: 10px;
+                    padding: 16px;
+                    width: 90vw;
+                    max-width: 960px;
+                    position: relative;
+                }
+
+                .modal-title {
+                    color: #ccc;
+                    font-size: 12px;
+                    margin-bottom: 10px;
+                    word-break: break-all;
+                }
+
+                .modal-box video {
+                    width: 100%;
+                    max-height: 70vh;
+                    border-radius: 6px;
+                    background: #000;
+                    display: block;
+                }
+
+                .modal-close {
+                    position: absolute;
+                    top: 10px;
+                    right: 14px;
+                    background: none;
+                    border: none;
+                    color: #fff;
+                    font-size: 24px;
+                    cursor: pointer;
+                    line-height: 1;
+                }
+                .modal-close:hover { color: #f00; }
+
+                .open-tab-btn {
+                    margin-top: 10px;
+                    padding: 6px 14px;
+                    background: #1a6fb3;
+                    color: #fff;
+                    border: none;
+                    border-radius: 4px;
+                    font-size: 13px;
+                    cursor: pointer;
+                    align-self: flex-end;
+                }
+                .open-tab-btn:hover { background: #155a94; }
+            </style>
+        </head>
+        <body>
+
+        <h1>📹 Video Recordings</h1>
+        <div class="summary">
+            Total: <span><?= $totalCount ?></span> recording(s) &nbsp;|&nbsp;
+            Total Size: <span><?= $totalSize ?> MB</span>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search by patient code, username, date...">
+        </div>
+
+        <table id="recordingsTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">#</th>
+                    <th onclick="sortTable(1)">Username</th>
+                    <th onclick="sortTable(2)">Patient Code</th>
+                    <th onclick="sortTable(3)">Activity ID</th>
+                    <th onclick="sortTable(4)">Referring MD</th>
+                    <th onclick="sortTable(5)">Referred To</th>
+                    <th onclick="sortTable(6)">Date</th>
+                    <th onclick="sortTable(7)">Time Start</th>
+                    <th onclick="sortTable(8)">Time End</th>
+                    <th onclick="sortTable(9)" class="size-col">Size (MB)</th>
+                    <th onclick="sortTable(10)">Saved At</th>
+                    <th>File Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($recordings)): ?>
+                    <tr>
+                        <td colspan="12" class="no-data">No recordings found.</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($recordings as $index => $rec): ?>
+                        <tr>
+                            <td><?= $index + 1 ?></td>
+                            <td><span class="badge badge-blue"><?= htmlspecialchars($rec['username']) ?></span></td>
+                            <td><?= htmlspecialchars($rec['patient_code']) ?></td>
+                            <td><?= htmlspecialchars($rec['activity_id']) ?></td>
+                            <td><?= htmlspecialchars($rec['referring_md']) ?></td>
+                            <td><?= htmlspecialchars($rec['referred_to']) ?></td>
+                            <td><?= htmlspecialchars($rec['date']) ?></td>
+                            <td><?= htmlspecialchars($rec['time_start']) ?></td>
+                            <td><?= htmlspecialchars($rec['time_end']) ?></td>
+                            <td class="size-col"><span class="badge badge-green"><?= $rec['size_mb'] ?> MB</span></td>
+                            <td><?= htmlspecialchars($rec['created_at']) ?></td>
+                            <td>
+                                <a  class="file-link"
+                                    href="<?= htmlspecialchars($rec['stream_url']) ?>"
+                                    target="_blank"
+                                    title="Click to play in new tab">
+                                    <span class="play-icon">▶️</span>
+                                    <?= htmlspecialchars($rec['file_name']) ?>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <div class="footer">Generated at <?= date('Y-m-d H:i:s') ?></div>
+
+        <script>
+            function filterTable() {
+                const input = document.getElementById('searchInput').value.toLowerCase();
+                const rows  = document.querySelectorAll('#recordingsTable tbody tr');
+                rows.forEach(row => {
+                    row.style.display = row.textContent.toLowerCase().includes(input) ? '' : 'none';
+                });
+            }
+
+            let sortDir = {};
+            function sortTable(colIndex) {
+                const table = document.getElementById('recordingsTable');
+                const rows  = Array.from(table.querySelectorAll('tbody tr'));
+                sortDir[colIndex] = !sortDir[colIndex];
+
+                rows.sort((a, b) => {
+                    const aText = a.cells[colIndex]?.textContent.trim() || '';
+                    const bText = b.cells[colIndex]?.textContent.trim() || '';
+                    const aNum  = parseFloat(aText);
+                    const bNum  = parseFloat(bText);
+                    if (!isNaN(aNum) && !isNaN(bNum)) {
+                        return sortDir[colIndex] ? aNum - bNum : bNum - aNum;
+                    }
+                    return sortDir[colIndex]
+                        ? aText.localeCompare(bText)
+                        : bText.localeCompare(aText);
+                });
+
+                const tbody = table.querySelector('tbody');
+                rows.forEach(row => tbody.appendChild(row));
+            }
+        </script>
+
+        </body>
+        </html>
+        <?php
+        return response(ob_get_clean())->header('Content-Type', 'text/html');
+    }
+
+    public function recordingStream(Request $request)
+    {
+        $username = $request->query('username');
+        $fileName = $request->query('file');
+
+        // Sanitize inputs
+        $username = basename($username);
+        $fileName = basename($fileName);
+
+        $filePath = storage_path("app/recordings/{$username}/{$fileName}");
+
+        if (!file_exists($filePath)) {
+            abort(404, 'Recording not found.');
+        }
+
+        $fileSize = filesize($filePath);
+        $mimeType = 'video/webm';
+
+        // Handle range requests for video seeking
+        $start  = 0;
+        $end    = $fileSize - 1;
+        $status = 200;
+
+        $headers = [
+            'Content-Type'              => $mimeType,
+            'Accept-Ranges'             => 'bytes',
+            'Cache-Control'             => 'no-cache, no-store, must-revalidate',
+            'Content-Disposition'       => 'inline; filename="' . $fileName . '"',
+        ];
+
+        if ($request->hasHeader('Range')) {
+            $range = $request->header('Range');
+            preg_match('/bytes=(\d+)-(\d*)/', $range, $matches);
+
+            $start = (int) $matches[1];
+            $end   = isset($matches[2]) && $matches[2] !== '' ? (int) $matches[2] : $fileSize - 1;
+            $end   = min($end, $fileSize - 1);
+
+            $headers['Content-Range']  = "bytes {$start}-{$end}/{$fileSize}";
+            $headers['Content-Length'] = $end - $start + 1;
+            $status = 206;
+        } else {
+            $headers['Content-Length'] = $fileSize;
+        }
+
+        return response()->stream(function () use ($filePath, $start, $end) {
+            $stream = fopen($filePath, 'rb');
+            fseek($stream, $start);
+
+            $remaining = $end - $start + 1;
+            $chunkSize = 1024 * 256; // 256KB chunks
+
+            while ($remaining > 0 && !feof($stream)) {
+                $read = min($chunkSize, $remaining);
+                echo fread($stream, $read);
+                $remaining -= $read;
+                flush();
+            }
+
+            fclose($stream);
+        }, $status, $headers);
     }
 
 }
