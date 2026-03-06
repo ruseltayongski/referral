@@ -142,7 +142,7 @@ export default {
   },
   mounted() {
     console.log("USER PROP:", this.user);
-    this.CheckOnboardStatus();
+    this.handleEchoVideoCallLogs();
     // Validate baseUrl and tracking_id before proceeding
     // if (!this.baseUrl || !this.tracking_id) {
     //   console.error('Missing baseUrl or tracking_id:', { 
@@ -445,13 +445,14 @@ export default {
         });
       });
     },
-    async handleAfterVideoCallLogs() {
+    async handleEchoVideoCallLogs() {
       let self = this;
+      let isConnected = false;
       const pusherConnection = window.Echo.connector.pusher.connection;
       pusherConnection.bind('connected', () => {
+        isConnected = true;
         Echo.join(`video-call.${String(this.referral_code)+this.referring_md}`)
           .here(async users => {
-
             const data = {
               patient_code: this.referral_code,
               refer_status: this.referring_md == 'yes' ? 'referring' : 'accepting',
@@ -461,9 +462,9 @@ export default {
             }
     
             const response = await axios.post(`${this.baseUrl}/api/video/onboard/Saveuser`, data);
-            console.log("Users currently in channel:", users);
+            console.log("users", users);
             if(response.data.error) {
-              console.error("Error saving user session:", response.data.error);
+              console.error("Error saving user session:", response.data);
               // const msg = "Error saving user session";
               const msg = "You have a problem in accessing this video call, Please try again later.";
               self.showChannelFullMessage(msg);
@@ -498,24 +499,33 @@ export default {
               console.log("Join rejected:", error);
           });
       });
+      // console.log("pusher websocket details:", 'failed');
+      // // When connection fails or disconnected
+      // setTimeout(() => {
+      //   pusherConnection.bind('disconnected', () => {
+      //       console.log("WebSocket connection lost. Some features may not work.");
+      //       self.CheckOnboardStatus();
+      //   });
 
-      // When connection fails or disconnected
-      pusherConnection.bind('disconnected', () => {
-          console.log("WebSocket connection lost. Some features may not work.");
-          self.CheckOnboardStatus();
-      });
+      //   pusherConnection.bind('failed', () => {
+      //       console.log("WebSocket connection failed. Please check your internet or try refreshing.");
+      //       self.CheckOnboardStatus();
+      //   });
 
-      pusherConnection.bind('failed', () => {
-          console.log("WebSocket connection failed. Please check your internet or try refreshing.");
-          self.CheckOnboardStatus();
-      });
-
-      pusherConnection.bind('state_change', states => {
-          if (states.current === 'unavailable') {
-              console.log("WebSocket is currently unavailable. Some features may not work.");
-              self.CheckOnboardStatus();
-          }
-      });
+      //   pusherConnection.bind('unavailable', states => {
+      //       if (states.current === 'unavailable') {
+      //           console.log("WebSocket is currently unavailable. Some features may not work.");
+      //           self.CheckOnboardStatus();
+      //       }
+      //   });
+      // }, 40000); 
+   
+      setTimeout(() => {
+        if (!isConnected) {
+            console.log("WebSocket did not connect within 40s. Running fallback.");
+            self.CheckOnboardStatus();
+        }
+      }, 40000);
     
     },
     async CheckOnboardStatus() {
@@ -1493,7 +1503,7 @@ export default {
 
       document.body.appendChild(fullMessage);
 
-      // Remove the message after a few seconds
+      //Remove the message after a few seconds
       setTimeout(() => {
         fullMessage.remove();
         window.top.close();
@@ -1894,7 +1904,7 @@ export default {
         <div class="mainPic">
           <div class="remotePlayerDiv">
             <div id="calling">
-              <h3 v-if="!isUserJoined">Calling...</h3>
+               <h3 v-if="!isUserJoined">{{this.referring_md == "yes" ? "Calling..." : "Waiting..."}}...</h3>
             </div>
             <img :src="doctorUrl" class="remote-img" alt="Image1" />
           </div>

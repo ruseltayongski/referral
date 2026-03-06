@@ -1191,7 +1191,7 @@ class TelemedicineApiCtrl extends Controller
 
     }
 
-    public function saveOnboardUser(){
+    public function saveOnboardUser(Request $request){
         $patientCode = $request->patient_code;
         $userId = $request->user_id;
         DB::beginTransaction();
