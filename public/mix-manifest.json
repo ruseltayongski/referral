@@ -6,6 +6,7 @@
     "/js/app_login.js": "/js/app_login.js",
     "/js/app_video.js": "/js/app_video.js",
     "/js/app_video_pregnant.js": "/js/app_video_pregnant.js",
+    "/js/app_video_opcen.js": "/js/app_video_opcen.js",
     "/js/app_qr_referred.js": "/js/app_qr_referred.js",
     "/js/app_qr_edit.js": "/js/app_qr_edit.js",
     "/js/app_appointment.js": "/js/app_appointment.js",

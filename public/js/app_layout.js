@@ -22692,18 +22692,26 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         this.tracking_id = tracking_id;
         this.referral_code = code;
         this.playVideoCallAudio();
-        $(document).ready(function () {
-          // console.log( "ready!" );
-          $("#video-call-confirmation").modal('toggle');
-        });
+        // $(document).ready(function() {
+        //     // console.log( "ready!" );
+        //     $("#video-call-confirmation").modal('toggle');
+        // });
+        var $modal = $("#video-call-confirmation");
+        if (!$modal.hasClass("show")) {
+          $modal.modal("show");
+        }
       } else if (telemedicine == 0 || telemedicine == 1 && (status == "redirected" || status == "examined")) {
         this.tracking_id = tracking_id;
         this.referral_code = code;
         this.playVideoCallAudio();
-        $(document).ready(function () {
-          // console.log( "ready!" );
-          $("#video-call-confirmation").modal('toggle');
-        });
+        // $(document).ready(function() {
+        //     // console.log( "ready!" );
+        //     $("#video-call-confirmation").modal('toggle');
+        // });
+        var _$modal = $("#video-call-confirmation");
+        if (!_$modal.hasClass("show")) {
+          _$modal.modal("show");
+        }
       }
     },
     acceptCall: function acceptCall() {

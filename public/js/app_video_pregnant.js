@@ -22044,10 +22044,7 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     isVisible: Boolean,
     code: String,
-    userId: Number,
-    fetchUrl: String,
-    postUrl: String,
-    imageUrl: String
+    userId: Number
   },
   data: function data() {
     return {
@@ -22058,21 +22055,8 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    axios.defaults.baseURL = this.baseUrl;
     this.fetchMessages();
-    // console.log("Modal Mounted, fetching messages");
-
-    // window.Echo.channel("reco") // Replace "feedback-channel" with your channel name
-    //     .listen("SocketReco", (event) => {
-    //         console.log("my events socket reco incoming", event);
-    //     });
-
-    // Echo.join('reco').listen('SocketReco', function (event) {
-    //     console.log("my events socket reco incoming", event);
-    // });
-    // Echo.join('reco')
-    // .listen('SocketReco', (event) => {
-    //     console.log("my submet update", event);
-    // });
   },
   methods: {
     getImagePath: function getImagePath(image) {
@@ -22082,7 +22066,7 @@ __webpack_require__.r(__webpack_exports__);
     fetchMessages: function fetchMessages() {
       var _this = this;
       // console.log("path image url", this.baseUrl, 'userId::', this.userId);
-      axios.get("/".concat(this.fetchUrl, "/").concat(this.code, "?ajax=true")).then(function (response) {
+      axios.get("/".concat(this.code, "?ajax=true")).then(function (response) {
         _this.messages = response.data.messages;
         // console.log(" response",  response);
         _this.scrollToBottom();
@@ -22262,6 +22246,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       type: String,
       required: false,
       "default": ""
+    },
+    reason: {
+      type: Object,
+      required: false,
+      "default": function _default() {
+        return {};
+      }
     },
     pregnancy: {
       type: Array,
@@ -22794,12 +22785,18 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     return {
       prescriptionSubmitted: false,
       prescription_v2: "",
-      prescribed_activity_id: ""
+      prescribed_activity_id: "",
+      prescriptions: []
     };
   },
   created: function created() {
     var prescriptionCode = this.code;
-    this.fetchPrescriptions(prescriptionCode);
+    // Add validation before fetching
+    if (this.baseUrl && prescriptionCode) {
+      this.fetchPrescriptions(prescriptionCode);
+    } else {
+      console.warn('baseUrl or code prop is missing');
+    }
   },
   mounted: function mounted() {
     var _this = this;
@@ -22819,7 +22816,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         // Hyperlinking
         ['Source'] // View/edit HTML
         ],
-        removePlugins: 'image,table,media,forms' // Remove unnecessary tools
+        removePlugins: 'image,media,forms' // Remove unnecessary tools
       });
       CKEDITOR.config.versionCheck = false; // Disable version checking
 
@@ -22884,10 +22881,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(_this3.baseUrl, "/api/video/prescriptions/").concat(code));
+              if (!(!_this3.baseUrl || !code)) {
+                _context.next = 3;
+                break;
+              }
+              console.error('Missing required parameters for API call');
+              return _context.abrupt("return");
             case 3:
+              _context.prev = 3;
+              _context.next = 6;
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().get("".concat(_this3.baseUrl, "/api/video/prescriptions/").concat(code));
+            case 6:
               response = _context.sent;
               _this3.prescriptions = response.data.prescriptions;
               if (_this3.prescriptions) {
@@ -22903,17 +22907,17 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               } else {
                 console.error('No prescriptions available.');
               }
-              _context.next = 11;
+              _context.next = 14;
               break;
-            case 8:
-              _context.prev = 8;
-              _context.t0 = _context["catch"](0);
-              console.error('Error fetching prescriptions:', _context.t0);
             case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](3);
+              console.error('Error fetching prescriptions:', _context.t0);
+            case 14:
             case "end":
               return _context.stop();
           }
-        }, _callee, null, [[0, 8]]);
+        }, _callee, null, [[3, 11]]);
       }))();
     }
   }
@@ -25742,7 +25746,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", {
       key: i.code
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_61, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.code) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(i.description), 1 /* TEXT */)]);
-  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.notes_diagnoses && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_62, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_63, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Diagnosis/Impression: ")), _cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.notes_diagnoses), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.other_diagnoses && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [_cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Other Diagnoses: ")), _cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _ctx.reason && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_68, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_69, [_cache[39] || (_cache[39] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), _cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_70, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(_ctx.reason.reason), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.other_reason_referral && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_71, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_72, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), _cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.file_path && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_74, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_75, [$props.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_76, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_77, "File Attachment: ")), _cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.file_path, function (path, index) {
+  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.notes_diagnoses && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_62, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_63, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Diagnosis/Impression: ")), _cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_64, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.notes_diagnoses), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.other_diagnoses && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_65, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_66, [_cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Other Diagnoses: ")), _cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_67, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_diagnoses), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.reason && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_68, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_69, [_cache[39] || (_cache[39] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), _cache[40] || (_cache[40] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_70, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.reason.reason), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.form.other_reason_referral && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_71, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_72, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Reason for referral: ")), _cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", _hoisted_73, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.form.other_reason_referral), 1 /* TEXT */)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $props.file_path && $props.form_version != 'version2' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", _hoisted_74, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_75, [$props.file_path.length > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_76, "File Attachments: ")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_77, "File Attachment: ")), _cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.file_path, function (path, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", {
       key: index
     }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("a", {
@@ -26087,7 +26091,7 @@ var _hoisted_5 = {
   "class": "modal-footer"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\" data-v-c2b74386><h5 class=\"modal-title fs-5\" id=\"prescriptionModalLabel\" data-v-c2b74386><i class=\"bi bi-prescription\" data-v-c2b74386></i> Prescription</h5><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" data-v-c2b74386><span aria-hidden=\"true\" data-v-c2b74386>×</span></button></div>", 1)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"container\" data-v-c2b74386>Ex. <div class=\"row row-circle\" data-v-c2b74386><div class=\"circle1\" data-v-c2b74386>1</div><div class=\"circle3\" data-v-c2b74386>2</div><div class=\"circle4\" data-v-c2b74386>3</div><div class=\"circle5\" data-v-c2b74386>4</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386><span class=\"underline\" data-v-c2b74386>Paracetamol</span><span class=\"underline\" data-v-c2b74386>500mg</span><span class=\"underline\" data-v-c2b74386>#30</span><span class=\"underline\" data-v-c2b74386>Tablet</span></div></div></div><div class=\"row row-circle\" data-v-c2b74386><div class=\"circle6\" data-v-c2b74386>6</div><div class=\"circle7\" data-v-c2b74386>7</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386>Sig: <span class=\"underline\" data-v-c2b74386>1 Tab</span> for <span class=\"underline\" data-v-c2b74386>Every 4 hours</span></div></div></div></div><div style=\"border:solid 1px lightgray;margin-top:10px;padding:5px;\" data-v-c2b74386><!-- &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;generic_name&quot;&gt;1.) Generic Name:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;generic_name&quot; class=&quot;form-control form-control-sm&quot; &gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt;\r\n                        &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;   \r\n                                &lt;label for=&quot;brandname&quot;&gt;2.) Brand Name: (Optional)&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;brandname&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;dosage&quot;&gt;3.) Dosage:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;dosage&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt;\r\n                        &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;quantity&quot;&gt;4.) Quantity:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;number&quot; v-model=&quot;quantity&quot;  class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;formulation&quot;&gt;5.) Formulation:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;formulation&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt;\r\n                        &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;frequency&quot;&gt;6.) Frequency:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;frequency&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;duration&quot;&gt;7.) Duration:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;duration&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt; --><!--------------- Prescription using CKEditor ----------------------><div data-v-c2b74386><textarea id=\"editor\" data-v-c2b74386></textarea></div></div>", 2)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("FOR DUPLICATE PRESCRIPTION"), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.prescriptions, function (prescription, index) {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [_cache[6] || (_cache[6] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"modal-header\" data-v-c2b74386><h5 class=\"modal-title fs-5\" id=\"prescriptionModalLabel\" data-v-c2b74386><i class=\"bi bi-prescription\" data-v-c2b74386></i> Prescription</h5><button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\" data-v-c2b74386><span aria-hidden=\"true\" data-v-c2b74386>×</span></button></div>", 1)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [_cache[2] || (_cache[2] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"container\" data-v-c2b74386>Ex. <div class=\"row row-circle\" data-v-c2b74386><div class=\"circle1\" data-v-c2b74386>1</div><div class=\"circle3\" data-v-c2b74386>2</div><div class=\"circle4\" data-v-c2b74386>3</div><div class=\"circle5\" data-v-c2b74386>4</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386><span class=\"underline\" data-v-c2b74386>Paracetamol</span><span class=\"underline\" data-v-c2b74386>500mg</span><span class=\"underline\" data-v-c2b74386>#30</span><span class=\"underline\" data-v-c2b74386>Tablet</span></div></div></div><div class=\"row row-circle\" data-v-c2b74386><div class=\"circle6\" data-v-c2b74386>6</div><div class=\"circle7\" data-v-c2b74386>7</div></div><div class=\"row row-presLabel\" data-v-c2b74386><div class=\"col col-presLabel\" data-v-c2b74386><div class=\"col-Label\" data-v-c2b74386>Sig: <span class=\"underline\" data-v-c2b74386>1 Tab</span> for <span class=\"underline\" data-v-c2b74386>Every 4 hours</span></div></div></div></div><div style=\"border:solid 1px lightgray;margin-top:10px;padding:5px;\" data-v-c2b74386><!-- &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;generic_name&quot;&gt;1.) Generic Name:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;generic_name&quot; class=&quot;form-control form-control-sm&quot; &gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt;\r\n                        &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;   \r\n                                &lt;label for=&quot;brandname&quot;&gt;2.) Brand Name: (Optional)&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;brandname&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;dosage&quot;&gt;3.) Dosage:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;dosage&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt;\r\n                        &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;quantity&quot;&gt;4.) Quantity:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;number&quot; v-model=&quot;quantity&quot;  class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;formulation&quot;&gt;5.) Formulation:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;formulation&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt;\r\n                        &lt;div class=&quot;row prescription&quot;&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;frequency&quot;&gt;6.) Frequency:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;frequency&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                            &lt;div class=&quot;col&quot;&gt;\r\n                                &lt;label for=&quot;duration&quot;&gt;7.) Duration:&lt;span style=&quot;color:red;&quot;&gt;*&lt;/span&gt;&lt;/label&gt;\r\n                                &lt;input type=&quot;text&quot; v-model=&quot;duration&quot; class=&quot;form-control form-control-sm&quot;&gt;\r\n                            &lt;/div&gt;\r\n                        &lt;/div&gt; --><!--------------- Prescription using CKEditor ----------------------><div data-v-c2b74386><textarea id=\"editor\" data-v-c2b74386></textarea></div></div>", 2)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("FOR DUPLICATE PRESCRIPTION"), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.prescriptions, function (prescription, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: index,
       style: {

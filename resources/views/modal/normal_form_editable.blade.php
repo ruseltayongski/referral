@@ -303,7 +303,6 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                                 <div id="others_diagnosis" style="padding-top: 5px"></div>
                             </div>
                         </div><br>
-
                         <div class="row">
                             <div class="col-md-12">
                                 <small class="text-success"><b>REASON FOR REFERRAL:</b></small> <span class="text-red">*</span><br>
@@ -312,7 +311,9 @@ $appointed_date = $appoitment_sched[0]->appointed_date;
                                     <!-- <option value="-1">Other reason for referral</option> -->
                                       <option value="-1">Other...</option>
                                     @foreach($reason_for_referral as $reason_referral)
-                                    <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                        @if($reason_referral->id != 3)
+                                            <option value="{{ $reason_referral->id }}">{{ $reason_referral->reason }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>

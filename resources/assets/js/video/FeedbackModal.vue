@@ -92,9 +92,6 @@ export default {
     isVisible: Boolean,
     code: String,
     userId: Number,
-    fetchUrl: String,
-    postUrl: String,
-    imageUrl: String,
   },
   data() {
     return {
@@ -104,22 +101,9 @@ export default {
         messageData: null,
     };
   },
-    mounted() {
+  mounted() {
+    axios.defaults.baseURL = this.baseUrl;
     this.fetchMessages();
-    // console.log("Modal Mounted, fetching messages");
-
-    // window.Echo.channel("reco") // Replace "feedback-channel" with your channel name
-    //     .listen("SocketReco", (event) => {
-    //         console.log("my events socket reco incoming", event);
-    //     });
-
-    // Echo.join('reco').listen('SocketReco', function (event) {
-    //     console.log("my events socket reco incoming", event);
-    // });
-    // Echo.join('reco')
-    // .listen('SocketReco', (event) => {
-    //     console.log("my submet update", event);
-    // });
     
   },
   methods: {
@@ -131,7 +115,7 @@ export default {
   },
     fetchMessages() {
         // console.log("path image url", this.baseUrl, 'userId::', this.userId);
-        axios.get(`/${this.fetchUrl}/${this.code}?ajax=true`).then((response) => {
+        axios.get(`/${this.code}?ajax=true`).then((response) => {
         this.messages = response.data.messages;
         // console.log(" response",  response);
         this.scrollToBottom();

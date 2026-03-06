@@ -606,22 +606,24 @@
             </div>
             <div class="clearfix"></div>
         </div>
-        <div class="header" style="background-color:#59ab91;padding:15px;">
-            <div class="container">
-                    @if($user->level == 'opcen')
-                    <img src="{{ asset('resources/img/banner_711healthline2023v1.png?v=1') }}" class="img-responsive" />
-                @elseif($user->level == 'bed_tracker')
-                    <img src="{{ asset('resources/img/bed_banner.png?v=1') }}" class="img-responsive" />
-                @elseif($user->level == 'vaccine')
-                    <img src="{{ asset('resources/img/updated_vaccine_logo.png?v=1') }}" class="img-responsive" />
-                @else
-                    <img src="{{ asset('resources/img/banner_referral2023v1-01.png?v=1') }}" class="img-responsive" />
-                @endif
+        @if(!request()->is('dashboard'))
+            <div class="header" style="background-color:#59ab91;padding:15px;">
+                <div class="container">
+                        @if($user->level == 'opcen')
+                        <img src="{{ asset('resources/img/banner_711healthline2023v1.png?v=1') }}" class="img-responsive" />
+                    @elseif($user->level == 'bed_tracker')
+                        <img src="{{ asset('resources/img/bed_banner.png?v=1') }}" class="img-responsive" />
+                    @elseif($user->level == 'vaccine')
+                        <img src="{{ asset('resources/img/updated_vaccine_logo.png?v=1') }}" class="img-responsive" />
+                    @else
+                        <img src="{{ asset('resources/img/banner_referral2023v1-01.png?v=1') }}" class="img-responsive" />
+                    @endif
+                </div>
             </div>
-        </div>
-        <div class="container" id="container-nav">
-            @include('layouts.navbar')
-        </div>
+            <div class="container" id="container-nav">
+                @include('layouts.navbar')
+            </div>
+        @endif
     </nav>
 
     <div class="{{ (request()->is([
@@ -639,7 +641,8 @@
                                 'admin/report/covid/1','admin/report/covid/2','admin/report/covid/3','admin/report/covid/4',
                                 'report/walkin/1','report/walkin/2','report/walkin/3','report/walkin/4',
 
-                                'doctor/appointment/calendar'
+                                'doctor/appointment/calendar',
+                                'dashboard'
                                 ]))
                                 ? 'container-fluid'
                                 : 'container'

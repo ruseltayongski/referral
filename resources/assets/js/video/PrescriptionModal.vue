@@ -342,12 +342,18 @@
         return {
             prescriptionSubmitted: false,
             prescription_v2: "", 
-            prescribed_activity_id: ""
+            prescribed_activity_id: "",
+            prescriptions: [],
         };
     },
     created() {
         const prescriptionCode = this.code;
-        this.fetchPrescriptions(prescriptionCode);
+        // Add validation before fetching
+        if (this.baseUrl && prescriptionCode) {
+            this.fetchPrescriptions(prescriptionCode);
+        } else {
+            console.warn('baseUrl or code prop is missing');
+        }
     },
 
     mounted() {
@@ -363,7 +369,7 @@
                     ['Link'], // Hyperlinking
                     ['Source'] // View/edit HTML
                 ],
-                removePlugins: 'image,table,media,forms' // Remove unnecessary tools
+                removePlugins: 'image,media,forms' // Remove unnecessary tools
             });
 
             CKEDITOR.config.versionCheck = false; // Disable version checking
@@ -428,6 +434,11 @@
         },
 
         async fetchPrescriptions(code) {
+            if (!this.baseUrl || !code) {
+                console.error('Missing required parameters for API call');
+                return;
+            }
+
             try {
                 const response = await axios.get(`${this.baseUrl}/api/video/prescriptions/${code}`);
                 this.prescriptions = response.data.prescriptions;

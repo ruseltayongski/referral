@@ -22,7 +22,13 @@ $facility_exclude =  \App\Facility::select('id')
 <div id="navbar" class="navbar-collapse collapse" style="font-size: 8pt;">
   <ul class="nav navbar-nav">   <!-- id="navbar-main" -->
         @if(!$multi_faci && ($user->level=='doctor' || $user->level=='midwife' || $user->level=='medical_dispatcher' || $user->level=='nurse' || $user->level=='mayor' || $user->level=='dmo'))
-            <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
+            <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-home"></i> Dashboard</a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url('doctor') }}"><i class="fa fa-line-chart"></i> Dashboard</a></li>
+                    <li><a href="{{ url('dashboard') }}"><i class="fa fa-line-chart"></i> Bed Tracker Dashboard</a></li>
+                </ul>
+            </li>
             @if($user->level != 'mayor' && $user->level != 'dmo')
             <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-users"></i> Patients <span class="caret"></span></a>

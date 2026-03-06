@@ -1230,8 +1230,8 @@ class ApiController extends Controller
             ->where(function($q) use($facility_id){
                 $q->where("referred_from",$facility_id)->orWhere("referred_to",$facility_id);
             })
-            ->first();
-        return $activity ? json_encode(true) : json_encode(false);
+            ->exists();
+        return json_encode($activity);
     }
 
     public function api(Request $request)

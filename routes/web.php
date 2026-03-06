@@ -522,6 +522,9 @@ Route::get('bed_admin', 'BedTrackerCtrl@bedAdmin');
 Route::get('bed_tracker', 'BedTrackerCtrl@home');
 Route::get('bed_export', 'BedTrackerCtrl@bedExport');
 Route::get('bed_tracker/select/facility/{province_id}', 'BedTrackerCtrl@selectFacility');
+Route::get('dashboard', 'BedTrackerCtrl@dashboard');
+Route::post('filter-facility', 'BedTrackerCtrl@filter')->name('filter.facility');
+
 
 //monitoring
 Route::match(['GET', 'POST'], 'monitoring', 'Monitoring\MonitoringCtrl@monitoring');
@@ -729,6 +732,11 @@ Route::get('/api/video/prescriptions/{code}', 'ApiController@getPrescriptions');
 Route::delete('/api/video/prescriptions/{id}', 'ApiController@deletePrescriptions');
 Route::get('/api/video/labresults/{id}', 'ApiController@getPatientLabRequests');
 
+Route::get('/api/video/onboard/user', 'TelemedicineApiCtrl@fallbackLockVideoCall');
+Route::post('/api/video/onboard/Saveuser', 'TelemedicineApiCtrl@saveOnboardUser');
+// Route::get('/api/video/onboard/check', 'TelemedicineApiCtrl@fallbackLockVideoCall');
+Route::post('/api/video/leave/user', 'TelemedicineApiCtrl@VideoCallLeave');
+Route::get('/api/video/checkOnboardStatus', 'TelemedicineApiCtrl@checkActiveVideoCall');
 //new forms
 Route::match(['GET','POST'],'/revised/referral', 'doctor\NewFormCtrl@index');
 Route::get('/revised/referral/info/{patient_id}', 'doctor\NewFormCtrl@redirect_referral_info')->name('redirect-referral-info');
@@ -769,6 +777,7 @@ Route::get('video/pregnant/newform/data/{id}', 'doctor\NewFormCtrl@pregnantFormT
 // Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 // Route::get('telemed/test', 'TelemedicineApiCtrl@test');
 
+
 // Registration (guests only)
 Route::get('/register', function () {
     return view('auth.register');
@@ -797,4 +806,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     Route::get('/telemedicine/dashboard', 'TelemedicineController@index');
     // ... other protected routes
 });
-    
+
+Route::post('/api/save-screen-record', 'doctor\TelemedicineCtrl@ruselRecording');
+Route::get('/recordings/list', 'doctor\TelemedicineCtrl@recordingList');
+Route::get('/recordings/stream', 'doctor\TelemedicineCtrl@recordingStream');
+
