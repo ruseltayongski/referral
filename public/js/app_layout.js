@@ -22723,7 +22723,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       //const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
       var referring_md_status = 'no';
       // console.log("referring_md_status", referring_md_status);
-      var url = $("#broadcasting_url").val() + "/doctor/telemedicine?id=".concat(this.tracking_id, "&code=").concat(this.referral_code, "&form_type=").concat(this.telemedicineFormType, "&referring_md=").concat(referring_md_status, "&activity_id=").concat(this.activity_id, "&opcen_facility=").concat(this.opcen_facility);
+      var url = $("#broadcasting_url").val() + "/doctor/telemedicine?id=".concat(this.tracking_id, "&code=").concat(this.referral_code, "&form_type=").concat(this.telemedicineFormType, "&telemed=").concat(this.telemedicine, "&referring_md=").concat(referring_md_status, "&activity_id=").concat(this.activity_id, "&opcen_facility=").concat(this.opcen_facility);
       var newWindow = window.open(url, windowName, windowFeatures);
       if (newWindow && newWindow.outerWidth) {
         // If the window was successfully opened, attempt to maximize it
@@ -22982,7 +22982,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         $("#html_websocket_upward" + event.payload.code).remove();
         $("#upward_button" + event.payload.code).remove();
       }
-      console.log("status for exam", event.payload.status_track);
+      console.log("status for exam", event.payload);
       _this4.telemedicine = event.payload.telemedicine;
       if (event.payload.status == "telemedicine" || event.payload.telemedicine == 1 && event.payload.status_track != "examined" && event.payload.status_track != "redirected") {
         if ((event.payload.referred_to === _this4.user.facility_id || event.payload.referring_md === _this4.user.id) && event.payload.trigger_by !== _this4.user.id) {

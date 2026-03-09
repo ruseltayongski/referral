@@ -190,9 +190,9 @@ $user = Session::get('auth');
                 @endif
                 <h3 class="page-header">
                     @if($filterFef == '0')
-                     {{$title}} <!-- Incoming Patients  {{$option}} -->
+                     {{$title}}  <!-- Incoming Patients  {{$option}} -->
                     @else
-                        Incoming Consultation    
+                        Incoming Consultation   
                     @endif
                   
                 </h3>
@@ -405,13 +405,14 @@ $user = Session::get('auth');
 @section('js')
     @include('script.referral')
     <script>
-        function openTelemedicine(referred_from, tracking_id, referral_code, form_type, action_md, activity_id) {
+        function openTelemedicine(telemed,referred_from, tracking_id, referral_code, form_type, action_md, activity_id) {
             let windowName = 'NewWindow'; // Name of the new window
             let windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
             let userid = '{{ $user->id }}';
+            let accepting_md = 'yes';
             // const referring_md_status = userid == action_md ? 'no' : 'yes';
             const referring_md_status = 'no';
-            let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${tracking_id}&from_fact=${referred_from}&code=${referral_code}&form_type=${form_type}&referring_md=${referring_md_status}&activity_id=${activity_id}`;
+            let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${tracking_id}&from_fact=${referred_from}&code=${referral_code}&form_type=${form_type}"&telemed="${telemed}"&accepting_md=${accepting_md}"&referring_md=${referring_md_status}&activity_id=${activity_id}`;
            
             let newWindow = window.open(url, windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {

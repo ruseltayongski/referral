@@ -23238,6 +23238,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       referring_md: this.getUrlVars()["referring_md"],
       activity_id: this.getUrlVars()["activity_id"],
       get_referring_facility: this.getUrlVars()["from_fact"],
+      get_accepting_md: this.getUrlVars()["accepting_md"],
       options: {
         // Pass your App ID here.
         appId: "0fc02f6b7ce04fbcb1991d71df2dbe0d",
@@ -23315,7 +23316,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
   mounted: function mounted() {
     var _this = this;
     console.log("USER PROP:", this.user);
-    this.CheckOnboardStatus();
+    this.handleEchoVideoCallLogs();
     // Validate baseUrl and tracking_id before proceeding
     // if (!this.baseUrl || !this.tracking_id) {
     //   console.error('Missing baseUrl or tracking_id:', { 
@@ -23542,16 +23543,19 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         });
       });
     },
-    handleAfterVideoCallLogs: function handleAfterVideoCallLogs() {
+    handleEchoVideoCallLogs: function handleEchoVideoCallLogs() {
       var _this3 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var self, pusherConnection;
+        var self, isConnected, pusherConnection;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               self = _this3;
+              isConnected = false;
+              _this3.get_accepting_md = decodeURIComponent(_this3.get_accepting_md).replace(/"/g, '');
               pusherConnection = window.Echo.connector.pusher.connection;
               pusherConnection.bind('connected', function () {
+                isConnected = true;
                 Echo.join("video-call.".concat(String(_this3.referral_code) + _this3.referring_md)).here(/*#__PURE__*/function () {
                   var _ref = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee2(users) {
                     var data, response, msg, _msg;
@@ -23569,12 +23573,12 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                           return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this3.baseUrl, "/api/video/onboard/Saveuser"), data);
                         case 3:
                           response = _context2.sent;
-                          console.log("Users currently in channel:", users);
+                          console.log("users", users);
                           if (!response.data.error) {
                             _context2.next = 13;
                             break;
                           }
-                          console.error("Error saving user session:", response.data.error);
+                          console.error("Error saving user session:", response.data);
                           // const msg = "Error saving user session";
                           msg = "You have a problem in accessing this video call, Please try again later.";
                           self.showChannelFullMessage(msg);
@@ -23590,11 +23594,13 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                           self.allowJoining = false;
                           return _context2.abrupt("return");
                         case 20:
-                          if (_this3.get_referring_facility != 0) {
+                          if (_this3.get_referring_facility != 0 && _this3.get_accepting_md != 'yes') {
+                            console.log("yes ringing");
                             $(document).ready(function () {
                               self.ringingPhoneFunc();
                             });
                           } else {
+                            console.log("no ringing");
                             _this3.isUserJoined = true;
                           }
                           self.startBasicCall();
@@ -23616,22 +23622,32 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                   console.log("Join rejected:", error);
                 });
               });
+              // console.log("pusher websocket details:", 'failed');
+              // // When connection fails or disconnected
+              // setTimeout(() => {
+              //   pusherConnection.bind('disconnected', () => {
+              //       console.log("WebSocket connection lost. Some features may not work.");
+              //       self.CheckOnboardStatus();
+              //   });
 
-              // When connection fails or disconnected
-              pusherConnection.bind('disconnected', function () {
-                console.log("WebSocket connection lost. Some features may not work.");
-                self.CheckOnboardStatus();
-              });
-              pusherConnection.bind('failed', function () {
-                console.log("WebSocket connection failed. Please check your internet or try refreshing.");
-                self.CheckOnboardStatus();
-              });
-              pusherConnection.bind('state_change', function (states) {
-                if (states.current === 'unavailable') {
-                  console.log("WebSocket is currently unavailable. Some features may not work.");
+              //   pusherConnection.bind('failed', () => {
+              //       console.log("WebSocket connection failed. Please check your internet or try refreshing.");
+              //       self.CheckOnboardStatus();
+              //   });
+
+              //   pusherConnection.bind('unavailable', states => {
+              //       if (states.current === 'unavailable') {
+              //           console.log("WebSocket is currently unavailable. Some features may not work.");
+              //           self.CheckOnboardStatus();
+              //       }
+              //   });
+              // }, 40000); 
+              setTimeout(function () {
+                if (!isConnected) {
+                  console.log("WebSocket did not connect within 40s. Running fallback.");
                   self.CheckOnboardStatus();
                 }
-              });
+              }, 40000);
             case 6:
             case "end":
               return _context3.stop();
@@ -23648,7 +23664,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
             case 0:
               console.log("Activating backend fallback lock checking...");
               self = _this4;
-              console.log("get referring_from", _this4.get_referring_facility);
+              _this4.get_accepting_md = decodeURIComponent(_this4.get_accepting_md).replace(/"/g, '');
               data = {
                 patient_code: _this4.referral_code,
                 refer_status: _this4.referring_md == 'yes' ? 'referring' : 'accepting',
@@ -23669,7 +23685,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
                 msg = "You have a problem in accessing this video call, Please try again later.";
                 self.showChannelFullMessage(msg);
               } else if (!response.data.otherJoined) {
-                if (_this4.get_referring_facility != 0) {
+                if (_this4.get_referring_facility != 0 && _this4.get_accepting_md != 'yes') {
                   $(document).ready(function () {
                     self.ringingPhoneFunc();
                   });
@@ -24593,7 +24609,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       fullMessage.style.zIndex = "9999";
       document.body.appendChild(fullMessage);
 
-      // Remove the message after a few seconds
+      //Remove the message after a few seconds
       setTimeout(function () {
         fullMessage.remove();
         window.top.close();
@@ -30560,7 +30576,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     ref: "ringingPhone",
     src: $data.ringingPhoneUrl,
     loop: ""
-  }, null, 8 /* PROPS */, _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [!$data.isUserJoined ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h3", _hoisted_12, "Calling...")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, null, 8 /* PROPS */, _hoisted_5), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [!$data.isUserJoined ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("h3", _hoisted_12, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(this.referring_md == "yes" ? "Calling..." : "Waiting...") + "...", 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl,
     "class": "remote-img",
     alt: "Image1"

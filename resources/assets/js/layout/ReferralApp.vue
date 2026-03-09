@@ -1011,7 +1011,7 @@
                     //const referring_md_status = this.user.id === this.action_md ? 'no' : 'yes'
                     const referring_md_status = 'no'
                     // console.log("referring_md_status", referring_md_status);
-                    let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&referring_md=${referring_md_status}&activity_id=${this.activity_id}&opcen_facility=${this.opcen_facility}`
+                    let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${this.tracking_id}&code=${this.referral_code}&form_type=${this.telemedicineFormType}&telemed=${this.telemedicine}&referring_md=${referring_md_status}&activity_id=${this.activity_id}&opcen_facility=${this.opcen_facility}`
                     let newWindow = window.open(url, windowName, windowFeatures);
                     if (newWindow && newWindow.outerWidth) {
                         // If the window was successfully opened, attempt to maximize it
@@ -1334,7 +1334,7 @@
                         $("#html_websocket_upward" + event.payload.code).remove();
                         $("#upward_button" + event.payload.code).remove();
                     }
-                    console.log("status for exam", event.payload.status_track);
+                    console.log("status for exam", event.payload);
                     this.telemedicine = event.payload.telemedicine;
                     if(event.payload.status == "telemedicine" || (event.payload.telemedicine == 1 && event.payload.status_track != "examined" && event.payload.status_track != "redirected")) {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {

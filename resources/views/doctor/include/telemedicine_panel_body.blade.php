@@ -7,6 +7,7 @@
     $referred_track = \App\Activity::where("code",$row->code)->where("status","referred")->first();
     $declined_track = \App\Activity::where("code",$row->code) ->orderBy('updated_at', 'desc')->first();
     $referred_trackFollowSubOpdId = \App\Activity::where("code",$row->code)->where("status","referred")->first();
+    $telemedicine = \App\Tracking::Select('telemedicine')->where("code",$referred_track->code)->first();
     $queue_referred = \App\Activity::where('code',$row->code)->where('status','queued')->orderBy('id','desc')->first()->remarks;
     $referred_seen_track = \App\Seen::where("code",$referred_track->code)
         ->where("facility_id",$referred_track->referred_to)
@@ -234,7 +235,7 @@
             </div>
         </div>
         <div class="stepper-item @if($referred_examined_track && !$referred_declined_track) completed @endif" id="examined_progress{{ $referred_track->code.$referred_track->id }}">
-            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}','{{ $referred_track->referred_from }}','{{$referred_treated_track}}','{{$referred_redirected_track}}','{{$referred_upward_track}}','{{$referred_followup_track}}','{{$user->facility_id}}','{{$referred_declined_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+            <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $referred_track->code }}', '{{ $referred_accepted_hold->first()->action_md }}', '{{ $referred_track->referring_md }}', '{{ $referred_track->id }}', '{{ $row->type }}', '{{ $referred_track->referred_to }}','{{ $referred_track->referred_from }}','{{$referred_treated_track}}','{{$referred_redirected_track}}','{{$referred_upward_track}}','{{$referred_followup_track}}','{{$user->facility_id}}','{{$telemedicine->telemedicine}}','{{$referred_declined_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
             <div class="step-name">Consultation</div>
         </div>
         <div class="stepper-item stepper-item-prescription @if(!$referred_declined_track &&($referred_examined_track || $referred_prescription_track)) completed @endif" id="prescribed_progress{{ $referred_track->code.$referred_track->id }}">
@@ -312,6 +313,7 @@
     @if(count($followup_track) > 0)
         @foreach($followup_track as $follow_track)
             <?php
+            $telemedicine = \App\Tracking::Select('telemedicine')->where("code",$follow_track->code)->first();
             $subOpd_follow = \App\Activity::where('code',$follow_track->code)->whereIn('status', ['followup', 'rebooked'])->where("referred_from",$follow_track->referred_from)
                 ->where("created_at",">=",$follow_track->created_at)->get();
            
@@ -454,7 +456,7 @@
                     </div>
                 </div>
                 <div class="stepper-item @if($follow_examined_track && $followup_track[$position_count]->status != 'rebooked') completed @endif" id="examined_progress{{ $follow_track->code.$follow_track->id }}">
-                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}','{{ $follow_track->referred_from }}','{{$follow_treated_track}}','{{$follow_redirected_track}}','{{$follow_upward_track}}','{{$follow_followup_track}}','{{$user->facility_id}}','{{$follow_declined_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
+                    <div class="step-counter step-counter-examined" onclick="telemedicineExamined('{{ $row->id }}', '{{ $follow_track->code }}', '{{ $follow_accepted_hold->first()->action_md }}', '{{ $follow_track->referring_md }}', '{{ $follow_track->id }}', '{{ $row->type }}', '{{ $follow_track->referred_to }}','{{ $follow_track->referred_from }}','{{$follow_treated_track}}','{{$follow_redirected_track}}','{{$follow_upward_track}}','{{$follow_followup_track}}','{{$user->facility_id}}','{{$telemedicine->telemedicine}}','{{$follow_declined_track}}')"><i class="fa fa-building" aria-hidden="true"></i></div>
                     <div class="step-name">Consultation</div>
                 </div>
               
