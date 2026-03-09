@@ -23528,6 +23528,7 @@ __webpack_require__.r(__webpack_exports__);
       departments: [],
       // File uploads
       uploadedFiles: [],
+      isSubmitting: false,
       privacyChecked: false,
       privacyAccepted: false,
       requestOpenHandler: null,
@@ -23869,6 +23870,7 @@ __webpack_require__.r(__webpack_exports__);
       // Submit to backend
       var baseUrl = typeof $ !== 'undefined' && $("#broadcasting_url").length ? $("#broadcasting_url").val() : window.location.origin;
       var url = "".concat(baseUrl, "/api/doctor/refer/normal");
+      this.isSubmitting = true;
       $.ajax({
         url: url,
         type: 'POST',
@@ -23876,12 +23878,10 @@ __webpack_require__.r(__webpack_exports__);
         processData: false,
         contentType: false,
         success: function success(response) {
-          Lobibox.notify('success', {
-            msg: 'Referral submitted successfully.'
-          });
-          _this5.closeModal();
+          window.location.href = "".concat(baseUrl, "/doctor/referred?filterRef=1");
         },
         error: function error(_error3) {
+          _this5.isSubmitting = false;
           console.error('Referral submit error:', _error3);
           Lobibox.notify('error', {
             msg: 'Failed to submit referral. Please try again.'
@@ -24495,6 +24495,16 @@ var _hoisted_56 = {
 var _hoisted_57 = {
   "class": "col-md-12 text-right"
 };
+var _hoisted_58 = {
+  type: "submit",
+  "class": "btn btn-success"
+};
+var _hoisted_59 = {
+  key: 0,
+  "class": "loading-overlay",
+  role: "status",
+  "aria-live": "polite"
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     type: "button",
@@ -24849,12 +24859,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     }
   }, _cache[46] || (_cache[46] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-times"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Close ")])), _cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    type: "submit",
-    "class": "btn btn-success"
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Close ")])), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", _hoisted_58, [_cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "fa fa-check"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Submit ")], -1 /* HOISTED */))])])], 32 /* NEED_HYDRATION */)])])])])], 64 /* STABLE_FRAGMENT */);
+  }, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.isSubmitting ? 'Submitting...' : 'Submit'), 1 /* TEXT */)])])])], 32 /* NEED_HYDRATION */)])])])]), $data.isSubmitting ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_59, _cache[48] || (_cache[48] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "loading-card"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "loading-spinner"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "loading-text"
+  }, "Submitting referral, please wait...")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -25030,7 +25043,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.input-sm[data-v-183c8533] {\r\n  height: 30px;\r\n  font-size: 12px;\r\n  padding: 5px 10px;\n}\nlabel[data-v-183c8533] {\r\n  display: block;\r\n  margin-bottom: 3px;\n}\n.file-upload-box[data-v-183c8533] {\r\n  width: 120px;\r\n  height: 120px;\r\n  border: 2px dashed #ccc;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  position: relative;\r\n  background-color: #f9f9f9;\r\n  transition: all 0.3s;\n}\n.file-upload-box[data-v-183c8533]:hover {\r\n  border-color: #28a745;\r\n  background-color: #f0f9f4;\n}\n.file-upload-box.uploaded[data-v-183c8533] {\r\n  border-style: solid;\r\n  border-color: #28a745;\r\n  background-color: #fff;\n}\n.modal-body[data-v-183c8533] {\r\n  max-height: 100vh;\r\n  overflow-y: auto;\n}\n.table[data-v-183c8533] {\r\n  font-size: 12px;\n}\n.form-control[data-v-183c8533]:focus {\r\n  border-color: #17a2b8;\r\n  box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.input-sm[data-v-183c8533] {\r\n  height: 30px;\r\n  font-size: 12px;\r\n  padding: 5px 10px;\n}\nlabel[data-v-183c8533] {\r\n  display: block;\r\n  margin-bottom: 3px;\n}\n.file-upload-box[data-v-183c8533] {\r\n  width: 120px;\r\n  height: 120px;\r\n  border: 2px dashed #ccc;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 10px;\r\n  cursor: pointer;\r\n  position: relative;\r\n  background-color: #f9f9f9;\r\n  transition: all 0.3s;\n}\n.file-upload-box[data-v-183c8533]:hover {\r\n  border-color: #28a745;\r\n  background-color: #f0f9f4;\n}\n.file-upload-box.uploaded[data-v-183c8533] {\r\n  border-style: solid;\r\n  border-color: #28a745;\r\n  background-color: #fff;\n}\n.modal-body[data-v-183c8533] {\r\n  max-height: 100vh;\r\n  overflow-y: auto;\n}\n.table[data-v-183c8533] {\r\n  font-size: 12px;\n}\n.form-control[data-v-183c8533]:focus {\r\n  border-color: #17a2b8;\r\n  box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);\n}\n.loading-overlay[data-v-183c8533] {\r\n  position: fixed;\r\n  inset: 0;\r\n  background: rgba(0, 0, 0, 0.45);\r\n  z-index: 3000;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  padding: 20px;\n}\n.loading-card[data-v-183c8533] {\r\n  width: 100%;\r\n  max-width: 360px;\r\n  background: #fff;\r\n  border-radius: 8px;\r\n  padding: 22px 20px;\r\n  text-align: center;\r\n  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);\n}\n.loading-spinner[data-v-183c8533] {\r\n  width: 44px;\r\n  height: 44px;\r\n  margin: 0 auto 12px;\r\n  border: 4px solid #d9f0e3;\r\n  border-top-color: #28a745;\r\n  border-radius: 50%;\r\n  animation: spin-183c8533 0.9s linear infinite;\n}\n.loading-text[data-v-183c8533] {\r\n  font-size: 14px;\r\n  color: #2f2f2f;\r\n  font-weight: 600;\n}\n@keyframes spin-183c8533 {\nfrom {\r\n    transform: rotate(0deg);\n}\nto {\r\n    transform: rotate(360deg);\n}\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

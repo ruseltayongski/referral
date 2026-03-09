@@ -286,13 +286,20 @@
                   <i class="fa fa-times"></i> Close
                 </button>
                 <button type="submit" class="btn btn-success">
-                  <i class="fa fa-check"></i> Submit
+                  <i class="fa fa-check"></i> {{ isSubmitting ? 'Submitting...' : 'Submit' }}
                 </button>
               </div>
             </div>
           </form>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div v-if="isSubmitting" class="loading-overlay" role="status" aria-live="polite">
+    <div class="loading-card">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Submitting referral, please wait...</div>
     </div>
   </div>
 </template>
@@ -339,6 +346,8 @@ export default {
       
       // File uploads
       uploadedFiles: [],
+
+      isSubmitting: false,
 
       privacyChecked: false,
       privacyAccepted: false,
@@ -718,6 +727,8 @@ export default {
         : window.location.origin;
       const url = `${baseUrl}/api/doctor/refer/normal`;
 
+      this.isSubmitting = true;
+
       $.ajax({
         url: url,
         type: 'POST',
@@ -725,12 +736,10 @@ export default {
         processData: false,
         contentType: false,
         success: (response) => {
-          Lobibox.notify('success', {
-            msg: 'Referral submitted successfully.'
-          });
-          this.closeModal();
+          window.location.href = `${baseUrl}/doctor/referred?filterRef=1`;
         },
         error: (error) => {
+          this.isSubmitting = false;
           console.error('Referral submit error:', error);
           Lobibox.notify('error', {
             msg: 'Failed to submit referral. Please try again.'
@@ -862,5 +871,51 @@ label {
 .form-control:focus {
   border-color: #17a2b8;
   box-shadow: 0 0 0 0.2rem rgba(23, 162, 184, 0.25);
+}
+
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.loading-card {
+  width: 100%;
+  max-width: 360px;
+  background: #fff;
+  border-radius: 8px;
+  padding: 22px 20px;
+  text-align: center;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+}
+
+.loading-spinner {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 12px;
+  border: 4px solid #d9f0e3;
+  border-top-color: #28a745;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.loading-text {
+  font-size: 14px;
+  color: #2f2f2f;
+  font-weight: 600;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>

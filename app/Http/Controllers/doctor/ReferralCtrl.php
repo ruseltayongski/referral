@@ -29,6 +29,7 @@ use App\Feedback;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
+use App\Http\Controllers\TelemedicineApiCtrl;
 use App\Icd;
 use App\Icd10;
 use App\Issue;
@@ -1369,6 +1370,10 @@ class ReferralCtrl extends Controller
         );
 
         $activity = Activity::create($data);
+        if ($track->telemedicine == 1 && $referred_from == 0) {
+            $telemedicine_controller = new TelemedicineApiCtrl();
+            $telemedicine_controller->sendConfirmationEmail($track->appointmentId, $track->patient_id, 'accepted', asset("doctor/telemedicine") . "?id={$track->id}&from_fact=0&code={$track->code}&form_type=normal&referring_md=yes&activity_id={$activity->id}" );
+        }
 
         //start websocket
         $latest_activity = Activity::where("code",$track->code)->where(function($query) {

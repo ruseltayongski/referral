@@ -30,7 +30,8 @@ use App\Department;
 use App\PatientForm;
 use App\ReasonForReferral;
 use App\Http\Controllers\doctor\PatientCtrl;  
-
+use Mail;
+use App\Mail\AppointmentMail;
 class TelemedicineApiCtrl extends Controller
 {
     public function login(Request $req)
@@ -456,19 +457,79 @@ class TelemedicineApiCtrl extends Controller
             "redirect_track" => $redirect_track,
             "position" => 0,
             "subOpdId" => $subOPD_Id,
-            'telemedicine' => $json['telemedicine'] ?? 0,
+            'telemedicine' => $json['telemedicine'] ?? 0,   
         ];
-
+        $this->sendConfirmationEmail($json['appointmentId'], $patient_id, 'pending');
         broadcast(new NewReferral($new_referral));
     }
 
+    public function sendConfirmationEmail($appointment_id, $patient_id, $status, $video_link = null)
+    {
 
+        $data =  AppointmentSchedule::where('id', $appointment_id)->first();
+        $doctor_name = User::select('fname','mname','lname')
+                    ->where('id', $data->created_by)->first();
+        $facility_data = Facility::select('name','address')
+                    ->where('id', $data->facility_id)->first();
+        $patient_name = Patients::select('fname','mname','lname')
+                    ->where('id', $patient_id)->first();
+        $patient_email = User::select('email')
+                    ->where('patient_id', $patient_id)->first();
+        
+        // Format date and time for readability
+        $formattedDate = 'N/A';
+        $formattedTime = 'N/A';
+        
+        if ($data->appointed_date) {
+            try {
+                $formattedDate = Carbon::parse($data->appointed_date)->format('F j, Y');
+            } catch (\Exception $e) {
+                $formattedDate = $data->appointed_date;
+            }
+        }
+        
+        if ($data->appointed_time) {
+            try {
+                $formattedTime = Carbon::parse($data->appointed_time)->format('g:i A');
+            } catch (\Exception $e) {
+                $formattedTime = $data->appointed_time;
+            }
+        }
+        
+        $appointment = [
+            'patient_name' => ucfirst($patient_name->fname) . ' ' . ucfirst($patient_name->mname) . ' ' . ucfirst($patient_name->lname),
+            'date' => $formattedDate,
+            'time' => $formattedTime,
+            'doctor' => 'Dr. ' . ucfirst($doctor_name->fname ?? '') . ' ' . ucfirst($doctor_name->mname ?? '') . ' ' . ucfirst($doctor_name->lname ?? ''),
+            'facility' => $facility_data->name ?? 'N/A',
+            'address' => $facility_data->address ?? 'N/A',
+            'status' => $status
+        ];
+        $appointment_accepted = [
+            'patient_name' => ucfirst($patient_name->fname) . ' ' . ucfirst($patient_name->mname) . ' ' . ucfirst($patient_name->lname),
+            'date' => $formattedDate,
+            'time' => $formattedTime,
+            'doctor' => 'Dr. ' . ucfirst($doctor_name->fname ?? '') . ' ' . ucfirst($doctor_name->mname ?? '') . ' ' . ucfirst($doctor_name->lname ?? ''),
+            'facility' => $facility_data->name ?? 'N/A',
+            'address' => $facility_data->address ?? 'N/A',
+            'status' => $status,
+            'video_link' => $video_link
+        ];
+        if ($status === 'pending') {
+            Mail::to($patient_email->email)->send(new AppointmentMail($appointment));
+        }else if ($status === 'accepted') {
+            Mail::to($patient_email->email)->send(new AppointmentMail($appointment_accepted));
+        }
+        
+
+        return "Email Sent";
+    }
 
     public function referPatient(Request $req, $type)
     {
         // Decode JSON payload manually
         $json = $req->all();
-        // return $json;
+
         $user = (object) [
             'id' => $json['referring_md'] ?? null,
             'facility_id' => $json['referring_facility'] ?? null,
