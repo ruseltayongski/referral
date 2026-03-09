@@ -869,7 +869,8 @@
     }
 
     function telemedicineExamined(tracking_id, code, action_md, referring_md, activity_id, form_tpe, referred_to,referred_from, alreadyTreated, alreadyReferred, alreadyupward, alreadyfollow, ownfacility,telemedicine,declined) {
-        console.log("tracking_id from the 30 minutes", tracking_id);
+
+        console.log("tracking telemedicine", telemedicine);
         if(telemedicine === 0){
            
             console.log("please trigger this ")
@@ -888,7 +889,7 @@
             $.post(url,json,function(){});
             var windowName = 'NewWindow'; // Name of the new window
             var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
+            var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&telemed="+telemedicine+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {
                 // If the window was successfully opened, attempt to maximize it
                 newWindow.moveTo(0, 0);
@@ -974,7 +975,7 @@
                 $.post(url,json,function(){});
                 var windowName = 'NewWindow'; // Name of the new window
                 var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-                var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&from_fact="+referred_from+"&code="+code+"&form_type="+form_tpe+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
+                var newWindow = window.open("{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&from_fact="+referred_from+"&code="+code+"&form_type="+form_tpe+"&telemed="+telemedicine+"&referring_md=yes&activity_id="+activity_id, windowName, windowFeatures);
                 if (newWindow && newWindow.outerWidth) {
                     // If the window was successfully opened, attempt to maximize it
                     newWindow.moveTo(0, 0);

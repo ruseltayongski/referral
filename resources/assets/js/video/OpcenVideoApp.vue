@@ -66,6 +66,7 @@ export default {
       referring_md: this.getUrlVars()["referring_md"],
       activity_id: this.getUrlVars()["activity_id"],
       get_referring_facility: this.getUrlVars()["from_fact"],
+      get_accepting_md: this.getUrlVars()["accepting_md"],
       options: {
         // Pass your App ID here.
         appId: "0fc02f6b7ce04fbcb1991d71df2dbe0d",
@@ -448,6 +449,7 @@ export default {
     async handleEchoVideoCallLogs() {
       let self = this;
       let isConnected = false;
+      this.get_accepting_md = decodeURIComponent(this.get_accepting_md).replace(/"/g, '');
       const pusherConnection = window.Echo.connector.pusher.connection;
       pusherConnection.bind('connected', () => {
         isConnected = true;
@@ -460,7 +462,7 @@ export default {
               user_id: this.user.id,
               facility_id: this.user.facility_id
             }
-    
+            
             const response = await axios.post(`${this.baseUrl}/api/video/onboard/Saveuser`, data);
             console.log("users", users);
             if(response.data.error) {
@@ -477,11 +479,13 @@ export default {
               return;
             }
             else {
-              if(this.get_referring_facility != 0){
+              if(this.get_referring_facility != 0 && this.get_accepting_md != 'yes'){
+                console.log("yes ringing");
                 $(document).ready(function () {
                   self.ringingPhoneFunc();
                 });       
               }else{
+                console.log("no ringing");
                 this.isUserJoined = true;
               }
            
@@ -519,7 +523,6 @@ export default {
       //       }
       //   });
       // }, 40000); 
-   
       setTimeout(() => {
         if (!isConnected) {
             console.log("WebSocket did not connect within 40s. Running fallback.");
@@ -531,7 +534,7 @@ export default {
     async CheckOnboardStatus() {
       console.log("Activating backend fallback lock checking...");  
       let self = this;
-      console.log("get referring_from", this.get_referring_facility);
+      this.get_accepting_md = decodeURIComponent(this.get_accepting_md).replace(/"/g, '');
       const data = {
         patient_code: this.referral_code,
         refer_status: this.referring_md == 'yes' ? 'referring' : 'accepting',
@@ -548,7 +551,7 @@ export default {
         const msg = "You have a problem in accessing this video call, Please try again later.";
         self.showChannelFullMessage(msg);
       } else if(!response.data.otherJoined) {
-        if(this.get_referring_facility != 0){
+        if(this.get_referring_facility != 0 && this.get_accepting_md != 'yes'){
           $(document).ready(function () {
             self.ringingPhoneFunc();
           });       

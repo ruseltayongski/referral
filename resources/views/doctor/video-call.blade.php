@@ -49,7 +49,7 @@
         @include('layouts.app_script')
         @include('script.feedback')        
     </head>
-    
+ 
     <body>
         <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
         @if($telemedicine == 1)
