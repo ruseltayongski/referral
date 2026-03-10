@@ -656,6 +656,17 @@ Route::post('admin/appointment/details', 'admin\ApptCtrl@appointmentDetails');
 Route::post('admin/appointment/addOngoing', 'admin\ApptCtrl@addOngoing');
 Route::post('admin/appointment/resolve', 'admin\ApptCtrl@apptResolve');
 Route::get('admin/appointment/export', 'admin\ApptCtrl@exportAppointment');
+Route::get('appointment/{id}/download-ics', function ($id) {
+    $appointment = \App\Appointment::findOrFail($id);
+    
+    return response()->streamDownload(
+        function () use ($appointment) {
+            echo $appointment->generateIcsContent();
+        },
+        'appointment.ics',
+        ['Content-Type' => 'text/calendar; charset=utf-8']
+    );
+})->name('appointment.download-ics');
 
 // feedback
 Route::match(['GET', 'POST'], 'admin/user_feedback', 'admin\ApptCtrl@feedback');

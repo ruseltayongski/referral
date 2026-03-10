@@ -459,7 +459,11 @@ class TelemedicineApiCtrl extends Controller
             "subOpdId" => $subOPD_Id,
             'telemedicine' => $json['telemedicine'] ?? 0,   
         ];
-        $this->sendConfirmationEmail($json['appointmentId'], $patient_id, 'pending');
+
+        $isPatientUserExist = User::where('patient_id', $patient_id)->exists();
+        if($isPatientUserExist){
+            $this->sendConfirmationEmail($json['appointmentId'], $patient_id, 'pending');
+        }
         broadcast(new NewReferral($new_referral));
     }
 
@@ -513,7 +517,8 @@ class TelemedicineApiCtrl extends Controller
             'facility' => $facility_data->name ?? 'N/A',
             'address' => $facility_data->address ?? 'N/A',
             'status' => $status,
-            'video_link' => $video_link
+            'video_link' => $video_link,
+            'appointment_id' => $appointment_id
         ];
         if ($status === 'pending') {
             Mail::to($patient_email->email)->send(new AppointmentMail($appointment));

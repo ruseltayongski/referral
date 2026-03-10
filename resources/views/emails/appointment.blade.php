@@ -185,6 +185,15 @@
             transition: all 0.3s ease;
             border: none;
             cursor: pointer;
+            color: #ffffff !important;
+        }
+
+        .btn:link,
+        .btn:visited,
+        .btn:hover,
+        .btn:active {
+            color: #ffffff !important;
+            text-decoration: none !important;
         }
         
         .btn-primary {
@@ -206,6 +215,16 @@
         .btn-secondary:hover {
             background-color: #27ae60;
             color: white;
+            text-decoration: none;
+        }
+
+        .btn-calendar {
+            background-color: #4285F4;
+            color: white;
+        }
+        
+        .btn-calendar:hover {
+            background-color: #357ae8;
             text-decoration: none;
         }
         
@@ -296,10 +315,15 @@
             <span class="status-badge accepted"> {{ data_get($appointment, 'status', 'N/A') }} Status</span>
             @endif
             <h2>Telemedicine Appointment Requested</h2>
-            
+            @if(data_get($appointment, 'status') === 'pending')
             <p>
                 Your telemedicine consultation request has been successfully submitted and is awaiting doctor acceptance. We will notify you once the doctor has accepted your appointment request.
             </p>
+            @elseif(data_get($appointment, 'status') === 'accepted')
+            <p>
+                Your telemedicine consultation request has been accepted by the doctor. Please find your appointment details below and use the provided video link to join the consultation at the scheduled time.
+            </p>
+            @endif
             
             <!-- Your Request Details -->
             <div class="appointment-details">
@@ -328,7 +352,44 @@
                     <span class="detail-value">{{ data_get($appointment, 'address', 'N/A') }}</span>
                 </div>
             </div>
-            
+
+            @if(data_get($appointment, 'status') === 'accepted')
+            @php
+                $dateValue = data_get($appointment, 'date');
+                $timeValue = data_get($appointment, 'time');
+                $startTimestamp = strtotime(trim($dateValue . ' ' . $timeValue));
+                $endTimestamp = $startTimestamp ? strtotime('+1 hour', $startTimestamp) : false;
+
+                $googleCalendarUrl = '#';
+                if ($startTimestamp && $endTimestamp) {
+                    $calendarStart = gmdate('Ymd\\THis\\Z', $startTimestamp);
+                    $calendarEnd = gmdate('Ymd\\THis\\Z', $endTimestamp);
+                    $calendarTitle = 'Telemedicine Appointment - ' . data_get($appointment, 'doctor', 'Doctor');
+                    $calendarLocation = trim(data_get($appointment, 'facility', '') . ' - ' . data_get($appointment, 'address', ''));
+                    $calendarDescription = "Patient: " . data_get($appointment, 'patient_name', 'N/A') . "\n"
+                        . "Video Link: " . data_get($appointment, 'video_link', 'N/A') . "\n"
+                        . "Status: " . strtoupper(data_get($appointment, 'status', 'N/A'));
+
+                    $googleCalendarUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+                        . '&text=' . rawurlencode($calendarTitle)
+                        . '&dates=' . rawurlencode($calendarStart . '/' . $calendarEnd)
+                        . '&details=' . rawurlencode($calendarDescription)
+                        . '&location=' . rawurlencode($calendarLocation);
+                }
+            @endphp
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ data_get($appointment, 'video_link', '#') }}" class="btn btn-primary" style="color: #ffffff !important; text-decoration: none;">Join Video Call</a>
+            </div>
+            <div class="action-buttons">
+                <a href="{{ route('appointment.download-ics', data_get($appointment, 'appointment_id')) }}" download="appointment.ics">Download Calendar</a>
+            </div>
+            <div class="action-buttons">
+                <a href="{{ $googleCalendarUrl }}" target="_blank" rel="noopener">Add to Google Calendar</a>
+            </div>
+            @endif
+        <!-- Additional Info -->
+        <div class="divider"></div>
             <!-- Info Box -->
             <div class="info-box">
                 <strong>What happens next?</strong><br><br>
@@ -337,15 +398,7 @@
                 • Video conference link<br>
                 • Option to save the appointment to your calendar
             </div>
-            
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <a href="{{ data_get($appointment, 'video_link', '#') }}" class="btn btn-primary">Video Link</a>
-            </div>
-            
-            <!-- Additional Info -->
-            <div class="divider"></div>
-            
+        
             <p style="font-size: 13px; color: #666; margin-top: 20px;">
                 <strong>Need to change something?</strong><br>
                 If you need to modify your request, you can do so from your dashboard before the doctor accepts it. Once accepted, you'll need to reschedule through the confirmed appointment.
