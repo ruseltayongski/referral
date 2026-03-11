@@ -428,6 +428,7 @@ $facility_exclude =  \App\Facility::select('id')
     let recoFetchUrl = "{{ url('reco/fetch') }}";
     let recoBaseUrl = "{{ url('reco') }}";
     let recoUnreadCount = 0;
+    let recoPayloadMap = {};
     function fetchRecoNotifications() {
 
         $("#reco_notifications").html(`
@@ -454,18 +455,19 @@ $facility_exclude =  \App\Facility::select('id')
                 let html = "";
                
                 UnreadNotifications.forEach(item => {
-                    console.log("item", item);
                     let time = timeAgo(item.feedback_created_at);
                     let patient = (item.patient_name || "").replace(/<\/?[^>]+(>|$)/g, "");
-                    let message = (item.message || "");
-                    message = message.length > 50 ? message.substring(0,50) + "…" : message;
 
+                    let message = (item.message || "");
+                    let cleanmessages = message.length > 80 ? message.substring(0, 80) + "…" : message;
                     let position = item.user_level == 'doctor' ? "Dr. " : "";
                     let notifId = item.code; 
+                    recoPayloadMap[notifId] = item;
                     html += `
-                        <a href="javascript:void(0)"
+                        <a href="javascript:void(0)" 
                             data-id="${notifId}"
-                            onclick='openReco(${JSON.stringify(item)})'class="referral-item ${!item.reco_seen ? 'unread' : ''}">
+                            onclick="openReco(this)"
+                            class="referral-item ${!item.reco_seen ? 'unread' : ''}">
                             <div class="referral-left">
                                 <img src="${profilePic}" class="referral-avatar" alt="Profile Pic">
                             </div>
@@ -477,7 +479,7 @@ $facility_exclude =  \App\Facility::select('id')
                                     </span>
                                     <span class="referral-time">${time}</span>
                                 </div>
-                                <div class="referral-message">${message}</div>
+                                <div class="referral-message">${cleanmessages}</div>
                                 <div class="referral-meta">
                                     ${position}${item.referring_md}
                                     <span class="referral-department badge">${item.department_name || ''}</span>
@@ -497,16 +499,15 @@ $facility_exclude =  \App\Facility::select('id')
     }
     // real time data listening using Laravel Echo and Pusher
     window.addEventListener("reco-notify", function(event) {
-        console.log("Received reco notification:", event.detail);
-
         let payload = event.detail.payload;
         let patient = (payload.patient_name || "").replace(/<\/?[^>]+(>|$)/g, "");
         let notifId = payload.code;
-
+        recoPayloadMap[notifId] = payload;
         let existing = $(`#reco_notifications a[data-id='${notifId}']`);
 
         let message = (payload.message || "");
-        message = message.length > 50 ? message.substring(0,50) + "…" : message;
+        message = message.length > 80 ? message.substring(0, 80) + "…" : message;
+
         let time = payload.date_now ? timeAgo(payload.date_now) : "Just now";
         let position = payload.user_level == 'doctor' ? "Dr. " : "";
 
@@ -515,7 +516,8 @@ $facility_exclude =  \App\Facility::select('id')
         html += `
                 <a href="javascript:void(0)"
                     data-id="${notifId}"
-                    onclick='openReco(${JSON.stringify(payload)})'class="referral-item ${!payload.reco_seen ? 'unread' : ''}">
+                    onclick="openReco(this)"
+                    class="referral-item ${!payload.reco_seen ? 'unread' : ''}">
                     <div class="referral-left">
                         <img src="${profilePic}" class="referral-avatar" alt="Profile Pic">
                     </div>
@@ -536,14 +538,6 @@ $facility_exclude =  \App\Facility::select('id')
                 </a>
             `;
 
-        // if(existing.length){
-        //     existing.remove();
-        //     $("#reco_notifications").prepend(html).hide().fadeIn(200);
-        // }else{
-        //     $("#reco_notifications").prepend(html).hide().fadeIn(200);
-        //     var reco_count_here = parseInt($('#reco_count').text(), 10);
-        //     $("#reco_count").text(reco_count_here);
-        // }
         existing.remove();
 
         $("#reco_notifications")
@@ -556,11 +550,18 @@ $facility_exclude =  \App\Facility::select('id')
                 $("#reco_count").text(reco_count_here);
             }
     });
-
-    function openReco(payload){
+    // not real time
+    function openReco(element){
+        // let payload = JSON.parse(
+        //     decodeURIComponent(element.dataset.payload)
+        // );
+        let notifId = element.dataset.id;
+        let payload = recoPayloadMap[notifId];
+    
         sessionStorage.setItem('reco_payload', JSON.stringify(payload));
         window.location.href = recoBaseUrl;
     }
+    
 
 </script>
 <style>
@@ -575,9 +576,12 @@ $facility_exclude =  \App\Facility::select('id')
     }
 
     .referral-menu{
-        width: 400px;
+        /* width: 400px;
         padding:0;
-        border-radius:8px;
+        border-radius:8px; */
+        width:400px;
+        max-width:400px;
+        overflow-x:hidden;
     }
 
     /* Header */
@@ -614,6 +618,7 @@ $facility_exclude =  \App\Facility::select('id')
         border-bottom:1px solid #f0f0f0;
         text-decoration:none;
         transition: background 0.2s;
+        overflow:hidden;
     }
     .referral-item:hover{
         background:#e6f0ff;
@@ -657,9 +662,13 @@ $facility_exclude =  \App\Facility::select('id')
 
     /* Message */
     .referral-message{
-        font-size:13px;
-        color:#555;
-        margin-bottom:5px;
+        font-size: 13px;
+        color: #555;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;      
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     /* Meta */

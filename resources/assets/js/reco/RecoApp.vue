@@ -46,7 +46,6 @@
         },
         mounted(){
             const storedReco = sessionStorage.getItem('reco_payload');
-            console.log("stored reco payload:", storedReco);
             if(storedReco) {
                 const payload = JSON.parse(storedReco);
                 this.selectRec(payload);
@@ -56,7 +55,6 @@
         methods: {
             async fetchMessages() {
                 await axios.get('reco/fetch').then(response => {    
-                    console.log("total reco::",response.data);
                     const dataMap = response.data.map((item) => {
                         // const message = item.message.replace(/<\/?[^>]+(>|$)/g, "") 
                         const message = item.message ? item.message.replace(/<\/?[^>]+(>|$)/g, "") : '';
@@ -72,7 +70,6 @@
                 });
             },
             async selectRec(payload) {
-                console.log("selected reco:", payload);
                 this.select_rec = payload
 
                 this.reco_seen_new = {

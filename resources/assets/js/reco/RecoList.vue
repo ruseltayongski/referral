@@ -41,7 +41,7 @@
         },
         methods: {
             selectReco(rec) {
-                console.log("rec selected xx", rec);
+                // console.log("rec selected xx", rec);
                 window.globalFiles = [];
                 try {
                     this.reco.map((item) => item.reco_id === rec.reco_id ? item.reco_seen = 1 : item )
