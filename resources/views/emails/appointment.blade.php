@@ -28,10 +28,6 @@
             padding: 30px 20px;
             margin: 16px auto 18px;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             color: white;
             position: relative;
             overflow: hidden;
@@ -41,13 +37,7 @@
         .header-content {
             position: relative;
             z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             text-align: center;
-            gap: 10px;
-            flex-wrap: wrap;
         }
         
         .header-logo {
@@ -55,9 +45,9 @@
             height: 50px;
             background: white;
             border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 0 auto 10px;
+            text-align: center;
+            line-height: 50px;
             font-weight: bold;
             color: #4a9b7f;
             font-size: 24px;
@@ -337,7 +327,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Requested Time</span>
-                    <span class="detail-value">{{ data_get($appointment, 'time', 'N/A') }}</span>
+                    <span class="detail-value">{{ data_get($appointment, 'time_from', 'N/A') }} - {{ data_get($appointment, 'time_to', 'N/A') }}</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Preferred Doctor</span>
@@ -356,9 +346,10 @@
             @if(data_get($appointment, 'status') === 'accepted')
             @php
                 $dateValue = data_get($appointment, 'date');
-                $timeValue = data_get($appointment, 'time');
-                $startTimestamp = strtotime(trim($dateValue . ' ' . $timeValue));
-                $endTimestamp = $startTimestamp ? strtotime('+1 hour', $startTimestamp) : false;
+                $timeFromValue = data_get($appointment, 'time_from');
+                $timeToValue = data_get($appointment, 'time_to');
+                $startTimestamp = strtotime(trim($dateValue . ' ' . $timeFromValue));
+                $endTimestamp = $startTimestamp ? strtotime(trim($dateValue . ' ' . $timeToValue)) : false;
 
                 $googleCalendarUrl = '#';
                 if ($startTimestamp && $endTimestamp) {
@@ -366,9 +357,7 @@
                     $calendarEnd = gmdate('Ymd\\THis\\Z', $endTimestamp);
                     $calendarTitle = 'Telemedicine Appointment - ' . data_get($appointment, 'doctor', 'Doctor');
                     $calendarLocation = trim(data_get($appointment, 'facility', '') . ' - ' . data_get($appointment, 'address', ''));
-                    $calendarDescription = "Patient: " . data_get($appointment, 'patient_name', 'N/A') . "\n"
-                        . "Video Link: " . data_get($appointment, 'video_link', 'N/A') . "\n"
-                        . "Status: " . strtoupper(data_get($appointment, 'status', 'N/A'));
+                    $calendarDescription = "Video Link: " . data_get($appointment, 'video_link', 'N/A') . "\n";
 
                     $googleCalendarUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
                         . '&text=' . rawurlencode($calendarTitle)

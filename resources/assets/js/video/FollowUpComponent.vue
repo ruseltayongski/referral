@@ -1,11 +1,16 @@
-<script>
-import { defineComponent } from '@vue/composition-api'
+<template>
+    <div class="follow-up-component">
+        <button class="btn btn-primary">Follow Up</button>
+    </div>
+</template>
 
-export default defineComponent({
-    props:{
+<script>
+export default {
+    name: 'FollowUpComponent',
+    props: {
       
     }
-})
+}
 </script>
 
 <style scoped>
@@ -14,9 +19,3 @@ export default defineComponent({
         border-color: #ffffff;
     }
 </style>
-
-<template>
-    <div class="follow-up-component">
-        <button class="btn btn-primary">Follow Up</button>
-    </div>
-</template>

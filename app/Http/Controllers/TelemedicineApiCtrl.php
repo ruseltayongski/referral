@@ -467,6 +467,11 @@ class TelemedicineApiCtrl extends Controller
         broadcast(new NewReferral($new_referral));
     }
 
+    public function checkIfUserIsPatient(Request $request, $patient_id){
+        $isPatientUserExist = User::where('patient_id', $patient_id)->exists();
+        return response()->json(['is_patient_user_exist' => $isPatientUserExist]);
+    }
+
     public function sendConfirmationEmail($appointment_id, $patient_id, $status, $video_link = null)
     {
 
@@ -482,7 +487,8 @@ class TelemedicineApiCtrl extends Controller
         
         // Format date and time for readability
         $formattedDate = 'N/A';
-        $formattedTime = 'N/A';
+        $formattedTimeFrom = 'N/A';
+        $formattedTimeTo = 'N/A';
         
         if ($data->appointed_date) {
             try {
@@ -494,16 +500,24 @@ class TelemedicineApiCtrl extends Controller
         
         if ($data->appointed_time) {
             try {
-                $formattedTime = Carbon::parse($data->appointed_time)->format('g:i A');
+                $formattedTimeFrom = Carbon::parse($data->appointed_time)->format('g:i A');
             } catch (\Exception $e) {
-                $formattedTime = $data->appointed_time;
+                $formattedTimeFrom = $data->appointed_time;
+            }
+        }
+        if ($data->appointedTime_to) {
+            try {
+                $formattedTimeTo = Carbon::parse($data->appointedTime_to)->format('g:i A');
+            } catch (\Exception $e) {
+                $formattedTimeTo = $data->appointedTime_to;
             }
         }
         
         $appointment = [
             'patient_name' => ucfirst($patient_name->fname) . ' ' . ucfirst($patient_name->mname) . ' ' . ucfirst($patient_name->lname),
             'date' => $formattedDate,
-            'time' => $formattedTime,
+            'time_from' => $formattedTimeFrom,
+            'time_to' => $formattedTimeTo,
             'doctor' => 'Dr. ' . ucfirst($doctor_name->fname ?? '') . ' ' . ucfirst($doctor_name->mname ?? '') . ' ' . ucfirst($doctor_name->lname ?? ''),
             'facility' => $facility_data->name ?? 'N/A',
             'address' => $facility_data->address ?? 'N/A',
@@ -512,7 +526,8 @@ class TelemedicineApiCtrl extends Controller
         $appointment_accepted = [
             'patient_name' => ucfirst($patient_name->fname) . ' ' . ucfirst($patient_name->mname) . ' ' . ucfirst($patient_name->lname),
             'date' => $formattedDate,
-            'time' => $formattedTime,
+            'time_from' => $formattedTimeFrom,
+            'time_to' => $formattedTimeTo,
             'doctor' => 'Dr. ' . ucfirst($doctor_name->fname ?? '') . ' ' . ucfirst($doctor_name->mname ?? '') . ' ' . ucfirst($doctor_name->lname ?? ''),
             'facility' => $facility_data->name ?? 'N/A',
             'address' => $facility_data->address ?? 'N/A',
