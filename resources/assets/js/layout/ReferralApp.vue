@@ -144,7 +144,13 @@
                     self.$refs.audioVideo.pause();
                 },60000);
             },
-            notifyReco(code, feedback_count, redirect_track) {
+            notifyReco(code, feedback_count, redirect_track,notifyPayload) {
+                console.log("modal not open pass data", notifyPayload);
+
+                window.dispatchEvent(new CustomEvent("reco-notify", {
+                    detail: notifyPayload
+                }));
+
                 let content = '<button class=\'btn btn-xs btn-info\' onclick=\'viewReco($(this))\' data-toggle=\'modal\'\n' +
                     '                               data-target=\'#feedbackModal\'\n' +
                     '                               data-code="'+code+'" ' +
@@ -1252,10 +1258,10 @@
                                 let objDiv = document.getElementById(event.payload.code);
                                 objDiv.scrollTop = objDiv.scrollHeight;
                                 if (!objDiv.scrollTop)
-                                    this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_trck)
+                                    this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_trck,event)
                             } catch(err){
                                 // console.log("modal not open");
-                                this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track)
+                                this.notifyReco(event.payload.code, event.payload.feedback_count, event.payload.redirect_track,event)
                             }
                         }
                     });
