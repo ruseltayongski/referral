@@ -6,10 +6,12 @@ use App\Activity;
 use App\Baby;
 use App\Facility;
 use App\Feedback;
+use App\Patients;
 use App\PatientForm;
 use App\PregnantForm;
 use App\Tracking;
 use App\User;
+use App\Department;
 use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -267,23 +269,40 @@ class ParamCtrl extends Controller
     public static function feedbackContent($code,$sender,$msg,$files_path){
         $sender = User::find($sender);
         $user = Session::get("auth");
+        $department_name = Department::find($sender->department_id)->description;
 
         $redirect_track = asset("doctor/referred?referredCode=").$code;
+        $tracking = Tracking::where("code", $code)->first();
+        $patient_fullname = "";
 
+        if($tracking){
+            $patient = Patients::find($tracking->patient_id);
+            if($patient){
+                $patient_fullname = $patient->fname . " " . $patient->mname . " " . $patient->lname;
+            }
+        }
+       
         $name_sender = ucwords(mb_strtolower($sender->fname))." ".ucwords(mb_strtolower($sender->lname));
-        $date_now = date('d M h:i a');
+        // $date_now = date('d M h:i a');
+        $date_now = date('Y-m-d H:i:s');
         $feedback_count = Feedback::where("code",$code)->count();
+        $reco_id = Feedback::where("code", $code)->latest()->value('id');
 
         return [
             "code" => $code,
             "picture" => url('resources/img/ro7.png'),
             "feedback_count" => $feedback_count,
+            "department_name" => $department_name,
             "sender_facility" => $sender->facility_id,
             "user_facility" => $user->facility_id,
+            "user_level" => $user->level,
+            "reco_id" => $reco_id,
             "message" => $msg,
             "filepath" => $files_path,
             "userid_sender" => $sender->id,
+            "patient_name" => $patient_fullname ?? "N/A",
             "name_sender" => $name_sender,
+            "reco_seen" => '',
             "facility_sender" => Facility::find($sender->facility_id)->name,
             "date_now" => $date_now,
             "redirect_track" => $redirect_track

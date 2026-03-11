@@ -268,7 +268,35 @@ $facility_exclude =  \App\Facility::select('id')
         @endif
         @if(!$multi_faci && $user->level != 'vaccine')
             {{--<li><a href="{{ asset('public/manual/Ereferral-User-Manual.pdf') }}" target="_blank"><i class="fa fa-file-pdf-o"></i> E-REFERRAL Manual </a></li>--}}
-            <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> BAS</a></li>
+            <!-- <li class="dropdown-submenu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-wechat"></i> Reco Messages
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></li>
+                </ul>
+            </li> -->
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" onclick='fetchRecoNotifications()'>
+                    <i class="fa fa-bell"></i> Reco
+                    <span class="badge badge-danger" id="reco_count">{{ $reco_count }}</span>
+                </a>
+                <ul class="dropdown-menu referral-menu shadow-lg">
+                    <!-- HEADER -->
+                    <li class="referral-header">
+                        <i class="fa fa-info-circle"></i> Reco Messages
+                    </li>
+                    <!-- SCROLLABLE BODY -->
+                    <li>
+                        <div class="referral-scroll" id="reco_notifications"></div>
+                    </li>
+                    <!-- FOOTER -->
+                    <li class="referral-footer">
+                        <a href="{{ url('reco') }}">View All Notifications</a>
+                    </li>
+                </ul>
+            </li>
+
             @if($user->level == 'admin')
                 <li><a href="{{ url('patient/walkin') }}"><i class="fa fa-odnoklassniki"></i> Walk-in Patients Monitoring </a></li>
             @endif
@@ -280,14 +308,15 @@ $facility_exclude =  \App\Facility::select('id')
                 More <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-                <li class="dropdown-submenu">
+                <!-- <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-wechat"></i> Reco Messages
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{{ url('reco') }}"><i class="fa fa-wechat"></i> ReCo <span class="badge bg-green"><span id="reco_count">{{ $reco_count }}</span> New</span></a></li>
                     </ul>
-                </li>
+                </li> -->
+                <li><a href="{{ url('bed_admin') }}"><i class="fa fa-bed"></i> BAS</a></li>
                 <li class="dropdown-submenu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-user-md"></i> Who's Online
@@ -368,4 +397,317 @@ $facility_exclude =  \App\Facility::select('id')
 
     }); 
 
+    function timeAgo(datetime){
+        const created = new Date(datetime.replace(' ', 'T'));
+        const now = new Date();
+
+        const seconds = Math.floor((now - created) / 1000);
+
+        const minutes = Math.floor(seconds / 60);
+        const hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        const daysGrammar = days > 1 ? "days" : "day";
+        if(minutes < 1){
+            return "Just now";
+        }
+
+        if(minutes < 60){
+            return minutes + " min ago";
+        }
+
+        if(hours < 24){
+            return hours + " hr ago";
+        }
+
+        return days + " " + daysGrammar + " ago";
+    
+    }
+    
+    let profilePic = "{{ url('resources/img/sender.png') }}";
+    let recoFetchUrl = "{{ url('reco/fetch') }}";
+    let recoBaseUrl = "{{ url('reco') }}";
+    let recoUnreadCount = 0;
+    function fetchRecoNotifications() {
+
+        $("#reco_notifications").html(`
+            <div class="notification-loader">
+                <i class="fa fa-spinner"></i> Loading notifications...
+            </div>
+        `);
+
+        $.ajax({
+            url: recoFetchUrl,
+            type: "GET",
+            success: function(response){
+                let user_id = {{ $user->id }};
+                
+                let count_reco_unread = response
+                    .filter(item => !item.reco_seen && user_id != item.userid_sender)
+                    .length;
+
+                let UnreadNotifications = response
+                    .filter(item => !item.reco_seen && user_id != item.userid_sender)
+                    .slice(0, 7);
+
+                let count = UnreadNotifications.length;
+                let html = "";
+               
+                UnreadNotifications.forEach(item => {
+                    console.log("item", item);
+                    let time = timeAgo(item.feedback_created_at);
+                    let patient = (item.patient_name || "").replace(/<\/?[^>]+(>|$)/g, "");
+                    let message = (item.message || "");
+                    message = message.length > 50 ? message.substring(0,50) + "…" : message;
+
+                    let position = item.user_level == 'doctor' ? "Dr. " : "";
+                    let notifId = item.code; 
+                    html += `
+                        <a href="javascript:void(0)"
+                            data-id="${notifId}"
+                            onclick='openReco(${JSON.stringify(item)})'class="referral-item ${!item.reco_seen ? 'unread' : ''}">
+                            <div class="referral-left">
+                                <img src="${profilePic}" class="referral-avatar" alt="Profile Pic">
+                            </div>
+                            <div class="referral-right">
+                                <div class="referral-top">
+                                    <span class="referral-patient">
+                                        ${patient}
+                                        <span class="patient-tag">Patient</span>
+                                    </span>
+                                    <span class="referral-time">${time}</span>
+                                </div>
+                                <div class="referral-message">${message}</div>
+                                <div class="referral-meta">
+                                    ${position}${item.referring_md}
+                                    <span class="referral-department badge">${item.department_name || ''}</span>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+
+                $("#reco_notifications").html(html);
+                recoUnreadCount = count_reco_unread; 
+                $("#reco_count").text(count_reco_unread);
+
+                $("#reco_notifications").removeClass("loading");
+            }
+        });
+    }
+    // real time data listening using Laravel Echo and Pusher
+    window.addEventListener("reco-notify", function(event) {
+        console.log("Received reco notification:", event.detail);
+
+        let payload = event.detail.payload;
+        let patient = (payload.patient_name || "").replace(/<\/?[^>]+(>|$)/g, "");
+        let notifId = payload.code;
+
+        let existing = $(`#reco_notifications a[data-id='${notifId}']`);
+
+        let message = (payload.message || "");
+        message = message.length > 50 ? message.substring(0,50) + "…" : message;
+        let time = payload.date_now ? timeAgo(payload.date_now) : "Just now";
+        let position = payload.user_level == 'doctor' ? "Dr. " : "";
+
+        let html = "";
+
+        html += `
+                <a href="javascript:void(0)"
+                    data-id="${notifId}"
+                    onclick='openReco(${JSON.stringify(payload)})'class="referral-item ${!payload.reco_seen ? 'unread' : ''}">
+                    <div class="referral-left">
+                        <img src="${profilePic}" class="referral-avatar" alt="Profile Pic">
+                    </div>
+                    <div class="referral-right">
+                        <div class="referral-top">
+                            <span class="referral-patient">
+                                ${patient}
+                                <span class="patient-tag">Patient</span>
+                            </span>
+                            <span class="referral-time">${time}</span>
+                        </div>
+                        <div class="referral-message">${message}</div>
+                        <div class="referral-meta">
+                            ${position}${payload.name_sender}
+                            <span class="referral-department badge">${payload.department_name || ''}</span>
+                        </div>
+                    </div>
+                </a>
+            `;
+
+        // if(existing.length){
+        //     existing.remove();
+        //     $("#reco_notifications").prepend(html).hide().fadeIn(200);
+        // }else{
+        //     $("#reco_notifications").prepend(html).hide().fadeIn(200);
+        //     var reco_count_here = parseInt($('#reco_count').text(), 10);
+        //     $("#reco_count").text(reco_count_here);
+        // }
+        existing.remove();
+
+        $("#reco_notifications")
+            .prepend(html)
+            .hide()
+            .fadeIn(200);
+
+        if(!existing.length){
+                var reco_count_here = parseInt($('#reco_count').text(), 10);
+                $("#reco_count").text(reco_count_here);
+            }
+    });
+
+    function openReco(payload){
+        sessionStorage.setItem('reco_payload', JSON.stringify(payload));
+        window.location.href = recoBaseUrl;
+    }
+
 </script>
+<style>
+    .patient-tag{
+        font-size:10px;
+        background:#28a745;
+        color:#fff;
+        padding:2px 5px;
+        border-radius:4px;
+        margin-left:5px;
+        font-weight:500;
+    }
+
+    .referral-menu{
+        width: 400px;
+        padding:0;
+        border-radius:8px;
+    }
+
+    /* Header */
+    .referral-header{
+        padding:12px 15px;
+        font-weight:600;
+        background:#f1f3f6;
+        border-bottom:1px solid #ddd;
+        font-size:14px;
+        display:flex;
+        align-items:center;
+        gap:5px;
+    }
+
+    /* Scrollable area */
+    .referral-scroll{
+        max-height:350px;
+        overflow-y:auto;
+    }
+
+    /* Scrollbar styling */
+    .referral-scroll::-webkit-scrollbar{
+        width:6px;
+    }
+    .referral-scroll::-webkit-scrollbar-thumb{
+        background: rgba(0,0,0,0.2);
+        border-radius:3px;
+    }
+
+    /* Notification item */
+    .referral-item{
+        display:flex;
+        padding:10px 12px;
+        border-bottom:1px solid #f0f0f0;
+        text-decoration:none;
+        transition: background 0.2s;
+    }
+    .referral-item:hover{
+        background:#e6f0ff;
+    }
+    .referral-item.unread{
+        background:#dceaff;
+        font-weight:600;
+    }
+
+    /* Avatar */
+    .referral-left{
+        flex:0 0 40px;
+        margin-right:10px;
+    }
+    .referral-avatar{
+        width:40px;
+        height:40px;
+        border-radius:50%;
+        object-fit:cover;
+    }
+
+    /* Right content */
+    .referral-right{
+        flex:1;
+    }
+
+    /* Top row */
+    .referral-top{
+        display:flex;
+        justify-content:space-between;
+        margin-bottom:3px;
+    }
+    .referral-patient{
+        font-size:14px;
+        font-weight:600;
+    }
+    .referral-time{
+        font-size:12px;
+        color:#999;
+    }
+
+    /* Message */
+    .referral-message{
+        font-size:13px;
+        color:#555;
+        margin-bottom:5px;
+    }
+
+    /* Meta */
+    .referral-meta{
+        font-size:12px;
+        color:#888;
+        display:flex;
+        gap:5px;
+        flex-wrap:wrap;
+    }
+    .referral-meta .referral-department {
+        background-color: #007bff;
+        color: #fff;
+        font-size:10px;;
+        padding:2px 5px;
+        border-radius:4px;
+        margin-left:5px;
+        font-weight:500;
+    }
+
+    /* Footer */
+    .referral-footer{
+        border-top:1px solid #eee;
+        text-align:center;
+    }
+    .referral-footer a{
+        display:block;
+        padding:10px;
+        font-weight:600;
+        color:#007bff;
+    }
+
+    /* notification reload effect */
+   .notification-loader{
+        padding:20px;
+        text-align:center;
+        color:#888;
+        font-size:13px;
+    }
+
+    .notification-loader i{
+        animation: spin 0.8s linear infinite;
+        margin-right:5px;
+    }
+
+    @keyframes spin{
+        from{transform:rotate(0deg);}
+        to{transform:rotate(360deg);}
+    }
+
+</style>

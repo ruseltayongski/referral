@@ -2402,7 +2402,7 @@ class ReferralCtrl extends Controller
         $doc = User::find($user->id);
         $name = ucwords(mb_strtolower($doc->fname)) . " " . ucwords(mb_strtolower($doc->lname));
         
-       $html = view('doctor.feedback_append', [
+        $html = view('doctor.feedback_append', [
             "name"     => $name,
             "facility" => Facility::find($user->facility_id)->name,
             "message"  => $req->message
