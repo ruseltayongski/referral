@@ -412,7 +412,7 @@ $user = Session::get('auth');
             let accepting_md = 'yes';
             // const referring_md_status = userid == action_md ? 'no' : 'yes';
             const referring_md_status = 'no';
-            let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${tracking_id}&from_fact=${referred_from}&code=${referral_code}&form_type=${form_type}"&telemed=${telemed}&accepting_md=${accepting_md}"&referring_md=${referring_md_status}&activity_id=${activity_id}`;
+            let url = $("#broadcasting_url").val()+`/doctor/telemedicine?id=${tracking_id}&from_fact=${referred_from}&code=${referral_code}&form_type=${form_type}&telemed=${telemed}&accepting_md=${accepting_md}&referring_md=${referring_md_status}&activity_id=${activity_id}`;
            
             let newWindow = window.open(url, windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {
