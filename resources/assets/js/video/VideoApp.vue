@@ -1581,8 +1581,8 @@ export default {
         callback: function ($this, type, ev) {
           if (type == "yes") {
             const endorseUpward = {
-              code: self.referral_code || referralCode,
-              form_type: self.form_type || formType,
+              code: self.referral_code,
+              form_type: self.form_type,
             };
             axios
               .post(`${self.baseUrl}/api/video/upward`, endorseUpward)
