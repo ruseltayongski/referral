@@ -5,9 +5,9 @@
                 <div class="col-md-4">
                     <aside>
                         <header>
-                            <input type="text" class="form-control" @keyup="searchList()" v-model="search" placeholder="search" style="height: 50px;">
+                            <input type="text" class="form-control" @keyup="searchList()" v-model="search" placeholder="search" style="height: 50px;"> 
                         </header>
-                        <reco-list :reco="reco" :user="user" @selectrec="selectRec"></reco-list>
+                        <reco-list :reco="reco" :user="user" :notif_selected="select_rec.code" @selectrec="selectRec"></reco-list>
                     </aside>
                 </div>
                 <div class="col-md-8">
@@ -44,10 +44,17 @@
             this.fetchMessages()
             //this.track_url = $("#broadcasting_url").val()+"/doctor/referred?referredCode=190604-004-194729"
         },
+        mounted(){
+            const storedReco = sessionStorage.getItem('reco_payload');
+            if(storedReco) {
+                const payload = JSON.parse(storedReco);
+                this.selectRec(payload);
+                sessionStorage.removeItem('reco_payload');
+            }
+        },
         methods: {
             async fetchMessages() {
                 await axios.get('reco/fetch').then(response => {    
-                    // console.log("total reco::",response.data);
                     const dataMap = response.data.map((item) => {
                         // const message = item.message.replace(/<\/?[^>]+(>|$)/g, "") 
                         const message = item.message ? item.message.replace(/<\/?[^>]+(>|$)/g, "") : '';

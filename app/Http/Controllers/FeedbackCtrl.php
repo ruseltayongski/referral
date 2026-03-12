@@ -104,18 +104,21 @@ class FeedbackCtrl extends Controller
             'feedback.id as reco_id',
             'feedback.sender as userid_sender',
             'reco_seen.id as reco_seen',
+            'feedback.created_at as feedback_created_at',
             \DB::raw('CONCAT(patients.fname," ",patients.mname," ",patients.lname) as patient_name'),
             \DB::raw("TIMESTAMPDIFF(YEAR, patients.dob, CURDATE()) AS age"),
             \DB::raw('COALESCE(CONCAT(users.fname," ",users.mname," ",users.lname),"WALK IN") as referring_md'),
             'patients.sex',
             'patients.id as patient_id',
             'patients.contact',
-            'users.level as user_level'
+            'users.level as user_level',
+            'department.description as department_name',
         )
             ->leftJoin('patients','patients.id','=','activity.patient_id')
             ->leftJoin('tracking','tracking.code','=','activity.code')
             ->join("feedback","feedback.code","=","activity.code")
             ->leftJoin('users','users.id','=','feedback.sender')
+            ->leftJoin('department','department.id','=','users.department_id')
             ->leftJoin('feedback as fac2',function($join){
                 $join->on("feedback.code","=","fac2.code");
                 $join->on("feedback.id","<","fac2.id");

@@ -27,13 +27,21 @@
                 loadingPath: $("#broadcasting_url").val()+'/resources/img/processing.gif'
             }
         },
-        props: ["reco","user"],
+        props: ["reco","user","notif_selected"],
         mounted() {
             this.logo = $("#doh_logo").val()
             // console.log(this.messagesInfo, "reco data:", this.reco);
         },
+        watch: {
+            notif_selected(newVal){
+                if(newVal){
+                    this.selected = newVal
+                }
+            }
+        },
         methods: {
             selectReco(rec) {
+                // console.log("rec selected xx", rec);
                 window.globalFiles = [];
                 try {
                     this.reco.map((item) => item.reco_id === rec.reco_id ? item.reco_seen = 1 : item )
