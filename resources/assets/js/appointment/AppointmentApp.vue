@@ -154,7 +154,7 @@ export default {
     handlePatientBookingProceed(payload) {
       // Populate appointment data for the telemedicine form
       this.appointmentData = payload.appointmentData;
-      
+      console.log(payload);
       // Fetch patient data if patient_id exists
       if (payload.user && payload.user.patient_id) {
         this.fetchPatientData(payload.user.patient_id);

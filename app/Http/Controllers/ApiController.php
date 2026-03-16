@@ -13,6 +13,7 @@ use App\Events\SocketReferralDischarged;
 use App\Facility;
 use App\Feedback;
 use App\Http\Controllers\doctor\ReferralCtrl;
+use App\Http\Controllers\TelemedicineApiCtrl;
 use App\Icd;
 use App\Icd10;
 use App\Issue;
@@ -712,7 +713,7 @@ class ApiController extends Controller
     public function patientFollowUp(Request $request) {
         $user = Session::get('auth');
         // dd($request->all());
-       
+
         $patient_form = null;
         $patient_id = 0;
         
@@ -833,9 +834,15 @@ class ApiController extends Controller
             "redirect_track" => $redirect_track,
             "position" => $position
         ];
+           //end broadcast
         broadcast(new NewReferral($new_referral)); //websockets notification for new referral
-        //end broadcast
-
+        $isPatientUserExist = User::where('patient_id', $patient_id)->exists();
+        // dd($isPatientUserExist,$request->Appointment_id, $patient_id );
+        // return;
+        $telemedicineApi = new TelemedicineApiCtrl();
+        if($isPatientUserExist){
+            $telemedicineApi->sendConfirmationEmail($request->Appointment_id, $patient_id,'followup',null);
+        }
         return Redirect::route('doctor_referred', ['filterRef' => 1]);
     }
 

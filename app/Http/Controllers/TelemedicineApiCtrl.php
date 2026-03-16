@@ -535,7 +535,7 @@ class TelemedicineApiCtrl extends Controller
             'video_link' => $video_link,
             'appointment_id' => $appointment_id
         ];
-        if ($status === 'pending') {
+        if ($status === 'pending' || $status === 'followup') {
             Mail::to($patient_email->email)->send(new AppointmentMail($appointment));
         }else if ($status === 'accepted') {
             Mail::to($patient_email->email)->send(new AppointmentMail($appointment_accepted));

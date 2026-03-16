@@ -881,12 +881,11 @@
                     const errors = result.errors;
                     if (errors) {
                         Object.entries(errors).forEach(([field, messages]) => {
-                            console.error(`${field}: ${messages.join(', ')}`);
+                            showCustomAlert(messages.join(', ') || 'Registration failed.', `${field}`);
                             // optionally show under each field
                         });
                     }
-                    console.log("message:", result.error);
-                    showCustomAlert(result.message || 'Registration failed.', 'Error');
+                    
                 }
 
             } catch (error) {

@@ -168,8 +168,9 @@ export default {
         });
         return;
       }
-        
-      if (this.user.level =="Patient") {
+      // console.log("follow_up:", this.followUpReferredId);
+      // return;
+      if (this.user.level =="Patient" && this.followUpReferredId == 0) {
         this.proceedToPatientBooking(this.user);
       }else{
         // Pass the selected slot data to proceedAppointment
@@ -182,8 +183,6 @@ export default {
           selectedSlot.departmentId
         );
       }
-    
-
     },
     
     proceedToPatientBooking(user) {
@@ -218,7 +217,6 @@ export default {
         });
         return;
       }
-     
       if (this.followUpReferredId) {
         console.log("AppointmentDoctor", this.selectedAppointmentDoctor, opdSubcateg);
         const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');

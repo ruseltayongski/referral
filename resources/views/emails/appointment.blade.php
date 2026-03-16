@@ -299,15 +299,15 @@
         
         <!-- Main Content -->
         <div class="content-wrapper">
-            @if(data_get($appointment, 'status') === 'pending')
+            @if(data_get($appointment, 'status') === 'pending' || data_get($appointment, 'status') === 'followup')
             <span class="status-badge pending"> {{ data_get($appointment, 'status', 'N/A') }} Status</span>
             @elseif(data_get($appointment, 'status') === 'accepted')
             <span class="status-badge accepted"> {{ data_get($appointment, 'status', 'N/A') }} Status</span>
             @endif
             <h2>Telemedicine Appointment Requested</h2>
-            @if(data_get($appointment, 'status') === 'pending')
+            @if(data_get($appointment, 'status') === 'pending' || data_get($appointment, 'status') === 'followup')
             <p>
-                Your telemedicine consultation request has been successfully submitted and is awaiting doctor acceptance. We will notify you once the doctor has accepted your appointment request.
+                Your {{ data_get($appointment, 'status') }} telemedicine consultation request has been successfully submitted and is awaiting doctor acceptance. We will notify you once the doctor has accepted your appointment request.
             </p>
             @elseif(data_get($appointment, 'status') === 'accepted')
             <p>
