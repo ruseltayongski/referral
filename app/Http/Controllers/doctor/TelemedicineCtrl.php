@@ -29,7 +29,6 @@ class TelemedicineCtrl extends Controller
 {
     public function index(Request $req)
     {
-
         return view('doctor.video-call', ['referral_type'=>$req->form_type,'telemedicine'=>$req->telemed]);
     }
 
@@ -2302,6 +2301,114 @@ class TelemedicineCtrl extends Controller
 
             fclose($stream);
         }, $status, $headers);
+    }
+
+    public function saveChunk(Request $request)
+    {
+        $sessionId  = $request->input('sessionId');
+        $fileName   = $request->input('fileName');
+        $chunkIndex = (int) $request->input('chunkIndex');
+        $isFinal    = $request->input('isFinal') === '1';
+        $username   = $request->input('username', 'unknown');
+
+        if (!$sessionId || !$fileName) {
+            return response()->json(['error' => 'Missing sessionId or fileName'], 422);
+        }
+
+        // Sanitize filename
+        $fileName  = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $fileName);
+        $chunkDir  = storage_path("app/recordings/chunks/{$sessionId}");
+
+        if (!is_dir($chunkDir)) {
+            mkdir($chunkDir, 0775, true);
+        }
+
+        // Save the incoming chunk (skip if it's an empty finalize blob)
+        $file = $request->file('video');
+        if ($file && $file->getSize() > 0) {
+            $chunkPath = "{$chunkDir}/chunk_{$chunkIndex}.webm";
+            $file->move($chunkDir, "chunk_{$chunkIndex}.webm");
+            Log::info("Chunk saved: {$chunkPath}");
+        }
+
+        // Merge all chunks when isFinal is set
+        if ($isFinal) {
+            return $this->mergeChunks($sessionId, $fileName, $chunkDir, $username);
+        }
+
+        return response()->json(['status' => 'chunk_saved', 'chunk' => $chunkIndex]);
+    }
+
+    /**
+     * POST /api/save-screen-record/finalize  (sendBeacon on tab close)
+     */
+    public function finalize(Request $request)
+    {
+        Log::info("finalized video call");
+        $body      = json_decode($request->getContent(), true);
+        $sessionId = $body['sessionId']  ?? null;
+        $fileName  = $body['fileName']   ?? null;
+        $username  = $body['username']   ?? 'unknown';
+
+        if (!$sessionId || !$fileName) {
+            return response()->json(['error' => 'Missing params'], 422);
+        }
+
+        $fileName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', $fileName);
+        $chunkDir = storage_path("app/recordings/chunks/{$sessionId}");
+
+        if (!is_dir($chunkDir)) {
+            return response()->json(['status' => 'no_chunks']);
+        }
+
+        return $this->mergeChunks($sessionId, $fileName, $chunkDir, $username);
+    }
+
+    /**
+     * Merge all chunk_N.webm files into one final .webm file
+     */
+    private function mergeChunks(string $sessionId, string $fileName, string $chunkDir, string $username): \Illuminate\Http\JsonResponse
+    {
+        $outputDir = storage_path("app/recordings/completed/{$username}");
+        if (!is_dir($outputDir)) {
+            mkdir($outputDir, 0775, true);
+        }
+
+        $outputPath = "{$outputDir}/{$fileName}";
+
+        // Collect chunks in order
+        $chunks = glob("{$chunkDir}/chunk_*.webm");
+        if (empty($chunks)) {
+            Log::warning("No chunks found for session {$sessionId}");
+            return response()->json(['status' => 'no_chunks']);
+        }
+
+        // Natural sort: chunk_0, chunk_1 ... chunk_10, chunk_11
+        natsort($chunks);
+
+        // Merge binary
+        $out = fopen($outputPath, 'wb');
+        foreach ($chunks as $chunkFile) {
+            $in = fopen($chunkFile, 'rb');
+            while (!feof($in)) {
+                fwrite($out, fread($in, 8192));
+            }
+            fclose($in);
+        }
+        fclose($out);
+
+        // Clean up chunk directory
+        array_map('unlink', $chunks);
+        rmdir($chunkDir);
+
+        Log::info("Recording merged: {$outputPath}");
+
+        return response()->json([
+            'status'   => 'merged',
+            'file'     => $fileName,
+            'path'     => $outputPath,
+            'size_mb'  => round(filesize($outputPath) / 1024 / 1024, 2),
+        ]);
     }
 
 }

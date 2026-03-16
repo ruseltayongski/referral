@@ -76,12 +76,11 @@
                                 $activity_latest = \App\Activity::where("code",$row->code)->orderBy('updated_at', 'desc')->first();
                                 $track = \App\Tracking::where("code", $row->code)->first();
                             ?>
-                        
-                            <td class="text-center">
-                                @if(Session::get('auth')->level == 'opcen' && ($track->telemedicine === 0 || ($track->telemedicine === 1 && $track->status === "redirected")))
+                             @if(Session::get('auth')->level == 'opcen' && ($track->telemedicine === 0 || ($track->telemedicine === 1 && $track->status === "redirected")))
+                                <td class="text-center">
                                     <button class="btn-xs  bg-success btn-flat" id="referral_video_call" onclick="opcenVideoCallToDoctor('{{$track->telemedicine}}','{{ $row->tracking_id }}', '{{ $row->code }}','{{ $track->type }}','{{$activity_latest->id}}','{{$activity_latest->referred_to}}','{{$activity_latest->department_id}}');"><i class="fa fa-camera"></i> Call</button>
-                                @endif
-                            </td> 
+                                </td>
+                             @endif 
                             <td width="20%">
                                 <?php
                                     $monitoring_not_accepted = \App\Monitoring::select("monitoring.remarks","monitoring.created_at",\Illuminate\Support\Facades\DB::raw("CONCAT(users.fname,' ',users.mname,' ',users.lname) as agent_name"))->where("monitoring.code","=",$row->code)

@@ -139,6 +139,10 @@ export default {
       screenRecorder: null,
       recordingCanvas: null,
       recordingAnimFrame: null,
+      recordingSessionId: null,   // unique ID per recording session
+      chunkSequence: 0,           // increments per uploaded chunk
+      recordingFileName: null,    // set once when recording starts
+      isRecordingFinalized: false
     };
   },
   mounted() {
@@ -379,22 +383,44 @@ export default {
         );
       });
     },
+    // handleBeforeUnload(event) {
+    //     console.log("User is leaving the page");
+
+    //     event.preventDefault();
+    //     event.returnValue = "";
+    // },
     handleBeforeUnload(event) {
-      const payload = JSON.stringify({ 
-        status: "leave",
-        user_id: this.user.id,
-        patient_code: this.referral_code
-      });
-
-      const blob = new Blob(
-        [payload],
-        { type: "application/json" }
-      );
-
+      // 1. Standard leave beacon
       navigator.sendBeacon(
         `${this.baseUrl}/api/video/leave/user`,
-        blob
+        new Blob([JSON.stringify({
+          status:       "leave",
+          user_id:      this.user.id,
+          patient_code: this.referral_code,
+        })], { type: "application/json" })
       );
+
+      // 2. Tell server to finalize/merge whatever chunks it already received
+      console.log(this.recordingSessionId);
+      console.log(this.isRecordingFinalized);
+      if (this.recordingSessionId && !this.isRecordingFinalized) {
+        navigator.sendBeacon(
+          `${this.baseUrl}/api/save-screen-record/finalize`,
+          new Blob([JSON.stringify({
+            sessionId:    this.recordingSessionId,
+            fileName:     this.recordingFileName,
+            totalChunks:  this.chunkSequence,
+            patient_code: this.referral_code,
+            activity_id:  this.activity_id,
+            username:     this.user?.username ?? "unknown",
+          })], { type: "application/json" })
+        );
+        console.log("📡 Finalize beacon sent on tab close");
+      }
+
+      // console.log("User is leaving the page");
+      // event.preventDefault();
+      // event.returnValue = "";
     },
     fetchMessages () {
       let self = this;
@@ -1128,85 +1154,64 @@ export default {
     async startScreenRecording() {
       try {
         this.recordedChunks = [];
+        this.chunkSequence = 0;
+        this.isRecordingFinalized = false;
 
-        const canvas = document.createElement("canvas");
-        canvas.width = 1280;
+        // ── Generate a unique session ID and filename ONCE ──
+        const patientCode = this.form?.code || this.referral_code || "Unknown";
+        const dateSave    = new Date().toISOString().split("T")[0];
+        const timeStart   = new Date()
+          .toLocaleTimeString("en-US", { hour12: false })
+          .replace(/:/g, "-");
+
+        this.recordingSessionId = `${patientCode}_${this.activity_id}_${Date.now()}`;
+        this.recordingFileName  = `${patientCode}_${this.activity_id}_${dateSave}_${timeStart}.webm`;
+
+        // ── Canvas setup ──
+        const canvas  = document.createElement("canvas");
+        canvas.width  = 1280;
         canvas.height = 720;
         this.recordingCanvas = canvas;
         const ctx = canvas.getContext("2d");
 
-        // ✅ Helper: find video element inside a container
-        const getVideoEl = (containerId) => {
-          const container = document.getElementById(containerId);
-          if (!container) {
-            console.warn(`⚠️ Container #${containerId} not found`);
-            return null;
-          }
-          const video = container.querySelector("video");
-          if (!video) console.warn(`⚠️ No <video> inside #${containerId}`);
-          return video;
-        };
+        const getVideoEl = (id) => document.getElementById(String(id))?.querySelector("video") ?? null;
 
-        // ✅ Verify at least remote video exists before starting
         const remoteVideo = getVideoEl(this.channelParameters.remoteUid);
         if (!remoteVideo) {
-          console.error("❌ Remote video element not found. Aborting recording.");
+          console.error("❌ Remote video not found — aborting recording.");
           return;
         }
-
-        console.log("🎥 Remote video element found:", remoteVideo);
-        console.log("🎥 Remote video readyState:", remoteVideo.readyState);
 
         const drawFrame = () => {
           ctx.fillStyle = "#000";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          const remoteVid = getVideoEl(this.channelParameters.remoteUid);
-          if (remoteVid && remoteVid.readyState >= 2) {
-            ctx.drawImage(remoteVid, 0, 0, canvas.width * 0.75, canvas.height);
-          }
+          const rv = getVideoEl(this.channelParameters.remoteUid);
+          if (rv?.readyState >= 2) ctx.drawImage(rv, 0, 0, canvas.width * 0.75, canvas.height);
 
-          const localVid = getVideoEl(this.options.uid);
-          if (localVid && localVid.readyState >= 2) {
-            const pipW = canvas.width * 0.25;
-            const pipH = canvas.height * 0.25;
-            ctx.drawImage(
-              localVid,
-              canvas.width - pipW - 10,
-              canvas.height - pipH - 10,
-              pipW,
-              pipH
-            );
+          const lv = getVideoEl(this.options.uid);
+          if (lv?.readyState >= 2) {
+            const pw = canvas.width * 0.25, ph = canvas.height * 0.25;
+            ctx.drawImage(lv, canvas.width - pw - 10, canvas.height - ph - 10, pw, ph);
           }
-
           this.recordingAnimFrame = requestAnimationFrame(drawFrame);
         };
-
         drawFrame();
 
-        // ---- Audio mix ----
-        const audioCtx = new AudioContext();
+        // ── Audio mix ──
+        const audioCtx   = new AudioContext();
         const destination = audioCtx.createMediaStreamDestination();
-
-        const addAudioTrack = (track) => {
+        const addTrack = (track) => {
           if (!track) return;
-          try {
-            const source = audioCtx.createMediaStreamSource(new MediaStream([track]));
-            source.connect(destination);
-            console.log("🔊 Audio track connected:", track.label);
-          } catch (e) {
-            console.warn("⚠️ Failed to connect audio track:", e);
-          }
+          try { audioCtx.createMediaStreamSource(new MediaStream([track])).connect(destination); }
+          catch (e) { console.warn("Audio track connect failed:", e); }
         };
+        addTrack(this.channelParameters.localAudioTrack?.getMediaStreamTrack());
+        addTrack(this.channelParameters.remoteAudioTrack?.getMediaStreamTrack());
 
-        addAudioTrack(this.channelParameters.localAudioTrack?.getMediaStreamTrack());
-        addAudioTrack(this.channelParameters.remoteAudioTrack?.getMediaStreamTrack());
-
-        // ---- Combine ----
+        // ── Combine video + audio ──
         const videoStream = canvas.captureStream(30);
-        destination.stream.getAudioTracks().forEach((t) => videoStream.addTrack(t));
-
-        console.log("🎞️ Stream tracks:", videoStream.getTracks().map(t => `${t.kind}:${t.label}`));
+        destination.stream.getAudioTracks().forEach(t => videoStream.addTrack(t));
 
         const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
           ? "video/webm;codecs=vp9,opus"
@@ -1214,136 +1219,88 @@ export default {
 
         this.screenRecorder = new MediaRecorder(videoStream, { mimeType });
 
-        this.screenRecorder.ondataavailable = (event) => {
-          console.log("📦 Chunk received, size:", event.data?.size);
-          if (event.data && event.data.size > 0) {
-            this.recordedChunks.push(event.data);
-            console.log("✅ Total chunks:", this.recordedChunks.length);
-          } else {
-            console.warn("⚠️ Empty chunk — canvas may not be drawing");
-          }
+        // ── Upload each chunk immediately as it arrives (Zoom-style) ──
+        this.screenRecorder.ondataavailable = async (event) => {
+          if (!event.data || event.data.size === 0) return;
+          this.recordedChunks.push(event.data);
+          await this._uploadChunk(event.data, this.chunkSequence++, false);
         };
 
-        this.screenRecorder.onstart = () => console.log("▶️ MediaRecorder started");
-        this.screenRecorder.onerror = (e) => console.error("❌ MediaRecorder error:", e);
+        this.screenRecorder.onerror = (e) => console.error("MediaRecorder error:", e);
 
+        // Collect a chunk every 5 seconds — uploads automatically
         this.screenRecorder.start(5000);
-        console.log("✅ Recording started. State:", this.screenRecorder.state);
+        console.log("✅ Auto-save recording started:", this.recordingFileName);
 
-      } catch (error) {
-        console.error("❌ Error starting recording:", error);
+      } catch (err) {
+        console.error("❌ startScreenRecording failed:", err);
+      }
+    },
+    async _uploadChunk(chunkBlob, sequence, isFinal) {
+      const formData = new FormData();
+      formData.append("video",          chunkBlob, this.recordingFileName);
+      formData.append("sessionId",      this.recordingSessionId);
+      formData.append("fileName",       this.recordingFileName);
+      formData.append("chunkIndex",     sequence);
+      formData.append("isFinal",        isFinal ? "1" : "0");
+      formData.append("username",       this.user?.username ?? "unknown");
+      formData.append("patient_code",   this.referral_code);
+      formData.append("activity_id",    this.activity_id);
+
+      try {
+        await axios.post(
+          `${this.baseUrl}/api/save-screen-record`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" }, timeout: 60_000 }
+        );
+        console.log(`📦 Chunk ${sequence} uploaded${isFinal ? " [FINAL]" : ""}`);
+      } catch (err) {
+        console.error(`❌ Chunk ${sequence} upload failed:`, err.message);
+        // Queue for retry — simple exponential backoff
+        setTimeout(() => this._uploadChunk(chunkBlob, sequence, isFinal), 3000);
       }
     },
     async saveScreenRecording(closeAfterUpload = false) {
-      if (this.recordedChunks.length > 0) {
-        this.loading = true; // Show loader
+      if (this.isRecordingFinalized) return; // prevent double-finalize
+      this.isRecordingFinalized = true;
 
-        // Convert recorded chunks to a Blob
-        const blob = new Blob(this.recordedChunks, { type: "video/webm" });
+      if (!this.recordingSessionId) {
+        if (closeAfterUpload) window.top.close();
+        return;
+      }
 
-        // --- Max file size check (2GB) ---
-        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
-        if (blob.size > maxSize) {
-          this.loading = false;
-          Lobibox.alert("error", {
-            msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
-          });
-          return;
-        }
+      this.loading        = true;
+      this.uploadProgress = 99; // already uploaded — just finalizing
 
-        // --- Generate filename ---
-        const patientCode = this.form.code || "Unknown_Patient";
-        const activityId = this.activity_id;
-        const referring_md = this.form.referring_md;
-        const referred = this.form.action_md;
-        const currentDate = new Date();
-        const dateSave = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
-        const timeStart = new Date(this.startTime)
-          .toLocaleTimeString("en-US", { hour12: false })
-          .replace(/:/g, "-");
-        const timeEnd = currentDate
-          .toLocaleTimeString("en-US", { hour12: false })
-          .replace(/:/g, "-");
+      // Send a tiny finalize signal so the server merges chunks
+      const formData = new FormData();
+      formData.append("video",        new Blob([], { type: "video/webm" }), this.recordingFileName);
+      formData.append("sessionId",    this.recordingSessionId);
+      formData.append("fileName",     this.recordingFileName);
+      formData.append("chunkIndex",   this.chunkSequence);
+      formData.append("isFinal",      "1");
+      formData.append("username",     this.user?.username ?? "unknown");
+      formData.append("patient_code", this.referral_code);
+      formData.append("activity_id",  this.activity_id);
 
-        const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
-        const username = this.user.username || "UnknownUser";
+      try {
+        await axios.post(`${this.baseUrl}/api/save-screen-record`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          timeout: 30_000,
+        });
+      } catch (err) {
+        console.error("Finalize request failed:", err.message);
+      }
 
-        // --- Detect upload speed and set chunk size dynamically ---
-        let chunkSize = 5 * 1024 * 1024; // Default 5MB
-        if (navigator.connection) {
-          const speed = navigator.connection.downlink; // Mbps (approx)
-          console.log(`Detected network speed: ${speed} Mbps`);
-          if (speed <= 2) chunkSize = 2 * 1024 * 1024; // 2MB for slow networks
-          else if (speed >= 5)
-            chunkSize = 5 * 1024 * 1024; // 5MB for moderate networks
-          else if (speed >= 10)
-            chunkSize = 10 * 1024 * 1024; // 10MB for fast networks
-          else if (speed >= 20) chunkSize = 20 * 1024 * 1024; // 20MB for very fast networks
-        }
-        console.log(
-          `Using chunk size: ${(chunkSize / (1024 * 1024)).toFixed(1)} MB`
-        );
+      this.uploadProgress = 100;
+      this.loading        = false;
+      this.recordedChunks = [];
 
-        const totalChunks = Math.ceil(blob.size / chunkSize);
-
-        // --- Upload chunks sequentially ---
-        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-          const start = chunkIndex * chunkSize;
-          const end = Math.min(blob.size, start + chunkSize);
-          const chunk = blob.slice(start, end);
-
-          const formData = new FormData();
-          formData.append("video", chunk, fileName);
-          formData.append("fileName", fileName);
-          formData.append("chunkIndex", chunkIndex);
-          formData.append("totalChunks", totalChunks);
-          formData.append("username", username);
-
-          try {
-            await axios.post(
-              $("#broadcasting_url").val()+"/api/save-screen-record",
-              formData,
-              {
-                headers: { "Content-Type": "multipart/form-data" },
-                timeout: 60_000, // 60s timeout per chunk
-              }
-            );
-
-            // Update progress after each chunk
-            this.uploadProgress = Math.round(
-              ((chunkIndex + 1) / totalChunks) * 100
-            );
-          } catch (error) {
-            this.loading = false;
-            this.uploadProgress = 0; // Reset on error
-            Lobibox.alert("error", {
-              msg:
-                `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
-                (error.response?.data?.message || error.message),
-              callback: function () {
-                window.top.close();
-              },
-            });
-            return;
-          }
-        }
-
-        // --- Upload complete ---
-        this.uploadProgress = 100;
-        this.recordedChunks = []; // Clear memory
-        this.loading = false;
-        this.uploadProgress = 0;
-
-        if (closeAfterUpload) {
-          Lobibox.alert("success", {
-            msg: `Your conversation has been successfully recorded and uploaded.`,
-            callback: function () {
-              window.top.close();
-            },
-          });
-        }
-      } else {
-        console.error("No recorded data available to save.");
+      if (closeAfterUpload) {
+        Lobibox.alert("success", {
+          msg: "Your conversation has been recorded and saved.",
+          callback: () => window.top.close(),
+        });
       }
     },
     async startBasicCall() {
@@ -1647,19 +1604,12 @@ export default {
     async handleAfterStop() {
       if (this.referring_md === "no") {
         clearInterval(this.callTimer);
-        const hasDuration = await this.sendCallDuration();
-        if (this.recordedChunks.length > 0) {
-          await this.saveScreenRecording(true);
-        } else {
-          console.warn("No recorded chunks — skipping upload.");
-          window.top.close();
-        }
+        await this.sendCallDuration();
+      }
+      if (this.recordedChunks.length > 0) {
+        await this.saveScreenRecording(true);
       } else {
-        if (this.recordedChunks.length > 0) {
-          await this.saveScreenRecording(true);
-        } else {
-          window.top.close();
-        }
+        window.top.close();
       }
     },
     stopCallTimer() {
