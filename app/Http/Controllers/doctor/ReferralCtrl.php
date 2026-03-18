@@ -949,15 +949,7 @@ class ReferralCtrl extends Controller
                 ->leftJoin('facility','facility.id','=','activity.referred_to')
                 ->leftJoin('tracking','tracking.code','=','activity.code')
                 ->leftJoin('users','users.id','=',DB::raw("if(activity.referring_md,activity.referring_md,activity.action_md)"))
-                ->where(function($query) use ($user) {
-                    // Check if referred_from is 0, then use patient_id
-                    $query->where(function($q) use ($user) {
-                        $q->where('tracking.referred_from', 0)
-                          ->where('tracking.patient_id', $user->facility_id);
-                    })
-                    // OR use the normal referred_from logic
-                    ->orWhere('activity.referred_from', $user->facility_id);
-                });
+                ->where('activity.referred_from', $user->facility_id);
 
             if(!$request->has('filterRef')){
                 $lastTelemed = session('last_filterRef', 0);
@@ -971,21 +963,39 @@ class ReferralCtrl extends Controller
             // $telemedOrReferral = $request->input('filterRef', null);
 
             if ($telemedOrReferral !== null) {
+                
                 if($telemedOrReferral == 1){
                    
                     $currentDoctorSubopdId = $user->subopd_id;
-
-                    $doctorIds = DB::table('users')
+                    $isPatient = $user->level === 'Patient';
+                  
+                    if($isPatient) {
+                        $trackingIds = DB::table('telemed_assign_doctor')
+                                ->where('doctor_id', $user->id)
+                                ->pluck('tracking_id')
+                                ->unique()
+                                ->toArray();
+                        $data = $data->where('tracking.telemedicine', 1)
+                            ->whereIn('tracking.id', $trackingIds)
+                            ->whereNotExists(function ($q) {
+                                $q->select(DB::raw(1))
+                                ->from('activity')
+                                ->whereRaw('activity.code = tracking.code')
+                                ->where('activity.status', 'redirected');
+                            }); 
+                        // return dd($data->get()->toJson());
+                    }else{
+                        $doctorIds = DB::table('users')
                         ->where('subopd_id', $currentDoctorSubopdId)
                         ->pluck('id');
                  
-                    $trackingIds = DB::table('telemed_assign_doctor')
+                        $trackingIds = DB::table('telemed_assign_doctor')
                         ->whereIn('doctor_id', $doctorIds)
                         ->pluck('tracking_id')
                         ->unique()
                         ->toArray();
                     
-                     $data = $data->where('tracking.telemedicine', 1)
+                        $data = $data->where('tracking.telemedicine', 1)
                         ->whereIn('tracking.id', $trackingIds)
                         ->whereNotExists(function ($q) {
                             $q->select(DB::raw(1))
@@ -993,6 +1003,8 @@ class ReferralCtrl extends Controller
                             ->whereRaw('activity.code = tracking.code')
                             ->where('activity.status', 'redirected');
                         }); 
+                    }
+                
                 }else{
                     // $data = $data->where('tracking.telemedicine', $telemedOrReferral);
 

@@ -1195,7 +1195,7 @@ export default {
           // ✅ Wait for video element to be ready, then start recording
           setTimeout(() => {
             if (!self.screenRecorder || self.screenRecorder.state === "inactive") {
-              self.startScreenRecording();
+             // self.startScreenRecording();
             }
           }, 1500); // small delay so <video> elements are in the DOM
 
