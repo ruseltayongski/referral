@@ -356,13 +356,13 @@ $facility_exclude =  \App\Facility::select('id')
                 </li>
                 @endif
                 @if($user->level == 'Patient')
-                    <li><a href="{{ url('doctor/') }}"><i class="fa fa-home"></i> Dashboard</a></li>
                     <li><a href="{{ url('doctor/appointment/calendar') }}"><i class="fa fa-table"></i> Book Appointment</a></li>
                     <li>    
                          <a href="{{ url('doctor/referred') }}?filterRef=1">
                             <i class="fa fa-ambulance outgoing_nav"></i> Outgoing &nbsp;&nbsp; 
                         </a>
                      </li>
+                    <li><a href="#editProfileModal" data-toggle="modal"><i class="fa fa-pencil"></i> Edit Profile</a></li>
                 @endif
                 <li>
                     <a href="{{ url('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>

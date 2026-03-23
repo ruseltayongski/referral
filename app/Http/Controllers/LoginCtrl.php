@@ -158,7 +158,7 @@ class LoginCtrl extends Controller
                 else if($login->level=='capitol')
                     return url('doctor');
                 else if($login->level=='Patient' && !empty($login->email_verified_at))
-                    return url('doctor');
+                    return url('doctor/appointment/calendar');
                 else if(empty($login->email_verified_at) && $login->level=='Patient'){
                     Session::forget('auth');
                     return [

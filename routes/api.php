@@ -33,4 +33,5 @@ Route::get('reasons_for_referral', 'TelemedicineApiCtrl@getReasonForReferral');
 Route::get('tracker/activities/{facility_id}', 'TelemedicineApiCtrl@getTrackerDetailsTest');
 Route::post('register/patient', 'TelemedicineApiCtrl@registerPatient');
 Route::get('LabRequest', 'ApiController@index');
+Route::post('/mobile/video/prescriptions/version2', 'ApiController@savePrescription_version2');
 Route::get('checkIfUserIsPatient/{patient_id}', 'TelemedicineApiCtrl@checkIfUserIsPatient');

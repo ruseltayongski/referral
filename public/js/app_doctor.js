@@ -22104,7 +22104,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       $('.dashboard-modal-title').html('');
     },
     proceedForm: function proceedForm() {
-      if (this.user.level !== "support") {
+      if (this.user.level !== "support" && this.user.level !== "Patient") {
         Lobibox.confirm({
           msg: "Where do you want to proceed?",
           buttons: {

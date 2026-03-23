@@ -195,7 +195,7 @@
                 $('.dashboard-modal-title').html('');
             },
             proceedForm() {
-                if (this.user.level !== "support") {
+                if (this.user.level !== "support" && this.user.level !== "Patient") {
                     Lobibox.confirm({
                         msg: "Where do you want to proceed?",
                         buttons: {

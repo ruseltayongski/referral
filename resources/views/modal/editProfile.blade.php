@@ -221,11 +221,12 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text"><i class="fa fa-briefcase"></i></span><label for="designation"> Designation:</label>
                                 </div>
-                            </div>
-                            <input type="text" class="form-control designation" name="designation" value="{{ $user->designation }}" required>
+                            </div>      
+                            <input type="text" class="form-control designation" name="designation" value="{{ $user->designation }}" required  {{ $user->level == "Patient" ? 'readonly' : '' }}>
                         </div>
                     </div>
                     <div class="form-row">
+                    @if($user->level != "Patient")
                         <div class="form-group col-md-12">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -235,6 +236,7 @@
                             <input type="text" class="form-control license" name="license" value="{{ $user->license }}" autocomplete="license">
                         </div>
                     </div>
+                    @endif
                     <div>
                         <div class="input-group-prepend">
                             <span class="input-group-text"></span> <label for="Privacy">Privacy Policy</label>
