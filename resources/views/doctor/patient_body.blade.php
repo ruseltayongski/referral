@@ -230,6 +230,19 @@
     </div>
 </form>
 @include('script.filterMuncity')
+<script>
+    function ensureMiddleNameDotUpdate() {
+        var mname = $('input[name="mname"]');
+        if (mname.val().trim() === '') {
+            mname.val('.');
+        }
+    }
+
+    $('input[name="mname"]').on('blur', ensureMiddleNameDotUpdate);
+    $('form').on('submit', function() {
+        ensureMiddleNameDotUpdate();
+    });
+</script>
 
 
 
