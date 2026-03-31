@@ -818,9 +818,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     // ... other protected routes
 });
 
-Route::post('/api/save-screen-record', 'doctor\TelemedicineCtrl@ruselRecording');
 Route::post('/api/save-screen-record', 'doctor\TelemedicineCtrl@saveChunk');
 Route::post('/api/save-screen-record/finalize', 'doctor\TelemedicineCtrl@finalize');
 Route::get('/recordings/list', 'doctor\TelemedicineCtrl@recordingList');
 Route::get('/recordings/stream', 'doctor\TelemedicineCtrl@recordingStream');
-
