@@ -130,6 +130,8 @@ export default {
       screenRecorder: null,
       recordingCanvas: null,
       recordingAnimFrame: null,
+      recordingSessionId: null,
+      isPatientToDoctor: true,
     };
   },
   mounted() {
@@ -390,6 +392,9 @@ export default {
                   const response = res.data;
                   this.telemedicine = response.form.telemedicine;
                   this.form = response.form;
+                  this.isPatientToDoctor = response.referring_fac_id == 0 ? true : false;
+                  console.log("response data:", this.isPatientToDoctor);
+                  return;
                   if (response.age_type === "y")
                     this.patient_age = response.patient_age + " Years Old";
                   else if (response.age_type === "m")
@@ -773,7 +778,7 @@ export default {
         const timeEnd = currentDate
           .toLocaleTimeString("en-US", { hour12: false })
           .replace(/:/g, "-");
-
+        this.recordingSessionId = `${patientCode}_${this.activity_id}_${Date.now()}`;
         const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
         const username = this.user.username || "UnknownUser";
 
@@ -803,10 +808,14 @@ export default {
 
           const formData = new FormData();
           formData.append("video", chunk, fileName);
+          formData.append("sessionId", this.recordingSessionId);
           formData.append("fileName", fileName);
           formData.append("chunkIndex", chunkIndex);
+          formData.append("isFinal",      "1");
           formData.append("totalChunks", totalChunks);
           formData.append("username", username);
+          formData.append("patient_code", patientCode);
+          formData.append("activity_id", activityId);
 
           try {
             await axios.post(
@@ -1195,7 +1204,7 @@ export default {
           // ✅ Wait for video element to be ready, then start recording
           setTimeout(() => {
             if (!self.screenRecorder || self.screenRecorder.state === "inactive") {
-             // self.startScreenRecording();
+              self.startScreenRecording();
             }
           }, 1500); // small delay so <video> elements are in the DOM
 
@@ -1639,14 +1648,19 @@ export default {
         <span v-else>(Slow)</span>
       </span>
     </div> -->
-  <audio ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
+  <audio v-if="!isPatientToDoctor" ref="ringingPhone" :src="ringingPhoneUrl" loop></audio>
   <div class="fullscreen-div">
     <div class="main-container">
       <div class="video-container">
         <div class="mainPic">
           <div class="remotePlayerDiv">
-            <div id="calling">
+            <div v-if="this.user.level == 'patient'" id="calling">
+              <h3 v-if="!isUserJoined">Waiting...</h3>
+              <h3 v-else>Joining...</h3>
+            </div>
+             <div v-else-if="this.user.level == 'doctor'" id="calling">
               <h3 v-if="!isUserJoined">Calling...</h3>
+              <h3 v-else>Joining...</h3>
             </div>
             <img :src="doctorUrl" class="remote-img" alt="Image1" />
           </div>
@@ -1751,7 +1765,7 @@ export default {
                     class="btn btn-warning btn-md upward-button"
                     @click="endorseUpward"
                     type="button"
-                    v-if="referring_md == 'no'"
+                    v-if="isPatientToDoctor ? user.level == 'doctor' : referring_md == 'no'"
                     @mouseover="showUpward = true"
                     @mouseleave="showUpward = false"
                   >
@@ -1771,7 +1785,7 @@ export default {
                     data-toggle="modal"
                     data-target="#prescriptionModal"
                     type="button"
-                    v-if="referring_md == 'yes'"
+                    v-if="isPatientToDoctor ? user.level == 'doctor' : referring_md == 'yes'"
                     @mouseover="showPrescription = true"
                     @mouseleave="showPrescription = false"
                   >
@@ -1791,7 +1805,7 @@ export default {
                     data-toggle="modal"
                     data-target="#labRequestModal"
                     type="button"
-                    v-if="referring_md == 'yes'"
+                    v-if="isPatientToDoctor ? user.level == 'doctor' : referring_md == 'yes'"
                     @mouseover="showTooltip = true"
                     @mouseleave="showTooltip = false"
                   >

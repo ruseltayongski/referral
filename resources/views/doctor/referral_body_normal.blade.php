@@ -48,7 +48,7 @@
         </tr>
     @endif
     <tr>
-        <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name ?? 'Patient-Doctor Referral' }} </span></td>
+        <td colspan="6" class="form-label">Name of Referring Facility: <span class="referring_name form-details">{{ $form->referring_name ?? 'N/A' }} </span></td>
     </tr>
     <tr>
         <td colspan="6">Facility Contact #: <span class="referring_contact form-details">{{ $form->referring_contact ?? 'N/A' }}</span></td>

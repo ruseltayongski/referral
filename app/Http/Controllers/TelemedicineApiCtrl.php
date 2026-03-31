@@ -9,6 +9,8 @@ use App\Facility;
 use App\AppointmentSchedule;
 use App\TelemedAssignDoctor;
 use App\Events\NewReferral;
+use App\Feedback;
+use App\Seen;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -467,9 +469,260 @@ class TelemedicineApiCtrl extends Controller
         broadcast(new NewReferral($new_referral));
     }
 
-    public function checkIfUserIsPatient(Request $request, $patient_id){
+    public function checkIfUserIsPatient($patient_id){
         $isPatientUserExist = User::where('patient_id', $patient_id)->exists();
         return response()->json(['is_patient_user_exist' => $isPatientUserExist]);
+    }
+
+    public function checkIfUserIsPatientTracking($tracking_id){
+        $tracking = Tracking::select('patient_id')->where('id', $tracking_id)->first();
+        if(!$tracking){
+            return response()->json(['is_patient_user_exist' => false]);
+        }
+        $isPatientUserExist = User::where('patient_id', $tracking->patient_id)->exists();
+        return response()->json(['is_patient_user_exist' => $isPatientUserExist]);
+    }
+
+    public function patientFollowUp(Request $request)
+    {
+        $user = null;
+        $doctorId = 0;
+
+        if ($request->filled('doctor_id')) {
+            $doctorId = intval($request->input('doctor_id'));
+            if ($doctorId > 0) {
+                $user = User::find($doctorId);
+            }
+        }
+
+        if (!$user && $request->filled('username')) {
+            $user = User::where('username', trim($request->input('username')))->first();
+            if ($user) {
+                $doctorId = $user->id;
+            }
+        }
+
+        if (!$user && Session::has('auth')) {
+            $user = Session::get('auth');
+            $doctorId = $user->id;
+        }
+
+        if (!$user && auth()->check()) {
+            $user = auth()->user();
+            $doctorId = $user->id;
+        }
+
+        $userId = $user ? $user->id : $doctorId;
+        $createdBy = $userId;
+
+        $tracking = Tracking::where('code', $request->code)->first();
+        if (!$tracking) {
+            return response()->json(['status' => 'failed', 'message' => 'Tracking record not found'], 404);
+        }
+
+        if (!$userId) {
+            $fallbackUserId = $tracking->action_md ?: $tracking->referring_md ?: 0;
+            $userId = $fallbackUserId;
+            $createdBy = $fallbackUserId;
+            $doctorId = $fallbackUserId;
+        }
+
+        $tracking->status = 'followup';
+        $tracking->save();
+
+        $scheduledAppointmentId = null;
+        $trackingCode = $request->input('code') ?: $tracking->code;
+        $useExistingSchedule = false;
+        $telemedicine = $request->filled('telemedicine')
+            ? filter_var($request->input('telemedicine'), FILTER_VALIDATE_BOOLEAN)
+            : (bool) $tracking->telemedicine;
+
+        if ($request->filled('date') && $request->filled('timeFrom') && $request->filled('timeTo')) {
+            $appointmentDate = date('Y-m-d', strtotime($request->input('date')));
+            $timeFrom = $request->input('timeFrom');
+            $timeTo = $request->input('timeTo');
+            $facilityForSchedule = $request->followup_facility_telemed ?: $tracking->referred_to;
+            $departmentForSchedule = $tracking->department_id;
+            $opdCategory = $request->filled('opdSubId')
+                ? $request->input('opdSubId')
+                : ($request->filled('configId')
+                    ? $request->input('configId')
+                    : ($tracking->subopd_id ?: 0));
+            $useExistingSchedule = filter_var($request->input('use_existing_schedule'), FILTER_VALIDATE_BOOLEAN);
+
+            $existingSchedule = AppointmentSchedule::where('facility_id', $facilityForSchedule)
+                ->where('appointed_date', $appointmentDate)
+                ->where('department_id', $departmentForSchedule)
+                ->where('appointed_time', '<=', $timeTo)
+                ->where('appointedTime_to', '>=', $timeFrom)
+                ->first();
+
+            if ($existingSchedule && !$useExistingSchedule) {
+                return response()->json([
+                    'status' => 'conflict',
+                    'message' => 'Schedule conflict detected. Do you want to use the existing appointment schedule? ',
+                    'existing_schedule_id' => $existingSchedule->id,
+                    'existing_schedule' => [
+                        'id' => $existingSchedule->id,
+                        'appointed_date' => $existingSchedule->appointed_date,
+                        'appointed_time' => $existingSchedule->appointed_time,
+                        'appointedTime_to' => $existingSchedule->appointedTime_to,
+                        'facility_id' => $existingSchedule->facility_id,
+                        'department_id' => $existingSchedule->department_id,
+                        'opdCategory' => $existingSchedule->opdCategory,
+                        'slot' => $existingSchedule->slot,
+                    ],
+                ], 409);
+            }
+
+            if ($existingSchedule && $useExistingSchedule) {
+                $scheduledAppointmentId = $existingSchedule->id;
+            }
+
+            if (!$existingSchedule) {
+                $appointmentSchedule = new AppointmentSchedule();
+                $appointmentSchedule->appointed_date = $appointmentDate;
+                $appointmentSchedule->appointed_time = $timeFrom;
+                $appointmentSchedule->appointedTime_to = $timeTo;
+                $appointmentSchedule->facility_id = $facilityForSchedule;
+                $appointmentSchedule->department_id = $departmentForSchedule;
+                $appointmentSchedule->opdCategory = $opdCategory;
+                $appointmentSchedule->created_by = $createdBy;
+                $appointmentSchedule->appointed_by = $createdBy;
+                $appointmentSchedule->code = $trackingCode;
+                $appointmentSchedule->slot = 1;
+                $appointmentSchedule->status = 'active';
+                $appointmentSchedule->save();
+
+                $scheduledAppointmentId = $appointmentSchedule->id;
+            }
+        }
+
+        if ($telemedicine || $useExistingSchedule) {
+            $appointmentIdToUse = $scheduledAppointmentId ?: $request->Appointment_id;
+            if ($appointmentIdToUse) {
+                if ($request->configId) {
+                    $telemedAssigned = new TelemedAssignDoctor();
+                    $telemedAssigned->subopd_id = $request->configId;
+                    $telemedAssigned->appointment_id = $appointmentIdToUse;
+                    $telemedAssigned->doctor_id = $doctorId;
+                    $telemedAssigned->save();
+                } else {
+                    $telemedAssignDoctor = new TelemedAssignDoctor();
+                    $telemedAssignDoctor->appointment_id = $appointmentIdToUse;
+                    $telemedAssignDoctor->doctor_id = $doctorId;
+                    $telemedAssignDoctor->save();
+                }
+            }
+        }
+
+        if (isset($createdActivity) && isset($appointmentSchedule) && $appointmentSchedule->id) {
+            $appointmentSchedule->created_by = $createdActivity->id;
+            $appointmentSchedule->save();
+        }
+
+        $patient_form = null;
+        $patient_id = 0;
+
+        if ($tracking->type == 'normal') {
+            $patient_form = PatientForm::where('code', $request->code)->first();
+            if ($patient_form) {
+                $patient_id = $patient_form->patient_id;
+            }
+        } elseif ($tracking->type == 'pregnant') {
+            $patient_form = PregnantForm::where('code', $request->code)->first();
+            if ($patient_form) {
+                $patient_id = $patient_form->patient_woman_id;
+            }
+        }
+
+        if (!$patient_form) {
+            return response()->json(['status' => 'failed', 'message' => 'Patient form not found'], 404);
+        }
+
+        $activity = [
+            'code' => $request->code,
+            'patient_id' => $patient_id,
+            'date_referred' => date('Y-m-d H:i:s'),
+            'date_seen' => '0000-00-00 00:00:00',
+            'referred_from' => $tracking->referred_from,
+            'referred_to' => $request->followup_facility_telemed,
+            'sub_opdId' => $request->input('opdSubId') ?? $request->input('configId') ?? null,
+            'department_id' => $tracking->department_id,
+            'referring_md' => $tracking->referring_md,
+            'action_md' => $userId,
+            'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks : 'patient follow up',
+            'status' => 'followup',
+        ];
+        $createdActivity = Activity::create($activity);
+
+        if ($request->hasFile('files')) {
+            $uploadFiles = $request->file('files');
+            $fileNames2 = [];
+            foreach ($uploadFiles as $file) {
+                $filepath = public_path() . '/fileupload/PublicDoctor';
+                $originalName = $file->getClientOriginalName();
+                $counter = 1;
+                while (file_exists($filepath . '/' . $originalName)) {
+                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
+                    $counter++;
+                }
+                $file->move($filepath, $originalName);
+                $fileNames2[] = $originalName;
+            }
+            $activityFile = Activity::where('id', $request->followup_id)
+                ->where('code', $request->code)
+                ->orderby('id')
+                ->first();
+            if ($activityFile) {
+                $activityFile->lab_result = implode('|', $fileNames2);
+                $activityFile->save();
+            }
+        }
+
+        $patient = Patients::find($tracking->patient_id);
+        $count_seen = Seen::where('tracking_id', $tracking->id)->count();
+        $count_reco = Feedback::where('code', $tracking->code)->count();
+        $redirect_track = asset('doctor/referred?referredCode=') . $tracking->code;
+        $position = Activity::where('code', $tracking->code)
+            ->where(function ($query) {
+                $query->where('status', 'redirected')
+                    ->orWhere('status', 'transferred')
+                    ->orWhere('status', 'followup');
+            })
+            ->count();
+
+        $new_referral = [
+            'patient_name' => ucfirst($patient->fname) . ' ' . ucfirst($patient->lname),
+            'referring_md' => ucfirst($user->fname) . ' ' . ucfirst($user->lname),
+            'referring_name' => Facility::find($user->facility_id)->name,
+            'referred_name' => Facility::find($tracking->referred_to)->name,
+            'referred_to' => (int) $request->followup_facility_telemed,
+            'referred_department' => Department::find($tracking->department_id)->description,
+            'referred_from' => $user->facility_id,
+            'form_type' => $tracking->type,
+            'tracking_id' => $tracking->id,
+            'referred_date' => date('M d, Y h:i A'),
+            'patient_sex' => $patient->sex,
+            'age' => ParamCtrl::getAge($patient->dob),
+            'patient_code' => $tracking->code,
+            'status' => 'followup',
+            'count_seen' => $count_seen,
+            'count_reco' => $count_reco,
+            'telemedicine' => 1,
+            'subOpdId' => $request->configId,
+            'SampleIDs' => '1233',
+            'redirect_track' => $redirect_track,
+            'position' => $position,
+        ];
+     
+        broadcast(new NewReferral($new_referral));
+
+        if (User::where('patient_id', $patient_id)->exists()) {
+            $this->sendConfirmationEmail($request->Appointment_id, $patient_id, 'followup', null);
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Follow-up created', 'tracking_id' => $tracking->id, 'code' => $tracking->code], 200);
     }
 
     public function sendConfirmationEmail($appointment_id, $patient_id, $status, $video_link = null)

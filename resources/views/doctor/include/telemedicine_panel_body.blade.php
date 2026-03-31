@@ -274,7 +274,7 @@
 
             <!-- my changes to follow up -->
             <div class="stepper-item stepper-item-follow_new @if($referred_followup_track && !$referred_declined_track) completed @endif" id="departed_progress{{ $referred_track->code.$referred_track->id }}">
-                <div class="step-counter-follow_new" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}','{{$referred_treated_track}}','{{$referred_upward_track}}','{{$user->facility_id}}','{{ $referred_track->referred_to }}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
+                <div class="step-counter-follow_new" onclick="telemedicineFollowUpPatient('{{ $referred_redirected_track }}','{{ $referred_end_track }}','{{ $referred_examined_track }}','{{ $referred_followup_track }}','{{ $referred_track->code }}','{{ $referred_track->id }}','{{$referred_treated_track}}','{{$referred_upward_track}}','{{$user->facility_id}}','{{ $referred_track->referred_to }}','{{$user->level}}')"><i class="fa fa-paper-plane" aria-hidden="true"></i></div>
                 <div class="step-name step-name-treated_new">Follow Up</div>
             </div><!--  end -->
 

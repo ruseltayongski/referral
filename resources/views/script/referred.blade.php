@@ -737,7 +737,7 @@
         }
     }
 
-    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward,ownfacility,referred_to) { // I am adding  alreadyTreated and  alreadyUpward
+    function telemedicineFollowUpPatient(alreadyReferred, alreadyEnded, examinedPatient, alreadyFollowUp, code, referred_id, alreadyTreated, alreadyUpward,ownfacility,referred_to,user_level) { // I am adding  alreadyTreated and  alreadyUpward
         $("#telemed_follow_code").val(code);//I add this add this to get the followup_id jondy
         $("#telemedicine_follow_id").val(referred_id); //I add this add this to get the followup_id jondy
         $(".telemedicine").val(1);
@@ -794,6 +794,11 @@
             Lobibox.alert("error",
                 {
                     msg: "You cannot follow up on a patient because it has not yet been examined."
+                });
+        }else if(user_level == 'Patient'){
+            Lobibox.alert("info",
+                {
+                    msg: "Your doctor will set your follow up schedule for you."
                 });
         }
         else {

@@ -1386,7 +1386,7 @@ class ReferralCtrl extends Controller
         if ($track->telemedicine == 1 && $referred_from == 0) {
             $telemedicine_controller = new TelemedicineApiCtrl();
             if ($isPatientUserExist) {
-                $telemedicine_controller->sendConfirmationEmail($track->appointmentId, $track->patient_id, 'accepted', asset("doctor/telemedicine") . '?id='.$track->id.'&from_fact=0&code='.$track->code.'&form_type=normal"&telemed="1"&accepting_md=yes"&referring_md=no&activity_id='.$activity->id );
+                $telemedicine_controller->sendConfirmationEmail($track->appointmentId, $track->patient_id, 'accepted', asset("doctor/telemedicine") . '?id='.$track->id.'&from_fact=0&code='.$track->code.'&form_type=normal&telemed=1&referring_md=yes&activity_id='.$activity->id );
             }
         }
 
