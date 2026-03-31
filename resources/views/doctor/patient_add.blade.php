@@ -191,5 +191,17 @@ $status = session::get('status');
             $('.phicID').val('').attr('disabled', true);
         }
     });
+
+    function ensureMiddleNameDot() {
+        var mname = $('.mname');
+        if (mname.val().trim() === '') {
+            mname.val('.');
+        }
+    }
+
+    $('.mname').on('blur', ensureMiddleNameDot);
+    $('#form-submit').on('submit', function() {
+        ensureMiddleNameDot();
+    });
 </script>
 @endsection
