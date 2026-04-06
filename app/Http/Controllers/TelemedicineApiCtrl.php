@@ -586,7 +586,7 @@ class TelemedicineApiCtrl extends Controller
                 $appointmentSchedule->appointedTime_to = $timeTo;
                 $appointmentSchedule->facility_id = $facilityForSchedule;
                 $appointmentSchedule->department_id = $departmentForSchedule;
-                $appointmentSchedule->opdCategory = $opdCategory;
+                $appointmentSchedule->opdCategory = $user->subopd_id ?: $opdCategory;
                 $appointmentSchedule->created_by = $createdBy;
                 $appointmentSchedule->appointed_by = $createdBy;
                 $appointmentSchedule->code = $trackingCode;
