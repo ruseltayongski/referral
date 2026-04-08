@@ -75,6 +75,18 @@ $redirected_upward = DB::table('activity')
                 type="button">
                 <i class="fa fa-hospital-o"></i> Upward
             </button>
+            <button
+                class="btn btn-primary btn-xs btn-followup"
+                type="button"
+                data-toggle="modal"
+                data-target="#scheduleModal"
+                data-code="{{ $row->code }}"
+                data-followup-facility="{{ $row->referred_to }}"
+                data-telemedicine="{{ $row->telemedicine }}"
+                data-appointment-id="{{ $row->appointmentId ?? '' }}"
+                data-config-id="{{ $row->subopd_id ?? '' }}">
+                <i class="fa fa-calendar"></i> Follow Up
+            </button>
         @endif
         @if($seen > 0)
             <!-- <div class="form-group"> -->
@@ -98,18 +110,6 @@ $redirected_upward = DB::table('activity')
                 </a>
             <!-- </div> -->
         @endif
-            <button
-                class="btn btn-primary btn-xs btn-followup"
-                type="button"
-                data-toggle="modal"
-                data-target="#scheduleModal"
-                data-code="{{ $row->code }}"
-                data-followup-facility="{{ $row->referred_to }}"
-                data-telemedicine="{{ $row->telemedicine }}"
-                data-appointment-id="{{ $row->appointmentId ?? '' }}"
-                data-config-id="{{ $row->subopd_id ?? '' }}">
-                <i class="fa fa-calendar"></i> Follow Up
-            </button>
         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                 data-target="#feedbackModal"
                 data-code="{{ $row->code }}"

@@ -441,7 +441,7 @@ class TelemedicineApiCtrl extends Controller
         $redirect_track = asset("doctor/referred?referredCode=") . $code;
 
         $new_referral = [
-            "patient_name" => ucfirst($patient->fname) . ' ' . ucfirst($patient->lname),
+            "patient_name" => ucfirst($patient->fname) . ' '. ucfirst($patient->mname) . ' ' . ucfirst($patient->lname),
             "referring_md" => ucfirst($user->fname) . ' ' . ucfirst($user->lname),
             "referring_name" => Facility::find($user->facility_id)->name ?? '',
             "referred_name" => Facility::find($referred_facility)->name ?? '',

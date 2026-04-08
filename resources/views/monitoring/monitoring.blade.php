@@ -188,7 +188,7 @@
                 "opcen_referred_to" : referred_to,
                 "departmentId" : department_id
             };
-            console.log("json data:", json);
+            //console.log("json data:", json);
             $.post(url,json,function(){});
             var windowName = 'NewWindow'; // Name of the new window
             var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)

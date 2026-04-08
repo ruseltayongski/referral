@@ -251,16 +251,24 @@ $user = Session::get('auth');
                                                 <small class="status">
                                                     [ {{ $row->sex }}, {{ $row->patient_age }} ]
                                                 </small>
-                                                was  <span class="text-blue">
-                                                    @if($row->telemedicine)
+                                                @if($row->telemedicine && $row->referred_from != 0)
+                                                was  <span class="text-blue">   
                                                     consulted
+                                                    @elseif($row->telemedicine && $row->referred_from == 0)
+                                                    requested an
                                                     @else
                                                     {{ $row->status }}
                                                     @endif
-                                                </span> to
+                                                </span>
+                                                @if($row->referred_from == 0)
+                                                <span class="text-danger">{{ $department }}</span>
+                                                consultation via <span class="text-danger">Telemedicine</span>, referred under  <span class="text-success">Dr. {{ $row->action_md }}</span>
+                                                @else
+                                                to
                                                 <span class="text-danger">{{ $department }}</span>
                                                 by <span class="text-warning">{{ $row->referred_from == 0 ? 'Itself' : $row->referring_md}}</span> {{$row->referred_from == 0 ? 'and' : 'of'}}
                                                 <span class="facility">{{ $row->referred_from == 0 ? 'Booked as Patient' : ($row->facility_name ?? 'Unknown Facility') }}</span>
+                                                @endif
                                                 @if(count($queue) > 0)
                                                     <h5 class="text-red pull-right-queue queued_badge">Queued at <b>{{ $queue->remarks }}</b>&emsp;</h5>
                                                 @endif

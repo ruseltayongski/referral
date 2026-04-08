@@ -22868,7 +22868,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
       // console.log("transferred condition", this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred');
       // console.log("passto facility", this.passToVueFacility, 'referred facility',  event.payload.referred_to, "referred from", event.payload.referred_from, "referred from track", event.payload.referred_from_track, "count_referred_from", event.payload.count_referred_from);
-
+      //console.log('isUserFacilityAndReferredToMatch:',this.user.facility_id === event.payload.referred_to);
       if (_this4.user.facility_id === event.payload.referred_to || event.payload.status === 'transferred' && (_this4.passToVueFacility === event.payload.referred_to || _this4.passToVueFacility === event.payload.referred_from || event.payload.count_referred_from === event.payload.referred_from)) {
         _this4.playAudio(event.payload.telemedicine, subOpdIdInt);
         _this4.increment_referral++;
@@ -22889,9 +22889,10 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
           }
           var type = event.payload.form_type;
           console.log("form type", event.payload);
+          console.log("user data:", _this4.user);
           type = type == 'normal' ? 'normal-section' : 'pregnant-section';
           var referral_type = type == 'normal-section' ? 'normal' : 'pregnant';
-          var content = '<li id="referral_incoming' + event.payload.patient_code + '">' + position_content + '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + type + '" id="item-' + event.payload.tracking_id + '">\n' + '        <h3 class="timeline-header no-border">' + '           <span class="name-patient">' + '               <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </span>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small> was <span class="text-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n' + '        <h3 class="timeline-header no-border">' + '           <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.referred_date + '</span></span></h3>\n' + (event.payload.form_version === 'version2' ? '           <img class="stamp-img" src="/referral/public/new_version_stamp.png" alt="PNG Image">\n' : '') + '        <div class="timeline-footer">\n';
+          var content = '<li id="referral_incoming' + event.payload.patient_code + '">' + position_content + '    <i class="fa fa-ambulance bg-blue-active"></i>\n' + '    <div class="timeline-item ' + type + '" id="item-' + event.payload.tracking_id + '">\n' + '        <h3 class="timeline-header no-border">' + '           <span class="name-patient">' + '               <a href="' + $("#broadcasting_url").val() + '/doctor/referred?referredCode=' + event.payload.patient_code + '" class="patient_name" target="_blank">' + event.payload.patient_name + '</a>' + '           </span>' + '           <small class="status">[ ' + event.payload.patient_sex + ', ' + event.payload.age + ' ]</small>' + (event.payload.telemedicine == 1 && event.payload.referred_from === "0" ? ' requested an <span class="text-danger">' + event.payload.referred_department + '</span>  consultation via <span class="text-danger">Telemedicine</span>, referred under  <span class="text-warning">Dr. ' + _this4.user.fname + ' ' + _this4.user.mname + ' ' + _this4.user.lname + '</span>' : '               was <span class="text-blue">' + event.payload.status + '</span> to <span class="text-danger">' + event.payload.referred_department + '</span> by <span class="text-warning">Dr. ' + event.payload.referring_md + '</span> of <span class="facility">' + event.payload.referring_name + '</span></h3>\n') + '        <h3 class="timeline-header no-border">' + '           <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">' + event.payload.referred_date + '</span></span></h3>\n' + (event.payload.form_version === 'version2' ? '           <img class="stamp-img" src="/referral/public/new_version_stamp.png" alt="PNG Image">\n' : '') + '        <div class="timeline-footer">\n';
 
           /*if(my_department_id==data.department_id) {*/
           var telemedText = parseInt(event.payload.telemedicine) == 1 ? '<h5 class="text-red blink_new_referral pull-right">New Telemed</h5>' : '<h5 class="text-red blink_new_referral pull-right">New Referral</h5>';
@@ -22986,7 +22987,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         $("#html_websocket_upward" + event.payload.code).remove();
         $("#upward_button" + event.payload.code).remove();
       }
-      console.log("status for exam", event.payload);
+      //console.log("status for exam", event.payload);
       _this4.telemedicine = event.payload.telemedicine;
       if (event.payload.status == "telemedicine" || event.payload.telemedicine == 1 && event.payload.status_track != "examined" && event.payload.status_track != "redirected") {
         if ((event.payload.referred_to === _this4.user.facility_id || event.payload.referring_md === _this4.user.id) && event.payload.trigger_by !== _this4.user.id) {
@@ -23034,7 +23035,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         _this4.telemedicineFormType = event.payload.form_type;
         _this4.activity_id = event.payload.activity_id;
         _this4.opcen_facility = event.payload.referred_to;
-        console.log("call data event", event.payload);
+        //console.log("call data event", event.payload);
         // if(event.payload.referred_to === this.user.facility_id && (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id)) {
 
         //     const tId = event.payload.tracking_id;

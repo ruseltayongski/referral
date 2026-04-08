@@ -1156,7 +1156,7 @@
                     }
                     // console.log("transferred condition", this.passToVueFacility === event.payload.referred_facility_id && event.payload.status == 'transferred');
                     // console.log("passto facility", this.passToVueFacility, 'referred facility',  event.payload.referred_to, "referred from", event.payload.referred_from, "referred from track", event.payload.referred_from_track, "count_referred_from", event.payload.count_referred_from);
-
+                    //console.log('isUserFacilityAndReferredToMatch:',this.user.facility_id === event.payload.referred_to);
                     if (this.user.facility_id === event.payload.referred_to || (event.payload.status === 'transferred' && (this.passToVueFacility === event.payload.referred_to || this.passToVueFacility === event.payload.referred_from || event.payload.count_referred_from === event.payload.referred_from))) {
                         this.playAudio(event.payload.telemedicine, subOpdIdInt);
                         this.increment_referral++;
@@ -1182,6 +1182,7 @@
 
                                 let type = event.payload.form_type;
                                 console.log("form type", event.payload);
+                                console.log("user data:", this.user);
                                 type = type=='normal' ? 'normal-section':'pregnant-section';
                                 let referral_type = (type=='normal-section') ? 'normal':'pregnant';
                                 let content = '<li id="referral_incoming'+event.payload.patient_code+'">' +
@@ -1192,7 +1193,12 @@
                                     '           <span class="name-patient">' +
                                     '               <a href="'+$("#broadcasting_url").val()+'/doctor/referred?referredCode='+event.payload.patient_code+'" class="patient_name" target="_blank">'+event.payload.patient_name+'</a>' +
                                     '           </span>'+
-                                    '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small> was <span class="text-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n' +
+                                    '           <small class="status">[ '+event.payload.patient_sex+', '+event.payload.age+' ]</small>' +
+                                    (
+                                        event.payload.telemedicine == 1 && event.payload.referred_from === "0"
+                                            ? ' requested an <span class="text-danger">'+event.payload.referred_department+'</span>  consultation via <span class="text-danger">Telemedicine</span>, referred under  <span class="text-warning">Dr. '+this.user.fname+' ' +this.user.mname+' ' +this.user.lname+'</span>'
+                                            : '               was <span class="text-blue">'+event.payload.status+'</span> to <span class="text-danger">'+event.payload.referred_department+'</span> by <span class="text-warning">Dr. '+event.payload.referring_md+'</span> of <span class="facility">'+event.payload.referring_name+'</span></h3>\n'
+                                    ) +
                                     '        <h3 class="timeline-header no-border">' +
                                     '           <span class="time"><i class="icon fa fa-ambulance"></i> <span class="date_activity">'+event.payload.referred_date+'</span></span></h3>\n' + 
                                      (event.payload.form_version === 'version2'
@@ -1340,7 +1346,7 @@
                         $("#html_websocket_upward" + event.payload.code).remove();
                         $("#upward_button" + event.payload.code).remove();
                     }
-                    console.log("status for exam", event.payload);
+                    //console.log("status for exam", event.payload);
                     this.telemedicine = event.payload.telemedicine;
                     if(event.payload.status == "telemedicine" || (event.payload.telemedicine == 1 && event.payload.status_track != "examined" && event.payload.status_track != "redirected")) {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
@@ -1393,7 +1399,7 @@
                         this.telemedicineFormType = event.payload.form_type;
                         this.activity_id = event.payload.activity_id;
                         this.opcen_facility = event.payload.referred_to;
-                        console.log("call data event", event.payload);
+                        //console.log("call data event", event.payload);
                         // if(event.payload.referred_to === this.user.facility_id && (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id)) {
 
                         //     const tId = event.payload.tracking_id;
