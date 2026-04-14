@@ -78,6 +78,8 @@
     <!-- <VideoApp @stopCall="stopAgoraCall" /> -->
 </template>
 <script>
+import { event } from 'jquery';
+
     export default {
         name : "ReferralApp",
         props: {
@@ -370,17 +372,18 @@
                     $('#filePreviewContentReco').modal('show');
                 });
             },
-            notifyReferral(patient_name, referring_md, referring_name, redirect_track, subOpdId, Telemedicine) {
+            notifyReferral(patient_name, referring_md, referring_name, redirect_track, subOpdId, Telemedicine, isReferredFromPatient) {
 
                 let content = patient_name+' was referred by Dr. '+referring_md+' of '+referring_name + '<br><br>\n' +
                     '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
                     '           <i class=\'fa fa-stethoscope\'></i> Track\n' +
                     '       </a>';
+                let content2 = patient_name +' requested an '+ "OPD" +' consultation via Telemedicine, referred under Dr. '+this.user.fname+' ' +this.user.mname+' ' + this.user.lname;
                 const isTelemed = parseInt(Telemedicine) === 1;
                 const isForUser = parseInt(subOpdId) === parseInt(this.user.subopd_id);
                 // console.log("notifyRef:", parseInt(Telemedicine) === 1, parseInt(subOpdId) === parseInt(this.user.subopd_id),"Telemed:", parseInt(Telemedicine),"Facility SubOpd:",parseInt(subOpdId),'UserSubOpd:', parseInt(this.user.subopd_id))
                 // console.log("isTelemed:", isTelemed);
-                  if (isTelemed) {
+                  if (isTelemed && !isReferredFromPatient) {
                     if (!isForUser) return;
                     Lobibox.notify('success', {
                         delay: false,
@@ -389,7 +392,15 @@
                         img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png",
                         sound: false
                     });
-                } else {
+                } else if(isTelemed && isReferredFromPatient){
+                    Lobibox.notify('success', {
+                        delay: false,
+                        title: 'New Telemedicine',
+                        msg: content2,
+                        img: $("#broadcasting_url").val() + "/resources/img/DOH_Logo.png",
+                        sound: false
+                    });
+                }else{
                     // Referral — always notify regardless of subOpdId
                     Lobibox.notify('success', {
                         delay: false,
@@ -1181,8 +1192,8 @@
                                 }
 
                                 let type = event.payload.form_type;
-                                console.log("form type", event.payload);
-                                console.log("user data:", this.user);
+                                // console.log("form type", event.payload);
+                                // console.log("user data:", this.user);
                                 type = type=='normal' ? 'normal-section':'pregnant-section';
                                 let referral_type = (type=='normal-section') ? 'normal':'pregnant';
                                 let content = '<li id="referral_incoming'+event.payload.patient_code+'">' +
@@ -1244,7 +1255,7 @@
                         if(event.payload.status === "transferred"){
                             this.notifyTransferred(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track,event.payload.patient_code, event.payload.referred_date,event.payload.remarks);
                         }else{
-                            this.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track,event.payload.subOpdId,event.payload.telemedicine);
+                            this.notifyReferral(event.payload.patient_name, event.payload.referring_md, event.payload.referring_name, event.payload.redirect_track,event.payload.subOpdId,event.payload.telemedicine,event.payload.referred_from === "0");
                         }
                         
 

@@ -32,6 +32,119 @@ class TelemedicineCtrl extends Controller
         return view('doctor.video-call', ['referral_type'=>$req->form_type,'telemedicine'=>$req->telemed]);
     }
 
+    // public function manageAppointment(Request $req)
+    // {
+    //     $user = Session::get('auth');
+    //     $facility = $user->facility_id;
+
+    //     $type = $req->input('type', session('last_type', 'upcoming'));
+    //     $dateFrom = $req->input('date_from');
+    //     $dateTo = $req->input('date_to');
+    //     $viewAll = $req->input('view_all', false);
+
+    //     $allowedTypes = ['upcoming', 'past'];
+    //     $now = \Carbon\Carbon::now();
+        
+    //     $sub_Opd = SubOpd::select('id', 'description')->get();
+    //     $config_sched = Cofig_schedule::select('id','department_id','facility_id','subopd_id','created_by','description','category','days','time')->get();
+    //     $query = AppointmentSchedule::
+    //         with([
+    //             'createdBy' => function ($query) {
+    //                 $query->select(
+    //                     'id',
+    //                     'fname',
+    //                     'lname',
+    //                     'mname'
+    //                 );
+    //             },
+    //             'facility' => function ($query) {
+    //                 $query->select(
+    //                     'id',
+    //                     'name'
+    //                 );
+    //             },
+    //             'department' => function ($query) {
+    //                 $query->select(
+    //                     'id',
+    //                     'description'
+    //                 );
+    //             },
+    //             'telemedAssignedDoctor' => function ($query) {
+    //             $query->with(['doctor' => function ($query) {
+    //                     $query->select(
+    //                         'id',
+    //                         'fname',
+    //                         'lname'
+    //                     );
+    //                 }]);
+    //             },
+    //             'subOpd',
+    //             'configSchedule',
+    //         ]);
+    //         // ->where('opdCategory', $user->subopd_id)
+
+    //         if ($user->level === 'doctor') {
+    //             $query->where('opdCategory', $user->subopd_id);
+    //         }
+
+    //         // Apply facility filter for all users
+    //         $query->where('facility_id', $facility);
+    //         // $query->where('created_by', $user->id);
+            
+    //         if($type === 'upcoming'){
+    //             // $query->where('appointed_date', '>=', Carbon::now()->format('Y-m-d'));
+    //             $query->whereRaw("STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') >= ?", [$now]);
+    //         } elseif ($type === 'past') {
+    //             // $query->where('appointed_date', '<', Carbon::now()->format('Y-m-d'));
+    //             $query->whereRaw("STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') < ?", [$now]);
+    //         }
+            
+    //         if(!$viewAll && $dateFrom && $dateTo){
+    //             $query->whereRaw("
+    //                 STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s')
+    //                 BETWEEN ? AND ?
+    //             ", [
+    //                 $dateFrom . ' 00:00:00',
+    //                 $dateTo . ' 23:59:59'
+    //             ]);
+    //         }
+
+    //     $appointment_schedule = $query->orderBy('created_at', 'desc')
+    //         ->paginate(20)
+    //          ->appends([
+    //                 'type' => $type,
+    //                 'date_from' => $dateFrom,
+    //                 'date_to' => $dateTo,
+    //                 'view_all' => $viewAll
+    //             ]);
+    
+    //     $user_facility = User::where('department_id',$user->department_id)
+    //     //  ->where('level','doctor')
+    //     ->where('facility_id',$facility)
+    //     ->with('facility')
+    //     ->groupBy('facility_id')
+    //     ->get();
+        
+    //     if (!in_array($type, $allowedTypes)) {
+    //         $lastype = session('last_type', 'upcoming');
+    //         return redirect()->route('manage.appointment', ['type' => $lastype]);
+    //     }
+
+    //     $data = [
+    //         'appointment_schedule' => $appointment_schedule,
+    //         'facility' => $user_facility,
+    //         'keyword' => $req->input('appt_keyword', ''),
+    //         'status' => $req->input('status_filter', ''),
+    //         'date' => $req->input('date_filter', ''),
+    //         'configs' => $config_sched,
+    //         'appointment_filter' => $appointmentstatus,
+    //         'subOpd' => $sub_Opd,
+    //         'user' => $user,
+    //         'type' => $type 
+    //     ];
+
+    //     return view('doctor.manage_appointment', $data);
+    // }
     public function manageAppointment(Request $req)
     {
         $user = Session::get('auth');
@@ -44,94 +157,136 @@ class TelemedicineCtrl extends Controller
 
         $allowedTypes = ['upcoming', 'past'];
         $now = \Carbon\Carbon::now();
-        
-        $sub_Opd = SubOpd::select('id', 'description')->get();
-        $config_sched = Cofig_schedule::select('id','department_id','facility_id','subopd_id','created_by','description','category','days','time')->get();
-        $query = AppointmentSchedule::
-            with([
-                'createdBy' => function ($query) {
-                    $query->select(
-                        'id',
-                        'fname',
-                        'lname',
-                        'mname'
-                    );
-                },
-                'facility' => function ($query) {
-                    $query->select(
-                        'id',
-                        'name'
-                    );
-                },
-                'department' => function ($query) {
-                    $query->select(
-                        'id',
-                        'description'
-                    );
-                },
-                'telemedAssignedDoctor' => function ($query) {
-                $query->with(['doctor' => function ($query) {
-                        $query->select(
-                            'id',
-                            'fname',
-                            'lname'
-                        );
-                    }]);
-                },
-                'subOpd',
-                'configSchedule',
-            ]);
-            // ->where('opdCategory', $user->subopd_id)
 
-            if ($user->level === 'doctor') {
-                $query->where('opdCategory', $user->subopd_id);
-            }
-
-            // Apply facility filter for all users
-            $query->where('facility_id', $facility);
-            // $query->where('created_by', $user->id);
-            
-            if($type === 'upcoming'){
-                // $query->where('appointed_date', '>=', Carbon::now()->format('Y-m-d'));
-                $query->whereRaw("STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') >= ?", [$now]);
-            } elseif ($type === 'past') {
-                // $query->where('appointed_date', '<', Carbon::now()->format('Y-m-d'));
-                $query->whereRaw("STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') < ?", [$now]);
-            }
-            
-            if(!$viewAll && $dateFrom && $dateTo){
-                $query->whereRaw("
-                    STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s')
-                    BETWEEN ? AND ?
-                ", [
-                    $dateFrom . ' 00:00:00',
-                    $dateTo . ' 23:59:59'
-                ]);
-            }
-
-        $appointment_schedule = $query->orderBy('created_at', 'desc')
-            ->paginate(20)
-             ->appends([
-                    'type' => $type,
-                    'date_from' => $dateFrom,
-                    'date_to' => $dateTo,
-                    'view_all' => $viewAll
-                ]);
-    
-        $user_facility = User::where('department_id',$user->department_id)
-        //  ->where('level','doctor')
-        ->where('facility_id',$facility)
-        ->with('facility')
-        ->groupBy('facility_id')
-        ->get();
-        
+        // Validate type
         if (!in_array($type, $allowedTypes)) {
             $lastype = session('last_type', 'upcoming');
             return redirect()->route('manage.appointment', ['type' => $lastype]);
         }
 
+        // Store last selected type in session
+        session(['last_type' => $type]);
+
+        // Fetch reference data
+        $sub_Opd = SubOpd::select('id', 'description')->get();
+
+        $config_sched = Cofig_schedule::select(
+            'id',
+            'department_id',
+            'facility_id',
+            'subopd_id',
+            'created_by',
+            'description',
+            'category',
+            'days',
+            'time'
+        )->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Build Appointment Query
+        |--------------------------------------------------------------------------
+        */
+        $query = AppointmentSchedule::with([
+            'createdBy:id,fname,lname,mname',
+            'facility:id,name',
+            'department:id,description',
+            'subOpd:id,description',
+            'configSchedule:id,category,days,time',
+            'telemedAssignedDoctor' => function ($q) {
+                $q->with(['doctor:id,fname,lname']);
+            }
+        ]);
+
+        // Filter by doctor sub-OPD
+        if ($user->level === 'doctor') {
+            $query->where('opdCategory', $user->subopd_id);
+        }
+
+        // Apply facility filter
+        $query->where('facility_id', $facility);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter by Appointment Type
+        |--------------------------------------------------------------------------
+        */
+        if ($type === 'upcoming') {
+            $query->whereRaw(
+                "STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') >= ?",
+                [$now]
+            );
+        } elseif ($type === 'past') {
+            $query->whereRaw(
+                "STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') < ?",
+                [$now]
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Date Range Filter
+        |--------------------------------------------------------------------------
+        */
+        if (!$viewAll && $dateFrom && $dateTo) {
+            $query->whereRaw(
+                "STR_TO_DATE(CONCAT(appointed_date,' ', appointed_time), '%Y-%m-%d %H:%i:%s') BETWEEN ? AND ?",
+                [
+                    $dateFrom . ' 00:00:00',
+                    $dateTo . ' 23:59:59'
+                ]
+            );
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sort by Appointment Date and Time
+        |--------------------------------------------------------------------------
+        */
+        $appointment_schedule = $query
+            ->orderBy('appointed_date', 'desc') // Latest date first
+            ->orderBy('appointed_time', 'asc')  // Chronological order within the date
+            ->paginate(20)
+            ->appends([
+                'type' => $type,
+                'date_from' => $dateFrom,
+                'date_to' => $dateTo,
+                'view_all' => $viewAll
+            ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Group Appointments by Date (For Collapsible UI)
+        |--------------------------------------------------------------------------
+        */
+        $groupedAppointments = $appointment_schedule->getCollection()
+            ->groupBy(function ($item) {
+                return \Carbon\Carbon::parse($item->appointed_date)
+                    ->format('Y-m-d');
+            });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Fetch User Facility Information
+        |--------------------------------------------------------------------------
+        */
+        $user_facility = User::where('department_id', $user->department_id)
+            ->where('facility_id', $facility)
+            ->with('facility')
+            ->groupBy('facility_id')
+            ->get();
+
+        // Placeholder for appointment filter (avoid undefined variable error)
+        $appointmentstatus = [];
+
+        /*
+        |--------------------------------------------------------------------------
+        | Prepare Data for View
+        |--------------------------------------------------------------------------
+        */
         $data = [
             'appointment_schedule' => $appointment_schedule,
+            'groupedAppointments' => $groupedAppointments, // For collapsible UI
             'facility' => $user_facility,
             'keyword' => $req->input('appt_keyword', ''),
             'status' => $req->input('status_filter', ''),
@@ -140,12 +295,11 @@ class TelemedicineCtrl extends Controller
             'appointment_filter' => $appointmentstatus,
             'subOpd' => $sub_Opd,
             'user' => $user,
-            'type' => $type 
+            'type' => $type
         ];
 
         return view('doctor.manage_appointment', $data);
     }
-
     public function configSched(){
         $user = Session::get('auth');
         $department = Department::all();

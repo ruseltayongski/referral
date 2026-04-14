@@ -32,7 +32,7 @@
         }
 
         .already-appointed {
-        background-color: #FFA07A; /* trapping background color of the Date appointment */
+        background-color: #FFA07A;
     }
 
     .btn-xs {
@@ -51,10 +51,8 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        /* max-width: 210px; Limit the container width */
-        /*  margin: auto;Center horizontally */
-        background-color: #f9f9f9; /* Light gray background */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         transition: box-shadow 0.3s ease;
     }
     .custom-label-config{
@@ -62,19 +60,17 @@
     }
 
     .appointment-container:hover {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
     }
 
     @media (max-width: 768px) {
         .appointment-container {
-            max-width: 90%; /* Adjust width for smaller screens */
+            max-width: 90%;
             padding: 10px;
         }
     }
     /* End for Config-Appointment */
 
-    /* range of the date Sched of "SchedCategory" */
-   
     .schedule-output {
         padding: 10px;
         border: 1px solid #ddd;
@@ -93,7 +89,7 @@
     .schedule-category {
         font-weight: bold;
         font-size: 16px;
-        color: #007bff; /* Use a theme color */
+        color: #007bff;
     }
     .input-error-config {
         border: 2px solid red;
@@ -116,14 +112,38 @@
         margin-top: 32px;
     }
 
-    .table td.text-center {
-        white-space: nowrap;      /* keep buttons in one line */
-        vertical-align: middle;   /* vertically center */
+    /* =============================================
+       TABLE ALIGNMENT FIXES
+       ============================================= */
+    table {
+        table-layout: fixed;
+        width: 100%;
     }
 
-    .table th.text-center:last-child,
-    .table td.text-center:last-child {
-        min-width: 140px;  /* adjust as needed based on number of buttons */
+    td, th {
+        vertical-align: middle !important;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .table td.text-center {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    /* Truncate long Facility names — shows full text on hover via title attribute */
+    .facility-cell {
+        max-width: 0;          /* forces table-layout:fixed to control width */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: default;
+    }
+
+    /* Badge columns — prevent wrapping */
+    .badge-cell {
+        white-space: nowrap;
+        text-align: center !important;
     }
 
     /* Add this to your CSS */
@@ -152,7 +172,34 @@
     .badge-warning { background-color: #daa812ff; }
 
     </style>
-    
+    <style>
+    .manual-badge {
+        padding: 5px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        color: #fff;
+    }
+
+    .badge-success {
+        background-color: #28a745;
+    }
+
+    .badge-warning {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    .badge-primary {
+        background-color: #007bff;
+    }
+
+    /* Pagination styling */
+    .pagination-wrapper {
+        display: flex;
+        justify-content: center;
+        margin-top: 15px;
+    }
+    </style>
 @endsection
 
 @section('content')
@@ -207,10 +254,6 @@
                             <i class="fa fa-eye"></i> View All
                         </button>
                         <br><br>
-                        {{-- <input type="date" name="date_filter" id="date_filter" class="form-control" value="{{ $date }}">
-                        <button type="submit" class="btn btn-info btn-sm btn-flat">
-                            <i class="fa fa-filter"></i> Filter
-                        </button> --}}
                     </form>
                 </div>
             </div>
@@ -222,12 +265,29 @@
                 @endif
             </h3>
         </div>
+
         <!-- Table List -->
-        <div class="box-body appointments">
-            @if(count($appointment_schedule)>0)
+        <div class="box-body">
+            @if(count($appointment_schedule) > 0)
+
                 <div class="table-responsive">
-                <table class="table table-hover table-bordered align-middle shadow-sm">
-                        <thead class="text-white text-center" style="background-color: #59AB91; color: white;">
+                    <table class="table table-hover table-bordered shadow-sm" style="table-layout: fixed; width: 100%;">
+
+                        {{-- COLGROUP: locks each column to a fixed width --}}
+                        <colgroup>
+                            <col style="width: 12%"> {{-- Appointment Date --}}
+                            <col style="width: 8%">  {{-- Time From --}}
+                            <col style="width: 8%">  {{-- Time To --}}
+                            <col style="width: 13%"> {{-- Created By --}}
+                            <col style="width: 18%"> {{-- Facility --}}
+                            <col style="width: 13%"> {{-- OPD Category --}}
+                            <col style="width: 7%">  {{-- Slot --}}
+                            <col style="width: 7%">  {{-- Booked --}}
+                            <col style="width: 7%">  {{-- Remaining --}}
+                            <col style="width: 7%">  {{-- Action --}}
+                        </colgroup>
+
+                        <thead class="text-center" style="background-color: #59AB91; color: white;">
                             <tr>
                                 <th>Appointment Date</th>
                                 <th>Time From</th>
@@ -241,115 +301,87 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody>
-                            @foreach($appointment_schedule as $row)
-                                @php 
-                                    $monthweeks =  Cofig_schedule::where('id', $row->configId)->first()->category;
-                                    $bookedSlots = $row->telemedAssignedDoctor()->count();
-                                    $remainingSlots = $row->slot - $bookedSlots;
+                        @php $lastDate = null; @endphp
+                        @foreach($appointment_schedule as $row)
+                            @php
+                                $booked       = $row->telemedAssignedDoctor->count();
+                                $remaining    = $row->slot - $booked;
+                                $currentDate  = $row->appointed_date;
+                            @endphp
+
+                            {{-- Date group header row — shown once per date group --}}
+                            @if($currentDate !== $lastDate)
+                                @php
+                                    $dateCount = $appointment_schedule->filter(fn($r) => $r->appointed_date === $currentDate)->count();
+                                    $lastDate  = $currentDate;
                                 @endphp
-                                
-                                <tr class="text-center small align-middle">
-                                    <td>{{ \Carbon\Carbon::parse($row->appointed_date)->format('F d, Y') }}</td>
-                                    <td>{{ $row->appointed_time ?? 'N/A' }}</td>
-                                    <td>{{ $row->appointedTime_to ?? 'N/A' }}</td>
-                                    <td>
-                                        <i class="fa fa-user-md text-primary"></i> 
-                                        Dr. {{ $row->createdBy->fname }} {{ $row->createdBy->mname }} {{ $row->createdBy->lname }}
-                                    </td>
-                                    <td>{{ $row->facility->name }}</td>
-                                    <td>{{ $row->subOpd->description }}</td>
-                                    <td><span class="manual-badge bg-primary">{{ $row->slot }}</span></td>
-                                    <td><span class="manual-badge badge-success">{{ $bookedSlots }}</span></td>
-                                    <td>
-                                        <span class="manual-badge badge-warning">
-                                            {{ $remainingSlots }}
+                                <tr style="background:#e9f7f3; font-weight: bold;">
+                                    <td colspan="10">
+                                        <i class="fa fa-calendar text-success"></i>
+                                        {{ \Carbon\Carbon::parse($currentDate)->format('F d, Y') }}
+                                        <span class="badge badge-primary" style="margin-left: 6px;">
+                                            {{ $dateCount }} Schedule(s)
                                         </span>
                                     </td>
-                                    
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            @if($type === 'upcoming' && $row->created_by == $user->id)
-                                                <button class="btn btn-primary btn-sm" title="Edit" onclick="UpdateModal({{ $row->id }})" style="margin-right: 4px;">
-                                                    <i class="fa fa-pencil"></i>
-                                                </button>
-                                            @endif
-                                            @if($row->created_by == $user->id)
-                                            <button class="btn btn-danger btn-sm" title="Delete" onclick="DeleteModal({{ $row->id }})">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                            @endif
-
-                                            @if($row->configId)
-                                                <button class="btn btn-info btn-sm" title="View Schedule" data-toggle="modal" data-target="#scheduleModal{{$row->id}}">
-                                                    <i class="fa fa-eye"></i>
-                                                </button>
-                                            @endif
-                                        </div>
-                                    </td>
                                 </tr>
+                            @endif
 
-                                <!-- Modal -->
-                                <div class="modal fade" id="scheduleModal{{$row->id}}" tabindex="-1" role="dialog" aria-labelledby="scheduleModalLabel{{$row->id}}" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header bg-success text-white">
-                                                <h5 class="modal-title" id="scheduleModalLabel{{$row->id}}">
-                                                    <i class="fa fa-calendar"></i> Doctor Schedule ({{ $monthweeks }})
-                                                </h5>
-                                                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
+                            <tr class="text-center align-middle small">
+                                <td style="vertical-align: middle;">
+                                    {{ \Carbon\Carbon::parse($row->appointed_date)->format('F d, Y') }}
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    {{ $row->appointed_time ?? 'N/A' }}
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    {{ $row->appointedTime_to ?? 'N/A' }}
+                                </td>
+                                <td style="vertical-align: middle;">
+                                    Dr. {{ $row->createdBy->fname }} {{ $row->createdBy->lname }}
+                                </td>
 
-                                            <div class="modal-body">
-                                                @php
-                                                    $config = Cofig_schedule::where('id', $row->configId)->first();
-                                                    $days = explode('|', $config->days);
-                                                    $times = explode('|', $config->time);
+                                {{-- Facility: truncates long names; full name shown on hover --}}
+                                <td class="facility-cell" title="{{ $row->facility->name }}" style="vertical-align: middle;">
+                                    {{ $row->facility->name }}
+                                </td>
 
-                                                    $dayTimes = [];
-                                                    $currentDay = null;
+                                <td style="vertical-align: middle; word-wrap: break-word; overflow-wrap: break-word;">
+                                    {{ $row->subOpd->description }}
+                                </td>
 
-                                                    foreach ($times as $time) {
-                                                        if (in_array($time, $days)) {
-                                                            $currentDay = $time;
-                                                            $dayTimes[$currentDay] = [];
-                                                        } else {
-                                                            $dayTimes[$currentDay][] = $time;
-                                                        }
-                                                    }
-                                                @endphp
+                                <td class="badge-cell" style="vertical-align: middle;">
+                                    <span class="badge badge-primary">{{ $row->slot }}</span>
+                                </td>
 
-                                                <p><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($row->appointed_date)->format('F d, Y') }}</p>
-                                                <p><strong>End Date:</strong> {{ \Carbon\Carbon::parse($row->date_end)->format('F d, Y') }}</p>
+                                <td class="badge-cell" style="vertical-align: middle;">
+                                    <span class="badge badge-success">{{ $booked }}</span>
+                                </td>
 
-                                                <div class="list-group">
-                                                    @foreach($dayTimes as $day => $times)
-                                                        <div class="list-group-item d-flex justify-content-between align-items-center">
-                                                            <span><i class="fa fa-calendar"></i> <strong>{{ $day }}</strong></span>
-                                                            <span><i class="fa fa-clock-o"></i> {{ implode(', ', $times) }}</span>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            </div>
+                                <td class="badge-cell" style="vertical-align: middle;">
+                                    <span class="badge badge-success">{{ $remaining }}</span>
+                                </td>
 
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">
-                                                    <i class="fa fa-times"></i> Close
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            @endforeach
+                                <td style="vertical-align: middle; white-space: nowrap;">
+                                    <button class="btn btn-sm btn-primary" onclick="UpdateModal({{ $row->id }})">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" onclick="DeleteModal({{ $row->id }})">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
                         </tbody>
                     </table>
-                    <div class="text-center">
-                        {!! $appointment_schedule->links() !!}
+
+                    {{-- Pagination --}}
+                    <div class="pagination-wrapper">
+                        {!! $appointment_schedule->appends(request()->query())->links() !!}
                     </div>
                 </div>
+
             @else
                 <div class="alert alert-warning">
                     <span class="text-warning">
@@ -403,7 +435,6 @@
                                                 </div>    
                                            </div>    
                                         </div>
-                                        <!-- <div id="update_additionalTimeContainer" style="display: none;"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -455,12 +486,9 @@
                                     <div class="label-border">
                                         <div id="opdCategoryContainer">
                                           <div id="delete_additionalTimeContainer" style="display: none;"></div>
-                                                <div style="margin-top: 15px;">
-                                                    <!-- <button type="button" class="btn btn-info btn-sm" id="update_add_slots" onclick="deleteTimeInput()">Add Slot</button> -->
-                                                </div>    
+                                                <div style="margin-top: 15px;"></div>    
                                            </div>    
                                         </div>
-                                        <!-- <div id="update_additionalTimeContainer" style="display: none;"></div> -->
                                     </div>
                                 </div>
                             </div>
@@ -480,6 +508,7 @@
 @endsection
 
 @section('js')
+
     <script>
         @if(Session::get('appointment_save'))
         Lobibox.notify('success', {
@@ -522,11 +551,8 @@
                     conflictShown = false;
                 }
                 
-                // Generate all appointment dates based on category and selected days
                 const appointmentDates = generateAppointmentDates(startDate, days, category);
-                // console.log("Generated appointment dates: ", appointmentDates, slots);
                 
-                // Create appointment slots array with all dates and their slots
                 const appointmentSlots = [];
 
                 const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -560,22 +586,16 @@
                         start_date: startDate
                     }),
                     success: function (response) {
-                        // console.log("Server response:", response.data);
                         if (response.status === 'warning' && !conflictShown) {
-                            // console.log("Skipped conflicting dates:", response.conflict_dates);
                             console.log("my available_slots:", response.valid_slots);
                             date_exists = response.conflict_dates;
-                            // window.existing_date = response.conflict_dates;
                             Lobibox.alert("info", {
                                 msg: response.message,
                                 closeButton: false,
                                 closable: false,
                                 callback: function () {
-                                    // Proceed only with valid slots
                                     const safeSlots = response.valid_slots || [];
-                                    // console.log("Safe slots to create:", safeSlots);
                                      resolve({ date_exists, response });
-                                    // TODO: rebuild UI or trigger creation logic using safeSlots only
                                 }
                             });
 
@@ -583,9 +603,6 @@
                             return;
 
                         } else if (response.status === 'ok') {
-                            // console.log("All slots safe:", response.valid_slots);
-                            // use response.valid_slots to continue
-                            // window.existing_date = [];
                             resolve({ date_exists: [], response });
                         }
 
@@ -602,20 +619,17 @@
         }
        
         function generateAppointmentDates(startDate, selectedDays, category) {
-            // console.log('generate date days:', startDate, selectedDays, category);
             const dates = [];
             const start = new Date(startDate);
            
-            // Determine end date based on category
             const endDate = new Date(start);
             if (category === "1 Week") {
-                endDate.setDate(start.getDate() + 6); // 7 days total (including start date)
+                endDate.setDate(start.getDate() + 6);
             } else if (category === "1 Month") {
                 endDate.setMonth(start.getMonth() + 1);
-                endDate.setDate(start.getDate() - 1); // End on the day before next month's same date
+                endDate.setDate(start.getDate() - 1);
             }
             
-            // Convert day names to numbers (Sunday = 0, Monday = 1, etc.)
             const dayMap = {
                 'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
                 'Thursday': 4, 'Friday': 5, 'Saturday': 6
@@ -623,7 +637,6 @@
             
             const selectedDayNumbers = selectedDays.map(day => dayMap[day]);
             
-            // Generate all dates within the range that match selected days
             const currentDate = new Date(start);
             while (currentDate <= endDate) {
                 if (selectedDayNumbers.includes(currentDate.getDay())) {
@@ -660,12 +673,6 @@
                 const effectiveDateValue = $effectiveDate.val();
                 const selectedConfig = configData.find(config => config.id == selectedConfigId);
                 
-                // let effective_Date = $(".Effective_date").val();
-                // console.log("efective:", effective_Date, "selectedConfig:::", selectedConfig);
-
-                // console.log("selectedConfigselectedConfig::", selectedConfig);
-                 // $("#SchedCategory").css("display", false);
-
                 if(selectedConfig){
                    
                     const days = selectedConfig.days.split('|');
@@ -724,18 +731,7 @@
                                     </div>
                                 </div`;
 
-                                //  <div class="col-md-2">
-                                //         <button type="button" class="btn btn-danger btn-sm remove-time-slot">
-                                //             <i class="fa fa-trash"></i>
-                                //         </button>
-                                //     </div>
-
                                  timeSlotsDiv.append(timeSlotHtml);
-                                // const $timeSlotsDiv = $(`.day-checkbox[value="${day}"]`).closest('.checkbox').find('.time-slots');
-                                // const $newSlot = $(timeSlotHtml);
-                                // $timeSlotsDiv.append($newSlot);
-
-                                //  checkSlotExistence(effectiveDateValue,allCollectedSlots, $timeSlotsDiv, days,category);
                             });
                         }
                    });
@@ -770,7 +766,6 @@
                             } else if (OneweekOrOneMonth  === "1 Month"){
                                 console.log("dateExistsArray.length:", dateExistsArray.length);
                                 if (dateExistsArray.length > 0) {
-                                    // extend based on number of date_exists
                                     endDate = new Date(startDate);
                                     endDate.setMonth(startDate.getMonth() + 1); 
                                     endDate.setDate(startDate.getDate() - 1);
@@ -951,14 +946,6 @@
                 }
             }
 
-                //  <div style="
-                //                     max-height: 550px; /* adjust this based on desired height for ~5 schedules */
-                //                     overflow-y: auto;
-                //                     padding-right: 5px;
-                //                 ">
-                //                     ${twoColumnLayout}
-                //                 </div>
-
             $defaultCategorySelect.on("change", categslot);
             $effectiveDate.on("change", categslot);
 
@@ -984,7 +971,7 @@
 
                 $('.day-checkbox:checked').each(function () {
 
-                    let day = $(this).val(); // Get the selected day
+                    let day = $(this).val();
                     let timeSlots = $(this).closest('.checkbox').find('.time-slot');
 
                     allSelectedTimes[day] = [];
@@ -1089,7 +1076,6 @@
                 { element: document.getElementById('appointment_date_label'), showOnCheck: false },
                 { element: document.getElementById('appointment_date'), showOnCheck: false },
                 { element: document.getElementById('side_Config'), showOnCheck: true },
-                // { element: document.getElementById('week_time_slot'), showOnCheck: true},
                 { element: document.getElementById('please_select_categ'), showOnCheck: true},
                 { element: document.getElementById('Manual-time-slot'), showOnCheck: false},
             ];
@@ -1127,7 +1113,6 @@
 
                     $("#appointment_date").val('');
                 }
-                //Toggle visibility for each element based on checkbox state
                 elementsToToggle.forEach(({ element, showOnCheck }) => {
                     element.style.display = isChecked === showOnCheck ? 'inline' : 'none';
                 });
@@ -1135,7 +1120,6 @@
                 checkFormCompletion();
             });
             
-            // Event listeners for input fields
             $('#effective_date, #defaultCategorySelect, #number_slot').on('input change', function () {
                 checkFormCompletion();
             });
@@ -1146,7 +1130,6 @@
                 const effectiveDate = $('#effective_date').val();
                 const defaultCategory  = $('#defaultCategorySelect').val();
                 const number_slot = $("#number_slot").val();
-                // console.log("number_slot", number_slot, 'l', defaultCategory);
                 if(effectiveDate === "" || defaultCategory === "" || number_slot === ""){
                     $("#Addappointment").prop('disabled', true);
                 }else{
@@ -1160,11 +1143,10 @@
             var selectedCategory = $(this).val();
             var today = new Date();
             var tomorrow = new Date(today);
-            tomorrow.setDate(today.getDate() + 1); // Tomorrow (one day after today)
+            tomorrow.setDate(today.getDate() + 1);
 
             var dateRangeInput = $('#config_date_range');
 
-            // Reset the input field if no category is selected
             if (!selectedCategory) {
                 dateRangeInput.val('');
                 return;
@@ -1174,26 +1156,21 @@
             var endDate;
 
             if (selectedCategory === '1 Week') {
-                // Calculate one week from tomorrow
                 endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 7); // Add 7 days
+                endDate.setDate(startDate.getDate() + 7);
             } else if (selectedCategory === '1 Month') {
-                // Calculate one month from tomorrow
                 endDate = new Date(startDate);
-                endDate.setMonth(startDate.getMonth() + 1); // Add 1 month
+                endDate.setMonth(startDate.getMonth() + 1);
             }
 
-            // Format the start and end dates as m/d/Y (for example, 12/1/2024)
             var formattedStartDate = formatDate(startDate);
             var formattedEndDate = formatDate(endDate);
 
-            // Set the date range value in the input field
             dateRangeInput.val(formattedStartDate + ' - ' + formattedEndDate);
         });
 
-        // Helper function to format the date as m/d/Y
         function formatDate(date) {
-            var month = date.getMonth() + 1; // Month is 0-based, so we add 1
+            var month = date.getMonth() + 1;
             var day = date.getDate();
             var year = date.getFullYear();
             
@@ -1229,7 +1206,7 @@
         $(document).on('change', '.day-checkbox', function() {
             let  checkboxContainer = $(this).closest('.checkbox');
             if($(this).is(':checked')){
-                $(this).closest('.checkbox').find('.time-slots').slideDown(); // Show time-slots
+                $(this).closest('.checkbox').find('.time-slots').slideDown();
             }else{
                 let timeSlots =  checkboxContainer.find('.time-slots');
                 timeSlots.slideUp(); 
@@ -1240,7 +1217,6 @@
 
         //---------------- for Config-Appointment ---------------//
 
-        // function UpdateModal(appointmentId) {
             var subOpdId = '{{ $getSubOpd->id }}'; 
             var departmentId = '{{ $departmentId }}';
         $(document).ready(function() {
@@ -1257,7 +1233,6 @@
                     }
                 });
 
-                // Disable the appointment button
                 $('#add-appointment').prop('disabled', true);
             }
 
@@ -1268,14 +1243,11 @@
 
         function UpdateModal(appointmentId) {
             $('#updateAppointmentId').val(appointmentId);
-            // console.log('sfdfssd',appointmentId);
             var url = "{{ url('display/appointment').'/'}}"+appointmentId;
-           // url = url.replace(':id', appointmentId);
 
             $.get(url, function(data) {
-                // console.log('my appointed Id:asdasd',data);
 
-                $('#update_additionalTimeContainer').empty();//to empty the previous  generate form
+                $('#update_additionalTimeContainer').empty();
                 
                 if (data && data.length > 0) {
                     const now = new Date();
@@ -1284,23 +1256,17 @@
                         const apptDate = appointment.appointed_date;
                         const apptTime = appointment.appointed_time;
 
-                        // Combine date + time into one object
                         const apptDateTime = new Date(`${apptDate}T${apptTime}`);
                         $('#appointed_date').val(appointment.appointed_date);
                         if (apptDate === now.toISOString().split("T")[0]) {
-                            // Same date as today
                             if (apptDateTime < now) {
-                                // console.log("PAST appointment:", appointment);
-                                // 👉 If you only want to render past, uncomment:
-                                // updateAddTimeInput(appointment, doctorAssigned);
+                                // past
                             } else {
                                 console.log("PRESENT appointment:", appointment);
                                 let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
                                 updateAddTimeInput(appointment, doctorAssigned);
                             }
                         } else {
-                            // Different day (future/past date)
-                            // console.log("OTHER appointment:", appointment);
                             let doctorAssigned = appointment.telemed_assigned_doctor[0]?.appointment_id;
                             updateAddTimeInput(appointment, doctorAssigned);
                         }
@@ -1315,10 +1281,6 @@
             });
             $('#updateConfirmationModal').modal('show');
         }
-
-        //-------------------End of my version UpdateModal
-
-        //--------------------------------------------------------------
 
         function DeleteModal(appointmentId){
 
@@ -1363,24 +1325,19 @@
                     $('.time-input-group').empty();
                  
                     data.forEach(function(appointment) {
-                        deleteTimeInput(appointment);  // Assuming deleteTimeInput appends new data to .time-input-group
+                        deleteTimeInput(appointment);
                     });
                         
                     $('#deleteConfirmationModal').modal('show');
 
                 }
             }
-             // else {
-
-            //     $('#deleteConfirmationModal').modal('hide');
-                
-            // }
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 console.log("AJAX Error: " + errorThrown);
             });
             
         }
-        //--------------------------------------------------------------
+
         function deleteAppointment() {
             var appointmentId = $('#deleteAppointmentId').val();
 
@@ -1392,10 +1349,8 @@
                     'id': appointmentId
                 },
                 success: function (data) {
-                    //console.log(data);
                     $('#deleteConfirmationModal').modal('hide');
 
-                    // Add auto-refresh after a successful deletion
                     setTimeout(function () {
                         location.reload();
                     }, 300);
@@ -1406,17 +1361,14 @@
             });
         }
 
-        //--------------------------------------------------------------
         function onchangeUpdateDepartment(data){
             if(data.val()) {
                 $.get("{{ url('department/get').'/' }}"+data.val(), function(result) {
-                    //console.log('Department Data:', result);
                     $('#update_department_id').html('');
                     $('#update_department_id').append($('<option>', {
                         value: "",
                         text: "Select Department"
                     }));
-                    // Use an object to store unique department IDs
                     var uniqueDepartments = {};
                     $.each(result, function(index, userData){
                         if (userData.department && userData.department.description && !uniqueDepartments[userData.department.id]) {
@@ -1424,7 +1376,6 @@
                                 value: userData.department.id,
                                 text: userData.department.description,
                             }));
-                            // Mark department ID as visited to avoid duplicates
                             uniqueDepartments[userData.department.id] = true;
                         }
                     });
@@ -1432,10 +1383,8 @@
             }
         }
 
-        //--------------------------------------------------------------
         $(document).ready(function() {
             var facility_id = $(`#id`).val();
-            // console.log(facility_id);
 
             if (facility_id) {
                 $.get("{{ url('get-doctors').'/' }}" + facility_id, function(result) {
@@ -1445,17 +1394,14 @@
                     for (var i = 1; i <= current_appointment_count; i++) {
                         const doctorSelect = $(`.available_doctor${i}`);
                         
-                        // Clear existing options
                         doctorSelect.empty();
 
-                        // Add "Select Doctors" placeholder option
                         doctorSelect.append($('<option>', {
                             value: "",
                             text: "Select Doctors",
-                            disabled: true // Only a placeholder, non-selectable
+                            disabled: true
                         }));
 
-                        // Append doctor options
                         $.each(query_doctor_store, function(index, userData) {
                             doctorSelect.append($('<option>', {
                                 value: userData.id,
@@ -1463,11 +1409,9 @@
                             }));
                         });
 
-                        // Event listener to update the selected option
                         doctorSelect.on('change', function() {
                             const selectedValue = $(this).val();
                             if (selectedValue) {
-                                // If a doctor is selected, remove the "Select Doctors" placeholder
                                 $(this).find('option[value=""]').remove();
                             }
                         });
@@ -1480,8 +1424,7 @@
         function addTimeInput(ok) {
             let currentCount = $(".appointment_count").val();
             $(".appointment_count").val(++currentCount);
-            // console.log("deleteCount:", deleteCount, " currentCount:", currentCount);
-            var adjustedCounts = currentCount  //currentCount - deleteCount;
+            var adjustedCounts = currentCount;
             console.log("adjustedCounts", adjustedCounts);
             if (adjustedCounts < 1) adjustedCounts = 1;
 
@@ -1520,7 +1463,6 @@
                 $(".appointment_count").val(updatedCount);
 
                 slotFormFields(); 
-                // $('#add_slots').prop('disabled', false);
             });
 
             $('.select2').select2();
@@ -1537,11 +1479,6 @@
 
            slotFormFields(); 
         }
-        //disabled Add appointment button
-
-        // function initializeSelect2() {
-        //     $('.available_doctor').select2(); // Adjust the selector as needed
-        // }
         
         function slotFormFields(){
             let allfilled = true;
@@ -1553,7 +1490,6 @@
                 const timefrom = $(this).find('input[name^="add_appointed_time"]').val();
                 const timeTo = $(this).find('input[name^="add_appointed_time_to"]').val();
                 const timeSlot = $(this).find('input[name^="slot"]').val();
-                // const availableDoctor = $(this).find('select[name^="add_available_doctor"]').val();
 
                 if(!timefrom || !timeTo || timefrom == '' || !timeSlot) {
                     allfilled = false;
@@ -1582,11 +1518,9 @@
             let timeSlots = [];
 
             $('.time-input-group').each(function() {
-                // Capture the "from" time and "to" time
                 let fromTimeObj = $(this).find('input[name^="add_appointed_time"]').val().slice(0,5);
                 let toTimeObj = $(this).find('input[name^="add_appointed_time_to"]').val().slice(0,5);
             
-                // If both times are selected, construct the object
                 if (fromTimeObj && toTimeObj) {
                     var timeObject = {
                         from: fromTimeObj,
@@ -1600,7 +1534,6 @@
             var fromTimeObj = new Date(appointmentDate + "T" + fromTime);
             var toTimeObj = new Date(appointmentDate + "T" + toTime);
 
-            // console.log("toTimeObj", toTimeObj);
             if (toTimeObj <= fromTimeObj) {
                 alert('End time must be after start time');
                 toInput.val('');
@@ -1623,8 +1556,6 @@
 
             const now = new Date();
             const nowDate = now.toISOString().split('T')[0];
-            //  console.log("appointment Date", appointmentDate);
-            //  console.log("nowDate", nowDate);
             if(appointmentDate === nowDate && fromTimeObj < now){
             
                 if(fromTimeObj < now){
@@ -1651,13 +1582,7 @@
         });
 
         $('#updateConfirmationModal').on('hidden.bs.modal', function () {
-            // Clear all input fields when the Update modal is closed
-            // $(this).find('input').val('');
-
-            // Reset all select fields to default
             $(this).find('select').prop('selectedIndex', 0);
-
-            // Remove dynamically added slots or fields
             $(this).find('.time-input-group').remove();
         });
 
@@ -1665,12 +1590,10 @@
         
         $('#Add_Cancel_appointment, #Add-close-apppoint').on('click', function() {
             skipAlertCLose = true;
-            // $(this).find('.time-input-group').remove();
             $('#addAppointmentForm_add')[0].reset();
             $('.select2').val(null).trigger('change'); 
             $('#additionalTimeContainer').empty();
             $(".appointment_count").val(1);
-            // console.log("wok ra");
 
             setTimeout(() => {
                 skipAlertCLose = false;
@@ -1689,9 +1612,7 @@
             $(".appointment_count").val(++currentCount);
             var timeInputGroup = $('<div class="time-input-group">');
             var appointments = appointment ? appointment : '';
-            // var doctorId = appointment.telemed_assign_doctor.map(doctorId=>doctorId.user.id);
             var appointmentDate = appointment && appointment.appointed_date ? appointment.appointed_date : '';
-            // let selectedSubOpd = subOpd.find(opd => opd.id == appointments.opdCategory ? appointments.opdCategory  : userSud);
                if(appointment){
                 var selectId = "Update_available_doctor" + currentCount;
                 var additionalTimeInput = `<div class="label-border-time">
@@ -1720,7 +1641,6 @@
                                                 </div>
                                             </div>`;
                                         }else{
-                                             //this will add a new form 
                                             var additionalTimeInput = `<div class="label-border-time">
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -1743,7 +1663,6 @@
                                             </div>`;
                                         }       
                                  
-            // Add the delete button
             var deleteBtn = '<div><button type="button" class="btn btn-danger btn-sm delete-time-input" data-index="{{index}}" style="margin-top: 15px;"><span><i class="fa fa-trash"></i></span></button></div>';
             if(currentCount > 2){
                 timeInputGroup.append(deleteBtn);
@@ -1755,17 +1674,14 @@
           
             let totalSlot = $('.time-input-group').length;
 
-            $('#cancelUpdate, #closeUpdate').on('click', function() { // reset currentCount for closing the modal update
+            $('#cancelUpdate, #closeUpdate').on('click', function() {
                 currentCount = 1;
                 $(".appointment_count").val(currentCount);
 
                 $('#addAppointmentFormUpdate').find(`[name^="update_appointed_time"], [name^="update_appointed_time_to"], [name^="Update_available_doctor"]`).val('');
-
-                // console.log("it is work");
             });
           
             if(appointment){
-                // console.log('timeInputGroup', timeInputGroup.length);
                 timeInputGroup.find('.delete-time-input').on('click', function () {
                     var appoint_id = appointment.id;
                     var url = "{{ route('delete-timeSlot', ':id') }}";
@@ -1827,20 +1743,17 @@
                     }));
                 });
             });
-        //-----------------------for update fix
  
         let appointmentSlot = [];
         
         function checkConflict(slotIndex, fromTime, toTime) {
             console.log("slotIndex", slotIndex, "number appointmentSlot", appointmentSlot.length);
             for (let i = 0; i < appointmentSlot.length; i++) {
-                if (i === slotIndex) continue; // Skip checking against itself for updates
-                // console.log("Comparing with slot:", i, "slot index:", slotIndex);
+                if (i === slotIndex) continue;
                 const slot = appointmentSlot[i];
                 const timeOverlap = (fromTime < slot.to && toTime > slot.from);
 
                 if (timeOverlap) {
-                    // console.log("conflict appointmentSlot", appointmentSlot);
                     return {
                         hasConflict: true,
                         message: `Time slot ${fromTime.toLocaleTimeString()} - ${toTime.toLocaleTimeString()} conflicts with existing appointment ${slot.from.toLocaleTimeString()} - ${slot.to.toLocaleTimeString()}`
@@ -1856,17 +1769,13 @@
         function addOrUpdateSlot(slotIndex, fromTime, toTime) {
             
             let OrigslotIndex  = slotIndex - (UpdatedeleteCount + 1);  
-                
-            // console.log("OrigslotIndex update", "equal", OrigslotIndex);
 
             const conflict = checkConflict(OrigslotIndex, fromTime, toTime);
             if (conflict.hasConflict) {
-                // console.log(conflict.message);
                 
                 Lobibox.alert("error", {
                     msg: conflict.message
                  });
-                //fala
                 $(`#update_appointed_time${slotIndex + 1}`).val('');
                 $(`#update_appointedTime_to${slotIndex + 1}`).val('');
                 $(`#empty_appointed_time${slotIndex + 1}`).val('');
@@ -1883,13 +1792,11 @@
             console.log("New or Updated Slot:", OrigslotIndex, "at index:",  appointmentSlot.length);
 
             if (OrigslotIndex < appointmentSlot.length) {
-                // Update existing slot
                 appointmentSlot[OrigslotIndex] = newSlot;
             }else if(slotIndex === appointmentSlot.length){
                 appointmentSlot.push(newSlot);
             }
              else {
-                // Add new slot
                 appointmentSlot.push(newSlot);
             
             }
@@ -1916,10 +1823,7 @@
             let hasExistingSlots = false;
             let hasPartiallyFilledNewSlot = false;
             let allNewSlotsFilled = true;
-            //start sslot
-            // Start from index 2 for existing slots
-            for (let i = 2; i <= 15; i++) { // Assuming a maximum of 9 slots (adjust if needed)
-                // Existing slots logic
+            for (let i = 2; i <= 15; i++) {
                 let fromTime = $(`#update_appointed_time${i}`).val();
                 let toTime = $(`#update_appointedTime_to${i}`).val();
                 let update_slot = $(`#update_slot${i}`).val();
@@ -1930,11 +1834,9 @@
                         allExistingSlotsFilledAndValid = false;
                     }
                 }
-                // New slots logic
                 let newFromTime = $(`#empty_appointed_time${i}`).val();
                 let newToTime = $(`#empty_appointedTime_to${i}`).val();
                 let add_Slot = $(`#Addupdate_slot${i}`).val();
-                // let submit_edit = $(`#editsubmit`);
 
                 
                 if (newFromTime || newToTime || add_Slot || (newFromTime == "" || newToTime == "" || add_Slot == "")) {
@@ -1950,7 +1852,7 @@
             let shouldEnable = (allExistingSlotsFilledAndValid && hasExistingSlots) &&
                                (!hasPartiallyFilledNewSlot || (hasPartiallyFilledNewSlot && allNewSlotsFilled));
             $('#update_add_slots').prop('disabled', !shouldEnable);
-            $('#editsubmit').prop('disabled', !shouldEnable); // disabled the submit button if slot is empty
+            $('#editsubmit').prop('disabled', !shouldEnable);
 
         }
 
@@ -1959,17 +1861,14 @@
         });
 
         $(document).ready(function() {
-            // Initial call to update the button state on page load
             updateAddSlotButtonState();
 
-            // Use event delegation to listen for input changes
             $(document).on('input change', '.label-border-time input, .label-border-time select', function() {
                 updateAddSlotButtonState();
             });
         });
 
         let deleteTimefrom = [];
-        // Initialize appointmentSlot with existing data
         $(document).ready(function() {
         
             $('.time-input-group').each(function(index) {
@@ -1981,18 +1880,16 @@
                 let newtoTime = new Date(appointedDate + "T" + $(`#empty_appointedTime_to${index+1}`).val());
      
                 let slotIndexs = index-1;
-                //existing slot
                 if (!appointmentSlot[index]) {
-                    // Only add valid slots (ensure that the date is not invalid)
                     if (!isNaN(fromTime.getTime()) && !isNaN(toTime.getTime())) {
-                        appointmentSlot.push({ //existing slot
+                        appointmentSlot.push({
                             from: fromTime ,
                             to: toTime,
                         });
                     }
 
                     if (!isNaN(newfromTime.getTime()) && !isNaN(newtoTime.getTime())) {
-                        appointmentSlot.push({ //newly added slot
+                        appointmentSlot.push({
                             from: newfromTime ,
                             to: newtoTime,
                         });
@@ -2004,22 +1901,17 @@
             appointmentSlot = appointmentSlot.filter(slot => {
                 return !isNaN(slot.from.getTime()) && !isNaN(slot.to.getTime());
             });
-            // console.log("Initial appointmentSlot array:", appointmentSlot);
-            //updateAddSlotButtonState();
         });
 
 
-        // for retrieving existing slots
         $(document).on('change', `[name^="update_appointed_time"], [name^="update_appointed_time_to"]`, function () {
-            let slotIndex = parseInt($(this).attr('name').match(/\d+/)[0], 10) - 1; // Adjust index to be 0-based
+            let slotIndex = parseInt($(this).attr('name').match(/\d+/)[0], 10) - 1;
             var UpdateDate = $("#updateAppointmentId").val();
 
             let updatefromTime = $(`#update_appointed_time${slotIndex+1}`).val().slice(0,5);
             let updatetoTime = $(`#update_appointedTime_to${slotIndex+1}`).val().slice(0,5);
-            //updateAddSlotButtonState();
             
             if (!updatefromTime || !updatetoTime || !UpdateDate) {
-                // console.log("Missing time or date input");
                 return;
             }
 
@@ -2028,11 +1920,9 @@
 
             if (validateTimeSlot(UpfromTimeObj, UptoTimeObj)) {
                 if (addOrUpdateSlot(slotIndex, UpfromTimeObj, UptoTimeObj)) {
-                    // console.log("Slot updated successfully");
+                    // success
                 } else {
-                    // Revert to original values if update fails
                     let originalSlot = appointmentSlot[slotIndex];
-                    // console.log("originalSlot", originalSlot);
                     if (originalSlot) {
                         $(`#update_appointed_time${slotIndex+1}`).val(originalSlot.from.toTimeString().slice(0,5));
                         $(`#update_appointedTime_to${slotIndex+1}`).val(originalSlot.to.toTimeString().slice(0,5));
@@ -2044,18 +1934,14 @@
             
         });
         
-        // for adding new slots
         $(document).on('change', `[name^="empty_Add_appointed_time"], [name^="empty_Add_appointed_time_to"]`, function () {
             let index =  parseInt($(this).attr('name').match(/\d+/)[0], 10) - 1;
             let newfromTime = $(`#empty_appointed_time${index+1}`).val().slice(0,5);
             let newTotime = $(`#empty_appointedTime_to${index+1}`).val().slice(0,5);
             var UpdateDate = $("#updateAppointmentId").val();
-            // console.log("update time", newTotime);
             deleteTimefrom = newfromTime && newTotime;
-            //updateAddSlotButtonState();
 
             if (!newfromTime || !newTotime || !UpdateDate) {
-                // console.log("Missing time or date input");
                 return;
             }
 
@@ -2065,17 +1951,13 @@
             if (validateTimeSlot(UpfromTimeObj, UptoTimeObj)) {
               
                 if (addOrUpdateSlot(index, UpfromTimeObj, UptoTimeObj)) {
-                    // console.log("New slot added successfully");
-                } else {
-            
+                    // success
                 }
             } else {
                 $(`#empty_appointedTime_to${index+1}`).val("");
             }
            
         });
-
-        //-----------------------for update fix
 
             if(assignedDoc){
                 document.getElementById('appointed_date').disabled = true; 
@@ -2086,14 +1968,14 @@
             const update_slots = document.getElementById('update_add_slots');
             const appointedDate = $("#updateAppointmentId").val();
             
-            if(appointedDate){ // hide Add slot button if past date
+            if(appointedDate){
                 const currentDate = new Date();
                 const appointmentDate = new Date(appointedDate);
 
                 currentDate.setHours(0, 0, 0, 0);
                 appointmentDate.setHours(0, 0, 0, 0);
                 
-                if(appointmentDate < currentDate){ //disabled all slot if it is already in the past date
+                if(appointmentDate < currentDate){
                     update_slots.style.display = 'none';
                     document.getElementById('appointed_date').disabled = true;
                     if(appointmentDate <= currentDate){
@@ -2158,19 +2040,12 @@ function deleteTimeInput(appointment){
 
         $(document).ready(function() {
                 $('.select2').select2();
-                // $.each(query_doctor_store, function (index, userData) {
-                //     $(`.available_doctors${currentCount}`).append($('<option>', {
-                //         value: userData.id,
-                //         text: userData.lname + '' + userData.lname
-                //     }));
-                // });
             });  
 }
 
     $(document).ready(function() {
         $('#cancelbtn-clear').on('click', function() {
              $('#delete_additionalTimeContainer').empty();
-            // console.log("it works");
         });
 
             $('#appointment_filter').select2({
@@ -2181,9 +2056,8 @@ function deleteTimeInput(appointment){
     });
  
 // ----------------------Trapping Appointment Time From and Time To and Date----------------------------//    
-    const today = new Date().toISOString().split('T')[0]; // i add this for disabled the past date in appointment date
+    const today = new Date().toISOString().split('T')[0];
     document.querySelector('input[name="appointed_date"]').setAttribute('min', today);
-    // console.log('today', today);
 
 
    $(document).ready(function() {
@@ -2202,14 +2076,12 @@ function deleteTimeInput(appointment){
                     const timeOverlap = (slot1.from < slot2.to && slot1.to > slot2.from);
 
                     if (timeOverlap) {
-                        return true; // Conflict found
+                        return true;
                     }
                 }
             }
-            return false; // No conflicts
+            return false;
         }
-
-        //Add Appointment Validation
 
         $('input[name="slot1"]').on('input', function() {
            if (this.value < 1) this.value = 1;
@@ -2226,25 +2098,19 @@ function deleteTimeInput(appointment){
             currentCounts = index + 1;
             counts = index;
 
-            // var adjustedCounts = currentCounts - deleteCount;
-            // if (adjustedCounts < 1) adjustedCounts = 1;
             var fromInput = timeInputGroup.find(`input[name="add_appointed_time${currentCounts}"]`);
             var toInput = timeInputGroup.find(`input[name="add_appointed_time_to${currentCounts}"]`);
-            // var selectedDoctor = timeInputGroup.find(`select[name="add_available_doctor${currentCounts}[]"]`).val();
 
             var fromTime = fromInput.val();
             var toTime = toInput.val();
           
             let currentFrom = [];
             let currentTo = [];
-            // let currentDoctors = [];
             let timeSlots = [];
             $('.time-input-group').each(function() {
-                // Capture the "from" time and "to" time
                 let fromTimeObj = $(this).find('input[name^="add_appointed_time"]').val().slice(0,5);
                 let toTimeObj = $(this).find('input[name^="add_appointed_time_to"]').val().slice(0,5);
             
-                // If both times are selected, construct the object
                 if (fromTimeObj && toTimeObj) {
                     var timeObject = {
                         from: fromTimeObj,
@@ -2264,9 +2130,6 @@ function deleteTimeInput(appointment){
             var fromTimeObj = new Date(appointmentDate + "T" + fromTime);
             var toTimeObj = new Date(appointmentDate + "T" + toTime);
 
-
-            // var toTimeCur = new Date(appointmentDate + "T" + currentTo);
-            // var FromTimeCur = new Date(appointmentDate + "T" + currentFrom);
             var toTimeCur = currentTo.length > 0 ?  new Date(appointmentDate + "T" + currentTo[currentCounts - 1]) : null;
             var FromTimeCur =currentFrom.length > 0 ? new Date(appointmentDate + "T" + currentFrom[currentCounts -1]) : null;
 
@@ -2281,7 +2144,6 @@ function deleteTimeInput(appointment){
                     url: "{{ route('get-booked-dates') }}",
                     type: 'GET',
                     success: function(response){
-                            // console.log("response::", response);
                             var timeConflict = false;
                             var dateConflict = false;
                           
@@ -2301,11 +2163,10 @@ function deleteTimeInput(appointment){
 
                                     if(timeROverlap){
                                         timeConflict = true;
-                                        return false; // Break the loop
+                                        return false;
                                     }
                                 }
                             });
-                            // console.log("timeConflict", timeConflict);
                             if (timeConflict) {
                                 Lobibox.alert("error",
                                 {
@@ -2354,9 +2215,6 @@ function deleteTimeInput(appointment){
 
                 if (timeOverlap && i !== index) {
                     isUnique = false;
-                    // conflictDoctors = conflictDoctors.concat(
-                    //         existingTime.doctors.filter(doctor => timeObject.doctors.includes(doctor))
-                    //     );
                 }
             }
 
@@ -2365,8 +2223,6 @@ function deleteTimeInput(appointment){
                     {
                         msg: "Appointment time Slot is already taken"
                     });
-                    // console.log("Cleared From Input:", fromInput);
-                    // console.log("Cleared To Input:", toInput);
 
                     fromInput.val('');
                     toInput.val('');
@@ -2376,9 +2232,6 @@ function deleteTimeInput(appointment){
 
 
             if (toTimeObj <= fromTimeObj) {
-
-
-                // alert('End time must be after start time');
                 toInput.val('');
                 return;
             }
@@ -2386,8 +2239,6 @@ function deleteTimeInput(appointment){
 
             const now = new Date();
             const nowDate = now.toISOString().split('T')[0];
-            //  console.log("appointment Date", appointmentDate);
-            //  console.log("nowDate", nowDate);
             if(appointmentDate === nowDate && fromTimeObj < now){
             
                 if(fromTimeObj < now){
@@ -2401,16 +2252,11 @@ function deleteTimeInput(appointment){
             }
 
 
-            // If unique, add or update the time slot
             allAppointmentTimes[index] = timeObject;
 
 
             allAppointmentTimes = allAppointmentTimes.filter(appointment =>appointment.to instanceof Date && !isNaN(appointment.to));
 
-
-            // console.log("allAppointmentTimes", allAppointmentTimes);
-            // console.log("selectedDoctors::", timeObject);
-            // console.log('slot', index);
             $('input[name="appointed_date"]').data('fromTimeObj', fromTimeObj);
             $('input[name="appointed_date"]').data('Totime', toTimeObj);
 
@@ -2421,11 +2267,7 @@ function deleteTimeInput(appointment){
 
 
             $('.delete-time-input').on('click', function () {
-
-
-                // console.log("I remove the", allAppointmentTimes, 'index count', index);
-
-
+                // handle remove
             });
         });  
     });
@@ -2458,10 +2300,5 @@ function deleteTimeInput(appointment){
                 $('.appt_body').html(response);
             });
         }
-        //------------------------
     </script>
 @endsection
-
-
-
-
