@@ -289,7 +289,9 @@ $end = \Carbon\Carbon::parse($end)->format('m/d/Y');
                 // If the window was successfully opened, attempt to maximize it
                 newWindow.moveTo(0, 0);
                 newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                $("#examined_progress"+code+tracking_id).addClass("completed");
             }
+
         }
     </script>
 @endsection

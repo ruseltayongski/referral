@@ -1517,14 +1517,16 @@ export default {
         tracking_id: this.tracking_id,
         referring_md: this.form.referring_md,
       };
-      
+    
       axios
         .post(`${this.baseUrl}/api/video/prescription/check`, getPrescription)
         .then((response) => {
           if (response.data.status === "success") {
             const prescribedActivityId =
               response.data.prescriptions[0].prescribed_activity_id;
-              if (!response.data.signature) {
+              console.log("form data:", this.form);
+              if (!response.data.signature && this.form.referring_name != null) {
+                console.log("getPrescription:", getPrescription);
                 return Lobibox.alert("error", {
                   msg: this.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !",
                 });
@@ -1553,17 +1555,19 @@ export default {
         referring_md: this.form.referring_md,
       };
 
+      console.log("generateLabrequest payload:", this.form);
+      
       axios
         .post(url, payload)
         .then((response) => {
           if (response.data.id) {
           
-            if (!response.data.signature) {
+            if (!response.data.signature && this.form.referring_name != null) {
                 return Lobibox.alert("error", {
                   msg: this.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !",
                 });
               }
-              
+            
             const pdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
 
             // Set the PDF URL for the modal

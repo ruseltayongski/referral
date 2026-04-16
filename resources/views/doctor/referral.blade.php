@@ -429,6 +429,7 @@ $user = Session::get('auth');
             if (newWindow && newWindow.outerWidth) {
                 newWindow.moveTo(0, 0);
                 newWindow.resizeTo(screen.availWidth, screen.availHeight);
+                $("#examined_progress"+referral_code+activity_id).addClass("completed");
             }
 
             const checkWindowClosed = setInterval(() => {
@@ -438,6 +439,7 @@ $user = Session::get('auth');
                     clearInterval(checkWindowClosed); // Stop checking once closed
                 }
             }, 1000)
+           
 
             // const updateExamined = {
             //     code : referral_code
