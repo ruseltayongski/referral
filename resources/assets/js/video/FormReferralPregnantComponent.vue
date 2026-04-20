@@ -115,14 +115,14 @@ export default {
     file_path: {
       handler(newValue) {
         this.localFilePath = [...newValue];
-        console.log("File path updated:", this.localFilePath);
+        // console.log("File path updated:", this.localFilePath);
       },
       deep: true,
     },
     file_name: {
       handler(newValue) {
         this.localFileName = [...newValue];
-        console.log("File name updated:", this.localFileName);
+        // console.log("File name updated:", this.localFileName);
       },
       deep: true,
     },

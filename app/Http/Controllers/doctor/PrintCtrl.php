@@ -8,6 +8,7 @@ use App\Tracking;
 use App\Icd;
 use App\LabRequest;
 use App\User;
+use App\Facility;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\doctor\ReferralCtrl;
@@ -845,14 +846,25 @@ class PrintCtrl extends Controller
         $requested_by = $activity->labRequest[0]->requestedBy;
         $doctor_data = User::select('*')
                 ->where('id', $requested_by->id)->first();
-        // dd($doctor_data);
+        $facility_data = Facility::select('name', 'address', 'contact', 'email')
+                ->where('id', $doctor_data->facility_id)->first();
+        
+        // dd($facility_data);
         $header = 'Dr. ' . $requested_by->fname . ' ' . $requested_by->lname;
         
         $department = 'OPD';
-        $facility = $activity->referredFrom;
-        $facility_address = $facility->address;
-        $facility_contact = $facility->contact;
-        $facility_email = $facility->email;
+        if($activity->referred_from == 0){
+            $facility = $facility_data;
+            $facility_address = $facility_data->address;
+            $facility_contact = $facility_data->contact;
+            $facility_email = $facility_data->email;
+        }else{
+            $facility = $activity->referredFrom;
+            $facility_address = $facility->address;
+            $facility_contact = $facility->contact;
+            $facility_email = $facility->email;
+        }
+    
         $signature_path = realpath(__DIR__ . '/../../../../' . $requested_by->signature);
 
         $pdf = new PDFPrescription($header, $department, $facility->name, $facility_address, $facility_contact, $facility_email, $signature_path, $facility->license);

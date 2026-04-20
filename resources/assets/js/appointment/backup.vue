@@ -86,7 +86,7 @@ export default {
   },
   watch: {
     appointedTimes(payload) {
-      console.log("sample my madam", payload);
+      // console.log("sample my madam", payload);
 
       // this.sub_opd_id = payload[0]['opdCategory'];
       // if(this.facilitySelectedId == this.user.facility_id) {

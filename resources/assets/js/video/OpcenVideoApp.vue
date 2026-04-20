@@ -146,7 +146,7 @@ export default {
     };
   },
   mounted() {
-    console.log("USER PROP:", this.user);
+    // console.log("USER PROP:", this.user);
     this.handleEchoVideoCallLogs();
     // Validate baseUrl and tracking_id before proceeding
     // if (!this.baseUrl || !this.tracking_id) {
@@ -158,7 +158,7 @@ export default {
     // }
     // this.handleVideoCallInit();
     if (!this.allowJoining) {
-      console.log("Mounted logic skipped because allowJoining = false");
+      // console.log("Mounted logic skipped because allowJoining = false");
       return;
     }
     window.addEventListener("keydown", this.pregnantKeydown);
@@ -222,11 +222,11 @@ export default {
       .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
       .then((res) => {
         const response = res.data;
-        console.log("Form type response:", response);
+        // console.log("Form type response:", response);
         if (response.success) {
             this.form_version = response.form_type;
             this.form_type_form = response.type;
-            console.log("Form version:", this.form_version);
+            // console.log("Form version:", this.form_version);
             if (this.form_version === "version1") {
                 if(response.type === "normal"){
                     axios
@@ -244,7 +244,7 @@ export default {
 
                     this.icd = response.icd;
                     // console.log("testing\n" + this.icd);
-                    console.log("form type", response);
+                    // console.log("form type", response);
                     this.normal_formType = response.form_type;
                     this.file_path = response.file_path;
                     this.file_name = response.file_name;
@@ -255,7 +255,7 @@ export default {
                     console.error(error);
                     });
                 }else{
-                    console.log("please log pregnant here");
+                    // console.log("please log pregnant here");
                     axios 
                     .get(
                         `${this.baseUrl}/doctor/referral/video/pregnant/form/${this.tracking_id}`
@@ -263,7 +263,7 @@ export default {
                     .then((res) => {
                         const response = res.data;
                         this.pregnantType = response.form_type;
-                        console.log("Form response:", response.form_type);
+                        // console.log("Form response:", response.form_type);
                         // console.log("Form response:", response.form['pregnant'].referring_facility);
                         // console.log("testing");
                         // console.log(response);
@@ -366,7 +366,7 @@ export default {
                         this.file_name = response.file_name;
                         this.reason = response.reason;
 
-                        console.log("Form response:", response);
+                        // console.log("Form response:", response);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -401,8 +401,8 @@ export default {
       );
 
       // 2. Tell server to finalize/merge whatever chunks it already received
-      console.log(this.recordingSessionId);
-      console.log(this.isRecordingFinalized);
+      // console.log(this.recordingSessionId);
+      // console.log(this.isRecordingFinalized);
       if (this.recordingSessionId && !this.isRecordingFinalized) {
         navigator.sendBeacon(
           `${this.baseUrl}/api/save-screen-record/finalize`,
@@ -415,7 +415,7 @@ export default {
             username:     this.user?.username ?? "unknown",
           })], { type: "application/json" })
         );
-        console.log("📡 Finalize beacon sent on tab close");
+        // console.log("📡 Finalize beacon sent on tab close");
       }
 
       // console.log("User is leaving the page");
@@ -490,7 +490,7 @@ export default {
             }
             
             const response = await axios.post(`${this.baseUrl}/api/video/onboard/Saveuser`, data);
-            console.log("users", users);
+            // console.log("users", users);
             if(response.data.error) {
               console.error("Error saving user session:", response.data);
               // const msg = "Error saving user session";
@@ -506,12 +506,12 @@ export default {
             }
             else {
               if(this.get_referring_facility != 0 && this.get_accepting_md != 'yes'){
-                console.log("yes ringing");
+                // console.log("yes ringing");
                 $(document).ready(function () {
                   self.ringingPhoneFunc();
                 });       
               }else{
-                console.log("no ringing");
+                // console.log("no ringing");
                 this.isUserJoined = true;
               }
            

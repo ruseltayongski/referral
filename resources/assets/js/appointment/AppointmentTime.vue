@@ -81,7 +81,7 @@ export default {
     );
     if (telemedicineFollowUp) {
       this.followUpReferredId = telemedicineFollowUp[0].referred_id;
-      console.log(this.followUpReferredId);
+      // console.log(this.followUpReferredId);
       this.followDeclined = telemedicineFollowUp[0].Lateststatus;
       this.followUpCode = telemedicineFollowUp[0].code;
     }
@@ -186,7 +186,6 @@ export default {
     },
     
     proceedToPatientBooking(user) {
-      console.log("Proceeding to patient booking for user:", user);
       
       const selectedSlot = this.getSelectedSlot();
       
@@ -218,7 +217,7 @@ export default {
         return;
       }
       if (this.followUpReferredId) {
-        console.log("AppointmentDoctor", this.selectedAppointmentDoctor, opdSubcateg);
+        // console.log("AppointmentDoctor", this.selectedAppointmentDoctor, opdSubcateg);
         const [timeFrom, timeTo] = (String(configtime || "00:00-23:59")).split('-');
         $("#telemed_follow_code").val(this.followUpCode);
         $("#telemedicine_follow_id").val(this.followUpReferredId);
@@ -233,7 +232,7 @@ export default {
         $("#configTimeto").val(timeTo);
         $("#OPD_SubId").val(parseInt(opdSubcateg));
 
-        console.log("follow declined:",this.followDeclined);
+        // console.log("follow declined:",this.followDeclined);
         if(this.followDeclined){
           $("#rebookAppoitment").val(this.followDeclined);
           $("#followup_header").html("Rebook Appointment");

@@ -563,8 +563,8 @@ import { event } from 'jquery';
                 const refericonContainer = $("#queue_number" + patient_code + activity_id);
                 const followiconContainer = $("#follow_queue_number" + patient_code + activity_id);
                 
-                console.log("refer icon", refericonContainer);
-                console.log("follow icon", followiconContainer);
+                // console.log("refer icon", refericonContainer);
+                // console.log("follow icon", followiconContainer);
 
                 if (!rejected_process_element.length) {
                     console.error("❌ Rejected progress element not found", patient_code, activity_id);
@@ -574,12 +574,12 @@ import { event } from 'jquery';
                 const declinedIcon = '<i class="fa fa-thumbs-down" aria-hidden="true" style="font-size:15px;"></i>';
              
                 if(refericonContainer.length && !refericonContainer.is(':empty')){
-                    console.log("it works");
-                    console.log("HTML before:", refericonContainer.html());
+                    // console.log("it works");
+                    // console.log("HTML before:", refericonContainer.html());
                     refericonContainer.html(declinedIcon);
                 }else if(followiconContainer.length){
-                    console.log("it works follow");
-                    console.log("follow HTML before:", followiconContainer.html());
+                    // console.log("it works follow");
+                    // console.log("follow HTML before:", followiconContainer.html());
                     followiconContainer.html(declinedIcon);
                 }else{
                     console.error("❌ No icon container found", patient_code, activity_id);
@@ -594,8 +594,8 @@ import { event } from 'jquery';
                 })
                 .first();
 
-                console.log("hasFollowup:", hasFollowup);
-                console.log("lastContainer:", lastContainer);
+                // console.log("hasFollowup:", hasFollowup);
+                // console.log("lastContainer:", lastContainer);
 
                 // 🔴 CASE 1: No follow-ups yet → FIRST position gets rebook
                 if (!hasFollowup && firstContainer.length) {
@@ -607,7 +607,7 @@ import { event } from 'jquery';
                         </button>
                     `).show();
 
-                    console.log("✅ Rebook on FIRST position");
+                    // console.log("✅ Rebook on FIRST position");
                     // return;
                 }
 
@@ -625,7 +625,7 @@ import { event } from 'jquery';
                         </button>
                     `).show();
 
-                    console.log("✅ Rebook on LAST position");
+                    // console.log("✅ Rebook on LAST position");
                 }
 
                 let declinedButtonName = '';
@@ -989,7 +989,7 @@ import { event } from 'jquery';
             },
             callADoctor(tracking_id,code,subopd_id, telemedicine, status) {
 
-                console.log("call doctor status", status);
+                // console.log("call doctor status", status);
                 if(this.user.subopd_id == subopd_id && telemedicine == 1){
                     this.tracking_id = tracking_id
                     this.referral_code = code
@@ -1426,7 +1426,7 @@ import { event } from 'jquery';
 
                             const tId = event.payload.tracking_id;
                             const sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
-                            console.log("faciltiydirect", event.payload.opcen_facility_call_to,this.user.facility_id, "department", event.payload.filter_department,this.user.department_id)
+                            // console.log("faciltiydirect", event.payload.opcen_facility_call_to,this.user.facility_id, "department", event.payload.filter_department,this.user.department_id)
                             if(event.payload.opcen_facility_call_to === this.user.facility_id && event.payload.filter_department === this.user.department_id){
                                  console.log("please work on this");
                                 // if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
