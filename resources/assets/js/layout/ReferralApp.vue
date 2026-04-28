@@ -437,11 +437,13 @@ import { event } from 'jquery';
             notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
                 $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 console.log("seenn progress:", $("#seen_progress"+patient_code+activity_id).addClass("completed"));
-
+                // console.log('seen_by_facility', seen_by_facility);
+                // console.log('pass to vue facility', this.passToVueFacility);
                 let msg = patient_name+' was seen by Dr. '+seen_by+' of '+seen_by_facility + '<br><br>\n' +
                     '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
                     '           <i class=\'fa fa-stethoscope\'></i> Track\n' +
                     '       </a>';
+                
                 Lobibox.notify('info', {
                     delay: false,
                     title: 'Referral Seen',
@@ -1286,9 +1288,16 @@ import { event } from 'jquery';
 
             Echo.join('referral_seen')
                 .listen('SocketReferralSeen', (event) => {
+                    // console.log("referral seen event", event.payload);
+                    // console.log("passToVueFacility", this.passToVueFacility);
+                    // console.log('user facility id', this.user.facility_id == event.payload.referred_facility_id);
                     $("#count_seen"+event.payload.patient_code).html(event.payload.count_seen); //increment seen both referring and referred
                     if(event.payload.referring_facility_id === this.passToVueFacility || event.payload.referring_facility_id === this.user.facility_id || (this.passToVueFacility === event.payload.referred_facility_id && event.payload.telemed === 1)) {
-                        this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track)
+                        if(this.user.facility_id == event.payload.referred_facility_id && event.payload.telemed === 1){
+                            return;
+                        }else{
+                            this.notifyReferralSeen(event.payload.patient_name, event.payload.seen_by, event.payload.seen_by_facility, event.payload.patient_code, event.payload.activity_id, event.payload.redirect_track)
+                        }             
                     }
                 });
 
