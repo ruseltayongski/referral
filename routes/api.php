@@ -22,7 +22,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResource('laboratories', 'ApiController');
 Route::post('icd10/search/{keyword}', 'TelemedicineApiCtrl@searchIcd10');
 Route::post('check/labresult',[ApiController::class, 'checkLabResult']);
-Route::post('patient/followup', 'TelemedicineApiCtrl@patientFollowUp');
+// Route::post('patient/followup', 'TelemedicineApiCtrl@patientFollowUp');
 //api for telemedicine app
 Route::post('telemed/login', 'TelemedicineApiCtrl@login');
 Route::get('telemed/test', 'TelemedicineApiCtrl@test');
@@ -37,3 +37,4 @@ Route::get('LabRequest', 'ApiController@index');
 Route::post('/mobile/video/prescriptions/version2', 'ApiController@savePrescription_version2');
 Route::get('checkIfUserIsPatient/{patient_id}', 'TelemedicineApiCtrl@checkIfUserIsPatient');
 Route::get('checkIfUserIsPatient/tracking/{tracking_id}', 'TelemedicineApiCtrl@checkIfUserIsPatientTracking');
+Route::get('schedule/check-slots', 'TelemedicineApiCtrl@checkAvailableSlots');

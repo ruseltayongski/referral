@@ -342,8 +342,8 @@
                         type: 'GET',
                         url: '{{ route("get-available-time-slots") }}',
                         data: {
-                            selected_date: selectedDate
-//                                facility_id: facility_id
+                            selected_date: selectedDate,
+                            facility_id: appointmentId
                         },
                         success: function (response) {
                             // Update the radio button list with available time slots

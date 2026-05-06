@@ -9,6 +9,7 @@ use App\Facility;
 use App\AppointmentSchedule;
 use App\TelemedAssignDoctor;
 use App\Events\NewReferral;
+use App\Events\SocketReferralAccepted;
 use App\Feedback;
 use App\Seen;
 use Illuminate\Support\Facades\Session;
@@ -31,9 +32,11 @@ use App\PregnantForm;
 use App\Department;
 use App\PatientForm;
 use App\ReasonForReferral;
-use App\Http\Controllers\doctor\PatientCtrl;  
+use App\Http\Controllers\doctor\PatientCtrl;
+use App\Http\Controllers\doctor\ReferralCtrl;  
 use Mail;
 use App\Mail\AppointmentMail;
+
 class TelemedicineApiCtrl extends Controller
 {
     public function login(Request $req)
@@ -485,142 +488,123 @@ class TelemedicineApiCtrl extends Controller
 
     public function patientFollowUp(Request $request)
     {
-        $user = null;
-        $doctorId = 0;
+        // ✅ Session-based user resolution only
+        $user = Session::get('auth') ?? auth()->user();
 
-        if ($request->filled('doctor_id')) {
-            $doctorId = intval($request->input('doctor_id'));
-            if ($doctorId > 0) {
-                $user = User::find($doctorId);
-            }
+        if (!$user) {
+            return response()->json(['status' => 'failed', 'message' => 'Unauthenticated'], 401);
         }
 
-        if (!$user && $request->filled('username')) {
-            $user = User::where('username', trim($request->input('username')))->first();
-            if ($user) {
-                $doctorId = $user->id;
-            }
-        }
-
-        if (!$user && Session::has('auth')) {
-            $user = Session::get('auth');
-            $doctorId = $user->id;
-        }
-
-        if (!$user && auth()->check()) {
-            $user = auth()->user();
-            $doctorId = $user->id;
-        }
-
-        $userId = $user ? $user->id : $doctorId;
-        $createdBy = $userId;
+        $doctorId = $user->id;
+        $userId = $user->id;
+        $createdBy = $user->id;
 
         $tracking = Tracking::where('code', $request->code)->first();
         if (!$tracking) {
             return response()->json(['status' => 'failed', 'message' => 'Tracking record not found'], 404);
         }
 
-        if (!$userId) {
-            $fallbackUserId = $tracking->action_md ?: $tracking->referring_md ?: 0;
-            $userId = $fallbackUserId;
-            $createdBy = $fallbackUserId;
-            $doctorId = $fallbackUserId;
-        }
-
+        // ✅ Always set followup first
         $tracking->status = 'followup';
         $tracking->save();
 
         $scheduledAppointmentId = null;
         $trackingCode = $request->input('code') ?: $tracking->code;
-        $useExistingSchedule = false;
+        $useExistingSchedule = filter_var($request->input('use_existing_schedule'), FILTER_VALIDATE_BOOLEAN);
+        $selectedScheduleId = $request->input('schedule_id');
+
         $telemedicine = $request->filled('telemedicine')
             ? filter_var($request->input('telemedicine'), FILTER_VALIDATE_BOOLEAN)
             : (bool) $tracking->telemedicine;
 
         if ($request->filled('date') && $request->filled('timeFrom') && $request->filled('timeTo')) {
+
             $appointmentDate = date('Y-m-d', strtotime($request->input('date')));
             $timeFrom = $request->input('timeFrom');
             $timeTo = $request->input('timeTo');
+
             $facilityForSchedule = $request->followup_facility_telemed ?: $tracking->referred_to;
             $departmentForSchedule = $tracking->department_id;
+
             $opdCategory = $request->filled('opdSubId')
                 ? $request->input('opdSubId')
                 : ($request->filled('configId')
                     ? $request->input('configId')
                     : ($tracking->subopd_id ?: 0));
-            $useExistingSchedule = filter_var($request->input('use_existing_schedule'), FILTER_VALIDATE_BOOLEAN);
 
-            $existingSchedule = AppointmentSchedule::where('facility_id', $facilityForSchedule)
-                ->where('appointed_date', $appointmentDate)
-                ->where('department_id', $departmentForSchedule)
-                ->where('appointed_time', '<=', $timeTo)
-                ->where('appointedTime_to', '>=', $timeFrom)
-                ->first();
+            if ($useExistingSchedule && $selectedScheduleId) {
 
-            if ($existingSchedule && !$useExistingSchedule) {
-                return response()->json([
-                    'status' => 'conflict',
-                    'message' => 'Schedule conflict detected. Do you want to use the existing appointment schedule? ',
-                    'existing_schedule_id' => $existingSchedule->id,
-                    'existing_schedule' => [
-                        'id' => $existingSchedule->id,
-                        'appointed_date' => $existingSchedule->appointed_date,
-                        'appointed_time' => $existingSchedule->appointed_time,
-                        'appointedTime_to' => $existingSchedule->appointedTime_to,
-                        'facility_id' => $existingSchedule->facility_id,
-                        'department_id' => $existingSchedule->department_id,
-                        'opdCategory' => $existingSchedule->opdCategory,
-                        'slot' => $existingSchedule->slot,
-                    ],
-                ], 409);
-            }
-
-            if ($existingSchedule && $useExistingSchedule) {
-                $scheduledAppointmentId = $existingSchedule->id;
-            }
-
-            if (!$existingSchedule) {
-                $appointmentSchedule = new AppointmentSchedule();
-                $appointmentSchedule->appointed_date = $appointmentDate;
-                $appointmentSchedule->appointed_time = $timeFrom;
-                $appointmentSchedule->appointedTime_to = $timeTo;
-                $appointmentSchedule->facility_id = $facilityForSchedule;
-                $appointmentSchedule->department_id = $departmentForSchedule;
-                $appointmentSchedule->opdCategory = $user->subopd_id ?: $opdCategory;
-                $appointmentSchedule->created_by = $createdBy;
-                $appointmentSchedule->appointed_by = $createdBy;
-                $appointmentSchedule->code = $trackingCode;
-                $appointmentSchedule->slot = 1;
-                $appointmentSchedule->status = 'active';
-                $appointmentSchedule->save();
-
-                $scheduledAppointmentId = $appointmentSchedule->id;
-            }
-        }
-
-        if ($telemedicine || $useExistingSchedule) {
-            $appointmentIdToUse = $scheduledAppointmentId ?: $request->Appointment_id;
-            if ($appointmentIdToUse) {
-                if ($request->configId) {
-                    $telemedAssigned = new TelemedAssignDoctor();
-                    $telemedAssigned->subopd_id = $request->configId;
-                    $telemedAssigned->appointment_id = $appointmentIdToUse;
-                    $telemedAssigned->doctor_id = $doctorId;
-                    $telemedAssigned->save();
+                $existingSchedule = AppointmentSchedule::find($selectedScheduleId);
+                if ($existingSchedule) {
+                    $scheduledAppointmentId = $existingSchedule->id;
                 } else {
-                    $telemedAssignDoctor = new TelemedAssignDoctor();
-                    $telemedAssignDoctor->appointment_id = $appointmentIdToUse;
-                    $telemedAssignDoctor->doctor_id = $doctorId;
-                    $telemedAssignDoctor->save();
+                    return response()->json(['status' => 'failed', 'message' => 'Selected schedule not found'], 404);
+                }
+
+            } else {
+
+                $existingSchedule = AppointmentSchedule::where('facility_id', $facilityForSchedule)
+                    ->where('appointed_date', $appointmentDate)
+                    ->where('department_id', $departmentForSchedule)
+                    ->where('appointed_time', '<=', $timeTo)
+                    ->where('appointedTime_to', '>=', $timeFrom)
+                    ->first();
+
+                if ($existingSchedule && !$useExistingSchedule) {
+                    return response()->json([
+                        'status' => 'conflict',
+                        'message' => 'Schedule conflict detected. Do you want to use the existing appointment schedule?',
+                        'existing_schedule_id' => $existingSchedule->id,
+                        'existing_schedule' => [
+                            'id' => $existingSchedule->id,
+                            'appointed_date' => $existingSchedule->appointed_date,
+                            'appointed_time' => $existingSchedule->appointed_time,
+                            'appointedTime_to' => $existingSchedule->appointedTime_to,
+                            'facility_id' => $existingSchedule->facility_id,
+                            'department_id' => $existingSchedule->department_id,
+                            'opdCategory' => $existingSchedule->opdCategory,
+                            'slot' => $existingSchedule->slot,
+                        ],
+                    ], 409);
+                }
+
+                if ($existingSchedule && $useExistingSchedule) {
+                    $scheduledAppointmentId = $existingSchedule->id;
+                }
+
+                if (!$existingSchedule) {
+                    $appointmentSchedule = new AppointmentSchedule();
+                    $appointmentSchedule->appointed_date = $appointmentDate;
+                    $appointmentSchedule->appointed_time = $timeFrom;
+                    $appointmentSchedule->appointedTime_to = $timeTo;
+                    $appointmentSchedule->facility_id = $facilityForSchedule;
+                    $appointmentSchedule->department_id = $departmentForSchedule;
+                    $appointmentSchedule->opdCategory = $user->subopd_id ?: $opdCategory;
+                    $appointmentSchedule->created_by = $createdBy;
+                    $appointmentSchedule->appointed_by = $createdBy;
+                    $appointmentSchedule->code = $trackingCode;
+                    $appointmentSchedule->slot = 1;
+                    $appointmentSchedule->status = 'active';
+                    $appointmentSchedule->save();
+
+                    $scheduledAppointmentId = $appointmentSchedule->id;
                 }
             }
         }
 
-        if (isset($createdActivity) && isset($appointmentSchedule) && $appointmentSchedule->id) {
-            $appointmentSchedule->created_by = $createdActivity->id;
-            $appointmentSchedule->save();
+        // Telemedicine assignment
+        if ($telemedicine || $useExistingSchedule) {
+            $appointmentIdToUse = $scheduledAppointmentId ?: $request->Appointment_id;
+            if ($appointmentIdToUse) {
+                $telemedAssignDoctor = new TelemedAssignDoctor();
+                $telemedAssignDoctor->appointment_id = $appointmentIdToUse;
+                $telemedAssignDoctor->doctor_id = $doctorId;
+                $telemedAssignDoctor->subopd_id = $request->configId ?? null;
+                $telemedAssignDoctor->save();
+            }
         }
 
+        // Get patient
         $patient_form = null;
         $patient_id = 0;
 
@@ -640,6 +624,7 @@ class TelemedicineApiCtrl extends Controller
             return response()->json(['status' => 'failed', 'message' => 'Patient form not found'], 404);
         }
 
+        // Create activity
         $activity = [
             'code' => $request->code,
             'patient_id' => $patient_id,
@@ -654,43 +639,14 @@ class TelemedicineApiCtrl extends Controller
             'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks : 'patient follow up',
             'status' => 'followup',
         ];
+
         $createdActivity = Activity::create($activity);
 
-        if ($request->hasFile('files')) {
-            $uploadFiles = $request->file('files');
-            $fileNames2 = [];
-            foreach ($uploadFiles as $file) {
-                $filepath = public_path() . '/fileupload/PublicDoctor';
-                $originalName = $file->getClientOriginalName();
-                $counter = 1;
-                while (file_exists($filepath . '/' . $originalName)) {
-                    $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME) . '_' . $counter . '.' . $file->getClientOriginalExtension();
-                    $counter++;
-                }
-                $file->move($filepath, $originalName);
-                $fileNames2[] = $originalName;
-            }
-            $activityFile = Activity::where('id', $request->followup_id)
-                ->where('code', $request->code)
-                ->orderby('id')
-                ->first();
-            if ($activityFile) {
-                $activityFile->lab_result = implode('|', $fileNames2);
-                $activityFile->save();
-            }
-        }
+        // ✅ AUTO ACCEPT — pass session user directly, no Request needed
+        $this->acceptFollowUp($user, $tracking->id);
 
+        // Broadcast
         $patient = Patients::find($tracking->patient_id);
-        $count_seen = Seen::where('tracking_id', $tracking->id)->count();
-        $count_reco = Feedback::where('code', $tracking->code)->count();
-        $redirect_track = asset('doctor/referred?referredCode=') . $tracking->code;
-        $position = Activity::where('code', $tracking->code)
-            ->where(function ($query) {
-                $query->where('status', 'redirected')
-                    ->orWhere('status', 'transferred')
-                    ->orWhere('status', 'followup');
-            })
-            ->count();
 
         $new_referral = [
             'patient_name' => ucfirst($patient->fname) . ' ' . ucfirst($patient->lname),
@@ -707,22 +663,145 @@ class TelemedicineApiCtrl extends Controller
             'age' => ParamCtrl::getAge($patient->dob),
             'patient_code' => $tracking->code,
             'status' => 'followup',
-            'count_seen' => $count_seen,
-            'count_reco' => $count_reco,
             'telemedicine' => 1,
-            'subOpdId' => $request->configId,
-            'SampleIDs' => '1233',
-            'redirect_track' => $redirect_track,
-            'position' => $position,
         ];
-     
+
         broadcast(new NewReferral($new_referral));
 
-        if (User::where('patient_id', $patient_id)->exists()) {
-            $this->sendConfirmationEmail($request->Appointment_id, $patient_id, 'followup', null);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Follow-up created and accepted',
+            'tracking_id' => $tracking->id,
+            'code' => $tracking->code
+        ], 200);
+    }
+
+    public function acceptFollowUp($user, $track_id)
+    {
+        // ✅ $user is passed directly — no resolution needed
+        if (!$user) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'No valid user found for acceptance'
+            ], 403);
         }
 
-        return response()->json(['status' => 'success', 'message' => 'Follow-up created', 'tracking_id' => $tracking->id, 'code' => $tracking->code], 200);
+        $track = Tracking::find($track_id);
+
+        if (!$track) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Tracking not found'
+            ], 404);
+        }
+
+        $referred_from = $track->referred_from;
+
+        // 🚫 Trap if already processed
+        if (
+            $track->status == 'accepted' ||
+            $track->status == 'rejected' ||
+            ($track->status == 'redirected' && $track->referred_to != $user->facility_id)
+        ) {
+            Session::put('incoming_denied', true);
+            return;
+        }
+
+        // ✅ Accept tracking
+        Tracking::where('id', $track_id)->update([
+            'status' => 'accepted',
+            'action_md' => $user->id,
+            'date_accepted' => date('Y-m-d H:i:s')
+        ]);
+
+        $track = Tracking::find($track_id);
+
+        // ✅ Create activity
+        $data = [
+            'code' => $track->code,
+            'patient_id' => $track->patient_id,
+            'date_referred' => date('Y-m-d H:i:s'),
+            'referred_from' => $track->referred_from,
+            'referred_to' => $user->facility_id,
+            'department_id' => $track->department_id,
+            'referring_md' => $track->referring_md,
+            'action_md' => $user->id,
+            'remarks' => 'Auto-accepted on follow-up',
+            'status' => $track->status
+        ];
+
+        $activity = Activity::create($data);
+
+        // ✅ Telemedicine email
+        $isPatientUserExist = User::where('patient_id', $track->patient_id)->exists();
+
+        if ($track->telemedicine == 1 && $referred_from == 0) {
+            $telemedicine_controller = new TelemedicineApiCtrl();
+
+            if ($isPatientUserExist) {
+                $telemedicine_controller->sendConfirmationEmail(
+                    $track->appointmentId,
+                    $track->patient_id,
+                    'accepted',
+                    asset("doctor/telemedicine") .
+                        '?id=' . $track->id .
+                        '&from_fact=0&code=' . $track->code .
+                        '&form_type=normal&telemed=1&referring_md=yes&activity_id=' . $activity->id
+                );
+            }
+        }
+
+        // 🔄 WEBSOCKET
+        $latest_activity = Activity::where("code", $track->code)
+            ->where(function ($query) {
+                $query->where("status", "referred")
+                    ->orWhere("status", "redirected")
+                    ->orWhere("status", "transferred")
+                    ->orWhere("status", "followup")
+                    ->orWhere("status", "rebooked");
+            })
+            ->orderBy("id", "desc")
+            ->first();
+
+        $telemed_redirected = Activity::select('status')
+            ->where("code", $track->code)
+            ->where("status", "redirected")
+            ->first();
+
+        $facility_referred = Activity::where("code", $track->code)
+            ->where("status", "referred")
+            ->orderBy("created_at", "asc")
+            ->first();
+
+        $patient = Patients::find($latest_activity->patient_id);
+
+        $redirect_track = asset("doctor/referred?referredCode=") . $latest_activity->code;
+
+        $referral_accepted = [
+            "patient_name" => ucfirst($patient->fname) . ' ' . $patient->mname . '. ' . ucfirst($patient->lname),
+            "accepting_doctor_id" => $user->id,
+            "accepting_doctor" => ucfirst($user->fname) . ' ' . ucfirst($user->lname),
+            "accepting_facility_name" => Facility::find($user->facility_id)->name,
+            "referred_from" => $latest_activity->referred_from,
+            "referred_to" => $latest_activity->referred_to,
+            "facility_referred" => $facility_referred->referred_from ?? null,
+            "patient_code" => $latest_activity->code,
+            "tracking_id" => $track_id,
+            "telemedicine" => $track->telemedicine,
+            "activity_id" => $latest_activity->id,
+            "date_accepted" => date('M d, Y h:i A', strtotime($activity->date_referred)),
+            "remarks" => $activity->remarks,
+            "redirect_track" => $redirect_track,
+            "telemed_redirected" => $telemed_redirected->status ?? null
+        ];
+
+        broadcast(new SocketReferralAccepted($referral_accepted));
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Follow-up accepted',
+            'tracking_id' => $track_id
+        ]);
     }
 
     public function sendConfirmationEmail($appointment_id, $patient_id, $status, $video_link = null)
@@ -1308,171 +1387,6 @@ class TelemedicineApiCtrl extends Controller
             })
             ->values();
             return response()->json($response);
-
-        // $dummyTracker = [
-        //     [
-        //         'patientName' => 'Jennifer Martinez',
-        //         'age' => 29,
-        //         'address' => '123 Main St, Cityville',
-        //         'patientGender' => 'Male',
-        //         'patient_contact_number' => '+1234567890',
-        //         'referred_by' => 'Dr. Sarah Chen',
-        //         'patientCode' => 'P001',
-        //         'activities' => [
-        //             [
-        //                 'date' => '15 Nov',
-        //                 'time' => '09:45',
-        //                 'info' => 'Referred to Central Medical Center by Dr. Sarah Chen from Community Health Clinic for specialized cardiac evaluation',
-        //                 'remarks' => 'Patient referred for specialist consultation',
-        //                 'patientName' => 'Jennifer Martinez',
-        //             ],
-        //             [
-        //                 'date' => '10 Nov',
-        //                 'time' => '14:30',
-        //                 'info' => 'Follow-up consultation at Community Health Clinic',
-        //                 'remarks' => 'Regular checkup completed',
-        //                 'patientName' => 'Jennifer Martinez',
-        //             ],
-        //             [
-        //                 'date' => '5 Nov',
-        //                 'time' => '11:00',
-        //                 'info' => 'Initial cardiac screening at Community Health Clinic',
-        //                 'remarks' => 'Preliminary tests conducted',
-        //                 'patientName' => 'Jennifer Martinez',
-        //             ],
-        //         ],
-        //     ],
-        //     [
-        //         'patientName' => 'Michael Thompson',
-        //         'address' => '456 Oak Ave, Townsville',
-        //         'age' => 45,
-        //         'patientGender' => 'Male',
-        //         'patient_contact_number' => '+1987654321',
-        //         'referred_by' => 'Dr. Sarah Chen',
-        //         'patientCode' => 'P002',
-        //         'activities' => [
-        //             [
-        //                 'date' => '15 Nov',
-        //                 'time' => '08:30',
-        //                 'info' => "Admitted to Emergency Department at St. Mary's Hospital with acute symptoms",
-        //                 'remarks' => 'Emergency admission processed',
-        //                 'patientName' => 'Michael Thompson',
-        //             ],
-        //             [
-        //                 'date' => '12 Nov',
-        //                 'time' => '10:15',
-        //                 'info' => 'Routine checkup at Family Clinic',
-        //                 'remarks' => 'Preventive care visit',
-        //                 'patientName' => 'Michael Thompson',
-        //             ],
-        //         ],
-        //     ],
-        //     [
-        //         'patientName' => 'Angela Rodriguez',
-        //         'address' => '789 Pine Rd, Villagetown',
-        //         'age' => 34,
-        //         'patientGender' => 'Female',
-        //         'patient_contact_number' => '+1122334455',
-        //         'referred_by' => 'Dr. Sarah Chen',
-        //         'patientCode' => 'P003',
-        //         'activities' => [
-        //             [
-        //                 'date' => '14 Nov',
-        //                 'time' => '16:20',
-        //                 'info' => 'Discharged from Regional Hospital Level 2 after successful post-operative recovery',
-        //                 'remarks' => 'Patient discharged with follow-up instructions',
-        //                 'patientName' => 'Angela Rodriguez',
-        //             ],
-        //             [
-        //                 'date' => '8 Nov',
-        //                 'time' => '07:00',
-        //                 'info' => 'Surgery performed at Regional Hospital Level 2',
-        //                 'remarks' => 'Procedure completed successfully',
-        //                 'patientName' => 'Angela Rodriguez',
-        //             ],
-        //             [
-        //                 'date' => '1 Nov',
-        //                 'time' => '13:45',
-        //                 'info' => 'Pre-operative consultation and preparation',
-        //                 'remarks' => 'Surgery scheduled',
-        //                 'patientName' => 'Angela Rodriguez',
-        //             ],
-        //         ],
-        //     ],
-        //     [
-        //         'patientName' => 'Robert Kim',
-        //         'address' => '321 Cedar St, Hamletburg',
-        //         'age' => 41,
-        //         'patientGender' => 'Male',
-        //         'patient_contact_number' => '+1223344556',
-        //         'referred_by' => 'Dr. Sarah Chen',
-        //         'patientCode' => 'P004',
-        //         'activities' => [
-        //             [
-        //                 'date' => '14 Nov',
-        //                 'time' => '14:15',
-        //                 'info' => 'Examined by Dr. James Wilson at Downtown Medical Plaza for routine annual physical examination',
-        //                 'remarks' => 'Annual checkup completed',
-        //                 'patientName' => 'Robert Kim',
-        //             ],
-        //         ],
-        //     ],
-        //     [
-        //         'patientName' => 'Patricia Brown',
-        //         'address' => '654 Spruce Ln, Boroughcity',
-        //         'age' => 37,
-        //         'patientGender' => 'Female',
-        //         'patient_contact_number' => '+1334455667',
-        //         'referred_by' => 'Dr. Sarah Chen',
-        //         'patientCode' => 'P005',
-        //         'activities' => [
-        //             [
-        //                 'date' => '14 Nov',
-        //                 'time' => '11:00',
-        //                 'info' => 'Underwent laboratory tests at Diagnostic Center including blood work and imaging studies',
-        //                 'remarks' => 'Lab results pending',
-        //                 'patientName' => 'Patricia Brown',
-        //             ],
-        //             [
-        //                 'date' => '7 Nov',
-        //                 'time' => '09:30',
-        //                 'info' => 'Initial consultation at Diagnostic Center',
-        //                 'remarks' => 'Tests ordered',
-        //                 'patientName' => 'Patricia Brown',
-        //             ],
-        //         ],
-        //     ],
-        //     [
-        //         'patientName' => 'David Lee',
-        //         'address' => '987 Willow Dr, Metroville',
-        //         'age' => 50,
-        //         'patientGender' => 'Male',
-        //         'patient_contact_number' => '+1445566778',
-        //         'referred_by' => 'Dr. Sarah Chen',
-        //         'patientCode' => 'P006',
-        //         'activities' => [
-        //             [
-        //                 'date' => '13 Nov',
-        //                 'time' => '15:45',
-        //                 'info' => 'Prescribed medication by Dr. Amanda Foster at Wellness Clinic for chronic condition management',
-        //                 'remarks' => 'Prescription issued',
-        //                 'patientName' => 'David Lee',
-        //             ],
-        //             [
-        //                 'date' => '6 Nov',
-        //                 'time' => '10:00',
-        //                 'info' => 'Follow-up for chronic condition management',
-        //                 'remarks' => 'Condition stable',
-        //                 'patientName' => 'David Lee',
-        //             ],
-        //         ],
-        //     ],
-        // ];
-
-        // return response()->json([
-        //     'success' => true,
-        //     'data' => $dummyTracker
-        // ]);
     }
 
     public function registerPatient(Request $req)
@@ -1682,5 +1596,96 @@ class TelemedicineApiCtrl extends Controller
         return response()->json([
             'message' => 'Leave recorded'
         ]);
+    }
+
+    public function checkAvailableSlots(Request $request)
+    {
+        try {
+            $date = $request->query('date');
+            $facilityId = $request->query('facility_id');
+
+            \Log::info('checkAvailableSlots called', [
+                'date' => $date,
+                'facility_id' => $facilityId,
+                'all_params' => $request->all()
+            ]);
+
+            if (!$date) {
+                return response()->json(['error' => 'Date parameter is required'], 400);
+            }
+
+            // Get existing appointment schedules for the date and facility
+            $query = AppointmentSchedule::where('appointed_date', $date)
+                ->where(function ($query) {
+                    $query->where('status', '!=', 'cancelled')
+                          ->orWhereNull('status');
+                })
+                ->whereNotNull('appointed_time')
+                ->whereNotNull('appointedTime_to');
+
+            // Only filter by facility if a valid facility_id is provided
+            if ($facilityId && $facilityId !== '' && $facilityId !== 'null' && $facilityId !== 'undefined') {
+                $query->where('facility_id', $facilityId);
+                \Log::info('Filtering by facility_id', ['facility_id' => $facilityId]);
+            } else {
+                \Log::info('Not filtering by facility_id');
+            }
+
+            $schedules = $query->with(['subOpd', 'facility'])
+                ->orderBy('appointed_time')
+                ->get();
+
+            \Log::info('Found schedules', ['count' => $schedules->count()]);
+
+            if ($schedules->count() === 0) {
+                \Log::info('No schedules found for requested date and facility');
+                $slots = [];
+            } else {
+                $slots = [];
+                foreach ($schedules as $schedule) {
+                    // Check how many slots are already taken for this schedule
+                    $takenSlots = TelemedAssignDoctor::where('appointment_id', $schedule->id)->count();
+                    $maxSlots = $schedule->slot ?? 10; // Use slot column for max patients
+
+                    $availability = 'Available';
+                    if ($takenSlots >= $maxSlots) {
+                        $availability = 'Full';
+                    } elseif ($takenSlots > 0) {
+                        $availability = ($maxSlots - $takenSlots) . ' slots left';
+                    }
+
+                    $slots[] = [
+                        'id' => $schedule->id,
+                        'time_from' => $schedule->appointed_time,
+                        'time_to' => $schedule->appointedTime_to,
+                        'date' => $schedule->appointed_date,
+                        'department' => $schedule->subOpd ? $schedule->subOpd->description : 'N/A',
+                        'facility' => $schedule->facility ? $schedule->facility->name : 'N/A',
+                        'facility_id' => $schedule->facility_id,
+                        'availability' => $availability,
+                        'taken_slots' => $takenSlots,
+                        'max_slots' => $maxSlots,
+                        'is_available' => $takenSlots < $maxSlots
+                    ];
+                }
+            }
+
+            return response()->json([
+                'success' => true,
+                'slots' => $slots,
+                'total_slots' => count($slots)
+            ]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error checking available slots: ' . $e->getMessage(), [
+                'date' => $request->query('date'),
+                'facility_id' => $request->query('facility_id'),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json([
+                'error' => 'Failed to fetch available slots',
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -51,6 +51,17 @@ export default {
       showPrescription: false,
       showUpward: false,
       showEndcall: false,
+      showFollowUp: false,
+      showFollowUpModal: false,
+      followUpForm: {
+        date: '',
+        timeFrom: '',
+        timeTo: ''
+      },
+      existingTimeSlots: [],
+      selectedTimeSlot: null,
+      followUpLoading: false,
+      checkingSlotsLoading: false,
       showVedio: false,
       showMic: false,
       ringingPhoneUrl: $("#broadcasting_url").val() + "/public/ringing.mp3",
@@ -866,6 +877,149 @@ export default {
     },
     closeFeedbackModal() {
       this.feedbackModalVisible = false; // Hide the feedback modal
+    },
+    openFollowUpModal() {
+      this.followUpForm = {
+        date: '',
+        timeFrom: '',
+        timeTo: ''
+      };
+      this.existingTimeSlots = [];
+      this.selectedTimeSlot = null;
+      this.showFollowUpModal = true;
+    },
+    checkExistingSlots() {
+      if (!this.followUpForm.date) {
+        this.existingTimeSlots = [];
+        this.selectedTimeSlot = null;
+        return;
+      }
+
+      this.checkingSlotsLoading = true;
+      const params = {
+        date: this.followUpForm.date,
+        facility_id: this.form.referred_to || this.user.facility_id
+      };
+
+      axios.get(this.baseUrl + '/api/schedule/check-slots', { params })
+        .then((response) => {
+          this.existingTimeSlots = (response.data.slots || []).sort((a, b) => {
+            const aFull = a.is_available === false || a.availability === 'Full';
+            const bFull = b.is_available === false || b.availability === 'Full';
+            if (aFull !== bFull) {
+              return aFull ? 1 : -1;
+            }
+            return (a.time_from || '').localeCompare(b.time_from || '');
+          });
+          this.checkingSlotsLoading = false;
+
+          if (this.existingTimeSlots.length === 0) {
+            // No alert needed for auto-checking, just show manual entry
+          }
+        })
+        .catch((error) => {
+          console.error('Error checking slots:', error);
+          this.checkingSlotsLoading = false;
+          this.existingTimeSlots = [];
+          Lobibox.alert('error', {
+            msg: 'Error fetching available slots.'
+          });
+        });
+    },
+    selectTimeSlot(slot) {
+      if (slot.is_available === false || slot.availability === 'Full') {
+        this.showSlotFullInfo(slot);
+        return;
+      }
+      this.selectedTimeSlot = slot;
+      this.followUpForm.timeFrom = slot.time_from;
+      this.followUpForm.timeTo = slot.time_to;
+    },
+    showSlotFullInfo(slot) {
+      Lobibox.alert({
+        msg: 'This slot is already full and cannot be selected. Please choose another time or create a new schedule.'
+      });
+    },
+    closeFollowUpModal() {
+      this.showFollowUpModal = false;
+    },
+    submitFollowUp() {
+      // Validation
+      if (!this.followUpForm.date || !this.followUpForm.timeFrom || !this.followUpForm.timeTo) {
+        Lobibox.alert('warning', {
+          msg: 'Please fill in all fields (Date, Time From, Time To).'
+        });
+        return;
+      }
+
+      // Validate time logic
+      if (this.followUpForm.timeFrom >= this.followUpForm.timeTo) {
+        Lobibox.alert('error', {
+          msg: 'Time To must be after Time From.'
+        });
+        return;
+      }
+
+      this.followUpLoading = true;
+
+      const payload = {
+        doctor_id: this.user.id,
+        username: this.user.username || '',
+        telemedicine: this.telemedicine || 0,
+        code: this.referral_code,
+        date: this.followUpForm.date,
+        timeFrom: this.followUpForm.timeFrom,
+        timeTo: this.followUpForm.timeTo,
+        followup_facility_telemed: this.form.referred_to || '',
+        use_existing_schedules: this.selectedTimeSlot ? true : false,
+        schedule_id: this.selectedTimeSlot ? this.selectedTimeSlot.id : null
+      };
+
+      axios.post(this.baseUrl + '/api/patient/followup', payload)
+        .then((response) => {
+          this.followUpLoading = false;
+          Lobibox.alert('success', {
+            msg: response.data.message || 'Follow-up scheduled successfully!',
+            callback: () => {
+              this.closeFollowUpModal();
+            }
+          });
+          this.closeFollowUpModal();
+        })
+        .catch((error) => {
+          const conflictData = error.response?.data;
+          if (error.response?.status === 409 && conflictData?.status === 'conflict' && conflictData?.existing_schedule) {
+            Lobibox.confirm({
+              title: 'Schedule Conflict',
+              msg: conflictData.message || 'Schedule conflict detected. Use the existing appointment schedule?',
+              callback: (box, type) => {
+                if (type === 'yes') {
+                  const existing = conflictData.existing_schedule;
+                  this.selectedTimeSlot = {
+                    id: conflictData.existing_schedule_id || existing.id,
+                    time_from: existing.appointed_time,
+                    time_to: existing.appointedTime_to
+                  };
+                  this.followUpForm.date = existing.appointed_date;
+                  this.followUpForm.timeFrom = existing.appointed_time;
+                  this.followUpForm.timeTo = existing.appointedTime_to;
+                  this.followUpLoading = false;
+                  this.submitFollowUp();
+                } else {
+                  this.followUpLoading = false;
+                }
+              } 
+            });
+            return;
+          }
+
+          let message = 'Unable to save follow-up schedule.';
+          if (conflictData?.message) {
+            message = conflictData.message;
+          }
+          Lobibox.alert('error', { msg: message });
+          this.followUpLoading = false;
+        });
     },
     startCallTimer() {
       // Store the start time in milliseconds
@@ -1836,6 +1990,24 @@ export default {
                     <i class="bi bi-chat-left-text"></i>
                   </button>
                 </div>
+                <div class="button-container" v-if="this.telemedicine == 1">
+                  <div
+                    v-if="!isMobileDevice && showFollowUp"
+                    class="tooltip-text"
+                    style="background-color: #6f42c1"
+                  >
+                    Follow Up
+                  </div>
+                  <button
+                    class="btn btn-primary btn-md"
+                    type="button"
+                    @click="openFollowUpModal()"
+                    @mouseover="showFollowUp = true"
+                    @mouseleave="showFollowUp = false"
+                  >
+                    <i class="bi bi-calendar-check"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </Transition>
@@ -1975,6 +2147,73 @@ export default {
         <p>
           Ending call in <b>{{ afkCountdown }}</b> seconds...
         </p>
+      </div>
+    </div>
+    <!-- Custom Follow Up Modal -->
+    <div v-if="showFollowUpModal" class="modal-overlay">
+      <div class="modal-content-custom">
+        <div class="modal-header-custom">
+          <h4>Schedule Follow Up</h4>
+          <button type="button" class="close-btn" @click="closeFollowUpModal">&times;</button>
+        </div>
+        <div class="modal-body-custom">
+          <div class="form-group">
+            <label>Date:</label>
+            <div style="display: flex; gap: 10px;">
+              <input type="date" v-model="followUpForm.date" @change="checkExistingSlots" class="form-control" style="flex: 1;">
+            </div>
+            <div v-if="checkingSlotsLoading" style="margin-top: 5px;">
+              <small class="text-muted">
+                <i class="fa fa-spinner fa-spin"></i> Checking available slots...
+              </small>
+            </div>
+          </div>
+
+          <!-- Existing Time Slots Display -->
+          <div v-if="existingTimeSlots.length > 0" class="slots-container">
+            <label style="font-weight: 600; display: block; margin-bottom: 10px;">Available Slots:</label>
+            <div class="existing-slots">
+              <div 
+                v-for="slot in existingTimeSlots" 
+                :key="slot.id"
+                class="slot-item"
+                :class="{
+                  'slot-selected': selectedTimeSlot && selectedTimeSlot.id === slot.id,
+                  'slot-full': slot.is_available === false || slot.availability === 'Full'
+                }"
+                @click="slot.is_available === false || slot.availability === 'Full' ? showSlotFullInfo(slot) : selectTimeSlot(slot)"
+              >
+                <div class="slot-time">{{ slot.time_from }} - {{ slot.time_to }}</div>
+                <div class="slot-info">
+                  <span>{{ slot.availability || 'Available' }}</span>
+                  <span v-if="slot.is_available === false || slot.availability === 'Full'" style="color: #dc3545; font-weight: 600; display: block; margin-top: 4px;">Full</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Manual Time Entry (when no slots selected or creating new) -->
+          <div v-if="!selectedTimeSlot || existingTimeSlots.length === 0" class="manual-entry">
+            <label v-if="existingTimeSlots.length > 0" style="font-weight: 600; display: block; margin: 15px 0 10px 0;">Or Create New Schedule:</label>
+            <div class="form-group">
+              <label>Time From:</label>
+              <input type="time" v-model="followUpForm.timeFrom" class="form-control">
+            </div>
+            <div class="form-group">
+              <label>Time To:</label>
+              <input type="time" v-model="followUpForm.timeTo" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-custom">
+          <button type="button" class="btn btn-default" @click="closeFollowUpModal" :disabled="followUpLoading">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" @click="submitFollowUp" :disabled="followUpLoading">
+            <span v-if="!followUpLoading">Save</span>
+            <span v-else><i class="fa fa-spinner fa-spin"></i> Saving...</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -2381,5 +2620,199 @@ td {
     height: 100% !important;
     object-fit: scale-down !important;
   }
+}
+
+/* Custom Follow Up Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999999;
+}
+
+.modal-content-custom {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+  overflow: hidden;
+}
+
+.modal-header-custom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+}
+
+.modal-header-custom h4 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+.modal-body-custom {
+  padding: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.modal-footer-custom {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 15px 20px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #f5f5f5;
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.btn-default {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-default:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Time Slots Display */
+.slots-container {
+  margin: 15px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+}
+
+.existing-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.slot-item {
+  padding: 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.slot-item:hover {
+  border-color: #007bff;
+  background-color: #e7f3ff;
+}
+
+.slot-item.slot-selected {
+  border-color: #28a745;
+  background-color: #d4edda;
+  font-weight: 600;
+}
+
+.slot-time {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.slot-info {
+  font-size: 12px;
+  color: #666;
+}
+
+.manual-entry {
+  margin-top: 10px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.btn-info {
+  background-color: #17a2b8;
+  color: white;
+  padding: 8px 12px;
+}
+
+.btn-info:hover:not(:disabled) {
+  background-color: #138496;
 }
 </style>

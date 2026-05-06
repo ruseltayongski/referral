@@ -795,7 +795,7 @@ Route::get('/register', function () {
 })->middleware('guest');
 
 
-// Notice and resend REQUIRE auth
+// Notice and resend require auth
 Route::group(['middleware' => 'auth'], function () {
 
     Route::get('/email/verify', 'Auth\VerificationController@show')
@@ -806,19 +806,12 @@ Route::group(['middleware' => 'auth'], function () {
         ->middleware('throttle:6,1');
 });
 
-
-// ✅ Verify route does NOT require auth — can verify while logged out
+// Verify link does not require auth so users can confirm from the email link
 Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')
     ->name('verification.verify');
-
-
-// Protected routes (requires login + verified email)
-Route::group(['middleware' => ['auth', 'verified']], function () {
-    Route::get('/telemedicine/dashboard', 'TelemedicineController@index');
-    // ... other protected routes
-});
 
 Route::post('/api/save-screen-record', 'doctor\TelemedicineCtrl@saveChunk');
 Route::post('/api/save-screen-record/finalize', 'doctor\TelemedicineCtrl@finalize');
 Route::get('/recordings/list', 'doctor\TelemedicineCtrl@recordingList');
 Route::get('/recordings/stream', 'doctor\TelemedicineCtrl@recordingStream');
+Route::post('/api/patient/followup', 'TelemedicineApiCtrl@patientFollowUp');

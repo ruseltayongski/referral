@@ -22995,6 +22995,17 @@ var doctorFeedback = "referral/doctor/feedback";
       showPrescription: false,
       showUpward: false,
       showEndcall: false,
+      showFollowUp: false,
+      showFollowUpModal: false,
+      followUpForm: {
+        date: '',
+        timeFrom: '',
+        timeTo: ''
+      },
+      existingTimeSlots: [],
+      selectedTimeSlot: null,
+      followUpLoading: false,
+      checkingSlotsLoading: false,
       showVedio: false,
       showMic: false,
       ringingPhoneUrl: $("#broadcasting_url").val() + "/public/ringing.mp3",
@@ -23806,14 +23817,153 @@ var doctorFeedback = "referral/doctor/feedback";
     closeFeedbackModal: function closeFeedbackModal() {
       this.feedbackModalVisible = false; // Hide the feedback modal
     },
-    startCallTimer: function startCallTimer() {
+    openFollowUpModal: function openFollowUpModal() {
+      this.followUpForm = {
+        date: '',
+        timeFrom: '',
+        timeTo: ''
+      };
+      this.existingTimeSlots = [];
+      this.selectedTimeSlot = null;
+      this.showFollowUpModal = true;
+    },
+    checkExistingSlots: function checkExistingSlots() {
       var _this11 = this;
+      if (!this.followUpForm.date) {
+        this.existingTimeSlots = [];
+        this.selectedTimeSlot = null;
+        return;
+      }
+      this.checkingSlotsLoading = true;
+      var params = {
+        date: this.followUpForm.date,
+        facility_id: this.form.referred_to || this.user.facility_id
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get(this.baseUrl + '/api/schedule/check-slots', {
+        params: params
+      }).then(function (response) {
+        _this11.existingTimeSlots = (response.data.slots || []).sort(function (a, b) {
+          var aFull = a.is_available === false || a.availability === 'Full';
+          var bFull = b.is_available === false || b.availability === 'Full';
+          if (aFull !== bFull) {
+            return aFull ? 1 : -1;
+          }
+          return (a.time_from || '').localeCompare(b.time_from || '');
+        });
+        _this11.checkingSlotsLoading = false;
+        if (_this11.existingTimeSlots.length === 0) {
+          // No alert needed for auto-checking, just show manual entry
+        }
+      })["catch"](function (error) {
+        console.error('Error checking slots:', error);
+        _this11.checkingSlotsLoading = false;
+        _this11.existingTimeSlots = [];
+        Lobibox.alert('error', {
+          msg: 'Error fetching available slots.'
+        });
+      });
+    },
+    selectTimeSlot: function selectTimeSlot(slot) {
+      if (slot.is_available === false || slot.availability === 'Full') {
+        this.showSlotFullInfo(slot);
+        return;
+      }
+      this.selectedTimeSlot = slot;
+      this.followUpForm.timeFrom = slot.time_from;
+      this.followUpForm.timeTo = slot.time_to;
+    },
+    showSlotFullInfo: function showSlotFullInfo(slot) {
+      Lobibox.alert({
+        msg: 'This slot is already full and cannot be selected. Please choose another time or create a new schedule.'
+      });
+    },
+    closeFollowUpModal: function closeFollowUpModal() {
+      this.showFollowUpModal = false;
+    },
+    submitFollowUp: function submitFollowUp() {
+      var _this12 = this;
+      // Validation
+      if (!this.followUpForm.date || !this.followUpForm.timeFrom || !this.followUpForm.timeTo) {
+        Lobibox.alert('warning', {
+          msg: 'Please fill in all fields (Date, Time From, Time To).'
+        });
+        return;
+      }
+
+      // Validate time logic
+      if (this.followUpForm.timeFrom >= this.followUpForm.timeTo) {
+        Lobibox.alert('error', {
+          msg: 'Time To must be after Time From.'
+        });
+        return;
+      }
+      this.followUpLoading = true;
+      var payload = {
+        doctor_id: this.user.id,
+        username: this.user.username || '',
+        telemedicine: this.telemedicine || 0,
+        code: this.referral_code,
+        date: this.followUpForm.date,
+        timeFrom: this.followUpForm.timeFrom,
+        timeTo: this.followUpForm.timeTo,
+        followup_facility_telemed: this.form.referred_to || '',
+        use_existing_schedules: this.selectedTimeSlot ? true : false,
+        schedule_id: this.selectedTimeSlot ? this.selectedTimeSlot.id : null
+      };
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post(this.baseUrl + '/api/patient/followup', payload).then(function (response) {
+        _this12.followUpLoading = false;
+        Lobibox.alert('success', {
+          msg: response.data.message || 'Follow-up scheduled successfully!',
+          callback: function callback() {
+            _this12.closeFollowUpModal();
+          }
+        });
+        _this12.closeFollowUpModal();
+      })["catch"](function (error) {
+        var _error$response2, _error$response3;
+        var conflictData = (_error$response2 = error.response) === null || _error$response2 === void 0 ? void 0 : _error$response2.data;
+        if (((_error$response3 = error.response) === null || _error$response3 === void 0 ? void 0 : _error$response3.status) === 409 && (conflictData === null || conflictData === void 0 ? void 0 : conflictData.status) === 'conflict' && conflictData !== null && conflictData !== void 0 && conflictData.existing_schedule) {
+          Lobibox.confirm({
+            title: 'Schedule Conflict',
+            msg: conflictData.message || 'Schedule conflict detected. Use the existing appointment schedule?',
+            callback: function callback(box, type) {
+              if (type === 'yes') {
+                var existing = conflictData.existing_schedule;
+                _this12.selectedTimeSlot = {
+                  id: conflictData.existing_schedule_id || existing.id,
+                  time_from: existing.appointed_time,
+                  time_to: existing.appointedTime_to
+                };
+                _this12.followUpForm.date = existing.appointed_date;
+                _this12.followUpForm.timeFrom = existing.appointed_time;
+                _this12.followUpForm.timeTo = existing.appointedTime_to;
+                _this12.followUpLoading = false;
+                _this12.submitFollowUp();
+              } else {
+                _this12.followUpLoading = false;
+              }
+            }
+          });
+          return;
+        }
+        var message = 'Unable to save follow-up schedule.';
+        if (conflictData !== null && conflictData !== void 0 && conflictData.message) {
+          message = conflictData.message;
+        }
+        Lobibox.alert('error', {
+          msg: message
+        });
+        _this12.followUpLoading = false;
+      });
+    },
+    startCallTimer: function startCallTimer() {
+      var _this13 = this;
       // Store the start time in milliseconds
       this.startTime = Date.now();
 
       // Update the timer every 10 milliseconds
       this.callTimer = setInterval(function () {
-        var elapsedTime = Date.now() - _this11.startTime;
+        var elapsedTime = Date.now() - _this13.startTime;
 
         // Calculate minutes, seconds, and milliseconds
         var hours = Math.floor(elapsedTime / 3600000);
@@ -23823,9 +23973,9 @@ var doctorFeedback = "referral/doctor/feedback";
         // Format the time as mm:ss:ms
 
         if (hours == 0) {
-          _this11.callDuration = "".concat(String(minutes).padStart(1, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
+          _this13.callDuration = "".concat(String(minutes).padStart(1, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
         } else {
-          _this11.callDuration = "".concat(String(hours).padStart(1, "0"), " : ").concat(String(minutes).padStart(2, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
+          _this13.callDuration = "".concat(String(hours).padStart(1, "0"), " : ").concat(String(minutes).padStart(2, "0"), " : ").concat(String(seconds).padStart(2, "0"), " ");
         }
       }, 10);
     },
@@ -23996,29 +24146,29 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     },
     startBasicCall: function startBasicCall() {
-      var _this12 = this;
+      var _this14 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
         var agoraEngine, joinedUsers, remotePlayerContainer, localPlayerContainer, self, localUid, devices, tracksToPublish;
         return _regeneratorRuntime().wrap(function _callee10$(_context10) {
           while (1) switch (_context10.prev = _context10.next) {
             case 0:
               // Create an instance of the Agora Engine
-              _this12.agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
+              _this14.agoraEngine = agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createClient({
                 mode: "rtc",
                 codec: "vp8"
               });
               // this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
-              agoraEngine = _this12.agoraEngine; // Use this reference
+              agoraEngine = _this14.agoraEngine; // Use this reference
               joinedUsers = new Set(); // Setup channel parameters with user count tracking
-              if (!_this12.channelParameters) {
-                _this12.channelParameters = {};
+              if (!_this14.channelParameters) {
+                _this14.channelParameters = {};
               }
-              _this12.channelParameters.userCount = 0; // Initialize user count
-              _this12.channelParameters.maxUsers = 2; // Maximum 2 users allowed
+              _this14.channelParameters.userCount = 0; // Initialize user count
+              _this14.channelParameters.maxUsers = 2; // Maximum 2 users allowed
               remotePlayerContainer = document.createElement("div");
               localPlayerContainer = document.createElement("div");
-              localPlayerContainer.id = _this12.options.uid;
-              self = _this12; // Listen for when a user joins the channel
+              localPlayerContainer.id = _this14.options.uid;
+              self = _this14; // Listen for when a user joins the channel
               agoraEngine.on("user-joined", /*#__PURE__*/function () {
                 var _ref2 = _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee8(user) {
                   return _regeneratorRuntime().wrap(function _callee8$(_context8) {
@@ -24026,11 +24176,11 @@ var doctorFeedback = "referral/doctor/feedback";
                       case 0:
                         console.log("User joined:", user.uid);
                         self.channelParameters.userCount++;
-                        _this12.isUserJoined = true;
+                        _this14.isUserJoined = true;
                         joinedUsers.add(user.uid);
                         console.log("user count: ", self.channelParameters.userCount, "max users:", self.channelParameters.maxUsers);
-                        _this12.channelUserCount = self.channelParameters.userCount;
-                        _this12.channelUserMax = self.channelParameters.maxUsers;
+                        _this14.channelUserCount = self.channelParameters.userCount;
+                        _this14.channelUserMax = self.channelParameters.maxUsers;
                         console.log("number users", joinedUsers.size);
                         if (!(joinedUsers.size > 2)) {
                           _context8.next = 13;
@@ -24061,7 +24211,7 @@ var doctorFeedback = "referral/doctor/feedback";
                         return agoraEngine.subscribe(user, mediaType);
                       case 2:
                         // console.log("subscribe success");
-                        console.log("option channel name:", _this12.options);
+                        console.log("option channel name:", _this14.options);
                         if (mediaType === "video") {
                           // Pause ringing audio when remote video is received
                           if (self.$refs && self.$refs.ringingPhone) {
@@ -24271,23 +24421,23 @@ var doctorFeedback = "referral/doctor/feedback";
       }))();
     },
     sendCallDuration: function sendCallDuration() {
-      var _this13 = this;
+      var _this15 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee12() {
         var duration, parts, totalMinutes, response;
         return _regeneratorRuntime().wrap(function _callee12$(_context12) {
           while (1) switch (_context12.prev = _context12.next) {
             case 0:
-              if (!_this13.isLeavingChannel) {
+              if (!_this15.isLeavingChannel) {
                 _context12.next = 2;
                 break;
               }
               return _context12.abrupt("return");
             case 2:
               // Prevent duplicate sends
-              _this13.isLeavingChannel = true;
+              _this15.isLeavingChannel = true;
 
               // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
-              duration = _this13.callDuration.replace(/\s/g, ""); // Remove spaces
+              duration = _this15.callDuration.replace(/\s/g, ""); // Remove spaces
               parts = duration.split(":").map(Number);
               totalMinutes = 0;
               if (parts.length === 2) {
@@ -24304,11 +24454,11 @@ var doctorFeedback = "referral/doctor/feedback";
               totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
               _context12.prev = 8;
               _context12.next = 11;
-              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this13.baseUrl, "/save-call-duration"), {
+              return axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(_this15.baseUrl, "/save-call-duration"), {
                 call_duration: totalMinutes,
                 // send as int(11)
-                tracking_id: _this13.tracking_id,
-                referral_code: _this13.referral_code
+                tracking_id: _this15.tracking_id,
+                referral_code: _this15.referral_code
               });
             case 11:
               response = _context12.sent;
@@ -24332,7 +24482,7 @@ var doctorFeedback = "referral/doctor/feedback";
       }))();
     },
     leaveChannel: function leaveChannel() {
-      var _this14 = this;
+      var _this16 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee13() {
         return _regeneratorRuntime().wrap(function _callee13$(_context13) {
           while (1) switch (_context13.prev = _context13.next) {
@@ -24342,7 +24492,7 @@ var doctorFeedback = "referral/doctor/feedback";
                 break;
               }
               _context13.next = 3;
-              return _this14.stopAndSaveRecording();
+              return _this16.stopAndSaveRecording();
             case 3:
             case "end":
               return _context13.stop();
@@ -24355,18 +24505,18 @@ var doctorFeedback = "referral/doctor/feedback";
       // Remove sendCallDuration from here since it's handled in leaveChannel
     },
     videoStreamingOnAndOff: function videoStreamingOnAndOff() {
-      var _this15 = this;
+      var _this17 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee14() {
         var devices, localPlayerContainer, newContainer;
         return _regeneratorRuntime().wrap(function _callee14$(_context14) {
           while (1) switch (_context14.prev = _context14.next) {
             case 0:
-              _this15.videoStreaming = !_this15.videoStreaming;
-              if (!_this15.videoStreaming) {
+              _this17.videoStreaming = !_this17.videoStreaming;
+              if (!_this17.videoStreaming) {
                 _context14.next = 33;
                 break;
               }
-              if (_this15.channelParameters.localVideoTrack) {
+              if (_this17.channelParameters.localVideoTrack) {
                 _context14.next = 30;
                 break;
               }
@@ -24382,30 +24532,30 @@ var doctorFeedback = "referral/doctor/feedback";
               _context14.next = 10;
               return agora_rtc_sdk_ng__WEBPACK_IMPORTED_MODULE_2__["default"].createCameraVideoTrack();
             case 10:
-              _this15.channelParameters.localVideoTrack = _context14.sent;
-              localPlayerContainer = document.getElementById(_this15.options.uid);
+              _this17.channelParameters.localVideoTrack = _context14.sent;
+              localPlayerContainer = document.getElementById(_this17.options.uid);
               if (!localPlayerContainer) {
                 newContainer = document.createElement("div");
-                newContainer.id = _this15.options.uid;
+                newContainer.id = _this17.options.uid;
                 document.body.append(newContainer);
                 $(".localPlayerDiv").html(newContainer);
                 $(newContainer).addClass("localPlayerLayer");
               }
-              _this15.channelParameters.localVideoTrack.play(_this15.options.uid);
+              _this17.channelParameters.localVideoTrack.play(_this17.options.uid);
 
               // Publish the video track if we're connected
-              if (!_this15.channelParameters.localAudioTrack) {
+              if (!_this17.channelParameters.localAudioTrack) {
                 _context14.next = 17;
                 break;
               }
               _context14.next = 17;
-              return agoraEngine.publish([_this15.channelParameters.localVideoTrack]);
+              return agoraEngine.publish([_this17.channelParameters.localVideoTrack]);
             case 17:
               _context14.next = 21;
               break;
             case 19:
               // console.log("No camera detected");
-              _this15.videoStreaming = false;
+              _this17.videoStreaming = false;
               return _context14.abrupt("return");
             case 21:
               _context14.next = 28;
@@ -24414,21 +24564,21 @@ var doctorFeedback = "referral/doctor/feedback";
               _context14.prev = 23;
               _context14.t0 = _context14["catch"](3);
               console.warn("Error accessing camera:", _context14.t0);
-              _this15.videoStreaming = false;
+              _this17.videoStreaming = false;
               return _context14.abrupt("return");
             case 28:
               _context14.next = 31;
               break;
             case 30:
               // If we already have a video track, just enable it
-              _this15.channelParameters.localVideoTrack.setEnabled(true);
+              _this17.channelParameters.localVideoTrack.setEnabled(true);
             case 31:
               _context14.next = 34;
               break;
             case 33:
               // Turning video off
-              if (_this15.channelParameters.localVideoTrack) {
-                _this15.channelParameters.localVideoTrack.setEnabled(false);
+              if (_this17.channelParameters.localVideoTrack) {
+                _this17.channelParameters.localVideoTrack.setEnabled(false);
               }
             case 34:
             case "end":
@@ -24465,16 +24615,16 @@ var doctorFeedback = "referral/doctor/feedback";
       clearTimeout(this.timeoutId);
     }),
     ringingPhoneFunc: function ringingPhoneFunc() {
-      var _this16 = this;
+      var _this18 = this;
       return _asyncToGenerator(/*#__PURE__*/_regeneratorRuntime().mark(function _callee15() {
         var self;
         return _regeneratorRuntime().wrap(function _callee15$(_context15) {
           while (1) switch (_context15.prev = _context15.next) {
             case 0:
               _context15.next = 2;
-              return _this16.$refs.ringingPhone.play();
+              return _this18.$refs.ringingPhone.play();
             case 2:
-              self = _this16;
+              self = _this18;
               setTimeout(function () {
                 // console.log("pause");
                 self.$refs.ringingPhone.pause();
@@ -24488,7 +24638,7 @@ var doctorFeedback = "referral/doctor/feedback";
     },
     //--------------------------------------------------------------------------
     generatePrescription: function generatePrescription() {
-      var _this17 = this;
+      var _this19 = this;
       var getPrescription = {
         code: this.referral_code,
         form_type: this.form_type,
@@ -24498,19 +24648,19 @@ var doctorFeedback = "referral/doctor/feedback";
       axios__WEBPACK_IMPORTED_MODULE_0___default().post("".concat(this.baseUrl, "/api/video/prescription/check"), getPrescription).then(function (response) {
         if (response.data.status === "success") {
           var prescribedActivityId = response.data.prescriptions[0].prescribed_activity_id;
-          console.log("form data:", _this17.form);
-          if (!response.data.signature && _this17.form.referring_name != null) {
+          console.log("form data:", _this19.form);
+          if (!response.data.signature && _this19.form.referring_name != null) {
             console.log("getPrescription:", getPrescription);
             return Lobibox.alert("error", {
-              msg: _this17.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !"
+              msg: _this19.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !"
             });
           }
           // Set the PDF URL
-          _this17.PdfUrl = "".concat(_this17.baseUrl, "/doctor/print/prescription/").concat(_this17.tracking_id, "/").concat(prescribedActivityId);
+          _this19.PdfUrl = "".concat(_this19.baseUrl, "/doctor/print/prescription/").concat(_this19.tracking_id, "/").concat(prescribedActivityId);
 
           // Show the modal using the ref method
-          _this17.$nextTick(function () {
-            _this17.$refs.pdfViewer.openModal();
+          _this19.$nextTick(function () {
+            _this19.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
@@ -24522,7 +24672,7 @@ var doctorFeedback = "referral/doctor/feedback";
       });
     },
     generateLabrequest: function generateLabrequest() {
-      var _this18 = this;
+      var _this20 = this;
       var url = "".concat(this.baseUrl, "/api/check/labresult");
       var payload = {
         activity_id: this.activity_id,
@@ -24531,19 +24681,19 @@ var doctorFeedback = "referral/doctor/feedback";
       console.log("generateLabrequest payload:", this.form);
       axios__WEBPACK_IMPORTED_MODULE_0___default().post(url, payload).then(function (response) {
         if (response.data.id) {
-          if (!response.data.signature && _this18.form.referring_name != null) {
+          if (!response.data.signature && _this20.form.referring_name != null) {
             return Lobibox.alert("error", {
-              msg: _this18.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !"
+              msg: _this20.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !"
             });
           }
-          var pdfUrl = "".concat(_this18.baseUrl, "/doctor/print/labresult/").concat(_this18.activity_id);
+          var pdfUrl = "".concat(_this20.baseUrl, "/doctor/print/labresult/").concat(_this20.activity_id);
 
           // Set the PDF URL for the modal
-          _this18.PdfUrl = pdfUrl;
+          _this20.PdfUrl = pdfUrl;
 
           // Show the PDF in the custom modal
-          _this18.$nextTick(function () {
-            _this18.$refs.pdfViewer.openModal();
+          _this20.$nextTick(function () {
+            _this20.$refs.pdfViewer.openModal();
           });
         } else {
           Lobibox.alert("error", {
@@ -26215,46 +26365,137 @@ var _hoisted_38 = {
 };
 var _hoisted_39 = ["data-code"];
 var _hoisted_40 = {
+  key: 4,
+  "class": "button-container"
+};
+var _hoisted_41 = {
+  key: 0,
+  "class": "tooltip-text",
+  style: {
+    "background-color": "#6f42c1"
+  }
+};
+var _hoisted_42 = {
   "class": "localPlayerDiv",
   id: "draggable-div"
 };
-var _hoisted_41 = ["src"];
-var _hoisted_42 = {
+var _hoisted_43 = ["src"];
+var _hoisted_44 = {
   "class": "form-container"
 };
-var _hoisted_43 = {
+var _hoisted_45 = {
   "class": "telemedForm"
 };
-var _hoisted_44 = {
+var _hoisted_46 = {
   "class": "form-scrollable"
 };
-var _hoisted_45 = {
+var _hoisted_47 = {
   "class": "form-header-container"
 };
-var _hoisted_46 = ["src"];
-var _hoisted_47 = {
+var _hoisted_48 = ["src"];
+var _hoisted_49 = {
   key: 0,
   "class": "tableForm"
 };
-var _hoisted_48 = {
+var _hoisted_50 = {
   "class": "row g-0"
 };
-var _hoisted_49 = {
-  "class": "col-6"
-};
-var _hoisted_50 = {
-  "class": "col-6"
-};
 var _hoisted_51 = {
+  "class": "col-6"
+};
+var _hoisted_52 = {
+  "class": "col-6"
+};
+var _hoisted_53 = {
   key: 1,
   "class": "telemedForm"
 };
-var _hoisted_52 = {
+var _hoisted_54 = {
   key: 0,
   "class": "afk-overlay"
 };
-var _hoisted_53 = {
+var _hoisted_55 = {
   "class": "afk-dialog"
+};
+var _hoisted_56 = {
+  key: 1,
+  "class": "modal-overlay"
+};
+var _hoisted_57 = {
+  "class": "modal-content-custom"
+};
+var _hoisted_58 = {
+  "class": "modal-header-custom"
+};
+var _hoisted_59 = {
+  "class": "modal-body-custom"
+};
+var _hoisted_60 = {
+  "class": "form-group"
+};
+var _hoisted_61 = {
+  style: {
+    "display": "flex",
+    "gap": "10px"
+  }
+};
+var _hoisted_62 = {
+  key: 0,
+  style: {
+    "margin-top": "5px"
+  }
+};
+var _hoisted_63 = {
+  key: 0,
+  "class": "slots-container"
+};
+var _hoisted_64 = {
+  "class": "existing-slots"
+};
+var _hoisted_65 = ["onClick"];
+var _hoisted_66 = {
+  "class": "slot-time"
+};
+var _hoisted_67 = {
+  "class": "slot-info"
+};
+var _hoisted_68 = {
+  key: 0,
+  style: {
+    "color": "#dc3545",
+    "font-weight": "600",
+    "display": "block",
+    "margin-top": "4px"
+  }
+};
+var _hoisted_69 = {
+  key: 1,
+  "class": "manual-entry"
+};
+var _hoisted_70 = {
+  key: 0,
+  style: {
+    "font-weight": "600",
+    "display": "block",
+    "margin": "15px 0 10px 0"
+  }
+};
+var _hoisted_71 = {
+  "class": "form-group"
+};
+var _hoisted_72 = {
+  "class": "form-group"
+};
+var _hoisted_73 = {
+  "class": "modal-footer-custom"
+};
+var _hoisted_74 = ["disabled"];
+var _hoisted_75 = ["disabled"];
+var _hoisted_76 = {
+  key: 0
+};
+var _hoisted_77 = {
+  key: 1
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _this = this;
@@ -26263,7 +26504,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_LabRequestModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("LabRequestModal");
   var _component_FeedbackModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("FeedbackModal");
   var _component_PDFViewerModal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("PDFViewerModal");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_cache[25] || (_cache[25] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [$data.loading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "loader",
     style: {
       "margin-right": "20px"
@@ -26275,7 +26516,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       height: '18px',
       transition: 'width 0.3s'
     })
-  }, null, 4 /* STYLE */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_4, [_cache[23] || (_cache[23] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Please wait until upload is complete.")), _cache[24] || (_cache[24] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Do not close this window. " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.uploadProgress) + "% ", 1 /* TEXT */)])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div\r\n      v-if=\"netSpeedMbps\"\r\n      class=\"net-speed-indicator\"\r\n      :class=\"netSpeedStatus\"\r\n    >\r\n      <span>\r\n        {{ netSpeedMbps }} Mbps\r\n        <span v-if=\"netSpeedStatus === 'fast'\">(Fast)</span>\r\n        <span v-else>(Slow)</span>\r\n      </span>\r\n    </div> "), !$data.isPatientToDoctor ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("audio", {
+  }, null, 4 /* STYLE */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_4, [_cache[33] || (_cache[33] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Please wait until upload is complete.")), _cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Do not close this window. " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.uploadProgress) + "% ", 1 /* TEXT */)])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div\r\n      v-if=\"netSpeedMbps\"\r\n      class=\"net-speed-indicator\"\r\n      :class=\"netSpeedStatus\"\r\n    >\r\n      <span>\r\n        {{ netSpeedMbps }} Mbps\r\n        <span v-if=\"netSpeedStatus === 'fast'\">(Fast)</span>\r\n        <span v-else>(Slow)</span>\r\n      </span>\r\n    </div> "), !$data.isPatientToDoctor ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("audio", {
     key: 1,
     ref: "ringingPhone",
     src: $data.ringingPhoneUrl,
@@ -26302,9 +26543,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[2] || (_cache[2] = function ($event) {
           return $data.showMic = false;
         })
-      }, _cache[26] || (_cache[26] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[36] || (_cache[36] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-mic-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[34] || (_cache[34] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [!$data.isMobileDevice && $data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[45] || (_cache[45] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [!$data.isMobileDevice && $data.showVedio ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, " Video ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["btn btn-success btn-md video-button", {
           'video-button-slash': !$data.videoStreaming
         }]),
@@ -26318,9 +26559,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[5] || (_cache[5] = function ($event) {
           return $data.showVedio = false;
         })
-      }, _cache[27] || (_cache[27] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[37] || (_cache[37] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-camera-video-fill"
-      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[35] || (_cache[35] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"button-container\" v-if=\"availableCameras.length > 1\"> "), $data.isMobileDevice ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, [!$data.isMobileDevice && $data.showCameraSwitch ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, " Switch Camera ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 34 /* CLASS, NEED_HYDRATION */)]), _cache[46] || (_cache[46] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"button-container\" v-if=\"availableCameras.length > 1\"> "), $data.isMobileDevice ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, [!$data.isMobileDevice && $data.showCameraSwitch ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, " Switch Camera ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-success btn-md camera-switch-button",
         onClick: _cache[6] || (_cache[6] = function () {
           return $options.switchCamera && $options.switchCamera.apply($options, arguments);
@@ -26332,9 +26573,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[8] || (_cache[8] = function ($event) {
           return $data.showCameraSwitch = false;
         })
-      }, _cache[28] || (_cache[28] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[38] || (_cache[38] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-arrow-repeat"
-      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[36] || (_cache[36] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [!$data.isMobileDevice && $data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _cache[47] || (_cache[47] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [!$data.isMobileDevice && $data.showEndcall ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_29, " End Call ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-danger btn-md decline-button",
         onClick: _cache[9] || (_cache[9] = function () {
           return $options.leaveChannel && $options.leaveChannel.apply($options, arguments);
@@ -26347,9 +26588,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return $data.showEndcall = false;
         }),
         disabled: $data.loading
-      }, _cache[29] || (_cache[29] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[39] || (_cache[39] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-telephone-x-fill"
-      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_30)]), _cache[37] || (_cache[37] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), _this.user.facility_id != 63 && _this.telemedicine == 1 && _this.opcen_facility != 63 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, [$data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), ($data.isPatientToDoctor ? $props.user.level == 'doctor' : $data.referring_md == 'no') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_30)]), _cache[48] || (_cache[48] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("   ")), _this.user.facility_id != 63 && _this.telemedicine == 1 && _this.opcen_facility != 63 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_31, [$data.showUpward ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_32, " Upward ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), ($data.isPatientToDoctor ? $props.user.level == 'doctor' : $data.referring_md == 'no') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
         "class": "btn btn-warning btn-md upward-button",
         onClick: _cache[12] || (_cache[12] = function () {
@@ -26362,7 +26603,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[14] || (_cache[14] = function ($event) {
           return $data.showUpward = false;
         })
-      }, _cache[30] || (_cache[30] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[40] || (_cache[40] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi-hospital"
       }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.telemedicine == 1 && _this.opcen_facility != 63 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_33, [!$data.isMobileDevice && $data.showPrescription ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_34, " Prescription ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), ($data.isPatientToDoctor ? $props.user.level == 'doctor' : $data.referring_md == 'yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
@@ -26376,7 +26617,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[16] || (_cache[16] = function ($event) {
           return $data.showPrescription = false;
         })
-      }, _cache[31] || (_cache[31] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[41] || (_cache[41] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription"
       }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _this.telemedicine == 1 && _this.opcen_facility != 63 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_35, [!$data.isMobileDevice && $data.showTooltip ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_36, " Lab Request ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), ($data.isPatientToDoctor ? $props.user.level == 'doctor' : $data.referring_md == 'yes') ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
         key: 1,
@@ -26390,7 +26631,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[18] || (_cache[18] = function ($event) {
           return $data.showTooltip = false;
         })
-      }, _cache[32] || (_cache[32] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[42] || (_cache[42] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-prescription2"
       }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [!$data.isMobileDevice && $data.showTooltipFeedback ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_38, " Chat ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
         "class": "btn btn-info btn-md reco-button",
@@ -26404,22 +26645,36 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         onMouseleave: _cache[20] || (_cache[20] = function ($event) {
           return $data.showTooltipFeedback = false;
         })
-      }, _cache[33] || (_cache[33] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+      }, _cache[43] || (_cache[43] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
         "class": "bi bi-chat-left-text"
-      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_39)])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
+      }, null, -1 /* HOISTED */)]), 40 /* PROPS, NEED_HYDRATION */, _hoisted_39)]), _this.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_40, [!$data.isMobileDevice && $data.showFollowUp ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_41, " Follow Up ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+        "class": "btn btn-primary btn-md",
+        type: "button",
+        onClick: _cache[21] || (_cache[21] = function ($event) {
+          return $options.openFollowUpModal();
+        }),
+        onMouseover: _cache[22] || (_cache[22] = function ($event) {
+          return $data.showFollowUp = true;
+        }),
+        onMouseleave: _cache[23] || (_cache[23] = function ($event) {
+          return $data.showFollowUp = false;
+        })
+      }, _cache[44] || (_cache[44] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+        "class": "bi bi-calendar-check"
+      }, null, -1 /* HOISTED */)]), 32 /* NEED_HYDRATION */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])];
     }),
     _: 1 /* STABLE */
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.doctorUrl1,
     id: "local-image",
     "class": "img2",
     alt: "Image2",
     draggable: "true"
-  }, null, 8 /* PROPS */, _hoisted_41)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  }, null, 8 /* PROPS */, _hoisted_43)])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_44, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_45, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.dohLogoUrl,
     alt: "Image3",
     "class": "dohLogo"
-  }, null, 8 /* PROPS */, _hoisted_46), _cache[38] || (_cache[38] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-3180088c><div data-v-3180088c><p data-v-3180088c>Republic of the Philippines</p><p data-v-3180088c>DEPARTMENT OF HEALTH</p><p data-v-3180088c><b data-v-3180088c>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-3180088c>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-3180088c> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-3180088c> Official Website: <span style=\"color:blue;\" data-v-3180088c>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-3180088c><span style=\"color:#4caf50;\" data-v-3180088c><b data-v-3180088c>CLINICAL REFERRAL FORM</b></span></div>", 2))]), $data.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_FormReferralComponent, {
+  }, null, 8 /* PROPS */, _hoisted_48), _cache[49] || (_cache[49] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"formHeader\" data-v-3180088c><div data-v-3180088c><p data-v-3180088c>Republic of the Philippines</p><p data-v-3180088c>DEPARTMENT OF HEALTH</p><p data-v-3180088c><b data-v-3180088c>CENTRAL VISAYAS CENTER for HEALTH DEVELOPMENT</b></p><p data-v-3180088c>Osmeña Boulevard Sambag II, Cebu City, 6000 Philippines</p><p data-v-3180088c> Regional Director&#39;s Office Tel. No. (032) 253-6355 Fax No. (032) 254-0109 </p><p data-v-3180088c> Official Website: <span style=\"color:blue;\" data-v-3180088c>http://www.ro7.doh.gov.ph</span> Email Address: dohro7@gmail.com </p></div></div><div class=\"clinical\" data-v-3180088c><span style=\"color:#4caf50;\" data-v-3180088c><b data-v-3180088c>CLINICAL REFERRAL FORM</b></span></div>", 2))]), $data.telemedicine == 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_FormReferralComponent, {
     initialForm: _objectSpread({}, $data.form),
     file_path: $data.file_path,
     icd: $data.icd,
@@ -26428,18 +26683,18 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     form_version: $data.form_version,
     current_medication: $data.current_medication,
     telemedicine: $data.telemedicine
-  }, null, 8 /* PROPS */, ["initialForm", "file_path", "icd", "patient_age", "file_name", "form_version", "current_medication", "telemedicine"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_49, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 8 /* PROPS */, ["initialForm", "file_path", "icd", "patient_age", "file_name", "form_version", "current_medication", "telemedicine"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-success btn-md w-100 ml-2",
     type: "button",
-    onClick: _cache[21] || (_cache[21] = function ($event) {
+    onClick: _cache[24] || (_cache[24] = function ($event) {
       return $options.generatePrescription();
     })
-  }, _cache[39] || (_cache[39] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[50] || (_cache[50] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-prescription"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_50, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Prescription ")]))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     "class": "btn btn-primary btn-md w-100",
     type: "button",
-    onClick: _cache[22] || (_cache[22] = function ($event) {
+    onClick: _cache[25] || (_cache[25] = function ($event) {
       return $options.generateLabrequest();
     }),
     style: {
@@ -26450,9 +26705,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     },
     onmouseover: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';",
     onmouseout: "this.style.backgroundColor='#0d6efd'; this.style.borderColor='#0d6efd';"
-  }, _cache[40] || (_cache[40] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  }, _cache[51] || (_cache[51] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
     "class": "bi bi-clipboard2-pulse"
-  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Lab Request ")]))])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_FormReferralComponent, {
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Generate Lab Request ")]))])])])) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_FormReferralComponent, {
     initialForm: _objectSpread({}, $data.form),
     file_path: $data.file_path,
     icd: $data.icd,
@@ -26489,7 +26744,74 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 8 /* PROPS */, ["isVisible", "code", "userId", "fetchUrl", "imageUrl", "postUrl", "onCloseModal"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_PDFViewerModal, {
     ref: "pdfViewer",
     pdfUrl: $data.PdfUrl
-  }, null, 8 /* PROPS */, ["pdfUrl"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Place AFK dialog here, before closing fullscreen-div "), $data.afkDialogVisible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_53, [_cache[43] || (_cache[43] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "You have been inactive for some time.", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [_cache[41] || (_cache[41] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ending call in ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.afkCountdown), 1 /* TEXT */), _cache[42] || (_cache[42] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" seconds... "))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
+  }, null, 8 /* PROPS */, ["pdfUrl"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Place AFK dialog here, before closing fullscreen-div "), $data.afkDialogVisible ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_55, [_cache[54] || (_cache[54] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "You have been inactive for some time.", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, [_cache[52] || (_cache[52] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Ending call in ")), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("b", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.afkCountdown), 1 /* TEXT */), _cache[53] || (_cache[53] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" seconds... "))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Custom Follow Up Modal "), $data.showFollowUpModal ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_56, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_57, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_58, [_cache[55] || (_cache[55] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", null, "Schedule Follow Up", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "close-btn",
+    onClick: _cache[26] || (_cache[26] = function () {
+      return $options.closeFollowUpModal && $options.closeFollowUpModal.apply($options, arguments);
+    })
+  }, "×")]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_59, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_60, [_cache[57] || (_cache[57] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Date:", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_61, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "date",
+    "onUpdate:modelValue": _cache[27] || (_cache[27] = function ($event) {
+      return $data.followUpForm.date = $event;
+    }),
+    onChange: _cache[28] || (_cache[28] = function () {
+      return $options.checkExistingSlots && $options.checkExistingSlots.apply($options, arguments);
+    }),
+    "class": "form-control",
+    style: {
+      "flex": "1"
+    }
+  }, null, 544 /* NEED_HYDRATION, NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.followUpForm.date]])]), $data.checkingSlotsLoading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_62, _cache[56] || (_cache[56] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("small", {
+    "class": "text-muted"
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "fa fa-spinner fa-spin"
+  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Checking available slots... ")], -1 /* HOISTED */)]))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Existing Time Slots Display "), $data.existingTimeSlots.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_63, [_cache[58] || (_cache[58] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    style: {
+      "font-weight": "600",
+      "display": "block",
+      "margin-bottom": "10px"
+    }
+  }, "Available Slots:", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_64, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.existingTimeSlots, function (slot) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: slot.id,
+      "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["slot-item", {
+        'slot-selected': $data.selectedTimeSlot && $data.selectedTimeSlot.id === slot.id,
+        'slot-full': slot.is_available === false || slot.availability === 'Full'
+      }]),
+      onClick: function onClick($event) {
+        return slot.is_available === false || slot.availability === 'Full' ? $options.showSlotFullInfo(slot) : $options.selectTimeSlot(slot);
+      }
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_66, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(slot.time_from) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(slot.time_to), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_67, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(slot.availability || 'Available'), 1 /* TEXT */), slot.is_available === false || slot.availability === 'Full' ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_68, "Full")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 10 /* CLASS, PROPS */, _hoisted_65);
+  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Manual Time Entry (when no slots selected or creating new) "), !$data.selectedTimeSlot || $data.existingTimeSlots.length === 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_69, [$data.existingTimeSlots.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("label", _hoisted_70, "Or Create New Schedule:")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_71, [_cache[59] || (_cache[59] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Time From:", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "time",
+    "onUpdate:modelValue": _cache[29] || (_cache[29] = function ($event) {
+      return $data.followUpForm.timeFrom = $event;
+    }),
+    "class": "form-control"
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.followUpForm.timeFrom]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_72, [_cache[60] || (_cache[60] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", null, "Time To:", -1 /* HOISTED */)), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "time",
+    "onUpdate:modelValue": _cache[30] || (_cache[30] = function ($event) {
+      return $data.followUpForm.timeTo = $event;
+    }),
+    "class": "form-control"
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.followUpForm.timeTo]])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_73, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-default",
+    onClick: _cache[31] || (_cache[31] = function () {
+      return $options.closeFollowUpModal && $options.closeFollowUpModal.apply($options, arguments);
+    }),
+    disabled: $data.followUpLoading
+  }, " Cancel ", 8 /* PROPS */, _hoisted_74), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn btn-primary",
+    onClick: _cache[32] || (_cache[32] = function () {
+      return $options.submitFollowUp && $options.submitFollowUp.apply($options, arguments);
+    }),
+    disabled: $data.followUpLoading
+  }, [!$data.followUpLoading ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_76, "Save")) : ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("span", _hoisted_77, _cache[61] || (_cache[61] = [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+    "class": "fa fa-spinner fa-spin"
+  }, null, -1 /* HOISTED */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" Saving...")])))], 8 /* PROPS */, _hoisted_75)])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -28707,7 +29029,7 @@ __webpack_require__.r(__webpack_exports__);
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 ___CSS_LOADER_EXPORT___.i(_node_modules_css_loader_dist_cjs_js_clonedRuleSet_10_use_1_css_index_css__WEBPACK_IMPORTED_MODULE_1__["default"]);
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n  padding: 5px;\n}\n.window-loader-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: #ffffff;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 99999;\n}\n.window-loader[data-v-3180088c] {\r\n  text-align: center;\n}\n.spinner[data-v-3180088c] {\r\n  width: 50px;\r\n  height: 50px;\r\n  border: 5px solid #f3f3f3;\r\n  border-top: 5px solid #3498db;\r\n  border-radius: 50%;\r\n  margin: 0 auto 1rem;\r\n  animation: spin-3180088c 1s linear infinite;\n}\n.window-loader p[data-v-3180088c] {\r\n  color: #666;\r\n  font-size: 1.1rem;\r\n  margin-top: 10px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.fullscreen-div[data-v-3180088c] {\r\n    overflow: auto;\r\n    position: relative;\n}\n.video-container[data-v-3180088c],\r\n  .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\r\n    overflow: hidden;\n}\n.video-container[data-v-3180088c] {\r\n    height: 60%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 40%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c],\r\n.fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c],\r\n.fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-3180088c] {\r\n  width: 195px;\r\n  height: 200px;\r\n  min-width: 150px;\r\n  min-height: 200px;\r\n  max-width: 150px;\r\n  max-height: 200px;\n}\n.loader-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 9999;\n}\n.loader[data-v-3180088c] {\r\n  border: 8px solid #f3f3f3;\r\n  border-top: 8px solid #3498db;\r\n  border-radius: 50%;\r\n  width: 50px;\r\n  height: 50px;\r\n  animation: spin-3180088c 1s linear infinite;\n}\n@keyframes spin-3180088c {\n0% {\r\n    transform: rotate(0deg);\n}\n100% {\r\n    transform: rotate(360deg);\n}\n}\n#call-timer[data-v-3180088c] {\r\n  font-size: 16px;\r\n  background: rgba(0, 0, 0, 0.425);\r\n  color: #fff;\r\n  padding: 4px 10px;\r\n  border-radius: 5px;\r\n  letter-spacing: 2px;\n}\n.call-duration[data-v-3180088c] {\r\n  position: absolute;\r\n  top: 20px;\r\n  left: 20px;\r\n  z-index: 10;\n}\n.net-speed-indicator[data-v-3180088c] {\r\n  position: fixed;\r\n  right: 20px;\r\n  bottom: 20px;\r\n  z-index: 10000;\r\n  padding: 8px 16px;\r\n  border-radius: 20px;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  background: rgba(15, 15, 15, 0.103);\r\n  color: #fff;\r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);\r\n  pointer-events: none;\n}\n.net-speed-indicator.fast[data-v-3180088c] {\r\n  border: 2px solid #4caf50;\r\n  color: #4caf50;\n}\n.net-speed-indicator.slow[data-v-3180088c] {\r\n  border: 2px solid #e53935;\r\n  color: #e53935;\n}\r\n\r\n/* AFK Dialog Styles */\n.afk-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  z-index: 99999;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.afk-dialog[data-v-3180088c] {\r\n  background: #fff;\r\n  padding: 30px 40px;\r\n  border-radius: 10px;\r\n  text-align: center;\r\n  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);\n}\n@media screen and (max-width: 768px) {\n.reco-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-chat-left-text[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.bi-prescription2[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.prescription-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-prescription[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.upward-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-hospital[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.decline-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-telephone-x-fill[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.camera-switch-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-arrow-repeat[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.video-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-camera-video-fill[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.mic-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-mic-fill[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.localPlayerLayer[data-v-3180088c] {\r\n    height: 120px !important;\r\n    width: 90px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-3180088c] {\r\n    min-height: 120px !important;\r\n    min-width: 90px !important;\r\n    max-height: 25vh !important;\r\n    max-width: 30vw !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-3180088c],\r\n  .localPlayerDiv img[data-v-3180088c] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\n@media screen and (max-width: 480px) {\n.localPlayerLayer[data-v-3180088c] {\r\n    height: 100px !important;\r\n    width: 75px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-3180088c] {\r\n    min-height: 100px !important;\r\n    min-width: 70px !important;\r\n    max-height: 20vh !important;\r\n    max-width: 25vw !important;\r\n    bottom: 60px !important;\r\n    right: 5px !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-3180088c],\r\n  .localPlayerDiv img[data-v-3180088c] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\ntd[data-v-3180088c] {\r\n  padding: 5px;\n}\n.window-loader-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: #ffffff;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 99999;\n}\n.window-loader[data-v-3180088c] {\r\n  text-align: center;\n}\n.spinner[data-v-3180088c] {\r\n  width: 50px;\r\n  height: 50px;\r\n  border: 5px solid #f3f3f3;\r\n  border-top: 5px solid #3498db;\r\n  border-radius: 50%;\r\n  margin: 0 auto 1rem;\r\n  animation: spin-3180088c 1s linear infinite;\n}\n.window-loader p[data-v-3180088c] {\r\n  color: #666;\r\n  font-size: 1.1rem;\r\n  margin-top: 10px;\n}\r\n\r\n/* Fullscreen layout */\n.fullscreen-div[data-v-3180088c] {\r\n  width: 100vw;\r\n  height: 100vh;\r\n  overflow: hidden; /* Prevent scrolling */\r\n  position: fixed; /* Keep it fixed in the viewport */\r\n  top: 0;\r\n  left: 0;\r\n  margin: 0;\r\n  padding: 0;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\n}\r\n\r\n/* Main container layout */\n.main-container[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: flex;\r\n  flex-direction: row;\r\n  overflow: hidden;\n}\r\n\r\n/* Video container (left side) */\n.video-container[data-v-3180088c] {\r\n  flex: 1.4;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Form container (right side) */\n.form-container[data-v-3180088c] {\r\n  flex: 1;\r\n  padding: 5px;\r\n  height: 100%;\r\n  min-width: 0;\r\n  position: relative;\r\n  overflow: hidden;\n}\r\n\r\n/* Responsive layout for smaller screens */\n@media (max-width: 992px) {\n.main-container[data-v-3180088c] {\r\n    flex-direction: column;\n}\n.fullscreen-div[data-v-3180088c] {\r\n    overflow: auto;\r\n    position: relative;\n}\n.video-container[data-v-3180088c],\r\n  .form-container[data-v-3180088c] {\r\n    width: 100%;\r\n    flex: none;\r\n    overflow: hidden;\n}\n.video-container[data-v-3180088c] {\r\n    height: 60%;\n}\n.form-container[data-v-3180088c] {\r\n    height: 40%;\n}\n}\n.remote-img[data-v-3180088c] {\r\n  width: 100%;\r\n  height: 100%;\r\n  -o-object-fit: cover;\r\n     object-fit: cover;\n}\n.form-scrollable[data-v-3180088c] {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n  background: white;\r\n  padding-left: 10px;\r\n  padding-right: 10px;\r\n  padding-bottom: 10px;\n}\n.form-header-container[data-v-3180088c] {\r\n  position: sticky;\r\n  background-color: #fff;\r\n  z-index: 2;\r\n  padding-bottom: 2px;\n}\n.clinical[data-v-3180088c] {\r\n  text-align: center;\r\n  margin: 10px 0;\r\n  font-size: 1.2rem;\n}\n.formTable[data-v-3180088c] {\r\n  width: 100%;\r\n  font-size: 0.85rem;\n}\r\n\r\n/* Transitions */\n.fade-enter-active[data-v-3180088c],\r\n.fade-leave-active[data-v-3180088c] {\r\n  transition: opacity 0.5s;\n}\n.fade-enter-from[data-v-3180088c],\r\n.fade-leave-to[data-v-3180088c] {\r\n  opacity: 0;\n}\n#draggable-div[data-v-3180088c] {\r\n  width: 195px;\r\n  height: 200px;\r\n  min-width: 150px;\r\n  min-height: 200px;\r\n  max-width: 150px;\r\n  max-height: 200px;\n}\n.loader-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100vw;\r\n  height: 100vh;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 9999;\n}\n.loader[data-v-3180088c] {\r\n  border: 8px solid #f3f3f3;\r\n  border-top: 8px solid #3498db;\r\n  border-radius: 50%;\r\n  width: 50px;\r\n  height: 50px;\r\n  animation: spin-3180088c 1s linear infinite;\n}\n@keyframes spin-3180088c {\n0% {\r\n    transform: rotate(0deg);\n}\n100% {\r\n    transform: rotate(360deg);\n}\n}\n#call-timer[data-v-3180088c] {\r\n  font-size: 16px;\r\n  background: rgba(0, 0, 0, 0.425);\r\n  color: #fff;\r\n  padding: 4px 10px;\r\n  border-radius: 5px;\r\n  letter-spacing: 2px;\n}\n.call-duration[data-v-3180088c] {\r\n  position: absolute;\r\n  top: 20px;\r\n  left: 20px;\r\n  z-index: 10;\n}\n.net-speed-indicator[data-v-3180088c] {\r\n  position: fixed;\r\n  right: 20px;\r\n  bottom: 20px;\r\n  z-index: 10000;\r\n  padding: 8px 16px;\r\n  border-radius: 20px;\r\n  font-weight: bold;\r\n  font-size: 1rem;\r\n  background: rgba(15, 15, 15, 0.103);\r\n  color: #fff;\r\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);\r\n  pointer-events: none;\n}\n.net-speed-indicator.fast[data-v-3180088c] {\r\n  border: 2px solid #4caf50;\r\n  color: #4caf50;\n}\n.net-speed-indicator.slow[data-v-3180088c] {\r\n  border: 2px solid #e53935;\r\n  color: #e53935;\n}\r\n\r\n/* AFK Dialog Styles */\n.afk-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background: rgba(0, 0, 0, 0.5);\r\n  z-index: 99999;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.afk-dialog[data-v-3180088c] {\r\n  background: #fff;\r\n  padding: 30px 40px;\r\n  border-radius: 10px;\r\n  text-align: center;\r\n  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.2);\n}\n@media screen and (max-width: 768px) {\n.reco-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-chat-left-text[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.bi-prescription2[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.prescription-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-prescription[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.upward-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-hospital[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.decline-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-telephone-x-fill[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.camera-switch-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-arrow-repeat[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.video-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-camera-video-fill[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.mic-button[data-v-3180088c] {\r\n    border-radius: 50% !important;\r\n    width: 30px !important;\r\n    height: 30px !important;\r\n    background-color: rgba(81, 83, 85, 0.596) !important;\r\n    border-color: transparent !important;\r\n\r\n    display: flex !important;\r\n    justify-content: center !important;\r\n    align-items: center !important;\n}\n.bi-mic-fill[data-v-3180088c] {\r\n    font-size: 12px !important;\n}\n.localPlayerLayer[data-v-3180088c] {\r\n    height: 120px !important;\r\n    width: 90px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-3180088c] {\r\n    min-height: 120px !important;\r\n    min-width: 90px !important;\r\n    max-height: 25vh !important;\r\n    max-width: 30vw !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-3180088c],\r\n  .localPlayerDiv img[data-v-3180088c] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\n@media screen and (max-width: 480px) {\n.localPlayerLayer[data-v-3180088c] {\r\n    height: 100px !important;\r\n    width: 75px !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n.localPlayerDiv[data-v-3180088c] {\r\n    min-height: 100px !important;\r\n    min-width: 70px !important;\r\n    max-height: 20vh !important;\r\n    max-width: 25vw !important;\r\n    bottom: 60px !important;\r\n    right: 5px !important;\r\n    overflow: hidden !important;\n}\n.localPlayerDiv video[data-v-3180088c],\r\n  .localPlayerDiv img[data-v-3180088c] {\r\n    width: 100% !important;\r\n    height: 100% !important;\r\n    -o-object-fit: scale-down !important;\r\n       object-fit: scale-down !important;\n}\n}\r\n\r\n/* Custom Follow Up Modal Styles */\n.modal-overlay[data-v-3180088c] {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  width: 100%;\r\n  height: 100%;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  z-index: 999999;\n}\n.modal-content-custom[data-v-3180088c] {\r\n  background-color: white;\r\n  border-radius: 8px;\r\n  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);\r\n  width: 90%;\r\n  max-width: 400px;\r\n  overflow: hidden;\n}\n.modal-header-custom[data-v-3180088c] {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n  padding: 20px;\r\n  border-bottom: 1px solid #e0e0e0;\r\n  background-color: #f5f5f5;\n}\n.modal-header-custom h4[data-v-3180088c] {\r\n  margin: 0;\r\n  font-size: 18px;\r\n  font-weight: 600;\r\n  color: #333;\n}\n.close-btn[data-v-3180088c] {\r\n  background: none;\r\n  border: none;\r\n  font-size: 28px;\r\n  cursor: pointer;\r\n  color: #999;\r\n  padding: 0;\r\n  width: 30px;\r\n  height: 30px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\n}\n.close-btn[data-v-3180088c]:hover {\r\n  color: #333;\n}\n.modal-body-custom[data-v-3180088c] {\r\n  padding: 20px;\n}\n.form-group[data-v-3180088c] {\r\n  margin-bottom: 15px;\n}\n.form-group label[data-v-3180088c] {\r\n  display: block;\r\n  margin-bottom: 5px;\r\n  font-weight: 500;\r\n  color: #333;\r\n  font-size: 14px;\n}\n.form-control[data-v-3180088c] {\r\n  width: 100%;\r\n  padding: 8px 12px;\r\n  border: 1px solid #ddd;\r\n  border-radius: 4px;\r\n  font-size: 14px;\r\n  font-family: inherit;\n}\n.form-control[data-v-3180088c]:focus {\r\n  outline: none;\r\n  border-color: #007bff;\r\n  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);\n}\n.modal-footer-custom[data-v-3180088c] {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  gap: 10px;\r\n  padding: 15px 20px;\r\n  border-top: 1px solid #e0e0e0;\r\n  background-color: #f5f5f5;\n}\n.btn[data-v-3180088c] {\r\n  padding: 8px 16px;\r\n  border: none;\r\n  border-radius: 4px;\r\n  cursor: pointer;\r\n  font-size: 14px;\r\n  font-weight: 500;\r\n  transition: all 0.3s ease;\n}\n.btn-default[data-v-3180088c] {\r\n  background-color: #6c757d;\r\n  color: white;\n}\n.btn-default[data-v-3180088c]:hover:not(:disabled) {\r\n  background-color: #5a6268;\n}\n.btn-primary[data-v-3180088c] {\r\n  background-color: #007bff;\r\n  color: white;\n}\n.btn-primary[data-v-3180088c]:hover:not(:disabled) {\r\n  background-color: #0056b3;\n}\n.btn[data-v-3180088c]:disabled {\r\n  opacity: 0.65;\r\n  cursor: not-allowed;\n}\r\n\r\n/* Time Slots Display */\n.slots-container[data-v-3180088c] {\r\n  margin: 15px 0;\r\n  padding: 15px;\r\n  background-color: #f8f9fa;\r\n  border-radius: 4px;\r\n  border: 1px solid #e9ecef;\n}\n.existing-slots[data-v-3180088c] {\r\n  display: grid;\r\n  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));\r\n  gap: 10px;\n}\n.slot-item[data-v-3180088c] {\r\n  padding: 12px;\r\n  border: 2px solid #dee2e6;\r\n  border-radius: 4px;\r\n  background-color: white;\r\n  cursor: pointer;\r\n  transition: all 0.3s ease;\r\n  text-align: center;\n}\n.slot-item[data-v-3180088c]:hover {\r\n  border-color: #007bff;\r\n  background-color: #e7f3ff;\n}\n.slot-item.slot-selected[data-v-3180088c] {\r\n  border-color: #28a745;\r\n  background-color: #d4edda;\r\n  font-weight: 600;\n}\n.slot-time[data-v-3180088c] {\r\n  font-weight: 600;\r\n  color: #333;\r\n  font-size: 14px;\r\n  margin-bottom: 5px;\n}\n.slot-info[data-v-3180088c] {\r\n  font-size: 12px;\r\n  color: #666;\n}\n.manual-entry[data-v-3180088c] {\r\n  margin-top: 10px;\r\n  padding-top: 15px;\r\n  border-top: 1px solid #e0e0e0;\n}\n.btn-info[data-v-3180088c] {\r\n  background-color: #17a2b8;\r\n  color: white;\r\n  padding: 8px 12px;\n}\n.btn-info[data-v-3180088c]:hover:not(:disabled) {\r\n  background-color: #138496;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
