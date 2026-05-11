@@ -744,7 +744,7 @@
             </div>
             <div class="sidebar-login">
                 <p>Already have an account?</p>
-                <button class="btn-login" onclick="window.location.href='/referral/login'">LOG IN</button>
+                <button class="btn-login" onclick="window.location.href='/login'">LOG IN</button>
             </div>
         </div>
         <div class="form-container">
