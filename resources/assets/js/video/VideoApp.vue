@@ -1990,7 +1990,7 @@ export default {
                     <i class="bi bi-chat-left-text"></i>
                   </button>
                 </div>
-                <div class="button-container" v-if="this.telemedicine == 1">
+                <!-- <div class="button-container" v-if="this.telemedicine == 1">
                   <div
                     v-if="!isMobileDevice && showFollowUp"
                     class="tooltip-text"
@@ -2007,7 +2007,7 @@ export default {
                   >
                     <i class="bi bi-calendar-check"></i>
                   </button>
-                </div>
+                </div> -->
               </div>
             </div>
           </Transition>
