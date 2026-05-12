@@ -1168,23 +1168,12 @@ $counter = 0;
         });
     }
 
+   
     $('.normal_form').on('submit', function(e) {
         e.preventDefault();
         $('.loading').show();
         $('.btn-submit').attr('disabled', true);
-     
-        // const formData = new FormData(this);
 
-        // const activFiles =  fileInfoArray.filter(file => file && !file.removed);
-
-        // formData.delete('file_upload[]');
-
-        // activFiles.forEach(fileInfo => {
-        //     if(fileInfo.file){
-        //         formData.append('file_upload[]', fileInfo.file);
-        //     }
-        // });
-        // console.log("remaining file to upload", formData);
         form_type = '#normalFormModal';
         department_id = $('.select_department_normal').val();
         department_name = $('.select_department_normal option:selected').html();
@@ -1195,17 +1184,18 @@ $counter = 0;
             type: 'POST',
             success: function(data) {
                 console.log(data);
-                
-                if (data.trim() === 'consultation_rejected') {
+
+                if (typeof data === 'string' && data.trim() === 'consultation_rejected') {
                     $('.loading').hide();
                     $('#pregnantModal').modal('hide');
                     $('#normalFormModal').modal('hide');
+                    $('.btn-submit').attr('disabled', false);
                     Lobibox.alert("error", {
                         msg: "This appointment schedule is not available because it is fully booked. Please select another schedule from the calendar."
                     });
                     return;
                 }
-                //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+
                 if (data.referred_to == 790 || data.referred_to == 23) {
                     var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
                     data.age = parseInt(data.age);
@@ -1217,28 +1207,51 @@ $counter = 0;
                     Lobibox.alert("success", {
                         msg: "Successfully referred the patient!"
                     });
-                } //push notification for CCMD
-                else {
+                } else {
                     $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
                 }
-            }
-            /*,
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                console.log(XMLHttpRequest);
-                console.log(textStatus);
-                console.log(errorThrown);
+            },
+            error: function(xhr, textStatus, errorThrown) {
                 $('.loading').hide();
-                $('#pregnantModal').modal('hide');
-                $('#normalFormModal').modal('hide');
-                $('.btn-submit').attr('disabled',false);
-                Lobibox.notify('error', {
-                    title: "Error",
-                    msg: "Status: " + textStatus+" Error: " + errorThrown
-                });
-            }*/
+                $('.btn-submit').attr('disabled', false);
+
+                let message = 'An unexpected error occurred. Please try again.';
+
+                if (xhr.responseText) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            message = response.message;
+                        }
+                    } catch (e) {
+                        // Response wasn't JSON, fall through to status-based messages
+                    }
+                }
+
+                if (xhr.status === 422) {
+                    Lobibox.alert("error", {
+                        msg: message
+                    });
+                } else if (xhr.status === 419) {
+                    Lobibox.alert("error", {
+                        msg: "Session expired. Please refresh the page and try again."
+                    });
+                } else if (xhr.status === 500) {
+                    Lobibox.alert("error", {
+                        msg: "Server error. Please contact your administrator."
+                    });
+                } else {
+                    Lobibox.alert("error", {
+                        msg: "Error (" + xhr.status + "): " + message
+                    });
+                }
+
+                console.log("XHR:", xhr);
+                console.log("Status:", textStatus);
+                console.log("Error:", errorThrown);
+            }
         });
     });
-
     //.............................................Warning Do not delete this submission ...........................................................!
     // $('.normal_form').on('submit', function(e) {
     //     e.preventDefault();
@@ -1333,52 +1346,88 @@ $counter = 0;
             });
         });
 
-        $('.revised_normal_form').on('submit',function(e){
+       $('.revised_normal_form').on('submit', function(e) {
             e.preventDefault();
             $('.loading').show();
-            $('.btn-submit').attr('disabled',true);
+            $('.btn-submit').attr('disabled', true);
             form_type = '#revisednormalFormModal';
             telemed = $('.telemedicine').val();
             department_id = $('.select_department_normal').val();
             department_name = $('.select_department_normal option:selected').html();
+
             $(this).ajaxSubmit({
                 url: "{{ url('submit-referral/normal') }}",
                 type: 'POST',
                 success: function(data) {
                     console.log(data);
-                    if(data == 'consultation_rejected') {
+
+                    if (typeof data === 'string' && data.trim() === 'consultation_rejected') {
                         $('.loading').hide();
                         $('#revisedpregnantModal').modal('hide');
                         $('#revisednormalFormModal').modal('hide');
-                        Lobibox.alert("error",
-                        {
-                            msg: "This appoinment schedule is not available, please select other schedule in the calendar."
+                        $('.btn-submit').attr('disabled', false);
+                        Lobibox.alert("error", {
+                            msg: "This appointment schedule is not available, please select other schedule in the calendar."
                         });
                         return;
                     }
-                    //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
-                    if(data.referred_to == 790 || data.referred_to == 23) {
+
+                    if (data.referred_to == 790 || data.referred_to == 23) {
                         var push_diagnosis = push_notification_diagnosis_ccmc ? push_notification_diagnosis_ccmc : $("#other_diag").val();
                         data.age = parseInt(data.age);
                         sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
                         $('.loading').hide();
                         $('#revisedpregnantModal').modal('hide');
                         $('#revisednormalFormModal').modal('hide');
-                        $('.btn-submit').attr('disabled',false);
-                        Lobibox.alert("success",
-                            {
-                                msg: "Successfully referred the patient!"
-                            });
-                    } //push notification for CCMD
-                    else {
-                        // $(location).attr('href', "{{ asset('doctor/referred') }}");
-                         $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+                        $('.btn-submit').attr('disabled', false);
+                        Lobibox.alert("success", {
+                            msg: "Successfully referred the patient!"
+                        });
+                    } else {
+                        $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
                     }
-                }
-                });
-            
-        });
+                },
+                error: function(xhr, textStatus, errorThrown) {
+                    $('.loading').hide();
+                    $('.btn-submit').attr('disabled', false);
 
+                    let message = 'An unexpected error occurred. Please try again.';
+
+                    if (xhr.responseText) {
+                        try {
+                            const response = JSON.parse(xhr.responseText);
+                            if (response.message) {
+                                message = response.message;
+                            }
+                        } catch (e) {
+                            // Response wasn't JSON, fall through to status-based messages
+                        }
+                    }
+
+                    if (xhr.status === 422) {
+                        Lobibox.alert("error", {
+                            msg: message
+                        });
+                    } else if (xhr.status === 419) {
+                        Lobibox.alert("error", {
+                            msg: "Session expired. Please refresh the page and try again."
+                        });
+                    } else if (xhr.status === 500) {
+                        Lobibox.alert("error", {
+                            msg: "Server error. Please contact your administrator."
+                        });
+                    } else {
+                        Lobibox.alert("error", {
+                            msg: "Error (" + xhr.status + "): " + message
+                        });
+                    }
+
+                    console.log("XHR:", xhr);
+                    console.log("Status:", textStatus);
+                    console.log("Error:", errorThrown);
+                }
+            });
+        });
         //.............................................Warning Do not delete this submission ...........................................................!
         // $('.revised_normal_form').on('submit',function(e){
         //     e.preventDefault();
@@ -1425,50 +1474,93 @@ $counter = 0;
         //         });
         // });
 
-        $('.revised_pregnant_form').on('submit', function(e){
-            e.preventDefault();
-            $('.loading').show();
-            form_type = '#revisedpregnantFormModal';
-            sex = 'Female';
-            telemed = $('.telemedicine').val();
-            console.log("revised Telemed", telemed);
-            reason = $('.woman_information_given').val();
-            department_id = $('.select_department_pregnant').val();
-            department_name = $('.select_department_pregnant :selected').text();
-            $(this).ajaxSubmit({
-                    url: "{{ url('submit-referral/pregnant') }}",
-                    type: 'POST',
-                    success: function(data){
-                        console.log("patient", data);
-                        if(data.referred_to == 790 || data.referred_to == 23) {
-                        data.age = parseInt(data.age);
-                        var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
-                        sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
-                        $('.loading').hide();
-                        $('#pregnantModal').modal('hide');
-                        $('#revisedpregnantFormModal').modal('hide');
-                        $('.btn-submit').attr('disabled',false);
-                        Lobibox.alert("success",
-                            {
-                                msg: "Successfully referred the patient!"
-                            });
-                    } else {
-                        // $('.loading').hide(); // Hide loading animation on success
-                        setTimeout(function(){
-                            // $(location).attr('href', "{{ asset('doctor/referred') }}");
-                             $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
-                        }, 500);
-                    }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error: ", error);
-                        console.error("Response: ", xhr.responseText);
-                        $('#serverModal').modal();
-                        $('.loading').hide(); // Hide loading animation on error
-                    }
-                });
-        });
+     $('.revised_pregnant_form').on('submit', function(e) {
+        e.preventDefault();
+        $('.loading').show();
+        $('.btn-submit').attr('disabled', true);
+        form_type = '#revisedpregnantFormModal';
+        sex = 'Female';
+        telemed = $('.telemedicine').val();
+        console.log("revised Telemed", telemed);
+        reason = $('.woman_information_given').val();
+        department_id = $('.select_department_pregnant').val();
+        department_name = $('.select_department_pregnant :selected').text();
 
+        $(this).ajaxSubmit({
+            url: "{{ url('submit-referral/pregnant') }}",
+            type: 'POST',
+            success: function(data) {
+                console.log("patient", data);
+
+                if (typeof data === 'string' && data.trim() === 'consultation_rejected') {
+                    $('.loading').hide();
+                    $('#pregnantModal').modal('hide');
+                    $('#revisedpregnantFormModal').modal('hide');
+                    $('.btn-submit').attr('disabled', false);
+                    Lobibox.alert("error", {
+                        msg: "This appointment schedule is not available, please select other schedule in the calendar."
+                    });
+                    return;
+                }
+
+                if (data.referred_to == 790 || data.referred_to == 23) {
+                    data.age = parseInt(data.age);
+                    var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
+                    sendNotifierData(data.age, data.chiefComplaint, data.department, push_diagnosis, data.patient, data.sex, data.referring_hospital, data.date_referred, data.patient_code);
+                    $('.loading').hide();
+                    $('#pregnantModal').modal('hide');
+                    $('#revisedpregnantFormModal').modal('hide');
+                    $('.btn-submit').attr('disabled', false);
+                    Lobibox.alert("success", {
+                        msg: "Successfully referred the patient!"
+                    });
+                } else {
+                    setTimeout(function() {
+                        $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
+                    }, 500);
+                }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                $('.loading').hide();
+                $('.btn-submit').attr('disabled', false);
+
+                let message = 'An unexpected error occurred. Please try again.';
+
+                if (xhr.responseText) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            message = response.message;
+                        }
+                    } catch (e) {
+                        // Response wasn't JSON, fall through to status-based messages
+                    }
+                }
+
+                if (xhr.status === 422) {
+                    Lobibox.alert("error", {
+                        msg: message
+                    });
+                } else if (xhr.status === 419) {
+                    Lobibox.alert("error", {
+                        msg: "Session expired. Please refresh the page and try again."
+                    });
+                } else if (xhr.status === 500) {
+                    Lobibox.alert("error", {
+                        msg: "Server error. Please contact your administrator."
+                    });
+                } else {
+                    Lobibox.alert("error", {
+                        msg: "Error (" + xhr.status + "): " + message
+                    });
+                }
+
+                console.log("XHR:", xhr);
+                console.log("Status:", textStatus);
+                console.log("Error:", errorThrown);
+            }
+        });
+    });
         //.............................................Warning Do not delete this submission ...........................................................!
         //  $('.revised_pregnant_form').on('submit', function(e){
         //     e.preventDefault();
@@ -1549,18 +1641,31 @@ $counter = 0;
     $('.pregnant_form').on('submit', function(e) {
         e.preventDefault();
         $('.loading').show();
+        $('.btn-submit').attr('disabled', true);
         form_type = '#pregnantFormModal';
         sex = 'Female';
         reason = $('.woman_information_given').val();
         department_id = $('.select_department_pregnant').val();
         department_name = $('.select_department_pregnant :selected').text();
         telemed = $('.telemedicine').val();
+
         $(this).ajaxSubmit({
             url: "{{ url('doctor/patient/refer/pregnant') }}",
             type: 'POST',
             success: function(data) {
                 console.log("patient", data);
-                //if((data.referred_to == 790 || data.referred_to == 23) && data.userid == 1687) {
+
+                if (typeof data === 'string' && data.trim() === 'consultation_rejected') {
+                    $('.loading').hide();
+                    $('#pregnantModal').modal('hide');
+                    $('#pregnantFormModal').modal('hide');
+                    $('.btn-submit').attr('disabled', false);
+                    Lobibox.alert("error", {
+                        msg: "This appointment schedule is not available because it is fully booked. Please select another schedule from the calendar."
+                    });
+                    return;
+                }
+
                 if (data.referred_to == 790 || data.referred_to == 23) {
                     data.age = parseInt(data.age);
                     var push_diagnosis = push_notification_diagnosis_ccmc_pregnant ? push_notification_diagnosis_ccmc_pregnant : $("#other_diag_preg").val();
@@ -1575,22 +1680,48 @@ $counter = 0;
                 } else {
                     $(location).attr('href', `{{ asset('doctor/referred') }}?filterRef=${encodeURIComponent(telemed)}`);
                 }
+            },
+            error: function(xhr, textStatus, errorThrown) {
+                $('.loading').hide();
+                $('.btn-submit').attr('disabled', false);
+
+                let message = 'An unexpected error occurred. Please try again.';
+
+                if (xhr.responseText) {
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            message = response.message;
+                        }
+                    } catch (e) {
+                        // Response wasn't JSON, fall through to status-based messages
+                    }
+                }
+
+                if (xhr.status === 422) {
+                    Lobibox.alert("error", {
+                        msg: message
+                    });
+                } else if (xhr.status === 419) {
+                    Lobibox.alert("error", {
+                        msg: "Session expired. Please refresh the page and try again."
+                    });
+                } else if (xhr.status === 500) {
+                    Lobibox.alert("error", {
+                        msg: "Server error. Please contact your administrator."
+                    });
+                } else {
+                    Lobibox.alert("error", {
+                        msg: "Error (" + xhr.status + "): " + message
+                    });
+                }
+
+                console.log("XHR:", xhr);
+                console.log("Status:", textStatus);
+                console.log("Error:", errorThrown);
             }
-            /*,
-                        error: function(XMLHttpRequest, textStatus, errorThrown){
-                            $('.loading').hide();
-                            $('#pregnantModal').modal('hide');
-                            $('#pregnantFormModal').modal('hide');
-                            $('.btn-submit').attr('disabled',false);
-                            Lobibox.notify('error', {
-                                title: "Error",
-                                msg: "Status: " + textStatus+" Error: " + errorThrown
-                            });
-                        }*/
         });
-
     });
-
  //.............................................Warning Do not delete this submission ...........................................................!
     // $('.pregnant_form').on('submit', function(e) {
     //     e.preventDefault();

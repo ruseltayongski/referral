@@ -599,16 +599,18 @@
     </tr>
     @endif
     
-    @if (!empty(implode(",",$pertinent_arr)))
+    @if (!empty(implode(",",$pertinent_arr)) || isset($file_path))
     <tr class="bg-gray">
         <td colspan="6">Pertinent Laboratory and Other Ancillary Procedures </td>
     </tr>
     @endif
-    @if (!empty(implode(",",$pertinent_arr)))
+    @if (!empty(implode(",",$pertinent_arr)) || isset($file_path))
+    @if(!isset($file_path) || !empty(implode(",",$pertinent_arr)))
     <tr>   
         <td colspan="6">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td> 
     </tr>
-    @if (!empty($pertinent_laboratory->lab_procedure_other))
+    @endif
+    @if (!empty($pertinent_laboratory->lab_procedure_other) || !isset($file_path))
     <tr>
         <td colspan="6">Others: <span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pertinent_laboratory->lab_procedure_other}}</span></td> 
     </tr>

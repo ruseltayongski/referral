@@ -553,10 +553,12 @@ $user = Session::get('auth');
             </tr>
             @endif
            
-            @if (!empty(implode(",",$pertinent_arr)))
+            @if (!empty(implode(",",$pertinent_arr)) || isset($file_path))
+            @if(!empty(implode(",",$pertinent_arr)) || !isset($file_path))
             <tr>   
                 <td colspan="4">Laboratory:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{implode(",",$pertinent_arr)}}</span></td>
             </tr>
+            @endif
             @if(!empty($pertinent_others))<tr><td colspan="4">Others:<span class="woman_prenatal form-details"></span> - <span class="woman_prenatal form-details">{{$pertinent_others}}</span></td></tr>@endif
             @endif
 

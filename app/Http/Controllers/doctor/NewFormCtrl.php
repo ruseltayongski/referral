@@ -1186,15 +1186,90 @@ class NewFormCtrl extends Controller
 
             $form = PatientForm::updateOrCreate( ['unique_id' => $unique_id],$data);
         
+            // $file_paths = "";
+            // if($_FILES["file_upload"]["name"]) {
+            //     ApiController::fileUpload($request);
+            //     for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+            //         $file = $_FILES['file_upload']['name'][$i];
+            //         if(isset($file) && !empty($file)) {
+            //             $username = $user->username;
+            //             $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
+            //             if($i + 1 != count($_FILES["file_upload"]["name"])) {
+            //                 $file_paths .= "|";
+            //             }
+            //         }
+            //     }
+            // }
+
             $file_paths = "";
-            if($_FILES["file_upload"]["name"]) {
-                ApiController::fileUpload($request);
-                for($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+            if ($_FILES["file_upload"]["name"]) {
+
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'xlsx'];
+                $allowedMimes = [
+                    'image/jpeg',
+                    'image/jpg',
+                    'image/png',
+                    'image/gif',
+                    'application/pdf',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',       // .xlsx
+                ];
+                $maxSizeBytes = 25 * 1024 * 1024; // 25MB
+
+                for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
                     $file = $_FILES['file_upload']['name'][$i];
-                    if(isset($file) && !empty($file)) {
-                        $username = $user->username;
-                        $file_paths .= ApiController::fileUploadUrl().$username."/".$file;
-                        if($i + 1 != count($_FILES["file_upload"]["name"])) {
+
+                    if (isset($file) && !empty($file)) {
+
+                        // --- 1. Check for upload errors ---
+                        if ($_FILES['file_upload']['error'][$i] !== UPLOAD_ERR_OK) {
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "Upload error on file: {$file}."
+                            ], 422);
+                        }
+
+                        // --- 2. Validate extension ---
+                        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                        if (!in_array($extension, $allowedExtensions)) {
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "File type not allowed: .{$extension}. Only JPG, PNG, GIF, PDF, DOCX, and XLSX are accepted."
+                            ], 422);
+                        }
+
+                        // --- 3. Validate MIME type (server-detected, not client-reported) ---
+                        $tmpPath  = $_FILES['file_upload']['tmp_name'][$i];
+                        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+                        $mimeType = $finfo->file($tmpPath);
+                        if (!in_array($mimeType, $allowedMimes)) {
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "Invalid file type detected for: {$file}. Only JPG, PNG, GIF, PDF, DOCX, and XLSX are accepted."
+                            ], 422);
+                        }
+
+                        // --- 4. Validate file size ---
+                        $fileSize = $_FILES['file_upload']['size'][$i];
+                        if ($fileSize > $maxSizeBytes) {
+                            $fileSizeMB = number_format($fileSize / (1024 * 1024), 2);
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "File too large: {$file} ({$fileSizeMB}MB). Maximum allowed size is 10MB."
+                            ], 422);
+                        }
+                    }
+                }
+
+                // --- All files passed validation, proceed with upload ---
+                ApiController::fileUpload($request);
+
+                for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+                    $file = $_FILES['file_upload']['name'][$i];
+                    if (isset($file) && !empty($file)) {
+                        $username    = $user->username;
+                        $file_paths .= ApiController::fileUploadUrl() . $username . "/" . $file;
+                        if ($i + 1 != count($_FILES["file_upload"]["name"])) {
                             $file_paths .= "|";
                         }
                     }
@@ -1291,14 +1366,88 @@ class NewFormCtrl extends Controller
             );
             $form = PregnantForm::create($data);
 
-            $file_paths = "";
+            // $file_paths = "";
 
+            // if ($_FILES["file_upload"]["name"]) {
+            //     ApiController::fileUpload($request);
+            //     for ($i = 0; $i < count($_FILES["file_upload"]["name"]); $i++) {
+            //         $file = $_FILES['file_upload']['name'][$i];
+            //         if (isset($file) && !empty($file)) {
+            //             $username = $user->username;
+            //             $file_paths .= ApiController::fileUploadUrl() . $username . "/" . $file;
+            //             if ($i + 1 != count($_FILES["file_upload"]["name"])) {
+            //                 $file_paths .= "|";
+            //             }
+            //         }
+            //     }
+            // }
+            $file_paths = "";
             if ($_FILES["file_upload"]["name"]) {
+
+                $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'docx', 'xlsx'];
+                $allowedMimes = [
+                    'image/jpeg',
+                    'image/jpg',
+                    'image/png',
+                    'image/gif',
+                    'application/pdf',
+                    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',       // .xlsx
+                ];
+                $maxSizeBytes = 25 * 1024 * 1024; // 25MB
+
+                for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
+                    $file = $_FILES['file_upload']['name'][$i];
+
+                    if (isset($file) && !empty($file)) {
+
+                        // --- 1. Check for upload errors ---
+                        if ($_FILES['file_upload']['error'][$i] !== UPLOAD_ERR_OK) {
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "Upload error on file: {$file}."
+                            ], 422);
+                        }
+
+                        // --- 2. Validate extension ---
+                        $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+                        if (!in_array($extension, $allowedExtensions)) {
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "File type not allowed: .{$extension}. Only JPG, PNG, GIF, PDF, DOCX, and XLSX are accepted."
+                            ], 422);
+                        }
+
+                        // --- 3. Validate MIME type (server-detected, not client-reported) ---
+                        $tmpPath  = $_FILES['file_upload']['tmp_name'][$i];
+                        $finfo    = new \finfo(FILEINFO_MIME_TYPE);
+                        $mimeType = $finfo->file($tmpPath);
+                        if (!in_array($mimeType, $allowedMimes)) {
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "Invalid file type detected for: {$file}. Only JPG, PNG, GIF, PDF, DOCX, and XLSX are accepted."
+                            ], 422);
+                        }
+
+                        // --- 4. Validate file size ---
+                        $fileSize = $_FILES['file_upload']['size'][$i];
+                        if ($fileSize > $maxSizeBytes) {
+                            $fileSizeMB = number_format($fileSize / (1024 * 1024), 2);
+                            return response()->json([
+                                'status'  => 'error',
+                                'message' => "File too large: {$file} ({$fileSizeMB}MB). Maximum allowed size is 10MB."
+                            ], 422);
+                        }
+                    }
+                }
+
+                // --- All files passed validation, proceed with upload ---
                 ApiController::fileUpload($request);
-                for ($i = 0; $i < count($_FILES["file_upload"]["name"]); $i++) {
+
+                for ($i = 0; $i < count($_FILES['file_upload']['name']); $i++) {
                     $file = $_FILES['file_upload']['name'][$i];
                     if (isset($file) && !empty($file)) {
-                        $username = $user->username;
+                        $username    = $user->username;
                         $file_paths .= ApiController::fileUploadUrl() . $username . "/" . $file;
                         if ($i + 1 != count($_FILES["file_upload"]["name"])) {
                             $file_paths .= "|";
