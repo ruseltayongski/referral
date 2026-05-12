@@ -1246,9 +1246,9 @@ $counter = 0;
                     });
                 }
 
-                console.log("XHR:", xhr);
-                console.log("Status:", textStatus);
-                console.log("Error:", errorThrown);
+                // console.log("XHR:", xhr);
+                // console.log("Status:", textStatus);
+                // console.log("Error:", errorThrown);
             }
         });
     });
@@ -1422,9 +1422,9 @@ $counter = 0;
                         });
                     }
 
-                    console.log("XHR:", xhr);
-                    console.log("Status:", textStatus);
-                    console.log("Error:", errorThrown);
+                    // console.log("XHR:", xhr);
+                    // console.log("Status:", textStatus);
+                    // console.log("Error:", errorThrown);
                 }
             });
         });
@@ -1555,9 +1555,9 @@ $counter = 0;
                     });
                 }
 
-                console.log("XHR:", xhr);
-                console.log("Status:", textStatus);
-                console.log("Error:", errorThrown);
+                // console.log("XHR:", xhr);
+                // console.log("Status:", textStatus);
+                // console.log("Error:", errorThrown);
             }
         });
     });
@@ -1716,9 +1716,9 @@ $counter = 0;
                     });
                 }
 
-                console.log("XHR:", xhr);
-                console.log("Status:", textStatus);
-                console.log("Error:", errorThrown);
+                // console.log("XHR:", xhr);
+                // console.log("Status:", textStatus);
+                // console.log("Error:", errorThrown);
             }
         });
     });
