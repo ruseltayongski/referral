@@ -147,7 +147,7 @@ import { event } from 'jquery';
                 },60000);
             },
             notifyReco(code, feedback_count, redirect_track,notifyPayload) {
-                console.log("modal not open pass data", notifyPayload);
+                // console.log("modal not open pass data", notifyPayload);
 
                 window.dispatchEvent(new CustomEvent("reco-notify", {
                     detail: notifyPayload

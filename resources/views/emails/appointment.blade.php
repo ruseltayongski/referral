@@ -371,9 +371,6 @@
                 <a href="{{ data_get($appointment, 'video_link', '#') }}" class="btn btn-primary" style="color: #ffffff !important; text-decoration: none;">Join Video Call</a>
             </div>
             <div class="action-buttons">
-                <a href="{{ route('appointment.download-ics', data_get($appointment, 'appointment_id')) }}" download="appointment.ics">Download Calendar</a>
-            </div>
-            <div class="action-buttons">
                 <a href="{{ $googleCalendarUrl }}" target="_blank" rel="noopener">Add to Google Calendar</a>
             </div>
             @endif

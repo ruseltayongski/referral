@@ -264,6 +264,30 @@ $(document).ready(function() {
     let isSubmitting = false; // 🔹 GLOBAL LOCK
     let existingSlots = []; // Store fetched slots
 
+    window.addEventListener('message', function(event) {
+        if (!event.data || event.data.type !== 'openFollowUp') return;
+
+        var d = event.data;
+
+        $('#schedule_code').val(d.code || '');
+        $('#schedule_followup_facility_telemed').val(d.followupFacility || '');
+        $('#schedule_appointment_id').val(d.appointmentId || '');
+        $('#schedule_config_id').val(d.configId || '');
+        $('#schedule_telemedicine').val(d.telemedicine || 1);
+
+        // Reset fields
+        $('#schedule_date').val('');
+        $('#schedule_time_from').val('');
+        $('#schedule_time_to').val('');
+        $('#selected_slot_id').val('');
+        $('#use_existing_slot').val('0');
+        existingSlots = [];
+        resetSlotsDisplay();
+
+        // Open the modal
+        $('#scheduleModal').modal('show');
+    });
+
     function getTodayISO() {
         const today = new Date();
         const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -572,6 +596,5 @@ $(document).ready(function() {
         showLoader();
         submitFollowUp(false);
     });
-
 });
 </script>

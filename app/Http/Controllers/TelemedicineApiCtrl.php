@@ -639,11 +639,51 @@ class TelemedicineApiCtrl extends Controller
             'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks : 'patient follow up',
             'status' => 'followup',
         ];
+        // $activity_examined = [
+        //     'code' => $request->code,
+        //     'patient_id' => $patient_id,
+        //     'date_referred' => date('Y-m-d H:i:s'),
+        //     'date_seen' => '0000-00-00 00:00:00',
+        //     'referred_from' => $tracking->referred_from,
+        //     'referred_to' => $request->followup_facility_telemed,
+        //     'sub_opdId' => $request->input('opdSubId') ?? $request->input('configId') ?? null,
+        //     'department_id' => $tracking->department_id,
+        //     'referring_md' => $tracking->referring_md,
+        //     'action_md' => $userId,
+        //     'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks : 'patient follow up',
+        //     'status' => 'examined',
+        // ];
+       $isPatientExamined = Activity::where('code', $request->code)
+        ->orderBy('id', 'desc')
+        ->value('status');
 
-        $createdActivity = Activity::create($activity);
+        $time = Carbon::now()->addMinute();
+
+        if(isset($isPatientExamined) && $isPatientExamined == 'examined'){
+            $createdActivity = Activity::create($activity);
+        }else {
+            // first record: examined
+            $examined = $activity;
+            $examined['status'] = 'examined';
+            $examined['remarks'] = 'patient examined';
+            $examined['created_at'] = $time;
+            $examined['updated_at'] = $time;
+
+            Activity::create($examined);
+
+            // second record: followup
+            $followup = $activity;
+            $followup['status'] = 'followup';
+            $followup['created_at'] = $time->copy()->addMinute();
+            $followup['updated_at'] = $time->copy()->addMinute();
+
+            Activity::create($followup);
+        }
+
+        // $createdActivity = Activity::create($activity);
 
         // ✅ AUTO ACCEPT — pass session user directly, no Request needed
-        $this->acceptFollowUp($user, $tracking->id);
+        $this->acceptFollowUp($user, $tracking->id, $time);
 
         // Broadcast
         $patient = Patients::find($tracking->patient_id);
@@ -676,7 +716,7 @@ class TelemedicineApiCtrl extends Controller
         ], 200);
     }
 
-    public function acceptFollowUp($user, $track_id)
+    public function acceptFollowUp($user, $track_id, $time)
     {
         // ✅ $user is passed directly — no resolution needed
         if (!$user) {
@@ -727,7 +767,9 @@ class TelemedicineApiCtrl extends Controller
             'referring_md' => $track->referring_md,
             'action_md' => $user->id,
             'remarks' => 'Auto-accepted on follow-up',
-            'status' => $track->status
+            'status' => $track->status,
+            'created_at' => $time->copy()->addMinute(),
+            'updated_at' => $time->copy()->addMinute()
         ];
 
         $activity = Activity::create($data);

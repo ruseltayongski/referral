@@ -2078,7 +2078,7 @@ class TelemedicineCtrl extends Controller
 
     public function recordingList()
     {
-        $recordingsPath = storage_path('app/recordings');
+        $recordingsPath = storage_path('app/recordings/completed');
         $recordings = [];
 
         if (is_dir($recordingsPath)) {
@@ -2403,7 +2403,7 @@ class TelemedicineCtrl extends Controller
         $username = basename($username);
         $fileName = basename($fileName);
 
-        $filePath = storage_path("app/recordings/{$username}/{$fileName}");
+        $filePath = storage_path("app/recordings/completed/{$username}/{$fileName}");
 
         if (!file_exists($filePath)) {
             abort(404, 'Recording not found.');

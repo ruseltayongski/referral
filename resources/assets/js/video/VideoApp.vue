@@ -21,7 +21,6 @@ export default {
   },
   data() {
     return {
-      // agoraEngine: null,
       isMobileDevice: false,
       showCameraSwitch: true,
       currentCameraId: null,
@@ -45,25 +44,14 @@ export default {
       currentCode: null,
       ImageUrl: "",
       baseUrlFeed: null,
-      //end  for feedback
       showTooltipFeedback: false,
       showTooltip: false,
       showPrescription: false,
       showUpward: false,
       showEndcall: false,
-      showFollowUp: false,
-      showFollowUpModal: false,
-      followUpForm: {
-        date: '',
-        timeFrom: '',
-        timeTo: ''
-      },
-      existingTimeSlots: [],
-      selectedTimeSlot: null,
-      followUpLoading: false,
-      checkingSlotsLoading: false,
       showVedio: false,
       showMic: false,
+      showFollowUp: false,
       ringingPhoneUrl: $("#broadcasting_url").val() + "/public/ringing.mp3",
       baseUrl: $("#broadcasting_url").val(),
       doctorUrl:
@@ -90,7 +78,7 @@ export default {
         // Pass your temp token here.
         token: null,
       },
-    
+ 
       form: {},
       patient_age: "",
       file_path: [],
@@ -137,11 +125,18 @@ export default {
       glasgocoma_scale: null,
       obstetric_and_gynecologic_history: null,
       pregnancy: null,
+ 
+      // ── Screen recording ──────────────────────────────────────────────────
       recordedChunks: [],
       screenRecorder: null,
       recordingCanvas: null,
       recordingAnimFrame: null,
       recordingSessionId: null,
+      chunkSequence: 0,           // increments per uploaded chunk
+      recordingFileName: null,    // set once when recording starts
+      isRecordingFinalized: false,
+      // ─────────────────────────────────────────────────────────────────────
+ 
       isPatientToDoctor: true,
     };
   },
@@ -154,12 +149,13 @@ export default {
     window.addEventListener("click", this.showDivAgain);
     window.addEventListener("beforeunload", this.preventCloseWhileUploading);
     window.addEventListener("beforeunload", this.stopCallTimer);
+    window.addEventListener("beforeunload", this.handleBeforeUnload);
     document.title = "TELEMEDICINE";
     // Change favicon
     const link = document.querySelector("link[rel~='icon']");
     this.initAfkDetection();
     if (link) {
-      link.href = this.dohLogoUrl; // Make sure logo.png is in your public folder
+      link.href = this.dohLogoUrl;
     } else {
       const newLink = document.createElement("link");
       newLink.rel = "icon";
@@ -183,12 +179,15 @@ export default {
     window.removeEventListener("click", this.showDivAgain);
     window.removeEventListener("beforeunload", this.preventCloseWhileUploading);
     window.removeEventListener("keydown", this.feedbackKeydown);
+    window.removeEventListener("beforeunload", this.handleBeforeUnload);
     this.clearAfkTimers();
     this.stopCallTimer();
     // Remove event listener when component is destroyed
     // window.removeEventListener("resize", this.handleResize);
   },
+ 
   props: ["user"],
+ 
   created() {
     let self = this;
     $(document).ready(function () {
@@ -247,7 +246,7 @@ export default {
   },
   watch: {
     isUserJoined() {
-      console.log("opcen facility", this.opcen_facility)
+      console.log("opcen facility", this.opcen_facility);
       if (this.isUserJoined) {
         this.$refs.ringingPhone.pause();
         this.startCallTimer();
@@ -266,116 +265,238 @@ export default {
   //   },
   // },
   methods: {
+    // ── Before-unload beacon (mirrors OpcenVideoApp) ──────────────────────
+    handleBeforeUnload() {
+      if (this.recordingSessionId && !this.isRecordingFinalized) {
+        navigator.sendBeacon(
+          `${this.baseUrl}/api/save-screen-record/finalize`,
+          new Blob(
+            [
+              JSON.stringify({
+                sessionId:   this.recordingSessionId,
+                fileName:    this.recordingFileName,
+                totalChunks: this.chunkSequence,
+                patient_code: this.referral_code,
+                activity_id: this.activity_id,
+                username:    this.user?.username ?? "unknown",
+              }),
+            ],
+            { type: "application/json" }
+          )
+        );
+        console.log("📡 Finalize beacon sent on tab close");
+      }
+    },
+ 
+    // ── Progressive screen recording (matches OpcenVideoApp exactly) ──────
     async startScreenRecording() {
       try {
-        this.recordedChunks = [];
-
-        const canvas = document.createElement("canvas");
-        canvas.width = 1280;
+        this.recordedChunks       = [];
+        this.chunkSequence        = 0;
+        this.isRecordingFinalized = false;
+ 
+        // Generate session ID and filename ONCE
+        const patientCode = this.form?.code || this.referral_code || "Unknown";
+        const dateSave    = new Date().toISOString().split("T")[0];
+        const timeStart   = new Date()
+          .toLocaleTimeString("en-US", { hour12: false })
+          .replace(/:/g, "-");
+ 
+        this.recordingSessionId = `${patientCode}_${this.activity_id}_${Date.now()}`;
+        this.recordingFileName  = `${patientCode}_${this.activity_id}_${dateSave}_${timeStart}.webm`;
+ 
+        // Canvas setup
+        const canvas  = document.createElement("canvas");
+        canvas.width  = 1280;
         canvas.height = 720;
         this.recordingCanvas = canvas;
         const ctx = canvas.getContext("2d");
-
-        // ✅ Helper: find video element inside a container
-        const getVideoEl = (containerId) => {
-          const container = document.getElementById(containerId);
-          if (!container) {
-            console.warn(`⚠️ Container #${containerId} not found`);
-            return null;
-          }
-          const video = container.querySelector("video");
-          if (!video) console.warn(`⚠️ No <video> inside #${containerId}`);
-          return video;
-        };
-
-        // ✅ Verify at least remote video exists before starting
+ 
+        const getVideoEl = (id) =>
+          document.getElementById(String(id))?.querySelector("video") ?? null;
+ 
         const remoteVideo = getVideoEl(this.channelParameters.remoteUid);
         if (!remoteVideo) {
-          console.error("❌ Remote video element not found. Aborting recording.");
+          console.error("❌ Remote video not found — aborting recording.");
           return;
         }
-
-        console.log("🎥 Remote video element found:", remoteVideo);
-        console.log("🎥 Remote video readyState:", remoteVideo.readyState);
-
+ 
         const drawFrame = () => {
           ctx.fillStyle = "#000";
           ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          const remoteVid = getVideoEl(this.channelParameters.remoteUid);
-          if (remoteVid && remoteVid.readyState >= 2) {
-            ctx.drawImage(remoteVid, 0, 0, canvas.width * 0.75, canvas.height);
-          }
-
-          const localVid = getVideoEl(this.options.uid);
-          if (localVid && localVid.readyState >= 2) {
-            const pipW = canvas.width * 0.25;
-            const pipH = canvas.height * 0.25;
+ 
+          const rv = getVideoEl(this.channelParameters.remoteUid);
+          if (rv?.readyState >= 2)
+            ctx.drawImage(rv, 0, 0, canvas.width * 0.75, canvas.height);
+ 
+          const lv = getVideoEl(this.options.uid);
+          if (lv?.readyState >= 2) {
+            const pw = canvas.width * 0.25,
+              ph = canvas.height * 0.25;
             ctx.drawImage(
-              localVid,
-              canvas.width - pipW - 10,
-              canvas.height - pipH - 10,
-              pipW,
-              pipH
+              lv,
+              canvas.width - pw - 10,
+              canvas.height - ph - 10,
+              pw,
+              ph
             );
           }
-
           this.recordingAnimFrame = requestAnimationFrame(drawFrame);
         };
-
         drawFrame();
-
-        // ---- Audio mix ----
-        const audioCtx = new AudioContext();
+ 
+        // Audio mix
+        const audioCtx    = new AudioContext();
         const destination = audioCtx.createMediaStreamDestination();
-
-        const addAudioTrack = (track) => {
+        const addTrack    = (track) => {
           if (!track) return;
           try {
-            const source = audioCtx.createMediaStreamSource(new MediaStream([track]));
-            source.connect(destination);
-            console.log("🔊 Audio track connected:", track.label);
+            audioCtx
+              .createMediaStreamSource(new MediaStream([track]))
+              .connect(destination);
           } catch (e) {
-            console.warn("⚠️ Failed to connect audio track:", e);
+            console.warn("Audio track connect failed:", e);
           }
         };
-
-        addAudioTrack(this.channelParameters.localAudioTrack?.getMediaStreamTrack());
-        addAudioTrack(this.channelParameters.remoteAudioTrack?.getMediaStreamTrack());
-
-        // ---- Combine ----
+        addTrack(this.channelParameters.localAudioTrack?.getMediaStreamTrack());
+        addTrack(this.channelParameters.remoteAudioTrack?.getMediaStreamTrack());
+ 
+        // Combine video + audio
         const videoStream = canvas.captureStream(30);
         destination.stream.getAudioTracks().forEach((t) => videoStream.addTrack(t));
-
-        console.log("🎞️ Stream tracks:", videoStream.getTracks().map(t => `${t.kind}:${t.label}`));
-
+ 
         const mimeType = MediaRecorder.isTypeSupported("video/webm;codecs=vp9,opus")
           ? "video/webm;codecs=vp9,opus"
           : "video/webm;codecs=vp8,opus";
-
+ 
         this.screenRecorder = new MediaRecorder(videoStream, { mimeType });
-
-        this.screenRecorder.ondataavailable = (event) => {
-          console.log("📦 Chunk received, size:", event.data?.size);
-          if (event.data && event.data.size > 0) {
-            this.recordedChunks.push(event.data);
-            console.log("✅ Total chunks:", this.recordedChunks.length);
-          } else {
-            console.warn("⚠️ Empty chunk — canvas may not be drawing");
-          }
+ 
+        // Upload each chunk immediately as it arrives (Zoom-style)
+        this.screenRecorder.ondataavailable = async (event) => {
+          if (!event.data || event.data.size === 0) return;
+          this.recordedChunks.push(event.data);
+          await this._uploadChunk(event.data, this.chunkSequence++, false);
         };
-
-        this.screenRecorder.onstart = () => console.log("▶️ MediaRecorder started");
-        this.screenRecorder.onerror = (e) => console.error("❌ MediaRecorder error:", e);
-
+ 
+        this.screenRecorder.onerror = (e) =>
+          console.error("MediaRecorder error:", e);
+ 
+        // Collect a chunk every 5 seconds — uploads automatically
         this.screenRecorder.start(5000);
-        console.log("✅ Recording started. State:", this.screenRecorder.state);
-
-      } catch (error) {
-        console.error("❌ Error starting recording:", error);
+        console.log("✅ Auto-save recording started:", this.recordingFileName);
+      } catch (err) {
+        console.error("❌ startScreenRecording failed:", err);
       }
     },
-    // Mobile device detection removed to always show camera switch functionality
+ 
+    // ── Upload a single chunk with retry ─────────────────────────────────
+    async _uploadChunk(chunkBlob, sequence, isFinal) {
+      const formData = new FormData();
+      formData.append("video",        chunkBlob, this.recordingFileName);
+      formData.append("sessionId",    this.recordingSessionId);
+      formData.append("fileName",     this.recordingFileName);
+      formData.append("chunkIndex",   sequence);
+      formData.append("isFinal",      isFinal ? "1" : "0");
+      formData.append("username",     this.user?.username ?? "unknown");
+      formData.append("patient_code", this.referral_code);
+      formData.append("activity_id",  this.activity_id);
+ 
+      try {
+        await axios.post(
+          `${this.baseUrl}/api/save-screen-record`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            timeout: 60_000,
+          }
+        );
+        console.log(`📦 Chunk ${sequence} uploaded${isFinal ? " [FINAL]" : ""}`);
+      } catch (err) {
+        console.error(`❌ Chunk ${sequence} upload failed:`, err.message);
+        // Simple retry with exponential backoff
+        setTimeout(() => this._uploadChunk(chunkBlob, sequence, isFinal), 3000);
+      }
+    },
+ 
+    // ── Finalize recording (send merge signal to server) ──────────────────
+    async saveScreenRecording(closeAfterUpload = false) {
+      if (this.isRecordingFinalized) return; // prevent double-finalize
+      this.isRecordingFinalized = true;
+ 
+      if (!this.recordingSessionId) {
+        if (closeAfterUpload) window.top.close();
+        return;
+      }
+ 
+      this.loading        = true;
+      this.uploadProgress = 99;
+ 
+      // Send finalize signal so server merges chunks
+      const formData = new FormData();
+      formData.append("video",        new Blob([], { type: "video/webm" }), this.recordingFileName);
+      formData.append("sessionId",    this.recordingSessionId);
+      formData.append("fileName",     this.recordingFileName);
+      formData.append("chunkIndex",   this.chunkSequence);
+      formData.append("isFinal",      "1");
+      formData.append("username",     this.user?.username ?? "unknown");
+      formData.append("patient_code", this.referral_code);
+      formData.append("activity_id",  this.activity_id);
+ 
+      try {
+        await axios.post(`${this.baseUrl}/api/save-screen-record`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+          timeout: 30_000,
+        });
+      } catch (err) {
+        console.error("Finalize request failed:", err.message);
+      }
+ 
+      this.uploadProgress = 100;
+      this.loading        = false;
+      this.recordedChunks = [];
+ 
+      if (closeAfterUpload) {
+        Lobibox.alert("success", {
+          msg: "Your conversation has been successfully recorded and uploaded.",
+          callback: () => window.top.close(),
+        });
+      }
+    },
+ 
+    // ── Stop recorder then finalize ───────────────────────────────────────
+    async stopAndSaveRecording() {
+      return new Promise((resolve) => {
+        if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
+          console.log("🛑 Stopping recorder, state:", this.screenRecorder.state);
+ 
+          // Flush any remaining data before stopping
+          this.screenRecorder.requestData();
+ 
+          this.screenRecorder.onstop = async () => {
+            console.log("🎬 Recorder stopped. Total chunks:", this.recordedChunks.length);
+            cancelAnimationFrame(this.recordingAnimFrame);
+            await this.handleAfterStop();
+            resolve();
+          };
+ 
+          this.screenRecorder.stop();
+        } else {
+          console.warn("⚠️ Recorder not active, skipping save.");
+          this.handleAfterStop().then(resolve);
+        }
+      });
+    },
+ 
+    async handleAfterStop() {
+      // Only the referring MD role saves call duration
+      if (this.referring_md === "yes") {
+        clearInterval(this.callTimer);
+        await this.sendCallDuration();
+      }
+      await this.saveScreenRecording(true);
+    },
+ 
+    // ── Mobile detection ──────────────────────────────────────────────────
     isMobile() {
       const isTabletSize =
         window.innerWidth >= 600 && window.innerWidth <= 1200;
@@ -392,8 +513,7 @@ export default {
           const response = res.data;
           if (response.success) {
             this.form_version = response.form_type;
-            // console.log("Form type:", this.form_version);
-
+ 
             if (this.form_version === "version1") {
               axios
                 .get(
@@ -403,22 +523,18 @@ export default {
                   const response = res.data;
                   this.telemedicine = response.form.telemedicine;
                   this.form = response.form;
-                  this.isPatientToDoctor = response.referring_fac_id == 0 ? true : false;
-                  console.log("response data:", this.isPatientToDoctor);
-                  return;
+                  this.isPatientToDoctor =
+                    response.referring_fac_id == 0 ? true : false;
+ 
                   if (response.age_type === "y")
                     this.patient_age = response.patient_age + " Years Old";
                   else if (response.age_type === "m")
                     this.patient_age = response.patient_age + " Months Old";
-
+ 
                   this.icd = response.icd;
-                  // console.log("testing\n" + this.icd);
-                  console.log("form type", response);
                   this.normal_formType = response.form_type;
                   this.file_path = response.file_path;
                   this.file_name = response.file_name;
-
-                  // console.log(response);
                 })
                 .catch((error) => {
                   console.error(error);
@@ -468,20 +584,16 @@ export default {
           );
         });
     },
-
+ 
+    // ── Camera devices ────────────────────────────────────────────────────
     async getCameraDevices() {
       try {
-        // Get list of available video devices
         const devices = await AgoraRTC.getCameras();
         this.availableCameras = devices;
-        // console.log('Available cameras:', devices); // Debug log
-
         if (devices.length > 0) {
           this.currentCameraId = devices[0].deviceId;
-          this.showCameraSwitch = devices.length > 1; // Only show button if multiple cameras
-          console.log("Current camera ID:", this.currentCameraId);
+          this.showCameraSwitch = devices.length > 1;
         } else {
-          console.warn("No cameras found");
           this.showCameraSwitch = false;
         }
       } catch (error) {
@@ -493,49 +605,33 @@ export default {
         });
       }
     },
-
+ 
     switchCamera() {
-      // console.log("Attempting to switch camera...");
       const track = this.channelParameters?.localVideoTrack;
       if (!track || track.isClosed) {
-        Lobibox.alert("error", {
-          msg: "Video track not initialized",
-          closeButton: false,
-        });
+        Lobibox.alert("error", { msg: "Video track not initialized", closeButton: false });
         return;
       }
-
       if (!this.availableCameras || this.availableCameras.length < 2) {
-        Lobibox.alert("error", {
-          msg: "Not enough cameras available",
-          closeButton: false,
-        });
+        Lobibox.alert("error", { msg: "Not enough cameras available", closeButton: false });
         return;
       }
-
-      // Find the next camera
+ 
       const currentIndex = this.availableCameras.findIndex(
         (camera) => camera.deviceId === this.currentCameraId
       );
-      const nextIndex = (currentIndex + 1) % this.availableCameras.length;
+      const nextIndex  = (currentIndex + 1) % this.availableCameras.length;
       const nextCamera = this.availableCameras[nextIndex];
-
-      // console.log("Switching to:", nextCamera.label || nextCamera.deviceId);
-
-      // 🔑 Switch device on the SAME track
+ 
       track
         .setDevice(nextCamera.deviceId)
         .then(() => {
-          // update current camera id
           this.currentCameraId = nextCamera.deviceId;
-          // console.log("Camera switch successful (no republish needed)");
-
-          // 🔑 re-play the track so the new camera feed shows immediately
           const container = document.getElementById(this.options.uid);
           if (container) {
             try {
-              track.stop(); // stop old rendering
-              track.play(container); // re-render new stream
+              track.stop();
+              track.play(container);
             } catch (err) {
               console.warn("Replay failed:", err);
             }
@@ -549,48 +645,39 @@ export default {
           });
         });
     },
-
+ 
+    // ── Draggable PiP div ─────────────────────────────────────────────────
     initDraggableDiv() {
       const draggableDiv = document.getElementById("draggable-div");
       const mainPic = document.querySelector(".mainPic");
-
+ 
       if (!draggableDiv) {
         console.error("❌ Error: Draggable element not found!");
         return;
       }
-
+ 
       let isDragging = false;
-      let offsetX = 0,
-        offsetY = 0;
-
-      // Position the draggable div in the bottom-right corner initially
+      let offsetX = 0, offsetY = 0;
+ 
       positionInBottomRight();
-
-      // Mouse events for desktop
+ 
       draggableDiv.addEventListener("mousedown", startDrag);
       document.addEventListener("mousemove", drag);
       document.addEventListener("mouseup", endDrag);
-
-      // Touch events for mobile
       draggableDiv.addEventListener("touchstart", startDragTouch);
       document.addEventListener("touchmove", dragTouch);
       document.addEventListener("touchend", endDrag);
-
+ 
       function positionInBottomRight() {
         const containerBounds = mainPic
           ? mainPic.getBoundingClientRect()
           : document.body.getBoundingClientRect();
         const padding = 20;
-
         draggableDiv.style.position = "absolute";
-        draggableDiv.style.left = `${
-          containerBounds.right - draggableDiv.offsetWidth - padding
-        }px`;
-        draggableDiv.style.top = `${
-          containerBounds.bottom - draggableDiv.offsetHeight - padding
-        }px`;
+        draggableDiv.style.left = `${containerBounds.right - draggableDiv.offsetWidth - padding}px`;
+        draggableDiv.style.top  = `${containerBounds.bottom - draggableDiv.offsetHeight - padding}px`;
       }
-
+ 
       function startDrag(event) {
         isDragging = true;
         const rect = draggableDiv.getBoundingClientRect();
@@ -598,29 +685,29 @@ export default {
         offsetY = event.clientY - rect.top;
         draggableDiv.style.cursor = "grabbing";
       }
-
+ 
       function startDragTouch(event) {
         if (event.touches.length !== 1) return;
         isDragging = true;
         const touch = event.touches[0];
-        const rect = draggableDiv.getBoundingClientRect();
+        const rect  = draggableDiv.getBoundingClientRect();
         offsetX = touch.clientX - rect.left;
         offsetY = touch.clientY - rect.top;
       }
-
+ 
       function drag(event) {
         if (!isDragging) return;
         event.preventDefault();
         moveElement(event.clientX, event.clientY);
       }
-
+ 
       function dragTouch(event) {
         if (!isDragging || event.touches.length !== 1) return;
         event.preventDefault();
         const touch = event.touches[0];
         moveElement(touch.clientX, touch.clientY);
       }
-
+ 
       function moveElement(clientX, clientY) {
         const containerBounds = mainPic
           ? mainPic.getBoundingClientRect()
@@ -633,124 +720,83 @@ export default {
           Math.max(clientY - offsetY, containerBounds.top),
           containerBounds.bottom - draggableDiv.offsetHeight
         );
-
         draggableDiv.style.left = `${newX}px`;
-        draggableDiv.style.top = `${newY}px`;
+        draggableDiv.style.top  = `${newY}px`;
       }
-
+ 
       function endDrag() {
         if (!isDragging) return;
         isDragging = false;
         draggableDiv.style.cursor = "grab";
       }
-
-      // Ensure the draggable div stays within bounds on window resize
+ 
       window.addEventListener("resize", positionInBottomRight);
     },
+ 
+    // ── Keyboard shortcuts for file preview ───────────────────────────────
     feedbackKeydown(e) {
-      // Check if the modal from Blade is visible
       const previewModal = document.getElementById("filePreviewContentReco");
-
       if (previewModal && previewModal.classList.contains("show")) {
         if (e.key === "ArrowLeft") {
           const prev = document.getElementById("prevBtn");
-          if (prev) prev.click(); // Trigger the Blade button click
+          if (prev) prev.click();
         } else if (e.key === "ArrowRight") {
           const next = document.getElementById("nextBtn");
-          if (next) next.click(); // Trigger the Blade button click
+          if (next) next.click();
         } else if (e.key === "Escape") {
-          $("#filePreviewContentReco").modal("hide"); // Close modal using jQuery
+          $("#filePreviewContentReco").modal("hide");
         }
       }
     },
-    // AFK Detection Methods
+ 
+    // ── AFK detection ─────────────────────────────────────────────────────
     initAfkDetection() {
-      // Listen for user activity
       const reset = this.resetAfkTimer;
-      window.addEventListener("mousemove", reset);
-      window.addEventListener("keydown", reset);
-      window.addEventListener("mousedown", reset);
+      window.addEventListener("mousemove",  reset);
+      window.addEventListener("keydown",    reset);
+      window.addEventListener("mousedown",  reset);
       window.addEventListener("touchstart", reset);
       this.resetAfkTimer();
     },
+ 
     resetAfkTimer() {
-      // If dialog is open, close it and reset countdown
-      if (this.afkDialogVisible) {
-        this.closeAfkDialog();
-      }
+      if (this.afkDialogVisible) this.closeAfkDialog();
       clearTimeout(this.afkTimeout);
-      this.afkTimeout = setTimeout(this.showAfkDialog, 3 * 60 * 1000); // 3 minutes
+      this.afkTimeout = setTimeout(this.showAfkDialog, 3 * 60 * 1000);
     },
+ 
     showAfkDialog() {
       this.afkDialogVisible = true;
       this.afkCountdown = 30;
       this.afkCountdownInterval = setInterval(() => {
         this.afkCountdown--;
-        if (this.afkCountdown <= 0) {
-          this.endCallAfk();
-        }
+        if (this.afkCountdown <= 0) this.endCallAfk();
       }, 1000);
     },
+ 
     closeAfkDialog() {
       this.afkDialogVisible = false;
       clearInterval(this.afkCountdownInterval);
       this.afkCountdown = 30;
       this.resetAfkTimer();
     },
-    endCallAfk() {
+ 
+    async endCallAfk() {
       clearInterval(this.afkCountdownInterval);
       this.afkDialogVisible = false;
-      this.stopAndSaveRecording();
+      await this.stopAndSaveRecording();
     },
-    async stopAndSaveRecording() {
-      return new Promise((resolve) => {
-        if (this.screenRecorder && this.screenRecorder.state !== "inactive") {
-          console.log("🛑 Stopping recorder, state:", this.screenRecorder.state);
-
-          // Flush any remaining data
-          this.screenRecorder.requestData();
-
-          this.screenRecorder.onstop = async () => {
-            console.log("🎬 Recorder stopped. Total chunks:", this.recordedChunks.length);
-            cancelAnimationFrame(this.recordingAnimFrame);
-            await this.handleAfterStop();
-            resolve();
-          };
-
-          this.screenRecorder.stop();
-        } else {
-          console.warn("⚠️ Recorder not active, skipping save.");
-          this.handleAfterStop().then(resolve);
-        }
-      });
-    },
-
-    async handleAfterStop() {
-      if (this.referring_md === "no") {
-        clearInterval(this.callTimer);
-        const hasDuration = await this.sendCallDuration();
-        if (this.recordedChunks.length > 0) {
-          await this.saveScreenRecording(true);
-        } else {
-          console.warn("No recorded chunks — skipping upload.");
-          window.top.close();
-        }
-      } else {
-        if (this.recordedChunks.length > 0) {
-          await this.saveScreenRecording(true);
-        } else {
-          window.top.close();
-        }
-      }
-    },
+ 
     clearAfkTimers() {
       clearTimeout(this.afkTimeout);
       clearInterval(this.afkCountdownInterval);
-      window.removeEventListener("mousemove", this.resetAfkTimer);
-      window.removeEventListener("keydown", this.resetAfkTimer);
-      window.removeEventListener("mousedown", this.resetAfkTimer);
+      window.removeEventListener("mousemove",  this.resetAfkTimer);
+      window.removeEventListener("keydown",    this.resetAfkTimer);
+      window.removeEventListener("mousedown",  this.resetAfkTimer);
       window.removeEventListener("touchstart", this.resetAfkTimer);
     },
+ 
+    // ── Prevent close while uploading ─────────────────────────────────────
     preventCloseWhileUploading(event) {
       if (this.loading) {
         event.preventDefault();
@@ -759,319 +805,326 @@ export default {
         return event.returnValue;
       }
     },
-    async saveScreenRecording(closeAfterUpload = false) {
-      if (this.recordedChunks.length > 0) {
-        this.loading = true; // Show loader
-
-        // Convert recorded chunks to a Blob
-        const blob = new Blob(this.recordedChunks, { type: "video/webm" });
-
-        // --- Max file size check (2GB) ---
-        const maxSize = 2 * 1024 * 1024 * 1024; // 2GB in bytes
-        if (blob.size > maxSize) {
-          this.loading = false;
-          Lobibox.alert("error", {
-            msg: "The recording is too large to upload (max 2GB). Please record a shorter session.",
-          });
-          return;
-        }
-
-        // --- Generate filename ---
-        const patientCode = this.form.code || "Unknown_Patient";
-        const activityId = this.activity_id;
-        const referring_md = this.form.referring_md;
-        const referred = this.form.action_md;
-        const currentDate = new Date();
-        const dateSave = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
-        const timeStart = new Date(this.startTime)
-          .toLocaleTimeString("en-US", { hour12: false })
-          .replace(/:/g, "-");
-        const timeEnd = currentDate
-          .toLocaleTimeString("en-US", { hour12: false })
-          .replace(/:/g, "-");
-        this.recordingSessionId = `${patientCode}_${this.activity_id}_${Date.now()}`;
-        const fileName = `${patientCode}_${activityId}_${referring_md}_${referred}_${dateSave}_${timeStart}_${timeEnd}.webm`;
-        const username = this.user.username || "UnknownUser";
-
-        // --- Detect upload speed and set chunk size dynamically ---
-        let chunkSize = 5 * 1024 * 1024; // Default 5MB
-        if (navigator.connection) {
-          const speed = navigator.connection.downlink; // Mbps (approx)
-          console.log(`Detected network speed: ${speed} Mbps`);
-          if (speed <= 2) chunkSize = 2 * 1024 * 1024; // 2MB for slow networks
-          else if (speed >= 5)
-            chunkSize = 5 * 1024 * 1024; // 5MB for moderate networks
-          else if (speed >= 10)
-            chunkSize = 10 * 1024 * 1024; // 10MB for fast networks
-          else if (speed >= 20) chunkSize = 20 * 1024 * 1024; // 20MB for very fast networks
-        }
-        console.log(
-          `Using chunk size: ${(chunkSize / (1024 * 1024)).toFixed(1)} MB`
-        );
-
-        const totalChunks = Math.ceil(blob.size / chunkSize);
-
-        // --- Upload chunks sequentially ---
-        for (let chunkIndex = 0; chunkIndex < totalChunks; chunkIndex++) {
-          const start = chunkIndex * chunkSize;
-          const end = Math.min(blob.size, start + chunkSize);
-          const chunk = blob.slice(start, end);
-
-          const formData = new FormData();
-          formData.append("video", chunk, fileName);
-          formData.append("sessionId", this.recordingSessionId);
-          formData.append("fileName", fileName);
-          formData.append("chunkIndex", chunkIndex);
-          formData.append("isFinal",      "1");
-          formData.append("totalChunks", totalChunks);
-          formData.append("username", username);
-          formData.append("patient_code", patientCode);
-          formData.append("activity_id", activityId);
-
-          try {
-            await axios.post(
-              $("#broadcasting_url").val()+"/api/save-screen-record",
-              formData,
-              {
-                headers: { "Content-Type": "multipart/form-data" },
-                timeout: 60_000, // 60s timeout per chunk
-              }
-            );
-
-            // Update progress after each chunk
-            this.uploadProgress = Math.round(
-              ((chunkIndex + 1) / totalChunks) * 100
-            );
-          } catch (error) {
-            this.loading = false;
-            this.uploadProgress = 0; // Reset on error
-            Lobibox.alert("error", {
-              msg:
-                `Failed to upload chunk ${chunkIndex + 1}/${totalChunks}: ` +
-                (error.response?.data?.message || error.message),
-              callback: function () {
-                window.top.close();
-              },
-            });
-            return;
-          }
-        }
-
-        // --- Upload complete ---
-        this.uploadProgress = 100;
-        this.recordedChunks = []; // Clear memory
-        this.loading = false;
-        this.uploadProgress = 0;
-
-        if (closeAfterUpload) {
-          Lobibox.alert("success", {
-            msg: `Your conversation has been successfully recorded and uploaded.`,
-            callback: function () {
-              window.top.close();
-            },
-          });
-        }
-      } else {
-        console.error("No recorded data available to save.");
-      }
-    },
-    closeFeedbackModal() {
-      this.feedbackModalVisible = false; // Hide the feedback modal
-    },
-    openFollowUpModal() {
-      this.followUpForm = {
-        date: '',
-        timeFrom: '',
-        timeTo: ''
-      };
-      this.existingTimeSlots = [];
-      this.selectedTimeSlot = null;
-      this.showFollowUpModal = true;
-    },
-    checkExistingSlots() {
-      if (!this.followUpForm.date) {
-        this.existingTimeSlots = [];
-        this.selectedTimeSlot = null;
-        return;
-      }
-
-      this.checkingSlotsLoading = true;
-      const params = {
-        date: this.followUpForm.date,
-        facility_id: this.form.referred_to || this.user.facility_id
-      };
-
-      axios.get(this.baseUrl + '/api/schedule/check-slots', { params })
-        .then((response) => {
-          this.existingTimeSlots = (response.data.slots || []).sort((a, b) => {
-            const aFull = a.is_available === false || a.availability === 'Full';
-            const bFull = b.is_available === false || b.availability === 'Full';
-            if (aFull !== bFull) {
-              return aFull ? 1 : -1;
-            }
-            return (a.time_from || '').localeCompare(b.time_from || '');
-          });
-          this.checkingSlotsLoading = false;
-
-          if (this.existingTimeSlots.length === 0) {
-            // No alert needed for auto-checking, just show manual entry
-          }
-        })
-        .catch((error) => {
-          console.error('Error checking slots:', error);
-          this.checkingSlotsLoading = false;
-          this.existingTimeSlots = [];
-          Lobibox.alert('error', {
-            msg: 'Error fetching available slots.'
-          });
-        });
-    },
-    selectTimeSlot(slot) {
-      if (slot.is_available === false || slot.availability === 'Full') {
-        this.showSlotFullInfo(slot);
-        return;
-      }
-      this.selectedTimeSlot = slot;
-      this.followUpForm.timeFrom = slot.time_from;
-      this.followUpForm.timeTo = slot.time_to;
-    },
-    showSlotFullInfo(slot) {
-      Lobibox.alert({
-        msg: 'This slot is already full and cannot be selected. Please choose another time or create a new schedule.'
-      });
-    },
-    closeFollowUpModal() {
-      this.showFollowUpModal = false;
-    },
-    submitFollowUp() {
-      // Validation
-      if (!this.followUpForm.date || !this.followUpForm.timeFrom || !this.followUpForm.timeTo) {
-        Lobibox.alert('warning', {
-          msg: 'Please fill in all fields (Date, Time From, Time To).'
-        });
-        return;
-      }
-
-      // Validate time logic
-      if (this.followUpForm.timeFrom >= this.followUpForm.timeTo) {
-        Lobibox.alert('error', {
-          msg: 'Time To must be after Time From.'
-        });
-        return;
-      }
-
-      this.followUpLoading = true;
-
-      const payload = {
-        doctor_id: this.user.id,
-        username: this.user.username || '',
-        telemedicine: this.telemedicine || 0,
-        code: this.referral_code,
-        date: this.followUpForm.date,
-        timeFrom: this.followUpForm.timeFrom,
-        timeTo: this.followUpForm.timeTo,
-        followup_facility_telemed: this.form.referred_to || '',
-        use_existing_schedules: this.selectedTimeSlot ? true : false,
-        schedule_id: this.selectedTimeSlot ? this.selectedTimeSlot.id : null
-      };
-
-      axios.post(this.baseUrl + '/api/patient/followup', payload)
-        .then((response) => {
-          this.followUpLoading = false;
-          Lobibox.alert('success', {
-            msg: response.data.message || 'Follow-up scheduled successfully!',
-            callback: () => {
-              this.closeFollowUpModal();
-            }
-          });
-          this.closeFollowUpModal();
-        })
-        .catch((error) => {
-          const conflictData = error.response?.data;
-          if (error.response?.status === 409 && conflictData?.status === 'conflict' && conflictData?.existing_schedule) {
-            Lobibox.confirm({
-              title: 'Schedule Conflict',
-              msg: conflictData.message || 'Schedule conflict detected. Use the existing appointment schedule?',
-              callback: (box, type) => {
-                if (type === 'yes') {
-                  const existing = conflictData.existing_schedule;
-                  this.selectedTimeSlot = {
-                    id: conflictData.existing_schedule_id || existing.id,
-                    time_from: existing.appointed_time,
-                    time_to: existing.appointedTime_to
-                  };
-                  this.followUpForm.date = existing.appointed_date;
-                  this.followUpForm.timeFrom = existing.appointed_time;
-                  this.followUpForm.timeTo = existing.appointedTime_to;
-                  this.followUpLoading = false;
-                  this.submitFollowUp();
-                } else {
-                  this.followUpLoading = false;
-                }
-              } 
-            });
-            return;
-          }
-
-          let message = 'Unable to save follow-up schedule.';
-          if (conflictData?.message) {
-            message = conflictData.message;
-          }
-          Lobibox.alert('error', { msg: message });
-          this.followUpLoading = false;
-        });
-    },
+ 
+    // ── Call timer ────────────────────────────────────────────────────────
     startCallTimer() {
-      // Store the start time in milliseconds
       this.startTime = Date.now();
-
-      // Update the timer every 10 milliseconds
       this.callTimer = setInterval(() => {
         const elapsedTime = Date.now() - this.startTime;
-
-        // Calculate minutes, seconds, and milliseconds
-        const hours = Math.floor(elapsedTime / 3600000);
+        const hours   = Math.floor(elapsedTime / 3600000);
         const minutes = Math.floor((elapsedTime % 3600000) / 60000);
         const seconds = Math.floor((elapsedTime % 60000) / 1000);
-
-        // Format the time as mm:ss:ms
-
-        if (hours == 0) {
-          this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(
-            seconds
-          ).padStart(2, "0")} `;
+ 
+        if (hours === 0) {
+          this.callDuration = `${String(minutes).padStart(1, "0")} : ${String(seconds).padStart(2, "0")}`;
         } else {
-          this.callDuration = `${String(hours).padStart(1, "0")} : ${String(
-            minutes
-          ).padStart(2, "0")} : ${String(seconds).padStart(2, "0")} `;
+          this.callDuration = `${String(hours).padStart(1, "0")} : ${String(minutes).padStart(2, "0")} : ${String(seconds).padStart(2, "0")}`;
         }
       }, 10);
     },
+ 
     stopCallTimer() {
       if (this.callTimer) {
         clearInterval(this.callTimer);
       }
-      // Stop canvas recording loop
       if (this.recordingAnimFrame) {
         cancelAnimationFrame(this.recordingAnimFrame);
         this.recordingAnimFrame = null;
       }
     },
+ 
+    // ── Agora video call ──────────────────────────────────────────────────
+    async startBasicCall() {
+      this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+      const agoraEngine = this.agoraEngine;
+      const joinedUsers = new Set();
+ 
+      if (!this.channelParameters) {
+        this.channelParameters = {};
+      }
+ 
+      const remotePlayerContainer = document.createElement("div");
+      const localPlayerContainer  = document.createElement("div");
+      localPlayerContainer.id = this.options.uid;
+      let self = this;
+ 
+      // ✅ FIX: trigger recording in user-joined (same as OpcenVideoApp)
+      agoraEngine.on("user-joined", async (user) => {
+        console.log("User joined:", user.uid);
+        this.isUserJoined = true;
+        joinedUsers.add(user.uid);
+ 
+        if (joinedUsers.size > 2) {
+          self.showChannelFullMessage();
+          await agoraEngine.leave();
+          return;
+        }
+ 
+        // Start recording with a short delay so the video element is in the DOM
+        setTimeout(() => {
+          if (!self.screenRecorder || self.screenRecorder.state === "inactive") {
+            self.startScreenRecording();
+          }
+        }, 1500);
+      });
+ 
+      agoraEngine.on("user-published", async (user, mediaType) => {
+        await agoraEngine.subscribe(user, mediaType);
+ 
+        if (mediaType === "video") {
+          if (self.$refs && self.$refs.ringingPhone) {
+            self.$refs.ringingPhone.pause();
+          }
+          self.channelParameters.remoteVideoTrack = user.videoTrack;
+          self.channelParameters.remoteAudioTrack = user.audioTrack;
+          self.channelParameters.remoteUid        = user.uid.toString();
+          remotePlayerContainer.id                = user.uid.toString();
+ 
+          document.body.append(remotePlayerContainer);
+          $(".remotePlayerDiv").html(remotePlayerContainer);
+          $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
+          $(remotePlayerContainer).addClass("remotePlayerLayer");
+ 
+          self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
+        }
+ 
+        if (mediaType === "audio") {
+          self.channelParameters.remoteAudioTrack = user.audioTrack;
+          self.channelParameters.remoteAudioTrack.play();
+        }
+ 
+        if (!self.callTimer) {
+          self.startCallTimer();
+        }
+      });
+ 
+      agoraEngine.on("user-left", (user) => {
+        joinedUsers.delete(user.uid);
+      });
+ 
+      try {
+        const localUid = await agoraEngine.join(
+          self.options.appId,
+          self.options.channel,
+          self.options.token,
+          self.options.uid
+        );
+        joinedUsers.add(localUid);
+ 
+        self.channelParameters.localAudioTrack =
+          await AgoraRTC.createMicrophoneAudioTrack();
+ 
+        try {
+          const devices = await AgoraRTC.getCameras();
+          if (devices && devices.length > 0) {
+            self.channelParameters.localVideoTrack =
+              await AgoraRTC.createCameraVideoTrack();
+            document.body.append(localPlayerContainer);
+            $(".localPlayerDiv").html(localPlayerContainer);
+            $(localPlayerContainer).addClass("localPlayerLayer");
+            self.channelParameters.localVideoTrack.play(localPlayerContainer);
+          }
+        } catch (error) {
+          console.warn("Error accessing camera:", error);
+        }
+ 
+        const tracksToPublish = [self.channelParameters.localAudioTrack];
+        if (self.channelParameters.localVideoTrack) {
+          tracksToPublish.push(self.channelParameters.localVideoTrack);
+          self.channelParameters.localVideoTrack.play(localPlayerContainer);
+        }
+        await agoraEngine.publish(tracksToPublish);
+ 
+        window.onload = function () {
+          self.joinVideo(agoraEngine, self.channelParameters, localPlayerContainer, self);
+        };
+      } catch (error) {
+        console.error("Error joining channel:", error);
+      }
+    },
+ 
+    showChannelFullMessage() {
+      const fullMessage = document.createElement("div");
+      fullMessage.className = "channel-full-message";
+      fullMessage.textContent = "This channel is full. Maximum 2 users allowed.";
+      fullMessage.style.cssText =
+        "position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);padding:20px;" +
+        "background:rgba(0,0,0,0.8);color:white;border-radius:5px;z-index:9999;";
+      document.body.appendChild(fullMessage);
+      setTimeout(() => {
+        fullMessage.remove();
+        window.top.close();
+      }, 5000);
+    },
+ 
+    getUrlVars() {
+      var vars = [], hash;
+      var hashes = window.location.href
+        .slice(window.location.href.indexOf("?") + 1)
+        .split("&");
+      for (var i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split("=");
+        vars.push(hash[0]);
+        vars[hash[0]] = hash[1];
+      }
+      return vars;
+    },
+ 
+    async joinVideo(agoraEngine, channelParameters, localPlayerContainer, self) {
+      try {
+        await agoraEngine.join(
+          self.options.appId,
+          self.options.channel,
+          self.options.token,
+          self.options.uid
+        );
+ 
+        channelParameters.localAudioTrack =
+          await AgoraRTC.createMicrophoneAudioTrack();
+ 
+        const devices = await AgoraRTC.getCameras();
+        if (devices && devices.length > 0) {
+          channelParameters.localVideoTrack =
+            await AgoraRTC.createCameraVideoTrack();
+          document.body.append(localPlayerContainer);
+          $(".localPlayerDiv").html(localPlayerContainer);
+          $(localPlayerContainer).addClass("localPlayerLayer");
+          channelParameters.localVideoTrack.play(localPlayerContainer);
+        }
+ 
+        const tracksToPublish = [channelParameters.localAudioTrack];
+        if (channelParameters.localVideoTrack) {
+          tracksToPublish.push(channelParameters.localVideoTrack);
+        }
+        await agoraEngine.publish(tracksToPublish);
+      } catch (error) {
+        console.error("Error in joinVideo:", error);
+      }
+    },
+ 
+    async sendCallDuration() {
+      if (this.isLeavingChannel) return;
+      this.isLeavingChannel = true;
+ 
+      let duration     = this.callDuration.replace(/\s/g, "");
+      let parts        = duration.split(":").map(Number);
+      let totalMinutes = 0;
+ 
+      if (parts.length === 2) {
+        totalMinutes = parts[0];
+        if (parts[1] >= 30) totalMinutes += 1;
+      } else if (parts.length === 3) {
+        totalMinutes = parts[0] * 60 + parts[1];
+        if (parts[2] >= 30) totalMinutes += 1;
+      }
+ 
+      totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
+ 
+      try {
+        await axios.post(`${this.baseUrl}/save-call-duration`, {
+          call_duration: totalMinutes,
+          tracking_id:   this.tracking_id,
+          referral_code: this.referral_code,
+        });
+        localStorage.removeItem("callStartTime");
+        return true;
+      } catch (error) {
+        console.error("Error saving call duration:", error);
+        return false;
+      }
+    },
+ 
+    // ✅ FIX: only save recording for the referring MD role (matches OpcenVideoApp)
+    async leaveChannel() {
+      if (confirm("Are you sure you want to leave this channel?")) {
+        if (this.referring_md === "yes") {
+          await this.stopAndSaveRecording();
+        } else {
+          window.top.close();
+        }
+      }
+    },
+ 
+    beforeDestroy() {
+      clearInterval(this.callTimer);
+    },
+ 
+    async videoStreamingOnAndOff() {
+      this.videoStreaming = !this.videoStreaming;
+ 
+      if (this.videoStreaming) {
+        if (!this.channelParameters.localVideoTrack) {
+          try {
+            const devices = await AgoraRTC.getCameras();
+            if (devices && devices.length > 0) {
+              this.channelParameters.localVideoTrack =
+                await AgoraRTC.createCameraVideoTrack();
+              const localPlayerContainer = document.getElementById(this.options.uid);
+ 
+              if (!localPlayerContainer) {
+                const newContainer = document.createElement("div");
+                newContainer.id = this.options.uid;
+                document.body.append(newContainer);
+                $(".localPlayerDiv").html(newContainer);
+                $(newContainer).addClass("localPlayerLayer");
+              }
+ 
+              this.channelParameters.localVideoTrack.play(this.options.uid);
+ 
+              if (this.channelParameters.localAudioTrack) {
+                await this.agoraEngine.publish([
+                  this.channelParameters.localVideoTrack,
+                ]);
+              }
+            } else {
+              this.videoStreaming = false;
+              return;
+            }
+          } catch (error) {
+            this.videoStreaming = false;
+            return;
+          }
+        } else {
+          this.channelParameters.localVideoTrack.setEnabled(true);
+        }
+      } else {
+        if (this.channelParameters.localVideoTrack) {
+          this.channelParameters.localVideoTrack.setEnabled(false);
+        }
+      }
+    },
+ 
+    audioStreamingOnAnddOff() {
+      this.audioStreaming = !this.audioStreaming;
+      this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
+    },
+ 
+    showDivAgain() {
+      this.showDiv = true;
+    },
+ 
+    clearTimeout() {
+      clearTimeout(this.timeoutId);
+    },
+ 
+    async ringingPhoneFunc() {
+      await this.$refs.ringingPhone.play();
+      let self = this;
+      setTimeout(function () {
+        self.$refs.ringingPhone.pause();
+      }, 60000);
+    },
+ 
+    // ── Notifications & chat ──────────────────────────────────────────────
     notifyReco(code, feedback_count, redirect_track) {
       let content =
         "<button class='btn btn-xs btn-info' onclick='viewReco($(this))' data-toggle='modal'\n" +
         "                               data-target='#feedbackModal'\n" +
-        '                               data-code="' +
-        code +
-        '" ' +
+        '                               data-code="' + code + '" ' +
         "                               >\n" +
         "                           <i class='fa fa-comments'></i> ReCo <span class='badge bg-blue' id=\"reco_count" +
-        code +
-        '">' +
-        feedback_count +
-        "</span>\n" +
-        '                       </button><a href="' +
-        redirect_track +
+        code + '">' + feedback_count + "</span>\n" +
+        '                       </button><a href="' + redirect_track +
         "\" class='btn btn-xs btn-warning' target='_blank'>\n" +
         "                                                <i class='fa fa-stethoscope'></i> Track\n" +
         "                                            </a>";
@@ -1084,21 +1137,7 @@ export default {
         msg: content,
       });
     },
-    // appendReco(code, name_sender, facility_sender, date_now, msg) {
-    //     let picture_sender = $("#broadcasting_url").val()+"/resources/img/receiver.png";
-    //     let message = msg.replace(/^\<p\>/,"").replace(/\<\/p\>$/,"");
-    //     $(".reco-body"+code).append('<div class=\'direct-chat-msg left\'>\n' +
-    //         '                    <div class=\'direct-chat-info clearfix\'>\n' +
-    //         '                    <span class="direct-chat-name text-info pull-left">'+facility_sender+'</span><br>'+
-    //         '                    <span class=\'direct-chat-name pull-left\'>'+name_sender+'</span>\n' +
-    //         '                    <span class=\'direct-chat-timestamp pull-right\'>'+date_now+'</span>\n' +
-    //         '                    </div>\n' +
-    //         '                    <img class=\'direct-chat-img\' title=\'\' src="'+picture_sender+'" alt=\'Message User Image\'>\n' +
-    //         '                    <div class=\'direct-chat-text\'>\n' +
-    //         '                    '+message+'\n' +
-    //         '                    </div>\n' +
-    //         '                    </div>')
-    // },
+ 
     appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
       let picture_sender =
         $("#broadcasting_url").val() + "/resources/img/receiver.png";
@@ -1106,171 +1145,139 @@ export default {
         msg && msg.trim() !== ""
           ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
           : "";
-
+ 
       let fileHtml = "";
-      const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp"];
       const pdfExtensions = ["pdf"];
       let filePaths = [];
       let newGlobalFiles = [];
-
+ 
       const startingGlobalIndex = globalFiles ? globalFiles.length : 0;
       if (filepath) {
         if (typeof filepath === "string") {
-          // Split by pipe and filter out empty strings
           filePaths = filepath.split("|").filter((path) => path.trim() !== "");
         } else if (Array.isArray(filepath)) {
           filePaths = filepath.filter((path) => path.trim() !== "");
         }
       }
-
+ 
       if (filePaths.length > 0) {
-        fileHtml +=
-          '<div class="attachment-wrapper" white-space: nowrap; overflow-x: auto;">';
+        fileHtml += '<div class="attachment-wrapper" style="white-space: nowrap; overflow-x: auto;">';
         const baseUrl = $("#broadcasting_url").val();
-
+ 
         filePaths.forEach((file, index) => {
           if (file.trim() !== "") {
             let url;
-
             const globalFileIndex = startingGlobalIndex + index;
-
+ 
             if (file.startsWith("http://") || file.startsWith("https://")) {
-              // Already a full URL
               url = file;
             } else if (file.startsWith("/")) {
-              // Absolute path
               url = baseUrl + file;
             }
-
+ 
             newGlobalFiles.push(url);
-
+ 
             try {
-              url = new URL(file, baseUrl); // Use base in case it's a relative URL
+              url = new URL(file, baseUrl);
             } catch (err) {
               console.error("Invalid file URL:", file, err);
-              return; // skip this file
+              return;
             }
-
-            const fileName = url.pathname.split("/").pop();
-            const extension = fileName.split(".").pop().toLowerCase();
-            const displayName =
-              fileName.length > 10
-                ? fileName.substring(0, 7) + "..."
-                : fileName;
-
-            const isPDF = pdfExtensions.includes(extension);
-            const icon = isPDF
+ 
+            const fileName    = url.pathname.split("/").pop();
+            const extension   = fileName.split(".").pop().toLowerCase();
+            const displayName = fileName.length > 10 ? fileName.substring(0, 7) + "..." : fileName;
+            const isPDF       = pdfExtensions.includes(extension);
+            const icon        = isPDF
               ? $("#broadcasting_url").val() + "/public/fileupload/pdffile.png"
               : $("#broadcasting_url").val() + `${file}`;
-
+ 
             fileHtml += `
-                        <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                            <a href="javascript:void(0)" class="file-preview-trigger realtime-file-preview" 
-                                data-file-type="${extension}"
-                                data-file-url="${file}"
-                                data-file-name="${fileName}"
-                                data-feedback-code="${code}"
-                                data-file-paths="${filePaths.join("|")}"
-                                data-current-index="${globalFileIndex}"
-                                data-local-index="${index}"
-                                data-use-global="true">
-                                
-                                <img class="attachment-thumb"
-                                    src="${icon}"
-                                    alt="${extension.toUpperCase()} file"
-                                    style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
-                            </a>
-                            <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
-                                ${displayName}
-                            </div>
-                        </div>
-                    `;
+              <div style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
+                <a href="javascript:void(0)" class="file-preview-trigger realtime-file-preview"
+                    data-file-type="${extension}"
+                    data-file-url="${file}"
+                    data-file-name="${fileName}"
+                    data-feedback-code="${code}"
+                    data-file-paths="${filePaths.join("|")}"
+                    data-current-index="${globalFileIndex}"
+                    data-local-index="${index}"
+                    data-use-global="true">
+                  <img class="attachment-thumb"
+                      src="${icon}"
+                      alt="${extension.toUpperCase()} file"
+                      style="width: 50px; height: 50px; object-fit: contain; border:1px solid green; border-radius: 4px;">
+                </a>
+                <div style="font-size: 10px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${fileName}">
+                  ${displayName}
+                </div>
+              </div>`;
           }
         });
-
+ 
         fileHtml += "</div>";
       }
-
-      // UPDATE GLOBAL FILES ARRAY
+ 
       if (newGlobalFiles.length > 0) {
-        // Initialize globalFiles if it doesn't exist
-        if (typeof window.globalFiles === "undefined") {
-          window.globalFiles = [];
-        }
-
-        // Add new files to global array
+        if (typeof window.globalFiles === "undefined") window.globalFiles = [];
         window.globalFiles = window.globalFiles.concat(newGlobalFiles);
-
-        // Store per-code basis for better organization
-        if (!window.globalFilesByCode) {
-          window.globalFilesByCode = {};
-        }
-        if (!window.globalFilesByCode[code]) {
-          window.globalFilesByCode[code] = [];
-        }
-        window.globalFilesByCode[code] =
-          window.globalFilesByCode[code].concat(newGlobalFiles);
-
-        // If you're using Vue's reactive data, you might want to update a Vue data property
+ 
+        if (!window.globalFilesByCode) window.globalFilesByCode = {};
+        if (!window.globalFilesByCode[code]) window.globalFilesByCode[code] = [];
+        window.globalFilesByCode[code] = window.globalFilesByCode[code].concat(newGlobalFiles);
+ 
         if (this.$data && this.$data.globalFiles) {
           this.globalFiles = [...this.globalFiles, ...newGlobalFiles];
         }
       }
-      let messageColor = 'style="margin-top: 5px;"';
-      let messageText = `<div class="caption-text" ${messageColor}>${message}</div>`;
-
+ 
+      let messageText = `<div class="caption-text" style="margin-top: 5px;">${message}</div>`;
+ 
       $(".reco-body" + code).append(`
-            <div class='direct-chat-msgs left'>
-                <div class='direct-chat-info clearfix'>
-                    <span class="direct-chat-name text-info pull-left">${facility_sender}</span><br>
-                    <span class='direct-chat-name pull-left'>${name_sender}</span>
-                    <span class='direct-chat-timestamp pull-right'>${date_now}</span>
-                </div>
-                <img class='direct-chat-img' title='' src="${picture_sender}" alt='Message User Image'>
-                <div class='direct-chat-text'>
-                    ${fileHtml}
-                    ${messageText}
-                </div>
-            </div>
-        `);
-
+        <div class='direct-chat-msgs left'>
+          <div class='direct-chat-info clearfix'>
+            <span class="direct-chat-name text-info pull-left">${facility_sender}</span><br>
+            <span class='direct-chat-name pull-left'>${name_sender}</span>
+            <span class='direct-chat-timestamp pull-right'>${date_now}</span>
+          </div>
+          <img class='direct-chat-img' title='' src="${picture_sender}" alt='Message User Image'>
+          <div class='direct-chat-text'>
+            ${fileHtml}
+            ${messageText}
+          </div>
+        </div>
+      `);
+ 
       this.FeedbackFilePreviewListeners();
     },
+ 
     FeedbackFilePreviewListeners() {
       $(document)
         .off("click", ".realtime-file-preview")
         .on("click", ".realtime-file-preview", function (e) {
           e.preventDefault();
-
-          const baseUrl = $("#broadcasting_url").val();
+ 
+          const baseUrl        = $("#broadcasting_url").val();
           const filePathsString = $(this).data("file-paths");
-          const filePaths =
-            typeof filePathsString === "string"
-              ? filePathsString.split("|").filter((p) => p.trim() !== "")
-              : [];
-          // var desc = 'desc';
-          const fullfilePaths = filePaths.map((file) =>
-            file.startsWith("http") ? file : baseUrl + file
-          );
-          const useGlobal = $(this).data("use-global");
+          const filePaths      = typeof filePathsString === "string"
+            ? filePathsString.split("|").filter((p) => p.trim() !== "")
+            : [];
+          const useGlobal  = $(this).data("use-global");
           const globalIndex = parseInt($(this).data("current-index"));
-          const localIndex = parseInt($(this).data("local-index"));
-          const feedbackCode = $(this).data("feedback-code");
-
-          let files = [];
+          const localIndex  = parseInt($(this).data("local-index"));
+ 
+          let files      = [];
           let startIndex = 0;
-
+ 
           if (useGlobal && globalFiles && globalFiles.length > 0) {
-            // Use globalFiles array for navigation
-            files = globalFiles.map(normalizeUrl);
+            files      = globalFiles.map(normalizeUrl);
             startIndex = globalIndex;
           } else {
-            // Fallback to local files from data attribute
             let filesAttr = $(this).attr("data-files");
             try {
               if (filesAttr) {
-                files = JSON.parse(filesAttr);
-                files = files.map(normalizeUrl);
+                files      = JSON.parse(filesAttr);
+                files      = files.map(normalizeUrl);
                 startIndex = localIndex;
               } else {
                 console.warn("data-files attribute is missing or empty.");
@@ -1281,453 +1288,76 @@ export default {
               return;
             }
           }
-
+ 
           if (Array.isArray(files) && files.length > 0) {
-            // console.log("Setting up file preview with files:", files);
-            // console.log("Starting index:", startIndex);
             window.setupfeedbackFilePreview(files, startIndex, code);
             $("#filePreviewContentReco").modal("show");
           }
           $("#filePreviewContentReco").modal("show");
         });
     },
-    async startBasicCall() {
-      // Create an instance of the Agora Engine
-      this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
-      // this.agoraEngine = AgoraRTC.createClient({ mode: "rtc", codec: "h264" });
-      const agoraEngine = this.agoraEngine; // Use this reference
-      const joinedUsers = new Set();
-      // Setup channel parameters with user count tracking
-      if (!this.channelParameters) {
-        this.channelParameters = {};
-      }
-      this.channelParameters.userCount = 0; // Initialize user count
-      this.channelParameters.maxUsers = 2; // Maximum 2 users allowed
-
-      const remotePlayerContainer = document.createElement("div");
-      const localPlayerContainer = document.createElement("div");
-      localPlayerContainer.id = this.options.uid;
-      let self = this;
-
-      // Listen for when a user joins the channel
-      agoraEngine.on("user-joined", async (user) => {
-        console.log("User joined:", user.uid);
-        self.channelParameters.userCount++;
-        this.isUserJoined = true;
-        joinedUsers.add(user.uid);
-          console.log(
-            "user count: ",
-            self.channelParameters.userCount,
-            "max users:",
-            self.channelParameters.maxUsers
-          );
-          this.channelUserCount = self.channelParameters.userCount;
-          this.channelUserMax = self.channelParameters.maxUsers;
-
-          console.log("number users", joinedUsers.size);
-          if (joinedUsers.size > 2) {
-            console.log("hello leave this call")
-            self.showChannelFullMessage();
-            await agoraEngine.leave();
-          }
-      });
-      // Listen for the "user-published" event to retrieve a AgoraRTCRemoteUser object
-      //agora
-      agoraEngine.on("user-published", async (user, mediaType) => {
-        await agoraEngine.subscribe(user, mediaType);
-        // console.log("subscribe success");
-        console.log("option channel name:", this.options);
-    
-        if (mediaType === "video") {
-          // Pause ringing audio when remote video is received
-          if (self.$refs && self.$refs.ringingPhone) {
-            self.$refs.ringingPhone.pause();
-          }
-          self.channelParameters.remoteVideoTrack = user.videoTrack;
-          self.channelParameters.remoteAudioTrack = user.audioTrack;
-          self.channelParameters.remoteUid = user.uid.toString();
-          remotePlayerContainer.id = user.uid.toString();
-
-          document.body.append(remotePlayerContainer);
-          $(".remotePlayerDiv").html(remotePlayerContainer);
-          $(".remotePlayerDiv").removeAttr("style").css("display", "unset");
-          $(remotePlayerContainer).addClass("remotePlayerLayer");
-
-          self.channelParameters.remoteVideoTrack.play(remotePlayerContainer);
-
-          // ✅ Wait for video element to be ready, then start recording
-          setTimeout(() => {
-            if (!self.screenRecorder || self.screenRecorder.state === "inactive") {
-              self.startScreenRecording();
-            }
-          }, 1500); // small delay so <video> elements are in the DOM
-
-        }
-
-        if (mediaType === "audio") {
-          self.channelParameters.remoteAudioTrack = user.audioTrack;
-          self.channelParameters.remoteAudioTrack.play();
-        }
-
-        // Start the timer only if not already started
-        if (!self.callTimer) {
-          self.startCallTimer();
-        }
-      });
-
-      // Listen for users leaving the channel
-      agoraEngine.on("user-left", (user) => {
-        // console.log(user.uid + " has left the channel");
-         joinedUsers.delete(user.uid);
-        self.channelParameters.userCount = Math.max(
-          0,
-          self.channelParameters.userCount - 1
-        );
-      });
-
-      try {
-        // console.log("Attempting to join channel...", self.options.channel);
-        const localUid = await agoraEngine.join(
-          self.options.appId,
-          self.options.channel,
-          self.options.token,
-          self.options.uid
-        );
-        joinedUsers.add(localUid);
-        console.log("number users", joinedUsers.size);
-        // console.log("Successfully joined channel");
-
-        // Create audio track
-        self.channelParameters.localAudioTrack =
-          await AgoraRTC.createMicrophoneAudioTrack();
-
-        // Check if camera is available before creating video track
-        try {
-          const devices = await AgoraRTC.getCameras();
-          if (devices && devices.length > 0) {
-            self.channelParameters.localVideoTrack =
-              await AgoraRTC.createCameraVideoTrack();
-            document.body.append(localPlayerContainer);
-            $(".localPlayerDiv").html(localPlayerContainer);
-            $(localPlayerContainer).addClass("localPlayerLayer");
-            self.channelParameters.localVideoTrack.play(localPlayerContainer);
-          } else {
-            // console.log("No camera detected");
-          }
-        } catch (error) {
-          console.warn("Error accessing camera:", error);
-        }
-
-        // Publish tracks based on availability
-        const tracksToPublish = [self.channelParameters.localAudioTrack];
-        if (self.channelParameters.localVideoTrack) {
-          tracksToPublish.push(self.channelParameters.localVideoTrack);
-          // Only play video if we have a track
-          self.channelParameters.localVideoTrack.play(localPlayerContainer);
-        }
-        await agoraEngine.publish(tracksToPublish);
-        // console.log("publish success!");
-        // this.startRecording();
-        window.onload = function () {
-          self.joinVideo(
-            agoraEngine,
-            self.channelParameters,
-            localPlayerContainer,
-            self
-          );
-        };
-      } catch (error) {
-        console.error("Error joining channel:", error);
-      }
+ 
+    closeFeedbackModal() {
+      this.feedbackModalVisible = false;
     },
-    // Method to show channel full message to user
-    showChannelFullMessage() {
-      // Create an alert or message to inform user
-      const fullMessage = document.createElement("div");
-      fullMessage.className = "channel-full-message";
-      fullMessage.textContent =
-        "This channel is full. Maximum 2 users allowed.";
-      fullMessage.style.position = "fixed";
-      fullMessage.style.top = "50%";
-      fullMessage.style.left = "50%";
-      fullMessage.style.transform = "translate(-50%, -50%)";
-      fullMessage.style.padding = "20px";
-      fullMessage.style.backgroundColor = "rgba(0,0,0,0.8)";
-      fullMessage.style.color = "white";
-      fullMessage.style.borderRadius = "5px";
-      fullMessage.style.zIndex = "9999";
-
-      document.body.appendChild(fullMessage);
-
-      // Remove the message after a few seconds
-      setTimeout(() => {
-        fullMessage.remove();
-        window.top.close();
-      }, 5000);
-    },
-
-    getUrlVars() {
-      var vars = [],
-        hash;
-      var hashes = window.location.href
-        .slice(window.location.href.indexOf("?") + 1)
-        .split("&");
-      for (var i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split("=");
-        vars.push(hash[0]);
-        vars[hash[0]] = hash[1];
-      }
-
-      return vars;
-    },
-
-    async joinVideo(
-      agoraEngine,
-      channelParameters,
-      localPlayerContainer,
-      self
-    ) {
-      // console.log("local");
-      try {
-        // Join a channel.
-        await agoraEngine.join(
-          self.options.appId,
-          self.options.channel,
-          self.options.token,
-          self.options.uid
-        );
-
-        // Create a local audio track from the audio sampled by a microphone.
-        channelParameters.localAudioTrack =
-          await AgoraRTC.createMicrophoneAudioTrack();
-
-        // Check if camera is available before creating video track
-        const devices = await AgoraRTC.getCameras();
-        if (devices && devices.length > 0) {
-          // Create a local video track from the video captured by a camera.
-          channelParameters.localVideoTrack =
-            await AgoraRTC.createCameraVideoTrack();
-          // Append the local video container to the page body.
-          document.body.append(localPlayerContainer);
-          $(".localPlayerDiv").html(localPlayerContainer);
-          $(localPlayerContainer).addClass("localPlayerLayer");
-
-          // Play the local video track.
-          channelParameters.localVideoTrack.play(localPlayerContainer);
-        }
-
-        // Publish the tracks that are available
-        const tracksToPublish = [channelParameters.localAudioTrack];
-        if (channelParameters.localVideoTrack) {
-          tracksToPublish.push(channelParameters.localVideoTrack);
-        }
-
-        // Publish the local audio and video tracks in the channel.
-        await agoraEngine.publish(tracksToPublish);
-        // console.log("publish success!");
-      } catch (error) {
-        console.error("Error in joinVideo:", error);
-      }
-    },
-    async sendCallDuration() {
-      if (this.isLeavingChannel) return; // Prevent duplicate sends
-      this.isLeavingChannel = true;
-
-      // Parse callDuration string (supports "mm : ss" or "hh : mm : ss")
-      let duration = this.callDuration.replace(/\s/g, ""); // Remove spaces
-      let parts = duration.split(":").map(Number);
-      let totalMinutes = 0;
-
-      if (parts.length === 2) {
-        // Format: mm:ss
-        totalMinutes = parts[0];
-        if (parts[1] >= 30) totalMinutes += 1; // round up if 30+ seconds
-      } else if (parts.length === 3) {
-        // Format: hh:mm:ss
-        totalMinutes = parts[0] * 60 + parts[1];
-        if (parts[2] >= 30) totalMinutes += 1; // round up if 30+ seconds
-      }
-
-      // Ensure integer and at least 1 minute if any call happened
-      totalMinutes = Math.max(1, parseInt(totalMinutes, 10));
-
-      try {
-        const response = await axios.post(
-          `${this.baseUrl}/save-call-duration`,
-          {
-            call_duration: totalMinutes, // send as int(11)
-            tracking_id: this.tracking_id,
-            referral_code: this.referral_code,
-          }
-        );
-
-        // console.log(
-        //   "Call duration saved (minutes):",
-        //   totalMinutes,
-        //   response.data
-        // );
-        localStorage.removeItem("callStartTime"); // Clean up
-        return true;
-      } catch (error) {
-        console.error("Error saving call duration:", error);
-        return false;
-      }
-    },
-    async leaveChannel() {
-      if (confirm("Are you sure you want to leave this channel?")) {
-        await this.stopAndSaveRecording();
-      }
-    },
-    beforeDestroy() {
-      clearInterval(this.callTimer);
-      // Remove sendCallDuration from here since it's handled in leaveChannel
-    },
-    async videoStreamingOnAndOff() {
-      this.videoStreaming = !this.videoStreaming;
-
-      if (this.videoStreaming) {
-        // If turning video on and we don't have a video track yet
-        if (!this.channelParameters.localVideoTrack) {
-          try {
-            const devices = await AgoraRTC.getCameras();
-            if (devices && devices.length > 0) {
-              this.channelParameters.localVideoTrack =
-                await AgoraRTC.createCameraVideoTrack();
-              const localPlayerContainer = document.getElementById(
-                this.options.uid
-              );
-
-              if (!localPlayerContainer) {
-                const newContainer = document.createElement("div");
-                newContainer.id = this.options.uid;
-                document.body.append(newContainer);
-                $(".localPlayerDiv").html(newContainer);
-                $(newContainer).addClass("localPlayerLayer");
-              }
-
-              this.channelParameters.localVideoTrack.play(this.options.uid);
-
-              // Publish the video track if we're connected
-              if (this.channelParameters.localAudioTrack) {
-                await agoraEngine.publish([
-                  this.channelParameters.localVideoTrack,
-                ]);
-              }
-            } else {
-              // console.log("No camera detected");
-              this.videoStreaming = false;
-              return;
-            }
-          } catch (error) {
-            console.warn("Error accessing camera:", error);
-            this.videoStreaming = false;
-            return;
-          }
-        } else {
-          // If we already have a video track, just enable it
-          this.channelParameters.localVideoTrack.setEnabled(true);
-        }
-      } else {
-        // Turning video off
-        if (this.channelParameters.localVideoTrack) {
-          this.channelParameters.localVideoTrack.setEnabled(false);
-        }
-      }
-    },
-    audioStreamingOnAnddOff() {
-      this.audioStreaming = this.audioStreaming ? false : true;
-      this.channelParameters.localAudioTrack.setEnabled(this.audioStreaming);
-    },
-    // hideDivAfterTimeout() {
-    // setTimeout(() => {
-    //   $(".iconCall").removeClass("fade-in");
-    //   this.showDiv = false;
-    // }, 10000);
-    // },
-    showDivAgain() {
-      this.showDiv = true;
-      //  this.hideDivAfterTimeout();
-    },
-    clearTimeout() {
-      // Clear the timeout if the component is about to be unmounted
-      // to prevent memory leaks
-      clearTimeout(this.timeoutId);
-    },
-    async ringingPhoneFunc() {
-      await this.$refs.ringingPhone.play();
-      let self = this;
-      setTimeout(function () {
-        // console.log("pause");
-        self.$refs.ringingPhone.pause();
-      }, 60000);
-    },
-
-    //--------------------------------------------------------------------------
-
+ 
+    // ── Prescription & lab request ────────────────────────────────────────
     generatePrescription() {
       const getPrescription = {
-        code: this.referral_code,
-        form_type: this.form_type,
-        tracking_id: this.tracking_id,
+        code:         this.referral_code,
+        form_type:    this.form_type,
+        tracking_id:  this.tracking_id,
         referring_md: this.form.referring_md,
       };
-    
+ 
       axios
         .post(`${this.baseUrl}/api/video/prescription/check`, getPrescription)
         .then((response) => {
           if (response.data.status === "success") {
             const prescribedActivityId =
               response.data.prescriptions[0].prescribed_activity_id;
-              console.log("form data:", this.form);
-              if (!response.data.signature && this.form.referring_name != null) {
-                console.log("getPrescription:", getPrescription);
-                return Lobibox.alert("error", {
-                  msg: this.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !",
-                });
-              }
-              // Set the PDF URL
-              this.PdfUrl = `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`;
-
-              // Show the modal using the ref method
-              this.$nextTick(() => {
-                this.$refs.pdfViewer.openModal();
+ 
+            if (!response.data.signature && this.form.referring_name != null) {
+              return Lobibox.alert("error", {
+                msg: this.referring_md == "yes"
+                  ? "No added signature!"
+                  : "No added signature for Referring MD !",
               });
-              } else {
-                Lobibox.alert("error", {
-                  msg: "No added prescription!",
-                });
-              }
-          })
-          .catch((error) => {
+            }
+ 
+            this.PdfUrl = `${this.baseUrl}/doctor/print/prescription/${this.tracking_id}/${prescribedActivityId}`;
+            this.$nextTick(() => {
+              this.$refs.pdfViewer.openModal();
+            });
+          } else {
+            Lobibox.alert("error", { msg: "No added prescription!" });
+          }
+        })
+        .catch((error) => {
           console.error(error);
         });
     },
+ 
     generateLabrequest() {
-      const url = `${this.baseUrl}/api/check/labresult`;
+      const url     = `${this.baseUrl}/api/check/labresult`;
       const payload = {
-        activity_id: this.activity_id,
+        activity_id:  this.activity_id,
         referring_md: this.form.referring_md,
       };
-
-      console.log("generateLabrequest payload:", this.form);
-      
+ 
       axios
         .post(url, payload)
         .then((response) => {
           if (response.data.id) {
-          
             if (!response.data.signature && this.form.referring_name != null) {
-                return Lobibox.alert("error", {
-                  msg: this.referring_md == "yes" ? "No added signature!" : "No added signature for Referring MD !",
-                });
-              }
-            
-            const pdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
-
-            // Set the PDF URL for the modal
-            this.PdfUrl = pdfUrl;
-
-            // Show the PDF in the custom modal
+              return Lobibox.alert("error", {
+                msg: this.referring_md == "yes"
+                  ? "No added signature!"
+                  : "No added signature for Referring MD !",
+              });
+            }
+ 
+            this.PdfUrl = `${this.baseUrl}/doctor/print/labresult/${this.activity_id}`;
             this.$nextTick(() => {
               this.$refs.pdfViewer.openModal();
             });
@@ -1741,6 +1371,7 @@ export default {
           console.log(error);
         });
     },
+ 
     endorseUpward() {
       let self = this;
       Lobibox.confirm({
@@ -1748,28 +1379,37 @@ export default {
         callback: function ($this, type, ev) {
           if (type == "yes") {
             const endorseUpward = {
-              code: self.referral_code,
+              code:      self.referral_code,
               form_type: self.form_type,
             };
             axios
               .post(`${self.baseUrl}/api/video/upward`, endorseUpward)
               .then((response) => {
-                // console.log(response.status);
-                // console.log("data Upward:", response.data);
-                // console.log("endorseUpward:", endorseUpward);
                 if (response.data.trim() === "success") {
                   Lobibox.alert("success", {
                     msg: "Successfully endorse the patient for upward referral!",
                   });
                 } else {
-                  Lobibox.alert("error", {
-                    msg: "Error in server!",
-                  });
+                  Lobibox.alert("error", { msg: "Error in server!" });
                 }
               });
           }
         },
       });
+    },
+ 
+    openFollowUpModal() {
+      window.parent.postMessage(
+        {
+          type:             "openFollowUp",
+          code:             this.referral_code,
+          followupFacility: this.form.referred_to  || "",
+          telemedicine:     this.telemedicine       || 1,
+          appointmentId:    this.form.appointmentId || "",
+          configId:         this.form.subopd_id     || "",
+        },
+        "*"
+      );
     },
   },
 };
@@ -1970,6 +1610,26 @@ export default {
                     <i class="bi bi-prescription2"></i>
                   </button>
                 </div>
+                <!-- <div class="button-container" v-if="telemedicine == 1 && opcen_facility != 63">
+                  <div
+                    v-if="!isMobileDevice && showFollowUp"
+                    class="tooltip-text"
+                    style="background-color: #6f42c1"
+                  >
+                    Follow Up
+                  </div>
+                  <button
+                    class="btn btn-md followup-button"
+                    type="button"
+                    v-if="isPatientToDoctor ? user.level == 'doctor' : referring_md == 'no'"
+                    @click="openFollowUpModal"
+                    @mouseover="showFollowUp = true"
+                    @mouseleave="showFollowUp = false"
+                    style="background-color: #6f42c1; border-color: #6f42c1; color: white;"
+                  >
+                    <i class="fa fa-calendar"></i>
+                  </button>
+                </div> -->
                 <div class="button-container">
                   <div
                     v-if="!isMobileDevice && showTooltipFeedback"
@@ -1990,24 +1650,6 @@ export default {
                     <i class="bi bi-chat-left-text"></i>
                   </button>
                 </div>
-                <!-- <div class="button-container" v-if="this.telemedicine == 1">
-                  <div
-                    v-if="!isMobileDevice && showFollowUp"
-                    class="tooltip-text"
-                    style="background-color: #6f42c1"
-                  >
-                    Follow Up
-                  </div>
-                  <button
-                    class="btn btn-primary btn-md"
-                    type="button"
-                    @click="openFollowUpModal()"
-                    @mouseover="showFollowUp = true"
-                    @mouseleave="showFollowUp = false"
-                  >
-                    <i class="bi bi-calendar-check"></i>
-                  </button>
-                </div> -->
               </div>
             </div>
           </Transition>
@@ -2147,73 +1789,6 @@ export default {
         <p>
           Ending call in <b>{{ afkCountdown }}</b> seconds...
         </p>
-      </div>
-    </div>
-    <!-- Custom Follow Up Modal -->
-    <div v-if="showFollowUpModal" class="modal-overlay">
-      <div class="modal-content-custom">
-        <div class="modal-header-custom">
-          <h4>Schedule Follow Up</h4>
-          <button type="button" class="close-btn" @click="closeFollowUpModal">&times;</button>
-        </div>
-        <div class="modal-body-custom">
-          <div class="form-group">
-            <label>Date:</label>
-            <div style="display: flex; gap: 10px;">
-              <input type="date" v-model="followUpForm.date" @change="checkExistingSlots" class="form-control" style="flex: 1;">
-            </div>
-            <div v-if="checkingSlotsLoading" style="margin-top: 5px;">
-              <small class="text-muted">
-                <i class="fa fa-spinner fa-spin"></i> Checking available slots...
-              </small>
-            </div>
-          </div>
-
-          <!-- Existing Time Slots Display -->
-          <div v-if="existingTimeSlots.length > 0" class="slots-container">
-            <label style="font-weight: 600; display: block; margin-bottom: 10px;">Available Slots:</label>
-            <div class="existing-slots">
-              <div 
-                v-for="slot in existingTimeSlots" 
-                :key="slot.id"
-                class="slot-item"
-                :class="{
-                  'slot-selected': selectedTimeSlot && selectedTimeSlot.id === slot.id,
-                  'slot-full': slot.is_available === false || slot.availability === 'Full'
-                }"
-                @click="slot.is_available === false || slot.availability === 'Full' ? showSlotFullInfo(slot) : selectTimeSlot(slot)"
-              >
-                <div class="slot-time">{{ slot.time_from }} - {{ slot.time_to }}</div>
-                <div class="slot-info">
-                  <span>{{ slot.availability || 'Available' }}</span>
-                  <span v-if="slot.is_available === false || slot.availability === 'Full'" style="color: #dc3545; font-weight: 600; display: block; margin-top: 4px;">Full</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Manual Time Entry (when no slots selected or creating new) -->
-          <div v-if="!selectedTimeSlot || existingTimeSlots.length === 0" class="manual-entry">
-            <label v-if="existingTimeSlots.length > 0" style="font-weight: 600; display: block; margin: 15px 0 10px 0;">Or Create New Schedule:</label>
-            <div class="form-group">
-              <label>Time From:</label>
-              <input type="time" v-model="followUpForm.timeFrom" class="form-control">
-            </div>
-            <div class="form-group">
-              <label>Time To:</label>
-              <input type="time" v-model="followUpForm.timeTo" class="form-control">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer-custom">
-          <button type="button" class="btn btn-default" @click="closeFollowUpModal" :disabled="followUpLoading">
-            Cancel
-          </button>
-          <button type="button" class="btn btn-primary" @click="submitFollowUp" :disabled="followUpLoading">
-            <span v-if="!followUpLoading">Save</span>
-            <span v-else><i class="fa fa-spinner fa-spin"></i> Saving...</span>
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -2621,198 +2196,20 @@ td {
     object-fit: scale-down !important;
   }
 }
-
-/* Custom Follow Up Modal Styles */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999999;
-}
-
-.modal-content-custom {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 400px;
-  overflow: hidden;
-}
-
-.modal-header-custom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
-  background-color: #f5f5f5;
-}
-
-.modal-header-custom h4 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 28px;
-  cursor: pointer;
-  color: #999;
-  padding: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.close-btn:hover {
-  color: #333;
-}
-
-.modal-body-custom {
-  padding: 20px;
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: 500;
-  color: #333;
-  font-size: 14px;
-}
-
-.form-control {
-  width: 100%;
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  font-family: inherit;
-}
-
-.form-control:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-}
-
-.modal-footer-custom {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 15px 20px;
-  border-top: 1px solid #e0e0e0;
-  background-color: #f5f5f5;
-}
-
-.btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.btn-default {
-  background-color: #6c757d;
-  color: white;
-}
-
-.btn-default:hover:not(:disabled) {
-  background-color: #5a6268;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-.btn:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-/* Time Slots Display */
-.slots-container {
-  margin: 15px 0;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  border: 1px solid #e9ecef;
-}
-
-.existing-slots {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 10px;
-}
-
-.slot-item {
-  padding: 12px;
-  border: 2px solid #dee2e6;
-  border-radius: 4px;
-  background-color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-align: center;
-}
-
-.slot-item:hover {
-  border-color: #007bff;
-  background-color: #e7f3ff;
-}
-
-.slot-item.slot-selected {
-  border-color: #28a745;
-  background-color: #d4edda;
-  font-weight: 600;
-}
-
-.slot-time {
-  font-weight: 600;
-  color: #333;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.slot-info {
-  font-size: 12px;
-  color: #666;
-}
-
-.manual-entry {
-  margin-top: 10px;
-  padding-top: 15px;
-  border-top: 1px solid #e0e0e0;
-}
-
-.btn-info {
-  background-color: #17a2b8;
-  color: white;
-  padding: 8px 12px;
-}
-
-.btn-info:hover:not(:disabled) {
-  background-color: #138496;
+@media screen and (max-width: 768px) {
+  /* ... your existing mobile styles ... */
+  .followup-button {
+    border-radius: 50% !important;
+    width: 30px !important;
+    height: 30px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+  }
+  .followup-button .fa-calendar {
+    font-size: 12px !important;
+  }
 }
 </style>

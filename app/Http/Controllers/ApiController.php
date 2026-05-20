@@ -2896,20 +2896,57 @@ class ApiController extends Controller
                     $patient_id = $patient_form->patient_woman_id;
                 }
 
+                     $isPatientExamined = Activity::where('code', $singlePrescription['code'])
+                    ->orderBy('id', 'desc')
+                    ->value('status');
+                    
+                    $time = Carbon::now()->addMinute();
 
-                    $latestActivity = new Activity();
-                    $latestActivity->patient_id = $patient_id;
-                    $latestActivity->date_referred = $patient_form->time_referred;
-                    $latestActivity->date_seen = $patient_form->time_transferred;
-                    $latestActivity->referred_from = $patient_form->referring_facility;
-                    $latestActivity->referred_to = $patient_form->referred_to;
-                    $latestActivity->department_id = $patient_form->department_id;
-                    $latestActivity->referring_md = $patient_form->referring_md;
-                    $latestActivity->action_md = $patient_form->referred_md;
-                    $latestActivity->code = $singlePrescription['code'];
-                    $latestActivity->status = "prescription";
-                    $latestActivity->remarks = "prescription examined";
-                    $latestActivity->save();
+                    if(isset($isPatientExamined) && $isPatientExamined == 'examined'){
+                        $latestActivity = new Activity();
+                        $latestActivity->patient_id = $patient_id;
+                        $latestActivity->date_referred = $patient_form->time_referred;
+                        $latestActivity->date_seen = $patient_form->time_transferred;
+                        $latestActivity->referred_from = $patient_form->referring_facility;
+                        $latestActivity->referred_to = $patient_form->referred_to;
+                        $latestActivity->department_id = $patient_form->department_id;
+                        $latestActivity->referring_md = $patient_form->referring_md;
+                        $latestActivity->action_md = $patient_form->referred_md;
+                        $latestActivity->code = $singlePrescription['code'];
+                        $latestActivity->status = "prescription";
+                        $latestActivity->remarks = "prescription referred";
+                        $latestActivity->save();
+                    }else {
+                        $latestActivity = new Activity();
+                        $latestActivity->patient_id = $patient_id;
+                        $latestActivity->date_referred = $time;
+                        $latestActivity->date_seen = $time;
+                        $latestActivity->referred_from = $patient_form->referring_facility;
+                        $latestActivity->referred_to = $patient_form->referred_to;
+                        $latestActivity->department_id = $patient_form->department_id;
+                        $latestActivity->referring_md = $patient_form->referring_md;
+                        $latestActivity->action_md = $patient_form->referred_md;
+                        $latestActivity->code = $singlePrescription['code'];
+                        $latestActivity->status = "examined";
+                        $latestActivity->remarks = "patient examined";
+                        $latestActivity->save();
+
+                        $latestActivity = new Activity();
+                        $latestActivity->patient_id = $patient_id;
+                        $latestActivity->date_referred = $time->copy()->addMinute();
+                        $latestActivity->date_seen = $time->copy()->addMinute();
+                        $latestActivity->referred_from = $patient_form->referring_facility;
+                        $latestActivity->referred_to = $patient_form->referred_to;
+                        $latestActivity->department_id = $patient_form->department_id;
+                        $latestActivity->referring_md = $patient_form->referring_md;
+                        $latestActivity->action_md = $patient_form->referred_md;
+                        $latestActivity->code = $singlePrescription['code'];
+                        $latestActivity->status = "prescription";
+                        $latestActivity->remarks = "prescription referred";
+                        $latestActivity->save();
+                    }
+
+                
 
                     $prescribed_activity_id = $latestActivity->id;
 
