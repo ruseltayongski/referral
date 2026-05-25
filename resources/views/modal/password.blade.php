@@ -17,11 +17,11 @@
                     </div>
                     <div class="form-group">
                         <label style="padding:0px;">New Password:</label>
-                        <input type="password" class="form-control" name="new" id="reset_password_new" pattern=".{6,}" title="New password - minimum of 6 Characters" placeholder="Minimum of 6 characters..." required />
+                        <input type="password" class="form-control" name="new" id="reset_password_new" pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}" title="Minimum 8 characters, including letters, numbers, and special characters" placeholder="Minimum 8 characters, including letters, numbers, and special characters" required />
                     </div>
                     <div class="form-group">
                         <label style="padding:0px;">Confirm Password:</label>
-                        <input type="password" class="form-control" name="confirm" id="reset_password_confirm" pattern=".{6,}" title="Confirm password - minimum of 6 Characters" required />
+                        <input type="password" class="form-control" name="confirm" id="reset_password_confirm" pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}" title="Minimum 8 characters, including letters, numbers, and special characters" required />
                     </div>
                     <div class="password_error hide alert alert-danger">
                         <span class="text-danger">

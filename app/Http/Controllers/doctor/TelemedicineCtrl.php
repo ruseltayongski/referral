@@ -29,7 +29,25 @@ class TelemedicineCtrl extends Controller
 {
     public function index(Request $req)
     {
-        return view('doctor.video-call', ['referral_type'=>$req->form_type,'telemedicine'=>$req->telemed]);
+        // Doctor-to-Doctor: existing session flow — untouched
+        if (Session::has('auth')) {
+            $user = Session::get('auth');   // exactly what the blade used before
+        } else {
+            // Patient/Guest: arriving via signed link, no session
+            $user = (object) [
+                'id'          => 0,
+                'username'    => $req->query('display_name', 'Guest'),
+                'level'       => $req->query('role', 'patient'),
+                'facility_id' => 0,
+                'name'        => $req->query('display_name', 'Guest'),
+            ];
+        }
+
+        return view('doctor.video-call', [
+            'referral_type' => $req->form_type,
+            'telemedicine'  => $req->telemed,
+            'user'          => $user,
+        ]);
     }
 
     // public function manageAppointment(Request $req)

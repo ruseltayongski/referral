@@ -25,8 +25,10 @@
                         $('.password_error').removeClass('hide').find('.info').html('Your password is incorrect!');
                     }else if(data=='not_match'){
                         $('.password_error').removeClass('hide').find('.info').html('Password did not match!');
-                    }else if(data=='length'){
-                        $('.password_error').removeClass('hide').find('.info').html('Password should be minimum 6 characters');
+                    }else if(data=='same'){
+                        $('.password_error').removeClass('hide').find('.info').html('Your new password must be different from your current password.');
+                    }else if(data=='policy'){
+                        $('.password_error').removeClass('hide').find('.info').html('Password must be at least 8 characters and include letters, numbers, and special characters.');
                     }else{
                         $('.password_success').removeClass('hide').find('.info').html('Password changed!');
                         $('#resetForm').find('input[type="password"]').val('');

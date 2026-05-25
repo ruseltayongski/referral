@@ -52,21 +52,21 @@
  
     <body>
         <input type="hidden" id="broadcasting_url" value="{{ url("/") }}">
-        @if($telemedicine == 1)
-            @if($referral_type == 'normal')
-                <div id="app_video">
-                    <video-app :user="{{ Session::get('auth') }}"></video-app>
-                </div>
-            @else
-                <div id="app_video_pregnant">
-                    <video-app-pregnant :user="{{ Session::get('auth') }}"></video-app-pregnant>
-                </div>
-            @endif
+     @if($telemedicine == 1)
+        @if($referral_type == 'normal')
+            <div id="app_video">
+                <video-app :user="{{ json_encode($user) }}"></video-app>
+            </div>
         @else
-            <div id="app_video_opcen">
-                <video-app-opcen :user="{{ Session::get('auth') }}"></video-app-opcen>
+            <div id="app_video_pregnant">
+                <video-app-pregnant :user="{{ json_encode($user) }}"></video-app-pregnant>
             </div>
         @endif
+    @else
+        <div id="app_video_opcen">
+            <video-app-opcen :user="{{ json_encode($user) }}"></video-app-opcen>
+        </div>
+    @endif
     
     </body>
 </html>

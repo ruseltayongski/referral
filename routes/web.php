@@ -276,6 +276,8 @@ Route::get('duty/{option}', 'UserCtrl@duty');
 Route::get('login', 'LoginCtrl@index3');
 Route::get('login/update/token/{token}', 'LoginCtrl@updateToken');
 Route::post('login', 'LoginCtrl@validateLogin2');
+Route::get('security/change-password', 'LoginCtrl@showForcePasswordChange');
+Route::post('security/change-password', 'LoginCtrl@updateForcePasswordChange');
 Route::post('reset/password', 'LoginCtrl@resetPassword');
 Route::get('maintenance', function () {
     return view('error', ['title' => 'Maintenance']);
@@ -700,7 +702,9 @@ Route::post('doctor/referral/queuePatient', 'doctor\ReferralCtrl@queuePatient');
 
 // duplicate referrals
 Route::match(['GET', 'POST'], 'doctor/duplicate', 'doctor\ReferralCtrl@duplicates');
-Route::match(['GET', 'POST'], 'doctor/telemedicine', 'doctor\TelemedicineCtrl@index');
+Route::match(['GET', 'POST'], 'doctor/telemedicine', 'doctor\TelemedicineCtrl@index')
+    ->name('doctor.telemedicine')
+    ->middleware('auth.or.signed');
 
 Route::post('/doctor/getconfigappointment', 'doctor\TelemedicineCtrl@getconfigAppointment');
 Route::get('/get-booked-dates', 'doctor\TelemedicineCtrl@getBookedDates')->name('get-booked-dates'); // I add this to get all dates that booked by the user

@@ -507,13 +507,14 @@ export default {
       this.isMobileDevice = isTabletUA || isTabletSize;
     },
     async getFormData() {
+      
       axios
         .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
         .then((res) => {
           const response = res.data;
           if (response.success) {
             this.form_version = response.form_type;
- 
+            
             if (this.form_version === "version1") {
               axios
                 .get(
@@ -521,6 +522,7 @@ export default {
                 )
                 .then((res) => {
                   const response = res.data;
+                  console.log("Form tracking:", response);
                   this.telemedicine = response.form.telemedicine;
                   this.form = response.form;
                   this.isPatientToDoctor =

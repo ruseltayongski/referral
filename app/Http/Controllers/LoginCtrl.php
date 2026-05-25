@@ -25,6 +25,10 @@ class LoginCtrl extends Controller
 {
     private function resolveSessionRedirect($login)
     {
+        if (Session::get('force_password_change')) {
+            return redirect('security/change-password');
+        }
+
         if (!$login) {
             return null;
         }
@@ -39,6 +43,17 @@ class LoginCtrl extends Controller
         }
 
         return redirect($login->level);
+    }
+
+    private function isDefaultPassword($login)
+    {
+        return Hash::check('123', $login->password);
+    }
+
+    private function passwordMeetsRequirements($password)
+    {
+        return is_string($password)
+            && preg_match('/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/', $password) === 1;
     }
 
     public function index()
@@ -87,6 +102,15 @@ class LoginCtrl extends Controller
         {
             if(Hash::check($req->password,$login->password))
             {
+                if($login->status=='inactive'){
+                    Session::forget('auth');
+                    Session::forget('force_password_change');
+                    return [
+                        "error_notif" => true,
+                        "error_msg" => "Your account was deactivated by the administrator, please call 711 DOH Health Line."
+                    ];
+                }
+
                 Session::put('auth',$login);
                 $last_login = date('Y-m-d H:i:s');
                 User::where('id',$login->id)
@@ -118,14 +142,12 @@ class LoginCtrl extends Controller
                 else
                     Session::put('multiple_login', false);
 
-                if($login->status=='inactive'){
-                    Session::forget('auth');
-                    return [
-                        "error_notif" => true,
-                        "error_msg" => "Your account was deactivated by the administrator, please call 711 DOH Health Line."
-                    ];
+                if($this->isDefaultPassword($login)){
+                    Session::put('force_password_change', true);
+                    return url('security/change-password');
                 }
-                elseif($login->level=='doctor')
+
+                if($login->level=='doctor')
                     return url('doctor');
                 else if($login->level=='chief')
                     return url('chief');
@@ -197,6 +219,12 @@ class LoginCtrl extends Controller
         {
             if(Hash::check($req->password,$login->password))
             {
+                if($login->status=='inactive'){
+                    Session::forget('auth');
+                    Session::forget('force_password_change');
+                    return Redirect::back()->with('error','Your account was deactivated by the administrator, please call 711 DOH health line.');
+                }
+
                 Session::put('auth',$login);
                 $last_login = date('Y-m-d H:i:s');
                 User::where('id',$login->id)
@@ -222,11 +250,12 @@ class LoginCtrl extends Controller
                         ]);
                 }
 
-                if($login->status=='inactive'){
-                    Session::forget('auth');
-                    return Redirect::back()->with('error','Your account was deactivated by the administrator, please call 711 DOH health line.');
+                if($this->isDefaultPassword($login)){
+                    Session::put('force_password_change', true);
+                    return redirect('security/change-password');
                 }
-                elseif($login->level=='doctor')
+
+                if($login->level=='doctor')
                     return redirect('doctor');
                 else if($login->level=='chief')
                     return redirect('chief');
@@ -294,27 +323,135 @@ class LoginCtrl extends Controller
     public function resetPassword(Request $req)
     {
         $user = Session::get('auth');
-        if(Hash::check($req->current,$user->password))
+        if(!$user){
+            return 'error';
+        }
+
+        $userData = User::find($user->id);
+        if(!$userData){
+            Session::forget('auth');
+            Session::forget('force_password_change');
+            return 'error';
+        }
+
+        if(Hash::check($req->current,$userData->password))
         {
             if($req->newPass == $req->confirm){
-                $lenght = strlen($req->newPass);
-                if($lenght>=6)
+                if(Hash::check($req->newPass,$userData->password))
                 {
-                    $password = bcrypt($req->newPass);
-                    User::where('id',$user->id)
-                        ->update([
-                            'password' => $password
-                        ]);
-                    return 'changed';
-                }else{
-                    return 'length';
+                    return 'same';
                 }
+
+                if(!$this->passwordMeetsRequirements($req->newPass))
+                {
+                    return 'policy';
+                }
+
+                $password = bcrypt($req->newPass);
+                User::where('id',$userData->id)
+                    ->update([
+                        'password' => $password
+                    ]);
+                Session::put('auth',$userData);
+                Session::forget('force_password_change');
+                return 'changed';
             }else{
                 return 'not_match';
             }
         }else{
             return 'error';
         }
+    }
+
+    public function showForcePasswordChange()
+    {
+        $user = Session::get('auth');
+        if(!$user){
+            return redirect('login');
+        }
+
+        if(!Session::get('force_password_change')){
+            return redirect('login');
+        }
+
+        return view('security.change_password', [
+            'user' => $user
+        ]);
+    }
+
+    public function updateForcePasswordChange(Request $req)
+    {
+        $user = Session::get('auth');
+        if(!$user){
+            return redirect('login');
+        }
+
+        $userData = User::find($user->id);
+        if(!$userData){
+            Session::forget('auth');
+            Session::forget('force_password_change');
+            return redirect('login');
+        }
+
+        if(!Hash::check($req->current_password, $userData->password)){
+            return redirect('security/change-password')->with('error', 'Your current password is incorrect.');
+        }
+
+        if($req->new_password !== $req->confirm_password){
+            return redirect('security/change-password')->with('error', 'The new passwords do not match.');
+        }
+
+        if(Hash::check($req->new_password, $userData->password)){
+            return redirect('security/change-password')->with('error', 'Your new password must be different from your current password.');
+        }
+
+        if(!$this->passwordMeetsRequirements($req->new_password)){
+            return redirect('security/change-password')->with('error', 'Your password must be at least 8 characters and include letters, numbers, and special characters.');
+        }
+
+        $userData->update([
+            'password' => bcrypt($req->new_password)
+        ]);
+
+        Session::put('auth', $userData);
+        Session::forget('force_password_change');
+
+        if($userData->level == 'doctor')
+            return redirect('doctor');
+        else if($userData->level == 'chief')
+            return redirect('chief');
+        else if($userData->level == 'support')
+            return redirect('support');
+        else if($userData->level == 'mcc')
+            return redirect('mcc');
+        else if($userData->level == 'admin')
+            return redirect('admin');
+        else if($userData->level == 'eoc_region')
+            return redirect('eoc_region');
+        else if($userData->level == 'eoc_city')
+            return redirect('eoc_city');
+        else if($userData->level == 'opcen')
+            return redirect('opcen');
+        else if($userData->level == 'bed_tracker')
+            return redirect('bed_tracker');
+        else if($userData->level == 'midwife')
+            return redirect('midwife');
+        else if($userData->level == 'medical_dispatcher')
+            return redirect('medical_dispatcher');
+        else if($userData->level == 'nurse')
+            return redirect('nurse');
+        else if($userData->level == 'vaccine')
+            return redirect('vaccine');
+        else if($userData->level == 'mayor')
+            return redirect('doctor');
+        else if($userData->level == 'dmo')
+            return redirect('doctor');
+        else if($userData->level == 'capitol')
+            return redirect('doctor');
+        else if($userData->level == 'Patient' && !empty($userData->email_verified_at))
+            return redirect('doctor/appointment/calendar');
+        else
+            return redirect('login');
     }
 
     public function updateToken($token){

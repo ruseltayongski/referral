@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Routing\Exceptions\InvalidSignatureException;
 
 class Handler extends ExceptionHandler
 {
@@ -47,6 +48,9 @@ class Handler extends ExceptionHandler
         /*if($exception instanceof Exception){
             return redirect('/');
         }*/
+        if ($exception instanceof InvalidSignatureException) {
+            return response()->view('errors.link_expired', [], 403);
+        }
         return parent::render($request, $exception);
     }
 
