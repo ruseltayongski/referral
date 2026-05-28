@@ -1996,6 +1996,8 @@ class NewFormCtrl extends Controller
         DB::raw("DATE_FORMAT(parity_edc, '%M %d, %Y %h:%i %p') as parity_edc"),
         )->where('patient_id', $patient_id)->first();
        
+        $referred_to = $form && isset($form->referred_to) ? $form->referred_to : null;
+        
         $arr = [
             "form" => $form['form'],
             "id" => $id,
@@ -2008,6 +2010,7 @@ class NewFormCtrl extends Controller
             "referral_status" => $referral_status,
             "cur_status" => $track->status,
             "referring_fac_id" => $track->referring_fac_id,
+            "referred_to" => $referred_to,
             "form_type" => $form_type,
             "patient_id" => $patient_id,
             "past_medical_history" => $past_medical_history,

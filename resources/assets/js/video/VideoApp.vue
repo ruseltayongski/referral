@@ -7,6 +7,7 @@ import LabRequestModal from "./LabRequestModal.vue";
 import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
 import FormReferralComponent from "./FormReferralComponent.vue";
+import ScheduleModal from "./scheduleModal.vue";
 
 let baseUrlfeedback = `referral/doctor/vue/feedback`;
 let doctorFeedback = `referral/doctor/feedback`;
@@ -18,6 +19,7 @@ export default {
     FeedbackModal,
     PDFViewerModal,
     FormReferralComponent,
+    ScheduleModal,
   },
   data() {
     return {
@@ -522,7 +524,7 @@ export default {
                 )
                 .then((res) => {
                   const response = res.data;
-                  console.log("Form tracking:", response);
+                  // console.log("Form tracking:", response);
                   this.telemedicine = response.form.telemedicine;
                   this.form = response.form;
                   this.isPatientToDoctor =
@@ -1405,7 +1407,8 @@ export default {
         {
           type:             "openFollowUp",
           code:             this.referral_code,
-          followupFacility: this.form.referred_to  || "",
+          followupFacility: this.form.referred_to || "",
+          referredTo:       this.form.referred_to || "",
           telemedicine:     this.telemedicine       || 1,
           appointmentId:    this.form.appointmentId || "",
           configId:         this.form.subopd_id     || "",
@@ -1612,7 +1615,7 @@ export default {
                     <i class="bi bi-prescription2"></i>
                   </button>
                 </div>
-                <!-- <div class="button-container" v-if="telemedicine == 1 && opcen_facility != 63">
+                <div class="button-container" v-if="telemedicine == 1 && opcen_facility != 63">
                   <div
                     v-if="!isMobileDevice && showFollowUp"
                     class="tooltip-text"
@@ -1631,7 +1634,7 @@ export default {
                   >
                     <i class="fa fa-calendar"></i>
                   </button>
-                </div> -->
+                </div>
                 <div class="button-container">
                   <div
                     v-if="!isMobileDevice && showTooltipFeedback"
@@ -1793,6 +1796,10 @@ export default {
         </p>
       </div>
     </div>
+    <ScheduleModal 
+      :doctorId="user.id" 
+      :username="user.username" 
+    />
   </div>
 </template>
 

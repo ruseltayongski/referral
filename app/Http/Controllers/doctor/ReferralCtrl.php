@@ -544,6 +544,7 @@ class ReferralCtrl extends Controller
             'facility.name as referring_name',
             'ff.name as referred_name',
             'ff.id as referred_fac_id',
+            'tracking.referred_to',
             DB::raw("DATE_FORMAT(patient_form.time_referred,'%M %d, %Y %h:%i %p') as time_referred"),
             DB::raw("DATE_FORMAT(patient_form.time_transferred,'%M %d, %Y %h:%i %p') as time_transferred"),
             DB::raw('CONCAT(
@@ -567,7 +568,7 @@ class ReferralCtrl extends Controller
             ->join('patients','patients.id','=','patient_form.patient_id')
             ->join('tracking','tracking.form_id','=','patient_form.id')
             ->leftJoin('facility','facility.id','=','tracking.referred_from')
-            ->join('facility as ff','ff.id','=','tracking.referred_to')
+            ->leftJoin('facility as ff','ff.id','=','tracking.referred_to')
             ->leftJoin('users','users.id','=','tracking.referring_md')
             ->leftJoin('users as u','u.id','=','patient_form.referred_md')
             ->leftJoin('barangay','barangay.id','=','patients.brgy')
@@ -585,7 +586,10 @@ class ReferralCtrl extends Controller
             ->where(function($query) {
                 $query->where('act.status', 'referred')
                     ->orWhere('act.status', 'redirected')
-                    ->orWhere('act.status', 'transferred');
+                    ->orWhere('act.status', 'transferred')
+                    ->orWhere('act.status', 'followup')
+                    ->orWhere('act.status', 'appointment')
+                    ->orWhere('act.status', 'approved');
             })
             ->orderBy('act.date_referred','desc')
             ->first();

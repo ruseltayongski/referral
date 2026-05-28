@@ -207,7 +207,8 @@ export default {
     open(data = {}) {
       this.resetForm();
       this.form.code = data.code || '';
-      this.form.followupFacilityTelemed = data.followupFacility || '';
+      // Use referredTo if available (fallback to followupFacility for backward compatibility)
+      this.form.followupFacilityTelemed = data.referredTo || data.followupFacility || '';
       this.form.appointmentId = data.appointmentId || null;
       this.form.configId = data.configId || null;
       this.form.telemedicine = data.telemedicine ?? 1;
@@ -222,7 +223,12 @@ export default {
 
     handlePostMessage(event) {
       if (!event.data || event.data.type !== 'openFollowUp') return;
-      this.open(event.data);
+      // Ensure referredTo is passed or fallback to followupFacility
+      const data = event.data;
+      if (!data.referredTo && data.followupFacility) {
+        data.referredTo = data.followupFacility;
+      }
+      this.open(data);
     },
 
     // ─── Form Reset ──────────────────────────────────────────────────────────
@@ -256,7 +262,10 @@ export default {
       }
 
       if (selected < this.todayISO) {
-        alert('Please select today or a future date.');
+        Lobibox.alert({
+          msg: 'Please select today or a future date.',
+          title: 'Invalid Date',
+        });
         this.form.date = '';
         this.slotsVisible = false;
         return;
@@ -276,7 +285,10 @@ export default {
         this.existingSlots = response.data.slots || [];
       } catch {
         this.existingSlots = [];
-        alert('Error fetching available slots. Please try again.');
+        Lobibox.alert({
+          msg: 'Error fetching available slots. Please try again.',
+          title: 'API Error',
+        });
       } finally {
         this.dateLoading = false;
         this.slotsVisible = true;
@@ -301,7 +313,10 @@ export default {
 
     selectSlot(slot) {
       if (slot.availability === 'Full') {
-        alert('This slot is fully booked. Please select another slot or create a new schedule.');
+        Lobibox.alert({
+          msg: 'This slot is fully booked. Please select another slot or create a new schedule.',
+          title: 'Slot Unavailable',
+        });
         return;
       }
 
@@ -319,7 +334,10 @@ export default {
       const { code, date, timeFrom, timeTo } = this.form;
 
       if (!code || !date || !timeFrom || !timeTo) {
-        alert('Please fill in all schedule fields before saving.');
+        Lobibox.alert({
+          msg: 'Please fill in all schedule fields before saving.',
+          title: 'Incomplete Form',
+        });
         return;
       }
 
@@ -345,28 +363,38 @@ export default {
 
       try {
         const response = await axios.post(this.followupUrl, payload);
-        alert(response.data.message || 'Follow-up scheduled successfully.');
+        Lobibox.notify('success', {
+          msg: response.data.message || 'Follow-up scheduled successfully.',
+          title: 'Success',
+        });
         this.$emit('saved', response.data);
         this.close();
       } catch (error) {
         if (error.response && error.response.status === 409) {
           // Conflict — ask user to confirm using existing schedule
-          const confirmed = confirm(
-            error.response.data.message ||
-            'Schedule conflict detected. Use existing schedule?'
-          );
-          if (confirmed) {
-            await this.submitFollowUp(true);
-            return; // keep isSubmitting locked until recursive call resolves
-          }
-          // User cancelled — unlock
+          Lobibox.confirm({
+            msg: error.response.data.message || 'Schedule conflict detected. Use existing schedule?',
+            title: 'Conflict Resolution',
+            callback: async (instance, type) => {
+              if (type === 'yes') {
+                await this.submitFollowUp(true);
+              } else {
+                this.isSubmitting = false;
+              }
+            },
+          });
         } else {
-          const message =
-            error.response?.data?.message || 'Unable to save follow-up schedule.';
-          alert(message);
+          const message = error.response?.data?.message || 'Unable to save follow-up schedule.';
+          Lobibox.alert({
+            msg: message,
+            title: 'Error',
+          });
+          this.isSubmitting = false;
         }
       } finally {
-        this.isSubmitting = false;
+        if (error && error.response?.status !== 409) {
+          // Already handled above
+        }
       }
     },
   },
