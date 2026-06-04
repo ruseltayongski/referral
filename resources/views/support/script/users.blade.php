@@ -1,5 +1,63 @@
 <?php $user = Session::get('auth'); ?>
-<script>    
+<script>
+
+// Real-time AJAX search functionality
+let searchTimeout;
+
+function performSearch() {
+    const searchKeyword = $('#searchInput').val().trim();
+    const status = $('#statusFilter').val();
+    const perPage = $('#perPageFilter').val();
+
+    // Show loading indicator
+    $('#searchLoading').show();
+
+    $.ajax({
+        url: "{{ url('support/users/ajax-search') }}",
+        type: "GET",
+        data: {
+            search: searchKeyword,
+            status: status,
+            per_page: perPage
+        },
+        success: function(data) {
+            // Update the table body with new results
+            $('#usersTableBody').html(data);
+            $('#searchLoading').hide();
+        },
+        error: function(error) {
+            console.log('Search error:', error);
+            $('#searchLoading').hide();
+            alert('Error performing search');
+        }
+    });
+}
+
+function resetFilters() {
+    $('#searchInput').val('');
+    $('#statusFilter').val('');
+    $('#perPageFilter').val('15');
+    performSearch();
+}
+
+// Trigger search on input keyup (per character)
+$('#searchInput').on('keyup', function() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(function() {
+        performSearch();
+    }, 300); // 300ms delay to avoid too many requests
+});
+
+// Trigger search on status filter change
+$('#statusFilter').on('change', function() {
+    performSearch();
+});
+
+// Trigger search on per_page filter change
+$('#perPageFilter').on('change', function() {
+    performSearch();
+});
+
 $('#department_select').on('change', function () {
     const selectedDepartment = parseInt($(this).val());
 

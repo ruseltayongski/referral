@@ -139,7 +139,7 @@ export default {
       isRecordingFinalized: false,
       // ─────────────────────────────────────────────────────────────────────
  
-      isPatientToDoctor: true,
+      isPatientToDoctor: false,
     };
   },
   mounted() {
@@ -1626,7 +1626,7 @@ export default {
                   <button
                     class="btn btn-md followup-button"
                     type="button"
-                    v-if="isPatientToDoctor ? user.level == 'doctor' : referring_md == 'no'"
+                    v-if="isPatientToDoctor && user.level == 'doctor' && referring_md == 'no'"
                     @click="openFollowUpModal"
                     @mouseover="showFollowUp = true"
                     @mouseleave="showFollowUp = false"

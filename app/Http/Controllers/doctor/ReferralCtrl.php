@@ -1387,12 +1387,32 @@ class ReferralCtrl extends Controller
 
         $activity = Activity::create($data);
         $isPatientUserExist = User::where('patient_id', $track->patient_id)->exists();
-        if ($track->telemedicine == 1 && $referred_from == 0) {
+        if ($track->telemedicine == 1 && $track->referred_from == 0) {
             $telemedicine_controller = new TelemedicineApiCtrl();
             if ($isPatientUserExist) {
+                $expiration = now()->addHours(2);
+                if ($track->appointmentId) {
+                    $appointmentSchedule = AppointmentSchedule::find($track->appointmentId);
+                    if ($appointmentSchedule && $appointmentSchedule->appointed_date) {
+                        $startTime = $appointmentSchedule->appointed_time ?: '00:00:00';
+                        $endTime = $appointmentSchedule->appointedTime_to;
+
+                        if ($endTime) {
+                            $expiration = Carbon::parse($appointmentSchedule->appointed_date . ' ' . $endTime);
+                        } else {
+                            $startDateTime = Carbon::parse($appointmentSchedule->appointed_date . ' ' . $startTime);
+                            $expiration = $startDateTime->copy()->addHours(2);
+                        }
+
+                        if ($expiration->isPast()) {
+                            $expiration = now()->addHours(2);
+                        }
+                    }
+                }
+
                 $joinUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute(
                     'doctor.telemedicine',
-                    now()->addHours(2),
+                    $expiration,
                     [
                         'id'           => $track->id,
                         'from_fact'    => 0,

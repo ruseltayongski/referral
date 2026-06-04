@@ -683,7 +683,7 @@ class TelemedicineApiCtrl extends Controller
         // $createdActivity = Activity::create($activity);
 
         // ✅ AUTO ACCEPT — pass session user directly, no Request needed
-        $this->acceptFollowUp($user, $tracking->id, $time);
+        $this->acceptFollowUp($user, $tracking->id, $time->copy()->addMinute());
 
         // Broadcast
         $patient = Patients::find($tracking->patient_id);

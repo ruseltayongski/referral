@@ -21,7 +21,7 @@ class AuthOrSignedLink
         }
 
         // Path 3: No session, no valid signature
-        return redirect()->route('login')
+        return redirect('/login')
             ->with('error', 'Please log in or use a valid appointment link.');
     }
 }

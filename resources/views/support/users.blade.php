@@ -20,7 +20,7 @@ if($searchKeyword){
     <div class="col-md-12">
         <div class="box box-success">
             <div class="box-header with-border">
-                <form action="{{ url('support/users') }}" method="GET" class="form-inline">
+                <!-- <form action="{{ url('support/users') }}" method="GET" class="form-inline">
                     {{ csrf_field() }}
                     <div class="form-group-sm" style="margin-bottom: 10px;">
                         <input type="text" style="width: 40%;" class="form-control" placeholder="Search name..." name="search" value="{{ $search }}">
@@ -35,6 +35,50 @@ if($searchKeyword){
                             <i class="fa fa-user-plus"></i> Add User  
                         </a>
                     </div>
+                </form> -->
+                <form action="{{ url('support/users') }}" method="GET" class="form-inline">
+
+                    <input type="text"
+                        id="searchInput"
+                        class="form-control"
+                        style="width:25%;"
+                        placeholder="Search name..."
+                        name="search"
+                        value="{{ request('search') }}">
+
+                    <!-- Status Filter -->
+                    <select name="status" class="form-control" id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="active"
+                            {{ request('status') == 'active' ? 'selected' : '' }}>
+                            Active
+                        </option>
+                        <option value="inactive"
+                            {{ request('status') == 'inactive' ? 'selected' : '' }}>
+                            Inactive
+                        </option>
+                    </select>
+
+                    <!-- Per Page -->
+                    <select name="per_page" class="form-control" id="perPageFilter">
+                        <option value="15" {{ request('per_page') == 15 ? 'selected' : '' }}>15</option>
+                        <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                        <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                        <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                        <option value="500" {{ request('per_page') == 500 ? 'selected' : '' }}>500</option>
+                        <option value="1000" {{ request('per_page') == 1000 ? 'selected' : '' }}>1000</option>
+                    </select>
+
+                    <button type="submit" class="btn btn-success btn-sm" style="display:none;">
+                        <i class="fa fa-search"></i> Search
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-warning btn-sm"
+                            onclick="resetFilters()">
+                        <i class="fa fa-eye"></i> Reset Filters
+                    </button>
+
                 </form>
                 <div class="modal fade" role="dialog" id="filter_user">
                     <div class="modal-dialog modal-sm" role="document">
@@ -71,40 +115,43 @@ if($searchKeyword){
                 @if(count($data)>0)
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
-                        <tr class="bg-black">
-                            <th>Name</th>
-                            <th>Department</th>
-                            <th>Contact</th>
-                            <th>Username</th>
-                            <th>Status</th>
-                            <th>Last Login</th>
-                        </tr>
-                        @foreach($data as $row)
-                        <tr>
-                            <td>
-                                <a href="#updateUserModal"
-                                   data-toggle="modal"
-                                   data-id = "{{ $row->id }}"
-                                   class="title-info update_info">
-                                <?php
-                                    if($row->level == 'doctor')
-                                        $abre = "Dr. ";
-                                    else
-                                        $abre = "";
+                        <thead>
+                            <tr class="bg-black">
+                                <th>Name</th>
+                                <th>Department</th>
+                                <th>Contact</th>
+                                <th>Username</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            @foreach($data as $row)
+                            <tr>
+                                <td>
+                                    <a href="#updateUserModal"
+                                       data-toggle="modal"
+                                       data-id = "{{ $row->id }}"
+                                       class="title-info update_info">
+                                    <?php
+                                        if($row->level == 'doctor')
+                                            $abre = "Dr. ";
+                                        else
+                                            $abre = "";
 
-                                    echo $abre.$row->fname.' '.$row->mname.' '.$row->lname;
-                                ?>
-                                </a>
-                            </td>
-                            <td>
-                                <?php
-                                    $department = \App\Department::find($row->department_id);
-                                    $description = '';
-                                    if($department){
-                                        $description = $department->description;
-                                    }
-                                ?>
-                                {{ $description }}
+                                        echo $abre.$row->fname.' '.$row->mname.' '.$row->lname;
+                                    ?>
+                                    </a>
+                                </td>
+                                <td>
+                                    <?php
+                                        $department = \App\Department::find($row->department_id);
+                                        $description = '';
+                                        if($department){
+                                            $description = $department->description;
+                                        }
+                                    ?>
+                                    {{ $description }}
                             </td>
                             <td>
                                 {{ $row->contact }}
@@ -124,11 +171,15 @@ if($searchKeyword){
                                 Never Login
                                 @endif
                             </td>
-                        </tr>
-                        @endforeach
+                            </tr>
+                            @endforeach
+                        </tbody>
                     </table>
+                    <div id="searchLoading" style="display:none; text-align:center; padding:10px;">
+                        <i class="fa fa-spinner fa-spin"></i> Searching...
+                    </div>
                     <div class="pagination">
-                        {{ $data->links() }}
+                        {{ $data->appends(Request::except('page'))->links() }}
                     </div>
                 </div>
                 @else

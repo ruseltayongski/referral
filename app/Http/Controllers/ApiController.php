@@ -2921,6 +2921,8 @@ class ApiController extends Controller
                         $latestActivity->patient_id = $patient_id;
                         $latestActivity->date_referred = $time;
                         $latestActivity->date_seen = $time;
+                        $latestActivity->created_at = $time->copy()->addMinute();
+                        $latestActivity->updated_at = $time->copy()->addMinute();
                         $latestActivity->referred_from = $patient_form->referring_facility;
                         $latestActivity->referred_to = $patient_form->referred_to;
                         $latestActivity->department_id = $patient_form->department_id;
@@ -2935,6 +2937,8 @@ class ApiController extends Controller
                         $latestActivity->patient_id = $patient_id;
                         $latestActivity->date_referred = $time->copy()->addMinute();
                         $latestActivity->date_seen = $time->copy()->addMinute();
+                        $latestActivity->created_at = $time->copy()->addMinute();
+                        $latestActivity->updated_at = $time->copy()->addMinute();
                         $latestActivity->referred_from = $patient_form->referring_facility;
                         $latestActivity->referred_to = $patient_form->referred_to;
                         $latestActivity->department_id = $patient_form->department_id;

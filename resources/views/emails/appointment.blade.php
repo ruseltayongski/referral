@@ -357,7 +357,7 @@
                     $calendarEnd = gmdate('Ymd\\THis\\Z', $endTimestamp);
                     $calendarTitle = 'Telemedicine Appointment - ' . data_get($appointment, 'doctor', 'Doctor');
                     $calendarLocation = trim(data_get($appointment, 'facility', '') . ' - ' . data_get($appointment, 'address', ''));
-                    $calendarDescription = "Video Link: " . data_get($appointment, 'video_link', 'N/A') . "\n";
+                    $calendarDescription = data_get($appointment, 'video_link', 'N/A') . "\n";
 
                     $googleCalendarUrl = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
                         . '&text=' . rawurlencode($calendarTitle)

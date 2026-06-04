@@ -23,54 +23,57 @@ class UserCtrl extends Controller
     public function index(Request $request)
     {
         $user = Session::get('auth');
-        $search = $request->search;
 
-        $data = User::where('facility_id',$user->facility_id)
-            ->where(function($q) use($search){
+        $search = $request->search;
+        $status = $request->status;
+        $perPage = $request->get('per_page', 15);
+
+        $data = User::where('facility_id', $user->facility_id)
+            ->where(function($q){
                 $q->where("users.level","doctor")
-                    ->orWhere("users.level","midwife")
-                    ->orWhere("users.level","nurse")
-                    ->orWhere("users.level","medical_dispatcher");
+                ->orWhere("users.level","midwife")
+                ->orWhere("users.level","nurse")
+                ->orWhere("users.level","medical_dispatcher");
             })
             ->where(function($q) use($search){
                 $q->where('fname','like',"%$search%")
-                ->orwhere('mname','like',"%$search%")
-                ->orwhere('lname','like',"%$search%")
-                ->orwhere('username','like',"%$search%")
-                ->orwhere(DB::raw('concat(fname," ",lname)'),'like',"$search")
-                ->orwhere(DB::raw('concat(lname," ",fname)'),'like',"$search");
+                ->orWhere('mname','like',"%$search%")
+                ->orWhere('lname','like',"%$search%")
+                ->orWhere('username','like',"%$search%")
+                ->orWhere(DB::raw('concat(fname," ",lname)'),'like',"%$search%")
+                ->orWhere(DB::raw('concat(lname," ",fname)'),'like',"%$search%");
             });
 
-        if($request->department_id)
-            $data = $data->where("department_id",$request->department_id == 'no_department' ? 0 : $request->department_id);
+        // Department Filter
+        if($request->department_id){
+            $data->where(
+                "department_id",
+                $request->department_id == 'no_department'
+                    ? 0
+                    : $request->department_id
+            );
+        }
 
+        // Status Filter
+        if($status){
+            $data->where('status', $status);
+        }
 
         $data = $data
             ->orderBy('fname','asc')
-            ->paginate(15);
+            ->paginate($perPage)
+            ->appends($request->all());
 
         $departments = Department::get();
-        $group_by_department = User::
-                                select(
-                                        DB::raw("count(users.id) as y"),
-                                        DB::raw("coalesce(department.description,'NO DEPARTMENT') as label"),
-                                        DB::raw("coalesce(department.id,'no_id') as department_id")
-                                    )
-                                    ->leftJoin("department","department.id","=","users.department_id")
-                                    ->where("users.facility_id",$user->facility_id) //TODO: possible changes for multiple facility log-in
-                                    ->where(function($q) use($search){
-                                        $q->where("users.level","doctor")
-                                        ->orWhere("users.level","midwife");
-                                    })
-                                    ->groupBy("users.department_id")
-                                    ->get();
 
         return view('support.users',[
             'title' => 'Manage Users',
             'data' => $data,
             'departments' => $departments,
             'search' => $search,
-            "group_by_department" => $group_by_department
+            'status' => $status,
+            'perPage' => $perPage,
+            'group_by_department' => $group_by_department
         ]);
     }
 
@@ -224,5 +227,86 @@ class UserCtrl extends Controller
     public function info($user_id)
     {
         return User::find($user_id);
+    }
+
+    public function ajaxSearch(Request $request)
+    {
+        $user = Session::get('auth');
+
+        $search = $request->search ?? '';
+        $status = $request->status ?? '';
+        $perPage = $request->get('per_page', 15);
+
+        $data = User::where('facility_id', $user->facility_id)
+            ->where(function($q){
+                $q->where("users.level","doctor")
+                ->orWhere("users.level","midwife")
+                ->orWhere("users.level","nurse")
+                ->orWhere("users.level","medical_dispatcher");
+            })
+            ->where(function($q) use($search){
+                if($search) {
+                    $q->where('fname','like',"%$search%")
+                    ->orWhere('mname','like',"%$search%")
+                    ->orWhere('lname','like',"%$search%")
+                    ->orWhere('username','like',"%$search%")
+                    ->orWhere(DB::raw('concat(fname," ",lname)'),'like',"%$search%")
+                    ->orWhere(DB::raw('concat(lname," ",fname)'),'like',"%$search%");
+                }
+            });
+
+        // Status Filter
+        if($status){
+            $data->where('status', $status);
+        }
+
+        $data = $data
+            ->orderBy('fname','asc')
+            ->paginate($perPage);
+
+        $html = '';
+
+        if($data->count() > 0) {
+            foreach($data as $row) {
+                $abbreviation = '';
+                if($row->level == 'doctor') {
+                    $abbreviation = "Dr. ";
+                }
+
+                $department = Department::find($row->department_id);
+                $departmentDescription = '';
+                if($department) {
+                    $departmentDescription = $department->description;
+                }
+
+                $lastLogin = '';
+                if($row->last_login != '0000-00-00 00:00:00') {
+                    $lastLogin = date('M d, Y h:i A', strtotime($row->last_login));
+                } else {
+                    $lastLogin = 'Never Login';
+                }
+
+                $statusClass = ($row->status == 'active') ? 'text-success' : 'text-danger';
+
+                $html .= '<tr>';
+                $html .= '<td>';
+                $html .= '<a href="#updateUserModal" data-toggle="modal" data-id="'.$row->id.'" class="title-info update_info">';
+                $html .= $abbreviation . $row->fname . ' ' . $row->mname . ' ' . $row->lname;
+                $html .= '</a>';
+                $html .= '</td>';
+                $html .= '<td>' . $departmentDescription . '</td>';
+                $html .= '<td>' . $row->contact . '</td>';
+                $html .= '<td>' . $row->username . '</td>';
+                $html .= '<td><span class="' . $statusClass . '">' . strtoupper($row->status) . '</span></td>';
+                $html .= '<td class="text-warning">' . $lastLogin . '</td>';
+                $html .= '</tr>';
+            }
+        } else {
+            $html .= '<tr>';
+            $html .= '<td colspan="6" style="text-align:center; color:#999;"><em>No users found</em></td>';
+            $html .= '</tr>';
+        }
+
+        return $html;
     }
 }

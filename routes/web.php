@@ -125,6 +125,7 @@ Route::get('support', 'doctor\HomeCtrl@index1');
 Route::get('support/dashboard/count', 'support\HomeCtrl@count');
 
 Route::get('support/users', 'support\UserCtrl@index');
+Route::get('support/users/ajax-search', 'support\UserCtrl@ajaxSearch');
 Route::get('support/uers/add', 'support\UserCtrl@create');
 Route::post('support/uers/add', 'support\UserCtrl@add');
 Route::post('support/users/store', 'support\UserCtrl@store');
