@@ -78,6 +78,9 @@ if($searchKeyword){
                             onclick="resetFilters()">
                         <i class="fa fa-eye"></i> Reset Filters
                     </button>
+                        <a href="#addUserModal" data-toggle="modal" class="btn btn-primary btn-sm ">
+                            <i class="fa fa-user-plus"></i> Add User  
+                        </a>
 
                 </form>
                 <div class="modal fade" role="dialog" id="filter_user">
