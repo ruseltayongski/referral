@@ -38,3 +38,5 @@ Route::post('/mobile/video/prescriptions/version2', 'ApiController@savePrescript
 Route::get('checkIfUserIsPatient/{patient_id}', 'TelemedicineApiCtrl@checkIfUserIsPatient');
 Route::get('checkIfUserIsPatient/tracking/{tracking_id}', 'TelemedicineApiCtrl@checkIfUserIsPatientTracking');
 Route::get('schedule/check-slots', 'TelemedicineApiCtrl@checkAvailableSlots');
+Route::get('/video/normal/newform/{id}', 'TelemedicineApiCtrl@normalFormTelemedApi');
+Route::get('/public/video/form-data/{id}', 'doctor\NewFormCtrl@publicTelemedFormData');

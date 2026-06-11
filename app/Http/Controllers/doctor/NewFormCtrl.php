@@ -1932,6 +1932,49 @@ class NewFormCtrl extends Controller
         return self::getViewForm_normal($id, $track->status, $track->type);
     }
 
+    public function publicTelemedFormData($id)
+    {
+        $track = Tracking::select('status', 'type', 'form_type', 'referred_from as referring_fac_id')
+            ->where('id', $id)
+            ->first();
+
+        if (!$track) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tracking record not found'
+            ], 404);
+        }
+
+        $payload = self::getViewForm_normal($id, $track->status, $track->type);
+
+        return response()->json([
+            'success' => true,
+            'form_version' => $track->form_type ?? 'version2',
+            'form_type' => $track->form_type ?? 'version2',
+            'telemedicine' => $payload['form']['telemedicine'] ?? null,
+            'form' => $payload['form'],
+            'patient_age' => $payload['patient_age'] ?? null,
+            'age_type' => $payload['age_type'] ?? null,
+            'icd' => $payload['icd'] ?? [],
+            'file_path' => $payload['file_path'] ?? [],
+            'file_name' => $payload['file_name'] ?? [],
+            'referring_fac_id' => $payload['referring_fac_id'] ?? null,
+            'current_medication' => $payload['personal_and_social_history']->current_medications ?? null,
+            'past_medical_history' => $payload['past_medical_history'] ?? null,
+            'personal_and_social_history' => $payload['personal_and_social_history'] ?? null,
+            'pertinent_laboratory' => $payload['pertinent_laboratory'] ?? null,
+            'review_of_system' => $payload['review_of_system'] ?? null,
+            'nutritional_status' => $payload['nutritional_status'] ?? null,
+            'latest_vital_signs' => $payload['latest_vital_signs'] ?? null,
+            'glasgocoma_scale' => $payload['glasgocoma_scale'] ?? null,
+            'obstetric_and_gynecologic_history' => $payload['obstetric_and_gynecologic_history'] ?? null,
+            'pregnancy' => $payload['pregnancy'] ?? [],
+            'normal_formType' => $track->form_type ?? 'version2',
+            'referred_to' => $payload['referred_to'] ?? null,
+            'tracking_id' => $id,
+        ]);
+    }
+
     public function checkFormVersion($id){
         $track = Tracking::select('form_type','type')->where('id', $id)->first();
         if ($track){

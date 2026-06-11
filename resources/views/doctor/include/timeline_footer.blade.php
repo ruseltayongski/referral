@@ -75,7 +75,7 @@ $redirected_upward = DB::table('activity')
                 type="button">
                 <i class="fa fa-hospital-o"></i> Upward
             </button>
-            <!-- <button
+            <button
                 class="btn btn-primary btn-xs btn-followup"
                 type="button"
                 data-toggle="modal"
@@ -86,7 +86,7 @@ $redirected_upward = DB::table('activity')
                 data-appointment-id="{{ $row->appointmentId ?? '' }}"
                 data-config-id="{{ $row->subopd_id ?? '' }}">
                 <i class="fa fa-calendar"></i> Follow Up
-            </button> -->
+            </button>
         @endif
         @if($seen > 0)
             <!-- <div class="form-group"> -->

@@ -34,6 +34,7 @@ use App\PatientForm;
 use App\ReasonForReferral;
 use App\Http\Controllers\doctor\PatientCtrl;
 use App\Http\Controllers\doctor\ReferralCtrl;  
+use App\Services\TelemedicineLinkService;
 use Mail;
 use App\Mail\AppointmentMail;
 
@@ -785,10 +786,13 @@ class TelemedicineApiCtrl extends Controller
                     $track->appointmentId,
                     $track->patient_id,
                     'accepted',
-                    asset("doctor/telemedicine") .
-                        '?id=' . $track->id .
-                        '&from_fact=0&code=' . $track->code .
-                        '&form_type=normal&telemed=1&referring_md=yes&activity_id=' . $activity->id
+                    TelemedicineLinkService::buildSignedUrl($track, [
+                        'from_fact'    => 0,
+                        'form_type'    => 'normal',
+                        'telemed'      => 1,
+                        'referring_md' => 'yes',
+                        'activity_id'  => $activity->id,
+                    ])
                 );
             }
         }
@@ -1729,5 +1733,142 @@ class TelemedicineApiCtrl extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+    
+    public function normalFormTelemedApi($id)
+    {
+        $track = Tracking::select('status', 'type')
+            ->where('id', $id)
+            ->first();
+
+        if (!$track) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tracking record not found'
+            ], 404);
+        }
+
+        $data = self::normalFormApi(
+            $id,
+            $track->status,
+            $track->type
+        );
+
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
+    }
+    public static function normalFormApi($id, $referral_status, $form_type)
+    {
+        $track = Tracking::select(
+                'code',
+                'status',
+                'referred_from as referring_fac_id',
+                'appointmentId'
+            )
+            ->where('id', $id)
+            ->first();
+
+        if (!$track) {
+            return null;
+        }
+
+        $icd = Icd::select('icd10.code', 'icd10.description')
+            ->join('icd10', 'icd10.id', '=', 'icd.icd_id')
+            ->where('icd.code', $track->code)
+            ->get();
+
+        $patientForm = PatientForm::select('file_path')
+            ->where('code', $track->code)
+            ->first();
+
+        $file_link = $patientForm ? $patientForm->file_path : null;
+
+        $path = [];
+        $file_name = [];
+        $local_base = config('app.url'); // better than hardcoded IP
+
+        if (!empty($file_link)) {
+
+            $explode = explode('|', $file_link);
+
+            foreach ($explode as $link) {
+
+                if (str_starts_with($link, '/storage/')) {
+
+                    $full_url = $local_base . $link;
+
+                    $path[] = $full_url;
+                    $file_name[] = basename($link);
+
+                } else {
+
+                    $path_tmp = self::securedFile($link);
+
+                    if (!empty($path_tmp)) {
+                        $path[] = $path_tmp;
+                        $file_name[] = basename($path_tmp);
+                    }
+                }
+            }
+        }
+
+        $reason = ReasonForReferral::select(
+                'reason_referral.reason',
+                'reason_referral.id'
+            )
+            ->join(
+                'patient_form',
+                'patient_form.reason_referral',
+                '=',
+                'reason_referral.id'
+            )
+            ->where('patient_form.code', $track->code)
+            ->first();
+
+        $form = self::normalFormData($id);
+
+        $appointmentDate = null;
+
+        if ($track->appointmentId) {
+            $appointment = AppointmentSchedule::select('appointed_date')
+                ->where('id', $track->appointmentId)
+                ->first();
+
+            if ($appointment) {
+                $appointmentDate = $appointment->appointed_date;
+            }
+        }
+
+        $latesActivityId = null;
+
+        if (
+            isset($form['form']) &&
+            $form['form']->telemedicine == 1
+        ) {
+            $latesAct = Activity::where('code', $form['form']->code)
+                ->orderBy('id', 'desc')
+                ->first();
+
+            $latesActivityId = $latesAct ? $latesAct->id : null;
+        }
+
+        return [
+            'form' => $form['form'],
+            'id' => $id,
+            'patient_age' => $form['age'],
+            'age_type' => $form['ageType'],
+            'reason' => $reason,
+            'icd' => $icd,
+            'file_path' => $path,
+            'file_name' => $file_name,
+            'appointment_date' => $appointmentDate,
+            'referral_status' => $referral_status,
+            'cur_status' => $track->status,
+            'latestIdAct' => $latesActivityId,
+            'referring_fac_id' => $track->referring_fac_id,
+            'form_type' => $form_type
+        ];
     }
 }

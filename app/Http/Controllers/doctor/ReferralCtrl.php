@@ -26,6 +26,7 @@ use App\Events\FeedbackMessageSent;
 use App\Events\MessageSent;
 use App\Facility;
 use App\Feedback;
+use App\Services\TelemedicineLinkService;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\DeviceTokenCtrl;
 use App\Http\Controllers\ParamCtrl;
@@ -1410,21 +1411,15 @@ class ReferralCtrl extends Controller
                     }
                 }
 
-                $joinUrl = \Illuminate\Support\Facades\URL::temporarySignedRoute(
-                    'doctor.telemedicine',
-                    $expiration,
-                    [
-                        'id'           => $track->id,
-                        'from_fact'    => 0,
-                        'code'         => $track->code,
-                        'form_type'    => 'normal',
-                        'telemed'      => 1,
-                        'referring_md' => 'yes',
-                        'activity_id'  => $activity->id,
-                        'display_name' => $track->patient_name,  // adjust field name if different
-                        'role'         => 'patient',
-                    ]
-                );
+                $joinUrl = TelemedicineLinkService::buildSignedUrl($track, [
+                    'from_fact'    => 0,
+                    'form_type'    => 'normal',
+                    'telemed'      => 1,
+                    'referring_md' => 'yes',
+                    'activity_id'  => $activity->id,
+                    'display_name' => $track->patient_name,
+                    'role'         => 'patient',
+                ]);
 
                 $telemedicine_controller->sendConfirmationEmail(
                     $track->appointmentId,

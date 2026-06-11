@@ -21,7 +21,8 @@ class AuthOrSignedLink
         }
 
         // Path 3: No session, no valid signature
-        return redirect('/login')
-            ->with('error', 'Please log in or use a valid appointment link.');
+        // Allow the request to continue as a guest so public telemedicine access
+        // does not redirect to the login page.
+        return $next($request);
     }
 }

@@ -11,6 +11,7 @@ use App\Tracking;
 use App\User;
 use App\Cofig_schedule;
 use App\SubOpd;
+use App\Services\TelemedicineLinkService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -29,6 +30,27 @@ class TelemedicineCtrl extends Controller
 {
     public function index(Request $req)
     {
+        if (!Session::has('auth') && !$req->hasValidSignature() && $req->filled('id')) {
+            $tracking = Tracking::find($req->id);
+
+            if ($tracking) {
+                $signedUrl = TelemedicineLinkService::buildSignedUrl($tracking, $req->only([
+                    'from_fact',
+                    'code',
+                    'form_type',
+                    'telemed',
+                    'referring_md',
+                    'activity_id',
+                    'display_name',
+                    'role',
+                ]));
+
+                if ($signedUrl) {
+                    return Redirect::away($signedUrl);
+                }
+            }
+        }
+
         // Doctor-to-Doctor: existing session flow — untouched
         if (Session::has('auth')) {
             $user = Session::get('auth');   // exactly what the blade used before

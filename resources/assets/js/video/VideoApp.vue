@@ -509,14 +509,57 @@ export default {
       this.isMobileDevice = isTabletUA || isTabletSize;
     },
     async getFormData() {
-      
+      try {
+        const res = await axios.get(
+          `${this.baseUrl}/video/public/form-data/${this.tracking_id}`
+        );
+        const response = res.data;
+
+        if (response.success) {
+          this.form_version = response.form_version || response.form_type || "version2";
+          this.telemedicine = response.telemedicine ?? this.telemedicine;
+          this.form = response.form || {};
+          this.isPatientToDoctor = response.referring_fac_id == 0 ? true : false;
+
+          if (response.age_type === "y") {
+            this.patient_age = response.patient_age + " Years Old";
+          } else if (response.age_type === "m") {
+            this.patient_age = response.patient_age + " Months Old";
+          } else {
+            this.patient_age = response.patient_age;
+          }
+
+          this.icd = response.icd || [];
+          this.normal_formType = response.normal_formType || response.form_type || this.form_version;
+          this.file_path = response.file_path || [];
+          this.file_name = response.file_name || [];
+
+          this.current_medication = response.current_medication ?? null;
+          this.past_medical_history = response.past_medical_history;
+          this.personal_and_social_history = response.personal_and_social_history;
+          this.pertinent_laboratory = response.pertinent_laboratory;
+          this.review_of_system = response.review_of_system;
+          this.nutritional_status = response.nutritional_status;
+          this.latest_vital_signs = response.latest_vital_signs;
+          this.glasgocoma_scale = response.glasgocoma_scale;
+          this.obstetric_and_gynecologic_history = response.obstetric_and_gynecologic_history;
+          this.pregnancy = response.pregnancy || [];
+          return;
+        }
+      } catch (error) {
+        console.warn(
+          "Public telemedicine form endpoint unavailable, falling back to legacy route.",
+          error
+        );
+      }
+
       axios
         .get(`${this.baseUrl}/video/normal/newform/${this.tracking_id}`)
         .then((res) => {
           const response = res.data;
           if (response.success) {
             this.form_version = response.form_type;
-            
+
             if (this.form_version === "version1") {
               axios
                 .get(
@@ -524,17 +567,16 @@ export default {
                 )
                 .then((res) => {
                   const response = res.data;
-                  // console.log("Form tracking:", response);
                   this.telemedicine = response.form.telemedicine;
                   this.form = response.form;
                   this.isPatientToDoctor =
                     response.referring_fac_id == 0 ? true : false;
- 
+
                   if (response.age_type === "y")
                     this.patient_age = response.patient_age + " Years Old";
                   else if (response.age_type === "m")
                     this.patient_age = response.patient_age + " Months Old";
- 
+
                   this.icd = response.icd;
                   this.normal_formType = response.form_type;
                   this.file_path = response.file_path;
@@ -571,10 +613,7 @@ export default {
                   else if (response.age_type === "m")
                     this.patient_age = response.patient_age + " Months Old";
 
-                  //console.log("Form response:", response);
                   this.icd = response.icd;
-                  // console.log("testing\n" + this.icd);
-
                   this.file_path = response.file_path;
                   this.file_name = response.file_name;
                 });
@@ -1624,7 +1663,7 @@ export default {
                     Follow Up
                   </div>
                   <button
-                    class="btn btn-md followup-button"
+                    class="btn-followup followup-button"
                     type="button"
                     v-if="isPatientToDoctor && user.level == 'doctor' && referring_md == 'no'"
                     @click="openFollowUpModal"
@@ -1865,7 +1904,16 @@ td {
   flex-direction: row;
   overflow: hidden;
 }
-
+.btn-followup {
+    border-radius: 50% !important;
+    width: 43px !important;
+    height: 40px !important;
+    background-color: rgba(81, 83, 85, 0.596) !important;
+    border-color: transparent !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
 /* Video container (left side) */
 .video-container {
   flex: 1.4;
@@ -2206,7 +2254,7 @@ td {
   }
 }
 @media screen and (max-width: 768px) {
-  /* ... your existing mobile styles ... */
+
   .followup-button {
     border-radius: 50% !important;
     width: 30px !important;
