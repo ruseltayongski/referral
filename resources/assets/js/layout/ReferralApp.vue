@@ -1266,7 +1266,7 @@ import { event } from 'jquery';
 
             Echo.join('reco')
                 .listen('SocketReco', (event) => {
-                    // console.log("socket reco", event);
+                    console.log("socket reco", event);
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
                          console.log("gawas check reco response dre", response.data);

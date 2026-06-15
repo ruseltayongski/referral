@@ -22930,7 +22930,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     });
     Echo.join('reco').listen('SocketReco', function (event) {
-      // console.log("socket reco", event);
+      console.log("socket reco", event);
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
       axios.get($("#broadcasting_url").val() + '/activity/check/' + event.payload.code + '/' + _this4.user.facility_id).then(function (response) {
         console.log("gawas check reco response dre", response.data);
