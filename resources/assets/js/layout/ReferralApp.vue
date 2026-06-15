@@ -186,7 +186,7 @@ import { event } from 'jquery';
             //         '                    </div>')
             // },
            appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
-                // console.log("inside the recos append:", filepath);
+                console.log("inside the recos append:", filepath, name_sender, facility_sender, date_now, msg);
                 let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
                 let message = msg && msg.trim() !== ""
                     ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
