@@ -11,6 +11,7 @@ use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Support\Facades\Log;
 
 class SocketReco implements ShouldBroadcast
 {
@@ -30,6 +31,7 @@ class SocketReco implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+        \Log::info('broadcasting reco fired');
         return new PresenceChannel('reco');
     }
 }
