@@ -2467,6 +2467,8 @@ class ReferralCtrl extends Controller
 
         // reco websocket
         $reco_json = ParamCtrl::feedbackContent($req->code, $user->id, $req->message, $files_pathname);
+        
+        \Log::info('Sending SocketReco broadcast', ['data' => $reco_json]); //rrt
         broadcast(new SocketReco($reco_json));
 
         // return view

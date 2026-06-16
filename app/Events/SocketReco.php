@@ -21,6 +21,7 @@ class SocketReco implements ShouldBroadcast
 
     public function __construct($payload)
     {
+        \Log::info('SocketReco event initialized'); //rrt
         $this->payload = $payload;
     }
 
@@ -31,7 +32,7 @@ class SocketReco implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        \Log::info('broadcasting reco fired');
+        \Log::info('broadcasting reco fired'); //rrt
         return new PresenceChannel('reco');
     }
 }
