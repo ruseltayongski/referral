@@ -22930,14 +22930,14 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     });
     Echo.join('reco').listen('SocketReco', function (event) {
-      console.log("socket reco", event);
+      // console.log("socket reco", event);
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
       axios.get($("#broadcasting_url").val() + '/activity/check/' + event.payload.code + '/' + _this4.user.facility_id).then(function (response) {
-        console.log("gawas check reco response dre", response.data);
+        //  console.log("gawas check reco response dre", response.data);
         if (response.data && event.payload.sender_facility !== _this4.user.facility_id && $("#archived_reco_page").val() !== 'true') {
           _this4.reco_count++;
           $("#reco_count").html(_this4.reco_count);
-          console.log("check reco response dre", response.data);
+          // console.log("check reco response dre", response.data);
           _this4.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message, event.payload.filepath);
           try {
             var objDiv = document.getElementById(event.payload.code);
@@ -23082,7 +23082,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
         var sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
         // console.log("faciltiydirect", event.payload.opcen_facility_call_to,this.user.facility_id, "department", event.payload.filter_department,this.user.department_id)
         if (event.payload.opcen_facility_call_to === _this4.user.facility_id && event.payload.filter_department === _this4.user.department_id) {
-          console.log("please work on this");
+          //  console.log("please work on this");
           // if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
           //     this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
           // } else {
@@ -23103,7 +23103,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
               _this4.activeCallWindows["delete"](event.payload.tracking_id);
             }
           }
-          console.log("call a doctor", event);
+          // console.log("call a doctor", event);
           if (_openedTrackingId) {
             return;
           }

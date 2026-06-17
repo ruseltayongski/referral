@@ -1266,14 +1266,14 @@ import { event } from 'jquery';
 
             Echo.join('reco')
                 .listen('SocketReco', (event) => {
-                    console.log("socket reco", event);
+                    // console.log("socket reco", event);
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
-                         console.log("gawas check reco response dre", response.data);
+                        //  console.log("gawas check reco response dre", response.data);
                         if(response.data && event.payload.sender_facility !== this.user.facility_id && $("#archived_reco_page").val() !== 'true') {
                             this.reco_count++
                             $("#reco_count").html(this.reco_count)
-                            console.log("check reco response dre", response.data);
+                            // console.log("check reco response dre", response.data);
                             this.appendReco(event.payload.code, event.payload.name_sender, event.payload.facility_sender, event.payload.date_now, event.payload.message,event.payload.filepath)
                             try {
                                 let objDiv = document.getElementById(event.payload.code);
@@ -1439,7 +1439,7 @@ import { event } from 'jquery';
                             const sharedActive = JSON.parse(localStorage.getItem('activeCall_' + tId) || '{}');
                             // console.log("faciltiydirect", event.payload.opcen_facility_call_to,this.user.facility_id, "department", event.payload.filter_department,this.user.department_id)
                             if(event.payload.opcen_facility_call_to === this.user.facility_id && event.payload.filter_department === this.user.department_id){
-                                 console.log("please work on this");
+                                //  console.log("please work on this");
                                 // if (!sharedActive.startedBy && !sharedActive.acceptedBy) {
                                 //     this.callADoctor(tId, event.payload.code, null, event.payload.telemedicine);
                                 // } else {
@@ -1462,7 +1462,7 @@ import { event } from 'jquery';
                                     }
                                     
                                 }
-                                console.log("call a doctor", event);
+                                // console.log("call a doctor", event);
                                 if(openedTrackingId){
                                     return;
                                 }
