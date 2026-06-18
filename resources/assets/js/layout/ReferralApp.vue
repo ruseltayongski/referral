@@ -186,7 +186,7 @@ import { event } from 'jquery';
             //         '                    </div>')
             // },
            appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
-                console.log("inside the recos append:", filepath, name_sender, facility_sender, date_now, msg);
+                // console.log("inside the recos append:", filepath, name_sender, facility_sender, date_now, msg);
                 let picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
                 let message = msg && msg.trim() !== ""
                     ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "")
@@ -437,7 +437,7 @@ import { event } from 'jquery';
             notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
                 $("#seen_progress"+patient_code+activity_id).addClass("completed");
                 console.log("seenn progress:", $("#seen_progress"+patient_code+activity_id).addClass("completed"));
-                // console.log('seen_by_facility', seen_by_facility);
+                console.log('seen_by_facility', seen_by_facility);
                 // console.log('pass to vue facility', this.passToVueFacility);
                 let msg = patient_name+' was seen by Dr. '+seen_by+' of '+seen_by_facility + '<br><br>\n' +
                     '       <a href="'+redirect_track+'" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' +
@@ -1266,7 +1266,7 @@ import { event } from 'jquery';
 
             Echo.join('reco')
                 .listen('SocketReco', (event) => {
-                    // console.log("socket reco", event);
+                    console.log("socket reco", event);
                     $("#reco_count"+event.payload.code).html(event.payload.feedback_count);
                     axios.get($("#broadcasting_url").val()+'/activity/check/'+event.payload.code+'/'+this.user.facility_id).then(response => {
                         //  console.log("gawas check reco response dre", response.data);

@@ -22162,7 +22162,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     //         '                    </div>')
     // },
     appendReco: function appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
-      console.log("inside the recos append:", filepath, name_sender, facility_sender, date_now, msg);
+      // console.log("inside the recos append:", filepath, name_sender, facility_sender, date_now, msg);
       var picture_sender = $("#broadcasting_url").val() + "/resources/img/receiver.png";
       var message = msg && msg.trim() !== "" ? msg.replace(/^\<p\>/, "").replace(/\<\/p\>$/, "") : '';
       var fileHtml = '';
@@ -22344,7 +22344,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
     notifyReferralSeen: function notifyReferralSeen(patient_name, seen_by, seen_by_facility, patient_code, activity_id, redirect_track) {
       $("#seen_progress" + patient_code + activity_id).addClass("completed");
       console.log("seenn progress:", $("#seen_progress" + patient_code + activity_id).addClass("completed"));
-      // console.log('seen_by_facility', seen_by_facility);
+      console.log('seen_by_facility', seen_by_facility);
       // console.log('pass to vue facility', this.passToVueFacility);
       var msg = patient_name + ' was seen by Dr. ' + seen_by + ' of ' + seen_by_facility + '<br><br>\n' + '       <a href="' + redirect_track + '" class=\'btn btn-xs btn-warning\' target=\'_blank\'>\n' + '           <i class=\'fa fa-stethoscope\'></i> Track\n' + '       </a>';
       Lobibox.notify('info', {
@@ -22930,7 +22930,7 @@ function _asyncToGenerator(n) { return function () { var t = this, e = arguments
       }
     });
     Echo.join('reco').listen('SocketReco', function (event) {
-      // console.log("socket reco", event);
+      console.log("socket reco", event);
       $("#reco_count" + event.payload.code).html(event.payload.feedback_count);
       axios.get($("#broadcasting_url").val() + '/activity/check/' + event.payload.code + '/' + _this4.user.facility_id).then(function (response) {
         //  console.log("gawas check reco response dre", response.data);
