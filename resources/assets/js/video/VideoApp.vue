@@ -235,7 +235,7 @@ export default {
                   event.payload.redirect_track
                 );
             } catch (err) {
-              // console.log("modal not open");
+              console.log("modal not open");
               this.notifyReco(
                 event.payload.code,
                 event.payload.feedback_count,
