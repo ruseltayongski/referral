@@ -822,5 +822,5 @@ Route::get('/recordings/list', 'doctor\TelemedicineCtrl@recordingList');
 Route::get('/recordings/stream', 'doctor\TelemedicineCtrl@recordingStream');
 Route::post('/api/patient/followup', 'TelemedicineApiCtrl@patientFollowUp');
 Route::get('/testing/push', function(){
-    return 'Testing Push Notification';
+    return 'Akoa gi usab para testing push notification';
 });
