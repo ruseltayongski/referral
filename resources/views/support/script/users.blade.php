@@ -221,13 +221,28 @@ $('a[href="#addUserModal"]').on('click',function(){
     $('.btn-update').addClass('hide');
 });
 
-$('.update_info').on('click',function(){
+// $('.update_info').on('click',function(){
+//     user_id = $(this).data('id');
+//     $.ajax({
+//         url: "{{ url('support/users/info') }}/"+user_id,
+//         type: "GET",
+//         success: function(data)
+//         {
+//             user_info = data;
+//             updateProfile();
+//         },
+//         error: function(){
+//             $('#serverModal').modal();
+//         }
+//     });
+// });
+
+$(document).on('click', '.update_info', function(){
     user_id = $(this).data('id');
     $.ajax({
         url: "{{ url('support/users/info') }}/"+user_id,
         type: "GET",
-        success: function(data)
-        {
+        success: function(data){
             user_info = data;
             updateProfile();
         },
@@ -249,7 +264,7 @@ $('#edit_other_department_select').on('change', function () {
 });
 
 function updateProfile() {
-    console.log("user_info", user_info);
+    //console.log("user_info", user_info);
     $('.user_id').val(user_id);
     $('.fname').val(user_info.fname);
     $('.mname').val(user_info.mname);
