@@ -29,6 +29,8 @@
 @endsection
 
 @section('js')
-
+<script>
+    console.log('doctor home',"test");
+</script>
 @endsection
 
