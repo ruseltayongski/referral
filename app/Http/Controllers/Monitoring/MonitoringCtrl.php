@@ -11,6 +11,7 @@ use App\Facility;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
+use App\Enums\CebuCapitol;
 
 class MonitoringCtrl extends Controller
 {
@@ -30,9 +31,29 @@ class MonitoringCtrl extends Controller
         }
 
         $pending_activity = \DB::connection('mysql')->select("call monitoring('$date_start','$date_end')");
-        
+        $filtered_activity = $pending_activity;
+        if($user->level == 'capitol'){
+           $filtered_activity = array_filter($pending_activity, function ($item) {
+                return $item->referring_facility == CebuCapitol::CPH_Danao || 
+                $item->referring_facility == CebuCapitol::CPH_Carcar ||
+                $item->referring_facility == CebuCapitol::CPH_Bogo ||
+                $item->referring_facility == CebuCapitol::CPH_Balamban ||
+                $item->referring_facility == CebuCapitol::ICKMH ||
+                $item->referring_facility == CebuCapitol::DJMBMH ||
+                $item->referring_facility == CebuCapitol::JBDMH ||
+                $item->referring_facility == CebuCapitol::MJCMH ||
+                $item->referring_facility == CebuCapitol::RLMMH ||
+                $item->referring_facility == CebuCapitol::DH_Badian ||
+                $item->referring_facility == CebuCapitol::DH_Bantayan ||
+                $item->referring_facility == CebuCapitol::DH_Barili ||
+                $item->referring_facility == CebuCapitol::DH_Daanbantayan ||
+                $item->referring_facility == CebuCapitol::DH_Minglanilla ||
+                $item->referring_facility == CebuCapitol::DH_Oslob ||
+                $item->referring_facility == CebuCapitol::DH_Tuburan;
+            });
+        }
         return view('monitoring.monitoring',[
-            "pending_activity" => $pending_activity,
+            "pending_activity" => $filtered_activity,
             "date_start" => $date_start,
             "date_end" => $date_end,
             "user" => $user
