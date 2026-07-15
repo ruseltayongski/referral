@@ -263,7 +263,7 @@ $facility_exclude =  \App\Facility::select('id')
         @elseif($user->level=="capitol")
             @include('layouts.report_menu')                       
         @endif
-        @if($user->level == 'admin')
+        @if($user->level == 'admin' || $user->level == 'capitol')
             <li><a href="{{ url('admin/login') }}"><i class="fa fa-sign-in"></i> Login As</a></li>
         @endif
         @if(!$multi_faci && $user->level != 'vaccine' && $user->level != 'Patient')
@@ -348,9 +348,9 @@ $facility_exclude =  \App\Facility::select('id')
                         
                         @if(Session::get('admin'))
                             <?php
-                            $check_login_as = \App\User::find($user->id);
+                            $check_login_as = \App\User::find($user->id);     
                             ?>
-                            <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> <?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : 'Back as Agent'; ?></a></li>
+                            <li><a href="{{ url('admin/account/return') }}"><i class="fa fa-user-secret"></i> <?php echo $check_login_as->level == 'admin' ? 'Back as Admin' : ($check_login_as->level == 'opcen' ? 'Back as Agent' : ($check_login_as->level == 'capitol' ? 'Back as Capitol': 'Back')); ?></a></li>
                         @endif
                     </ul>
                 </li>

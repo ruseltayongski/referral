@@ -16,6 +16,7 @@ use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Illuminate\Support\Facades\Log;
 
 class ParamCtrl extends Controller
 {
@@ -218,7 +219,12 @@ class ParamCtrl extends Controller
         $user = User::find($user->id);
         Session::put('auth',$user);
         print_r($user);
-        return redirect($user->level);
+        if($user->level == 'capitol') {
+            return redirect('doctor');
+        }else {
+          return redirect($user->level);
+        }
+        
     }
 
     static function lastLogin()
@@ -268,8 +274,17 @@ class ParamCtrl extends Controller
 
     public static function feedbackContent($code,$sender,$msg,$files_path){
         $sender = User::find($sender);
+        Log::info('feedbackContent sender: ' . $sender);
         $user = Session::get("auth");
-        $department_name = Department::find($sender->department_id)->description;
+        $senderUser = $sender ?: (object) [
+            'id' => 0,
+            'fname' => 'Patient',
+            'lname' => '',
+            'facility_id' => 0,
+            'department_id' => 0,
+        ];
+        $department = Department::find($senderUser->department_id);
+        $department_name = $department ? $department->description : 'Patient';
 
         $redirect_track = asset("doctor/referred?referredCode=").$code;
         $tracking = Tracking::where("code", $code)->first();
@@ -282,28 +297,33 @@ class ParamCtrl extends Controller
             }
         }
        
-        $name_sender = ucwords(mb_strtolower($sender->fname))." ".ucwords(mb_strtolower($sender->lname));
+        $name_sender = trim(ucwords(mb_strtolower($senderUser->fname))." ".ucwords(mb_strtolower($senderUser->lname)));
+        $name_sender = $name_sender ?: 'Patient';
         // $date_now = date('d M h:i a');
         $date_now = date('Y-m-d H:i:s');
         $feedback_count = Feedback::where("code",$code)->count();
         $reco_id = Feedback::where("code", $code)->latest()->value('id');
+        $senderFacility = Facility::find($senderUser->facility_id);
+        $senderFacilityName = $senderFacility ? $senderFacility->name : 'Patient';
+        $userFacilityId = $user ? $user->facility_id : 0;
+        $userLevel = $user ? $user->level : 'patient';
 
         return [
             "code" => $code,
             "picture" => url('resources/img/ro7.png'),
             "feedback_count" => $feedback_count,
             "department_name" => $department_name,
-            "sender_facility" => $sender->facility_id,
-            "user_facility" => $user->facility_id,
-            "user_level" => $user->level,
+            "sender_facility" => $senderUser->facility_id,
+            "user_facility" => $userFacilityId,
+            "user_level" => $userLevel,
             "reco_id" => $reco_id,
             "message" => $msg,
             "filepath" => $files_path,
-            "userid_sender" => $sender->id,
+            "userid_sender" => $senderUser->id,
             "patient_name" => $patient_fullname ?? "N/A",
             "name_sender" => $name_sender,
             "reco_seen" => '',
-            "facility_sender" => Facility::find($sender->facility_id)->name,
+            "facility_sender" => $senderFacilityName,
             "date_now" => $date_now,
             "redirect_track" => $redirect_track
         ];

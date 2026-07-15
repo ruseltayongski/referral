@@ -1,9 +1,35 @@
 <?php
 $user = Session::get('auth');
+use App\Enums\CebuCapitol;
 $facilities = \App\Facility::select('id','name')
     ->where('id','!=','63')
     ->where('referral_used','yes')
     ->orderBy('name','asc')->get();
+
+if($user->level == 'capitol'){
+            $filtered_activity = $facilities->filter(function ($item) {
+            return in_array($item->name, [
+                CebuCapitol::CPH_Danao,
+                CebuCapitol::CPH_Carcar,
+                CebuCapitol::CPH_Bogo,
+                CebuCapitol::CPH_Balamban,
+                CebuCapitol::ICKMH,
+                CebuCapitol::DJMBMH,
+                CebuCapitol::JBDMH,
+                CebuCapitol::MJCMH,
+                CebuCapitol::RLMMH,
+                CebuCapitol::DH_Badian,
+                CebuCapitol::DH_Bantayan,
+                CebuCapitol::DH_Barili,
+                CebuCapitol::DH_Daanbantayan,
+                CebuCapitol::DH_Minglanilla,
+                CebuCapitol::DH_Oslob,
+                CebuCapitol::DH_Tuburan,
+            ], true);
+        });
+            $facilities = $filtered_activity;
+        }
+
 $multi_faci = \App\FacilityAssign::select('faci.id', 'faci.name')
     ->leftJoin('facility as faci', 'faci.id', '=', 'facility_assignment.facility_id')
     ->where('facility_assignment.user_id', $user->id)
