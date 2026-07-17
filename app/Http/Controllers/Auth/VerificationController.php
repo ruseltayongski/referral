@@ -66,10 +66,10 @@ class VerificationController extends Controller
             //     'hash_received' => $hash
             // ]);
             
-            // $user = User::findOrFail($userId);
+            $user = User::findOrFail($userId);
             
-            // // Calculate expected hash
-            // $expectedHash = sha1($user->getEmailForVerification());
+            // Calculate expected hash
+            $expectedHash = sha1($user->getEmailForVerification());
             
             // Log::info('Hash comparison', [
             //     'email' => $user->getEmailForVerification(),
