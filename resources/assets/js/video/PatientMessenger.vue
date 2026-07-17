@@ -23,7 +23,7 @@
                         <div v-for="(file, index) in parseFiles(message.filename)"
                             :key="index"
                             style="display: inline-block; text-align: center; width: 60px; margin-right: 5px;">
-                            <a href="javascript:void(0)" @click="triggerPreview(file, index)">
+                            <a href="javascript:void(0)" @click="triggerPreview(file)">
                                 <img class="attachment-thumb" :src="getThumbnail(file)" style="width: 50px; height: 50px; object-fit: cover; border:1px solid green; border-radius: 4px;">
                             </a>
                         </div>
@@ -51,6 +51,29 @@
                 </span>
             </div>
         </div>
+
+        <!-- Attachment preview modal -->
+        <div v-if="previewVisible" class="pm-preview-overlay" @click.self="closePreview">
+            <div class="pm-preview-content">
+                <button type="button" class="pm-preview-close" @click="closePreview">
+                    <i class="fa fa-times"></i>
+                </button>
+
+                <img v-if="isImageFile(previewFile)" :src="previewFile" class="pm-preview-img" alt="attachment preview">
+
+                <div v-else-if="isPdfFile(previewFile)" class="pm-preview-pdf-wrapper">
+                    <iframe :src="previewFile" class="pm-preview-pdf"></iframe>
+                    <a :href="previewFile" target="_blank" rel="noopener" class="pm-preview-fallback-link">
+                        Open PDF in new tab
+                    </a>
+                </div>
+
+                <div v-else class="pm-preview-fallback">
+                    <img :src="getThumbnail(previewFile)" class="pm-preview-fallback-icon" alt="file">
+                    <a :href="previewFile" target="_blank" rel="noopener">Download file</a>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -76,7 +99,9 @@ export default {
             globalFiles: [],
             uploadedFiles: new Map(),
             loadingPath: (this.broadcastingUrl || '') + '/resources/img/loading.gif',
-            loadingFlag: true
+            loadingFlag: true,
+            previewVisible: false,
+            previewFile: null
         }
     },
     mounted() {
@@ -102,6 +127,7 @@ export default {
         },
 
         getFileExtension(file) {
+            if (!file) return '';
             return file.split('.').pop().toLowerCase();
         },
 
@@ -117,9 +143,24 @@ export default {
             return file;
         },
 
-        triggerPreview(fileUrl, index) {
-            window.setupfeedbackFilePreview && window.setupfeedbackFilePreview(fileUrl, index, this.code);
-            $('#filePreviewContentReco').modal('show');
+        isImageFile(file) {
+            if (!file) return false;
+            return ['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(this.getFileExtension(file));
+        },
+
+        isPdfFile(file) {
+            if (!file) return false;
+            return this.getFileExtension(file) === 'pdf';
+        },
+
+        triggerPreview(fileUrl) {
+            this.previewFile = fileUrl;
+            this.previewVisible = true;
+        },
+
+        closePreview() {
+            this.previewVisible = false;
+            this.previewFile = null;
         },
 
         initializeTinyMCE() {
@@ -203,13 +244,6 @@ export default {
 
             tinyMCE.activeEditor.setContent('');
 
-            // build filename string the same way RecoMessages does
-            const filesArray = Array.from(this.uploadedFiles.values());
-            let fileNamesString = '';
-            if (filesArray.length > 0) {
-                fileNamesString = filesArray.map(file => file.name).join('|');
-            }
-
             // optimistic append so it feels instant; server broadcast will skip
             // echoing it back to this same client (sender check on the socket side)
             this.pendingMessages.push({ text: str, time: Date.now() });
@@ -217,7 +251,7 @@ export default {
                 id: 'local-' + Date.now(),
                 code: this.code,
                 message: str,
-                filename: fileNamesString,   // now populated, matches RecoMessages
+                filename: '',
                 sender: 0,
                 sender_name: this.patientName,
                 facility_name: 'Patient',
@@ -225,11 +259,11 @@ export default {
                 position: 'right'
             });
             this.scrolldownFeedback();
-            console.log("Messages:", this.messages);
+
             const formData = new FormData();
             formData.append('message', str);
             formData.append('display_name', this.patientName);
-            filesArray.forEach((file, index) => {
+            Array.from(this.uploadedFiles.values()).forEach((file, index) => {
                 formData.append(`file_upload[${index}]`, file);
             });
 
@@ -311,5 +345,76 @@ export default {
     font-size: 16px;
     color: #666;
     cursor: pointer;
+}
+
+.pm-preview-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 10001; // above the .direct-chat widget's 10000
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pm-preview-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    background: #fff;
+    border-radius: 6px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pm-preview-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.pm-preview-img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.pm-preview-pdf-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80vw;
+    height: 80vh;
+}
+
+.pm-preview-pdf {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.pm-preview-fallback-link {
+    margin-top: 8px;
+}
+
+.pm-preview-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 24px;
+}
+
+.pm-preview-fallback-icon {
+    width: 60px;
+    height: 60px;
 }
 </style>
