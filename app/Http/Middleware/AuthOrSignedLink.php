@@ -16,13 +16,21 @@ class AuthOrSignedLink
         }
 
         // Path 2: Guest with a valid signed link
+        // hasValidSignature() checks both signature validity AND expiration
         if (URL::hasValidSignature($request)) {
             return $next($request);  // controller builds the guest user itself
         }
 
-        // Path 3: No session, no valid signature
-        // Allow the request to continue as a guest so public telemedicine access
-        // does not redirect to the login page.
-        return $next($request);
+        // Path 3: No valid authentication - reject access
+        // Expired or missing signatures must not be allowed
+        if (! $request->hasValidSignature()) {
+        $message = 'Expired or invalid access link';
+
+            if ($request->expectsJson()) {
+                return response()->json(['message' => $message], 403);
+            }
+
+            return response()->view('errors.link_expired', ['message' => $message], 403);
+        }
     }
 }

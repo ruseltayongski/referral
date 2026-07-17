@@ -23,7 +23,7 @@ class UserCtrl extends Controller
 
     public function searchDoctor(Request $req)
     {
-         Log::info('Search Doctor Request:', $req->all());
+        // Log::info('Search Doctor Request:', $req->all());
         $data = array(
             'keyword' => $req->keyword,
             'facility_id' => $req->facility_id

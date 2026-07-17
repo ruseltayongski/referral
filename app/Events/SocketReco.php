@@ -31,6 +31,6 @@ class SocketReco implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('reco');
+        return [new PresenceChannel('reco'),  new Channel('reco.' . $this->payload['code'])];
     }
 }

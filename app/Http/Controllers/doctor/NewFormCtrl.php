@@ -13,6 +13,8 @@ use App\Http\Controllers\doctor\ReferralCtrl;
 use Illuminate\Support\Facades\Response;
 use App\Events\SocketReferralSeen;
 use App\Events\SocketReferralUpdate;
+use App\Services\TelemedicineLinkService;
+use Illuminate\Support\Facades\Log;
 
 use App\Feedback;
 use App\Seen;
@@ -1934,19 +1936,33 @@ class NewFormCtrl extends Controller
 
     public function publicTelemedFormData($id)
     {
-        $track = Tracking::select('status', 'type', 'form_type', 'referred_from as referring_fac_id')
+        $track = Tracking::select('code','status', 'type', 'form_type', 'referred_from as referring_fac_id', 'patient_id')
             ->where('id', $id)
             ->first();
-
+        $patient_data = Patients::select('id','fname', 'mname', 'lname')
+            ->where('id', $track->patient_id)
+            ->first();
+        $patientName = trim(
+            ($patient_data->fname ?? '') . ' ' .
+            ($patient_data->mname ?? '') . ' ' .
+            ($patient_data->lname ?? '')
+        );
+         $isPatientUserExist = User::where('patient_id', $patient_data->id)->exists();
         if (!$track) {
             return response()->json([
                 'success' => false,
                 'message' => 'Tracking record not found'
             ], 404);
         }
-
+        // Log::info("Telemedicine Tracking: " .  $patientName);
         $payload = self::getViewForm_normal($id, $track->status, $track->type);
-
+          if ($isPatientUserExist) {
+             $sender_id = User::select('id')->where('patient_id', $patient_data->id)->first();
+             $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track, $sender_id->id ?? null);
+         }else {
+             $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track);
+         }
+        
         return response()->json([
             'success' => true,
             'form_version' => $track->form_type ?? 'version2',
@@ -1972,6 +1988,9 @@ class NewFormCtrl extends Controller
             'normal_formType' => $track->form_type ?? 'version2',
             'referred_to' => $payload['referred_to'] ?? null,
             'tracking_id' => $id,
+            'messengerFetchUrl' => $messengerUrls['fetch'] ?? null,
+            'messengerSendUrl'  => $messengerUrls['send'] ?? null,
+            'patient_name'      => $patientName ?? null,
         ]);
     }
 

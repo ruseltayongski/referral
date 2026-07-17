@@ -193,7 +193,7 @@
             $.post(url,json,function(){});
             var windowName = 'NewWindow'; // Name of the new window
             var windowFeatures = 'width=600,height=400'; // Features for the new window (size, position, etc.)
-            let videourl = "{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&telemed="+telemedicine+"&referring_md=yes&activity_id="+activity_id+"&opcen_facility={{ $user->facility_id }}";
+            let videourl = "{{ asset('doctor/telemedicine?id=') }}"+tracking_id+"&code="+code+"&form_type="+form_tpe+"&telemed="+telemedicine+"&referring_md=no&activity_id="+activity_id+"&opcen_facility={{ $user->facility_id }}";
 
             let newWindow = window.open(videourl, windowName, windowFeatures);
             if (newWindow && newWindow.outerWidth) {

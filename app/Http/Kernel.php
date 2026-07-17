@@ -71,5 +71,6 @@ class Kernel extends HttpKernel
         'admin' => Admin::class,
         'eoc_region' => EocRegion::class,
         'auth.or.signed' => \App\Http\Middleware\AuthOrSignedLink::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
     ];
 }

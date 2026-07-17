@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\FeedbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +41,12 @@ Route::get('checkIfUserIsPatient/tracking/{tracking_id}', 'TelemedicineApiCtrl@c
 Route::get('schedule/check-slots', 'TelemedicineApiCtrl@checkAvailableSlots');
 Route::get('/video/normal/newform/{id}', 'TelemedicineApiCtrl@normalFormTelemedApi');
 Route::get('/public/video/form-data/{id}', 'doctor\NewFormCtrl@publicTelemedFormData');
+Route::get('/reco/activity/{code}', 'TelemedicineApiCtrl@getRecoActivity');
+Route::get('/tracking/{code}/{user_id}', 'FeedbackCtrl@GetTrackingApi');
+Route::middleware('signed')->group(function () {
+    Route::get('/reco/{code}/messages', [FeedbackController::class, 'guestVueFeedback'])
+        ->name('api.reco.messages');
+
+    Route::post('/reco/{code}/{sender_id}/message', [FeedbackController::class, 'guestSaveFeedback'])
+        ->name('api.reco.message.send');
+});

@@ -421,8 +421,8 @@ import axios from 'axios';
                                 'Content-Type': 'multipart/form-data'
                             }
                         }).then(response => {
-                            // console.log('Message sent successfully:', response.data);
-
+                            console.log('Message sent successfully:', response.data);
+                            return;
                             if (response.data.filename) {
                                     this.uploadedFiles.clear();
                                     this.globalFiles = []; // Clear the file display

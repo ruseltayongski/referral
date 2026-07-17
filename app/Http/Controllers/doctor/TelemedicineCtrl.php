@@ -30,6 +30,8 @@ class TelemedicineCtrl extends Controller
 {
     public function index(Request $req)
     {
+
+        Log::info('message_index_logs: ' . json_encode($req->all()));
         if (!Session::has('auth') && !$req->hasValidSignature() && $req->filled('id')) {
             $tracking = Tracking::find($req->id);
 
@@ -2522,7 +2524,7 @@ class TelemedicineCtrl extends Controller
         if ($file && $file->getSize() > 0) {
             $chunkPath = "{$chunkDir}/chunk_{$chunkIndex}.webm";
             $file->move($chunkDir, "chunk_{$chunkIndex}.webm");
-            Log::info("Chunk saved: {$chunkPath}");
+         //   Log::info("Chunk saved: {$chunkPath}");
         }
 
         // Merge all chunks when isFinal is set
@@ -2538,7 +2540,7 @@ class TelemedicineCtrl extends Controller
      */
     public function finalize(Request $request)
     {
-        Log::info("finalized video call");
+       // Log::info("finalized video call");
         $body      = json_decode($request->getContent(), true);
         $sessionId = $body['sessionId']  ?? null;
         $fileName  = $body['fileName']   ?? null;
@@ -2595,7 +2597,7 @@ class TelemedicineCtrl extends Controller
         array_map('unlink', $chunks);
         rmdir($chunkDir);
 
-        Log::info("Recording merged: {$outputPath}");
+       // Log::info("Recording merged: {$outputPath}");
 
         return response()->json([
             'status'   => 'merged',

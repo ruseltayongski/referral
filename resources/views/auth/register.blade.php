@@ -952,18 +952,62 @@
         agree_terms.addEventListener('change', updateButtonState);
         agree_data.addEventListener('change', updateButtonState);
 
+        // document.getElementById('registerForm').addEventListener('submit', async function(e) {
+        //     e.preventDefault();
+        //     setRegisterLoading(true);
+        //     const formData = new FormData(this);
+
+        //     // Convert to plain object (or use FormData directly)
+        //     const payload = Object.fromEntries(formData.entries());
+
+        //     console.log('Form data to submit:', payload);
+
+        //      try {
+        //         const response = await fetch('api/register/patient', {   // your API endpoint
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+        //                 'Accept': 'application/json',
+        //             },
+        //             body: JSON.stringify(payload)
+        //         });
+
+        //         const result = await response.json();
+
+        //         if (response.ok) {
+        //             showCustomAlert('Registration successful!\nPlease check your email for verification instructions.', 'Welcome!');
+        //             // window.location.href = '/referral/login';   // redirect on success
+        //         } else {
+        //             // Show validation errors
+        //             const errors = result.errors;
+        //             if (errors) {
+        //                 Object.entries(errors).forEach(([field, messages]) => {
+        //                     showCustomAlert(messages.join(', ') || 'Registration failed.', `${field}`);
+        //                     // optionally show under each field
+        //                 });
+        //             }
+                    
+        //         }
+
+        //     } catch (error) {
+        //         console.error('Network error:', error);
+        //         showCustomAlert('Something went wrong. Please try again.', 'Error');
+        //     } finally {
+        //         setRegisterLoading(false);
+        //     }
+        // });
+
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             setRegisterLoading(true);
             const formData = new FormData(this);
-
-            // Convert to plain object (or use FormData directly)
             const payload = Object.fromEntries(formData.entries());
 
             console.log('Form data to submit:', payload);
 
-             try {
-                const response = await fetch('api/register/patient', {   // your API endpoint
+            try {
+                const response = await fetch('api/register/patient', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -973,21 +1017,39 @@
                     body: JSON.stringify(payload)
                 });
 
-                const result = await response.json();
+                let result = null;
+                try {
+                    result = await response.json();
+                } catch (parseErr) {
+                    console.error('Failed to parse response JSON:', parseErr);
+                }
+
+                // --- Hard stop on 422: never proceed to success handling, never save ---
+                if (response.status === 422) {
+                    const errors = result && result.errors;
+                    if (errors && Object.keys(errors).length) {
+                        const messages = Object.entries(errors)
+                            .map(([field, msgs]) => `${field}: ${(Array.isArray(msgs) ? msgs.join(', ') : msgs)}`)
+                            .join('\n');
+                        showCustomAlert(messages, 'Please fix the following');
+                    } else {
+                        showCustomAlert(
+                            (result && result.message) || 'Some fields are invalid. Please review the form.',
+                            'Validation Error'
+                        );
+                    }
+                    return; // stop here completely
+                }
 
                 if (response.ok) {
                     showCustomAlert('Registration successful!\nPlease check your email for verification instructions.', 'Welcome!');
                     // window.location.href = '/referral/login';   // redirect on success
                 } else {
-                    // Show validation errors
-                    const errors = result.errors;
-                    if (errors) {
-                        Object.entries(errors).forEach(([field, messages]) => {
-                            showCustomAlert(messages.join(', ') || 'Registration failed.', `${field}`);
-                            // optionally show under each field
-                        });
-                    }
-                    
+                    // Any other non-422 error status (e.g. 500)
+                    showCustomAlert(
+                        (result && result.message) || `Registration failed (HTTP ${response.status}).`,
+                        'Error'
+                    );
                 }
 
             } catch (error) {

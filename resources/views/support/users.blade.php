@@ -42,7 +42,7 @@ if($searchKeyword){
                         id="searchInput"
                         class="form-control"
                         style="width:25%;"
-                        placeholder="Search name..."
+                        placeholder="Search name..." 
                         name="search"
                         value="{{ request('search') }}">
 

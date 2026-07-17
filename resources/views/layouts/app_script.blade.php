@@ -180,7 +180,7 @@
     // });
 
     function initTinyMCEWithCode(code,userId,videoApp) {
-        var url = "<?php echo asset('tracking').'/'; ?>" + code;
+        var url = "<?php echo asset('/api/tracking').'/'; ?>" + code + '/' + userId;
         currentCode = code;
         userID = userId;
         VideoApp =  Number(videoApp);;

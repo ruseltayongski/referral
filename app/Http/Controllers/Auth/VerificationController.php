@@ -61,22 +61,22 @@ class VerificationController extends Controller
             $userId = $request->route('id');
             $hash = $request->route('hash');
             
-            Log::info('Email verification attempt', [
-                'user_id' => $userId,
-                'hash_received' => $hash
-            ]);
+            // Log::info('Email verification attempt', [
+            //     'user_id' => $userId,
+            //     'hash_received' => $hash
+            // ]);
             
-            $user = User::findOrFail($userId);
+            // $user = User::findOrFail($userId);
             
-            // Calculate expected hash
-            $expectedHash = sha1($user->getEmailForVerification());
+            // // Calculate expected hash
+            // $expectedHash = sha1($user->getEmailForVerification());
             
-            Log::info('Hash comparison', [
-                'email' => $user->getEmailForVerification(),
-                'hash_expected' => $expectedHash,
-                'hash_received' => $hash,
-                'match' => hash_equals((string) $hash, $expectedHash)
-            ]);
+            // Log::info('Hash comparison', [
+            //     'email' => $user->getEmailForVerification(),
+            //     'hash_expected' => $expectedHash,
+            //     'hash_received' => $hash,
+            //     'match' => hash_equals((string) $hash, $expectedHash)
+            // ]);
 
             // Verify the hash matches the user's email
             if (! hash_equals((string) $hash, $expectedHash)) {
@@ -87,18 +87,18 @@ class VerificationController extends Controller
 
             // Check if already verified
             if ($user->hasVerifiedEmail()) {
-                Log::info('User already verified', ['user_id' => $userId]);
+            //    Log::info('User already verified', ['user_id' => $userId]);
                 return redirect('/login')->with('message', 'Your email is already verified. Please log in.');
             }
 
             // Mark as verified and fire event
             $result = $user->markEmailAsVerified();
             
-            Log::info('Email marked as verified', [
-                'user_id' => $userId,
-                'save_result' => $result,
-                'email_verified_at' => $user->email_verified_at
-            ]);
+            // Log::info('Email marked as verified', [
+            //     'user_id' => $userId,
+            //     'save_result' => $result,
+            //     'email_verified_at' => $user->email_verified_at
+            // ]);
             
             if ($result) {
                 event(new Verified($user));

@@ -8,6 +8,7 @@ import FeedbackModal from "./FeedbackModal.vue";
 import PDFViewerModal from "./PDFViewerModal.vue";
 import FormReferralComponent from "./FormReferralComponent.vue";
 import ScheduleModal from "./scheduleModal.vue";
+import PatientMessenger from "./PatientMessenger.vue";
 
 let baseUrlfeedback = `referral/doctor/vue/feedback`;
 let doctorFeedback = `referral/doctor/feedback`;
@@ -20,6 +21,7 @@ export default {
     PDFViewerModal,
     FormReferralComponent,
     ScheduleModal,
+    PatientMessenger,
   },
   data() {
     return {
@@ -140,12 +142,17 @@ export default {
       // ─────────────────────────────────────────────────────────────────────
  
       isPatientToDoctor: false,
+      showPatientMessenger: false,
+      messengerFetchUrl: null,
+      messengerSendUrl: null,
+      patientDisplayName: null,
     };
   },
   mounted() {
     this.getCameraDevices();
     this.getFormData();
     this.isMobile();
+    // window.viewReco = this.viewReco.bind(this);
     window.addEventListener("keydown", this.feedbackKeydown);
     //this.hideDivAfterTimeout();
     window.addEventListener("click", this.showDivAgain);
@@ -182,6 +189,7 @@ export default {
     window.removeEventListener("beforeunload", this.preventCloseWhileUploading);
     window.removeEventListener("keydown", this.feedbackKeydown);
     window.removeEventListener("beforeunload", this.handleBeforeUnload);
+    // if (window.viewReco === this.viewReco) window.viewReco = undefined;
     this.clearAfkTimers();
     this.stopCallTimer();
     // Remove event listener when component is destroyed
@@ -267,6 +275,71 @@ export default {
   //   },
   // },
   methods: {
+    // async viewReco(data, videoApp = 0) {
+    //   const code = data.data("code");
+    //   this.currentCode = code;
+    //   let activityUserId = null;
+
+    //   try {
+    //     const res = await axios.get(`${this.baseUrl}/api/reco/activity/${code}`);
+    //     console.log("Reco Activity Response:", res.data);
+    //     if (res.data && res.data.user_id) {
+    //       activityUserId = res.data.user_id.referring_md;
+    //       console.log("Updated userId:", activityUserId);
+    //     } else {
+    //       console.warn("No activity_id found in response:", res.data);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error fetching reco activity:", error);
+    //   }
+
+    //   // Mark as seen (fire and forget, same as legacy)
+    //   axios.get(`${this.baseUrl}/reco/seen1/${code}`).catch((error) => {
+    //     console.error("Error marking reco as seen:", error);
+    //   });
+
+    //   $("#feedbackModal")
+    //     .off("shown.bs.modal")
+    //     .on("shown.bs.modal", () => {
+    //       const idToUse = activityUserId != null ? activityUserId : this.user.id;
+    //       initTinyMCEWithCode(code, idToUse, videoApp);
+    //     });
+
+    //   $(".feedback_code").html(code);
+    //   $(".direct-chat-messages").attr("id", code);
+    //   $("#message").addClass(`message input-${code}-${this.user.id}`);
+
+    //   $("#" + code).html("Loading...");
+
+    //   try {
+    //     const res = await axios.get(`${this.baseUrl}/doctor/feedback/${code}`);
+    //     setTimeout(() => {
+    //       const filenameStr = res.data.filename || "";
+    //       window.globalFiles = filenameStr
+    //         ? filenameStr
+    //             .split("|")
+    //             .filter((path) => path.trim() !== "")
+    //             .map((path) => `${this.baseUrl}${path}`)
+    //         : [];
+    //       $("#" + code).html(res.data.html);
+    //       if (typeof scrolldownFeedback === "function") {
+    //         scrolldownFeedback(code);
+    //       }
+    //     }, 500);
+    //   } catch (error) {
+    //     console.error("Error fetching doctor feedback:", error);
+    //   }
+
+    //   $("#current_code").val(code);
+    // },
+    // scrolldownFeedback(code){
+    //     console.log(code);
+    //     var objDiv = document.getElementById(code);
+
+    //     setTimeout(function () {
+    //         objDiv.scrollTop = objDiv.scrollHeight;
+    //     },500);
+    // },
     // ── Before-unload beacon (mirrors OpcenVideoApp) ──────────────────────
     handleBeforeUnload() {
       if (this.recordingSessionId && !this.isRecordingFinalized) {
@@ -514,12 +587,16 @@ export default {
           `${this.baseUrl}/video/public/form-data/${this.tracking_id}`
         );
         const response = res.data;
-
+          
         if (response.success) {
           this.form_version = response.form_version || response.form_type || "version2";
           this.telemedicine = response.telemedicine ?? this.telemedicine;
           this.form = response.form || {};
           this.isPatientToDoctor = response.referring_fac_id == 0 ? true : false;
+
+          this.messengerFetchUrl = response.messengerFetchUrl || null;
+          this.messengerSendUrl  = response.messengerSendUrl  || null;
+          this.patientDisplayName = response.patient_name || "Patient";
 
           if (response.age_type === "y") {
             this.patient_age = response.patient_age + " Years Old";
@@ -1180,7 +1257,9 @@ export default {
         msg: content,
       });
     },
- 
+    togglePatientMessenger() {
+      this.showPatientMessenger = !this.showPatientMessenger;
+    },
     appendReco(code, name_sender, facility_sender, date_now, msg, filepath) {
       let picture_sender =
         $("#broadcasting_url").val() + "/resources/img/receiver.png";
@@ -1674,9 +1753,9 @@ export default {
                     <i class="fa fa-calendar"></i>
                   </button>
                 </div>
-                <div class="button-container">
+                <div class="button-container" v-if="this.telemedicine == 1 && this.opcen_facility != 63 && user.level == 'doctor'">
                   <div
-                    v-if="!isMobileDevice && showTooltipFeedback"
+                    v-if="!isMobileDevice && showTooltipFeedback && user.level == 'doctor'"
                     class="tooltip-text"
                     style="background-color: #17a2b8"
                   >
@@ -1692,6 +1771,27 @@ export default {
                     @mouseleave="showTooltipFeedback = false"
                   >
                     <i class="bi bi-chat-left-text"></i>
+                  </button>
+                </div>
+
+                <!-- NEW: guest patient messenger button -->
+                <div class="button-container" v-if="messengerFetchUrl && user.id == 0 || user.level == 'Patient'">
+                  <div
+                    v-if="!isMobileDevice && showTooltipPatientChat"
+                    class="tooltip-text"
+                    style="background-color: #6610f2"
+                  >
+                    Message
+                  </div>
+                  <button
+                    class="btn btn-md patient-chat-button"
+                    style="background-color: #6610f2; border-color: #6610f2; color: #fff;"
+                    type="button"
+                    @click="togglePatientMessenger"
+                    @mouseover="showTooltipPatientChat = true"
+                    @mouseleave="showTooltipPatientChat = false"
+                  >
+                    <i class="bi bi-chat-dots-fill"></i>
                   </button>
                 </div>
               </div>
@@ -1839,6 +1939,15 @@ export default {
       :doctorId="user.id" 
       :username="user.username" 
     />
+    <patient-messenger
+      v-if="showPatientMessenger && messengerFetchUrl"
+      :code="referral_code"
+      :fetch-url="messengerFetchUrl"
+      :send-url="messengerSendUrl"
+      :patient-name="patientDisplayName"
+      :broadcasting-url="baseUrl"
+      @close="showPatientMessenger = false"
+    ></patient-messenger>
   </div>
 </template>
 

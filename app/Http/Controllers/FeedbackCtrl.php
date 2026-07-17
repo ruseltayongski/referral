@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Session;
 class FeedbackCtrl extends Controller
 {
     public function __construct() {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['GetTrackingApi']);
     }
 
     public function home() {
@@ -55,6 +55,62 @@ class FeedbackCtrl extends Controller
          if (!$tracking) {
             return response()->json(['error' => 'Tracking not found'], 404);
         }
+
+        // If the latest status is rejected or transferred → action_md = 0
+        if (in_array($latestStatus, ['rejected', 'transferred'])) {
+            $tracking->action_md = 0;
+        } 
+
+        if (in_array($latestStatus, ['travel', 'arrived', 'admitted', 'discharged'])) {
+            $latestAccepted = \DB::table('activity')
+                ->where('code', $code)
+                ->where('status', 'accepted')
+                ->orderByDesc('id')
+                ->first();
+
+            // If we found a previous accepted record, use its referred_from & referred_to
+            if ($latestAccepted) {
+                $tracking->referred_from = $latestAccepted->referred_from;
+                $tracking->referred_to = $latestAccepted->referred_to;
+                $tracking->action_md = $latestAccepted->action_md;
+            }
+        }
+
+        return response()->json(['tracking' => $tracking, 'referring_md_Status' => $referring_md_Status]);
+    }
+    public function GetTrackingApi($code, $user){
+        $userSession = Session::get('auth');
+        $tracking = \DB::table('tracking')
+        ->join('activity', 'tracking.code', '=', 'activity.code')
+        ->where('tracking.code', $code)
+        ->select(
+            'tracking.id as tracking_id',
+            'tracking.type as type',
+            'tracking.telemedicine as telemedicine',
+            'tracking.referring_md as track_referring_md',
+            'activity.action_md as action_md',
+            'activity.referred_from as referred_from',
+            'activity.referred_to as referred_to',
+            'activity.status as status',
+            'activity.id as activity_id',
+            'activity.code as code'
+        )
+        ->orderByDesc('activity.id') // latest activity first
+        ->first();
+
+         $referring_md_Status = Activity::where("code", $code)
+            ->where('status','referred')->select('referring_md', 'referred_from')->first();
+
+        // if($tracking->status == "rejected" || $tracking->status == "transferred"){
+        //     $tracking->action_md = 0;
+        // }
+
+         if (!$tracking) {
+            return response()->json(['error' => 'Tracking not found'], 404);
+        }
+
+         // Check the latest activity status
+        $latestStatus = $tracking->status;
 
         // If the latest status is rejected or transferred → action_md = 0
         if (in_array($latestStatus, ['rejected', 'transferred'])) {

@@ -32,5 +32,6 @@ class VerifyCsrfToken extends BaseVerifier
         'save-screen-record',
         'api/video/leave/user',
         'api/save-screen-record/finalize',
+        'doctor/feedback',
     ];
 }

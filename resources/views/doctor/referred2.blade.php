@@ -93,6 +93,8 @@ $user = Session::get('auth');
 
     </style>
     <div class="row">
+        @if ($user->level == 'Patient')
+        @else
         <div class="col-md-3">
             @if($referredCode)
                 @include('sidebar.track_referred')
@@ -101,6 +103,7 @@ $user = Session::get('auth');
             @endif
             @include('sidebar.quick')
         </div>
+        @endif
         <div class="col-md-9">
             @if(count($data) > 0)
                

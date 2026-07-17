@@ -33,7 +33,7 @@
 
                         <input type="hidden" id="current_code" name="code" />
                         <div class="input-group">
-                            <textarea placeholder="Type Message ..." class="mytextarea1"></textarea>
+                            <textarea placeholder="Type Message ..." class="mytextarea1" name="message"></textarea>
                             <span class="input-group-btn">
                                 <button type="submit" class="btn btn-success send-button btn-md">Send</button>
                                  &nbsp;

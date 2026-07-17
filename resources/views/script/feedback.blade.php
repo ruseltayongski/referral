@@ -2,6 +2,7 @@
 <script>
     //var objDiv = document.getElementById("feedback-181105-023-134025");
     <?php $user = \Illuminate\Support\Facades\Session::get('auth'); ?>
+
     var code = 0;
     //var feedbackRef = dbRef.ref('Feedback');
     var last_id = 0;
@@ -62,7 +63,18 @@
     var globalFiles = [];
     function viewReco(data,videoApp) {
         code = data.data("code");
-        console.log("viewRecos");
+        var user_id;
+        console.log("viewRecos", data.data());
+        console.log("viewRecoVideoApp", videoApp);
+        $.get("{{ url('/api/reco/activity') }}/" + code, function(response) {
+            console.log("Reco Activity Response:", response);
+            if (response && response.user_id) {
+                user_id = response.user_id.referring_md;
+                console.log("Updated userId:", user_id);
+            } else {
+                console.warn("No activity_id found in response:", response);
+            }
+        });
         let baseUrl = "{{ asset('') }}";
         baseUrl = baseUrl.replace(/[\/|]$/, "");
         var reco_seen_url = "<?php echo asset('reco/seen1').'/'; ?>"+code;
@@ -76,7 +88,12 @@
         // });
 
         $('#feedbackModal').on('shown.bs.modal', function() {
-            initTinyMCEWithCode(code,userId,videoApp); // pass code dynamically
+            if (userId == null) {
+              initTinyMCEWithCode(code,user_id,videoApp); 
+            }else {
+                initTinyMCEWithCode(code,userId,videoApp);
+            }
+             // pass code dynamically
         });
 
         $('.feedback_code').html(code);

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 use App\User;
 use App\Login;
 use App\Facility;
@@ -782,17 +783,24 @@ class TelemedicineApiCtrl extends Controller
             $telemedicine_controller = new TelemedicineApiCtrl();
 
             if ($isPatientUserExist) {
+                $sender_id = User::select('id')->where('patient_id', $track->patient_id)->first();
+                $videoUrl = TelemedicineLinkService::buildSignedUrl($track, [
+                    'from_fact'    => 0,
+                    'form_type'    => 'normal',
+                    'telemed'      => 1,
+                    'referring_md' => 'yes',
+                    'activity_id'  => $activity->id,
+                ]);
+                
+                $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track,$sender_id->id);
+
                 $telemedicine_controller->sendConfirmationEmail(
                     $track->appointmentId,
                     $track->patient_id,
                     'accepted',
-                    TelemedicineLinkService::buildSignedUrl($track, [
-                        'from_fact'    => 0,
-                        'form_type'    => 'normal',
-                        'telemed'      => 1,
-                        'referring_md' => 'yes',
-                        'activity_id'  => $activity->id,
-                    ])
+                    $videoUrl,
+                    $messengerUrls['fetch'] ?? null,
+                    $messengerUrls['send'] ?? null
                 );
             }
         }
@@ -850,7 +858,7 @@ class TelemedicineApiCtrl extends Controller
         ]);
     }
 
-    public function sendConfirmationEmail($appointment_id, $patient_id, $status, $video_link = null)
+    public function sendConfirmationEmail($appointment_id, $patient_id, $status, $video_link = null, $messengerFetchUrl = null, $messengerSendUrl = null)
     {
 
         $data =  AppointmentSchedule::where('id', $appointment_id)->first();
@@ -1435,81 +1443,175 @@ class TelemedicineApiCtrl extends Controller
             return response()->json($response);
     }
 
-    public function registerPatient(Request $req)
-    {
-        try {
+    // public function registerPatient(Request $req)
+    // {
+    //     try {
 
-            $req->validate([
-                'first_name'        => 'required|string|max:100',
-                'middle_name'       => 'nullable|string|max:100',
-                'last_name'         => 'required|string|max:100',
-                'birth_date'        => 'required|date',
-                'email'             => 'required|email|unique:users,email',
-                'username'          => 'required|string|unique:users,username',
-                'password'          => 'required|string|min:8',
-                'philhealth_status' => 'required|string',
-                'contact_number'    => 'required|string',
-                'sex'               => 'required|string',
-                'civil_status'      => 'required|string',
-                'region'            => 'required',
-                'province'          => 'required',
-                'municipality_city' => 'required',
-                'barangay'          => 'required',
-            ]);
+    //         $req->validate([
+    //             'first_name'        => 'required|string|max:100',
+    //             'middle_name'       => 'nullable|string|max:100',
+    //             'last_name'         => 'required|string|max:100',
+    //             'birth_date'        => 'required|date',
+    //             'email'             => 'required|email|unique:users,email',
+    //             'username'          => 'required|string|unique:users,username',
+    //             'password'          => 'required|string|min:8',
+    //             'philhealth_status' => 'required|string',
+    //             'contact_number'    => 'required|string',
+    //             'sex'               => 'required|string',
+    //             'civil_status'      => 'required|string',
+    //             'region'            => 'required',
+    //             'province'          => 'required',
+    //             'municipality_city' => 'required',
+    //             'barangay'          => 'required',
+    //         ]);
 
    
-            $dataReq = $req->all();
+    //         $dataReq = $req->all();
 
-            $unique = implode([
-                $dataReq['first_name'],
-                $dataReq['middle_name'] ?? '',
-                $dataReq['last_name'],
-                date('Ymd', strtotime($dataReq['birth_date'])),
-                $dataReq['barangay'],
-            ]);
+    //         $unique = implode([
+    //             $dataReq['first_name'],
+    //             $dataReq['middle_name'] ?? '',
+    //             $dataReq['last_name'],
+    //             date('Ymd', strtotime($dataReq['birth_date'])),
+    //             $dataReq['barangay'],
+    //         ]);
 
-            $patient = Patients::updateOrCreate(
-                ['unique_id' => $unique],
-                [
-                    'phic_status'  => $dataReq['philhealth_status'],
-                    'phic_id'      => $dataReq['philhealth_id'] ?? '',
-                    'fname'        => $dataReq['first_name'],
-                    'mname'        => $dataReq['middle_name'] ?? '',
-                    'lname'        => $dataReq['last_name'],
-                    'contact'      => $dataReq['contact_number'],
-                    'dob'          => $dataReq['birth_date'],
-                    'sex'          => $dataReq['sex'],
-                    'civil_status' => $dataReq['civil_status'],
-                    'region'       => $dataReq['region'],
-                    'province'     => $dataReq['province'],
-                    'muncity'      => $dataReq['municipality_city'],
-                    'brgy'         => $dataReq['barangay'],
-                ]
-            );
+    //         $patient = Patients::updateOrCreate(
+    //             ['unique_id' => $unique],
+    //             [
+    //                 'phic_status'  => $dataReq['philhealth_status'],
+    //                 'phic_id'      => $dataReq['philhealth_id'] ?? '',
+    //                 'fname'        => $dataReq['first_name'],
+    //                 'mname'        => $dataReq['middle_name'] ?? '',
+    //                 'lname'        => $dataReq['last_name'],
+    //                 'contact'      => $dataReq['contact_number'],
+    //                 'dob'          => $dataReq['birth_date'],
+    //                 'sex'          => $dataReq['sex'],
+    //                 'civil_status' => $dataReq['civil_status'],
+    //                 'region'       => $dataReq['region'],
+    //                 'province'     => $dataReq['province'],
+    //                 'muncity'      => $dataReq['municipality_city'],
+    //                 'brgy'         => $dataReq['barangay'],
+    //             ]
+    //         );
 
-            $user = $this->patientAddAsUser($dataReq, $unique);
+    //         $user = $this->patientAddAsUser($dataReq, $unique);
 
-            Session::put('profileSearch', [
-                'keyword'  => $dataReq['first_name'] . ' ' . $dataReq['last_name'],
-                'region'   => $dataReq['region'],
-                'province' => $dataReq['province'],
-                'muncity'  => $dataReq['municipality_city'],
-                'brgy'     => $dataReq['barangay'],
-            ]);
+    //         Session::put('profileSearch', [
+    //             'keyword'  => $dataReq['first_name'] . ' ' . $dataReq['last_name'],
+    //             'region'   => $dataReq['region'],
+    //             'province' => $dataReq['province'],
+    //             'muncity'  => $dataReq['municipality_city'],
+    //             'brgy'     => $dataReq['barangay'],
+    //         ]);
 
+    //         return response()->json([
+    //             'success'               => true,
+    //             'message'               => 'Patient registered. Please check your email to verify your account.',
+    //             'data'                  => $patient,
+    //             'requires_verification' => true,
+    //         ], 201);
+
+    //     } catch (\Illuminate\Validation\ValidationException $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'errors'  => $e->errors(),
+    //         ], 422);
+
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+
+    public function registerPatient(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            'first_name'        => 'required|string|max:100',
+            'middle_name'       => 'nullable|string|max:100',
+            'last_name'         => 'required|string|max:100',
+            'birth_date'        => 'required|date',
+            'email'             => 'required|email|unique:users,email',
+            'username'          => 'required|string|unique:users,username',
+            'password'          => 'required|string|min:8',
+            'philhealth_status' => 'required|string',
+            'contact_number'    => 'required|string',
+            'sex'               => 'required|string',
+            'civil_status'      => 'required|string',
+            'region'            => 'required',
+            'province'          => 'required',
+            'municipality_city' => 'required',
+            'barangay'          => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
+    
+        try {
+            // Everything inside this closure is one atomic unit.
+            // If patientAddAsUser() throws (e.g. SMTP auth failure while
+            // sending the verification email), Laravel rolls back ALL
+            // DB writes made inside the closure - including the Patients
+            // row created just above it. Nothing gets persisted.
+            $patient = DB::transaction(function () use ($req) {
+                $dataReq = $req->all();
+    
+                $unique = implode([
+                    $dataReq['first_name'],
+                    $dataReq['middle_name'] ?? '',
+                    $dataReq['last_name'],
+                    date('Ymd', strtotime($dataReq['birth_date'])),
+                    $dataReq['barangay'],
+                ]);
+    
+                $patient = Patients::updateOrCreate(
+                    ['unique_id' => $unique],
+                    [
+                        'phic_status'  => $dataReq['philhealth_status'],
+                        'phic_id'      => $dataReq['philhealth_id'] ?? '',
+                        'fname'        => $dataReq['first_name'],
+                        'mname'        => $dataReq['middle_name'] ?? '',
+                        'lname'        => $dataReq['last_name'],
+                        'contact'      => $dataReq['contact_number'],
+                        'dob'          => $dataReq['birth_date'],
+                        'sex'          => $dataReq['sex'],
+                        'civil_status' => $dataReq['civil_status'],
+                        'region'       => $dataReq['region'],
+                        'province'     => $dataReq['province'],
+                        'muncity'      => $dataReq['municipality_city'],
+                        'brgy'         => $dataReq['barangay'],
+                    ]
+                );
+    
+                // This call creates the User row AND sends the verification
+                // email. If the email send throws, the exception propagates
+                // out of this closure and DB::transaction rolls everything back.
+                $this->patientAddAsUser($dataReq, $unique);
+    
+                Session::put('profileSearch', [
+                    'keyword'  => $dataReq['first_name'] . ' ' . $dataReq['last_name'],
+                    'region'   => $dataReq['region'],
+                    'province' => $dataReq['province'],
+                    'muncity'  => $dataReq['municipality_city'],
+                    'brgy'     => $dataReq['barangay'],
+                ]);
+    
+                return $patient;
+            });
+    
             return response()->json([
                 'success'               => true,
                 'message'               => 'Patient registered. Please check your email to verify your account.',
                 'data'                  => $patient,
                 'requires_verification' => true,
             ], 201);
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'success' => false,
-                'errors'  => $e->errors(),
-            ], 422);
-
+    
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -1517,11 +1619,11 @@ class TelemedicineApiCtrl extends Controller
             ], 500);
         }
     }
-
+    
     public function patientAddAsUser(array $req, $unique_id)
     {
-  
         $patient_id = Patients::select('id')->where('unique_id', $unique_id)->first();
+    
         $user = User::updateOrCreate(
             ['email' => $req['email']],
             [
@@ -1538,16 +1640,19 @@ class TelemedicineApiCtrl extends Controller
                 'subopd_id'                => 0,
                 'username'                 => $req['username'],
                 'password'                 => bcrypt($req['password']),
-                'muncity'                  => $req['municipality_city'], // ← fixed
+                'muncity'                  => $req['municipality_city'],
                 'province'                 => $req['province'],
                 'patient_id'               => $patient_id->id ?? null,
             ]
         );
-
+    
+        // If this throws (SMTP failure), it propagates up to
+        // registerPatient()'s DB::transaction() and triggers a rollback
+        // of both this User row and the Patients row.
         if ($user->wasRecentlyCreated) {
             $user->sendEmailVerificationNotification();
         }
-
+    
         return $user;
     }
 
@@ -1870,5 +1975,24 @@ class TelemedicineApiCtrl extends Controller
             'referring_fac_id' => $track->referring_fac_id,
             'form_type' => $form_type
         ];
+    }
+
+    public function getRecoActivity($code)
+    {
+        $activity = Activity::select('referring_md')->where('code', $code)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if (!$activity) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Activity not found for the given code'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'user_id' => $activity
+        ]);
     }
 }

@@ -65,7 +65,7 @@ class ReferralCtrl extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        $this->middleware('auth')->except(['VueFeedback', 'feedback','replyFeedback','loadFeedback','notificationFeedback','saveFeedback','getFeedbackFiles']);
         //$this->middleware('doctor');
     }
 
@@ -2381,6 +2381,7 @@ class ReferralCtrl extends Controller
     public function replyFeedback($id)
     {
         $user = Session::get('auth');
+        $currentUserId = $user ? $user->id : 0;
         $position = '';
         $icon = 'receiver.png';
         $pull = 'right';
@@ -2399,7 +2400,7 @@ class ReferralCtrl extends Controller
             ->where('feedback.id',$id)
             ->first();
 
-        if($user->id==$data->sender){
+        if($currentUserId == $data->sender){
             $position = 'right';
             $icon = 'sender.png';
             $pull = 'left';
@@ -2428,15 +2429,26 @@ class ReferralCtrl extends Controller
 
     public function saveFeedback(Request $req)
     {
+        
         $user = Session::get('auth');
+        Log::info('$user: ' . json_encode($user));
         $file_paths = [];
         $files = $req->file('file_upload');
+        $senderId = $user ? $user->id : 0;
+        $displayName = trim($req->input('display_name', $req->input('name', 'Patient')));
+        $displayName = $displayName ?: 'Patient';
+        $facilityName = 'Patient';
+
+        if ($user) {
+            $facility = Facility::find($user->facility_id);
+            $facilityName = $facility ? $facility->name : 'Patient';
+        }
 
         if ($files && is_array($files)) {
 
             foreach ($files as $file) {
                 if ($file->isValid()) {
-                    $username = $user->username;
+                    $username = $user ? $user->username : 'patient';
 
                     // Generate a unique name for storing
                     $extension = $file->getClientOriginalExtension();
@@ -2457,7 +2469,7 @@ class ReferralCtrl extends Controller
        
         $data = [
             'code'     => $req->code,
-            'sender'   => $user->id,
+            'sender'   => $senderId,
             'receiver' => 0,
             'filename' => $files_pathname,
             'message'  => $req->message,
@@ -2466,17 +2478,23 @@ class ReferralCtrl extends Controller
         $feedback = Feedback::create($data);
 
         // reco websocket
-        $reco_json = ParamCtrl::feedbackContent($req->code, $user->id, $req->message, $files_pathname);
+        $reco_json = ParamCtrl::feedbackContent($req->code, $senderId, $req->message, $files_pathname);
         
         broadcast(new SocketReco($reco_json));
 
         // return view
-        $doc = User::find($user->id);
-        $name = ucwords(mb_strtolower($doc->fname)) . " " . ucwords(mb_strtolower($doc->lname));
+        if ($user) {
+            $doc = User::find($user->id);
+            $name = $doc
+                ? ucwords(mb_strtolower($doc->fname)) . " " . ucwords(mb_strtolower($doc->lname))
+                : $displayName;
+        } else {
+            $name = $displayName;
+        }
         
         $html = view('doctor.feedback_append', [
             "name"     => $name,
-            "facility" => Facility::find($user->facility_id)->name,
+            "facility" => $facilityName,
             "message"  => $req->message
         ])->render();
         
