@@ -638,6 +638,7 @@ class TelemedicineApiCtrl extends Controller
             'department_id' => $tracking->department_id,
             'referring_md' => $tracking->referring_md,
             'action_md' => $userId,
+            'appointment' => $request->schedule_id,
             'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks : 'patient follow up',
             'status' => 'followup',
         ];
@@ -685,7 +686,7 @@ class TelemedicineApiCtrl extends Controller
         // $createdActivity = Activity::create($activity);
 
         // ✅ AUTO ACCEPT — pass session user directly, no Request needed
-        $this->acceptFollowUp($user, $tracking->id, $time->copy()->addMinute());
+        $this->acceptFollowUp($user, $tracking->id, $time->copy()->addMinute(), $request->schedule_id);
 
         // Broadcast
         $patient = Patients::find($tracking->patient_id);
@@ -718,7 +719,7 @@ class TelemedicineApiCtrl extends Controller
         ], 200);
     }
 
-    public function acceptFollowUp($user, $track_id, $time)
+    public function acceptFollowUp($user, $track_id, $time, $schedule_id)
     {
         // ✅ $user is passed directly — no resolution needed
         if (!$user) {
@@ -768,6 +769,7 @@ class TelemedicineApiCtrl extends Controller
             'department_id' => $track->department_id,
             'referring_md' => $track->referring_md,
             'action_md' => $user->id,
+            'appointment' => $schedule_id,
             'remarks' => 'Auto-accepted on follow-up',
             'status' => $track->status,
             'created_at' => $time->copy()->addMinute(),
@@ -795,7 +797,7 @@ class TelemedicineApiCtrl extends Controller
                 $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track,$sender_id->id);
 
                 $telemedicine_controller->sendConfirmationEmail(
-                    $track->appointmentId,
+                    $schedule_id,
                     $track->patient_id,
                     'accepted',
                     $videoUrl,
