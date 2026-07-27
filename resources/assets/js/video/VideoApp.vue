@@ -2375,7 +2375,7 @@ td {
     align-items: center !important;
   }
   .followup-button .fa-calendar {
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
 }
 </style>
