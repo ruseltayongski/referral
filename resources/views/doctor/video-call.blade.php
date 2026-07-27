@@ -63,9 +63,9 @@
             </div>
         @endif
     @else
-        <div id="app_video_opcen">
-            <video-app-opcen :user="{{ json_encode($user) }}"></video-app-opcen>
-        </div>
+           <div id="app_video_opcen">
+                <video-app-opcen :user="{{ Session::get('auth') }}"></video-app-opcen>
+            </div>
     @endif
     
     </body>

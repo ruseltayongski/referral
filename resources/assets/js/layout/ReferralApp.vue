@@ -1368,11 +1368,11 @@ import { event } from 'jquery';
                         $("#html_websocket_upward" + event.payload.code).remove();
                         $("#upward_button" + event.payload.code).remove();
                     }
-                    //console.log("status for exam", event.payload);
+                    console.log("status for exam", event.payload);
                     this.telemedicine = event.payload.telemedicine;
                     if(event.payload.status == "telemedicine" || (event.payload.telemedicine == 1 && event.payload.status_track != "examined" && event.payload.status_track != "redirected")) {
                         if((event.payload.referred_to === this.user.facility_id || event.payload.referring_md === this.user.id) && event.payload.trigger_by !== this.user.id ) {
-                            // console.log("callAdoctor", event);
+                            
                             this.action_md = event.payload.action_md;
                             this.doctorCaller = event.payload.doctorCaller;
                             this.telemedicineFormType = event.payload.form_type;
@@ -1421,7 +1421,17 @@ import { event } from 'jquery';
                         this.telemedicineFormType = event.payload.form_type;
                         this.activity_id = event.payload.activity_id;
                         this.opcen_facility = event.payload.referred_to;
-                        //console.log("call data event", event.payload);
+                        console.log("call data event", event.payload);
+                        console.log('facility check', {
+                            payload_facility: event.payload.opcen_facility_call_to,
+                            payload_facility_type: typeof event.payload.opcen_facility_call_to,
+                            user_facility: this.user.facility_id,
+                            user_facility_type: typeof this.user.facility_id,
+                            payload_dept: event.payload.filter_department,
+                            payload_dept_type: typeof event.payload.filter_department,
+                            user_dept: this.user.department_id,
+                            user_dept_type: typeof this.user.department_id,
+                        });
                         // if(event.payload.referred_to === this.user.facility_id && (this.action_md === this.user.id || event.payload.first_referring_md === this.user.id)) {
 
                         //     const tId = event.payload.tracking_id;

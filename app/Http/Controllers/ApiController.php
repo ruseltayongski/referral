@@ -232,9 +232,11 @@ class ApiController extends Controller
                             ->first();
 
         $subOpd_id = $latest_subOpd_id->sub_opdId;
-        if((int)$request->opcen_facility === 63){
+        if((int)$request->opcen_facility === 63 && $user->level === 'opcen') {
             $doctorCaller = "711 Agent";
-        }else{
+        }else if((int)$request->opcen_facility === 63 && $user->level === 'capitol') {
+            $doctorCaller = "Capitol Province";
+        }else {
             $doctorCaller = "Dr. ".$user->fname.' '.$user->lname;
         }
    
@@ -257,6 +259,7 @@ class ApiController extends Controller
             "subopd_id" => $subOpd_id,
             "first_referring_md" => $referring_md_Status->referring_md
         ];
+        Log::info('Call a doctor data: ', $call);
         broadcast(new SocketReferralDischarged($call));
     }
 

@@ -220,11 +220,10 @@ class ParamCtrl extends Controller
         Session::put('auth',$user);
         print_r($user);
         if($user->level == 'capitol') {
-            return redirect('doctor');
+            return redirect('monitoring');
         }else {
           return redirect($user->level);
         }
-        
     }
 
     static function lastLogin()
