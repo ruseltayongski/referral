@@ -594,12 +594,19 @@ class TelemedicineApiCtrl extends Controller
             }
         }
 
+        $effectiveAppointmentId = $scheduledAppointmentId
+            ?: ($request->input('schedule_id') ?: $request->input('Appointment_id'));
+
+        if ($effectiveAppointmentId) {
+            $tracking->appointmentId = $effectiveAppointmentId;
+            $tracking->save();
+        }
+
         // Telemedicine assignment
         if ($telemedicine || $useExistingSchedule) {
-            $appointmentIdToUse = $scheduledAppointmentId ?: $request->Appointment_id;
-            if ($appointmentIdToUse) {
+            if ($effectiveAppointmentId) {
                 $telemedAssignDoctor = new TelemedAssignDoctor();
-                $telemedAssignDoctor->appointment_id = $appointmentIdToUse;
+                $telemedAssignDoctor->appointment_id = $effectiveAppointmentId;
                 $telemedAssignDoctor->doctor_id = $doctorId;
                 $telemedAssignDoctor->subopd_id = $request->configId ?? null;
                 $telemedAssignDoctor->save();
@@ -638,7 +645,7 @@ class TelemedicineApiCtrl extends Controller
             'department_id' => $tracking->department_id,
             'referring_md' => $tracking->referring_md,
             'action_md' => $userId,
-            'appointment' => $request->schedule_id,
+            'appointment' => $effectiveAppointmentId,
             'remarks' => $request->filled('followremarks') ? 'follow up — ' . $request->followremarks : 'patient follow up',
             'status' => 'followup',
         ];
@@ -686,7 +693,7 @@ class TelemedicineApiCtrl extends Controller
         // $createdActivity = Activity::create($activity);
 
         // ✅ AUTO ACCEPT — pass session user directly, no Request needed
-        $this->acceptFollowUp($user, $tracking->id, $time->copy()->addMinute(), $request->schedule_id);
+        $this->acceptFollowUp($user, $tracking->id, $time->copy()->addMinute(), $effectiveAppointmentId);
 
         // Broadcast
         $patient = Patients::find($tracking->patient_id);
@@ -739,6 +746,12 @@ class TelemedicineApiCtrl extends Controller
         }
 
         $referred_from = $track->referred_from;
+        $effectiveAppointmentId = $schedule_id ?: $track->appointmentId;
+
+        if ($effectiveAppointmentId) {
+            Tracking::where('id', $track_id)->update(['appointmentId' => $effectiveAppointmentId]);
+            $track->appointmentId = $effectiveAppointmentId;
+        }
 
         // 🚫 Trap if already processed
         if (
@@ -769,7 +782,7 @@ class TelemedicineApiCtrl extends Controller
             'department_id' => $track->department_id,
             'referring_md' => $track->referring_md,
             'action_md' => $user->id,
-            'appointment' => $schedule_id,
+            'appointment' => $effectiveAppointmentId,
             'remarks' => 'Auto-accepted on follow-up',
             'status' => $track->status,
             'created_at' => $time->copy()->addMinute(),
@@ -787,17 +800,18 @@ class TelemedicineApiCtrl extends Controller
             if ($isPatientUserExist) {
                 $sender_id = User::select('id')->where('patient_id', $track->patient_id)->first();
                 $videoUrl = TelemedicineLinkService::buildSignedUrl($track, [
-                    'from_fact'    => 0,
-                    'form_type'    => 'normal',
-                    'telemed'      => 1,
-                    'referring_md' => 'yes',
-                    'activity_id'  => $activity->id,
+                    'from_fact'      => 0,
+                    'form_type'      => 'normal',
+                    'telemed'        => 1,
+                    'referring_md'   => 'yes',
+                    'activity_id'    => $activity->id,
+                    'appointment_id' => $effectiveAppointmentId,
                 ]);
-                
-                $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track,$sender_id->id);
+
+                $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track, $sender_id->id);
 
                 $telemedicine_controller->sendConfirmationEmail(
-                    $schedule_id,
+                    $effectiveAppointmentId,
                     $track->patient_id,
                     'accepted',
                     $videoUrl,

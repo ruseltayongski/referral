@@ -498,13 +498,13 @@ export default {
               self.showChannelFullMessage(msg);
               self.allowJoining = false;
               return;
-            }else if(users.length > 1) {
-              const msg = "This channel is full. Maximum 2 users allowed.";
-              self.showChannelFullMessage(msg);
-              self.allowJoining = false;
-              return;
-            }
-            else {
+            // }else  if(users.length > 1) {
+            //   const msg = "This channel is full. Maximum 2 users allowed.";
+            //   self.showChannelFullMessage(msg);
+            //   self.allowJoining = false;
+            //   return;
+            // }
+            }else {
               if(this.get_referring_facility != 0 && this.get_accepting_md != 'yes'){
                 // console.log("yes ringing");
                 $(document).ready(function () {

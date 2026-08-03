@@ -27,9 +27,11 @@ class TelemedicineLinkService
             return $value !== null && $value !== '';
         });
 
+        $appointmentScheduleId = $additional['appointment_id'] ?? $additional['appointmentId'] ?? $tracking->appointmentId ?? null;
+
         return URL::temporarySignedRoute(
             'doctor.telemedicine',
-            self::resolveExpiration($tracking),
+            self::resolveExpiration($tracking, $appointmentScheduleId),
             $parameters
         );
     }
@@ -95,12 +97,19 @@ class TelemedicineLinkService
         return self::buildMessengerUrls($tracking, $senderId, $additional);
     }
 
-    public static function resolveExpiration($tracking)
+    protected static function resolveAppointmentSchedule($appointmentScheduleId)
+    {
+        return AppointmentSchedule::find($appointmentScheduleId);
+    }
+
+    public static function resolveExpiration($tracking, $appointmentScheduleId = null)
     {
         $expiration = now()->addHours(2);
 
-        if (!empty($tracking->appointmentId)) {
-            $appointmentSchedule = AppointmentSchedule::find($tracking->appointmentId);
+        $resolvedAppointmentId = $appointmentScheduleId ?? $tracking->appointmentId ?? null;
+
+        if (!empty($resolvedAppointmentId)) {
+            $appointmentSchedule = static::resolveAppointmentSchedule($resolvedAppointmentId);
 
             if ($appointmentSchedule && $appointmentSchedule->appointed_date) {
                 $startTime = $appointmentSchedule->appointed_time ?: '00:00:00';
