@@ -320,7 +320,7 @@ $user = Session::get('auth');
                                 data-toggle="modal"
                                 data-target="#feedbackModal"
                                 data-code="{{ $row->code }}"
-                                onclick="viewReco($(this))">
+                                onclick="viewReco($(this),0)">
                                 <i class="fa fa-comments"></i> ReCo
                                 <span class="badge bg-blue" id="reco_count{{ $row->code }}">{{ $feedback }}</span>
                             </button>

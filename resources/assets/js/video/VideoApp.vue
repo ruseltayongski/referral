@@ -1781,7 +1781,7 @@ export default {
                     class="tooltip-text"
                     style="background-color: #6610f2"
                   >
-                    Message
+                    Patient Messenger
                   </div>
                   <button
                     class="btn btn-md patient-chat-button"

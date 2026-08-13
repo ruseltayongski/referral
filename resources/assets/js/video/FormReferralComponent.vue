@@ -150,6 +150,9 @@ export default {
         })
         .replace(",", ""); // remove the extra comma before time
     },
+    checkIfPatientFormAccessed(){
+      return this.form.md_referring !== this.form.patient_name;
+    },
     isEmpty(value) {
       if (value === null || value === undefined) return true;
       if (typeof value === "string" && value.trim() === "") return true;
@@ -344,13 +347,13 @@ export default {
         </td>
       </tr>
       <tr>
-        <td colspan="12">
+        <td colspan="12" v-if="checkIfPatientFormAccessed()">
           Name of Referring MD/HCW:
           <span class="forDetails"> {{ form.md_referring }} </span>
         </td>
       </tr>
       <tr>
-        <td colspan="12">
+        <td colspan="12" v-if="checkIfPatientFormAccessed()">
           Contact # of Referring MD/HCW:
           <span class="forDetails">
             {{ form.referring_md_contact }}

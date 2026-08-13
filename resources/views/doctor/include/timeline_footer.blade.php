@@ -113,7 +113,7 @@ $redirected_upward = DB::table('activity')
         <button class="btn btn-xs btn-info btn-feedback" data-toggle="modal"
                 data-target="#feedbackModal"
                 data-code="{{ $row->code }}"
-                onclick="viewReco($(this))"
+                onclick="viewReco($(this),0)"
         >
             <i class="fa fa-comments"></i>
             ReCo

@@ -1220,7 +1220,7 @@ class ApiController extends Controller
         return [
             "code" => $code,
             "picture" => url('resources/img/ro7.png'),
-            "content" => "<button class='btn btn-xs btn-info' onclick='viewReco($(this))' data-toggle='modal'
+            "content" => "<button class='btn btn-xs btn-info' onclick='viewReco($(this),0)' data-toggle='modal'
                                data-target='#feedbackModal'
                                data-code='$code'
                                >

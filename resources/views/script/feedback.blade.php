@@ -80,28 +80,35 @@
         var reco_seen_url = "<?php echo asset('reco/seen1').'/'; ?>"+code;
         $.get(reco_seen_url,function(){ });
 
-        // $('#feedbackModal').bind('shown', function() {
-        //     $('textarea.mytextarea1').tinymce({
-
-        //     });
-        //     console.log("wew")
-        // });
-
-        $('#feedbackModal').on('shown.bs.modal', function() {
-            if (userId == null) {
-              initTinyMCEWithCode(code,user_id,videoApp); 
-            }else {
-                initTinyMCEWithCode(code,userId,videoApp);
+        // Remove any stale TinyMCE instance before initializing a new one
+        if (typeof tinymce !== 'undefined') {
+            const existingEditor = tinymce.get('message');
+            if (existingEditor) {
+                existingEditor.remove();
             }
-             // pass code dynamically
-        });
+        }
+
+        const initializeEditor = function() {
+            const effectiveUserId = (typeof userId === 'undefined' || userId == null) ? user_id : userId;
+            if (code) {
+                initTinyMCEWithCode(code, effectiveUserId, videoApp);
+            } else {
+                console.warn('viewReco: missing code, cannot initialize TinyMCE');
+            }
+        };
+
+        if ($('#feedbackModal').is(':visible')) {
+            initializeEditor();
+        } else {
+            $('#feedbackModal').off('show.bs.modal').one('show.bs.modal', initializeEditor);
+        }
 
         $('.feedback_code').html(code);
-        $('.direct-chat-messages').attr('id',code);
-        $('#message').addClass("message input-"+code+"-{{ $user->id }}");
+        $('.direct-chat-messages').attr('id', code);
+        $('#message').addClass("message input-" + code + "-{{ $user->id }}");
 
-        $("#"+code).html("Loading...");
-        var url = "<?php echo asset('doctor/feedback').'/'; ?>"+code;
+        $("#" + code).html("Loading...");
+        var url = "<?php echo asset('doctor/feedback').'/'; ?>" + code;
         $.get(url,function(response){
             setTimeout(function() {
                 let FilesArray = response.data.filter((item) =>  item.filename);

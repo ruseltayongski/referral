@@ -1956,11 +1956,14 @@ class NewFormCtrl extends Controller
         }
         // Log::info("Telemedicine Tracking: " .  $patientName);
         $payload = self::getViewForm_normal($id, $track->status, $track->type);
+        $messengerAdditional = [
+            'appointment_id' => $track->appointmentId ?? null,
+        ];
           if ($isPatientUserExist) {
              $sender_id = User::select('id')->where('patient_id', $patient_data->id)->first();
-             $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track, $sender_id->id ?? null);
+             $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track, $sender_id->id ?? null, $messengerAdditional);
          }else {
-             $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track);
+             $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track, 0, $messengerAdditional);
          }
         
         return response()->json([

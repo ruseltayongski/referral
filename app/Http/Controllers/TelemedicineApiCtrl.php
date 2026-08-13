@@ -808,7 +808,9 @@ class TelemedicineApiCtrl extends Controller
                     'appointment_id' => $effectiveAppointmentId,
                 ]);
 
-                $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track, $sender_id->id);
+                $messengerUrls = TelemedicineLinkService::buildMessengerUrls($track, $sender_id->id, [
+                    'appointment_id' => $effectiveAppointmentId,
+                ]);
 
                 $telemedicine_controller->sendConfirmationEmail(
                     $effectiveAppointmentId,

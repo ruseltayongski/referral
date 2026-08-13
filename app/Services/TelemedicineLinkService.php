@@ -54,7 +54,8 @@ class TelemedicineLinkService
      */
     public static function buildMessengerUrls($tracking, $senderId = 0, array $additional = [])
     {
-        $expiration = self::resolveExpiration($tracking);
+        $appointmentScheduleId = $additional['appointment_id'] ?? $additional['appointmentId'] ?? $tracking->appointmentId ?? null;
+        $expiration = self::resolveExpiration($tracking, $appointmentScheduleId);
 
         $fetchParameters = array_merge([
             'code' => $tracking->code,
