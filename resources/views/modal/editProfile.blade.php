@@ -235,8 +235,8 @@
                             </div>
                             <input type="text" class="form-control license" name="license" value="{{ $user->license }}" autocomplete="license">
                         </div>
-                    </div>
                     @endif
+                    </div>
                     <div>
                         <div class="input-group-prepend">
                             <span class="input-group-text"></span> <label for="Privacy">Privacy Policy</label>
