@@ -33,6 +33,8 @@ class UserCtrl extends Controller
                     ->orwhere('mname','like',"%$keyword%")
                     ->orwhere('lname','like',"%$keyword%")
                     ->orwhere('username','like',"%$keyword%")
+                    ->orwhere('level','like',"%$keyword%")
+                    ->orwhere('email','like',"%$keyword%")
                     ->orwhere(\DB::raw('concat(fname," ",lname)'),'like',"$keyword")
                     ->orwhere(\DB::raw('concat(lname," ",fname)'),'like',"$keyword");
             });
@@ -48,7 +50,8 @@ class UserCtrl extends Controller
                         ->orWhere("level","bed_tracker")
                         ->orWhere("level","mayor")
                         ->orWhere("level","dmo")
-                        ->orWhere("level","capitol");
+                        ->orWhere("level","capitol")
+                        ->orWhere("level","Patient");
                     })
                 ->orderBy('lname','asc')
                 ->paginate(20);

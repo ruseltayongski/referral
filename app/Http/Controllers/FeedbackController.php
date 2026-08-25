@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Feedback;
+use App\User;
 use App\Events\SocketReco;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -59,23 +60,25 @@ class FeedbackController extends Controller
 
     public function guestSaveFeedback(Request $request, $code, $sender_id)
     {
-        Log::info('guestSaveFeedback request: ' . $request);
+        // Log::info('guestSaveFeedback request: ' . $request);
+        // Log::info('sender_id: ' . $sender_id);
         $displayName = trim($request->input('display_name', 'Patient')) ?: 'Patient';
-
+        $username_ = User::select('username')->where('id', $sender_id)->first();
         $files = $request->file('file_upload');
         $file_paths = [];
+
 
         if ($files && is_array($files)) {
             foreach ($files as $file) {
                 if ($file->isValid()) {
                     $extension = $file->getClientOriginalExtension();
                     $uniqueName = 'guest_' . Str::random(10) . '_' . time() . '.' . $extension;
-                    $path = $file->storeAs('RecoChat/guest', $uniqueName, 'public');
+                    $path = $file->storeAs('RecoChat/' . $username_->username, $uniqueName, 'public');
                     $file_paths[] = '/public' . Storage::url($path);
                 }
             }
         }
-
+    
         $files_pathname = implode('|', $file_paths);
 
         $feedback = Feedback::create([

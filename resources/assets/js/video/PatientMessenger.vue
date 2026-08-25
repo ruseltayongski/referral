@@ -266,7 +266,7 @@ export default {
             Array.from(this.uploadedFiles.values()).forEach((file, index) => {
                 formData.append(`file_upload[${index}]`, file);
             });
-
+            console.log('sendUrl:', this.sendUrl);
             axios.post(this.sendUrl, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then(response => {

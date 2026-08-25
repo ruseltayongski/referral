@@ -9,6 +9,7 @@ use App\Activity;
 use App\TelemedAssignDoctor;
 use App\Tracking;
 use App\User;
+use App\PatientForm;
 use App\Cofig_schedule;
 use App\SubOpd;
 use App\Services\TelemedicineLinkService;
@@ -58,12 +59,26 @@ class TelemedicineCtrl extends Controller
             $user = Session::get('auth');   // exactly what the blade used before
         } else {
             // Patient/Guest: arriving via signed link, no session
+            $patient_name = PatientForm::join(
+                    'patients',
+                    'patient_form.patient_id',
+                    '=',
+                    'patients.id'
+                )
+                ->where('patient_form.code', $req->code)
+                ->select(
+                    'patients.fname',
+                    'patients.mname',
+                    'patients.lname'
+                )
+                ->first();
+            // Log::info('message_patient_name: ' . json_encode($patient_name));
             $user = (object) [
                 'id'          => 0,
-                'username'    => $req->query('display_name', 'Guest'),
+                'username'    => $req->query('display_name', $patient_name ? trim($patient_name->fname . ' ' . $patient_name->mname . ' ' . $patient_name->lname) : 'Patient'),
                 'level'       => $req->query('role', 'patient'),
                 'facility_id' => 0,
-                'name'        => $req->query('display_name', 'Guest'),
+                'name'        => $req->query('display_name', $patient_name ? trim($patient_name->fname . ' ' . $patient_name->mname . ' ' . $patient_name->lname) : 'Patient'),
             ];
         }
 
@@ -2348,7 +2363,7 @@ class TelemedicineCtrl extends Controller
             <thead>
                 <tr>
                     <th onclick="sortTable(0)">#</th>
-                    <th onclick="sortTable(1)">Username</th>
+                    <th onclick="sortTable(1)">Username / Patient name</th>
                     <th onclick="sortTable(2)">Patient Code</th>
                     <th onclick="sortTable(3)">Activity ID</th>
                     <th onclick="sortTable(4)">Referring MD</th>

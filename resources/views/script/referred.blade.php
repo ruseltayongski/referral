@@ -5,7 +5,7 @@
     function telemedicineReferPatient(alreadyRedirected,alreadyFollowup,code,referred_id,ownfacility,referred_from) { 
         // console.log('upward level', endorseUpward);
         const upwardIsCompleted = $('#upward_progress'+code+referred_id).hasClass('completed');
-        console.log('alreadyRedirected', alreadyRedirected, 'alreadyFollowup', alreadyFollowup);
+        // console.log('alreadyRedirected', alreadyRedirected, 'alreadyFollowup', alreadyFollowup);
         $(".telemedicine").val(0);
         $("#telemedicine_redirected_code").val(code);
 
