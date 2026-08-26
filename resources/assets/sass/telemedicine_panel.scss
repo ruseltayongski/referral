@@ -472,19 +472,19 @@ a.btn.filecolorclose{
   }
   
 
-  .stepper-item-prescription .step-name {
-    font-size: 6px;
-    text-align: end;
-    width: 100px;
-    margin-left: -10px;
-  }
+  // .stepper-item-prescription .step-name {
+  //   font-size: 6px;
+  //   text-align: end;
+  //   width: 100px;
+  //   margin-left: -10px;
+  // }
 
-  .stepper-item .step-name {
-    font-size: 5pt;
-    font-weight: 500;
-    margin-top: 8px;
-    text-align: center;
-  }
+  // .stepper-item .step-name {
+  //   font-size: 10pt;
+  //   font-weight: 500;
+  //   margin-top: 8px;
+  //   text-align: center;
+  // }
   .step-counter-prescription .step-name {
     text-align: end;
   }
@@ -494,12 +494,12 @@ a.btn.filecolorclose{
     width: 60px;
     margin-left: -10px;
   }
-  .stepper-item-upward .step-name {
-    font-size: 6px;
-    text-align: center;
-    width: 60px;
-    margin-left: -10px;
-  }
+  // .stepper-item-upward .step-name {
+  //   font-size: 6px;
+  //   text-align: center;
+  //   width: 60px;
+  //   margin-left: -10px;
+  // }
 
   .panel-scoped-telemedicine .stepper-item.completed::after {
     position: absolute;
@@ -1415,9 +1415,15 @@ a.btn.filecolorclose{
             content: "";
             border-bottom: 2px solid #ccc;
             width: 137px;
-            transform: rotate(55deg);
-            top: -51px;
-            left: -41px;
+            transform: rotate(65deg);
+            top: -49px;
+            left: -34px;
+        }
+        .panel-scoped-telemedicine .stepper-item-prescription::after {
+            width: 64px;
+            transform: rotate(160deg);
+            margin-top: -28px;
+            display: hidden;
         }
      }
        // Responsive adjustments for dimension between 551px and 550px width
@@ -1561,9 +1567,24 @@ a.btn.filecolorclose{
             width: 153px;
             z-index: 3;
             transform: rotate(55deg);
-            margin-top: 0px;
+            margin-top: -3px;
             color: white;
         }
+        .panel-scoped-telemedicine .stepper-item-prescription:after {
+            display: hidden;
+            margin-top: -25px;
+            transform: rotate(160deg);
+            width: 75px;
+        }
+        .panel-scoped-telemedicine .stepper-item-treated_new::before {
+          position: absolute;
+          content: "";
+          border-bottom: 2px solid #ccc;
+          width: 162px;
+          transform: rotate(55deg);
+          top: -32px;
+          left: -34px;
+      }
      }
       // Responsive adjustments for dimension between 610px and 641px width
      @media screen and (min-width: 648px) and (max-width: 671px) { 
@@ -1813,6 +1834,7 @@ a.btn.filecolorclose{
             margin-top: 8px;
             color: white;
         }
+        
     }
       // Responsive adjustments for dimension between 917px and 1199px width
       @media screen and (min-width: 917px) and (max-width: 1199px) {
@@ -1820,7 +1842,7 @@ a.btn.filecolorclose{
             position: absolute;
             content: "";
             border-bottom: 2px solid #4bb543;
-            width: 125px;
+            width: 110px;
             top: 56px;
             left: 50px;
             z-index: 3;
