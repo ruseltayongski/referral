@@ -261,6 +261,7 @@ $facility_exclude =  \App\Facility::select('id')
             <li><a href="{{ asset('vaccine/facility').'/mandaue' }}">Mandaue City</a></li>
             <li><a href="{{ asset('vaccine/facility').'/lapu' }}">Lapu-Lapu City</a></li>
         @elseif($user->level=="capitol")
+            <li><a href="{{ url('opcen') }}"><i class="fa fa-home"></i> Dashboard</a></li>
             @include('layouts.report_menu')                       
         @endif
         @if($user->level == 'admin' || $user->level == 'capitol')
