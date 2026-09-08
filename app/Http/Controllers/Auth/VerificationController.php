@@ -80,7 +80,7 @@ class VerificationController extends Controller
 
             // Verify the hash matches the user's email
             if (! hash_equals((string) $hash, $expectedHash)) {
-                Log::warning('Hash mismatch for user', ['user_id' => $userId]);
+                // Log::warning('Hash mismatch for user', ['user_id' => $userId]);
                 return redirect('/login')
                     ->with('error', 'Invalid or expired verification link. Please request a new one.');
             }
@@ -107,10 +107,10 @@ class VerificationController extends Controller
             // Show success page
             return view('auth.verified');
         } catch (\Exception $e) {
-            Log::error('Email verification error', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
+            // Log::error('Email verification error', [
+            //     'error' => $e->getMessage(),
+            //     'trace' => $e->getTraceAsString()
+            // ]);
             return redirect('/login')
                 ->with('error', 'An error occurred during verification. Please try again.');
         }

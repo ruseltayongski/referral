@@ -259,7 +259,7 @@ class ApiController extends Controller
             "subopd_id" => $subOpd_id,
             "first_referring_md" => $referring_md_Status->referring_md
         ];
-        Log::info('Call a doctor data: ', $call);
+        // Log::info('Call a doctor data: ', $call);
         broadcast(new SocketReferralDischarged($call));
     }
 

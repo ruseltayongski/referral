@@ -2257,7 +2257,7 @@ class NewFormCtrl extends Controller
             }
         } catch (Exception $e) {
             // Log the exception for debugging
-            Log::error($e->getMessage());
+            // Log::error($e->getMessage());
             return Response::json(['error' => 'An error occurred'], 500);
         }
     }

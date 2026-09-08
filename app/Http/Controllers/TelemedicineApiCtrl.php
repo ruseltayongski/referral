@@ -1306,7 +1306,7 @@ class TelemedicineApiCtrl extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Refer Patient API Error', ['error' => $e->getMessage()]);
+            // Log::error('Refer Patient API Error', ['error' => $e->getMessage()]);
 
             return response()->json([
                 'status'  => false,
@@ -1773,11 +1773,11 @@ class TelemedicineApiCtrl extends Controller
             $date = $request->query('date');
             $facilityId = $request->query('facility_id');
 
-            \Log::info('checkAvailableSlots called', [
-                'date' => $date,
-                'facility_id' => $facilityId,
-                'all_params' => $request->all()
-            ]);
+            // \Log::info('checkAvailableSlots called', [
+            //     'date' => $date,
+            //     'facility_id' => $facilityId,
+            //     'all_params' => $request->all()
+            // ]);
 
             if (!$date) {
                 return response()->json(['error' => 'Date parameter is required'], 400);
@@ -1795,19 +1795,19 @@ class TelemedicineApiCtrl extends Controller
             // Only filter by facility if a valid facility_id is provided
             if ($facilityId && $facilityId !== '' && $facilityId !== 'null' && $facilityId !== 'undefined') {
                 $query->where('facility_id', $facilityId);
-                \Log::info('Filtering by facility_id', ['facility_id' => $facilityId]);
+                // \Log::info('Filtering by facility_id', ['facility_id' => $facilityId]);
             } else {
-                \Log::info('Not filtering by facility_id');
+                // \Log::info('Not filtering by facility_id');
             }
 
             $schedules = $query->with(['subOpd', 'facility'])
                 ->orderBy('appointed_time')
                 ->get();
 
-            \Log::info('Found schedules', ['count' => $schedules->count()]);
+            // \Log::info('Found schedules', ['count' => $schedules->count()]);
 
             if ($schedules->count() === 0) {
-                \Log::info('No schedules found for requested date and facility');
+                // \Log::info('No schedules found for requested date and facility');
                 $slots = [];
             } else {
                 $slots = [];
@@ -1846,11 +1846,11 @@ class TelemedicineApiCtrl extends Controller
             ]);
 
         } catch (\Exception $e) {
-            \Log::error('Error checking available slots: ' . $e->getMessage(), [
-                'date' => $request->query('date'),
-                'facility_id' => $request->query('facility_id'),
-                'trace' => $e->getTraceAsString()
-            ]);
+            // \Log::error('Error checking available slots: ' . $e->getMessage(), [
+            //     'date' => $request->query('date'),
+            //     'facility_id' => $request->query('facility_id'),
+            //     'trace' => $e->getTraceAsString()
+            // ]);
             return response()->json([
                 'error' => 'Failed to fetch available slots',
                 'message' => $e->getMessage()

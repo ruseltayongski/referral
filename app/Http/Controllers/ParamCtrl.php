@@ -273,7 +273,7 @@ class ParamCtrl extends Controller
 
     public static function feedbackContent($code,$sender,$msg,$files_path){
         $sender = User::find($sender);
-        Log::info('feedbackContent sender: ' . $sender);
+        // Log::info('feedbackContent sender: ' . $sender);
         $user = Session::get("auth");
         $senderUser = $sender ?: (object) [
             'id' => 0,

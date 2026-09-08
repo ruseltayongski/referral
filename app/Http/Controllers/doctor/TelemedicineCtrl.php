@@ -32,7 +32,7 @@ class TelemedicineCtrl extends Controller
     public function index(Request $req)
     {
 
-        Log::info('message_index_logs: ' . json_encode($req->all()));
+        // Log::info('message_index_logs: ' . json_encode($req->all()));
         if (!Session::has('auth') && !$req->hasValidSignature() && $req->filled('id')) {
             $tracking = Tracking::find($req->id);
 
@@ -2638,7 +2638,7 @@ class TelemedicineCtrl extends Controller
         // Collect chunks in order
         $chunks = glob("{$chunkDir}/chunk_*.webm");
         if (empty($chunks)) {
-            Log::warning("No chunks found for session {$sessionId}");
+            // Log::warning("No chunks found for session {$sessionId}");
             return response()->json(['status' => 'no_chunks']);
         }
 

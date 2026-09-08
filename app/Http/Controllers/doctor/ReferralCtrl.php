@@ -284,7 +284,7 @@ class ReferralCtrl extends Controller
         $provinces = Province::get();
 
         Session::put('totalIncoming_for_Dashboard', $data->total());
-        Log::info('Total Incoming for Dashboard: ' . $data->all());
+        // Log::info('Total Incoming for Dashboard: ' . $data->all());
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
             'data' => $data,
@@ -2431,7 +2431,7 @@ class ReferralCtrl extends Controller
     {
         
         $user = Session::get('auth');
-        Log::info('$user: ' . json_encode($user));
+        // Log::info('$user: ' . json_encode($user));
         $file_paths = [];
         $files = $req->file('file_upload');
         $senderId = $user ? $user->id : 0;
