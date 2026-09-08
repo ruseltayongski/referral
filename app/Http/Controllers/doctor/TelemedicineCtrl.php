@@ -1068,64 +1068,112 @@ class TelemedicineCtrl extends Controller
         return redirect::back();
     }
 
-    public function appointmentCalendar() {
+    public function appointmentCalendar()
+    {
         $user = Session::get('auth');
-        //$appointment_sched = AppointmentSchedule::select("appointment_schedule.*",DB::raw("sum(appointment_schedule.slot) as slot"))->groupBy('appointment_schedule.facility_id')->with('facility')->get();
+        $facility_id = AppointmentSchedule::where(
+            'facility_id',
+            '!=',
+            $user->facility_id
+        )->pluck('facility_id');
+
+        $facilityQuery = Facility::select(
+                'id',
+                'facility_code',
+                'name',
+                'level'
+            )
+            ->with([
+                'appointmentSchedules.telemedAssignedDoctor',
+                'appointmentSchedules.configSchedule',
+                'appointmentSchedules.subOpd'
+            ])
+            ->where('id', '!=', $user->facility_id)
+            ->whereIn('id', $facility_id);
+        $facility_level = Facility::select('level')->where('id', $user->facility_id)->first();
         
-        $facility_id = AppointmentSchedule::pluck('facility_id');
+        // Only apply primary care facility filter for Patients
+        if ($user->level == 'Patient') {
+            $facilityQuery->where('level', 'primary_care_facility');
+        }
         
-        $appointment_slot = Facility::select('id','facility_code','name')->with(['appointmentSchedules.telemedAssignedDoctor', 'appointmentSchedules.configSchedule','appointmentSchedules.subOpd'])
-        ->whereHas('appointmentSchedules', function($q) use ($user) {
-            $q->where('facility_id','!=',$user->facility_id);
-        })
-        ->find($facility_id);
+        else if ($user->level == 'doctor') {
+            if ($facility_level->level == '1') {
+                $facilityQuery->where('level', '1')
+                    ->orWhere('level', '2')
+                    ->orWhere('level', '3');
+            } else if ($facility_level->level == '2') {
+                $facilityQuery->where('level', '2')
+                    ->orWhere('level', '3');
+            } else if ($facility_level->level == '3') {
+                $facilityQuery->where('level', '3');
+            }         
+        }
+
+        $appointment_slot = $facilityQuery->get();
 
         $now = Carbon::now();
 
         $appointment_slot = $appointment_slot->map(function ($facility) use ($now) {
+
             $filteredSchedules = $facility->appointmentSchedules
-              ->groupBy('appointed_date')
-              ->flatMap(function ($schedulesByDate, $date) use ($now) {
-                
+                ->groupBy('appointed_date')
+                ->flatMap(function ($schedulesByDate, $date) use ($now) {
+
                     $dateCarbon = Carbon::parse($date);
-                   
+
+                    // Past date → REMOVE
                     if ($dateCarbon->lt($now->toDateString())) {
                         return collect();
                     }
 
-                    if($dateCarbon->isToday()){
-                        $allPast = $schedulesByDate->every(function ($schedule) use ($now) {
-                            return Carbon::parse($schedule->appointedTime_to)->lte($now);
-                        });
-                        
-                        return $allPast ? collect() : $schedulesByDate;
-                    }
-                     // Future date → KEEP ALL
-                    return $schedulesByDate;
-              })
-              ->values();
+                    // Today → only keep schedules that have not completely passed
+                    if ($dateCarbon->isToday()) {
 
-                $facility->setRelation('appointmentSchedules', $filteredSchedules);
-                return $facility;
+                        $allPast = $schedulesByDate->every(function ($schedule) use ($now) {
+                            return Carbon::parse(
+                                $schedule->appointedTime_to
+                            )->lte($now);
+                        });
+
+                        return $allPast
+                            ? collect()
+                            : $schedulesByDate;
+                    }
+
+                    // Future date → KEEP ALL
+                    return $schedulesByDate;
+                })
+                ->values();
+
+            $facility->setRelation(
+                'appointmentSchedules',
+                $filteredSchedules
+            );
+
+            return $facility;
         })
-        ->filter(function ($facility){
+        ->filter(function ($facility) {
             return $facility->appointmentSchedules->isNotEmpty();
         })
         ->values();
+
         if (request()->wantsJson()) {
             return response()->json([
                 'user' => $user,
                 'appointment_slot' => $appointment_slot,
             ]);
         }
-        return view('doctor.telemedicine_calendar1',[
-            // 'appointment_sched' => $appointment_sched,
+
+        // Log::info('Appointment Slot Data:', [
+        //     'appointment_slot' => $appointment_slot->toArray()
+        // ]);
+
+        return view('doctor.telemedicine_calendar1', [
             'appointment_slot' => $appointment_slot,
-            // 'appointment_config' => $config,
             'user' => $user
         ]);
     }
-
     public function createAppointment(Request $request)
     {
         $user = Session::get('auth');

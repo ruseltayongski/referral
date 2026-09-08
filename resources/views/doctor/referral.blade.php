@@ -158,6 +158,34 @@ $user = Session::get('auth');
             top: 100;
             right: 0;
         }
+        .appointment-date {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 6px;
+            padding: 6px 10px;
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
+            color: #166534;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .appointment-date .fa-calendar {
+            color: #16a34a;
+            font-size: 15px;
+        }
+
+        .appointment-label {
+            font-weight: 500;
+            color: #15803d;
+        }
+
+        .appointment-date strong {
+            font-weight: 600;
+            color: #14532d;
+        }
     </style>
     @php
 
@@ -205,12 +233,26 @@ $user = Session::get('auth');
                             <!-- timeline item -->
                             @foreach($data as $row)
                                 <?php
+                               
                                 $type = ($row->type=='normal') ? 'normal-section':'pregnant-section';
                                 $type = ($row->status=='referred' || $row->status=='redirected' || $row->status=='transferred' || $row->status=='followup' || $row->status=='rebooked') ? $type : 'read-section';
                                 $icon = ($row->status=='referred' || $row->status=='redirected' || $row->status=='followup' || $row->status=='rebooked') ? 'fa-ambulance' : 'fa-eye';
                                 $modal = ($row->type=='normal') ? '#normalFormModal' : '#pregnantFormModal';
+                                if (empty($row->appointmentId)){
+                                   $appointed_date = null;
+                                   
+                                }else{
+                                    $appointment_schedule = \App\AppointmentSchedule::select('appointed_date', 'appointed_time', 'appointedTime_to')->where('id',$row->appointmentId)->first();
+                                    $appointed_date = date('M d, Y',strtotime($appointment_schedule->appointed_date)) . ' ' . date('h:i A',strtotime($appointment_schedule->appointed_time)) . ' - ' . date('h:i A',strtotime($appointment_schedule->appointedTime_to));
+                                    
+                                }
+                                
+                              
                                 $date = date('M d, Y h:i A',strtotime($row->date_referred));
+                               
+                                //   dd($row->appointmentId);
                                 $feedback = \App\Feedback::where('code',$row->code)->count();
+                                
 
                                 $department = '"Not specified department"';
                                 // $subdepartment = '"Not specified sub department"';
@@ -274,12 +316,25 @@ $user = Session::get('auth');
                                                 @endif
                                             </h3> <!-- time line for #referred #seen #redirected -->
                                   
-                                            <h3 class="timeline-header no-border">
-                                            <span class="time"><i class="icon fa {{ $icon }}"></i><span class="date_activity">{{ $date }}</span>
-                                            @if ($row->form_type === "version2")
-                                                <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
-                                            @endif
-                                            </span>
+                                           <h3 class="timeline-header no-border">
+                                                <!-- Referral Date -->
+                                                <span class="time referral-date">
+                                                    <i class="icon fa {{ $icon }}"></i>
+                                                    <span class="date_activity">{{ $date }}</span>
+                                                </span>
+                                                @if ($appointed_date != null)
+                                                <!-- Appointment Date -->
+                                                <span class="appointment-date">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span class="appointment-label">Appointment:</span>
+                                                    <strong>{{ $appointed_date }}</strong>
+                                                </span>
+                                                @endif
+                                                @if ($row->form_type === "version2")
+                                                    <img class="stamp-img"
+                                                        src="{{ asset('resources/img/new_version_stamp.png') }}"
+                                                        alt="PNG Image">
+                                                @endif
                                             </h3>
                                             @include('doctor.include.timeline_footer')
                                         </div>
@@ -292,10 +347,24 @@ $user = Session::get('auth');
                                                 </span>
                                                 was RECOMMENDED TO REDIRECT to other facility by <span class="text-danger">Dr. {{ $row->action_md }}</span>
                                             </h3>
-                                            <h3 class="timeline-header no-border">
-                                                <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
-                                                 @if ($row->form_type === "version2")
-                                                    <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                           <h3 class="timeline-header no-border">
+                                                <!-- Referral Date -->
+                                                <span class="time referral-date">
+                                                    <i class="icon fa {{ $icon }}"></i>
+                                                    <span class="date_activity">{{ $date }}</span>
+                                                </span>
+                                                @if ($appointed_date != null)
+                                                <!-- Appointment Date -->
+                                                <span class="appointment-date">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span class="appointment-label">Appointment:</span>
+                                                    <strong>{{ $appointed_date }}</strong>
+                                                </span>
+                                                @endif
+                                                @if ($row->form_type === "version2")
+                                                    <img class="stamp-img"
+                                                        src="{{ asset('resources/img/new_version_stamp.png') }}"
+                                                        alt="PNG Image">
                                                 @endif
                                             </h3>
                                             @include('doctor.include.timeline_footer')
@@ -312,10 +381,24 @@ $user = Session::get('auth');
                                                 <br><br>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
-                                            <h3 class="timeline-header no-border">
-                                                <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
-                                                 @if ($row->form_type === "version2")
-                                                    <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                             <h3 class="timeline-header no-border">
+                                                <!-- Referral Date -->
+                                                <span class="time referral-date">
+                                                    <i class="icon fa {{ $icon }}"></i>
+                                                    <span class="date_activity">{{ $date }}</span>
+                                                </span>
+                                                @if ($appointed_date != null)
+                                                <!-- Appointment Date -->
+                                                <span class="appointment-date">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span class="appointment-label">Appointment:</span>
+                                                    <strong>{{ $appointed_date }}</strong>
+                                                </span>
+                                                @endif   
+                                                @if ($row->form_type === "version2")
+                                                    <img class="stamp-img"
+                                                        src="{{ asset('resources/img/new_version_stamp.png') }}"
+                                                        alt="PNG Image">
                                                 @endif
                                             </h3>
                                         </div>
@@ -335,10 +418,24 @@ $user = Session::get('auth');
                                                 by <span class="text-warning">{{ $row->referring_md == $user-id }}</span> of
                                                 <span class="facility">{{ $row->referred_from == 0 ? 'N/A' : ($row->facility_name ?? 'Unknown Facility') }}</span>
                                             </h3> <!-- time line for #referred #seen #redirected -->
-                                            <h3 class="timeline-header no-border">
-                                                <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
-                                                 @if ($row->form_type === "version2")
-                                                    <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
+                                             <h3 class="timeline-header no-border">
+                                                <!-- Referral Date -->
+                                                <span class="time referral-date">
+                                                    <i class="icon fa {{ $icon }}"></i>
+                                                    <span class="date_activity">{{ $date }}</span>
+                                                </span>
+                                                @if ($appointed_date != null)
+                                                <!-- Appointment Date -->
+                                                <span class="appointment-date">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span class="appointment-label">Appointment:</span>
+                                                    <strong>{{ $appointed_date }}</strong>
+                                                </span>
+                                                @endif
+                                                @if ($row->form_type === "version2")
+                                                    <img class="stamp-img"
+                                                        src="{{ asset('resources/img/new_version_stamp.png') }}"
+                                                        alt="PNG Image">
                                                 @endif
                                             </h3>
                                             @include('doctor.include.timeline_footer')
@@ -355,12 +452,26 @@ $user = Session::get('auth');
                                                     Dr. {{ $row->action_md }}
                                                 </span>
                                                 <br><br>
-                                                <h3 class="timeline-header no-border">
-                                                   <span class="time"><i class="icon fa {{ $icon }}"></i> <span class="date_activity">{{ $date }}</span></span>
-                                                    @if ($row->form_type === "version2")
-                                                        <img class="stamp-img" src="{{ asset('resources/img/new_version_stamp.png') }}" alt="PNG Image">
-                                                    @endif
-                                                </h3>
+                                                  <h3 class="timeline-header no-border">
+                                                <!-- Referral Date -->
+                                                <span class="time referral-date">
+                                                    <i class="icon fa {{ $icon }}"></i>
+                                                    <span class="date_activity">{{ $date }}</span>
+                                                </span> 
+                                                @if ($appointed_date != null)
+                                                <!-- Appointment Date -->
+                                                <span class="appointment-date">
+                                                    <i class="fa fa-calendar"></i>
+                                                    <span class="appointment-label">Appointment:</span>
+                                                    <strong>{{ $appointed_date }}</strong>
+                                                </span>
+                                                @endif
+                                                @if ($row->form_type === "version2")
+                                                    <img class="stamp-img"
+                                                        src="{{ asset('resources/img/new_version_stamp.png') }}"
+                                                        alt="PNG Image">
+                                                @endif
+                                            </h3>
                                                 @include('doctor.include.timeline_footer')
                                             </h3>
                                         </div>

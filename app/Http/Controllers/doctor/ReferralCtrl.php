@@ -284,7 +284,7 @@ class ReferralCtrl extends Controller
         $provinces = Province::get();
 
         Session::put('totalIncoming_for_Dashboard', $data->total());
-
+        Log::info('Total Incoming for Dashboard: ' . $data->all());
         return view('doctor.referral',[
             'title' => 'Incoming Patients',
             'data' => $data,
