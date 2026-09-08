@@ -107,10 +107,10 @@ class VerificationController extends Controller
             // Show success page
             return view('auth.verified');
         } catch (\Exception $e) {
-            // Log::error('Email verification error', [
-            //     'error' => $e->getMessage(),
-            //     'trace' => $e->getTraceAsString()
-            // ]);
+            Log::error('Email verification error', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect('/login')
                 ->with('error', 'An error occurred during verification. Please try again.');
         }

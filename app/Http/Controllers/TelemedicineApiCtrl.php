@@ -1306,7 +1306,7 @@ class TelemedicineApiCtrl extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            // Log::error('Refer Patient API Error', ['error' => $e->getMessage()]);
+            Log::error('Refer Patient API Error', ['error' => $e->getMessage()]);
 
             return response()->json([
                 'status'  => false,
@@ -1846,11 +1846,11 @@ class TelemedicineApiCtrl extends Controller
             ]);
 
         } catch (\Exception $e) {
-            // \Log::error('Error checking available slots: ' . $e->getMessage(), [
-            //     'date' => $request->query('date'),
-            //     'facility_id' => $request->query('facility_id'),
-            //     'trace' => $e->getTraceAsString()
-            // ]);
+            Log::error('Error checking available slots: ' . $e->getMessage(), [
+                'date' => $request->query('date'),
+                'facility_id' => $request->query('facility_id'),
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json([
                 'error' => 'Failed to fetch available slots',
                 'message' => $e->getMessage()
